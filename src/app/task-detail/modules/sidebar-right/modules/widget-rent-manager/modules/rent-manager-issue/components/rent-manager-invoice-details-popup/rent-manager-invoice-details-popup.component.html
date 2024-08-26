@@ -1,0 +1,51 @@
+<trudi-modal
+  [(visible)]="show"
+  [autoFocus]="''"
+  (triggerAfterClose)="handleAfterClose()">
+  <ng-template #headerModal>
+    <div
+      class="rent-manager-issue-invoice-details-popup-header d-flex align-items-center">
+      <img src="assets/images/rent-manager-icon.png" class="flex-1 size-icon" />
+      <div class="title d-flex justify-content-center flex-1 w-100">
+        <span>Invoice details</span>
+      </div>
+    </div>
+  </ng-template>
+  <div
+    class="d-flex flex-dir-column gap-20 rm-invoice-detail-form"
+    id="rm-invoice-detail-form"
+    *ngIf="formGroup"
+    [formGroup]="formGroup">
+    <invoice-details-info [formGroup]="formGroup"></invoice-details-info>
+    <invoice-details-table [formGroup]="formGroup"></invoice-details-table>
+  </div>
+  <ng-template #footerModal>
+    <div
+      class="rent-manager-issue-popup-footer d-flex align-items-center justify-content-between w-100">
+      <div class="info-status d-flex align-items-center">
+        <sync-status
+          [syncStatus]="syncStatus"
+          [lastTimeSynced]="syncDate"></sync-status>
+      </div>
+      <div class="footer-wrapper d-flex" [style.gap.px]="12">
+        <button
+          trudi-btn
+          variant="outlined"
+          btnType="neutral"
+          size="large"
+          (click)="back()">
+          <span class="btn-text">Back</span>
+        </button>
+        <button
+          [disabled]="isArchiveMailbox || isConsole"
+          trudi-btn
+          variant="filled"
+          btnType="primary"
+          size="large"
+          (click)="syncToRM()">
+          <span class="btn-text">Sync to Rent Manager</span>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</trudi-modal>

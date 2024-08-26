@@ -1,0 +1,9 @@
+:host {
+  ::ng-deep {
+    .charges-form {
+      & .recurring-charges {
+        margin-bottom: 18px;
+      }
+    }
+  }
+}

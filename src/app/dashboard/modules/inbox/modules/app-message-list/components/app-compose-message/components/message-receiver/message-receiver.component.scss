@@ -1,0 +1,468 @@
+@import 'function';
+:host ::ng-deep ng-select {
+  &.ng-select {
+    &.ng-select-single {
+      .ng-select-container {
+        .ng-value-container {
+          padding: 0;
+          gap: 8px;
+          max-height: 116px;
+          padding-right: 85px !important;
+          .ng-value {
+            visibility: visible;
+          }
+          .ng-option:has(.bulk-send-option) {
+            padding: 0;
+            pointer-events: none;
+            .bulk-send-option {
+              padding: 8px 10px;
+            }
+          }
+          .select-item {
+            .overflow-text {
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 100%;
+            }
+            .select-item-remove {
+              display: flex;
+              align-items: center;
+            }
+          }
+          .select-item-label {
+            border: 1px solid var(--border-neutral-dark);
+            padding: 1px 8px;
+            border-radius: 8px;
+          }
+
+          .ng-placeholder {
+            position: absolute;
+            top: 12px;
+            padding: 0;
+          }
+
+          .ng-input {
+            position: unset;
+            padding: 0;
+
+            & > input {
+              margin-top: 2px;
+              @include fontSetup(
+                var(--fg-neutral-stronger) !important,
+                14px,
+                20px,
+                normal,
+                500
+              );
+            }
+          }
+        }
+      }
+      &.ng-valid,
+      &.ng-dirty,
+      &.ng-touched {
+        &.input-error-select {
+          .ng-select-container {
+            border-radius: 8px !important;
+            @include box-shadow-input-select(var(--shadow-danger));
+            margin-bottom: 0;
+          }
+        }
+      }
+
+      & .clear-btn {
+        cursor: pointer;
+        border: none;
+        padding: 0;
+        &[focusable]:focus-visible {
+          border-radius: 8px;
+          border: 1px solid var(--brand-500);
+          box-shadow: 0px 0px 0px 1px var(--bg-brand-tonal-strongest) !important;
+        }
+        @include fontSetup(
+          var(--fg-neutral-stronger, #3d3d3d),
+          12px,
+          16px,
+          normal,
+          500
+        );
+        background-color: var(--white);
+      }
+
+      & .count-text {
+        @include fontSetup(var(--fg-neutral-weaker), 12px, 16px, normal, 400);
+      }
+    }
+    .ng-select-container {
+      margin-bottom: 0;
+      padding: 10px 16px;
+      max-height: 128px;
+      overflow-y: auto;
+      border: unset;
+      align-items: flex-start;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      &.ng-has-value {
+        align-items: center;
+      }
+      .ng-arrow-wrapper {
+        display: none;
+      }
+    }
+    &.ng-select-opened.ng-select-bottom > .ng-select-container {
+      cursor: auto;
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    &.ng-select-single .ng-select-container {
+      height: 44px;
+    }
+  }
+  &.hide-dropdown {
+    .ng-dropdown-panel {
+      display: none;
+    }
+  }
+  &.hide-last-child {
+    .ng-dropdown-panel {
+      &.ng-select-bottom {
+        .ng-dropdown-panel-items {
+          .ng-option:last-child {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+  &:has(.isAddItem).hide-last-child {
+    .ng-dropdown-panel {
+      &.ng-select-bottom {
+        .ng-dropdown-panel-items {
+          .ng-option:last-child {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  .ng-option,
+  .ng-select-container {
+    .select-item {
+      &__from {
+        @include fontSetup(var(--gray-400), 14px, 20px, normal, 600);
+      }
+      &-remove {
+        padding: 5px 0 5px 5px;
+        display: flex;
+        align-items: center;
+      }
+      &__info {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        ::ng-deep app-circle-avatar {
+          .img-circle {
+            margin: 2px 0;
+            label,
+            div {
+              font-size: 60% !important;
+            }
+            &.supplier trudi-icon svg {
+              width: 8px !important;
+              height: 8px !important;
+            }
+          }
+        }
+        @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+        div {
+          margin-bottom: 8px;
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+        .avatar {
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          margin-right: 4px;
+        }
+
+        .avatar-trudi {
+          background: var(--white);
+        }
+
+        .small-circle {
+          width: 3px;
+          height: 3px;
+          display: inline-block;
+          border-radius: 100%;
+          margin: 0 5px;
+          margin-bottom: 2px;
+          background-color: var(--gray-950);
+        }
+
+        .select-item {
+          &__title {
+            @include fontSetup(
+              var(--fg-neutral-stronger),
+              12px,
+              16px,
+              normal,
+              500
+            );
+            &.item-checked {
+              color: var(--gray-700);
+            }
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 28%;
+          }
+          &__email-wrapper {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 28%;
+          }
+          &__email {
+            @include fontSetup(
+              var(--fg-neutral-normal),
+              12px,
+              16px,
+              normal,
+              400
+            );
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+          }
+          &__street-wrapper {
+            trudi-icon svg {
+              color: var(--fg-neutral-normal);
+              path {
+                fill: var(--fg-neutral-normal) !important;
+              }
+            }
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            // max-width: 28%;
+            flex: 1;
+            &___title {
+              @include fontSetup(
+                var(--fg-neutral-normal) !important,
+                12px,
+                16px,
+                normal,
+                400
+              );
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 100%;
+            }
+          }
+          &__type {
+            @include fontSetup(
+              var(--fg-neutral-stronger),
+              12px,
+              16px,
+              normal,
+              500
+            );
+          }
+        }
+
+        &--invalid {
+          color: var(--fg-danger);
+        }
+      }
+    }
+  }
+
+  .ng-option-disabled {
+    &.ng-optgroup {
+      .header-group {
+        @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 500);
+      }
+    }
+  }
+
+  .ng-dropdown-panel {
+    width: 85%;
+    margin-top: -11px;
+    margin-left: 32px;
+    .ng-dropdown-panel-items {
+      .ng-option {
+        & .highlighted {
+          background: var(--tenant-500);
+          color: inherit !important;
+          font-size: inherit !important;
+          font-weight: inherit !important;
+          text-decoration: inherit !important;
+        }
+        &:first-child {
+          border-radius: unset;
+        }
+      }
+      .overflow-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 580px;
+      }
+    }
+
+    &.ng-select-bottom {
+      border-radius: 8px !important;
+      overflow: hidden;
+    }
+  }
+  .border-item.ng-select .ng-dropdown-panel .ng-dropdown-panel-items .ng-option,
+  .ng-optgroup {
+    box-shadow: unset;
+    background: var(--bg-neutral-tonal-normal, #f2f5f7);
+  }
+  .ng-dropdown-panel .ng-dropdown-panel-items {
+    .ng-option:not(:last-child) {
+      box-shadow: inset 0px -1px 0px var(--border-neutral-dark);
+    }
+    .ng-option-disabled {
+      font-style: italic;
+    }
+  }
+  .header-group {
+    @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 500);
+    background-color: var(--bg-neutral-tonal-normal);
+    padding: 4px 12px;
+  }
+  .select-header {
+    padding: 8px 12px;
+  }
+}
+
+input[type='checkbox'] {
+  width: 0px;
+  margin-right: 25px;
+}
+
+.visible-checkbox-in-safari {
+  cursor: pointer;
+  visibility: hidden;
+  &::before {
+    visibility: visible;
+  }
+}
+
+input[type='checkbox']:before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  border-radius: 4px;
+  vertical-align: middle;
+  border: 1px solid var(--gray-200);
+  text-align: center;
+  background-color: var(--white);
+}
+
+input[type='checkbox']:checked:before {
+  background-image: url('/assets/icon/checkbox-on.svg');
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  background-position: center center;
+  background-color: var(--brand-500);
+  border: none;
+}
+
+:host ::ng-deep .select-wrapper {
+  --suffix-width: 0px;
+  position: relative;
+  .suffix-wrapper {
+    position: absolute;
+    top: 9px;
+  }
+  .pseudo-input {
+    @include fontSetup(var(--fg-neutral-weaker), 14px, 20px, normal, 400);
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 1001;
+    width: fit-content;
+  }
+
+  ::ng-deep .suffix-wrapper {
+    right: 12px;
+    z-index: 1001;
+    width: fit-content;
+    top: 10px;
+    .function-btn {
+      border-radius: 6px;
+      border: 1px solid var(--border-neutral-dark, #d8dcdf);
+      background: var(--bg-base, #fff);
+      padding: 0px 8px;
+      height: 24px;
+      @include fontSetup(
+        var(--fg-neutral-strongest) !important,
+        14px,
+        20px,
+        normal,
+        400
+      );
+    }
+  }
+  .focused.ng-label-focused {
+    display: block !important;
+  }
+  .ng-label-default {
+    display: block;
+    width: max-content;
+    max-width: 98%;
+  }
+  .ng-label-focused {
+    display: none;
+  }
+  .ng-select-opened {
+    .ng-label-default {
+      display: none;
+    }
+    .ng-label-focused {
+      display: block;
+    }
+  }
+  .receivers-info-wrapper {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+  // .trudi-badge {
+  //   max-width: 32%;
+  // }
+  // .badge-text {
+  //   white-space: nowrap;
+  //   overflow: hidden;
+  //   text-overflow: ellipsis;
+  //   @include fontSetup(
+  //             var(--fg-neutral-normal),
+  //             12px,
+  //             16px,
+  //             normal,
+  //             400
+  //           );
+  // }
+  .show-archived-deleted-contact-toggle .checkbox-label {
+    @include fontSetup(var(--fg-neutral-stronger), 12px, 16px, normal, 500);
+  }
+}
+.hover-template {
+  max-width: 264px;
+}

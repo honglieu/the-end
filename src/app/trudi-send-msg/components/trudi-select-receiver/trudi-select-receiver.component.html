@@ -1,0 +1,451 @@
+<ng-container *ngIf="!isShowContactType; else sendBulkMessageTemplate">
+  <div #ref class="select-wrapper">
+    <ng-select
+      #ngSelectReceiver
+      [items]="items"
+      [bindLabel]="bindLabel"
+      [bindValue]="bindValue"
+      [multiple]="true"
+      [clearable]="false"
+      [groupBy]="isRmEnvironment ? 'typeInRm' : 'type'"
+      [searchFn]="lazyLoad ? customSearchFnFake : customSearchFn"
+      [closeOnSelect]="false"
+      (search)="onSearch($event)"
+      placeholder="Search name, email or property address"
+      [addTag]="isAddItem ? addEmail : false"
+      [virtualScroll]="virtualScroll"
+      [clearSearchOnAdd]="false"
+      [(ngModel)]="selectedValue"
+      (ngModelChange)="onModelChange($event)"
+      [ngClass]="extraCls"
+      [disabled]="disabled"
+      (close)="clearSearchTerm()"
+      [loading]="loading"
+      [class.hide-last-child]="isHiddenLastChild"
+      [class.isAddItem]="isAddItem"
+      [compareWith]="compareWith"
+      (input)="onInput($event.target.value)"
+      appOutsideClickListener
+      (clickOutside)="handleClickOutsideReceiver()"
+      (keydown)="handleEnterKeyPress($event)"
+      (scrollToEnd)="nextPage.emit()"
+      [trackByFn]="trackByFn">
+      <ng-template ng-optgroup-tmp let-item="item">
+        <div class="header-group">
+          {{ MAP_GROUP_TYPE_RECEIVER_TO_DISPLAY[(isRmEnvironment ?
+          item?.typeInRm : item?.type)] ?? (isRmEnvironment ? item?.typeInRm :
+          item?.type) }}
+        </div>
+      </ng-template>
+
+      <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+        <div class="ng-label-default">
+          <ng-container
+            *ngTemplateOutlet="
+    customizeSelectedOptionTemplate;
+  "></ng-container>
+        </div>
+        <div class="ng-label-focused" *ngFor="let item of items">
+          <div
+            class="select-item select-item-label d-flex align-items-center gap-8"
+            [ngClass]="{'disable-field': disabled}"
+            appHoverShow
+            [appHoverShow]="hoverInformation"
+            (onTooltipHidden)="onTooltipHidden()"
+            #c="child">
+            <ng-container
+              *ngTemplateOutlet="
+              customizeTemplate;
+              context: { item: item ,item$: item$, clear: clear}
+            "></ng-container>
+            <trudi-icon
+              *ngIf="!item?.disabled"
+              class="cursor-pointer select-item-remove size-16"
+              icon="closeGray64"
+              (click)="$event.stopPropagation(); clear(item); c.hideTooltip()"></trudi-icon>
+            <ng-template #hoverInformation>
+              <ng-container
+                class="gap-4px"
+                *ngTemplateOutlet="
+          customizeInfoTemplate;
+          context: { item: item, item$: item$, visible: c.isTooltipVisible }
+        "></ng-container>
+            </ng-template>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template
+        ng-option-tmp
+        let-item="item"
+        let-item$="item$"
+        let-index="index"
+        let-search="searchTerm">
+        <div
+          class="select-item d-flex gap-8"
+          [ngClass]="{'disable-field': item.disabled}">
+          <ng-container
+            *ngTemplateOutlet="
+          customizeOptionTemplate;
+          context: { item: item, item$: item$, searchTerm: searchTerm }
+        "></ng-container>
+          <div>
+            <input
+              id="select-checkbox"
+              class="visible-checkbox-in-safari"
+              type="checkbox"
+              [ngModel]="item$.selected" />
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template ng-header-tmp>
+        <div
+          *ngIf="totalReceiver"
+          class="d-flex align-items-center justify-content-between pd-12">
+          <div>
+            <span class="count-text">{{totalSelected}}/{{totalReceiver}}</span>
+          </div>
+          <span
+            class="clear-btn clear-selection-btn"
+            *ngIf="selectedValue.length"
+            (click)="handleClearAll()"
+            >Clear selection</span
+          >
+        </div>
+      </ng-template>
+    </ng-select>
+    <div
+      #pseudoTemplate
+      class="pseudo-input"
+      [ngClass]="{'has-value': selectedValue?.length > 0}">
+      <ng-container *ngIf="iconTemplate; else default">
+        <trudi-icon
+          class="cursor-pointer"
+          [icon]="iconTemplate"
+          [style]="{ 'width.px': 20, 'height.px': 20 }"
+          (click)="$event.stopPropagation(); clear(item); c.hideTooltip()"></trudi-icon>
+      </ng-container>
+      <ng-template #default>
+        <span *ngIf="textTemplate">{{ textTemplate }}:</span>
+      </ng-template>
+    </div>
+  </div>
+</ng-container>
+<!-- customize template -->
+
+<!-- customize template for label show value on input -->
+<ng-template #customizeTemplate let-item="item" let-item$="item$">
+  <div
+    class="select-item__info flex-grow-1 d-flex gap-4"
+    [ngClass]="{'select-item__info--invalid': item.type === EUserPropertyType.UNIDENTIFIED && !item.isValid}">
+    <app-circle-avatar
+      [userId]="item.id"
+      [firstName]="item.firstName"
+      [lastName]="item.lastName"
+      [userType]="item.type === EUserPropertyType.UNIDENTIFIED ? EUserPropertyType.EXTERNAL : item.type"
+      [size]="20"
+      [isValid]="item.type === EUserPropertyType.UNIDENTIFIED ? item.isValid : true">
+    </app-circle-avatar>
+    <span class="overflow-text">
+      {{item | contactTitleByConversationProperty: { isNoPropertyConversation:
+      false, isMatchingPropertyWithConversation: true} }}
+    </span>
+  </div>
+</ng-template>
+
+<!-- customize template for option display when click dropdown -->
+<ng-template
+  #customizeOptionTemplate
+  let-item="item"
+  let-item$="item$"
+  let-search="searchTerm">
+  <div class="select-item__info flex-grow-1">
+    <div
+      class="gap-6 d-flex align-items-center"
+      [ngClass]="{ 'item-checked': item$.selected }">
+      <span
+        class="select-item__title overflow-text"
+        [ngOptionHighlight]="searchTerm ? searchTerm : ''">
+        {{ (item.type === EUserPropertyType.UNIDENTIFIED || item.type ===
+        EUserPropertyType.UNIDENTIFIED) ? item.email : ((item?.firstName || "")
+        + " " + (item?.lastName || "") | titlecase)}}
+      </span>
+      <span
+        *ngIf="isRmEnvironment && item?.type | userTypeInRm: pipeType.TYPE : isRmEnvironment"
+        class="user-type">
+        {{item.type | userTypeInRm: pipeType.TYPE : isRmEnvironment}}
+      </span>
+      <img
+        *ngIf="item.isPrimary"
+        loading="lazy"
+        src="{{ urlImg(item.type) }}"
+        nz-tooltip
+        [nzTooltipTitle]="(item.type === EUserPropertyType.SUPPLIER
+          ? 'Favorite '
+          : 'Primary ') + (item?.type | landlordToOwner | userTypeInRm: pipeType.DEFAULT : isRmEnvironment) | uppercaseFirstLetter" />
+    </div>
+    <ng-container
+      *ngTemplateOutlet="
+          customizeInfoTemplate;
+          context: { item: item, item$: item$ }
+        "></ng-container>
+  </div>
+</ng-template>
+
+<!-- customize template information -->
+<ng-template
+  #customizeInfoTemplate
+  let-item="item"
+  let-item$="item$"
+  let-visible="visible">
+  <div
+    *ngIf="item.streetLine"
+    class="select-item__address white-space-normal"
+    [ngClass]="{'hover-template' : visible}">
+    <trudi-badge
+      [text]="item.streetLine"
+      [highlighText]="searchTerm"
+      [icon]="'mapGrey'"
+      size="small-min-height"
+      variant="role"
+      [allowTruncated]="visible"></trudi-badge>
+  </div>
+  <div
+    *ngIf="item.email || item.isAppUser"
+    class="select-item__contact d-flex flex-wrap gap-4 white-space-normal"
+    [ngClass]="{'hover-template' : visible}">
+    <trudi-badge
+      *ngIf="item.email"
+      [text]="item.email"
+      [highlighText]="searchTerm"
+      [icon]="'mailFill'"
+      size="small-min-height"
+      variant="role"
+      [allowTruncated]="visible"></trudi-badge>
+    <trudi-badge
+      *ngIf="item.isAppUser"
+      [text]="'App user'"
+      [icon]="'appUser'"
+      size="small"
+      variant="role"
+      [allowTruncated]="visible"></trudi-badge>
+  </div>
+  <div
+    *ngIf="item.contactType"
+    class="select-item__other-contact"
+    [ngClass]="{'hover-template' : visible}">
+    <trudi-badge
+      [text]="item.contactType | titleCasePipe"
+      [highlighText]="searchTerm"
+      [icon]="'circleInfo'"
+      size="small"
+      variant="role"
+      [allowTruncated]="visible"></trudi-badge>
+  </div>
+</ng-template>
+<ng-template #sendBulkMessageTemplate>
+  <div #ref class="select-reciver-wrapper">
+    <ng-select
+      #ngSelectReceiver
+      [items]="listReceivers"
+      [groupBy]="'group'"
+      [bindLabel]="bindLabel"
+      [bindValue]="bindValue"
+      [multiple]="true"
+      [clearable]="false"
+      [searchFn]="lazyLoad ? customSearchFnFake : customSearchFn"
+      [closeOnSelect]="false"
+      (search)="onSearch($event)"
+      [placeholder]="placeholder"
+      [virtualScroll]="virtualScroll"
+      [clearSearchOnAdd]="false"
+      [(ngModel)]="selectedValue"
+      (ngModelChange)="onModelChange($event)"
+      [ngClass]="extraCls"
+      [disabled]="disabled"
+      (close)="clearSearchTerm()"
+      [loading]="loading"
+      [class.hide-last-child]="isHiddenLastChild"
+      [compareWith]="isPrefillSelected ? compareWithdType : compareWith"
+      (input)="onInput($event.target.value)"
+      appOutsideClickListener
+      (clickOutside)="handleClickOutsideReceiver()"
+      (keydown)="handleEnterKeyPress($event)"
+      (scrollToEnd)="goOnToNextPage()"
+      [trackByFn]="trackByFn"
+      [markFirst]="false">
+      <ng-template ng-header-tmp>
+        <div class="receiver-type-wrapper">
+          <trudi-radio-button
+            [(ngModel)]="currentReceiverType"
+            classType="ROW"
+            [options]="LIST_RECEIVER_TYPE"
+            (ngModelChange)="handleChangeContactType($event)"></trudi-radio-button>
+        </div>
+        <div class="d-flex justify-content-between clear-func-wrapper">
+          <span class="selected-option-value">
+            {{selectedValue?.length}} / {{currentReceiverType ===
+            EReceiverType.CONTACT_TYPE ? listContactTypes?.length :
+            totalReceiver}}
+          </span>
+          <button class="clear-btn" (click)="handleClearAll()">
+            Clear selection
+          </button>
+        </div>
+      </ng-template>
+      <ng-template ng-optgroup-tmp let-item="item" let-item$="item$">
+        <div class="header-group d-flex justify-content-between">
+          <div class="d-flex align-items-center">
+            {{ MAP_TYPE_RECEIVER_TO_LABEL[item?.group] }}
+          </div>
+        </div>
+      </ng-template>
+      <ng-template
+        ng-multi-label-tmp
+        let-item="item"
+        let-items="items"
+        let-clear="clear">
+        <div class="ng-label-default">
+          <ng-container
+            *ngTemplateOutlet="
+    customizeSelectedOptionTemplate;
+  "></ng-container>
+        </div>
+        <div class="ng-label-focused" *ngFor="let item of items">
+          <div
+            class="select-item select-item-label d-flex align-items-center gap-8"
+            appHoverShow
+            [appHoverShow]="hoverInformation"
+            (onTooltipHidden)="onTooltipHidden()"
+            #c="child">
+            <ng-container
+              *ngIf="currentReceiverType === EReceiverType.CONTACT_TYPE;else individualContactTemp">
+              <ng-container
+                *ngTemplateOutlet="
+            customizeListContactTypeTemplate;
+              context: { item: item, item$: item$ }
+            "></ng-container>
+            </ng-container>
+            <ng-template #individualContactTemp>
+              <ng-container
+                *ngTemplateOutlet="
+              customizeTemplate;
+              context: { item: item, item$: item$ }
+            "></ng-container>
+            </ng-template>
+
+            <trudi-icon
+              *ngIf="!item?.disabled"
+              class="cursor-pointer select-item-remove"
+              icon="closeGray64"
+              [style]="{ 'width.px': 8, 'height.px': 8 }"
+              (click)="$event.stopPropagation(); clear(item); c.hideTooltip()"></trudi-icon>
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template
+        ng-option-tmp
+        let-item="item"
+        let-item$="item$"
+        let-index="index"
+        let-search="searchTerm">
+        <div
+          nz-tooltip
+          [nzTooltipTitle]="item?.disabled ? 'No contact available' : ''"
+          nzTooltipPlacement="topRight"
+          class="select-item d-flex gap-8">
+          <ng-container
+            *ngIf="currentReceiverType === EReceiverType.CONTACT_TYPE;else individualContactOptionTemp">
+            <ng-container
+              *ngTemplateOutlet="
+            customizeContactTypeOptionTemplate;
+              context: { item: item, item$: item$, searchTerm: searchTerm }
+            "></ng-container>
+          </ng-container>
+          <ng-template #individualContactOptionTemp>
+            <ng-container
+              *ngTemplateOutlet="
+              customizeOptionTemplate;
+              context: { item: item, item$: item$, searchTerm: searchTerm }
+            "></ng-container>
+          </ng-template>
+
+          <div>
+            <trudi-checkbox
+              class="checkbox-item"
+              [disabled]="item?.disabled"
+              [ngModel]="item$.selected"
+              [ngModelOptions]="{standalone: true}"></trudi-checkbox>
+          </div>
+        </div>
+      </ng-template>
+    </ng-select>
+    <div
+      #pseudoTemplate
+      class="pseudo-input"
+      [ngClass]="{'has-value': selectedValue?.length > 0}">
+      <ng-container *ngIf="iconTemplate; else default">
+        <trudi-icon
+          class="cursor-pointer"
+          [icon]="iconTemplate"
+          [style]="{ 'width.px': 20, 'height.px': 20 }"
+          (click)="$event.stopPropagation(); clear(item); c.hideTooltip()"></trudi-icon>
+      </ng-container>
+      <ng-template #default>
+        <span *ngIf="textTemplate">{{ textTemplate }}:</span>
+      </ng-template>
+    </div>
+  </div>
+  <ng-template
+    #customizeListContactTypeTemplate
+    let-item="item"
+    let-item$="item$">
+    <div class="d-flex flex-dir-column gap-4">
+      <span class="item-label"> {{item.label}} </span>
+    </div>
+  </ng-template>
+
+  <ng-template
+    #customizeContactTypeOptionTemplate
+    let-item="item"
+    let-item$="item$"
+    let-search="searchTerm">
+    <div class="select-item__info flex-grow-1">
+      <div
+        class="d-flex flex-dir-column gap-4"
+        [ngClass]="{ 'item-checked': item$.selected }">
+        <span
+          class="select-item__title overflow-text"
+          [innerHTML]="item.label | highlight: search">
+        </span>
+        <span
+          *ngIf="item?.subLabel"
+          class="sendTo-subLabel"
+          [innerHTML]="item.subLabel | highlight: search">
+        </span>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+<ng-template #customizeSelectedOptionTemplate>
+  <ng-container
+    *ngIf="!!selectedValue?.[0]?.data?.length; else individualTemplate">
+    <div
+      class="receivers-info-wrapper"
+      [ngClass]="{'invalid-receiver': isHasUnIdentifiedContact}"
+      [innerHtml]="selectedValue | formatParticipants: isRmEnvironment :currentReceiverType === EReceiverType.CONTACT_TYPE: true"></div>
+  </ng-container>
+  <ng-template #individualTemplate>
+    <div
+      class="receivers-info-wrapper d-flex align-items-center"
+      [ngClass]="{'invalid-receiver': isHasUnIdentifiedContact}">
+      <span *ngFor="let receiver of selectedValue; let last = last"
+        >{{receiver | contactTitleByConversationProperty: {
+        isNoPropertyConversation: false, isMatchingPropertyWithConversation:
+        true } }}<span *ngIf="!last">,&nbsp;</span></span
+      >
+    </div>
+  </ng-template>
+</ng-template>

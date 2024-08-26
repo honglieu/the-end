@@ -1,0 +1,159 @@
+<trudi-modal
+  [visible]="visible"
+  title="Integrate with IMAP/SMTP server"
+  className="modal-integrate-imap"
+  subTitle=""
+  [autoFocus]="null"
+  (onCancel)="handleCancel()">
+  <div>
+    <div class="wrapper-body">
+      <div [formGroup]="formImap" autocomplete="off">
+        <trudi-form-control>
+          <trudi-text-field
+            size="large"
+            label="Email"
+            placeholder="your@example.com"
+            autocomplete="new-password"
+            [disabled]="disableForm || isConnectAgain"
+            [maxCharacter]="255"
+            [showCounting]="false"
+            [formControlName]="field.EMAIL"></trudi-text-field>
+        </trudi-form-control>
+        <div class="mt-16 input-name">
+          <trudi-form-control>
+            <trudi-text-field
+              size="large"
+              label="Name"
+              placeholder="Enter your name"
+              autocomplete="new-password"
+              [disabled]="disableForm || isConnectAgain"
+              [maxCharacter]="255"
+              [showCounting]="false"
+              [formControlName]="field.NAME"></trudi-text-field>
+          </trudi-form-control>
+        </div>
+        <div class="mt-16">
+          <trudi-form-control>
+            <trudi-text-field
+              type="password"
+              size="large"
+              label="Password"
+              placeholder="Enter your password"
+              autocomplete="new-password"
+              [disabled]="disableForm"
+              [showCounting]="false"
+              [formControlName]="field.PASSWORD"></trudi-text-field>
+          </trudi-form-control>
+        </div>
+        <div class="wrapper-server mt-16">
+          <div class="inbox-server" [formGroupName]="field.INBOX_SERVER">
+            <div class="title-server">Inbox server (IMAP)</div>
+            <div class="mt-12">
+              <trudi-form-control>
+                <trudi-text-field
+                  size="large"
+                  label="Server"
+                  [disabled]="disableForm || isConnectAgain"
+                  [showCounting]="false"
+                  [formControlName]="field.HOST"></trudi-text-field>
+              </trudi-form-control>
+            </div>
+            <div class="mt-12">
+              <trudi-form-control>
+                <trudi-text-field
+                  size="large"
+                  label="Port"
+                  [disabled]="disableForm"
+                  [showCounting]="false"
+                  [maxCharacter]="255"
+                  [formControlName]="field.PORT"></trudi-text-field>
+              </trudi-form-control>
+            </div>
+            <div class="mt-12">
+              <trudi-form-control>
+                <trudi-single-select
+                  [formControlName]="field.PROTECTION"
+                  [items]="listProtectionServer"
+                  bindLabel="label"
+                  bindValue="value"
+                  label="Protection"
+                  [disabled]="disableForm || isConnectAgain"
+                  [enableSearch]="false"></trudi-single-select>
+              </trudi-form-control>
+            </div>
+          </div>
+          <div class="vertical-line"></div>
+          <div class="oubox-server" [formGroupName]="field.OUTBOX_SERVER">
+            <div class="title-server">Outbox server (SMTP)</div>
+            <div class="mt-12">
+              <trudi-form-control>
+                <trudi-text-field
+                  size="large"
+                  label="Server"
+                  [disabled]="disableForm || isConnectAgain"
+                  [showCounting]="false"
+                  [formControlName]="field.HOST"></trudi-text-field>
+              </trudi-form-control>
+            </div>
+            <div class="mt-12">
+              <trudi-form-control>
+                <trudi-text-field
+                  size="large"
+                  label="Port"
+                  [disabled]="disableForm"
+                  [showCounting]="false"
+                  [maxCharacter]="255"
+                  [formControlName]="field.PORT"></trudi-text-field>
+              </trudi-form-control>
+            </div>
+            <div class="mt-12">
+              <trudi-form-control>
+                <trudi-single-select
+                  [formControlName]="field.PROTECTION"
+                  [items]="listProtectionServer"
+                  bindLabel="label"
+                  bindValue="value"
+                  label="Protection"
+                  [disabled]="disableForm || isConnectAgain"
+                  [enableSearch]="false"></trudi-single-select>
+              </trudi-form-control>
+            </div>
+          </div>
+        </div>
+        <div class="wrapper-assistance mt-16">
+          <div class="title-assistance">All sound a bit technical?</div>
+          <div class="body-assistance mt-8">
+            <span class="content-assistance">Email to</span>
+            <a class="link-assistance" [href]="mailContactSupport"
+              >&nbsp;support&#64;trudi.ai&nbsp;</a
+            >
+            <span class="content-assistance">for assistance.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #footerModal>
+      <div class="wrapper-footer">
+        <button
+          trudi-btn
+          size="large"
+          btnType="neutral"
+          variant="outlined"
+          [disabled]="disableForm"
+          (click)="handleBack()">
+          Back
+        </button>
+        <button
+          trudi-btn
+          class="margin-left-12"
+          size="large"
+          variant="filled"
+          [disabled]="disableForm"
+          (click)="handleSave()">
+          Save
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</trudi-modal>
+<canvas #avatar class="display-none"></canvas>

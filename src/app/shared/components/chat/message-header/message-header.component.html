@@ -1,0 +1,17 @@
+<div
+  (click)="canViewProfile && handleOpenUserProfile($event)"
+  class="text-muted message-header"
+  [ngClass]="{'hover-underline': canViewProfile}">
+  @if(currentConversation?.conversationType === EConversationType.APP &&
+  message.messageReply) {
+  <span class="reply-label d-flex">
+    <trudi-icon
+      class="icon"
+      svgClass="size-16"
+      icon="cornerUpLeft"></trudi-icon>
+    <span style="margin-left: 4px"> {{replyTitle}} </span>
+  </span>
+  } @else { {{ currentConversation?.conversationType === EConversationType.APP
+  && senderType === 'user' ? (firstName ? firstName : (lastName || '')) :
+  fullName }} }
+</div>

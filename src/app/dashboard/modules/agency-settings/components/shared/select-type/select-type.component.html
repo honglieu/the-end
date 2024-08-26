@@ -1,0 +1,144 @@
+<trudi-single-select
+  [virtualScroll]="true"
+  [items]="items"
+  [formControl]="formControl"
+  [bindValue]="bindValue"
+  [bindLabel]="bindLabel"
+  [clearable]="clearable"
+  [placeholder]="placeholder"
+  [isDisabled]="isDisabled"
+  [setSelectOpen]="isfocus"
+  [isOpen]="isOpen"
+  (triggerEventBlur)="triggerEventBlur.emit()"
+  [dropdownPosition]="dropdownPosition"
+  (isOpened)="openHandler.emit()"
+  appOutsideClickListener
+  (clickOutside)="handleClickOutside()">
+  <ng-template
+    trudi-option-tmp
+    let-item="item"
+    let-item$="item$"
+    let-searchTerm="searchTerm">
+    <div
+      class="type_list"
+      [ngStyle]="{'padding': editingItemId === item?.id ? 0 : '8px 12px', 'height': showEditTypeForm && editingItemId === item?.id && typeForm.invalid ? '' : '44px'}">
+      @if(!showEditTypeForm || editingItemId !== item?.id) {
+      <div class="d-flex justify-content-between w-100">
+        <div class="type_list-wrapper d-flex align-items-center">
+          <span
+            #typeName
+            class="text-name"
+            [ngOptionHighlight]="searchTerm"
+            nz-tooltip
+            nzTooltipPlacement="top"
+            [nzTooltipTitle]="tooltipTemplate"
+            [nzTooltipOverlayStyle]="{'padding-bottom': '8px', 'word-break': 'break-all'}"
+            triggerLongContentTooltip
+            [elementRef]="typeName"
+            >{{item?.name}}</span
+          >
+        </div>
+        @if(item$.selected) {
+        <div
+          [ngClass]="{'d-none': item.isShowDropdown}"
+          class="check-success d-flex align-items-center">
+          <trudi-icon
+            [style]="{ 'width.px': 16, 'height.px': 16}"
+            icon="checkSuccess"></trudi-icon>
+        </div>
+        }
+        <div
+          [ngClass]="{'d-block': item.isShowDropdown}"
+          class="three-dots-button">
+          <button
+            trudi-btn
+            btnType="neutral"
+            variant="outlined"
+            shape="circle"
+            size="extra-small"
+            [selected]="item.isShowDropdown"
+            (click)="onClick($event, item, menu)">
+            <trudi-icon [icon]="'threeDotDetail'"></trudi-icon>
+          </button>
+        </div>
+      </div>
+      } @if(showEditTypeForm && editingItemId === item?.id) {
+      <ng-template [ngTemplateOutlet]="typeNameForm"></ng-template>
+      }
+    </div>
+
+    <ng-template #tooltipTemplate>
+      <div class="d-flex gap-4">
+        <span class="type-name-default"> {{item?.name}} </span>
+      </div>
+    </ng-template>
+  </ng-template>
+
+  <ng-template trudi-footer-tmp>
+    @if(showAddNewTypeForm) {
+    <ng-template [ngTemplateOutlet]="typeNameForm"></ng-template>
+    }
+    <button
+      trudi-btn
+      variant="link"
+      size="medium"
+      (click)="$event.stopPropagation(); showInputAddNewType()"
+      class="add-new-type-btn">
+      <trudi-icon svgClass="size-20" icon="plusImg"></trudi-icon>
+      <span class="add-new-type-btn-text">Add new type</span>
+    </button>
+  </ng-template>
+</trudi-single-select>
+
+<ng-template #typeNameForm>
+  <div class="input-type" [formGroup]="typeForm">
+    <trudi-form-control
+      [errors]="[{errorName: 'existTypeName', errorMessage: 'Type already exists'}]">
+      <trudi-text-field
+        (keydown)="$event.stopPropagation()"
+        (keydown.enter)="showAddNewTypeForm ? addType() : editType()"
+        formControlName="typeName"
+        maxCharacter="30"
+        size="medium"
+        placeholder="Enter type name"
+        [showCounting]="false"
+        [clearable]="true"
+        [autoFocus]="true"
+        (click)="$event.stopPropagation();">
+      </trudi-text-field>
+    </trudi-form-control>
+  </div>
+</ng-template>
+
+<nz-dropdown-menu #menu>
+  <div nz-menu class="menu-wrapper menu-action-wrapper border-rad-8 mt-10">
+    <div
+      nz-menu-item
+      class="item item-content d-flex align-items-center gap-8"
+      (click)="$event.stopPropagation(); showInputEditType()">
+      <trudi-icon svgClass="size-20" icon="iconEditNeutralNormal"></trudi-icon>
+      <p class="text">Edit</p>
+    </div>
+    <div
+      nz-tooltip
+      nz-menu-item
+      nzTooltipPlacement="top"
+      [class.disabled]="isDisabledDelete"
+      [nzTooltipTitle]="isDisabledDelete ? deleteTemplate : null"
+      class="item item-content d-flex align-items-center gap-8"
+      [nzTooltipOverlayStyle]="{'padding-bottom': '8px', 'word-break': 'break-all'}"
+      (click)="$event.stopPropagation(); deleteType()">
+      <trudi-icon
+        svgClass="size-20"
+        viewBox="auto"
+        icon="deleteIconOutline"></trudi-icon>
+      <p class="text">Delete</p>
+    </div>
+  </div>
+
+  <ng-template #deleteTemplate>
+    <div class="d-flex gap-4">
+      <span class="type-name-default">This type has been used.</span>
+    </div>
+  </ng-template>
+</nz-dropdown-menu>

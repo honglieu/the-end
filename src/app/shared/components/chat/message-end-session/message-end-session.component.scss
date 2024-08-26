@@ -1,0 +1,21 @@
+@import 'function';
+
+.marker-end-session {
+  margin-inline: auto;
+  width: fit-content;
+  margin: 16px auto;
+  padding: 4px 8px;
+  flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+  border-radius: 16px;
+  @include fontSetup(
+    var(--fg-neutral-normal, #646464),
+    12px,
+    16px,
+    normal,
+    500
+  );
+}

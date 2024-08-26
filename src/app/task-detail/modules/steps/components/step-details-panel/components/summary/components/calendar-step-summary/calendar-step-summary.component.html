@@ -1,0 +1,54 @@
+<ng-container [ngSwitch]="currentStep.status">
+  <ng-container *ngSwitchCase="EStepStatus.PENDING">
+    <div class="d-flex gap-8 align-items-center">
+      <trudi-icon icon="filledCalendar" class="size-24"> </trudi-icon>
+      Create {{ calendarTypeMap[currentStep.fields.eventType] }}
+    </div>
+  </ng-container>
+  <ng-container *ngSwitchCase="EStepStatus.EXECUTED">
+    <div class="d-flex gap-8 flex-dir-column">
+      <div class="d-flex gap-4 flex-dir-column">
+        <div class="title-success">
+          Created {{ calendarTypeMap[currentStep.fields.eventType] }}
+        </div>
+        <div class="success-note">
+          Executed by {{ currentStep.lastActionUser?.firstName }} at {{
+          currentStep.lastTimeAction | formatDateTime:false:false:true | async}}
+        </div>
+        <div
+          nz-tooltip
+          nzTooltipPlacement="top"
+          [nzTooltipTitle]="!event.isLinked ? 'This event is unlinked from task' : ''"
+          [nzTooltipTrigger]="!event.isLinked ? 'hover' : null">
+          <area-appointment
+            class="bg-white border-rad-8"
+            [ngClass]="{'unlinked': !event.isLinked}"
+            [isPreventButton]="false"
+            (triggerMenu)="toggleDropdown()"
+            (calendarEventOption)="handleCalendarEvent($event)"
+            (isOpenAnotherModal)="resetCurrentStep()"
+            [calenderWidgetExpiredDays]="calenderWidgetExpiredDays"
+            [isShowDropdown]="isShowDropdown && event.isLinked"
+            [event]="event"></area-appointment>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngSwitchCase="EStepStatus.COMPLETED">
+    <div class="d-flex gap-8 align-items-center">
+      <div class="align-self-start">
+        <trudi-icon icon="filledCalendar" class="size-24"> </trudi-icon>
+      </div>
+      <div class="d-flex gap-4 flex-dir-column">
+        <div class="title-success">
+          Created {{ calendarTypeMap[currentStep.fields.eventType] }}
+        </div>
+        <div class="success-note">
+          Manually marked as completed by {{
+          currentStep.lastActionUser?.firstName }} at {{
+          currentStep.lastTimeAction | formatDateTime:false:false:true | async}}
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>

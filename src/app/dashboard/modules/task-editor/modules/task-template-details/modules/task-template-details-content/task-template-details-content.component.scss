@@ -1,0 +1,33 @@
+@import 'function';
+
+:host {
+  display: block;
+
+  .task-template-details-content-wrapper {
+    .task-template-details-tree-steps {
+      border-top: 1px solid var(--gray-200);
+      padding: 20px 0;
+    }
+  }
+}
+
+.create-menu-wrapper {
+  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.08),
+    0px 14px 36px rgba(0, 0, 0, 0.13);
+  border-radius: 8px;
+  background: var(--bg-base);
+  min-width: 155px;
+  overflow: hidden;
+
+  & > menu-item:not(:last-child) {
+    border-bottom: 1px solid var(--border-neutral-light);
+  }
+}
+
+.menu-item {
+  cursor: pointer;
+  padding: 12px;
+  width: 165px;
+  border-bottom: 1px solid var(--border-neutral-light);
+  @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+}

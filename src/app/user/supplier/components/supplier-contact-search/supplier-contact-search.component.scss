@@ -1,0 +1,39 @@
+@import 'function';
+@import 'function';
+
+trudi-form-control trudi-text-field ::ng-deep .trudi-text-field-wrapper {
+  width: 320px;
+}
+
+.pls {
+  @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  z-index: 1001;
+}
+
+:host ::ng-deep {
+  dropdown-menu-contacts {
+    .container-dropdown {
+      height: fit-content !important;
+      background-color: var(--gray-50) !important;
+
+      .target-item-detail {
+        height: 40px !important;
+        border: none !important;
+
+        .text-agent-detail {
+          .title {
+            font-weight: 500 !important;
+            color: var(--gray-600) !important;
+          }
+        }
+      }
+    }
+  }
+}

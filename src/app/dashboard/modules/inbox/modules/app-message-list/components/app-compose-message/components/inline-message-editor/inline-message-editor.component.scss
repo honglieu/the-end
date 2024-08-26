@@ -1,0 +1,53 @@
+@import 'function';
+
+:host {
+  ::ng-deep {
+    editor {
+      margin-bottom: 40px;
+      .tox .tox-tinymce .tox-tinymce--toolbar-sticky-off {
+        border-bottom: 1px solid var(--border-neutral-dark);
+      }
+    }
+    --toolbar-bottom-height: 50px;
+    --chat-reply-height: 28px;
+    .reply-gpt-alert {
+      border-radius: unset !important;
+    }
+    .editor-container {
+      display: flex !important;
+      flex-direction: column !important;
+      .editor-area {
+        flex: 1;
+      }
+      .toolbar {
+        position: relative !important;
+
+        @media screen and (max-width: 1480px) {
+          .gap-8 {
+            gap: 6px;
+          }
+        }
+
+        @media screen and (max-width: 1440px) {
+          .btn-list .btn-group .divider {
+            margin: 0 2px !important;
+          }
+        }
+      }
+      .chat-gpt-generate {
+        .editor-area {
+          height: calc(100% - 78px) !important;
+        }
+        editor {
+          height: calc(100% - 0px) !important;
+        }
+      }
+
+      .toolbar.toolbar-on-bottom .btn-list .btn-group {
+        .divider-index-2 {
+          display: none !important;
+        }
+      }
+    }
+  }
+}

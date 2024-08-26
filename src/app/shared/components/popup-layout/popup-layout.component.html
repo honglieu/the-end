@@ -1,0 +1,58 @@
+<div class="layout-box">
+  <div class="box-header d-flex justify-content-between align-items-center">
+    <div class="leading">
+      <div
+        data-console="home-icon"
+        class="icon"
+        [style.background-color]="logoSvgSegmentId === '#home-rounded-icon'? 'var(--brand-500)' : 'none'">
+        <svg><use [attr.xlink:href]="logoSvgSegmentId" /></svg>
+      </div>
+    </div>
+    <div class="title" data-console="select-property-header">
+      {{headerText}}
+    </div>
+    <button
+      data-e2e="button-close"
+      class="close-modal-btn"
+      data-console="x-btn-select-property-hide"
+      (click)="onClose($event)">
+      <trudi-icon
+        [style]="{ 'width.px': 14, 'height.px': 14, color: '#646464' }"
+        icon="closeBtn"
+        class="trudi-icon"></trudi-icon>
+    </button>
+  </div>
+  <hr class="divider hr-top" />
+  <div class="box-body">
+    <ng-content></ng-content>
+  </div>
+  <hr *ngIf="dividerBottom" class="divider hr-bottom" />
+  <div class="box-footer">
+    <button
+      *ngIf="leftButtonText"
+      (click)="onCancel()"
+      type="button"
+      class="trudi-btn trudi-btn-large trudi-btn-tertiary d-flex align-items-center"
+      data-console="cancel-btn-hide"
+      [ngClass]="{'unclick': disabledLeftButton}"
+      ripple>
+      <span class="btn-text">{{leftButtonText}}</span>
+    </button>
+    <button
+      [disabled]="apiCalling"
+      (click)="onConfirm()"
+      type="button"
+      class="d-flex justify-content-center trudi-btn trudi-btn-large trudi-btn-primary"
+      data-console="confirm-btn-hide"
+      [ngClass]="{'unclick': disabledRightButton}"
+      ripple>
+      <span *ngIf="!apiCalling; else calling" class="btn-text"
+        >{{rightButtonText}}</span
+      >
+      <ng-template #calling>
+        <circle-loading-indicator
+          [btnLoadingStyle]="true"></circle-loading-indicator>
+      </ng-template>
+    </button>
+  </div>
+</div>

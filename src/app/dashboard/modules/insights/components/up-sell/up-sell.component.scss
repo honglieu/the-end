@@ -1,0 +1,76 @@
+@import 'function';
+
+:host {
+  .up-cell-wrapper {
+    background-image: url('/assets/images/overlay.png');
+    min-height: 100%;
+    min-width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  .confirm-request-body {
+    p {
+      margin: 0;
+      @include fontSetup(var(--fg-neutral-stronger), 16px, 24px, normal, 400);
+      &:nth-child(2) {
+        margin-top: 24px;
+      }
+    }
+  }
+}
+
+:host {
+  ::ng-deep .upsell-modal {
+    .modal-container {
+      left: 52px !important;
+      top: 52px !important;
+      .modal-popup-bk {
+        left: 52px !important;
+        top: 52px !important;
+      }
+    }
+
+    .up-sell-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 32px;
+
+      .up-sell-img {
+        width: 240px;
+        height: 240px;
+        display: block;
+        border: none;
+      }
+      .up-sell-title {
+        text-align: center;
+        @include fontSetup(var(--fg-neutral-stronger), 20px, 32px, normal, 600);
+      }
+      .up-sell-summary {
+        width: 100%;
+        @include fontSetup(var(--fg-neutral-stronger), 16px, 24px, normal, 500);
+
+        .benefit-list {
+          padding: 0 0 0 15px;
+          margin: 32px 0;
+        }
+      }
+      .up-sell-button {
+        margin-top: 16px;
+        width: 100%;
+        min-height: 48px;
+      }
+    }
+
+    #modal-popup-wrapper {
+      z-index: 100 !important;
+    }
+
+    .modal-window {
+      padding: 0 !important;
+    }
+  }
+}

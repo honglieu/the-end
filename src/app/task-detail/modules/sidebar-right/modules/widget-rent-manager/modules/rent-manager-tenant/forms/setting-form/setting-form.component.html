@@ -1,0 +1,271 @@
+<div [formGroup]="settingForm">
+  <ng-container *ngIf="isLoading else hasContent">
+    <div class="setting-form-wrapper">
+      <div class="setting-title cursor-default">
+        <nz-skeleton
+          [nzParagraph]="{ rows: 1 }"
+          [style.width.px]="85"
+          [nzTitle]="false"
+          [nzActive]="true"></nz-skeleton>
+      </div>
+      <div class="form-row d-flex gap-20">
+        <div class="setting-form-group w-50">
+          <span class="setting-form-group_title">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 1 }"
+              [style.width.px]="75"
+              [nzTitle]="false"
+              [nzActive]="true"></nz-skeleton>
+          </span>
+          <div class="setting-form-group_select">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 1 }"
+              [style.width.px]="140"
+              class="skeleton-item"
+              [nzTitle]="false"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </div>
+        <div class="setting-form-group w-50">
+          <span class="setting-form-group_title">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 1 }"
+              [style.width.px]="75"
+              [nzTitle]="false"
+              [nzActive]="true"></nz-skeleton>
+          </span>
+          <div class="setting-form-group_select">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 1 }"
+              [style.width.px]="140"
+              class="skeleton-item"
+              [nzTitle]="false"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </div>
+        <div class="setting-form-group w-50">
+          <span class="setting-form-group_title">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 1 }"
+              [style.width.px]="75"
+              [nzTitle]="false"
+              [nzActive]="true"></nz-skeleton>
+          </span>
+          <div class="setting-form-group_select">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 1 }"
+              [style.width.px]="140"
+              class="skeleton-item"
+              [nzTitle]="false"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </div>
+      </div>
+      <div class="form-row d-flex gap-20 mt-16">
+        <div class="setting-form-group w-100">
+          <span class="setting-form-group_title">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 1 }"
+              [style.width.px]="75"
+              [nzTitle]="false"
+              [nzActive]="true"></nz-skeleton>
+          </span>
+          <div class="setting-form-group_select">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 1 }"
+              [style.width.px]="470"
+              class="skeleton-item"
+              [nzTitle]="false"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </div>
+      </div>
+      <div class="setting-form-group mt-16">
+        <div class="setting-form-group_select">
+          <trudi-form-control>
+            <trudi-checkbox-group>
+              <ng-container>
+                <div class="row-checkbox d-flex w-100">
+                  <div class="col-6 w-50" *ngFor="let _ of [].constructor(4);">
+                    <div class="d-flex">
+                      <nz-skeleton
+                        [nzParagraph]="{ rows: 1 }"
+                        [style.width.px]="25"
+                        [nzTitle]="false"
+                        [nzActive]="true"></nz-skeleton>
+                      <nz-skeleton
+                        [nzParagraph]="{ rows: 1 }"
+                        [style.width.px]="200"
+                        [nzTitle]="false"
+                        [nzActive]="true"></nz-skeleton>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </trudi-checkbox-group>
+          </trudi-form-control>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #hasContent>
+    <div class="setting-form-wrapper">
+      <div class="setting-title cursor-default">Settings</div>
+      <div class="form-row d-flex gap-20">
+        <div class="setting-form-group w-50">
+          <span class="setting-form-group_title"> Rent period (required) </span>
+          <div class="setting-form-group_select">
+            <trudi-form-control>
+              <trudi-single-select
+                [items]="listRent"
+                class="rent-select"
+                bindLabel="label"
+                bindValue="value"
+                [clearable]="true"
+                [virtualScroll]="true"
+                (triggerEventChange)="handleChangeRentPeriod($event)"
+                formControlName="rentPeriod">
+              </trudi-single-select>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div
+          *ngIf="(rentPeriodControl.value && rentPeriodControl.value !== frequencyRental.DAILY)"
+          class="setting-form-group w-50">
+          <span class="setting-form-group_title"> Due day (required) </span>
+          <div class="setting-form-group_select">
+            <trudi-form-control
+              [control]="rentDueDayControl"
+              [checkSubmit]="!isSubmitted">
+              <ng-container [ngSwitch]="rentPeriodControl.value">
+                <trudi-number-field
+                  *ngSwitchCase="frequencyRental.MONTHLY"
+                  [checkSubmit]="!isSubmitted"
+                  formControlName="rentDueDay"
+                  size="large"
+                  [maxCharacter]="3">
+                </trudi-number-field>
+                <trudi-single-select
+                  *ngSwitchCase="frequencyRental.WEEKLY"
+                  [items]="listWeekly"
+                  bindLabel="label"
+                  bindValue="value"
+                  formControlName="rentDueDay">
+                </trudi-single-select>
+              </ng-container>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div class="setting-form-group w-50">
+          <span class="setting-form-group_title"> Tax type ID </span>
+          <div class="setting-form-group_select">
+            <trudi-form-control>
+              <trudi-single-select
+                [items]="taxTypeList"
+                bindLabel="label"
+                bindValue="value"
+                formControlName="taxTypeID">
+              </trudi-single-select>
+            </trudi-form-control>
+          </div>
+        </div>
+      </div>
+      <div class="form-row d-flex gap-20 mt-16">
+        <div class="setting-form-group w-100">
+          <span class="setting-form-group_title"> Subsidies </span>
+          <div class="setting-form-group_select">
+            <trudi-form-control>
+              <trudi-multi-select
+                [items]="subsidiesList"
+                class="subsidies-select"
+                bindValue="value"
+                bindLabel="label"
+                formControlName="subsidies"
+                [totalOptions]="subsidiesList.length"
+                #select>
+                <ng-template
+                  trudi-label-tmp
+                  let-items="items"
+                  let-clear="clear">
+                  <div class="ng-value" *ngFor="let item of items">
+                    <div
+                      class="d-flex gap-4 align-items-center trudi-label-wrapper border-rad-8">
+                      <div class="trudi-select-label">{{item.label}}</div>
+                      <div
+                        class="close-wrapper"
+                        nz-tooltip
+                        nzTooltipPlacement="top"
+                        [nzTooltipTitle]="item.disabled ? titleTooltipRemoved : ''"
+                        (click)="!item?.disabled && !isProgressStatus && clear(item)">
+                        <trudi-icon
+                          class="cursor-pointer"
+                          [ngClass]="{'cursor-not-allowed': item?.disabled || isProgressStatus}"
+                          [icon]="item?.disabled ? 'closeDisabled' : 'closeSmall'"
+                          [style]="{ 'width.px': 12, 'height.px': 12 }"></trudi-icon>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+                <ng-template
+                  trudi-option-tmp
+                  let-item="item"
+                  let-searchTerm="searchTerm"
+                  let-item$="item$">
+                  <div
+                    class="d-flex justify-content-between align-items-center w-100 pd-12">
+                    <div class="d-flex flex-dir-column gap-4 text-ellipsis">
+                      <span
+                        [ngOptionHighlight]="searchTerm ? searchTerm : ''"
+                        class="sendTo-label text-ellipsis"
+                        >{{item.label}}</span
+                      >
+                    </div>
+                    <div
+                      class="d-flex align-items-center"
+                      nz-tooltip
+                      nzTooltipPlacement="topRight"
+                      nzTooltipOverlayClassName="tooltip-checkbox-subsidies-deposit"
+                      [nzTooltipTitle]="item.disabled ? titleTooltipRemoved : ''">
+                      <trudi-checkbox
+                        [disabled]="item.disabled"
+                        [ngModel]="item$.selected"
+                        [ngModelOptions]="{standalone: true}"></trudi-checkbox>
+                    </div>
+                  </div>
+                </ng-template>
+              </trudi-multi-select>
+            </trudi-form-control>
+          </div>
+        </div>
+      </div>
+      <div class="setting-form-group mt-16">
+        <div class="setting-form-group_select">
+          <trudi-form-control>
+            <trudi-checkbox-group>
+              <ng-container>
+                <div class="row-checkbox d-flex w-100">
+                  <div
+                    class="col-6 w-50 d-flex gap-4"
+                    *ngFor="let item of settingCheckbox">
+                    <trudi-checkbox
+                      class="setting-checkbox"
+                      [formControlName]="item.formControlName"
+                      [stringValue]="item.id"></trudi-checkbox>
+                    <div>
+                      <span
+                        class="cursor-pointer"
+                        [class.cursor-not-allowed]="isProgressStatus"
+                        (click)="!isProgressStatus && handleClickLabel(item.formControlName)"
+                        >{{item.title}}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </trudi-checkbox-group>
+          </trudi-form-control>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

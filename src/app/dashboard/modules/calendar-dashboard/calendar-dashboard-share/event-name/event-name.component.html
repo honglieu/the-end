@@ -1,0 +1,27 @@
+<div
+  *ngIf="currentRowData?.eventName"
+  class="name-wrapper d-flex align-items-center gap-4">
+  <div
+    [innerHTML]="currentRowData?.eventName | titleCasePipe | highlight: searchText"
+    class="name-text text-ellipsis"
+    [ngClass]="{'event-cancelled': isEventCancelled || isEventClosed}"></div>
+  @if(currentRowData?.ptStatus) {
+  <div class="event-cancelled-label">
+    <trudi-badge
+      [text]="currentRowData.ptStatus | uppercaseFirstLetter"
+      [variant]="(isEventCancelled || isEventClosed) ? 'error' : 'primary'"
+      badgeType="tonal"
+      size="small">
+    </trudi-badge>
+  </div>
+  } @else {
+  <div *ngIf="isEventCancelled || isEventClosed" class="event-cancelled-label">
+    <trudi-badge
+      [text]="currentRowData?.eventStatus | uppercaseFirstLetter"
+      variant="error"
+      badgeType="tonal"
+      size="small">
+    </trudi-badge>
+  </div>
+  }
+</div>

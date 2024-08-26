@@ -1,0 +1,119 @@
+<button
+  trudi-btn
+  size="extra-small"
+  variant="neutral"
+  class="assigned-agent-container"
+  data-console="assignee-button"
+  [ngClass]="{'avatar-mode': titleMode === 'avatar', 'avatar-mode-custom': titleMode === 'avatar' && isCustom}"
+  [disabled]="(inboxService.isArchiveMailbox$ | async)"
+  (click)="onShowPopupAssign($event)"
+  nz-dropdown
+  [nzDropdownMenu]="menu"
+  [nzVisible]="visibleDropdown"
+  [nzTrigger]="!isReadOnly ? 'click' : null"
+  [nzClickHide]="false"
+  [nzPlacement]="assignBoxPlacement"
+  [nzBackdrop]="true"
+  (nzVisibleChange)="onDropdownMenuVisibleChange($event)">
+  <ng-container *ngIf="task?.assignToAgents?.length; else hasNoAvatar">
+    <div
+      class="cursor-pointer assigned-agent d-flex align-items-center target-person-detail"
+      [ngClass]="{'active': popoverName === POPOVER_NAME &&
+      assignAttachBoxState &&
+      task?.id === (taskService?.activeTaskAssignId$ | async)  }"
+      trudi-tooltip
+      [nzTooltipTitle]="isShowTooltip && tooltipTemplate"
+      [nzTooltipOverlayClassName]="'tooltip-assigned-agent'"
+      nzTooltipPlacement="bottom">
+      <ng-container *ngFor="let agent of displayAssignedAgents; index as i">
+        <div
+          *ngIf="agent.id && !isCustom"
+          class="td-icon-circle-btn cursor-pointer item-avatar">
+          <avatar-button
+            [size]="titleMode === 'button' ? 16 : avatarSize"
+            [avatar]="agent.googleAvatar"
+            [user]="agent"
+            [agencyId]="agent.id"
+            [placement]="currentTaskId ? 'bottom' : 'top'"></avatar-button>
+        </div>
+        <div
+          *ngIf="agent.id && isCustom"
+          class="td-icon-circle-btn cursor-pointer item-avatar item-avatar-custom"
+          [class.item-avatar-custom-trudi]="agent.id === trudiUserId"
+          [style.z-index]="i">
+          <avatar-button
+            [size]="avatarSize"
+            [avatar]="agent.googleAvatar"
+            [user]="agent"
+            [agencyId]="agent.id"
+            [placement]="currentTaskId ? 'bottom' : 'top'"></avatar-button>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="!isAssigning && nonDisplayAssignedAgents.length">
+        <div
+          class="item-avatar remaining-item round-icon cursor-pointer"
+          [class.rounded-corner]="nonDisplayAssignedAgents.length > 9"
+          [style.z-index]="displayAssignedAgents?.length">
+          <label class="cursor-pointer"
+            >+{{nonDisplayAssignedAgents.length}}</label
+          >
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="isAssigning">
+        <nz-skeleton-element
+          nzType="avatar"
+          [nzActive]="true"
+          [nzSize]="'small'"
+          nzShape="circle"
+          class="assigned-number-skeleton"
+          [class.custom]="isCustom">
+        </nz-skeleton-element>
+      </ng-container>
+    </div>
+  </ng-container>
+  <ng-template #hasNoAvatar>
+    <ng-container>
+      <div
+        class="target-person-assignEl cursor-pointer d-flex align-items-center gap-4"
+        [ngClass]="{'active': popoverName === POPOVER_NAME &&
+      assignAttachBoxState &&
+      task?.id === (taskService?.activeTaskAssignId$ | async)}">
+        <div class="info white-space-nowrap">Assign to</div>
+        <trudi-icon
+          class="size-16"
+          viewBox="auto"
+          icon="iconPlusSuccess"></trudi-icon>
+      </div>
+    </ng-container>
+  </ng-template>
+</button>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div focusElement [isFocus]="visibleDropdown" tabindex="0" nz-menu>
+    <assign-attach-box
+      #assignAttachBox
+      *ngIf="
+        popoverName === POPOVER_NAME &&
+        assignAttachBoxState &&
+        task?.id === activeTaskAssignId$
+      "
+      [selectingUserIds]="selectingUserIdListInTask"
+      [propertyId]="propertyId"
+      [showTrudiAgent]="showTrudiAgent"
+      (itemsSelected)="onItemsSelected($event)"></assign-attach-box>
+  </div>
+</nz-dropdown-menu>
+
+<ng-template #tooltipTemplate let-thing>
+  <div class="non-display-agents-box">
+    <div class="non-display-agents-content">
+      <ng-container *ngFor="let agent of task?.assignToAgents; index as i">
+        <div class="non-display-agents-item text-ellipsis">
+          {{agent.fullName || (agent.firstName + ' ' + agent.lastName)}}
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>

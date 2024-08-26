@@ -1,0 +1,27 @@
+<div class="confirm-wrapper">
+  <div class="header">
+    <div class="warning-icon">
+      <img src="/assets/icon/close_red.svg" />
+    </div>
+    <div class="confirm-text">
+      <p class="bold-text">Activate {{nameOfUser}} ?</p>
+      <p class="grey-text">What happens when an account is activated?</p>
+    </div>
+  </div>
+  <div class="btn-wrapper">
+    <button
+      data-e2e="button-cancel"
+      type="button"
+      class="go-back-btn"
+      (click)="isOpenModal(false)">
+      <span class="btn-text"> Cancel </span>
+    </button>
+    <button
+      data-e2e="button-active"
+      type="button"
+      class="confirm-btn"
+      (click)="isActivate()">
+      <span class="btn-text"> Active </span>
+    </button>
+  </div>
+</div>

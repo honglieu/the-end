@@ -1,0 +1,131 @@
+<div #historyItem class="invoice-history-wrapper">
+  <div class="invoice-item">
+    <div class="invoice-item-content">
+      <div>{{invoiceHistoryData?.created | formatCharectorDate | async}}</div>
+      <div>Monthly subscription</div>
+      <div>
+        {{invoiceHistoryData?.fee?.total | currency:'USD':true:'1.2-2'}}
+      </div>
+      <div>
+        <trudi-badge
+          [text]="invoiceHistoryData?.status | titleCasePipe"
+          [variant]="STATUS_OF_INVOICE[invoiceHistoryData?.status]"></trudi-badge>
+      </div>
+      <button
+        *ngIf="!!invoiceHistoryData?.invoice_pdf && invoiceHistoryData?.status !== EInvoiceHistoryStatus.UNCOLLECTIBLE"
+        (click)="downloadInvoiceFile()"
+        class="download-icon"
+        nz-tooltip
+        nzTooltipTitle="Download invoice PDF"
+        nzTooltipPlacement="top">
+        <trudi-icon
+          [style]="{'width.px': 32, 'height.px': 32}"
+          icon="download"></trudi-icon>
+      </button>
+    </div>
+    <div class="invoice-item-dropdown">
+      <trudi-collapse-widget
+        [titleHeader]="headerSummary"
+        [activeExpand]="invoiceHistoryData?.expanded"
+        (activeChange)="toggleDropdown.emit(historyItemRef.nativeElement.offsetTop)">
+        <div class="invoice-table-wrapper">
+          <billing-table
+            *ngIf="dataSetupFee?.length > 0"
+            rowLimit="999"
+            tableTitle="Charges and fees"
+            [isCoupon]="true"
+            [hiddenQuantitySymbol]="true"
+            [showMoreBtn]="false"
+            [billingTableData]="dataSetupFee">
+          </billing-table>
+          <ng-container *ngIf="isFirstMonth; else secondsMonth">
+            <billing-table
+              *ngIf="invoicePropertyCount?.currentMonth > 0"
+              rowLimit="1"
+              tableTitle="You started the month having pre-paid for {{invoicePropertyCount?.currentMonth}} {{ invoicePropertyCount?.currentMonth > 1 ? 'properties' : 'property' }}"
+              [hiddenQuantitySymbol]="true"
+              [showMoreBtn]="false"
+              [billingTableData]="nextMonthInvoiceHistory">
+            </billing-table>
+          </ng-container>
+          <ng-template #secondsMonth>
+            <billing-table
+              [rowLimit]="rowLimit"
+              [tableTitle]="currentInvoiceHistoryTitle"
+              [isTrial]="this.invoiceHistoryData?.isNextMonthAfterTrail"
+              [showMoreBtn]="currentInvoiceHistory?.length > rowLimit"
+              [billingTableData]="currentInvoiceHistory"
+              (showMoreItem)="rowLimit = currentInvoiceHistory.length">
+            </billing-table>
+            <billing-table
+              *ngIf="invoicePropertyCount?.currentMonth > 0"
+              rowLimit="1"
+              tableTitle="You pre-paid for {{invoicePropertyCount?.currentMonth}} {{ invoicePropertyCount?.currentMonth > 1 ? 'properties' : 'property' }} for the following month"
+              [hiddenQuantitySymbol]="true"
+              [showMoreBtn]="false"
+              [billingTableData]="nextMonthInvoiceHistory">
+            </billing-table>
+          </ng-template>
+          <div *ngIf="currentInvoiceHistory.length > 0" class="mt-20"></div>
+
+          <div class="invoice-footer mt-20">
+            <div class="d-flex align-items-center gap-40">
+              <div class="invoice-gst d-flex align-items-center">
+                <span> {{invoiceHistoryData?.taxSettings?.displayName}}</span>
+                <span
+                  *ngIf="invoiceHistoryData?.taxSettings?.taxType === TAX_TYPE.SALES_TAX">
+                  - {{invoiceHistoryData?.taxSettings?.jurisdiction}}</span
+                >
+              </div>
+              <span class="invoice-cost">
+                {{invoiceHistoryData.tax | currency:'USD':true:'1.2-2'}}
+              </span>
+            </div>
+            <div
+              class="d-flex align-items-center gap-40"
+              *ngIf="!!invoiceHistoryData.coupon">
+              <div class="invoice-gst d-flex align-items-center">
+                <span class="coupon-name"
+                  >{{invoiceHistoryData?.coupon?.name}} ({{
+                  invoiceHistoryData?.coupon?.unit === '$' ?
+                  (invoiceHistoryData?.coupon?.value | currency: 'USD' : true
+                  :'1.2-2') : invoiceHistoryData?.coupon?.percent + '%' }}
+                  off)</span
+                >
+              </div>
+              <span
+                class="invoice-cost"
+                *ngIf="+invoiceHistoryData.fee.total > 0 && !!invoiceHistoryData.coupon; else noneValue">
+                -{{invoiceHistoryData?.coupon?.value |
+                currency:'USD':true:'1.2-2'}}
+              </span>
+            </div>
+            <div class="d-flex align-items-center gap-40">
+              <div class="invoice-fee">TRANSACTION FEES</div>
+              <span class="invoice-cost"
+                >{{invoiceHistoryData?.fee?.fee |
+                currency:'USD':true:'1.2-2'}}</span
+              >
+            </div>
+            <div class="d-flex align-items-center gap-40">
+              <div class="invoice-total">TOTAL</div>
+              <span class="invoice-cost invoice-total text-ellipsis"
+                >{{invoiceHistoryData?.fee?.total |
+                currency:'USD':true:'1.2-2'}}</span
+              >
+            </div>
+          </div>
+        </div>
+      </trudi-collapse-widget>
+    </div>
+  </div>
+</div>
+
+<ng-template #headerSummary>
+  <div class="box-detail-header-title" data-e2e="details-title">
+    Cost breakdown
+  </div>
+</ng-template>
+<ng-template #noneValue>
+  <span class="invoice-cost">{{ '0' | currency:'USD':true:'1.2-2' }} </span>
+</ng-template>

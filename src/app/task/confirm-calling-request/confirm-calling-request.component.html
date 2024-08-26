@@ -1,0 +1,51 @@
+<div class="invite-wrapper">
+  <div class="header">
+    <div class="detail-invite">
+      <div class="send-invite-icon">
+        <img
+          [src]="typeOfCall  === 'videoCall' ? videoCallIcon : phoneCallIcon" />
+      </div>
+      <div class="send-invite-text">
+        <ng-container *ngIf="showListNumber; else default">
+          <p class="numbers-sent">Which number do you want to call?</p>
+        </ng-container>
+        <ng-template #default>
+          <p>Start {{callType}} Call</p>
+          <div class="number-sent">Call to {{callTo}}</div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="showListNumber">
+    <div class="list-phone">
+      <ng-container *ngFor="let phone of listPhoneNumber">
+        <div
+          class="phone-radio d-flex align-items-center cursor-pointer"
+          (click)="selectPhone(phone)">
+          <img
+            class="size-20"
+            [src]="selectedPhone === phone ? checkBoxImg.ownershipCheck : checkBoxImg.uncheck" />
+          <p>{{phone | phoneNumberFormat}}</p>
+        </div>
+        <hr />
+      </ng-container>
+    </div>
+  </ng-container>
+
+  <div class="btn-wrapper d-flex">
+    <button
+      data-e2e="button-cancel"
+      class="trudi-btn trudi-btn-large trudi-btn-tertiary"
+      (click)="closeModal(true)">
+      Cancel
+    </button>
+    <button
+      data-e2e="button-confirm"
+      [disabled]="showListNumber ? !selectedPhone : false || isConsole"
+      trudi-btn
+      (click)="startToCall()">
+      Call now
+    </button>
+  </div>
+</div>

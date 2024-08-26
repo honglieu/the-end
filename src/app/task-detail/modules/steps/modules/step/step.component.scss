@@ -1,0 +1,80 @@
+@import 'function';
+
+::ng-deep {
+  .none-section {
+    .step {
+      ::ng-deep .trudi-step .trudi-step-container {
+        &::after {
+          content: '';
+          position: absolute;
+          background-color: var(--line-color, var(--gray-200)) !important;
+          width: 1px !important;
+          height: 100%;
+          top: 0px !important;
+          left: 19.5px !important;
+        }
+      }
+    }
+
+    &:last-child {
+      ::ng-deep .trudi-step .trudi-step-container {
+        &::after {
+          content: none;
+        }
+      }
+    }
+
+    &:has(+ .trudi-section) {
+      .step {
+        ::ng-deep .trudi-step .trudi-step-container {
+          &::after {
+            content: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+:host {
+  &.first {
+    --workflow-line-top: calc(50% + 12px);
+    --workflow-line-height: calc(50% - 12px);
+  }
+  &.last {
+    --workflow-line-top: 0px;
+    --workflow-line-height: calc(50% - 12px);
+  }
+}
+
+.has-process-line .step {
+  ::ng-deep .trudi-step {
+    .trudi-step-container {
+      &:after {
+        content: '';
+        position: absolute;
+        background-color: var(--line-color, var(--gray-200)) !important;
+        width: 1px !important;
+        height: var(--workflow-line-height, 100%);
+        top: var(--workflow-line-top, 0px) !important;
+        left: 19.5px !important;
+      }
+    }
+  }
+}
+
+.none-section .step {
+  ::ng-deep .trudi-step {
+    .trudi-step-container {
+      &:after {
+        content: '';
+        position: absolute;
+        background-color: var(--line-color, var(--gray-200)) !important;
+        width: 1px !important;
+        height: var(--workflow-line-height, 0);
+        top: var(--workflow-line-top, 0px) !important;
+        left: 19.5px !important;
+      }
+    }
+  }
+}

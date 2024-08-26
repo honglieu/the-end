@@ -1,0 +1,28 @@
+@import 'function';
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-radius: 8px;
+  border: 1px solid var(--border-neutral-dark, #d8dcdf);
+  padding: 20px;
+  .chart-title {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      16px,
+      24px,
+      normal,
+      500
+    );
+  }
+  .chart-note {
+    font-style: italic !important;
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      14px,
+      20px,
+      normal,
+      400
+    );
+  }
+}

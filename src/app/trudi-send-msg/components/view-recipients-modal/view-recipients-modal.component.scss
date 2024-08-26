@@ -1,0 +1,98 @@
+@import 'function';
+
+::ng-deep
+  nz-modal-container.view-recipients-container
+  .ant-modal-content
+  .ant-modal-body {
+  height: 560px !important;
+  padding: 0;
+  .view-recipients-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    min-height: 450px;
+    .select-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      &__label {
+        //styleName: Text S/Regular;
+        font-family: Inter;
+        font-size: 12px;
+        font-weight: 400;
+        line-height: 16px;
+        letter-spacing: 0em;
+        text-align: left;
+        color: var(--fg-neutral-normal);
+      }
+    }
+    .recipient-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      .recipient-item {
+        padding-bottom: 12px;
+        &-content {
+          // border-radius: 4px;
+          display: flex;
+          gap: 4px;
+          justify-content: space-between;
+          .recipient-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            .recipient-name {
+              @include fontSetup(
+                var(--fg-neutral-strongest),
+                14px,
+                20px,
+                normal,
+                600
+              );
+              &.unidentified-contact {
+                color: var(--fg-danger);
+              }
+            }
+
+            .recipient-address {
+              display: flex;
+              align-items: center;
+              gap: 2px;
+              p {
+                @include fontSetup(
+                  var(--fg-neutral-normal),
+                  12px,
+                  16px,
+                  normal,
+                  400
+                );
+              }
+              &.no-property {
+                p {
+                  color: var(--gray-300);
+                  font-style: italic;
+                }
+                &::ng-deep trudi-icon svg-icon svg path {
+                  fill: var(--gray-300);
+                }
+              }
+            }
+          }
+        }
+        &:not(:last-child) {
+          border-bottom: 1px solid var(--border-neutral-dark);
+        }
+      }
+    }
+  }
+}
+
+::ng-deep ng-select.select-recipients .ng-select-container {
+  background: var(--gray-200);
+  padding: 12px !important;
+  border-radius: 8px !important;
+  max-height: 128px !important;
+  overflow-y: auto;
+  border: unset;
+  align-items: flex-start;
+}

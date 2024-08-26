@@ -1,0 +1,34 @@
+:host {
+  display: flex;
+  background-color: var(--bg-base);
+  height: 100%;
+  border-radius: 12px;
+}
+
+.events--page_container {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+
+  .events--page_sidebar {
+    width: 266px;
+    min-width: 266px;
+    border-right: 1px solid var(--gray-200);
+  }
+
+  .events--page_content {
+    flex-grow: 5;
+
+    .calendar-dashboard {
+      width: 100%;
+      height: 100%;
+      overflow-y: hidden;
+      display: flex;
+      flex-direction: column;
+
+      subscribe-to-calendar {
+        padding: 0 16px;
+      }
+    }
+  }
+}

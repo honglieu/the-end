@@ -1,0 +1,85 @@
+<integrations-pop-up></integrations-pop-up>
+<select-events-provider
+  [provider]="provider"
+  [config]="config"
+  [status]="status"
+  [userCalendarId]="userCalendarSettingId">
+</select-events-provider>
+
+<div class="integrations-wrapper d-flex flex-dir-column">
+  <div *ngIf="!this.isRmEnvironment">
+    <div
+      class="wrapper d-flex flex-dir-column align-items-center flex-1 gap-16"
+      *ngIf="!isLoading else skeleton">
+      <div
+        *ngFor="let integration of integrationsList; trackBy:trackById"
+        class="form-wrapper d-flex flex-dir-column gap-12">
+        <div class="wrap-title d-flex flex-dir-column gap-12">
+          <h2 class="integrations-title">{{integration.label}}</h2>
+        </div>
+        <div class="wrap-content d-flex flex-dir-column gap-12">
+          <ng-container>
+            <div *ngFor="let form of integration.items; trackBy:trackById">
+              <integration
+                (onReConnect)="connectAgain()"
+                (onDisconnect)="handleDisconnectCalendar()"
+                [label]="integration.label"
+                [item]="form"
+                [isShowConnected]="isShowConnected"></integration>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+  <subscribe-to-calendar class="h-100 d-flex flex-dir-column">
+  </subscribe-to-calendar>
+</div>
+
+<ng-template #skeleton>
+  <div class="d-flex flex-dir-column gap-16">
+    <ng-container *ngFor="let _ of [].constructor(2)">
+      <div class="skeleton-wrapper d-flex flex-dir-column">
+        <nz-skeleton
+          class="skeleton-label"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+
+        <div class="pd-16 skeleton-bg">
+          <div class="header d-flex justify-content-between">
+            <div class="header-left d-flex">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"
+                class="logo"></nz-skeleton>
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"
+                class="btn-setting"></nz-skeleton>
+            </div>
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="bagde"></nz-skeleton>
+          </div>
+
+          <!-- 
+          TODO: hide in TDI-9453
+          <nz-skeleton
+            class="content"
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+
+          <nz-skeleton
+            class="btn-connect"
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton> -->
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+
+<connect-calendar
+  [visible]="popupState === EPoupState.CONNECT_CALENDAR"
+  (onNext)="onNextCalendarProvider($event)"></connect-calendar>

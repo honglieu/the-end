@@ -1,0 +1,30 @@
+<div class="container-skeleton d-flex gap-8 mb-16">
+  <div class="avatar-skeleton">
+    <nz-skeleton-element
+      nzType="avatar"
+      [nzActive]="true"
+      class="skeleton-label">
+    </nz-skeleton-element>
+  </div>
+  <div class="rows">
+    <div class="first-row d-flex align-items-center">
+      <nz-skeleton
+        class="custom-skeleton-height"
+        [nzParagraph]="{ rows: 1,  width: [66] }"
+        [nzTitle]="false"
+        [nzActive]="true"></nz-skeleton>
+      <nz-skeleton
+        class="custom-skeleton-height"
+        [nzParagraph]="{ rows: 1,  width: [20] }"
+        [nzTitle]="false"
+        [nzActive]="true"></nz-skeleton>
+    </div>
+    <div class="second-row">
+      <nz-skeleton
+        class="custom-skeleton-height"
+        [nzParagraph]="{ rows: 1,  width: [167] }"
+        [nzTitle]="false"
+        [nzActive]="true"></nz-skeleton>
+    </div>
+  </div>
+</div>

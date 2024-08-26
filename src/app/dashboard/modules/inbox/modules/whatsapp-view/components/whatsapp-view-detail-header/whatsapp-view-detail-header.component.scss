@@ -1,0 +1,174 @@
+@import 'function';
+
+.detail-header {
+  background: var(--bg-base, #ffffff);
+  padding: 12px;
+  border-bottom: 1px solid var(--border-neutral-dark, #ececed);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  &-first-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    .contact-info {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      &:hover {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+      .username {
+        @include fontSetup(
+          var(--fg-neutral-stronger, #333741),
+          16px,
+          24px,
+          normal,
+          600
+        );
+      }
+      .contact-title {
+        @include fontSetup(
+          var(--fg-neutral-stronger, #333741),
+          16px,
+          24px,
+          normal,
+          600
+        );
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        .contact-title-wrapper {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          &:hover {
+            cursor: pointer;
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    .action-buttons {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: auto;
+    }
+  }
+
+  &-second-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .ant-skeleton-element .ant-skeleton-avatar-lg {
+      width: 24px !important;
+      height: 24px !important;
+    }
+    .ant-skeleton-header {
+      padding-right: 0 !important;
+    }
+    .property-address {
+      display: flex;
+      align-items: center;
+      gap: 4px !important;
+      @include fontSetup(
+        var(--fg-neutral-normal, #61646c),
+        14px,
+        20px,
+        normal,
+        500
+      );
+    }
+    .assignees {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      &.disabled {
+        opacity: 0.5;
+      }
+      .sync {
+        @include fontSetup(
+          var(--fg-neutral-normal, #61646c),
+          12px,
+          16px,
+          normal,
+          400
+        );
+        padding: 2px;
+        &-success {
+          color: var(--fg-neutral-normal, #61646c);
+        }
+        &-fail {
+          color: var(--fg-neutral-normal, #61646c);
+        }
+      }
+    }
+  }
+}
+
+.folder-option {
+  background: var(--white, #fff);
+  overflow: hidden;
+  border-radius: 8px;
+
+  .disabled {
+    cursor: not-allowed !important;
+    pointer-events: auto !important;
+    background-color: var(--gray-200);
+  }
+
+  .folder-option-item {
+    border: none;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    cursor: pointer;
+    @include fontSetup(
+      var(--fg-neutral-stronger, #333741),
+      14px,
+      20px,
+      normal,
+      500
+    );
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+
+      &:hover,
+      &:active {
+        background: none !important;
+        color: var(--gray-600) !important;
+      }
+    }
+    &:hover:not(.disabled) {
+      background-color: var(--bg-neutral-tonal-stronger);
+      color: var(--fg-neutral-normal);
+    }
+  }
+}
+
+.ant-dropdown:has(.folder-option) {
+  margin-bottom: -40px;
+}
+
+@media (max-width: 1440px) {
+  .action-buttons .button-text,
+  .contact-title .contact-title-role {
+    display: none !important;
+  }
+  .action-buttons button {
+    padding: 4px !important;
+    min-width: unset !important;
+  }
+}

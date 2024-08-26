@@ -1,0 +1,80 @@
+<trudi-modal
+  *ngIf="show"
+  [(visible)]="show"
+  [modelWidth]="624"
+  [subTitle]="''"
+  [title]="'Which PDF attachments would you like to send to the landlord?'"
+  [autoFocus]="null"
+  (onCancel)="isOpenModal(true)"
+  [showIconName]="false"
+  iconName="trudiAvt">
+  <div class="send-quote-landlord">
+    <div class="body">
+      <ng-container *ngIf="listQuoteSupplier?.length === 0; else notEmptyQuote">
+        <div data-e2e="no-attach-text" class="header-text">
+          No attachment found in this task
+        </div>
+        <hr class="hr-bottom" />
+      </ng-container>
+      <ng-template #notEmptyQuote>
+        <div
+          class="item d-flex align-items-center justify-content-between"
+          *ngFor="let item of listQuoteSupplier; let i = index">
+          <div class="d-flex align-items-center item-title">
+            <span class="pdf-item" [attr.data-e2e]="'pdf-item-'+i"
+              >{{item.title}}</span
+            >
+            <div
+              data-e2e="pdf-label"
+              class="cls-badge-success d-flex align-items-center">
+              PDF
+            </div>
+          </div>
+          <div class="sub-checkbox">
+            <input
+              type="checkbox"
+              id="cb-{{item.id}}"
+              class="d-none"
+              (change)="onCheckboxChange(item.id)" />
+            <label for="cb-{{item.id}}" class="checkbox-label cursor-pointer">
+              <ng-container>
+                <img
+                  [src]="item.checked ? '/assets/icon/ownership-check.svg' : '/assets/icon/select-people-uncheck.svg'"
+                  class="user-checkbox checkbox-head" />
+              </ng-container>
+            </label>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+    <div class="addition">
+      <div class="btn-wrapper" style="padding: 0">
+        <button
+          data-e2e="button-upload-file"
+          type="button"
+          class="add-file-btn-upload">
+          <span class="btn-text"> Upload File </span>
+        </button>
+      </div>
+    </div>
+    <ng-template #footerModal>
+      <div class="d-flex gap-16">
+        <button
+          data-e2e="button-back"
+          type="button"
+          class="trudi-btn trudi-btn-large trudi-btn-tertiary d-flex align-items-center"
+          *ngIf="listQuoteSupplier.length && isBack"
+          (click)="isOpenModal(false)">
+          <span class="btn-text">Back</span>
+        </button>
+        <button
+          type="button"
+          data-e2e="button-next"
+          class="trudi-btn trudi-btn-large trudi-btn-primary d-flex align-items-center"
+          (click)="openSendMessageModal(true)">
+          <span class="btn-text">Next</span>
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</trudi-modal>

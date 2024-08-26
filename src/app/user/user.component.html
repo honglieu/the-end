@@ -1,0 +1,52 @@
+<div class="contacts-wrapper">
+  <div class="contact-side-bar">
+    <sidebar-item-shared [listItem]="contactsTabs"></sidebar-item-shared>
+  </div>
+  <div class="contact-main">
+    <div class="header">
+      <div
+        class="search-wrapper"
+        *ngIf="router.url.includes('tenants-landlords') ||
+          router.url.includes('landlords-prospect') ||
+          router.url.includes('tenant-prospect')">
+        <trudi-form-control>
+          <trudi-text-field
+            #searchInput
+            size="large"
+            data-console="search-tenants-landlords"
+            iconLeft="iconSearch"
+            onFocus="this.placeholder = ''"
+            onBlur="this.placeholder = 'Search'"
+            placeholder="Search"
+            [clearable]="true"
+            [(ngModel)]="searchText"
+            (clear)="onCloseSearch()"
+            (keydown.enter)="onSearch($event);$event.target.blur();"
+            (focus)="onFocusOnSearch()"
+            (blur)="onFocusOutSearch($event)"></trudi-text-field>
+        </trudi-form-control>
+      </div>
+      <div *ngIf="router.url.includes('landlords-prospect')">
+        <dropdown-menu-contacts
+          [defaultListValues]="prevListCrmOwner"
+          [listItem]="crmStatusLandlordsProspect"
+          [label]="'CRM status'"
+          [type]="filterType.CRM"
+          [noResetListItem]="true"
+          (itemsSelected)="handleCrmLandlordProspectItemsSelected($event)"></dropdown-menu-contacts>
+      </div>
+      <div *ngIf="router.url.includes('tenant-prospect')">
+        <dropdown-menu-contacts
+          [defaultListValues]="prevListCrmTenant"
+          [listItem]="crmStatusTenantsProspect"
+          [label]="'CRM status'"
+          [type]="filterType.CRM"
+          [noResetListItem]="true"
+          (itemsSelected)="handleCrmTenantProspectItemsSelected($event)"></dropdown-menu-contacts>
+      </div>
+    </div>
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

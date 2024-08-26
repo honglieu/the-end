@@ -1,0 +1,40 @@
+@import 'function';
+.trudi-tag {
+  display: flex;
+  align-items: center;
+  padding: 7px;
+  border-radius: 8px;
+  width: fit-content;
+  column-gap: 4px;
+  border: solid 1px var(--gray-200);
+  background-color: var(--white);
+  cursor: pointer;
+
+  &-content {
+    @include fontSetup(var(--gray-600), 14px, 16px, normal, 500);
+  }
+
+  &-image {
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+  }
+
+  &.disabled .trudi-tag-content {
+    color: var(--gray-300);
+  }
+
+  &:hover {
+    background-color: var(--brand-100);
+  }
+
+  &:active {
+    background-color: var(--brand-200);
+  }
+
+  &.disabled {
+    background-color: var(--gray-200);
+    border: 1px solid var(--gray-200);
+    cursor: unset;
+  }
+}

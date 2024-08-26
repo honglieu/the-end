@@ -1,0 +1,47 @@
+@import 'function';
+
+.line-radius {
+  border-top-right-radius: 8px;
+  border-top-left-radius: 8px;
+}
+
+.header {
+  border: 1px solid var(--gray-200);
+  position: relative;
+  padding: 7px 0 7px 21px;
+  background-color: var(--gray-50);
+  overflow: hidden;
+  &.header-text {
+    @include fontSetup(var(--gray-600), 14px, 18px, normal, 600);
+  }
+  &.deleted {
+    opacity: 0.4;
+  }
+  .line {
+    display: flex;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 6px;
+    &-owner {
+      background-color: var(--brand-500);
+    }
+    &-tenant {
+      background-color: var(--tenant-500);
+    }
+    &.deleted {
+      opacity: 0.4;
+    }
+  }
+  .prop-status {
+    white-space: pre-wrap;
+    &.deleted {
+      color: var(--fg-neutral-weakest);
+    }
+  }
+}
+
+.childGroup {
+  border-top: none;
+}

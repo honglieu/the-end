@@ -1,0 +1,41 @@
+<trudi-modal [visible]="configs.visible" [closable]="false">
+  <ng-template #headerModal>
+    <div class="mailbox-activity-header d-flex align-items-center">
+      <div class="mailbox-activity-icon">
+        <trudi-icon [icon]="'propertyTree'"></trudi-icon>
+      </div>
+      <div class="mailbox-activity-header__title">{{configs.title}}</div>
+    </div>
+  </ng-template>
+  <div class="mailbox-activity-container">
+    <div class="mailbox-activity-title mb-20">{{configs.subTitle}}</div>
+
+    <div class="mailbox-activity-content" [formGroup]="form">
+      <div>
+        <div class="d-flex justify-content-between mb-8">
+          <span class="mailbox-activity-item_title"
+            >{{configs.saveResolveText}}</span
+          >
+          <trudi-switch
+            [index]="'saveResolveConversations'"
+            formControlName="autoSyncConversationsToPT">
+          </trudi-switch>
+        </div>
+        <trudi-single-select
+          [virtualScroll]="true"
+          [items]="listCategoryTaskActivity"
+          bindLabel="name"
+          [placeholder]="'Select category to save'"
+          bindValue="name"
+          formControlName="saveCategoryDocumentType"
+          [clearable]="true">
+        </trudi-single-select>
+      </div>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <button (click)="confirm()" trudi-btn [btnType]="'primary'">
+      {{configs.btnText}}
+    </button>
+  </ng-template>
+</trudi-modal>

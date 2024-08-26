@@ -1,0 +1,17 @@
+@import 'function';
+.rm-vacate-detail {
+  &-title {
+    @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 600);
+    width: 80px;
+  }
+
+  &-value {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      12px,
+      16px,
+      normal,
+      500
+    );
+  }
+}

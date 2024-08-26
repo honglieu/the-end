@@ -1,0 +1,22 @@
+<div [formGroup]="sendAttachmentForm" class="send-attachment-wrapper">
+  <div class="d-flex justify-content-between align-items-center label-wrapper">
+    <label class="send-attachment-label"> Pre-screen: Select attachment </label>
+    <div class="required-checkbox mb-4">
+      <trudi-checkbox formControlName="isRequired" label="Required">
+      </trudi-checkbox>
+    </div>
+  </div>
+  <div class="attachment-form">
+    <div class="w-100">
+      <trudi-form-control [checkSubmit]="!isSubmittedCommunicationForm">
+        <trudi-text-field
+          formControlName="attachmentName"
+          label="Attachment name"
+          placeholder="Enter attachment name"
+          [checkSubmit]="!isSubmittedCommunicationForm"
+          [maxCharacter]="75">
+        </trudi-text-field>
+      </trudi-form-control>
+    </div>
+  </div>
+</div>

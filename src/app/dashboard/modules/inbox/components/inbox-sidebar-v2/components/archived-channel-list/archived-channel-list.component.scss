@@ -1,0 +1,11 @@
+.list-archive-messenger {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 8px;
+  background-color: var(--white);
+
+  & ::ng-deep message-sidebar-item .ant-menu-inline {
+    opacity: 0.5;
+  }
+}

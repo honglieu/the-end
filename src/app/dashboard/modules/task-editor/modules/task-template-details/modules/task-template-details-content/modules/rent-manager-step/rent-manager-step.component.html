@@ -1,0 +1,37 @@
+<trudi-drawer
+  [(visible)]="showDrawer"
+  [enableBackBtn]="!editStep || isDisableForm"
+  [enableDeleteBtn]="editStep && !isDisableForm"
+  [enableOkBtn]="!isDisableForm"
+  [enableCancel]="!isDisableForm"
+  [okText]="editStep ? 'Update' : 'Add'"
+  [nzClosable]="true"
+  (onOk)="handleOk()"
+  (onBack)="handleBack()"
+  (onDelete)="handleDelete()"
+  (onCancel)="handleCancel()"
+  (onClose)="handleCancel()"
+  [headerTpl]="headerTpl">
+  <rent-manager-step-form
+    [editStep]="editStep"
+    [disabled]="isDisableForm"
+    [isShowUpgradeMessage]="canEdit && isDisableForm"></rent-manager-step-form>
+</trudi-drawer>
+
+<ng-template #headerTpl>
+  <div
+    [formGroup]="ptStepForm"
+    class="rm-step-header d-flex flex-dir-column gap-4">
+    <div class="header-badge" *ngIf="canEdit">
+      <trudi-badge text="Rent Manager action" size="small"></trudi-badge>
+      <div *ngIf="crmLogo" class="crm-logo">
+        <img [src]="crmLogo" alt="logo" />
+      </div>
+    </div>
+    <trudi-text-field
+      [disabled]="isDisableForm"
+      class="step-name-field"
+      formControlName="stepName"
+      placeholder="Add your step name here"></trudi-text-field>
+  </div>
+</ng-template>

@@ -1,0 +1,69 @@
+<div
+  class="three-dot-icon cursor-pointer"
+  nz-dropdown
+  nzTrigger="click"
+  [nzDropdownMenu]="fileActionMenu"
+  (nzVisibleChange)="fileActionMenuVisibleChange($event)"
+  nzPlacement="bottomRight">
+  <trudi-icon class="size-16" icon="greyThreeDot"></trudi-icon>
+</div>
+<nz-dropdown-menu #fileActionMenu="nzDropdownMenu">
+  <ul nz-menu class="menu-button">
+    <li
+      disableOpenSendMsgModal
+      nz-menu-item
+      PreventButton
+      (leftClick)="onForward(message.file)"
+      [appE2E]="'message-3-dots-forward-button'">
+      <div class="d-flex align-items-center gap-8 no-pointer-event">
+        <trudi-icon
+          [style]="{'width.px': 16, 'height.px': 16, 'color': '#3D3D3D'}"
+          class="size-16 no-pointer-event"
+          icon="moveToIcon"></trudi-icon>
+        <div class="dropdown-item-text no-pointer-event">Forward</div>
+      </div>
+    </li>
+    <li nz-menu-divider></li>
+    <li
+      nz-menu-item
+      (click)="filesService.downloadResource(message?.file?.mediaLink, message?.file?.name)">
+      <div class="d-flex align-items-center gap-8">
+        <trudi-icon
+          [style]="{'width.px': 16, 'height.px': 16, 'color': '#3D3D3D'}"
+          class="size-16"
+          icon="iconDownload"></trudi-icon>
+        <div class="dropdown-item-text">Download</div>
+      </div>
+    </li>
+    <li nz-menu-divider></li>
+    <li
+      nz-menu-item
+      trudi-tooltip
+      nzTooltipPlacement="bottom"
+      nzTooltipTitle="No property assigned"
+      [nzTooltipTrigger]="currentConversation?.isTemporaryProperty ? 'hover' : null"
+      class="message-file-menu-item"
+      (click)="handleSync(message.file)"
+      [class.disabled]="disableSync">
+      <div
+        *ngIf="(!isSyncing); else syncingButtonTemplate"
+        class="d-flex align-items-center gap-8">
+        <trudi-icon
+          [style]="{'width.px': 16, 'height.px': 16, 'color': '#3D3D3D'}"
+          class="size-16"
+          icon="iconSync"></trudi-icon>
+        <div class="dropdown-item-text">{{ syncText }}</div>
+      </div>
+
+      <ng-template #syncingButtonTemplate>
+        <div class="d-flex align-items-center gap-8">
+          <trudi-icon
+            [style]="{'width.px': 16, 'height.px': 16, 'color': '#3D3D3D'}"
+            class="size-16"
+            icon="syncSuccessPic"></trudi-icon>
+          <div class="dropdown-item-text">Syncing</div>
+        </div>
+      </ng-template>
+    </li>
+  </ul>
+</nz-dropdown-menu>

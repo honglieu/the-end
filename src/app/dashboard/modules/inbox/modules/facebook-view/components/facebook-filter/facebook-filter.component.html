@@ -1,0 +1,38 @@
+<div
+  class="facebook-filter"
+  [class.search-box-focused]="sharedMessageViewService.isSearchBoxFocused$ | async">
+  <div
+    class="facebook-filter__action"
+    [class.d-block]="(sharedMessageViewService.isSearchBoxFocused$ | async)">
+    <div class="w-100">
+      <inbox-filter
+        tabindex="-1"
+        [taskDetailViewMode]="EViewDetailMode.MESSAGE"></inbox-filter>
+    </div>
+    @if((sharedMessageViewService.isSearchBoxFocused$ | async) === false) {
+    <div class="facebook-filter__action--select">
+      @if(!isHidden && (sharedMessageViewService.isSearchBoxFocused$ | async)
+      === false && (inboxService.isAllFiltersDisabled$ | async) === false) {
+      <button trudi-btn variant="ghost" (click)="onChangeMode()">
+        {{isSelecting ? 'Cancel' : 'Select'}}
+      </button>
+      }
+    </div>
+    }
+  </div>
+  <div class="facebook-filter__navigation--container">
+    <div *rxFor="let item of listNavigate; trackBy: 'name'" nzMatchRouter>
+      <a
+        class="facebook-filter__navigation--container--none"
+        [ngClass]="{
+          'facebook-filter__navigation--container--active': currentQueryParam.status === item.queryParams.status
+        }"
+        (click)="onNavigate(item)">
+        <span>{{ item.name }}</span>
+        @if(item.unread) {
+        <trudi-icon [icon]="'redDotUnreadMessage'"> </trudi-icon>
+        }
+      </a>
+    </div>
+  </div>
+</div>

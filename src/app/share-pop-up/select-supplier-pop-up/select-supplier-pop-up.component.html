@@ -1,0 +1,77 @@
+<trudi-modal
+  *ngIf="showSelectSupplier"
+  [(visible)]="showSelectSupplier"
+  [modelWidth]="624"
+  [subTitle]="''"
+  [title]="title"
+  [autoFocus]="null"
+  (onCancel)="handleClosePopup()"
+  [showIconName]="false"
+  iconName="trudiAvt">
+  <div class="invite-wrapper">
+    <div [formGroup]="supplierForm">
+      <div class="supplier-tab">
+        <div class="search-box">
+          <ng-select
+            data-e2e="supplier-dropdown"
+            [items]="supplierListData"
+            [ngClass]="{'ng-error': supplierIds.invalid && (supplierIds.dirty || supplierIds.touched)}"
+            class="supplier-dropdown supplier-select"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Enter name or email address"
+            [multiple]="multiple"
+            [clearable]="false"
+            [searchable]="true"
+            [searchFn]="searchSupplier"
+            [notFoundText]="'No results found'"
+            formControlName="supplierIds"
+            (search)="resetValidate()"
+            (focus)="resetValidate()">
+            <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+              <div class="d-flex gap-4 align-items-center">
+                <span
+                  data-e2e="label"
+                  [ngOptionHighlight]="search ? search : ''"
+                  class="supplier-name-item"
+                  >{{item.label}}</span
+                >
+                <span
+                  [ngOptionHighlight]="search ? search : ''"
+                  class="supplier-email-item"
+                  >({{item.value.email}})</span
+                >
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div
+          *ngIf="supplierIds.invalid && (supplierIds.dirty || supplierIds.touched)"
+          class="validate-wrapper mt-6 d-flex items-center gap-4">
+          <trudi-icon
+            class="ng-select-alert alert-icon mt-4"
+            icon="iconWarningRedFit"></trudi-icon>
+          <span class="text-danger">Required field</span>
+        </div>
+      </div>
+    </div>
+    <ng-template #footerModal>
+      <div class="gap-16 d-flex">
+        <button
+          *ngIf="showBackBtn"
+          type="button"
+          class="trudi-btn trudi-btn-tertiary trudi-btn-large"
+          (click)="handleBack()">
+          Back
+        </button>
+        <button
+          type="button"
+          class="trudi-btn trudi-btn-primary trudi-btn-large"
+          (click)="handleConfirm()"
+          [disabled]="!supplierIds.value">
+          Next
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</trudi-modal>

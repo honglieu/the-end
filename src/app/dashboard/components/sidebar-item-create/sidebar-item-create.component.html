@@ -1,0 +1,71 @@
+<sidebar-item
+  tabindex="0"
+  nz-popover
+  [nzPopoverTrigger]="'click'"
+  nzPopoverPlacement="bottomRight"
+  [nzPopoverContent]="createMenu"
+  nzPopoverOverlayClassName="sidebar-popover"
+  [(nzPopoverVisible)]="isOpenCreateMenu"
+  (nzPopoverVisibleChange)="isOpenCreateMenu = $event"
+  hoverIconName="greyPlus"
+  titleName="create"
+  [iconName]="isOpenCreateMenu || isMouseOver ? 'iconPlus' : 'greyPlus'"
+  (mouseover)="isMouseOver = true"
+  (mouseleave)="isMouseOver = false"
+  dataE2e="nav-create-button"
+  (keydown.enter)="isOpenCreateMenu = !isOpenCreateMenu">
+</sidebar-item>
+
+<ng-template #createMenu>
+  <div
+    class="create-menu-wrapper"
+    cdkTrapFocus="true"
+    cdkTrapFocusAutoCapture="true"
+    aria-modal="true"
+    role="dropdown"
+    [@menuAnimation]>
+    <div>
+      <sidebar-item
+        [hasCustomClass]="true"
+        [attr.data-button-key]="EButtonTask.TASK_CREATE_MESSAGE"
+        [attr.data-button-type]="EButtonType.TASK"
+        (click-validation)="handleClickOpenMenuCreate(ESidebarPopup.CREATE_CONVERSATION)"
+        titleName="Email"
+        iconName="mailThin"
+        role="button"
+        tabindex="0"
+        cdkFocusRegionStart
+        cdkFocusInitial
+        #firstSidebar
+        dataE2e="nav-create-message-button"
+        mode="horizontal"></sidebar-item>
+    </div>
+    <sidebar-item
+      [attr.data-button-key]="EButtonTask.TASK_CREATE_TASK"
+      [attr.data-button-type]="EButtonType.TASK"
+      [hasCustomClass]="true"
+      (click-validation)="handleClickOpenMenuCreate(ESidebarPopup.CREATE_TASK)"
+      titleName="Task"
+      iconName="createTask"
+      role="button"
+      tabindex="0"
+      mode="horizontal"
+      dataE2e="nav-create-task-button"></sidebar-item>
+  </div>
+</ng-template>
+
+<ng-template cdkPortal>
+  <ng-container [ngSwitch]="activePopup">
+    <ng-template [ngSwitchCase]="(ESidebarPopup.CREATE_TASK)">
+      <create-new-task-pop-up
+        [taskNameList]="listTaskName"
+        [configs]="createNewTaskConfigs"
+        [openFrom]="TaskType.TASK"
+        (stopProcessCreateNewTask)="closeActivePopup()"></create-new-task-pop-up>
+    </ng-template>
+
+    <ng-template [ngSwitchCase]="(ESidebarPopup.MAIL_IMPORT)">
+      <email-import-pop-up (onQuit)="closeActivePopup()"></email-import-pop-up>
+    </ng-template>
+  </ng-container>
+</ng-template>

@@ -1,0 +1,56 @@
+::ng-deep .ant-modal.trudi-modal.modal-select-option {
+  .ant-modal-header {
+    border-radius: 16px 16px 0 0;
+  }
+  .ant-modal-body {
+    padding: 24px 28px 32px 28px;
+  }
+}
+
+.select_option--task {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.convert_task,
+.move_task{
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  width: 490px;
+  justify-content: space-between;
+  height: 92px;
+  border-radius: 8px;
+  border: 1px solid var(--border-neutral-dark, #d8dcdf);
+  background: var(--bg-base, #fff);
+
+  &:hover {
+    border: 1px solid var(--border-neutral-dark, #D8DCDF);
+    background: var(--bg-neutral-tonal-stronger, #D8DCDF);
+  }
+}
+.convert_task p,
+.move_task p {
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  color: var(--fg-neutral-stronger, #3D3D3D);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.convert_task span,
+.move_task span {
+  color: var(--fg-neutral-weaker, #999999);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.content_btn_task{
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}

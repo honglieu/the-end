@@ -1,0 +1,86 @@
+@import 'function';
+
+.tenancy-agreement-wrapper {
+  .body {
+    padding-bottom: 20px;
+
+    .dropzone {
+      position: relative;
+      border: 1px dashed var(--gray-600);
+      border-radius: 12px;
+      align-items: center;
+      padding: 20px 0;
+      @include fontSetup(var(--gray-500), 14px, 20px, normal, 400);
+      color: var(--gray-500);
+
+      img {
+        margin-bottom: 20px;
+        padding: 13px;
+        background-color: var(--gray-200);
+        border-radius: 50%;
+      }
+
+      .text-browse {
+        color: var(--brand-500);
+        font-weight: 600;
+      }
+
+      input {
+        position: absolute;
+        z-index: 2;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+      }
+    }
+    .warning {
+      @include fontSetup(var(--danger-500), 14px, 16px, normal, 400);
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px solid var(--danger-500);
+      border-radius: 12px;
+    }
+    .files {
+      max-height: 250px;
+      overflow-y: auto;
+      margin: 16px 0 24px;
+
+      .file-item {
+        position: relative;
+        width: 100%;
+        gap: 12px;
+        margin-bottom: 12px;
+        padding: 16px;
+        border: 1px solid rgba(32, 32, 32, 0.2);
+        border-radius: 12px;
+
+        &:last-of-type {
+          margin-bottom: 1px;
+        }
+
+        .file-type-icon {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+        }
+
+        .file-name {
+          max-width: 400px;
+          @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+        }
+
+        .file-size {
+          @include fontSetup(var(--gray-600), 14px, 20px, normal, 400);
+        }
+
+        .delete-btn {
+          position: absolute;
+          right: 16px;
+          top: 50%;
+          transform: translate(0, -50%);
+        }
+      }
+    }
+  }
+}

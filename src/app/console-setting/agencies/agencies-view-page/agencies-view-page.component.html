@@ -1,0 +1,212 @@
+<div class="general-wrapper">
+  <div class="header-wrapper">
+    <div class="header-left">
+      <trudi-text-field
+        [(ngModel)]="searchKeyWord"
+        [size]="'medium'"
+        iconLeft="iconSearch"
+        [placeholder]="'Search'"
+        [clearable]="true">
+      </trudi-text-field>
+      <header-filter-agency
+        (selectedEventFilter)="handleItemsSelected($event)"></header-filter-agency>
+    </div>
+    <div class="header-filter-wrapper header-right">
+      <button
+        trudi-btn
+        (click)="openPopupNewAgency()"
+        *ngIf="currentUser?.isAdministrator">
+        <div class="d-flex gap-8">
+          <trudi-icon icon="plusWhite"></trudi-icon>
+          <span>Add new company</span>
+        </div>
+      </button>
+    </div>
+  </div>
+  <div class="table-wrapper table-responsive">
+    <table
+      infiniteScroll
+      (scrolled)="appendData()"
+      [infiniteScrollContainer]="scrollContainer"
+      [fromRoot]="true">
+      <thead>
+        <tr>
+          <th class="name">Company name</th>
+          <th class="properties">Properties</th>
+          <th class="crm">CRM</th>
+          <th class="crm">CRM subscription</th>
+          <th class="plan">Plan</th>
+          <th class="tasks">Number of tasks</th>
+          <th class="subscription">Stripe subscription</th>
+          <th class="email">Incoming email</th>
+          <th class="email">Outgoing email</th>
+          <th class="voice-number">Voicemail number</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngIf="isLoading">
+          <tr *ngFor="let row of skeletonLoadingRowsNumber">
+            <td *ngFor="let column of skeletonLoadingColumsNumber">
+              <nz-skeleton
+                [nzActive]="true"
+                [nzRound]="true"
+                [nzParagraph]="false"></nz-skeleton>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container *ngIf="!isLoading">
+          <ng-template [ngIf]="agenciesList?.length > 0" [ngIfElse]="noResult">
+            <tr
+              *ngFor="let agency of agenciesList"
+              (click)="openPopupEditAgency(agency)"
+              class="cursor-pointer"
+              [class.active-row]="agency.id === selectedRowId"
+              [class.disabled-row]="!currentUser?.isAdministrator">
+              <td
+                class="name name-value"
+                [innerHTML]="agency.name | highlight: searchKeyWord"></td>
+              <td class="properties general-value">
+                {{agency?.countProperties}}
+              </td>
+              <td class="crm name-value white-space-nowrap">
+                {{ agency.crmSystemName }}
+                <br />
+                <span
+                  *ngIf="agency?.agencyURL"
+                  (click)="openURL(agency?.agencyURL); $event.stopPropagation()"
+                  class="url"
+                  [innerHTML]="agency?.agencyURL | highlight: searchKeyWord"
+                  nz-tooltip
+                  [nzTooltipTitle]="agency?.agencyURL ? agency.agencyURL : ''">
+                  {{ agency.agencyURL }}
+                </span>
+              </td>
+              <td class="crm-subscription">
+                <div *ngFor="let crmSubscription of agency.agencies">
+                  <div class="d-flex align-items-center wrapper-sub">
+                    <ng-container
+                      *ngIf="agency?.crmSystemName === propertyTree; else rentManager">
+                      <span
+                        class="subscription-name normal"
+                        [innerHTML]="crmSubscription?.ptAgencyName | highlight: searchKeyWord"
+                        nz-tooltip
+                        [nzTooltipTitle]="crmSubscription?.ptAgencyName ? crmSubscription.ptAgencyName : ''"
+                        >{{crmSubscription.ptAgencyName}}</span
+                      >
+                    </ng-container>
+                    <ng-template #rentManager>
+                      <span
+                        class="subscription-name hyper-link"
+                        (click)="openURL(crmSubscription?.agencyURL); $event.stopPropagation()"
+                        [innerHTML]="crmSubscription?.agencyURL | highlight: searchKeyWord"
+                        nz-tooltip
+                        [nzTooltipTitle]="crmSubscription?.agencyURL ? crmSubscription.agencyURL : ''">
+                        {{crmSubscription.agencyURL}}
+                      </span>
+                    </ng-template>
+                    <div
+                      class="properties-wrapper d-flex align-items-center justify-content-between">
+                      <trudi-icon
+                        class="icon-properties"
+                        icon="home4"></trudi-icon>
+                      <span class="total-properties"
+                        >{{crmSubscription.countProperties}}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </td>
+              <td class="name-value">
+                {{agency?.configPlans?.plan ?? agencyPlan.STARTER | titlecase}}
+              </td>
+              <td class="tasks">
+                <span
+                  nz-tooltip
+                  nzTooltipPlacement="top"
+                  [nzTooltipTitle]="agency?.taskNames?.length ? tooltipTemplate : null">
+                  {{ agency?.taskNames?.length ?? 0 }}
+                </span>
+                <ng-template #tooltipTemplate>
+                  <div class="task-template-region-tooltip">
+                    <div
+                      style="text-align: start"
+                      *ngFor="let taskTemplate of agency?.taskNames?.slice(0, 10)">
+                      {{taskTemplate.name}}
+                    </div>
+                    <div
+                      style="text-align: start"
+                      *ngIf="agency?.taskNames.length > 10">
+                      {{ ' +' + (agency?.taskNames.length - 10) + ' more' }}
+                    </div>
+                  </div>
+                </ng-template>
+              </td>
+              <td class="subscription add-on-wrapper">
+                <div class="badge-items d-flex flex-wrap gap-4">
+                  <trudi-badge
+                    *ngFor="let subscription of agency.subscriptions"
+                    nz-tooltip
+                    [allowTruncated]="true"
+                    [nzTooltipTitle]="subscription?.deleted ? 'Subscription removed in Stripe' : ''"
+                    [icon]="subscription?.deleted ? 'iconWarning' : ''"
+                    [text]="subscription.displayName"
+                    [variant]="subscription?.deleted ? 'error' : 'role'">
+                  </trudi-badge>
+                </div>
+              </td>
+              <td class="email">
+                <div class="d-flex mw-250 align-items-center action">
+                  <div
+                    class="general-value text-ellipsis"
+                    [nzTooltipTitle]="agency.incomingEmail"
+                    nz-tooltip
+                    [innerHTML]="agency.incomingEmail | highlight: searchKeyWord"></div>
+                  <div
+                    *ngIf="agency.incomingEmail"
+                    class="action-function ml-10"
+                    (click)="copyToClipboard(agency.incomingEmail); $event.stopPropagation()">
+                    <trudi-icon icon="iconCopy"></trudi-icon>
+                  </div>
+                </div>
+              </td>
+              <td class="email">
+                <div class="d-flex mw-250 align-items-center action">
+                  <div
+                    class="general-value text-ellipsis"
+                    [nzTooltipTitle]="agency.outgoingEmail"
+                    nz-tooltip
+                    [innerHTML]="agency.outgoingEmail | highlight: searchKeyWord"></div>
+                  <div
+                    *ngIf="agency.outgoingEmail"
+                    class="action-function ml-10"
+                    (click)="copyToClipboard(agency.outgoingEmail); $event.stopPropagation()">
+                    <trudi-icon icon="iconCopy"></trudi-icon>
+                  </div>
+                </div>
+              </td>
+              <td
+                class="voice-number general-value white-space-nowrap"
+                [innerHTML]="agency?.voiceMailPhoneNumber | phoneNumberFormat | highlight: searchKeyWord"></td>
+            </tr>
+          </ng-template>
+          <ng-template #noResult>
+            <tr>
+              <td colspan="8" class="no-result">
+                <div class="header-no-result">No results found</div>
+                <div class="content-no-result">
+                  You may want to try using different keywords, check for
+                  correct spelling or adjust your filters.
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>
+<new-edit-company
+  [isShowModal]="showNewEditModal"
+  [userId]="currentUser?.id"
+  (saveOrEdit)="onClosePopup($event)">
+</new-edit-company>

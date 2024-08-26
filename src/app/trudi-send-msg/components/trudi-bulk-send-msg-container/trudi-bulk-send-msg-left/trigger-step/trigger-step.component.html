@@ -1,0 +1,22 @@
+<div class="custom-trigger-step" #selectTask>
+  <trudi-single-select
+    groupBy="decision"
+    id="task-template-list"
+    data-e2e="select-task-dropdown"
+    bindValue="id"
+    bindLabel="name"
+    [placeholder]="'Select task step'"
+    [items]="listTaskStep"
+    [clearable]="true"
+    [virtualScroll]="true"
+    [labelTpl]="labelTpl"
+    notFoundText="No results found"
+    (triggerEventChange)="onTaskSelectChanged($event)">
+  </trudi-single-select>
+</div>
+<ng-template #labelTpl>
+  <div class="select-field-label">
+    <span> Trigger step from this task </span>
+    <span> (Optional)</span>
+  </div>
+</ng-template>

@@ -1,0 +1,13 @@
+@import 'function';
+.green-text {
+  @include fontSetup(var(--brand-500), 12px, 20px, normal, 500);
+}
+div {
+  @include fontSetup(
+    var(--fg-neutral-normal, #61646c),
+    12px,
+    16px,
+    normal,
+    500
+  );
+}

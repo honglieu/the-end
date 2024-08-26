@@ -1,0 +1,230 @@
+<div
+  #messageRow
+  (contextmenu)="onRightClick($event,menu)"
+  trudi-item
+  [tabIndex]="isChecked ? 0 : -1"
+  (shiftClickPressed)="onShiftClick($event)"
+  (ctrClickPressed)="onCtrClick()"
+  (itemClick)="navigateToMessageDetail()"
+  class="message-row-wrapper d-flex gap-8 w-100 cursor-pointer"
+  (downKeyPressed)="handleNavigateNextMessage()"
+  (upKeyPressed)="handleNavigatePreMessage()"
+  [ngClass]="{
+    'seen': isReadMsg,
+    'message-urgent': isUrgent,
+    'message-urgent-seen': isUrgent && isReadMsg,
+    'message-menu-displayed': isMenuDisplayed,
+    'message-selected': (isChecked || isFocused) && activeMsgList.length <= 1}
+  ">
+  <div
+    class="checkbox-wrapper"
+    *ngIf="!isConsole && (sharedMessageViewService.isSelectingMode$ | async)">
+    <trudi-checkbox
+      class="checkbox-frame"
+      [disabled]="isNotDetectedContact"
+      [(ngModel)]="isChecked"
+      (triggerEventClick)="onShiftClick($event)"
+      (ngModelChange)="handleChangeSelected($event)"></trudi-checkbox>
+  </div>
+  <div class="info-wrapper d-flex flex-dir-column gap-4">
+    <div class="d-flex align-items-center address-container">
+      <div class="address- w-100 d-flex gap-4 text-ellipsis align-items-center">
+        <trudi-icon
+          icon="iconAddress"
+          svgClass="size-16"
+          viewBox="auto"></trudi-icon>
+        @if (message.property.shortenStreetline || message.property.streetline)
+        {
+        <div
+          class="property-address text-ellipsis cursor-pointer"
+          [class.crossed]="message.propertyStatus && message.propertyStatus !== EPropertyStatus.active"
+          [innerHTML]="(message.property.shortenStreetline || message.property.streetline) | highlight: search"></div>
+        } @else {
+        <div class="property-address text-ellipsis cursor-pointer font-italic">
+          No property
+        </div>
+        }
+      </div>
+    </div>
+    <div class="participants-wrapper gap-4">
+      <div
+        class="participants-right d-flex align-items-center fit-content overflow-hidden">
+        <div
+          class="text-ellipsis"
+          trudi-tooltip
+          [hideWhenClick]="true"
+          [nzTooltipTitle]="userName"
+          [nzTooltipMouseEnterDelay]="tooltipEnterMouseDelay"
+          nzTooltipOverlayClassName="participants-tooltip-position participants-tooltip"
+          [nzTooltipPlacement]="tooltipPlacement">
+          <span [innerHTML]="userName | highlight: search"> </span>
+        </div>
+      </div>
+      <time #timeText class="ml-auto time">
+        {{ listOfConversations?.[0]?.messageDate | trudiDateTime | async }}
+      </time>
+    </div>
+    <div [ngClass]="{'m-0': isConsole}" class="quote-wrapper">
+      <div
+        class="d-flex align-items-center gap-4"
+        *ngFor="let item of listOfConversations">
+        @if (isUrgent) {
+        <trudi-badge
+          text="Urgent"
+          size="extra-small"
+          variant="error"
+          badgeType="filled"
+          [allowTruncated]="true"
+          [rounded]="true">
+        </trudi-badge>
+        }
+
+        <!-- AI control status -->
+        @if (!item?.isPmJoined) {
+        <div class="ai-control-text text-ellipsis">
+          {{ item?.isHasTicketSession ? EJoinConversationContent.AI_NEED_HUMAN :
+          EJoinConversationContent.AI_CONTROL }}
+        </div>
+        } @else {
+        <!-- Last message -->
+        <trudi-quote
+          [isDeliveryFail]="deliveryFailedMessageStorageService.getVisibleDeliveryFail(
+                item?.id
+              )"
+          [isConsole]="isConsole"
+          class="overflow-hidden"
+          [taskDetailViewMode]="EViewDetailMode.SMS_MESSAGE"
+          [conversationId]="item?.id"
+          [syncStatus]="item?.syncStatus || item?.conversationSyncDocumentStatus"
+          [isConversationOfMsg]="true"
+          [color]="item?.propertyType | lowercase"
+          [isRead]="isReadMsg"
+          [isLastMessageDraft]="isLastMessageDraft && !isConsole"
+          [searchText]="search"
+          [hightLightLastMsgUnseen]="!isReadMsg"
+          [content]="{
+              message: item?.summaryMessage,
+              dateTime: item?.messageDate,
+              attachmentCount: item?.attachmentCount
+              }">
+        </trudi-quote>
+        } @if(item?.countUnreadTicket) {
+        <div class="count-badge">
+          <trudi-badge
+            [text]="item?.countUnreadTicket |
+                      totalCountPipe: 99: true : '+'"
+            size="small"
+            variant="error"
+            badgeType="tonal">
+          </trudi-badge>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div nz-menu>
+    <div class="menu-wrapper menu-wrapper-message border-rad-8">
+      <div
+        (click)="!disabledAction && handleMenu(menuDropDown.unread ? EMessageMenuOption.UNREAD : EMessageMenuOption.READ)"
+        class="item d-flex align-items-center gap-8"
+        [appE2E]="menuDropDown.unread ? EDataE2EConversation.MARK_AS_UNREAD : EDataE2EConversation.MARK_AS_READ"
+        [ngClass]="{'disabled' : disabledAction}">
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          class="no-pointer-event"
+          [icon]="menuDropDown.unread ? 'unreadEmail' : 'markAsReadSms'"></trudi-icon>
+        <p class="text no-pointer-event">
+          {{menuDropDown.unread ? 'Mark as unread' : 'Mark as read'}}
+        </p>
+      </div>
+      <div
+        *ngIf="menuDropDown.resolve"
+        (click)="!isLoading && !disabledAction && handleMenu(EMessageMenuOption.RESOLVE)"
+        class="item d-flex align-items-center gap-8"
+        [appE2E]="EDataE2EConversation.MARK_AS_RESOLVED"
+        [ngClass]="{'disabled' : disabledAction || isLoading}">
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          class="no-pointer-event"
+          icon="iconCheckCircleV2"></trudi-icon>
+        <p class="text no-pointer-event">Mark as resolved</p>
+      </div>
+      <div
+        *ngIf="menuDropDown.urgent"
+        [appE2E]="isUrgent ? EDataE2EConversation.CLICK_UNFLAG : EDataE2EConversation.CLICK_FLAG"
+        (click)="!disabledAction && handleMenu(isUrgent ? EMessageMenuOption.UN_FLAG : EMessageMenuOption.FLAG)"
+        class="item d-flex align-items-center gap-8"
+        [ngClass]="{'disabled' : disabledAction}">
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          class="no-pointer-event"
+          icon="unFlag"></trudi-icon>
+        <p class="text no-pointer-event">
+          {{ isUrgent ? 'Unflag' : 'Flag as urgent'}}
+        </p>
+      </div>
+      <div
+        *ngIf="menuDropDown.saveToRentManager"
+        (click)="!(disabledAction || listOfConversations[0].syncStatus === SYNC_TYPE.INPROGRESS) && handleMenu(EMessageMenuOption.SAVE_TO_RENT_MANAGER)"
+        class="item d-flex align-items-center gap-8"
+        [ngClass]="{'disabled': listOfConversations[0].syncStatus === SYNC_TYPE.INPROGRESS || disabledAction}">
+        <trudi-icon class="size-20" viewBox="auto" icon="archive"></trudi-icon>
+        <p class="text">Save to Rent Manager</p>
+      </div>
+
+      @if (menuDropDown.saveToPropertyTree) {
+      <div
+        nz-submenu
+        [nzDisabled]="disabledAction"
+        [nzTitle]="exportConversation">
+        <div
+          nz-menu-item
+          class="submenu-option-item"
+          appE2E="conversation-right-click-save-to-pt"
+          [ngClass]="{'disabled': isDisabledSaveToPT}"
+          (click)="!isDisabledSaveToPT && handleMenu(EMessageMenuOption.SAVE_TO_PROPERTY_TREE)">
+          <trudi-icon
+            svgClass="size-20"
+            viewBox="auto"
+            icon="archive"
+            class="no-pointer-event"></trudi-icon>
+          <p class="no-margin no-pointer-event">Save to Property Tree</p>
+        </div>
+        <div
+          nz-menu-item
+          class="submenu-option-item"
+          [ngClass]="{'disabled': disabledDownloadPDF}"
+          (click)="!disabledDownloadPDF && handleMenu(EMessageMenuOption.DOWNLOAD_AS_PDF)">
+          <trudi-icon
+            svgClass="size-20"
+            viewBox="auto"
+            icon="iconDownload"></trudi-icon>
+          <p class="no-margin">Download as PDF</p>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<ng-template #exportConversation>
+  <div class="d-flex justify-content-between align-items-center gap-8">
+    <div
+      class="item d-flex align-items-center gap-8 submenu-option"
+      [ngClass]="{'disabled': disabledAction}"
+      ripple>
+      <trudi-icon
+        svgClass="size-20"
+        viewBox="auto"
+        icon="conversationExport"></trudi-icon>
+      <div class="text text-ellipsis">Export conversation history</div>
+    </div>
+    <trudi-icon svgClass="size-20" icon="iconChevronRight"></trudi-icon>
+  </div>
+</ng-template>

@@ -1,0 +1,103 @@
+<trudi-modal
+  [visible]="visiblePopup$ | push"
+  (triggerAfterClose)="closePopup()">
+  <ng-template #headerModal>
+    <div class="d-flex align-items-center">
+      <trudi-icon
+        [style]="{'width.px': 106, 'height.px': 20}"
+        icon="rentManager">
+      </trudi-icon>
+      <div class="title rent-manager-vacate-detail-title">Vacate details</div>
+    </div>
+  </ng-template>
+
+  <div class="rent-manager-vacate-detail-form" [formGroup]="vacateDetailForm">
+    <!-- tenant -->
+    <div class="trudi-form-control">
+      <div class="trudi-input-label">Select tenant</div>
+      <trudi-form-control
+        [checkSubmit]="!submitted"
+        [control]="tenancyIdControl">
+        <trudi-single-select
+          [items]="tenancies"
+          [bindLabel]="'name'"
+          [bindValue]="'id'"
+          formControlName="tenancyId"></trudi-single-select>
+      </trudi-form-control>
+    </div>
+
+    <!-- move in - move out -->
+    <div class="trudi-form-group">
+      <!-- move in -->
+      <div class="trudi-form-control">
+        <div class="trudi-input-label">Move in</div>
+        <trudi-form-control
+          [checkSubmit]="!submitted"
+          [control]="moveInDateControl">
+          <trudi-date-picker
+            formControlName="moveInDate"
+            [trudiDisabled]="moveInDateControl.disabled"
+            [defaultValue]="moveInDateControl?.value"
+            [class.trudi-picker-error]="submitted && (moveInDateControl?.touched || moveInDateControl?.dirty) && moveInDateControl?.invalid">
+          </trudi-date-picker>
+        </trudi-form-control>
+      </div>
+
+      <!-- move out -->
+      <div class="trudi-form-control">
+        <div class="trudi-input-label">Move out</div>
+        <trudi-form-control
+          [checkSubmit]="!submitted"
+          [control]="vacateDateControl">
+          <trudi-date-picker
+            formControlName="vacateDate"
+            [trudiDisabled]="vacateDateControl.disabled"
+            [defaultValue]="vacateDateControl?.value"
+            [class.trudi-picker-error]="submitted && (vacateDateControl?.touched || vacateDateControl?.dirty) && vacateDateControl?.invalid">
+          </trudi-date-picker>
+        </trudi-form-control>
+      </div>
+    </div>
+
+    <!-- noctive - expected move out -->
+    <div class="trudi-form-group">
+      <div class="trudi-form-control">
+        <!-- notice -->
+        <div class="trudi-input-label">Notice</div>
+        <trudi-form-control [control]="noticeDateControl">
+          <trudi-date-picker
+            formControlName="noticeDate"
+            [defaultValue]="noticeDateControl?.value"
+            [trudiDisabled]="noticeDateControl.disabled">
+          </trudi-date-picker>
+        </trudi-form-control>
+      </div>
+
+      <div class="trudi-form-control">
+        <!-- expected move out -->
+        <div class="trudi-input-label">Expected move out</div>
+        <trudi-form-control [control]="expectedMoveOutDateControl">
+          <trudi-date-picker
+            formControlName="expectedMoveOutDate"
+            [defaultValue]="expectedMoveOutDateControl?.value"
+            [trudiDisabled]="expectedMoveOutDateControl.disabled">
+          </trudi-date-picker>
+        </trudi-form-control>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #footerModal>
+    <div class="d-flex w-100 align-items-center justify-content-between">
+      <sync-status [syncStatus]="syncStatus" [lastTimeSynced]="lastSyncTime">
+      </sync-status>
+      <button
+        [disabled]="isConsole || vacateDetail?.status === eSyncStatus.INPROGRESS || isArchiveMailbox"
+        (click)="onSubmit()"
+        type="submit"
+        class="trudi-btn trudi-btn-large trudi-btn-primary">
+        <span class="btn-text">Sync to Rent manager</span>
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

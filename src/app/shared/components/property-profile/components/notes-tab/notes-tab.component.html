@@ -1,0 +1,225 @@
+<div class="notes-tab">
+  <div
+    class="notes-tab-wrapper skeleton-wrapper"
+    *ngIf="isLoading; else content">
+    <div
+      class="item-maintenance"
+      *ngIf="crmSystemId === ECrmSystemId.PROPERTY_TREE">
+      <div class="list-sub-item">
+        <div class="card-maintenance">
+          <nz-skeleton
+            class="skeleton-title"
+            [nzActive]="true"
+            [nzTitle]="false"
+            [nzParagraph]="{ rows: 1 }">
+          </nz-skeleton>
+          <nz-skeleton
+            [nzActive]="true"
+            [nzTitle]="false"
+            [nzParagraph]="{ rows: 2, width: ['100%']}">
+          </nz-skeleton>
+        </div>
+      </div>
+    </div>
+    <div class="item-property">
+      <div class="item-title action">
+        <nz-skeleton
+          class="skeleton-title"
+          [nzActive]="true"
+          [nzTitle]="false"
+          [nzParagraph]="{ rows: 1 }">
+        </nz-skeleton>
+        <nz-skeleton
+          [nzAvatar]="true"
+          [size]="'small'"
+          [nzActive]="true"
+          [nzTitle]="false"
+          [nzParagraph]="{ rows: 1 }">
+        </nz-skeleton>
+      </div>
+      <div class="list-sub-item">
+        <ng-container *ngFor="let item of [].constructor(3)">
+          <div class="card-property">
+            <nz-skeleton
+              [nzActive]="true"
+              [nzTitle]="false"
+              [nzParagraph]="{ rows: 4, width: ['94px', '100%', '100%', '94px']}">
+            </nz-skeleton>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #content>
+    <div class="notes-tab-wrapper">
+      <div
+        class="item-maintenance"
+        *ngIf="crmSystemId === ECrmSystemId.PROPERTY_TREE">
+        <div class="item-title">MAINTENANCE NOTE</div>
+        <div class="list-sub-item">
+          <div
+            class="card-maintenance content"
+            *ngIf="currentProperty?.maintenanceNote; else noDataLabel;">
+            {{ currentProperty?.maintenanceNote }}
+          </div>
+          <ng-template #noDataLabel>
+            <div class="no-data-label">No maintenance notes</div>
+          </ng-template>
+        </div>
+      </div>
+      <div class="item-property">
+        <div class="item-title action">
+          <span>{{isUnitType ? 'UNIT NOTES' : 'PROPERTY NOTES'}}</span>
+          <div class="note-count">{{listPropertyNote?.length}}</div>
+          <button class="item-button" (click)="handleOpenModalAddNote()">
+            <trudi-icon icon="plusInvite"></trudi-icon>
+            <span class="item-button-text">Add note</span>
+          </button>
+        </div>
+        <div class="list-sub-item">
+          <ng-container
+            *ngIf="listPropertyNote.length > 0; else subNoDataLabel;">
+            <ng-container
+              *ngFor="let item of listPropertyNote; let i = index; trackBy: noteTrackByFn;">
+              <div
+                class="card-property"
+                [class.card-property--syncing]="item.syncStatus === TYPE_SYNC_MAINTENANCE.INPROGRESS"
+                [class.card-property--synced]="item.syncStatus === TYPE_SYNC_MAINTENANCE.COMPLETED"
+                [class.card-property--fail-to-sync]="item.syncStatus === TYPE_SYNC_MAINTENANCE.FAILED"
+                [class.card-property--active]="updateItem && updateItem.id === item.id"
+                (click)="handleOpenModalEditNote(item, i)">
+                <div class="card-property-wrapper">
+                  <div class="card-title">
+                    <div>{{item.categoryName}}</div>
+                    <ng-container>
+                      <div class="sync-maintenance y-center gap-4">
+                        <ng-container
+                          *ngIf="item.syncStatus === TYPE_SYNC_MAINTENANCE.INPROGRESS">
+                          <trudi-icon
+                            class="sync-icon spin-syncing-v2"
+                            icon="syncingV2"></trudi-icon>
+                          <span>Syncing</span>
+                        </ng-container>
+                        <ng-container
+                          *ngIf="item.syncStatus === TYPE_SYNC_MAINTENANCE.FAILED">
+                          <trudi-icon icon="warningsync"></trudi-icon>
+                          <span>Fail to sync</span>
+                        </ng-container>
+                        <ng-container
+                          *ngIf="item.syncStatus === TYPE_SYNC_MAINTENANCE.COMPLETED">
+                          <trudi-icon
+                            class="synced-icon"
+                            icon="checkedSync"></trudi-icon>
+                          <span>Synced</span>
+                        </ng-container>
+                      </div>
+                    </ng-container>
+                  </div>
+                  <div class="card-content">
+                    <div class="content">{{item.description}}</div>
+                  </div>
+                  <div
+                    *ngIf="crmSystemId === ECrmSystemId.RENT_MANAGER && !!item.files?.length"
+                    class="card-files-tag">
+                    <ng-container
+                      *ngFor="let file of item.files; let i = index; trackBy: fileTrackByFn;">
+                      <div
+                        class="card-files-tag-item"
+                        (click)="previewFile($event, item, file, i)">
+                        <trudi-icon
+                          [style]="{'width.px': 16, 'height.px': 16}"
+                          [icon]="getPreviewIcon(file.fileType)"></trudi-icon>
+                        <div
+                          #fileName
+                          class="file-name text-ellipsis"
+                          nz-tooltip
+                          nzTooltipPlacement="top"
+                          [nzTooltipTitle]="file.fileName"
+                          [nzTooltipOverlayStyle]="{ 'max-width': '200px', 'word-break': 'break-all' }"
+                          [nzTooltipTrigger]="tooltipTriggers.get(i)">
+                          {{file.fileName}}
+                        </div>
+                      </div>
+                    </ng-container>
+                  </div>
+                  <div class="card-title-date">
+                    Updated {{(item.lastModified || item.createdAt) | formatDate
+                    | async}}
+                  </div>
+                  <div
+                    class="card-action"
+                    *ngIf="item.syncStatus === TYPE_SYNC_MAINTENANCE.FAILED">
+                    <button
+                      trudi-btn
+                      btnType="danger"
+                      size="small"
+                      [disabled]="isConsole"
+                      (click)="handleRetryNote($event, item)">
+                      <span class="btn-text">Retry</span>
+                    </button>
+                    <button
+                      *ngIf="crmSystemId === ECrmSystemId.PROPERTY_TREE"
+                      trudi-btn
+                      btnType="danger"
+                      variant="outlined"
+                      size="small"
+                      [disabled]="isConsole"
+                      (click)="handleRemoveSyncFailedNote($event, item)">
+                      <span class="btn-text"
+                        >{{!!item.ptId ? 'Cancel' : 'Remove' }}</span
+                      >
+                    </button>
+                    <button
+                      *ngIf="crmSystemId === ECrmSystemId.RENT_MANAGER"
+                      trudi-btn
+                      btnType="danger"
+                      variant="outlined"
+                      size="small"
+                      [disabled]="isConsole"
+                      (click)="handleRemoveSyncFailedNote($event, item)">
+                      <span class="btn-text"
+                        >{{!!item?.source?.externalId ? 'Cancel' : 'Remove'
+                        }}</span
+                      >
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+          <ng-template #subNoDataLabel>
+            <div class="no-data-label">
+              {{isUnitType ? 'No unit notes' : 'No property notes'}}
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>
+<add-edit-note-popup
+  *ngIf="isShowModalAddEditNote"
+  [isShow]="isShowModalAddEditNote"
+  (handleCloseModalAddNote)="handleCloseModalAddNote()"
+  (handleSubmit)="handleCloseModalAddNote()"
+  [propertyId]="currentProperty.id"
+  [updateItem]="updateItem"
+  [isUpdate]="isUpdateModal"
+  [crmSystemId]="crmSystemId"
+  [listCategory]="listCategory"
+  [isConsole]="isConsole"
+  [agencyId]="currentProperty.agencyId"></add-edit-note-popup>
+<app-modal-popup
+  *ngIf="isShowCarousel"
+  [transparent]="true"
+  [show]="isShowCarousel"
+  [position]="popupModalPosition.full_screen">
+  <app-images-carousel
+    *ngIf="isShowCarousel"
+    [open]="false"
+    [imageUrlList]="listFileCarousel"
+    [initialIndex]="initialIndex"
+    (showCarousel)="manageCarouselState($event)">
+  </app-images-carousel>
+</app-modal-popup>

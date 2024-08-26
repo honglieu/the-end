@@ -1,0 +1,201 @@
+@import 'function';
+
+::ng-deep {
+  .add-policy-overlay {
+    max-width: fit-content;
+    .header-title {
+      @include fontSetup(var(--fg-neutral-stronger), 16px, 24px, normal, 600);
+      padding-bottom: 16px;
+    }
+    .policy-list {
+      padding-bottom: 16px;
+      label {
+        @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 500);
+      }
+      .ng-select {
+        height: 44px;
+      }
+
+      .sub-item {
+        height: 44px;
+        width: 100%;
+        padding: 12px;
+        border-bottom: 1px solid var(--border-neutral-dark);
+
+        .label-container {
+          max-width: 90%;
+        }
+
+        .ant-skeleton-element .ant-skeleton-input {
+          width: 390px !important;
+          height: 20px !important;
+          border-radius: 4px;
+        }
+      }
+
+      .select-policy {
+        ng-select.trudi-single-select .ng-dropdown-panel .ng-dropdown-panel-items {
+          max-height: 224px !important;
+        }
+      }
+    }
+    .option-add-policy {
+      padding-bottom: 16px;
+
+      .container-trudi-radio {
+        width: 210px;
+      }
+    }
+    .policy-version {
+      padding-bottom: 16px;
+      label {
+        @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 500);
+      }
+      .ng-select {
+        height: 44px;
+      }
+      .sub-item {
+        height: 44px;
+        width: 100%;
+        padding: 12px;
+        border-bottom: 1px solid var(--border-neutral-dark);
+
+        .label-container {
+          max-width: 90%;
+        }
+
+    .select-policy {
+      ng-select.trudi-single-select
+        .ng-dropdown-panel
+        .ng-dropdown-panel-items {
+        max-height: 224px !important;
+      }
+    }
+    .ant-popover-inner {
+      border-radius: 16px;
+    }
+    .ant-popover-inner-content{
+      width: 450px;
+      padding: 15px;
+      border-radius: 16px;
+      border: 1px solid var(--border-neutral-dark);
+    }
+    .ant-radio-group {
+      flex-direction: row;
+    }
+    .label-trudi-radio {
+      @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 500);
+    }
+    .trudi-ui-text-field-label {
+      @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 500);
+    }
+    .ant-popover-arrow {
+      display: none;
+    }
+  }
+  .button-add {
+    max-width: fit-content;
+    .add-policy-btn {
+      @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    .ant-popover-inner-content{
+      width: 165px;
+      height: 44px;
+      background-color: var(--white);
+      border-radius: 8px;
+      border: 1px solid var(--border-neutral-dark);
+      &:hover {
+        background-color: var(--bg-neutral-tonal-stronger);
+      }
+    }
+  }
+  .ant-popover-inner {
+    border-radius: 16px;
+  }
+  .ant-popover-inner-content {
+    width: 450px;
+    padding: 15px;
+    border-radius: 16px;
+    border: 1px solid var(--border-neutral-dark);
+  }
+  .ant-radio-group {
+    flex-direction: row;
+  }
+  .label-trudi-radio {
+    @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 500);
+  }
+  .trudi-ui-text-field-label {
+    @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 500);
+  }
+  .ant-popover-arrow {
+    display: none;
+  }
+    }
+  }
+}
+
+::ng-deep .button-add {
+  max-width: fit-content;
+  .add-policy-btn {
+    @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+    cursor: pointer;
+    border-radius: 8px;
+  }
+  .ant-popover-inner-content {
+    width: 165px;
+    height: 44px;
+    background-color: var(--white);
+    border-radius: 8px;
+    border: 1px solid var(--border-neutral-dark);
+    &:hover {
+      background-color: var(--bg-neutral-tonal-stronger);
+    }
+  }
+
+  ng-select.ng-select-opened.ng-select-top > .ng-select-container {
+    border-top-right-radius: 8px !important;
+    border-top-left-radius: 8px !important;
+  }
+}
+
+
+.select-policy-dropdown-menu-container {
+  max-width: 450px;
+  background: var(--white);
+  border-radius: 8px;
+  padding: 12px;
+  border: 1px solid var(--border-neutral-dark);
+  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.1),
+    0px 8px 28px 0px rgba(0, 0, 0, 0.05);
+}
+
+.btn-add-custom-version {
+  color: var(--brand-500);
+  display: flex;
+  align-items: center;
+  border: none;
+  background: transparent;
+  padding: 0;
+  gap: 4px;
+}
+::ng-deep .ant-tooltip.tooltip-policy-label {
+  .ant-tooltip-inner {
+    min-width: 369px !important;
+  }
+  .ant-tooltip-arrow {
+    left: 185px !important;
+  }
+}
+
+.trudi-highlight-text {
+  padding: 12px 16px;
+    border-radius: 8px;
+    border: none;
+    background-color: var(--bg-neutral-tonal-normal);
+    margin-bottom: 16px;
+    max-height: 136px;
+    min-height: fit-content;
+    overflow-y: auto;
+}

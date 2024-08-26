@@ -1,0 +1,8 @@
+::ng-deep {
+  .preview-email-modal {
+    .ant-modal-body {
+      max-height: 460px;
+      overflow-y: auto;
+    }
+  }
+}

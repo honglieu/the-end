@@ -1,0 +1,124 @@
+@import 'function';
+
+button {
+  border: none;
+}
+
+.custom-trudi-btn {
+  padding: 10px 8px 10px 16px;
+  border-radius: 8px 0px 0px 8px;
+
+  &:hover {
+    background: var(--brand-400);
+  }
+
+  &:active {
+    background: var(--brand-600);
+  }
+}
+
+.icon-20 {
+  width: 20px;
+  height: 20px;
+}
+
+.divider-btn {
+  width: 1px;
+  height: 100%;
+  background: var(--white);
+}
+
+.open-dropdown-icon {
+  position: relative;
+  background: var(--brand-500);
+  padding: 10px 16px 10px 8px;
+  border-radius: 0 8px 8px 0;
+  width: 40px;
+  height: 40px;
+
+  &:hover {
+    background: var(--brand-400);
+  }
+
+  &:active {
+    background: var(--brand-600);
+  }
+
+  img {
+    width: 20px;
+    height: 20px;
+  }
+
+  &::before {
+    // expand the click area
+    content: '';
+    position: absolute;
+    height: 16px;
+    width: 1px;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--gray-200);
+  }
+
+  &:not(:disabled) {
+    cursor: pointer;
+  }
+
+  &:disabled {
+    background: var(--brand-200);
+  }
+}
+
+.dropdown-container {
+  position: absolute;
+  right: 0px;
+  bottom: calc(100% + 50px);
+  background: var(--white);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 8px 0px 21px rgba(0, 0, 0, 0.02),
+    0px -2px 16px rgba(0, 0, 0, 0.08), 0px 26px 24px rgba(0, 0, 0, 0.05);
+
+  .item {
+    min-width: 218px;
+    padding: 12px;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--brand-100);
+      .item-text {
+        @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+      }
+    }
+
+    &-text {
+      @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+      margin: unset;
+    }
+
+    &-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    &-checked-icon {
+      width: 16px;
+      margin-left: auto;
+    }
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--gray-50);
+    }
+  }
+
+  .item.selected {
+    background: var(--brand-200);
+    .item-text {
+      @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+    }
+    .item-icon {
+      filter: brightness(0.2);
+    }
+  }
+}

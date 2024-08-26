@@ -1,0 +1,11 @@
+<trudi-modal
+  [visible]="configs.visible"
+  type="confirm"
+  [title]="configs.title"
+  [okText]="configs.okText"
+  [cancelText]="configs.cancelText"
+  [subTitle]="configs.subtitle"
+  [closable]="configs.closable"
+  [className]="configs.className"
+  (onOk)="confirm()"
+  (onCancel)="cancel()"></trudi-modal>

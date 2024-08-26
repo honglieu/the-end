@@ -1,0 +1,192 @@
+@import 'function';
+
+:host {
+  display: block;
+  height: 100vh;
+  overflow: auto;
+  background-color: var(--white);
+  padding: 24px;
+  border-radius: 8px;
+
+  .tz-hint {
+    display: flex;
+    align-items: center;
+    padding: 8px 0px 0px 0px;
+    .label-hint {
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 20px;
+      color: var(--fg-neutral-weaker, #999);
+    }
+  }
+
+  .custom-hours-display {
+    border-radius: 8px;
+    border: 1px solid var(--gray-200, #d8dcdf);
+    min-width: 275px;
+    margin-top: 12px;
+    margin-left: 17px;
+
+    &__item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px;
+      @include fontSetup(
+        var(--fg-neutral-stronger, #3d3d3d),
+        14px,
+        20px,
+        normal,
+        500
+      );
+
+      &:not(:last-child) {
+        border-bottom: 1px solid var(--gray-200, #d8dcdf);
+      }
+
+      &--time {
+        font-weight: 400;
+      }
+    }
+  }
+
+  .voicemail-section {
+    .header {
+      @include fontSetup(
+        var(--fg-neutral-strongest, #202020),
+        20px,
+        32px,
+        normal,
+        500
+      );
+    }
+
+    &:not(:last-child) {
+      padding-bottom: 32px;
+    }
+
+    .voicemail-number {
+      margin-top: 8px;
+      width: max-content;
+      padding: 6px 16px;
+      border-radius: 8px;
+      background: var(--bg-brand-tonal-normal, #e1f8f5);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      @include fontSetup(var(--fg-brand, #00aa9f), 14px, 20px, normal, 600);
+    }
+
+    .voicemail-redirect {
+      max-width: 369px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      &-text {
+        margin-top: 8px;
+        @include fontSetup(
+          var(--fg-neutral-stronger, #3d3d3d),
+          14px,
+          20px,
+          normal,
+          400
+        );
+      }
+
+      &-form {
+        height: 36px;
+
+        &-input {
+          max-width: 180px;
+        }
+
+        &::ng-deep {
+          .trudi-number-field-wrapper .prefix-text.active {
+            color: var(--gray-400);
+          }
+        }
+      }
+    }
+
+    .voicemail-customise {
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+
+      &::ng-deep {
+        .ant-radio {
+          top: 0;
+        }
+
+        nz-radio-group.radio-group .radio-label span:not(.ant-radio) {
+          padding-top: 0;
+          padding-right: 0;
+        }
+
+        nz-radio-group.radio-group .radio-label span {
+          @include fontSetup(
+            var(--fg-neutral-stronger, #3d3d3d),
+            14px,
+            20px,
+            normal,
+            400
+          );
+        }
+
+        .ant-radio-wrapper {
+          margin-right: 0;
+        }
+
+        .ant-radio-group > div {
+          display: flex;
+          align-items: center;
+
+          .tooltip-icon {
+            margin-left: 4px;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}
+
+::ng-deep {
+  .voicemail-number-skeleton.ant-skeleton {
+    margin-top: 8px;
+    .ant-skeleton-content .ant-skeleton-paragraph li {
+      border-radius: 8px !important;
+      width: 157px !important;
+      height: 36px !important;
+    }
+  }
+
+  .voicemail-redirect-form-skeleton.ant-skeleton {
+    margin-top: 8px;
+    .ant-skeleton-content .ant-skeleton-paragraph li {
+      border-radius: 8px !important;
+      width: 164px !important;
+      height: 36px !important;
+    }
+  }
+
+  .voicemail-customise-skeleton.ant-skeleton {
+    margin-top: 12px;
+    .ant-skeleton-content .ant-skeleton-paragraph li {
+      width: 312px !important;
+      height: 20px !important;
+    }
+  }
+
+  .ant-tooltip.outside-hours-tooltip {
+    .ant-tooltip-inner {
+      min-width: 270px;
+
+      > div {
+        flex-direction: row;
+      }
+    }
+  }
+}

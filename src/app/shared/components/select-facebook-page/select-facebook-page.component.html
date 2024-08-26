@@ -1,0 +1,108 @@
+<trudi-modal
+  [autoFocus]="null"
+  [(visible)]="showSelectFacebookPagePopup"
+  [closable]="false"
+  (onCancel)="closeSelectFacebookPagePopup()">
+  <ng-template #headerModal>
+    <div class="modal-header-select-facebook-page__title--default">
+      <div class="modal-header-select-facebook-page-body">
+        <div class="title w-100 flex-1">
+          <span class="flex-1"
+            >Which Facebook page will you be using with Trudi®?</span
+          >
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-container [ngTemplateOutlet]="body"></ng-container>
+
+  <ng-template #footerModal>
+    @if(facebookPageControl?.invalid && facebookPageControl?.touched ) {
+    <span class="facebook-error" @textAnimation
+      >Please select a page to continue</span
+    >
+    }
+    <div class="gap-16 d-flex">
+      <button
+        trudi-btn
+        variant="outlined"
+        btnType="neutral"
+        (click)="closeSelectFacebookPagePopup()">
+        Cancel
+      </button>
+      <button
+        trudi-btn
+        variant="filled"
+        btnType="primary"
+        (click)="handleConfirm()"
+        [disabled]="isSubmitting || (facebookAccountService.facebookPageLoading$ | async)">
+        Next
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>
+
+<ng-template #skeletonLoading>
+  <div class="d-flex flex-dir-column gap-16 skeleton-loading">
+    <div *ngFor="let _ of [].constructor(6)" class="quote-wrapper">
+      <span></span>
+      <nz-skeleton [nzParagraph]="paragraph" [nzActive]="true"></nz-skeleton>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #body>
+  <ng-container
+    *ngIf="(facebookAccountService.facebookPageLoading$ | async) === false; else skeletonLoading">
+    @if (facebookPageOptions?.length) {
+    <div
+      [formGroup]="facebookPageForm"
+      class="modal-select-facebook-page__body">
+      <trudi-radio-button
+        formControlName="facebookPage"
+        [options]="facebookPageOptions">
+      </trudi-radio-button>
+    </div>
+    } @else {
+    <div class="empty-content">
+      We can't find any pages linked to your Facebook profile. Please check you
+      have required permissions and try again
+    </div>
+    }
+  </ng-container>
+</ng-template>
+
+<trudi-modal
+  className="modal-facebook-connect-succcess"
+  [autoFocus]="null"
+  [(visible)]="showSuccessPopup"
+  [closable]="true"
+  (onCancel)="closeSuccessPopup()"
+  [isHideFooter]="true">
+  <ng-template #headerModal>
+    <div></div>
+  </ng-template>
+  <ng-container [ngTemplateOutlet]="body2"></ng-container>
+</trudi-modal>
+
+<ng-template #body2>
+  <div class="modal-succcess__body">
+    <trudi-icon icon="successfullyImage"></trudi-icon>
+
+    <div class="modal-succcess__body__content">
+      <div class="modal-succcess__body__content--title">You're all set</div>
+      <div class="modal-succcess__body__content--description">
+        {{textContentForSuccessPopup}}
+      </div>
+    </div>
+
+    <button
+      class="navigate-btn"
+      trudi-btn
+      variant="filled"
+      btnType="primary"
+      (click)="navigateToInboxPage()">
+      Go to inbox
+    </button>
+  </div>
+</ng-template>

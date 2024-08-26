@@ -1,0 +1,143 @@
+<label *ngIf="label?.length > 0" class="trudi-ui-textarea-label">
+  {{ label }}
+  <ng-container *ngTemplateOutlet="Counting"></ng-container>
+</label>
+<div></div>
+<div
+  class="trudi-textarea-wrapper"
+  [ngClass]="[isDisabled, isSuffixIcon, isVisibleDropdown]"
+  [class.not-check-submit]="!checkSubmit">
+  <textarea
+    #textarea
+    id="trudi-textarea"
+    [placeholder]="placeholder"
+    [ngClass]="{
+      empty: value?.length === 0,
+      'ng-invalid': !checkSubmit && control?.invalid,
+      'ng-dirty': !checkSubmit && control?.dirty,
+      'ng-touched': !checkSubmit && control?.touched,
+      'not-check-submit': !checkSubmit,
+      'not-resize': !resizable
+    }"
+    class="trudi-ui-textarea"
+    type="text"
+    (focus)="triggerEventFocus.emit()"
+    (blur)="triggerEventBlur.emit($event)"
+    (focus)="triggerEventFocus.emit($event)"
+    (keydown.enter)="onEnterThenOutFocus($event)"
+    [disabled]="disabled"
+    [(ngModel)]="value"
+    [maxlength]="maxCharacter"
+    [rows]="rows"></textarea>
+  <ng-container *ngIf="bottomButton?.length">
+    <hr class="line-straight" />
+    @if (isCustomPolicyAttach) {
+    <div class="d-flex justify-content-start">
+      <ng-container *ngTemplateOutlet="customPolicyAttach"></ng-container>
+    </div>
+    } @else {
+    <div class="d-flex justify-content-start">
+      <ng-container *ngTemplateOutlet="BottomMenu"></ng-container>
+    </div>
+    }
+  </ng-container>
+  <ng-container *ngIf="suffixIcon?.length">
+    <div style="display: flex; justify-content: flex-end">
+      <ng-container *ngTemplateOutlet="SuffixIcon"></ng-container>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!isShowCountingOutSide">
+    <div style="display: flex; justify-content: flex-end" *ngIf="!label">
+      <ng-container *ngTemplateOutlet="Counting"></ng-container>
+    </div>
+  </ng-container>
+</div>
+<ng-container *ngIf="isShowCountingOutSide">
+  <div
+    class="counting-outside"
+    style="display: flex; justify-content: flex-start"
+    *ngIf="!label">
+    <ng-container *ngTemplateOutlet="Counting"></ng-container>
+  </div>
+</ng-container>
+
+<ng-template #Counting>
+  <trudi-max-character
+    *ngIf="maxCharacter && showCounting"
+    [maxCharacter]="maxCharacter"
+    [showRemainderCharacterMode]="showRemainderCharacterMode"
+    [onlyShowMaxCharacter]="onlyShowMaxCharacter"
+    [currentLength]="untrimmedValue?.length ?? 0">
+  </trudi-max-character>
+</ng-template>
+
+<ng-template #SuffixIcon>
+  <trudi-icon
+    (click)="triggerEventClickSuffixIcon.emit()"
+    *ngIf="suffixIcon"
+    [icon]="suffixIcon"
+    [style]="{ 'width.px': 20, 'height.px': 20 }"></trudi-icon>
+</ng-template>
+
+<ng-template #BottomMenu>
+  <div
+    nz-dropdown
+    nzTrigger="click"
+    [nzDisabled]="disabled"
+    [nzDropdownMenu]="menu"
+    [(nzVisible)]="visibleDropdown"
+    (nzVisibleChange)="onDropdownMenuVisibleChange($event)"
+    class="bottom-menu"
+    [ngClass]="{'enable': visibleDropdown}">
+    <trudi-icon
+      class="cursor-pointer"
+      nz-tooltip
+      [nzTooltipTitle]="'Attachment'"
+      (click)="triggerEventClickAttachIcon.emit(true)"
+      [icon]="bottomButton"
+      [style]="{ 'width.px': 20, 'height.px': 20 }"></trudi-icon>
+  </div>
+  <nz-dropdown-menu #menu>
+    <ul nz-menu class="dropdown-attachment-list">
+      <li
+        *ngFor="let item of attachOptions"
+        class="dropdown-attachment-item"
+        nz-menu-item
+        (click)="triggerEventClickAttachItem.emit(item.action)">
+        {{item.text}}
+      </li>
+    </ul>
+  </nz-dropdown-menu>
+</ng-template>
+
+<ng-template #customPolicyAttach>
+  <div
+    nz-dropdown
+    nzTrigger="click"
+    [nzDisabled]="disabled"
+    [nzDropdownMenu]="menu"
+    [(nzVisible)]="visibleDropdown"
+    (nzVisibleChange)="onDropdownMenuVisibleChange($event, index)"
+    class="bottom-menu"
+    [ngClass]="{'enable': visibleDropdown}">
+    <trudi-icon
+      class="cursor-pointer"
+      nz-tooltip
+      [nzTooltipTitle]="'Attachment'"
+      (click)="triggerEventClickAttachIcon.emit(true)"
+      [icon]="bottomButton"
+      [style]="{ 'width.px': 20, 'height.px': 20 }"></trudi-icon>
+  </div>
+  <nz-dropdown-menu #menu>
+    <ul nz-menu class="dropdown-attachment-list">
+      @for (item of attachOptions; track item) {
+      <li
+        class="dropdown-attachment-item"
+        nz-menu-item
+        (click)="triggerEventClickAttachItem.emit(item.action, index)">
+        {{item.text}}
+      </li>
+      }
+    </ul>
+  </nz-dropdown-menu>
+</ng-template>

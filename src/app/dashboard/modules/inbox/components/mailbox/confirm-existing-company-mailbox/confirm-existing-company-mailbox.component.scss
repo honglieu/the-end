@@ -1,0 +1,20 @@
+@import 'function';
+.custom-modal-confirm-existing {
+  .ant-modal-header {
+    border: none;
+    padding: 16px 24px 0px 24px;
+    .title {
+      color: var(--fg-neutral-stronger) !important;
+    }
+  }
+  .content-text {
+    margin-top: -20px;
+    margin-bottom: -20px;
+    padding: 0px 30px 0px 64px;
+    @include fontSetup(var(--fg-neutral-normal), 1.4rem, 2rem, normal, 500);
+  }
+  .ant-modal-footer {
+    margin-top: 16px;
+    border: none;
+  }
+}

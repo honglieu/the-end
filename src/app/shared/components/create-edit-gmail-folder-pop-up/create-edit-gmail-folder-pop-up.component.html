@@ -1,0 +1,85 @@
+<trudi-modal
+  *ngIf="isVisible"
+  [(visible)]="isVisible"
+  [modelWidth]="624"
+  [autoFocus]="null"
+  [title]="'Email folder'"
+  (onCancel)="closeModal()"
+  className="trudi-modal-invite-team-nember">
+  <div class="folder-wrapper" [formGroup]="emailFolderForm">
+    <trudi-form-control
+      [control]="folderName"
+      [errors]="[{errorName: 'exists', errorMessage: 'Existing folder name'},
+      {errorName: 'folderNameTooLong', errorMessage: 'The name is too long. Please try another name.'}]">
+      <trudi-text-field
+        label="Folder name"
+        placeholder="Enter folder name"
+        [showCounting]="false"
+        [size]="'large'"
+        [maxCharacter]="75"
+        [formControl]="folderName"></trudi-text-field>
+    </trudi-form-control>
+    <div class="checkbox-wrapper">
+      <trudi-form-control>
+        <td-checkbox
+          [spaceBetween]="false"
+          [isChecked]="isNestFolder"
+          [reverse]="true"
+          label="Nest folder under"
+          [size]="24"
+          (tdCheckboxChanged)="onCheckboxChange($event)">
+        </td-checkbox>
+      </trudi-form-control>
+    </div>
+    <div class="select-form-wrapper">
+      <div class="form-select-wrapper">
+        <trudi-form-control [control]="selectedFolder">
+          <ng-select
+            class="share-ng-select folder-ng-select"
+            bindLabel="name"
+            placeholder="Select folder"
+            [items]="listOption"
+            [clearable]="true"
+            [searchable]="true"
+            [virtualScroll]="true"
+            (change)="onChangeState($event)"
+            [formControl]="selectedFolder"
+            [ngClass]="{
+              'ng-valid-form': selectedFolder?.invalid
+            }">
+            <ng-template
+              ng-label-tmp
+              let-item="item"
+              let-item$="item$"
+              let-index="index">
+              <span>{{item?.title}}</span>
+            </ng-template>
+
+            <ng-template ng-option-tmp let-item="item" let-index="index">
+              <div
+                class="d-flex justify-content-between ng-value-label-wraper"
+                [ngClass]="'wrapper-option-lv-'+item.level">
+                <span
+                  class="d-flex align-items-center value-label select-role-option wrapper-text single-line-ellipsis">
+                  <span class="wrapper-icon">
+                    <trudi-icon
+                      icon="iconFolder"
+                      [style]="{'width.px': 18, 'height.px': 18}"></trudi-icon>
+                  </span>
+                  <span class="wrapper-title"> {{item.title}} </span>
+                </span>
+                <trudi-icon
+                  icon="checkSuccess"
+                  [style]="{ 'width.px': 20, 'height.px': 20}"
+                  *ngIf="item.internalId === selectedFolder?.value?.internalId"></trudi-icon>
+              </div>
+            </ng-template>
+          </ng-select>
+        </trudi-form-control>
+      </div>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <button trudi-btn (click)="submit()" [disabled]="isLoading">Confirm</button>
+  </ng-template>
+</trudi-modal>

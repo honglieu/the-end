@@ -1,0 +1,153 @@
+<ng-template #noDraft>
+  <div
+    appE2E
+    [e2ePrefix]="e2ePrefix"
+    e2eId="user-avatar"
+    [style.width.px]="size"
+    [style.height.px]="size"
+    *ngIf="userId !== trudiUserId">
+    <div
+      *ngIf="[userPropertyType.LANDLORD,
+            userPropertyType.LANDLORD_PROSPECT,
+            userPropertyType.TENANT_UNIT,
+            userPropertyType.TENANT_PROSPECT ,
+            userPropertyType.TENANT_PROPERTY ,
+            userPropertyType.TENANT,
+            userPropertyType.AGENT,
+            userPropertyType.PROPERTY_MANAGER].includes(userType)"
+      [ngClass]="{
+            'landlord': userType === userPropertyType.LANDLORD,
+            'landlord-prospect': userType === userPropertyType.LANDLORD_PROSPECT,
+            'tenant-prospect': userType === userPropertyType.TENANT_PROSPECT,
+            'tenant': userType === userPropertyType.TENANT,
+            'tenant-property': userType === userPropertyType.TENANT_PROPERTY,
+            'tenant-unit': userType === userPropertyType.TENANT_UNIT,
+            'agent': ![userPropertyType.LANDLORD,
+                     userPropertyType.TENANT,
+                     userPropertyType.LANDLORD_PROSPECT,
+                     userPropertyType.TENANT_PROSPECT,
+                     userPropertyType.TENANT_PROPERTY,
+                     userPropertyType.TENANT_UNIT].includes(userType)
+          }"
+      class="img-circle"
+      [style.width.px]="size"
+      [style.height.px]="size">
+      <label *ngIf="!checkAvatar" [style.fontSize.px]="sizeOfTextAva"
+        >{{ { firstName, lastName } | formatFullname }}</label
+      >
+      <img
+        *ngIf="checkAvatar"
+        [style.width.px]="size"
+        [style.height.px]="size"
+        loading="lazy"
+        src="{{avatar}}"
+        alt="user avatar" />
+    </div>
+    <div *ngIf="userType === userPropertyType.SUPPLIER">
+      <img
+        *ngIf="checkAvatar"
+        [style.width.px]="size"
+        [style.height.px]="size"
+        src="{{avatar}}"
+        alt="user avatar" />
+      <div
+        *ngIf="!checkAvatar"
+        [style.width.px]="size"
+        [style.height.px]="size"
+        class="img-circle supplier">
+        <trudi-icon class="supplier-avt" icon="avtSupplier"></trudi-icon>
+      </div>
+    </div>
+    <div
+      class="img-circle"
+      *ngIf="[userPropertyType.UNIDENTIFIED, userPropertyType.LEAD, userPropertyType.ADMIN, userPropertyType.USER].includes(userType) || !userType ">
+      <img
+        *ngIf="checkAvatar"
+        [style.width.px]="size"
+        [style.height.px]="size"
+        src="{{avatar}}"
+        alt="user avatar"
+        [ngClass]="{'img-circle' : userType === userPropertyType.LEAD || userType === userPropertyType.ADMIN}" />
+      <div
+        *ngIf="!checkAvatar && (this.firstName || this.lastName)"
+        [style.width.px]="size"
+        [style.height.px]="size"
+        [style.fontSize.px]="sizeOfTextAva"
+        class="img-circle">
+        {{ {firstName, lastName} | formatFullname }}
+      </div>
+      <div
+        *ngIf="!checkAvatar && !this.firstName && !this.lastName"
+        [style.width.px]="size"
+        [style.height.px]="size"
+        class="img-circle transparent">
+        <trudi-icon
+          [style]="{'width.px': size, 'height.px': size}"
+          svgClass="size-24"
+          icon="avatar"></trudi-icon>
+      </div>
+    </div>
+    <div *ngIf="userType === userPropertyType.OTHER">
+      <img
+        *ngIf="checkAvatar"
+        [style.width.px]="size"
+        [style.height.px]="size"
+        src="{{avatar}}"
+        alt="user avatar" />
+      <div
+        *ngIf="!checkAvatar"
+        [style.width.px]="size"
+        [style.height.px]="size"
+        class="img-circle">
+        <trudi-icon
+          [style]="{'width.px': size, 'height.px': size}"
+          icon="otherContactAvatar"></trudi-icon>
+      </div>
+    </div>
+    <div *ngIf="userType === userPropertyType.EXTERNAL">
+      <div [style.width.px]="size" [style.height.px]="size" class="img-circle">
+        <trudi-icon
+          [style]="{'width.px': size, 'height.px': size}"
+          class="supplier-avt"
+          [icon]="isValid ? 'avatar' : 'iconWarningRedFit'"></trudi-icon>
+      </div>
+    </div>
+    <div class="img-circle" *ngIf="userType === userPropertyType.MAILBOX">
+      <img
+        *ngIf="checkAvatar"
+        [style.width.px]="size"
+        [style.height.px]="size"
+        src="{{avatar}}"
+        alt="user avatar" />
+      <div
+        *ngIf="!checkAvatar"
+        [style.width.px]="size"
+        [style.height.px]="size"
+        [style.fontSize.px]="sizeOfTextAva">
+        {{ {firstName, lastName} | formatFullname }}
+      </div>
+    </div>
+  </div>
+  <div
+    [style.width.px]="size"
+    [style.height.px]="size"
+    *ngIf="userId === trudiUserId"
+    class="left">
+    <div [style.width.px]="size" [style.height.px]="size" class="img-circle">
+      <trudi-icon
+        [style]="{'width.px': size, 'height.px': size}"
+        icon="trudiAvt"></trudi-icon>
+    </div>
+  </div>
+</ng-template>
+
+<div *ngIf="isDraft else noDraft" class="left">
+  <div
+    [style.width.px]="size"
+    [style.height.px]="size"
+    class="img-circle img-draft">
+    <trudi-icon
+      [style]="{'width.px': 18.29, 'height.px': 18.29}"
+      icon="penGray"></trudi-icon>
+  </div>
+</div>

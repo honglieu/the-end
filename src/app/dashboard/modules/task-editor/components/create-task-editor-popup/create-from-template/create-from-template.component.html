@@ -1,0 +1,103 @@
+<trudi-modal
+  [(visible)]="visible"
+  [modelWidth]="624"
+  (onCancel)="handleCancel()"
+  [autoFocus]="null"
+  className="task-editor-popup"
+  title="Select template"
+  subTitle="">
+  <ng-template #footerModal>
+    <div class="d-flex align-items-center gap-12">
+      <button
+        [disabled]="isDisabled"
+        (click)="handleBack()"
+        class="btn-back-task d-flex align-items-center gap-8">
+        Back
+      </button>
+      <button
+        [disabled]="isDisabled"
+        (click)="handleNext()"
+        class="btn-next-task d-flex align-items-center gap-8">
+        Next
+      </button>
+    </div>
+  </ng-template>
+  <div class="form-template-container">
+    <div class="search-template trudi-form-control w-50">
+      <trudi-form-control>
+        <trudi-text-field
+          #inputSearch
+          size="large"
+          iconLeft="iconSearch"
+          placeholder="Search"
+          [clearable]="true"
+          [ngModel]="searchText"
+          (ngModelChange)="handleSearch($event)"></trudi-text-field>
+      </trudi-form-control>
+    </div>
+    <ng-container *ngIf="loadingService.isLoading$ | async; else hasList">
+      <div class="skeleton-wrapper">
+        <ng-container *ngFor="let _ of [].constructor(5)">
+          <div class="list-skeleton">
+            <div
+              class="card-skeleton d-flex justify-content-between align-items-center">
+              <div class="skeleton-left d-flex gap-8">
+                <nz-skeleton
+                  [nzParagraph]="{ rows: 1 }"
+                  [style.width.px]="160"
+                  [nzTitle]="false"
+                  [nzActive]="true"></nz-skeleton>
+              </div>
+              <div class="skeleton-right">
+                <nz-skeleton
+                  [nzParagraph]="{ rows: 1 }"
+                  [style.width.px]="85"
+                  [nzTitle]="false"
+                  [nzActive]="true"></nz-skeleton>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+    <ng-template #hasList>
+      <ng-container *ngIf="isSelectTemplate">
+        <span class="error-text">Please select a template</span>
+      </ng-container>
+      <ng-container
+        *ngIf="templates.length; then hasItems else noItem"></ng-container>
+      <ng-template #hasItems>
+        <div
+          #scrollContainer
+          class="list-template"
+          infiniteScroll
+          [infiniteScrollContainer]="scrollContainer"
+          [fromRoot]="true"
+          (scrolled)="onScroll()">
+          <ng-container *ngFor="let item of templates">
+            <button
+              [ngClass]="{'active': activeTemplate === item?.id}"
+              class="task-card"
+              (click)="handleSelectTemplate(item?.id)">
+              <div class="align-items-center gap-4">
+                <span
+                  [innerHTML]="(item?.name) | highlight: (searchNameTemplate ? (searchNameTemplate | nzTrim) : '')"
+                  class="task-card-name"
+                  >{{item?.name}}</span
+                >
+              </div>
+              <img [src]="item?.crmSystemMediaLink" alt="logo" />
+            </button>
+          </ng-container>
+        </div>
+      </ng-template>
+    </ng-template>
+  </div>
+</trudi-modal>
+
+<ng-template #noItem>
+  <div class="no-data">
+    <trudi-icon icon="noTasks2"> </trudi-icon>
+    <span>No templates found</span>
+  </div>
+</ng-template>

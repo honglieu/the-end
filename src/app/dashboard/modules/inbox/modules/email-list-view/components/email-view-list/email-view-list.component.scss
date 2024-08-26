@@ -1,0 +1,354 @@
+@import 'function';
+
+:host ::ng-deep {
+  --header-height: 88px;
+
+  .view-mode {
+    position: relative;
+  }
+
+  .cdk-drop-list {
+    height: 100%;
+  }
+
+  .scroll {
+    width: calc(100% - 28px) !important;
+  }
+
+  .email-skeleton {
+    overflow-y: hidden !important;
+    overflow-x: hidden !important;
+    overflow: hidden !important;
+
+    border-radius: 0;
+  }
+
+  .email-list-wrapper:has(.loading-spinner-top) {
+    .message-row:nth-child(2) {
+      .message-row-wrapper {
+        border-top: 0 !important;
+      }
+    }
+  }
+
+  .email-list-wrapper {
+    height: calc(100vh - 116px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: auto;
+
+    > div {
+      overflow: visible;
+      box-sizing: border-box;
+    }
+
+    .email-row:last-child {
+      .email-row-wrapper > div {
+        border-bottom: 1px solid var(--border-neutral-dark);
+      }
+    }
+
+    .email-row:last-child:not(.loading-spinner) {
+      .email-row-wrapper > div {
+        border-top-right-radius: 8px;
+        border-bottom: 1px solid var(--border-neutral-dark);
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &.selected {
+      transition: all ease-in 0.3ms;
+      background: var(--bg-brand-tonal-strongest);
+    }
+
+    .email-row.cdk-drag-disabled {
+      .gmail-row-wrapper {
+        cursor: pointer !important;
+      }
+    }
+  }
+
+  .gmail-row-wrapper {
+    padding: 0 12px !important;
+
+    > div {
+      border-bottom: 1px solid var(--border-neutral-dark);
+      display: flex;
+      flex-direction: column;
+      padding: 12px 0;
+    }
+
+    .ant-skeleton-custom {
+      width: calc(100% - 23px);
+
+      h3.ant-skeleton-title {
+        height: 14px;
+        margin-left: 23px;
+      }
+    }
+
+    .ant-skeleton-circle {
+      width: 50px;
+
+      h3.ant-skeleton-title {
+        border-radius: 20px;
+      }
+    }
+
+    .ant-skeleton-gmail-role {
+      width: 100px;
+      height: 20px;
+      margin-left: -12px;
+    }
+  }
+
+  .email-row.loading-spinner {
+    height: 104px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border-left: 0px;
+    border-bottom: 1px solid var(--border-neutral-dark);
+    border-top-right-radius: 0%;
+    margin-left: 12px;
+    margin-right: 12px;
+
+    img {
+      height: 64px;
+      width: 64px;
+    }
+  }
+}
+
+.list-wrapper {
+  height: calc(100vh - var(--header-height));
+  width: 100%;
+
+  .no-gmail {
+    margin: 0 auto;
+    margin-top: 75%;
+    gap: 16px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &__text {
+      display: flex;
+      justify-content: center;
+      text-align: center;
+      @include fontSetup(
+        var(--fg-neutral-weaker, #999),
+        14px,
+        20px,
+        normal,
+        500
+      );
+    }
+  }
+}
+
+.cdk-drag-placeholder {
+  opacity: 1;
+}
+
+.drag_preview {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  overflow: visible;
+  max-width: 440px;
+  border-radius: 8px;
+  background: var(--bg-in-progress-solid-default, #4a7ce0);
+  backdrop-filter: blur(4px);
+  @include fontSetup(var(--white), 14px, 20px, normal, 500);
+  .tooltip-for-drag {
+    position: absolute;
+    top: -50px;
+    left: -20px;
+    .tooltip-content {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      max-width: 440px;
+      display: block;
+      background-color: var(--bg-overlay-dark);
+      color: var(--white);
+      text-align: center;
+      padding: 4px 6px;
+      z-index: 1;
+      border-radius: 4px;
+    }
+    .tooltip-arrow {
+      position: absolute;
+      left: 12px;
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid var(--bg-overlay-dark);
+    }
+  }
+  .email-subject {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--info-500);
+    padding: 8px 12px;
+  }
+}
+
+.menu-wrapper {
+  width: 180px;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: var(--white);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+
+  .item {
+    padding: 12px;
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+    cursor: pointer;
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: default;
+
+      .size-20 {
+        opacity: 0.3;
+      }
+    }
+
+    .text {
+      margin: 0;
+      white-space: nowrap;
+    }
+  }
+}
+
+::ng-deep .cdk-overlay-pane:has(.folder-option) {
+  margin-top: -50px !important;
+  margin-left: -166px !important;
+}
+
+.folder-option {
+  max-width: 161px;
+  background: var(--white, #fff);
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px 0px var(--bg-overlay-light),
+    0px 8px 28px 0px rgba(0, 0, 0, 0.05);
+
+  .disabled {
+    cursor: not-allowed !important;
+    pointer-events: auto !important;
+    color: var(--fg-neutral-weakest, #b9bec0) !important;
+  }
+
+  .folder-option-item {
+    border: none;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 45px;
+    max-width: 161px;
+    padding: 12px;
+    background: var(--status-bg);
+    cursor: pointer;
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      14px,
+      20px,
+      normal,
+      500
+    );
+
+    &:not(:disabled):hover {
+      background-color: var(--bg-neutral-tonal-stronger);
+      color: var(--fg-neutral-normal);
+    }
+  }
+}
+
+.disabled-menu {
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
+
+  .size-20 {
+    opacity: 0.3;
+  }
+
+  &:hover {
+    background-color: var(--bg-base) !important;
+    color: var(--fg-neutral-weakest) !important;
+  }
+}
+
+.quote-wrapper {
+  margin-bottom: 4px;
+}
+
+:host ::ng-deep {
+  .group-list-message .header-collapse {
+    margin: 0 12px;
+  }
+}
+
+::ng-deep .submenu-item {
+  white-space: nowrap;
+  border: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 45px;
+  padding: 12px;
+  background: var(--status-bg);
+  cursor: pointer;
+  @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+
+  &:hover {
+    background-color: var(--gray-50);
+    color: var(--fg-neutral-normal);
+  }
+
+  &:active {
+    background-color: var(--gray-100);
+    color: var(--fg-neutral-normal);
+  }
+}
+
+::ng-deep {
+  .move-to {
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+    .ant-dropdown-menu-submenu-title {
+      padding: 12px !important;
+      .ant-dropdown-menu-submenu-expand-icon {
+        display: none;
+      }
+    }
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+    cursor: pointer;
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: default;
+
+      .size-20 {
+        opacity: 0.3;
+      }
+    }
+
+    .text {
+      margin: 0;
+      white-space: nowrap;
+    }
+  }
+}

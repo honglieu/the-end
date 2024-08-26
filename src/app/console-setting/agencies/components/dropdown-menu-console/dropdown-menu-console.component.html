@@ -1,0 +1,107 @@
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div nz-menu>
+    <div class="list-items auto-hide-scroll">
+      <div class="list-items-info">
+        <ng-container
+          *ngIf="formDropdown=== 'multiple selection';else otherTemplateDropdown">
+          <div
+            *ngIf="currentListItem.length > 0"
+            class="d-flex align-items-center justify-content-between container-sub">
+            <p class="sub-title">
+              {{defaultFilterList.length}}/{{currentListItem.length}}
+            </p>
+            <p
+              class="clear-selection cursor-pointer clear-selection-btn"
+              (click)="clear($event)">
+              Clear selection
+            </p>
+          </div>
+          <div
+            *ngFor="let item of currentListItem; index as i"
+            (click)="handleCheckbox(item.key)"
+            [ngClass]="{'active': item.selected}"
+            class="item-detail cursor-pointer">
+            <div class="item-detail-content">
+              <div class="item-detail-info">
+                <div
+                  class="item-name text-overflow"
+                  [ngClass]="{'active': item.selected}">
+                  {{ item.value }}
+                </div>
+              </div>
+              <trudi-checkbox
+                [ngModel]="item.selected"
+                (ngModelChange)="handleCheckbox(item.key)"></trudi-checkbox>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #otherTemplateDropdown>
+          <div *ngIf="currentListItem.length > 0">
+            <div
+              *ngFor="let item of currentListItem; index as i"
+              class="item-detail cursor-pointer"
+              (click)="handleCheckbox(item.key)"
+              [ngClass]="{'active': item.selected}">
+              <div class="item-detail-content">
+                <div class="item-detail-info">
+                  <div class="item-name text-overflow">{{ item.value }}</div>
+                </div>
+                <trudi-icon
+                  *ngIf="item.selected"
+                  icon="checkSuccess"></trudi-icon>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<button
+  class="container-dropdown"
+  (click)="onShowPopupAssign($event)"
+  nz-dropdown
+  [nzDropdownMenu]="menu"
+  [nzTrigger]="'click'"
+  [nzClickHide]="false"
+  (nzVisibleChange)="onDropdownMenuVisibleChange($event)">
+  <ng-container>
+    <div
+      class="cursor-pointer container-item d-flex align-items-center target-item-detail"
+      [ngClass]="{'active': focus}">
+      <div class="title">
+        {{newFilterList.length > 0 ? label + ":" : label }}
+      </div>
+
+      <ng-container *ngFor="let item of newFilterList; index as i">
+        <div class="td-icon-circle-btn cursor-pointer item-avatar">
+          <div class="text-detail">
+            <span class="text"> {{ item.value }} </span>
+            <div *ngIf="nonDisplayListItem.length">,</div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="nonDisplayListItem.length">
+        <div class="item-avatar remaining-item round-icon cursor-pointer">
+          <label class="cursor-pointer">+{{nonDisplayListItem.length}}</label>
+        </div>
+      </ng-container>
+
+      <ng-container>
+        <trudi-icon
+          *ngIf="newFilterList.length === 0"
+          icon="grayChevronDown"></trudi-icon>
+        <trudi-icon
+          *ngIf="newFilterList.length > 0"
+          (click)="clear($event)"
+          nz-tooltip
+          nzTooltipPlacement="top"
+          [nzTooltipTitle]="'Clear selection'"
+          svgClass="size-16"
+          icon="smallCloseBlack"></trudi-icon>
+      </ng-container>
+    </div>
+  </ng-container>
+</button>

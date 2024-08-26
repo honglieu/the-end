@@ -1,0 +1,168 @@
+<div class="attachment-wrapper d-flex flex-dir-column gap-16 mt-12">
+  <div
+    data-e2e="pdf-section"
+    class="trudi-send-msg-attachment-files justify-content-between"
+    [class.files-spacing]="listOfFiles.value.length > 0 || listAttachMediaFiles.length > 0"
+    *ngIf="listOfFiles.value || listAttachMediaFiles">
+    <ng-container *ngIf="listAttachMediaFiles.length && isPrefillMediaFiles">
+      <ng-container *ngTemplateOutlet="isAttachMediaFile"> </ng-container>
+    </ng-container>
+    <div
+      class="message-file"
+      [class.invalid-file]="item | checkFileInvalid:fileValidType:maxImageFilesSize && (item?.mediaType === 'image' || item?.mediaType === 'photo') ? maxImageFilesSize : maxFileSize"
+      style="margin: 0"
+      *ngFor="let item of listOfFiles.value; let i = index; trackBy: trackByItems">
+      <div
+        class="message-file-logo"
+        [class.dim-brightness]="(item?.localThumb && item?.isSupportedVideo) || (item?.[0]?.localThumb && item?.[0]?.isSupportedVideo)">
+        <ng-container *ngIf="item?.mediaType === 'photo'; else otherFiles">
+          <img
+            *ngIf="item?.mediaLink || item?.localThumb"
+            [src]="item?.mediaLink || item?.localThumb" />
+          <img
+            *ngIf="!item?.mediaLink && !item.localThumb"
+            [src]="((item?.name || item?.fileName ) | getFileIconType)" />
+        </ng-container>
+        <ng-template #otherFiles>
+          <img
+            *ngIf="item?.localThumb || item?.[0]?.localThumb || (item?.isDraft && item?.thumbMediaLink)"
+            [src]="((item.localThumb || item?.[0]?.localThumb || (item?.isDraft && item?.thumbMediaLink)) | safe: 'resourceUrl')"
+            data-e2e="pdf-label" />
+          <img
+            *ngIf="!item?.localThumb && !item?.[0]?.localThumb || (item?.isDraft && item?.thumbMediaLink)"
+            [src]="(((item?.name || item[0]?.name || item?.fileName || (item?.isDraft && item?.thumbMediaLink)) | getFileIconType))"
+            data-e2e="pdf-label" />
+          <div
+            *ngIf="(item?.localThumb && item?.isSupportedVideo) || (item?.[0]?.localThumb && item?.[0]?.isSupportedVideo) || (item?.isDraft && item?.thumbMediaLink)"
+            class="play-icon">
+            <trudi-icon icon="playSolid"></trudi-icon>
+          </div>
+        </ng-template>
+      </div>
+      <div data-e2e="pdf-title" class="file">
+        <div
+          #trudiSendfileName
+          data-e2e="pdf-title"
+          class="file-name"
+          nz-tooltip
+          nzTooltipPlacement="top"
+          [nzTooltipTitle]="item.title || item.name || item[0]?.name"
+          [nzTooltipOverlayStyle]="{'max-width': '240px', 'word-break': 'break-all'}"
+          [nzTooltipTrigger]="trudiSendfileName?.offsetWidth < trudiSendfileName?.scrollWidth ? 'hover' : null">
+          {{item.title || item.name || item[0]?.name}}
+        </div>
+        <div class="file-size">
+          {{(item?.size || item[0]?.size) || item[0]?.fileSize|| item.fileSize |
+          convertFileSize}}
+        </div>
+      </div>
+      <!-- File Forward from Send quote to Landlord (don't have title) and ReiForm are not able to delete -->
+      <ng-container
+        *ngIf="(item.name || item[0]?.name || !item?.isReiForm) && !item?.isHideRemoveIcon && (item.canUpload ? item?.uploaded : !item.canUpload)">
+        <div
+          data-e2e="close-btn"
+          class="cursor-pointer message-file-remove"
+          (click)="removeFile(i)">
+          <trudi-icon
+            class="trudi-icon"
+            [style]="{ 'width.px': 16, 'height.px': 16, color: '#646464' }"
+            icon="closeIcon"></trudi-icon>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!item?.uploaded && item.canUpload">
+        <div class="image-rotation rotate-image">
+          <img src="/assets/icon/loading.png" alt="loading-icon" />
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<div
+  *ngIf="listOfFiles.value?.length && (isOverFileSize || isOverImageSize)"
+  class="y-center gap-6 mt-4">
+  <img src="/assets/icon/icon_warning.svg" alt="" />
+  <span class="warning-content">
+    {{ maxImageFilesSize ? 'File size must not exceed ' + maxFileSize + ' MB.
+    Images must not exceed ' + maxImageFilesSize + ' MB.' : 'Your file is larger
+    than ' + maxFileSize + ' MB. Please upload a smaller file.' }}
+  </span>
+</div>
+<div
+  *ngIf="listOfFiles.value?.length &&  isUnSupportFile"
+  class="y-center gap-6 mt-4">
+  <img src="/assets/icon/icon_warning.svg" alt="" />
+  <span class="warning-content">Unsupported file type.</span>
+</div>
+<ng-container>
+  <div class="addition hide">
+    <div class="btn-wrapper" style="padding: 0">
+      <button
+        data-e2e="button-upload-file"
+        type="button"
+        class="add-file-btn-upload">
+        <input
+          id="trudi-send-msg-upload-btn"
+          [accept]="acceptOnlySupportedFile"
+          title=""
+          [multiple]="true"
+          class="input-file"
+          onclick="this.value=''"
+          type="file"
+          (change)="handleUploadFileLocal($event)" />
+      </button>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #isAttachMediaFile>
+  <div
+    class="message-file"
+    style="margin: 0"
+    *ngFor="let item of listAttachMediaFiles; let i = index; trackBy: trackByItems">
+    <div
+      class="message-file-logo"
+      [class.dim-brightness]="(item?.localThumb && item?.isSupportedVideo) || (item?.[0]?.localThumb && item?.[0]?.isSupportedVideo)">
+      <img
+        *ngIf="item?.localThumb || item?.[0]?.localThumb"
+        [src]="((item.localThumb || item?.[0]?.localThumb) | safe: 'resourceUrl')"
+        data-e2e="pdf-label" />
+      <img
+        *ngIf="!item?.localThumb && !item?.[0]?.localThumb"
+        [src]="(((item?.name || item[0]?.name || item?.fileName) | getFileIconType))"
+        data-e2e="pdf-label" />
+      <div
+        *ngIf="(item?.localThumb && item?.isSupportedVideo) || (item?.[0]?.localThumb && item?.[0]?.isSupportedVideo)"
+        class="play-icon">
+        <trudi-icon icon="playSolid"></trudi-icon>
+      </div>
+    </div>
+    <div data-e2e="pdf-title" class="file">
+      <div
+        #mediaFileName
+        data-e2e="pdf-title"
+        class="file-name"
+        nz-tooltip
+        nzTooltipPlacement="top"
+        [nzTooltipTitle]="item.title || item.name || item[0]?.name"
+        [nzTooltipOverlayStyle]="{'max-width': '240px', 'word-break': 'break-all'}"
+        [nzTooltipTrigger]="mediaFileName?.offsetWidth < mediaFileName?.scrollWidth ? 'hover' : null">
+        {{item.title || item.name || item[0]?.name}}
+      </div>
+      <div class="file-size">
+        {{(item?.size || item[0]?.size) | convertFileSize}}
+      </div>
+    </div>
+    <ng-container
+      *ngIf="(item.name || item[0]?.name || !item?.isReiForm) && !item?.isHideRemoveIcon">
+      <div
+        data-e2e="close-btn"
+        class="cursor-pointer message-file-remove"
+        (click)="removeMediaFiles(i)">
+        <trudi-icon
+          class="trudi-icon"
+          [style]="{ 'width.px': 16, 'height.px': 16, color: '#646464' }"
+          icon="closeIcon"></trudi-icon>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>

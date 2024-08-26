@@ -1,0 +1,94 @@
+<ng-container [ngSwitch]="requestItemToDisplay?.type">
+  <ng-template [ngSwitchCase]="EOptionType.MAINTENANCE_REQUEST">
+    <div class="section" *ngIf="requestItemToDisplay?.originalContent">
+      {{requestItemToDisplay?.translatedContent ||
+      requestItemToDisplay?.originalContent}}
+    </div>
+  </ng-template>
+  <ng-template [ngSwitchCase]="EOptionType.GENERAL_ENQUIRY">
+    <div class="section" *ngIf="requestItemToDisplay?.originalContent">
+      {{requestItemToDisplay?.translatedContent ||
+      requestItemToDisplay?.originalContent}}
+    </div>
+  </ng-template>
+  <ng-template [ngSwitchCase]="EOptionType.RESCHEDULE_INSPECTION_REQUEST">
+    <div class="section-wrapper">
+      <div
+        class="section"
+        *ngIf="requestItemToDisplay?.rescheduleInfo?.suggestedDate">
+        <div class="section-text-content">
+          <span class="section-text">Suggested date:</span
+          >{{requestItemToDisplay?.rescheduleInfo?.suggestedDate}}
+        </div>
+      </div>
+      <div
+        class="section"
+        *ngIf="requestItemToDisplay?.rescheduleInfo?.suggestedTime">
+        <div class="section-text-content">
+          <span class="section-text">Suggested time:</span
+          >{{requestItemToDisplay?.rescheduleInfo?.suggestedTime}}
+        </div>
+      </div>
+      <div class="section" *ngIf="requestItemToDisplay?.originalContent">
+        <div class="section-text-content">
+          <span class="section-text">Reason:</span>
+          {{ requestItemToDisplay.translatedContent || (createdFrom !==
+          EConversationType.VOICE_MAIL &&
+          requestItemToDisplay?.rescheduleInfo?.reason ?
+          requestItemToDisplay?.rescheduleInfo?.reason :
+          requestItemToDisplay?.originalContent ) }}
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template [ngSwitchCase]="EOptionType.VACATE_REQUEST">
+    <div class="section-wrapper">
+      <div class="section" *ngIf="requestItemToDisplay?.vacateInfo?.type">
+        <div class="section-text-content">
+          <span class="section-text">Type:</span
+          >{{requestItemToDisplay?.vacateInfo?.type}}
+        </div>
+      </div>
+      <div
+        class="section"
+        *ngIf="requestItemToDisplay?.vacateInfo?.intendedDate">
+        <div class="section-text-content">
+          <span class="section-text">Intended move out date:</span
+          >{{requestItemToDisplay?.vacateInfo?.intendedDate}}
+        </div>
+      </div>
+      <div class="section" *ngIf="requestItemToDisplay?.originalContent">
+        <div class="section-text-content">
+          <span class="section-text">Note:</span
+          >{{requestItemToDisplay?.translatedContent || (createdFrom !==
+          EConversationType.VOICE_MAIL && requestItemToDisplay?.vacateInfo?.note
+          ? requestItemToDisplay?.vacateInfo?.note :
+          requestItemToDisplay?.originalContent)}}
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template [ngSwitchCase]="EOptionType.FINAL_INSPECTION">
+    @if((requestItemToDisplay?.translatedContent ||
+    requestItemToDisplay?.finalInspectionRequest?.availableTime) && createdFrom
+    !== EConversationType.VOICE_MAIL) {
+    <div class="section-wrapper">
+      <div class="section">
+        <div class="section-text-content">
+          <span class="section-text">Available date:</span
+          >{{requestItemToDisplay?.translatedContent ||
+          requestItemToDisplay?.finalInspectionRequest?.availableTime }}
+        </div>
+      </div>
+    </div>
+    }
+  </ng-template>
+  <ng-template [ngSwitchDefault]>
+    <div
+      class="section section-text-content"
+      *ngIf="requestItemToDisplay?.translatedContent || requestItemToDisplay?.originalContent">
+      {{requestItemToDisplay?.translatedContent ||
+      requestItemToDisplay?.originalContent}}
+    </div>
+  </ng-template>
+</ng-container>

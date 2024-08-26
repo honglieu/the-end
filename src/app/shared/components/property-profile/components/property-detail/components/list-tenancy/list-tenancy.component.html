@@ -1,0 +1,36 @@
+<div class="tenancies-wrapper">
+  <div class="title">
+    <div class="flex-1">{{ isCRM ? 'TENANTS' : 'TENANCIES' }}</div>
+    <trudi-checkbox
+      [ngModel]="filterCheckbox"
+      (ngModelChange)="getListTenancy($event)"
+      [label]="isCRM ? ' Include future, past tenants' : ' Include archived tenancies'"></trudi-checkbox>
+  </div>
+  <div *ngIf="!isLoading" class="list-wrapper">
+    <ng-container *ngFor="let tenancy of tenancies; let i = index">
+      <div class="item-tab-wrapper">
+        <div
+          class="item-tab"
+          tabindex="0"
+          (click)="handleClickTenancy(tenancy)"
+          (keydown.enter)="handleClickTenancy(tenancy)">
+          <div class="d-flex gap-8 label-wrapper align-items-center">
+            <span class="tenant-label">{{tenancy.name}}</span>
+            <trudi-badge
+              size="small"
+              [text]="tenancy.status | uppercaseFirstLetter"
+              [variant]="(tenancy?.status === ECrmStatus.ARCHIVED || tenancy?.status === 'past') ? 'archive' : 'border'"></trudi-badge>
+          </div>
+          <trudi-icon icon="chevronRight" class="action-icon pd-4"></trudi-icon>
+        </div>
+        <div class="border-bottom" *ngIf="i !== tenancies.length - 1"></div>
+      </div>
+    </ng-container>
+    <span class="no-content" *ngIf="tenancies.length === 0"
+      >{{ !isCRM ? 'No tenancies' : 'No tenants' }}</span
+    >
+  </div>
+  <tenancies-section-skeleton
+    *ngIf="isLoading"
+    [displayHeader]="false"></tenancies-section-skeleton>
+</div>

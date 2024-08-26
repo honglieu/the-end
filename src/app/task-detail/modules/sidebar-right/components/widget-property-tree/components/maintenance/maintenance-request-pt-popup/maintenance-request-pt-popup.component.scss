@@ -1,0 +1,65 @@
+@import 'function';
+
+.maintenance-request-pt-footer-wrap {
+  padding: 16px 24px;
+  border-top: 1px solid var(--gray-100);
+  .info-status {
+    white-space: nowrap;
+
+    span {
+      @include fontSetup(var(--bg-overlay-dark), 12px, 20px, normal, 500);
+      margin-left: 4px;
+    }
+  }
+
+  img {
+    margin-right: 0.5rem;
+  }
+
+  .sync-icon {
+    height: 1.6rem;
+    width: 1.6rem;
+  }
+
+  .spin {
+    -webkit-animation: spin 4s linear infinite;
+    -moz-animation: spin 4s linear infinite;
+    animation: spin 4s linear infinite;
+  }
+}
+
+.maintenance-request-pt-header-wrap {
+  &-title {
+    flex: 1 28%;
+    @include fontSetup(var(--gray-700), 18px, 28px, normal, 600);
+  }
+}
+
+.label-with-status {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.footer-wrapper {
+  ::ng-deep .trudi-btn-primary:disabled {
+    pointer-events: unset;
+    cursor: not-allowed !important;
+  }
+}
+
+:host ::ng-deep .maintainance-request-popup .modal-popup-content {
+  padding: 20px 24px;
+}
+
+::ng-deep .maintainance-request-popup .resizable-modal-header .title {
+  flex: initial;
+  display: flex;
+  justify-content: center;
+  span {
+    flex: initial;
+  }
+}
+
+::ng-deep .maintainance-request-popup .resizable-modal-header__title--default {
+  column-gap: unset !important;
+}

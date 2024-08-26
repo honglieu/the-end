@@ -1,0 +1,21 @@
+<trudi-modal
+  *ngIf="visible"
+  [modelWidth]="624"
+  [visible]="visible"
+  [autoFocus]="null"
+  className="trudi-modal-custom">
+  <app-move-mess-to-different-task-v2
+    [subTitle]="subTitleMoveToTask"
+    [show]="visible"
+    [propertyIds]="propertyIds"
+    [taskIds]="taskIds"
+    [taskFolderId]="taskFolderId"
+    [isUnHappyPath]="isUnHappyPath"
+    [isFromVoiceMail]="isFromVoiceMail"
+    [isFromTrudiApp]="isFromTrudiApp"
+    [isShowAddress]="true"
+    (isQuitModal)="handleClose()"
+    [isSelectMultipleMsg]="true"
+    (onMoveMsgToTask)="onSubmit()"
+    (onOpenCreateTaskOption)="handleOpenCreateTaskOptionModal()"></app-move-mess-to-different-task-v2>
+</trudi-modal>

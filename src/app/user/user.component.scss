@@ -1,0 +1,141 @@
+@import 'function';
+
+.contacts-wrapper {
+  display: flex;
+  height: 100%;
+
+  ::ng-deep.contact-side-bar {
+    padding: 24px 0px;
+    width: 188px !important;
+    height: 100%;
+    background-color: var(--white);
+    border-right: 1px solid var(--border-neutral-dark);
+  }
+
+  ::ng-deep sidebar-item-shared {
+    ul {
+      background-color: var(--white);
+      border-right: 1px solid var(--border-neutral-dark);
+
+      li.single-item {
+        background-color: var(--white) !important;
+
+        &:hover,
+        &.ant-menu-item-selected {
+          background: var(--bg-brand-tonal-stronger) !important;
+        }
+
+        &:active {
+          background: var(--bg-brand-tonal-strongest) !important;
+        }
+      }
+    }
+  }
+
+  .contact-main {
+    padding: 24px 32px;
+    width: 100%;
+    overflow: auto;
+
+    .header {
+      display: flex;
+      align-items: center;
+      column-gap: 20px;
+
+      .search-wrapper {
+        position: relative;
+        width: 320px;
+
+        i {
+          position: absolute;
+          top: 50%;
+          left: 1.2rem;
+          transform: translate(50%, calc(-50% - 2px));
+          font-size: 1.7rem;
+
+          &::before {
+            color: var(--gray-500);
+          }
+        }
+
+        .form-control {
+          padding: 1.4rem 7.2rem 1.2rem 4.2rem;
+          min-height: 4rem;
+          border-radius: 0.8rem;
+          border: none;
+          background-color: var(--gray-200);
+          caret-color: var(--brand-500);
+          @include fontSetup(var(--gray-700), 1.4rem, 1.5rem, normal, 500);
+
+          &:focus {
+            background: var(--white);
+            border: var(--brand-500) solid 1px;
+            outline: 2px solid rgba(var(--brand-500-rgb), 0.6) !important;
+          }
+
+          &::placeholder {
+            /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: var(--gray-500);
+            opacity: 1;
+            /* Firefox */
+          }
+
+          &:-ms-input-placeholder {
+            /* Internet Explorer 10-11 */
+            color: var(--gray-500);
+          }
+
+          &::-ms-input-placeholder {
+            /* Microsoft Edge */
+            color: var(--gray-500);
+          }
+        }
+
+        .close-icon {
+          position: absolute;
+          right: 1.5rem;
+          top: 50%;
+          transform: translate(50%, calc(-50% + 1px));
+          cursor: pointer;
+        }
+
+        .clear-text {
+          position: absolute;
+          right: 4.5rem;
+          top: 50%;
+          transform: translate(50%, calc(-50% + 1px));
+          color: var(--gray-500);
+          font-size: 1.2rem;
+          pointer-events: none;
+
+          &.active {
+            cursor: pointer;
+            pointer-events: all;
+          }
+        }
+      }
+    }
+
+    .content {
+      margin-top: 20px;
+    }
+  }
+}
+
+:host ::ng-deep {
+  .search-wrapper {
+    trudi-form-control {
+      .trudi-form-control-wrapper {
+        trudi-text-field {
+          .trudi-text-field-wrapper {
+            .trudi-ui-text-field {
+              &::placeholder {
+                color: var(--gray-400);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

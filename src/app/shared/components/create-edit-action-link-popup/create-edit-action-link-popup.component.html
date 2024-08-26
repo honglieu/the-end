@@ -1,0 +1,145 @@
+<div class="invite-wrapper" [formGroup]="actionLinkForm">
+  <div class="header">
+    <div class="preview">
+      <div class="al-custom-effect">
+        <app-message-action-link
+          [messageActionLink]="previousProps"
+          [linkBackground]="actionLinkProps.color"
+          [imgLink]="actionLinkProps.svg">
+        </app-message-action-link>
+      </div>
+    </div>
+    <div class="close-btn" (click)="openQuitConfirmModal(true)">
+      <img src="/assets/icon/close-modal.png" />
+    </div>
+  </div>
+  <hr />
+  <div class="body" #createBody>
+    <div class="topic-title">
+      <div class="topic">
+        <div class="up-left-text">Topic</div>
+        <ng-select
+          appendTo="body"
+          formControlName="topicId"
+          [items]="selectTopicItems"
+          class="topic-select rise-to-top"
+          bindLabel="text"
+          bindValue="id"
+          [searchable]="false"
+          [clearable]="true"></ng-select>
+      </div>
+
+      <div class="title">
+        <div class="up-left-text">Title</div>
+        <input
+          type="text"
+          class="input title-text"
+          formControlName="title"
+          [class.invalid-input]="actionLinkForm?.get('title').dirty && actionLinkForm?.get('title').invalid"
+          maxlength="32" />
+        <div class="down-right-text">
+          <app-remaining-character
+            [maxlength]="32"
+            [currentTextLength]="actionLinkForm?.get('title')?.value.length"></app-remaining-character>
+        </div>
+      </div>
+    </div>
+    <div class="sub-heading">
+      <div class="up-left-text">Sub Heading</div>
+      <input
+        type="text"
+        formControlName="subHeading"
+        class="input"
+        [class.invalid-input]="actionLinkForm?.get('subHeading').dirty && actionLinkForm?.get('subHeading').invalid"
+        maxlength="100" />
+      <div class="down-right-text">
+        <app-remaining-character
+          [maxlength]="100"
+          [currentTextLength]="actionLinkForm?.get('subHeading')?.value.length"></app-remaining-character>
+      </div>
+    </div>
+
+    <div class="pri-btn-text">
+      <div class="up-left-text">Primary Button Text</div>
+      <input
+        type="text"
+        class="input"
+        formControlName="primaryButtonText"
+        [class.invalid-input]="actionLinkForm?.get('primaryButtonText').dirty && actionLinkForm?.get('primaryButtonText').invalid"
+        maxlength="14" />
+      <div class="down-right-text">
+        <app-remaining-character
+          [maxlength]="14"
+          [currentTextLength]="actionLinkForm?.get('primaryButtonText')?.value.length"></app-remaining-character>
+      </div>
+    </div>
+
+    <div class="pri-btn-url">
+      <div class="up-left-text">Primary Button URL</div>
+      <input
+        type="text"
+        class="input"
+        formControlName="primaryButtonUrl"
+        [class.invalid-input]="(actionLinkForm?.get('primaryButtonUrl').dirty || actionLinkForm?.get('primaryButtonUrl').touched) && actionLinkForm?.get('primaryButtonUrl').invalid" />
+    </div>
+
+    <div class="check-box dark-grey">
+      <label class="ihr cursor-pointer" for="cb-second-btn"
+        >Add secondary button</label
+      >
+      <input
+        id="cb-second-btn"
+        class="def-checkbox"
+        type="checkbox"
+        formControlName="secondaryButton" />
+      <label for="cb-second-btn" class="checkbox-label no-margin-bottom">
+        <img
+          [src]="getBtnSecond.value ? '/assets/icon/checkbox-on.svg' : '/assets/icon/checkbox-off.svg'"
+          class="user-checkbox checkbox-head"
+          alt="" />
+      </label>
+    </div>
+    <ng-container *ngIf="getBtnSecond.value">
+      <div class="sec-btn-text">
+        <div class="up-left-text">Secondary Button Text</div>
+        <input
+          type="text"
+          class="input"
+          formControlName="secondaryButtonText"
+          [class.invalid-input]="actionLinkForm?.get('secondaryButtonText').dirty && actionLinkForm?.get('secondaryButtonText').invalid"
+          maxlength="14" />
+        <div class="down-right-text">
+          <app-remaining-character
+            [maxlength]="14"
+            [currentTextLength]="actionLinkForm?.get('secondaryButtonText')?.value.length"></app-remaining-character>
+        </div>
+      </div>
+      <div class="sec-btn-url">
+        <div class="up-left-text">Secondary Button URL</div>
+        <input
+          type="text"
+          class="input"
+          formControlName="secondaryButtonUrl"
+          [class.invalid-input]="actionLinkForm?.get('secondaryButtonUrl').dirty && actionLinkForm?.get('secondaryButtonUrl').invalid" />
+      </div>
+    </ng-container>
+  </div>
+  <div class="btn-wrapper">
+    <button
+      data-e2e="button-cancel"
+      type="button"
+      class="white-btn"
+      (click)="openQuitConfirmModal(true)">
+      <span class="btn-text"> Cancel </span>
+    </button>
+    <button
+      class="green-btn"
+      data-e2e="button-save"
+      [class.btn-disabled]="actionLinkForm?.invalid"
+      [disabled]="actionLinkForm?.invalid"
+      (click)="openActionLinkModal(true)
+      ">
+      <span class="btn-text"> Save </span>
+    </button>
+  </div>
+</div>

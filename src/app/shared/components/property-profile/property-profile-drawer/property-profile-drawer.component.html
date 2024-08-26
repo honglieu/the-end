@@ -1,0 +1,19 @@
+<div class="property-profile-drawer">
+  <div
+    *ngIf="visible"
+    class="property-profile-drawer-mask"
+    (click)="onCloseDrawer()"></div>
+  <div
+    class="property-profile-container"
+    [@openClose]="{value: visible, params: { closeMargin: closeMargin }}"
+    (@openClose.done)="handleAnimationEnd()">
+    <property-profile
+      *ngIf="visibleProperty || visible"
+      [propertyId]="propertyId"
+      [displayBackButton]="displayBackButton"
+      [userId]="userId"
+      [userType]="userType"
+      (triggerBackButton)="handleBackButton()"
+      class="property-profile-inside-drawer"></property-profile>
+  </div>
+</div>

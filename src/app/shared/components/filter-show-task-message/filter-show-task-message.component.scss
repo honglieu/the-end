@@ -1,0 +1,13 @@
+@import 'function';
+
+.filter-container {
+  padding: 12px;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+:host {
+  ::ng-deep .switch-checkbox-container {
+    gap: 0px !important;
+  }
+}

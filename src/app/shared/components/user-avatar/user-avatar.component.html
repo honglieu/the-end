@@ -1,0 +1,14 @@
+<div class="user-avatar" [ngClass]="{'no-round': !round}" [style]="style">
+  <img
+    *ngIf="avatar && checkAvatar(); else noAvatar"
+    [nz-image]
+    [nzSrc]="avatar"
+    [nzDisablePreview]="disablePreview"
+    alt="avatar" />
+  <ng-template #noAvatar>
+    <div class="text">
+      {{{firstName: user?.firstName, lastName: user?.lastName} |
+      formatShortName}}
+    </div>
+  </ng-template>
+</div>

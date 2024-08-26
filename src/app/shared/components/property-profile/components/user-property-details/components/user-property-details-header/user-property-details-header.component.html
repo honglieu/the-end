@@ -1,0 +1,92 @@
+<div class="gap-12 d-flex justify-content-between">
+  <div class="user-info d-flex gap-8 align-items-center">
+    <!--    button back-->
+    <div class="wrapper-avatar">
+      <ng-container>
+        <button
+          (click)="handleBack()"
+          class="assigned-agent-container"
+          data-console="assignee-button"
+          menuKeyboard
+          tabindex="0">
+          <ng-container>
+            <div
+              class="cursor-pointer assigned-agent d-flex align-items-center white-space-nowrap target-person"
+              nz-tooltip
+              nzTooltipPlacement="bottom">
+              <ng-container>
+                <div class="td-icon-circle-btn">
+                  <div class="text-agent-detail d-flex align-items-center">
+                    <trudi-icon
+                      class="icon-down"
+                      icon="chevronLeft"
+                      svgClass="size-20"
+                      viewBox="auto"></trudi-icon>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </button>
+      </ng-container>
+    </div>
+
+    <!--    info-->
+    <div class="info d-block">
+      <div class="d-flex gap-4">
+        <span class="info-name"
+          >{{ userProperty.user.firstName }} {{ userProperty.user.lastName
+          }}</span
+        >
+        <trudi-icon
+          *ngIf="isIconSync"
+          class="icon-sync d-flex align-items-center"
+          icon="iconSyncBlue"></trudi-icon>
+      </div>
+
+      <div class="wrapper-type-status d-flex align-items-center">
+        <div
+          *ngIf="contactType && ![ETypePage.TENANTS_LANLORDS, ETypePage.TASK_DETAIL].includes(openFrom)"
+          [ngClass]="{'border-right-type': status}"
+          class="info-type">
+          <span>{{contactType | titleCasePipe }}</span>
+        </div>
+        <div
+          *ngIf="contactType && openFrom === ETypePage.TASK_DETAIL"
+          [ngClass]="{'border-right-type': status}"
+          class="info-type">
+          <span>{{contactType | titleCasePipe }}</span>
+        </div>
+        <div
+          *ngIf="![ETypePage.OTHER, ETypePage.TASK_DETAIL].includes(openFrom)"
+          [ngClass]="{'border-right-type': status}"
+          class="info-type">
+          <span>{{ userProperty?.displayType }}</span>
+        </div>
+        <div
+          *ngIf="status"
+          class="info-status d-flex gap-4 align-items-center ml-10">
+          <span class="status"
+            >{{ status | landlordToOwner | uppercaseFirstLetter }}</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="user-toolbar d-flex align-items-center">
+    <ng-container *ngIf="userProperty?.user?.email || secondaryEmailMsg">
+      <button
+        (leftClick)="handleOpenSendMessageModal()"
+        PreventButton
+        class="toolbar-button"
+        [attr.data-button-key]="EButtonTask.SEND_MESSAGE"
+        [attr.data-button-type]="EButtonType.TASK"
+        disableOpenSendMsgModal>
+        <trudi-icon
+          class="icon-mail"
+          icon="mailFill"
+          svgClass="size-20"></trudi-icon>
+      </button>
+    </ng-container>
+  </div>
+</div>

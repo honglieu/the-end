@@ -1,0 +1,317 @@
+<ng-container
+  *ngIf="isLoadingSkeleton && taskDetailViewMode === EViewDetailMode.TASK; else loadingContent">
+  <div class="gap-16 w-100 d-flex justify-content-between task-detail">
+    <div class="content-left d-flex gap-8">
+      <div class="d-flex flex-dir-column w-100 gap-4 wapper-header-left">
+        <div class="property-section d-flex flex-wrap align-items-center gap-4">
+          <div class="d-flex flex-dir-column align-items-start gap-8">
+            <div class="d-flex align-items-center gap-8">
+              <nz-skeleton-element
+                nzType="button"
+                [nzActive]="true"
+                class="skeleton-title"></nz-skeleton-element>
+              <nz-skeleton-element
+                nzType="button"
+                [nzActive]="true"
+                class="skeleton-time"></nz-skeleton-element>
+            </div>
+            <div class="d-flex align-items-center gap-8">
+              <nz-skeleton-element
+                nzType="button"
+                [nzActive]="true"
+                class="skeleton-button-address"></nz-skeleton-element>
+              <nz-skeleton-element
+                nzType="button"
+                [nzActive]="true"
+                class="skeleton-button-assignee"></nz-skeleton-element>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #loadingContent>
+  <div
+    *ngIf="taskDetailViewMode === EViewDetailMode.TASK"
+    class="gap-16 w-100 d-flex justify-content-between task-detail"
+    (mouseenter)="showPopup = true"
+    (mouseleave)="showPopup = false">
+    <div class="content-left d-flex gap-8">
+      <div class="d-flex flex-dir-column gap-4 w-100">
+        <div class="property-section d-flex flex-dir-column gap-8">
+          <div class="d-flex align-items-center gap-8">
+            <button
+              #backButton
+              *ngIf="!showBtnNewMessage && !showBtnNewTask && currentTask"
+              trudi-btn
+              variant="outlined"
+              btnType="neutral"
+              shape="circle"
+              size="small"
+              [tabIndex]="0"
+              (keyup.enter)="backButton.click()"
+              PreventButton
+              [attr.data-button-key]="EButtonTask.BACK"
+              [attr.data-button-type]="EButtonType.TASK"
+              (leftClick)="onBack(true)">
+              <trudi-icon
+                class="icon-arrow-back"
+                viewBox="auto"
+                svgClass="size-20"
+                icon="closeV2"></trudi-icon>
+            </button>
+            <div class="title-wrapper">
+              <div
+                *ngIf="!isEditTitle"
+                #editInput
+                [tabIndex]="0"
+                class="title text-ellipsis"
+                [ngClass]="{'block-event': !(isCanEditTask)}"
+                [class.title-effect]="(isCanEditTask)"
+                data-e2e="task-name"
+                nz-tooltip
+                nzTooltipPlacement="bottom"
+                [nzTooltipTitle]="isCanEditTask ? 'Click to edit' : ''"
+                (keyup.enter)="editInput.click()"
+                (click)="isCanEditTask ? onEditTitle($event) : null">
+                {{ title.value }}
+              </div>
+              <div *ngIf="isEditTitle" class="dummySpace"></div>
+              <div class="title-text-field" [class.editing]="isEditTitle">
+                <edit-title
+                  [title]="title"
+                  (triggerEdit)="saveEditTitle($event)"
+                  [isBlockEvent]="isBlockEvent"></edit-title>
+              </div>
+            </div>
+
+            <div id="task-status-label">
+              <button
+                [disabled]="isConsole"
+                [tabIndex]="-1"
+                class="d-flex align-items-center justify-content-center gap-4 list-options"
+                [ngClass]="(currentTask?.status | lowercase)">
+                <span class="text-list-options">
+                  {{(currentTask?.status | lowercase) | titleStatus: taskType}}
+                </span>
+              </button>
+            </div>
+
+            <span class="time-open">
+              {{currentTask?.status | taskDateCase : currentTask?.createdAt:
+              currentTask?.updatedAt}} {{currentTask?.status ===
+              TaskStatusType.inprogress ? (currentTask?.createdAt | dateCase |
+              async) === TIME_NOW ? '' : (currentTask?.createdAt | dateCase |
+              async) : (currentTask?.updatedAt | dateCase | async) === TIME_NOW
+              ? '' : (currentTask?.updatedAt | dateCase | async)}}
+            </span>
+          </div>
+          <div class="d-flex align-items-center gap-12">
+            <ng-container>
+              <div
+                *ngIf="currentTask?.taskType === TaskType.TASK"
+                class="d-flex gap-8 align-items-center">
+                <assign-to-agents
+                  [isReadOnly]="isConsole"
+                  titleMode="avatar"
+                  [isCustom]="true"
+                  [maxDisplayAssignees]="3"
+                  [avatarSize]="24"
+                  *ngIf="currentTask?.taskType === TaskType.TASK"
+                  [agents]="(currentTask$ | async)?.assignToAgents"
+                  [task]="currentTask$ | async"
+                  (onAssignToAgentsClick)="onShowPopupAssign($event)"
+                  [isDetailSection]="isDetailSection">
+                </assign-to-agents>
+              </div>
+
+              <button
+                [disabled]="isNoProperty || !(currentTask$ | push)?.property?.streetline"
+                class="item border-b-1 y-center cs-more cs-move d-flex align-items-center gap-8 button-address"
+                [ngClass]="{'disabled': !(currentTask$ | push)?.property?.streetline,
+              'cursor-not-allowed' : propertyStatus === EPropertyStatus.deleted}"
+                [attr.data-button-key]="EButtonTask.VIEW_PROPERTY"
+                [attr.data-button-type]="EButtonType.TASK"
+                PreventButton
+                (leftClick)="handleOpenPropertyProfile()"
+                nz-tooltip
+                nzTooltipPlacement="top"
+                [nzTooltipTitle]="(
+                  (currentTask$ | push)?.property?.status && toolTipProperty)">
+                <div
+                  class="d-flex cs-more cs-move cursor-pointer address-title gap-4"
+                  [ngClass]="{'un-highlight':(currentTask$ | push)?.property?.status && (currentTask$ | push)?.property?.status !== 'ACTIVE',
+                'cursor-not-allowed' : propertyStatus === EPropertyStatus.deleted}">
+                  <trudi-icon
+                    class="size-16 pd-top-2"
+                    [icon]="'iconAddress'"></trudi-icon>
+                  <p
+                    class="cursor-pointer info-property-address text-ellipsis"
+                    [ngClass]="{
+                      'strike-through': [EPropertyStatus.deleted, EPropertyStatus.archived].includes((currentTask$ |async)?.property?.status)
+                    }">
+                    {{!(currentTask$ |async)?.property?.streetline ? "No
+                    property" : streetProperty }}
+                  </p>
+                </div>
+              </button>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="d-flex gap-8 align-items-center task-detail-actions">
+            <div class="item d-flex gap-8 flex-wrap">
+              <assign-to-agents
+                *ngIf="currentTask?.taskType === TaskType.MESSAGE"
+                [displayText]="'Assign'"
+                [agents]="(taskService.currentTask$ | push)?.assignToAgents"
+                [task]="taskService.currentTask$ | push"
+                [isDetailSection]="isDetailSection">
+              </assign-to-agents>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    *ngIf="taskDetailViewMode === EViewDetailMode.MESSAGE && (taskService.currentTask$
+          |async)?.taskType !== TaskTypeEnum.TASK"
+    class="message-view">
+    <ng-container
+      *ngIf="!isLoadingDetailHeader;else voicemailDetailSkeletonBottom">
+      <div class="d-flex align-items-center">
+        <div class="content-left d-flex align-items-center gap-8">
+          <button
+            [disabled]="!(taskService.currentTask$
+            |async)?.property?.streetline"
+            class="item border-b-1 y-center cs-more cs-move d-flex align-items-center gap-8 button-address"
+            [attr.data-button-key]="EButtonTask.VIEW_PROPERTY"
+            [attr.data-button-type]="EButtonType.TASK"
+            PreventButton
+            (leftClick)="handleOpenPropertyProfile()"
+            nz-tooltip
+            nzTooltipPlacement="top"
+            [nzTooltipTitle]="(
+                (taskService.currentTask$ | push)?.property?.status && toolTipProperty)">
+            <div
+              class="d-flex cs-more cs-move cursor-pointer address-title gap-4">
+              <trudi-icon
+                class="size-16 pd-top-2"
+                [icon]="'iconAddress'"></trudi-icon>
+              <p
+                class="cursor-pointer info-property-address text-ellipsis"
+                [ngClass]="{
+                  'strike-through': [EPropertyStatus.deleted, EPropertyStatus.archived, EPropertyStatus.inactive].includes(currentConversation?.propertyStatus),
+                  'draft-folder-property': isDraftFolder,
+                  'font-italic': !currentConversation?.streetline
+                  }">
+                {{currentConversation?.streetline || "No property"}}
+              </p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </ng-container>
+    <div *ngIf="!currentConversation?.isScratchDraft" class="assign-agent">
+      <assign-to-agents
+        [isReadOnly]="isConsole"
+        [isCustom]="true"
+        [maxDisplayAssignees]="3"
+        [avatarSize]="24"
+        titleMode="avatar"
+        [task]="taskService.currentTask$ | push">
+      </assign-to-agents>
+    </div>
+  </div>
+</ng-template>
+
+<app-modal-popup
+  *ngIf="isShowQuitConfirmModal"
+  [show]="isShowQuitConfirmModal"
+  [position]="ModalPopupPosition.center"
+  [specificWidth]="510">
+  <confirm-popup
+    [iconUrl]="'/assets/icon/icon-warning-red.svg'"
+    [backgroundRightBtn]="'var(--danger-500)'"
+    [titleText]="
+      'Are you sure you want to ' +
+      (showBtnNewTask ||
+      this.taskService.currentTask$?.value?.taskType === TaskType.TASK
+        ? 'cancel this task?'
+        : 'delete this message?')
+    "
+    [subTexts]="[]"
+    [buttonLeft]="
+      showBtnNewTask ||
+      this.taskService.currentTask$?.value?.taskType === TaskType.TASK
+        ? 'No, keep it'
+        : 'Cancel'
+    "
+    [buttonRight]="
+      showBtnNewTask ||
+      this.taskService.currentTask$?.value?.taskType === TaskType.TASK
+        ? 'Yes, cancel'
+        : 'Delete'
+    "
+    btnType="danger"
+    (onButtonLeftClick)="isShowQuitConfirmModal = false"
+    (onButtonRightClick)="deleteTask($event)">
+    >
+  </confirm-popup>
+</app-modal-popup>
+
+<info-people-popup
+  *ngIf="isShowModalPeople"
+  [isShow]="isShowPersonMd"
+  (isCloseModal)="isCloseModal($event)"
+  (isShowModalAddNote)="isShowModalAdd($event)"
+  (statusProperty)="statusProperty($event)"
+  [streetline]="isRequestShowUserInfoFromTaskConversation ? currentConversation.streetline : (taskService.currentTask$ | push)?.property?.streetline"
+  [propertyManager]="(taskService.currentTask$ | push)?.propertyManager"
+  [propertyId]="isRequestShowUserInfoFromTaskConversation ? currentConversation.propertyId : currentPropertyId"
+  [crmSystemId]="crmSystemId"
+  [isExpandProperty]="isExpandProperty"></info-people-popup>
+
+<add-note-property
+  *ngIf="isShowModalAddNote"
+  [isShow]="isShowModalAddNote"
+  (onCloseModalAddNote)="isCloseModalAddNote($event)"
+  (onSubmit)="onSubmitAddNote($event)"
+  (onBack)="handlleBackAddNote($event)"
+  (statusExpandProperty)="statusExpandProperty($event)"
+  [propertyId]="currentPropertyId"
+  [agencyId]="currentAgencyId"
+  [isExpandProperty]="isExpandProperty"></add-note-property>
+
+<ng-template #permanentlyDeleteConfirmModalContent>
+  <div class="d-flex justify-content-end">
+    <ul class="content pd-0">
+      <li>
+        <span>Any data or task history will be permanently deleted</span>
+      </li>
+      <li>
+        <span>
+          Any messages within this task will be automatically marked as
+          deleted</span
+        >
+      </li>
+    </ul>
+  </div>
+</ng-template>
+<ng-template #voicemailDetailSkeletonBottom>
+  <nz-skeleton
+    [nzTitle]="true"
+    [nzParagraph]="false"
+    [style.width.px]="376"
+    [nzActive]="true"></nz-skeleton>
+</ng-template>
+<property-profile-drawer
+  [visible]="visiblePropertyProfile"
+  [openFrom]="ETypePage.TASK_DETAIL"
+  (triggerCloseDrawer)="visiblePropertyProfile = false"
+  [propertyId]="(taskService.currentTask$|async)?.property?.id">
+</property-profile-drawer>

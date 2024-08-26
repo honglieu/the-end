@@ -1,0 +1,74 @@
+<ng-select
+  [items]="items"
+  [(ngModel)]="valueSelected"
+  (ngModelChange)="onChange($event)"
+  (search)="handleSearch($event)"
+  class="share-ng-select checkbox-select custom-dropdown-scroll-to-view"
+  [bindLabel]="bindLabel"
+  [bindValue]="bindValue"
+  [searchable]="true"
+  [readonly]="disabled"
+  [clearable]="clearable"
+  [editableSearchTerm]="false"
+  (close)="isSearching = false"
+  (open)="onOpenSelect()"
+  [searchFn]="searchFn"
+  [trackByFn]="trackByFn"
+  notFoundText="No results found"
+  placeholder=""
+  [groupBy]="groupBy"
+  [virtualScroll]="virtualScroll"
+  [loading]="loading"
+  [typeahead]="typeahead"
+  (search)="search.emit($event)"
+  (scrollToEnd)="scrollToEnd.emit($event)"
+  (change)="onchange.emit($event)"
+  #select>
+  <ng-template *ngIf="listCheckbox?.length" ng-header-tmp>
+    <trudi-checkbox-group
+      [(ngModel)]="checkBox"
+      (ngModelChange)="handleCheckboxValue($event)"
+      [disabled]="disabled"
+      class="checkbox-group">
+      <trudi-checkbox
+        class="checkbox-wrapper"
+        *ngFor="let item of listCheckbox"
+        labelPosition="left"
+        [label]="item.label"
+        [stringValue]="item.value"></trudi-checkbox>
+    </trudi-checkbox-group>
+  </ng-template>
+
+  <ng-template ng-option-tmp let-item="item" let-searchTerm="searchTerm">
+    <ng-container
+      *ngTemplateOutlet="optionTemplate.templateRef || defaultOptionTmp; context: {item: item, searchTerm: searchTerm, valueSelected: valueSelected, isSearching: isSearching}">
+    </ng-container>
+  </ng-template>
+
+  <ng-template *ngIf="labelTemplate?.templateRef" ng-label-tmp let-item="item">
+    <ng-container
+      *ngTemplateOutlet="labelTemplate?.templateRef; context: {item: item, clear: clear, isSearching: isSearching}"></ng-container>
+  </ng-template>
+
+  <ng-template *ngIf="footerTemplate?.templateRef" ng-footer-tmp>
+    <div
+      class="footer-wrapper"
+      (click)="select.close(); footerClick.emit($event)">
+      <ng-container
+        *ngTemplateOutlet="footerTemplate?.templateRef"></ng-container>
+    </div>
+  </ng-template>
+</ng-select>
+
+<ng-template #defaultOptionTmp let-item="item" let-searchTerm="searchTerm">
+  <div class="d-flex justify-content-between align-items-center w-100">
+    <div class="item-label" [ngOptionHighlight]="searchTerm ? searchTerm : ''">
+      {{item[bindLabel]}}
+    </div>
+    <div
+      *ngIf="valueSelected && (valueSelected === item[bindValue])"
+      class="d-flex align-items-center">
+      <trudi-icon icon="checkSuccess"></trudi-icon>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,114 @@
+@import 'function';
+
+::ng-deep {
+  .bill-wrapper {
+    &.scrollAble {
+      max-height: calc(100vh - 630px);
+      overflow-y: auto;
+      position: relative;
+    }
+    &.border-b {
+      border-bottom: 1px solid var(--border-neutral-dark);
+    }
+
+    .bill-item {
+      .bill-group {
+        display: grid;
+        grid-template-columns: 1fr 1fr 0.4fr 0.4fr 1fr 256px;
+        align-items: flex-start;
+
+        .btn-options {
+          cursor: pointer;
+          border-radius: 80px;
+          padding: 6px;
+          background-color: var(--bg-neutral-tonal-normal);
+        }
+
+        .item {
+          padding: 16px;
+
+          ng-select.trudi-single-select .ng-select-container {
+            min-height: 36px;
+          }
+
+          trudi-number-field {
+            .trudi-number-field-wrapper {
+              height: 36px;
+            }
+          }
+
+          trudi-text-field {
+            .trudi-text-field-wrapper {
+              height: 36px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .options-wrapper {
+    width: 164px;
+    color: rgba(0, 0, 0, 0.87);
+    background-color: var(--white);
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    border-radius: 8px;
+
+    .item {
+      padding: 12px;
+      background: var(--bg-base);
+      @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+      cursor: pointer;
+      &:not(:first-child) {
+        border-bottom: 1px solid var(--border-neutral-light);
+      }
+
+      &.disabled {
+        color: var(--fg-neutral-weakest);
+        cursor: default;
+
+        .size-20 {
+          opacity: 0.3;
+        }
+
+        &:hover {
+          background-color: var(--bg-base) !important;
+          color: var(--fg-neutral-weakest) !important;
+        }
+      }
+
+      &:not(:first-child) {
+        border-top: 1px var(--border-neutral-light) solid;
+      }
+
+      &:hover {
+        background-color: var(--brand-200) !important;
+        color: var(--gray-700) !important;
+
+        &:first-child {
+          border-top-left-radius: 8px;
+          border-top-right-radius: 8px;
+        }
+
+        &:last-child {
+          border-bottom-left-radius: 8px;
+          border-bottom-right-radius: 8px;
+        }
+      }
+
+      &:active {
+        background-color: var(--brand-300) !important;
+      }
+
+      .text {
+        margin: 0;
+        white-space: nowrap;
+        @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+      }
+
+      .text-error {
+        color: var(--fg-danger);
+      }
+    }
+  }
+}

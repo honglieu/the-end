@@ -1,0 +1,19 @@
+<link-task
+  *ngIf="selectedEvent && !selectedEventFromEventsTab"
+  [taskNameList]="taskNames"
+  (stopProcess)="handleCloseModal()"></link-task>
+
+<div class="events--page_container">
+  <div class="events--page_sidebar">
+    <events-sidebar></events-sidebar>
+  </div>
+  <div class="events--page_content">
+    <div class="calendar-dashboard">
+      <calendar-header></calendar-header>
+      <subscribe-to-calendar viewMode="notification"></subscribe-to-calendar>
+      <!-- TODO: hide in TDI-9453 -->
+      <!-- <calendar-connect-popup></calendar-connect-popup> -->
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

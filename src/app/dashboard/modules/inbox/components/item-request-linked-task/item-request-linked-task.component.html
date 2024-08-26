@@ -1,0 +1,9 @@
+<div class="linked_task">
+  {{linkedData?.user?.firstName}} {{linkedData?.typeLink === typeLinkItems.Link
+  ?'linked to task' : ' unlinked from task'}} {{linkedData?.title}}
+  @if(linkedData?.isLinked) {
+  <div (click)="handleNavigateTask()" class="linked_task--button">
+    View task
+  </div>
+  }
+</div>

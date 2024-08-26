@@ -1,0 +1,172 @@
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div nz-menu tabindex="0">
+    <div
+      class="leading messages-header"
+      *ngIf="type === typeDropdown.PORTFOLIO">
+      <div
+        class="search-bar relative gap-10 border-rad-8 align-items-center background--gray">
+        <input
+          tabindex="0"
+          focusable
+          type="text"
+          class="search-property-input background--gray"
+          placeholder="Search"
+          onfocus="this.placeholder = ''"
+          [formControl]="searchFormControl$"
+          onblur="this.placeholder = 'Search'"
+          (keydown.enter)="onSearch($event);$event.target.blur();" />
+        <div
+          *ngIf="showClearIcon"
+          focusable
+          tabindex="0"
+          (click)="handleClearSearch()"
+          class="clear-search cursor-pointer">
+          <trudi-icon icon="closeBtn"></trudi-icon>
+        </div>
+      </div>
+    </div>
+    <div
+      *ngIf="formDropdown === 'multiple selection'"
+      class="d-flex align-items-center justify-content-between container-sub pd-12">
+      <p class="sub-title">{{defaultFilterList.length}}/{{listItem?.length}}</p>
+      <div
+        *ngIf="defaultFilterList.length"
+        #clearButtonTemplate
+        focusable
+        tabindex="0"
+        class="clear-selection cursor-pointer clear-selection-btn"
+        (click)="clear($event)"
+        (keydown.enter)="clearButtonTemplate.click()">
+        Clear selection
+      </div>
+    </div>
+    <div
+      class="list-items auto-hide-scroll"
+      [class]="formDropdown === 'multiple selection' ? 'borderRadiusLeftRight' : 'borderRadiusAll'">
+      <div class="list-items-info">
+        <ng-container
+          *ngIf="formDropdown === 'multiple selection' ;else otherTemplateDropdown">
+          <ng-container *ngIf="currentListItem.length > 0; else noResult">
+            <ng-container *ngFor="let item of currentListItem; index as i">
+              <div
+                focusable
+                tabindex="0"
+                class="item-detail cursor-pointer"
+                (click)="handleCheckbox(item.id)"
+                (keyup.enter)="handleCheckbox(item.id)"
+                [ngClass]="{'active': item.selected, 'portfolio': type === typeDropdown.PORTFOLIO }">
+                <div class="item-detail-content">
+                  <div class="item-detail-info">
+                    <div
+                      class="item-name text-overflow"
+                      [ngClass]="{'active': item.selected}">
+                      {{ item.text || item.name | landlordToOwner}}
+                    </div>
+                  </div>
+                  <td-checkbox
+                    [size]="24"
+                    [isChecked]="item.selected"
+                    (tdCheckboxChanged)="handleCheckbox(item.id)"
+                    [currentUser]="item">
+                  </td-checkbox>
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+          <ng-template #noResult>
+            <div class="no-result">No results found</div>
+          </ng-template>
+        </ng-container>
+        <ng-template #otherTemplateDropdown>
+          <div *ngIf="currentListItem.length > 0">
+            <ng-container *ngFor="let item of currentListItem; index as i">
+              <div
+                tabindex="0"
+                focusable
+                class="item-detail cursor-pointer"
+                (click)="handleCheckbox(item.id)"
+                (keyup.enter)="handleCheckbox(item.id)"
+                [ngClass]="{'active': item.selected}">
+                <div class="item-detail-content">
+                  <div class="item-detail-info">
+                    <div class="item-name text-overflow">
+                      {{ item.text || item.name | landlordToOwner}}
+                    </div>
+                  </div>
+                  <trudi-icon *ngIf="item.selected" icon="checkSuccess">
+                  </trudi-icon>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<button
+  trudi-btn
+  variant="outlined"
+  btnType="neutral"
+  size="small"
+  [selected]="isSelected"
+  class="container-dropdown"
+  (click)="onShowPopupAssign($event)"
+  nz-dropdown
+  [nzDropdownMenu]="menu"
+  [nzTrigger]="'click'"
+  [nzClickHide]="false"
+  [(nzVisible)]="isSelected"
+  [nzPlacement]="assignBoxPlacement"
+  (nzVisibleChange)="onDropdownMenuVisibleChange($event)">
+  <ng-container>
+    <div
+      class="cursor-pointer container-item d-flex align-items-center target-item-detail"
+      [ngClass]="{'active': focus}">
+      <ng-container *ngIf="formDropdown === 'single selection'">
+        <div class="title">
+          {{newFilterList.length > 0 ? label + ":" : label }}
+        </div>
+        <ng-container *ngFor="let item of newFilterList; index as i">
+          <div class="td-icon-circle-btn cursor-pointer item-avatar">
+            <div class="text-detail">
+              <span class="text"
+                >{{item.text || item.name | landlordToOwner | userTypeInRm:
+                pipeType : isRmEnvironment}}</span
+              >
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngIf="formDropdown === 'multiple selection'">
+        <div class="text-agent-detail d-flex align-items-center">
+          <span class="title">{{label}}</span>
+          <span
+            *ngIf="nonDisplayListItem.length + newFilterList.length"
+            class="text-agent">
+            {{nonDisplayListItem.length + newFilterList.length}}
+          </span>
+        </div>
+      </ng-container>
+
+      <ng-container>
+        <trudi-icon
+          *ngIf="newFilterList.length === 0"
+          icon="grayChevronDown"></trudi-icon>
+        <trudi-icon
+          *ngIf="newFilterList.length > 0"
+          #iconClearTemplate
+          (click)="clear($event)"
+          nz-tooltip
+          nzTooltipPlacement="top"
+          [nzTooltipTitle]="'Clear selection'"
+          svgClass="size-16"
+          class="icon-clear"
+          icon="smallCloseBlack">
+        </trudi-icon>
+      </ng-container>
+    </div>
+  </ng-container>
+</button>

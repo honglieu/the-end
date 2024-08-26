@@ -1,0 +1,86 @@
+<div [formGroup]="form">
+  <div class="capture-break-lease-fee-wrapper">
+    <div
+      class="d-flex justify-content-between align-items-center label-wrapper">
+      <label class="capture-break-lease-fee-label"> Pre-screen </label>
+      <div class="required-checkbox mb-4">
+        <trudi-checkbox formControlName="preScreenIsRequired" label="Required">
+        </trudi-checkbox>
+      </div>
+    </div>
+    <div class="break-lease-fee-form">
+      <div class="w-100 d-flex flex-dir-column gap-16">
+        <div class="title">
+          <trudi-form-control [checkSubmit]="!isSubmittedCommunicationForm">
+            <trudi-text-field
+              [checkSubmit]="!isSubmittedCommunicationForm"
+              label="Title"
+              formControlName="title"
+              [maxCharacter]="150">
+            </trudi-text-field>
+          </trudi-form-control>
+        </div>
+        <div class="d-flex gap-16">
+          <div class="break-lease-fee">
+            <trudi-number-field
+              label="Break-lease fee?"
+              formControlName="breakLeaseFee"
+              size="extra-large"
+              prefixText="$">
+            </trudi-number-field>
+          </div>
+          <div class="advertising-fees">
+            <trudi-number-field
+              label="Advertising fees?"
+              formControlName="advertisingFee"
+              size="extra-large"
+              prefixText="$">
+            </trudi-number-field>
+          </div>
+        </div>
+        <div class="other-fees d-flex gap-16" formGroupName="otherFee">
+          <div class="">
+            <trudi-text-field
+              label="Other fees"
+              formControlName="name"
+              placeholder="Fee name">
+            </trudi-text-field>
+          </div>
+          <div class="align-self-end">
+            <trudi-number-field
+              prefixText="$"
+              formControlName="fee"
+              size="extra-large">
+            </trudi-number-field>
+          </div>
+        </div>
+        <div class="advertising fees?"></div>
+      </div>
+    </div>
+  </div>
+  <div class="send-attachment-wrapper">
+    <div
+      class="d-flex justify-content-between align-items-center label-wrapper">
+      <label class="send-attachment-label">
+        Pre-screen: Select attachment
+      </label>
+      <div class="required-checkbox mb-4">
+        <trudi-checkbox formControlName="attachmentIsRequired" label="Required">
+        </trudi-checkbox>
+      </div>
+    </div>
+    <div class="attachment-form">
+      <div class="w-100">
+        <trudi-form-control [checkSubmit]="!isSubmittedCommunicationForm">
+          <trudi-text-field
+            [checkSubmit]="!isSubmittedCommunicationForm"
+            formControlName="attachmentName"
+            label="Attachment name"
+            placeholder="Enter attachment name"
+            [maxCharacter]="75">
+          </trudi-text-field>
+        </trudi-form-control>
+      </div>
+    </div>
+  </div>
+</div>

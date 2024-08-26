@@ -1,0 +1,333 @@
+<div class="select-form-wrapper" [formGroup]="companyFormGroup">
+  <trudi-drawer
+    [(visible)]="isShowModal"
+    [enableOkBtn]="true"
+    [enableBackBtn]="false"
+    [enableDeleteBtn]="false"
+    [okText]="drawerOkText"
+    [headerTpl]="headerTpl"
+    [footerTpl]="footerTpl">
+    <ng-template #headerTpl>
+      <ng-container *ngIf="!isLoading; else headerSkeleton">
+        <div class="drawer-input-header d-flex flex-dir-column gap-4">
+          <trudi-form-control
+            [control]="companyName"
+            [errors]="[{errorName: 'companyNameExists', errorMessage: 'This company name is already existed'}]">
+            <trudi-text-field
+              formControlName="companyName"
+              maxCharacter="255"
+              [showCounting]="false"
+              [disabled]="isDisable"
+              placeholder="Enter company name here">
+            </trudi-text-field>
+          </trudi-form-control>
+        </div>
+      </ng-container>
+      <ng-template #headerSkeleton>
+        <div class="pd-16 w-100">
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"
+            class="skeleton-header w-100">
+          </nz-skeleton-element>
+        </div>
+      </ng-template>
+    </ng-template>
+    <div [hidden]="!isShowModal || isLoading">
+      <div class="content-modal">
+        <div>
+          <div
+            class="d-flex flex-dir-column align-items-center justify-content-start align-items-start gap-16"></div>
+          <ng-container *ngIf="action === ActionForm.CREATE">
+            <div
+              class="d-flex align-items-center justify-content-between gap-12">
+              <div class="w-100">
+                <div class="trudi-input-label">Country</div>
+                <trudi-form-control>
+                  <trudi-single-select
+                    [items]="countryList"
+                    bindLabel="name"
+                    bindValue="id"
+                    [clearable]="false"
+                    formControlName="country"
+                    placeholder="Select country">
+                  </trudi-single-select>
+                </trudi-form-control>
+              </div>
+              <div class="w-100">
+                <div class="trudi-input-label">CRM</div>
+                <trudi-form-control>
+                  <trudi-single-select
+                    [items]="CRMList"
+                    bindLabel="name"
+                    bindValue="id"
+                    [clearable]="false"
+                    formControlName="CRM"
+                    placeholder="Select CRM">
+                  </trudi-single-select>
+                </trudi-form-control>
+              </div>
+            </div>
+
+            <ng-container *ngIf="country?.value === ECountryName.AUSTRALIA">
+              <select-crm-subscription
+                [agencyList]="agencyList"></select-crm-subscription>
+            </ng-container>
+
+            <ng-container *ngIf="country?.value === ECountryName.UNITED_STATES">
+              <trudi-form-control
+                [errors]="[{errorName: 'invalidUrl', errorMessage: companyCodeError ? companyCodeError : 'Invalid company code'}]">
+                <trudi-text-field
+                  maxCharacter="2048"
+                  [showCounting]="false"
+                  formControlName="companyCode"
+                  placeholder="Enter company code"
+                  label="Company code"></trudi-text-field>
+              </trudi-form-control>
+            </ng-container>
+          </ng-container>
+          <div
+            class="trudi-input-label"
+            [class.mt-12]="action === ActionForm.CREATE || agencyData?.country === ECountryName.AUSTRALIA">
+            Stripe customer
+          </div>
+          <trudi-form-control>
+            <trudi-single-select
+              formControlName="customer"
+              bindLabel="name"
+              bindValue="id"
+              placeholder="Select Stripe customer"
+              [searchFn]="customerListSearchFn"
+              [items]="customerList"
+              [clearable]="false"
+              [virtualScroll]="true">
+              <ng-template
+                trudi-option-tmp
+                let-item="item"
+                let-searchTerm="searchTerm">
+                <div
+                  class="customer-option d-flex justify-content-between w-100">
+                  <div class="w-100 d-flex flex-dir-column gap-2">
+                    <div
+                      class="customer-option-name"
+                      [innerHTML]="item?.name || '' | highlight: searchTerm"></div>
+                    <div
+                      class="customer-option-email"
+                      [innerHTML]="item?.email || '' | highlight: searchTerm"></div>
+                  </div>
+                  <div
+                    *ngIf="item.id === customer.value"
+                    class="d-flex align-items-center">
+                    <trudi-icon
+                      [style]="{'width.px': 20, 'height.px': 20}"
+                      icon="checkSuccess"></trudi-icon>
+                  </div>
+                </div>
+              </ng-template>
+            </trudi-single-select>
+          </trudi-form-control>
+
+          <!-- Voicemail/SMS Number Field -->
+          <div class="trudi-input-label mt-12">Voicemail/SMS number</div>
+          <trudi-form-control
+            [control]="voiceMailPhoneNumber"
+            [errors]="[{controlName: 'pattern', errorMessage: 'Invalid number'}]">
+            <trudi-number-field
+              size="medium"
+              placeholder="Enter your Voicemail/SMS number"
+              formControlName="voiceMailPhoneNumber"
+              (onKeydownEnter)="handleKeydownEnter($event)"
+              (onChangeData)="handleVoicemailPhoneNumberChange($event)"
+              [disableDotKey]="isRmEnvironment"
+              [prefixText]="areaCode"
+              [maskPattern]="maskPattern"
+              [maxCharacter]="11">
+            </trudi-number-field>
+          </trudi-form-control>
+
+          <ng-container *ngIf="customer?.value">
+            <div class="trudi-input-label mt-12">Subscription</div>
+            <trudi-form-control
+              [control]="subscription"
+              [errors]="[{errorName: 'subscriptionRemoved', errorMessage: 'Subscription removed in Stripe'}]">
+              <trudi-multi-select
+                [items]="subscriptionsList"
+                bindValue="id"
+                bindLabel="displayName"
+                formControlName="subscription"
+                [totalOptions]="subscriptionsList.length"
+                placeholder="Select Stripe subscription"
+                [clearSearchOnAdd]="false">
+                <ng-template
+                  trudi-label-tmp
+                  let-items="items"
+                  let-clear="clear">
+                  <div class="ng-value" *ngFor="let item of items">
+                    <div
+                      class="d-flex gap-4 align-items-center trudi-label-wrapper border-rad-8"
+                      [ngClass]="{'error': item?.deleted || false}">
+                      <div class="trudi-select-label">
+                        {{item?.displayName}}
+                      </div>
+                      <div
+                        *ngIf="!disabled"
+                        class="close-wrapper"
+                        (click)="clear(item)">
+                        <trudi-icon
+                          *ngIf="!item?.disabled"
+                          class="cursor-pointer"
+                          icon="closeGray64"
+                          [style]="{ 'width.px': 8, 'height.px': 8 }"></trudi-icon>
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </trudi-multi-select>
+            </trudi-form-control>
+          </ng-container>
+        </div>
+        <select-company-plan></select-company-plan>
+        <select-task-templates></select-task-templates>
+      </div>
+    </div>
+    <div [hidden]="!isLoading">
+      <div class="d-flex gap-12 pd-16">
+        <div class="w-50 d-flex gap-4 flex-dir-column">
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"
+            class="skeleton-label">
+          </nz-skeleton-element>
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"
+            class="skeleton-input">
+          </nz-skeleton-element>
+        </div>
+        <div class="w-50 d-flex gap-4 flex-dir-column">
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"
+            class="skeleton-label">
+          </nz-skeleton-element>
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"
+            class="skeleton-input">
+          </nz-skeleton-element>
+        </div>
+      </div>
+
+      <div class="pd-16 d-flex gap-4 flex-dir-column">
+        <nz-skeleton-element
+          nzType="button"
+          [nzActive]="true"
+          class="skeleton-label">
+        </nz-skeleton-element>
+        <nz-skeleton-element
+          nzType="button"
+          [nzActive]="true"
+          class="skeleton-input">
+        </nz-skeleton-element>
+      </div>
+
+      <div class="pd-16 d-flex gap-4 flex-dir-column">
+        <nz-skeleton-element
+          nzType="button"
+          [nzActive]="true"
+          class="skeleton-label">
+        </nz-skeleton-element>
+        <nz-skeleton-element
+          nzType="button"
+          [nzActive]="true"
+          class="skeleton-input">
+        </nz-skeleton-element>
+      </div>
+
+      <div class="pd-16 d-flex gap-4 flex-dir-column">
+        <nz-skeleton-element
+          nzType="button"
+          [nzActive]="true"
+          class="skeleton-label">
+        </nz-skeleton-element>
+        <div class="pd-8 d-flex gap-16 flex-dir-column">
+          <div class="d-flex gap-8 align-items-center">
+            <nz-skeleton-element
+              nzType="avatar"
+              [nzActive]="true"
+              class="skeleton-checkbox">
+            </nz-skeleton-element>
+            <nz-skeleton-element
+              nzType="button"
+              [nzActive]="true"
+              class="skeleton-label">
+            </nz-skeleton-element>
+          </div>
+          <div class="d-flex gap-8 align-items-center">
+            <nz-skeleton-element
+              nzType="avatar"
+              [nzActive]="true"
+              class="skeleton-checkbox">
+            </nz-skeleton-element>
+            <nz-skeleton-element
+              nzType="button"
+              [nzActive]="true"
+              class="skeleton-label">
+            </nz-skeleton-element>
+          </div>
+          <div class="d-flex gap-8 align-items-center">
+            <nz-skeleton-element
+              nzType="avatar"
+              [nzActive]="true"
+              class="skeleton-checkbox">
+            </nz-skeleton-element>
+            <nz-skeleton-element
+              nzType="button"
+              [nzActive]="true"
+              class="skeleton-label">
+            </nz-skeleton-element>
+          </div>
+          <div class="d-flex gap-8 align-items-center">
+            <nz-skeleton-element
+              nzType="avatar"
+              [nzActive]="true"
+              class="skeleton-checkbox">
+            </nz-skeleton-element>
+            <nz-skeleton-element
+              nzType="button"
+              [nzActive]="true"
+              class="skeleton-label">
+            </nz-skeleton-element>
+          </div>
+        </div>
+      </div>
+
+      <div class="pd-16 d-flex gap-4 flex-dir-column">
+        <nz-skeleton-element
+          nzType="button"
+          [nzActive]="true"
+          class="skeleton-label">
+        </nz-skeleton-element>
+        <nz-skeleton-element
+          nzType="button"
+          [nzActive]="true"
+          class="skeleton-input">
+        </nz-skeleton-element>
+      </div>
+    </div>
+    <canvas #canvas hidden></canvas>
+    <ng-template #footerTpl>
+      <div class="d-flex gap-16">
+        <button
+          trudi-btn
+          btnType="neutral"
+          variant="outlined"
+          class="ml-auto"
+          (click)="handleClose()">
+          Cancel
+        </button>
+        <button trudi-btn (click)="handleSave()">{{ drawerOkText }}</button>
+      </div>
+    </ng-template>
+  </trudi-drawer>
+</div>

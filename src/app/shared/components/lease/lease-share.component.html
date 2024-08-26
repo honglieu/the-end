@@ -1,0 +1,78 @@
+<div class="lease-box">
+  <span class="hide">{{timeOfLease}}</span>
+  <ng-container
+    *ngIf="crmSystemId !== ECrmSystemId.RENT_MANAGER; else rentManager">
+    <div class="lease-duration-date">
+      <div class="date-start-end">
+        <div class="day">
+          {{startLeaseDay}}
+          <span
+            *ngIf="dayRemain > 0"
+            class="days-remaining"
+            [ngClass]="{
+              'lease-in-duration': this.startDate && this.endDate && dayRemain !== 0,
+              'lease-expired': this.startDate && this.endDate && dayRemain === 0,
+              'lease-not-available': !(this.startDate && this.endDate)}">
+            ({{ dayRemain }} {{ dayRemain > 1 ? 'days' : 'day' }} remaining)
+          </span>
+          <span
+            *ngIf="(!startDate && !endDate) || (startDate && !endDate)  || dayRemain === 0"
+            class="days-remaining"
+            [ngClass]="{
+              'lease-expired': this.startDate && this.endDate && dayRemain === 0,
+              'lease-not-available': !(this.startDate && this.endDate)}">
+            (0 days remaining)
+          </span>
+        </div>
+
+        <div class="day">{{endLeaseDay}}</div>
+      </div>
+      <app-progress-bar [progress]="progress"></app-progress-bar>
+      <div class="item-pay d-flex">
+        <div class="day">
+          <span class="paid-to">Paid to </span>{{paidLeaseDay}}
+        </div>
+        <div *ngIf="rentAmount" class="content-pay">
+          ${{rentAmount}}
+          <span class="content-date">{{leaseFequency}}</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #rentManager>
+    <div class="lease-duration-date">
+      <div class="date-start-end">
+        <div class="day">{{startLeaseDay}}</div>
+        <div class="day">{{endLeaseDay}}</div>
+      </div>
+      <app-progress-bar [progress]="progress"></app-progress-bar>
+      <div class="item-pay d-flex">
+        <div class="d-flex justify-content-between align-items-center">
+          <div
+            *ngIf="dayRemain > 0"
+            class="days-remaining"
+            [ngClass]="{
+          'lease-in-duration': this.startDate && this.endDate && dayRemain !== 0,
+          'lease-expired': this.startDate && this.endDate && dayRemain === 0,
+          'lease-not-available': !(this.startDate && this.endDate)}">
+            {{ dayRemain }} {{ dayRemain > 1 ? 'days' : 'day' }} remaining
+          </div>
+          <div
+            *ngIf="(!startDate && !endDate) || (startDate && !endDate)  || dayRemain === 0"
+            class="days-remaining"
+            [ngClass]="{
+          'lease-expired': this.startDate && this.endDate && dayRemain === 0,
+          'lease-not-available': !(this.startDate && this.endDate)}">
+            0 days remaining
+          </div>
+        </div>
+        <div
+          *ngIf="rentAmount && forceShowRentAmount"
+          class="content-pay d-flex align-items-center">
+          ${{rentAmount}}
+          <span class="content-date">{{leaseFequency}}</span>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

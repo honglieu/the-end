@@ -1,0 +1,144 @@
+<h4 *ngIf="title" class="title-upload">{{title}}</h4>
+<button
+  *ngIf="!hiddenButtonUpload"
+  trudi-btn
+  size="extra-small"
+  [variant]="buttonVariant"
+  [btnType]="buttonTheme"
+  type="button"
+  class="add-file-btn-upload border-rad-6 mt-6"
+  [ngClass]="{'upload-btn-disable': disable,'d-flex gap-4': !!icon, 'loading': loading, 'show-loading': showLoading, 'change-image': showCustomizedLabel }">
+  <trudi-icon
+    *ngIf="icon"
+    [style]="{'width.px': 16, 'height.px': 16}"
+    [icon]="icon"></trudi-icon>
+  <span class="btn-text">
+    {{showLoading && loading ? 'Uploading ...' : label}}
+  </span>
+  <input
+    [id]="id"
+    (change)="handleUploadFileLocal($event)"
+    [multiple]="multipleFile"
+    [accept]="acceptTypeFile"
+    [disabled]="disable || showLoading && loading"
+    type="file"
+    hidden />
+  <label [for]="id" class="cursor-pointer input-file-lable"></label>
+</button>
+<div
+  *ngIf="listFile.length && !hideAllVisualization && showListFile"
+  class="file mt-6"
+  [ngClass]="{'single-column': listFile?.length === 1}">
+  <div
+    class="file-box"
+    [ngClass]="{ 'invalid': invalidType[item.fileType], 'file-preview': filePreview }"
+    *ngFor="let item of listFile; let i = index"
+    (click)="filePreview && manageCarouselState(true, i)">
+    <div
+      *ngIf="showFileThumb"
+      class="file-logo"
+      [class.dim-brightness]="item?.localThumb && item?.isSupportedVideo">
+      <img
+        *ngIf="item?.localThumb"
+        [src]="(item.localThumb | safe: 'resourceUrl')" />
+      <img
+        *ngIf="!item?.localThumb"
+        [src]="(((item?.fileName || item?.name) | getFileIconType))" />
+      <div *ngIf="item?.localThumb && item?.isSupportedVideo" class="play-icon">
+        <trudi-icon icon="playSolid"></trudi-icon>
+      </div>
+    </div>
+    <div class="file-content">
+      <div
+        #uploadFileName
+        nz-tooltip
+        nzTooltipPlacement="top"
+        [nzTooltipTitle]="item?.name || item?.fileName"
+        [nzTooltipOverlayStyle]="{'max-width': '240px', 'word-break': 'break-all'}"
+        [nzTooltipTrigger]="uploadFileName?.offsetWidth < uploadFileName?.scrollWidth ? 'hover' : null"
+        class="file-name text-ellipsis">
+        {{ item?.name || item?.fileName }}
+      </div>
+      <div *ngIf="showFileSize" class="file-size">
+        {{(item?.size || item?.fileSize) | convertFileSize}}
+      </div>
+    </div>
+    <button
+      type="button"
+      class="cursor-pointer remove-button"
+      [disabled]="!!item.isDisabled || disableRemoveButton"
+      (click)="removeFile(i)">
+      <trudi-icon
+        nz-tooltip
+        [nzTooltipTitle]="!!item.isDisabled ? disableTooltipText: ''"
+        [ngClass]="{'cursor-not-allowed': !!item.isDisabled || disableRemoveButton }"
+        [style]="{ 'width.px': 16, 'height.px': 16, color: '#646464' }"
+        icon="closeIcon"></trudi-icon>
+    </button>
+  </div>
+</div>
+
+<ng-container *ngIf="!isIncludeInvalidFile; else errorMessageList;">
+  <div
+    *ngIf="areSomeFilesTooLarge && showFileTooLarge && !hideAllVisualization || showFileInvalid"
+    class="y-center mt-6 gap-4 warning-wrapper">
+    <div class="block-icon">
+      <trudi-icon [icon]="'iconWarning'" class="size-16"></trudi-icon>
+    </div>
+    <span class="warning-content"> {{errorMessage}} </span>
+  </div>
+</ng-container>
+
+<ng-template #errorMessageList>
+  <div
+    *ngIf="areSomeFilesTooLarge && showFileTooLarge && !hideAllVisualization || showFileInvalid"
+    class="mt-6 warning-wrapper">
+    <ng-container *ngFor="let error of errorMessageArr">
+      <div class="y-center gap-4 block-error-message">
+        <div class="block-icon">
+          <trudi-icon [icon]="'iconWarning'" class="size-16"></trudi-icon>
+        </div>
+        <span class="warning-content"> {{error.errorMessage}} </span>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+
+<trudi-modal
+  [visible]="isShowWarning && showPopupWarning"
+  iconName="iconWarningRed"
+  [closable]="false"
+  [modelWidth]="510"
+  type="confirm"
+  [className]="'upload-file-btn'"
+  colorBtn="danger"
+  okText="Ok, got it"
+  title="Cannot upload file"
+  [subTitleTemplate]="subTitle"
+  [hiddenCancelBtn]="true"
+  [autoFocus]="null"
+  (onOk)="isShowWarning = false">
+</trudi-modal>
+
+<ng-template #subTitle>
+  <ul class="sub-title">
+    <li>You cannot upload with files larger than 25 MB.</li>
+    <li>{{warningContent}}</li>
+  </ul>
+</ng-template>
+
+<app-modal-popup
+  *ngIf="isShowCarousel"
+  [transparent]="true"
+  [show]="isShowCarousel"
+  [position]="popupModalPosition.full_screen">
+  <app-images-carousel
+    *ngIf="isShowCarousel"
+    [open]="isShowCarousel"
+    [hideSendButton]="true"
+    [hideSyncButton]="true"
+    [imageUrlList]="arrayImageCarousel"
+    [initialIndex]="initialIndex"
+    (updateThumbnail)="updateThumbnail($event)"
+    (showCarousel)="manageCarouselState($event)"></app-images-carousel>
+</app-modal-popup>

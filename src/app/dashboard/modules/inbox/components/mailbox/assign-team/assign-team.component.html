@@ -1,0 +1,276 @@
+<trudi-modal
+  *ngIf="popupState === EMailBoxPopUp.ASSIGN_TEAM"
+  [visible]="popupState === EMailBoxPopUp.ASSIGN_TEAM"
+  [modelWidth]="624"
+  [autoFocus]="null"
+  [title]="title"
+  [subTitle]="subTitle"
+  [closable]="isHideFooter"
+  [isHideFooter]="isHideFooter"
+  (triggerAfterClose)="handleClose($event)">
+  <ng-container *ngIf="isLoading; else hasList">
+    <div class="skeleton-wrapper">
+      <ng-container *ngFor="let _ of [].constructor(9)">
+        <div class="skeleton-row-item">
+          <div class="d-flex align-items-center gap-12">
+            <nz-skeleton-element
+              [nzParagraph]="{ rows: 0 }"
+              [nzTitle]="false"
+              nzType="avatar"
+              [nzShape]="'circle'"
+              [nzActive]="true"></nz-skeleton-element>
+            <nz-skeleton
+              [nzParagraph]="{ rows: 1 }"
+              [style.width.px]="180"
+              [nzTitle]="false"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+          <nz-skeleton
+            class="ant-skeleton-checkbox"
+            [nzParagraph]="paragraph"
+            [nzActive]="true"
+            class="size-16"></nz-skeleton>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+  <ng-template #hasList>
+    <ng-container *ngIf="agencyList?.length > 0; else noResult">
+      <div class="list-team-member">
+        <div class="list-team-member__header">
+          <span>Select team members</span>
+          <trudi-checkbox
+            [disabled]="isCompanyMailbox || agencyList?.length === 1"
+            [ngModel]="listSelectPM?.length > (agencyList?.length === 1 ? 0 : 1)"
+            [isSelectedAll]="agencyList?.length !== listSelectPM?.length"
+            (ngModelChange)="handleCheckAll($event)"></trudi-checkbox>
+        </div>
+        <ng-container *ngIf="isCompanyMailbox ;else hasListIndividual">
+          <div class="list-team-member__content">
+            <ng-container
+              *ngFor="let item of agencyList; let first = first; index as i">
+              <div class="team-member" (click)="!first && handleCheckbox(i)">
+                <div class="d-flex align-items-center gap-8">
+                  <app-user-avatar
+                    [avatar]="item?.googleAvatar"
+                    [user]="item"
+                    [style]="'width: 32px; height: 32px; font-size: 16px;'"></app-user-avatar>
+                  <span
+                    class="assign-name"
+                    [ngClass]="{'active': item.selected}">
+                    {{(item?.firstName || '') + ' ' + (item?.lastName || '')}}
+                  </span>
+                  <div class="size-16" *ngIf="first">
+                    <trudi-icon
+                      svgClass="size-16"
+                      icon="crownGold"></trudi-icon>
+                  </div>
+                </div>
+                <trudi-checkbox
+                  [disabled]="isCompanyMailbox || first"
+                  [ngModel]="item.selected"
+                  (change)="handleCheckbox(i)">
+                </trudi-checkbox>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+        <ng-template #hasListIndividual>
+          <div class="list-team-member__content">
+            <cdk-virtual-scroll-viewport
+              [itemSize]="20"
+              class="h-100"
+              minBufferPx="100"
+              maxBufferPx="200">
+              <ng-container
+                *cdkVirtualFor="let item of agencyList; let first = first; index as i">
+                <div class="team-member" (click)="!first && handleCheckbox(i)">
+                  <div class="d-flex align-items-center gap-8">
+                    <app-user-avatar
+                      [avatar]="item?.googleAvatar"
+                      [user]="item"
+                      [style]="'width: 32px; height: 32px; font-size: 16px;'"></app-user-avatar>
+                    <span
+                      class="assign-name"
+                      [ngClass]="{'active': item.selected}">
+                      {{(item?.firstName || '') + ' ' + (item?.lastName || '')}}
+                    </span>
+                    <div class="size-16" *ngIf="first">
+                      <trudi-icon
+                        svgClass="size-16"
+                        icon="crownGold"></trudi-icon>
+                    </div>
+                  </div>
+                  <trudi-checkbox
+                    [ngModel]="item.selected"
+                    [disabled]="first"
+                    (change)="handleCheckbox(i)">
+                  </trudi-checkbox>
+                </div>
+              </ng-container>
+            </cdk-virtual-scroll-viewport>
+          </div>
+        </ng-template>
+      </div>
+    </ng-container>
+  </ng-template>
+
+  <ng-template #footerModal>
+    <div class="assign-default__footer">
+      <div class="d-flex flex-dir-column text-left">
+        <span>Can't find all your team?</span>
+        <span
+          >Make sure they are
+          <span (click)="inviteTeamMember()">invited to Trudi®</span></span
+        >
+      </div>
+      <ng-container *ngIf="isCompanyMailbox; else invividual">
+        <div class="d-flex align-items-center gap-12">
+          <button
+            trudi-btn
+            [disabled]="isLoading || isDisabled"
+            (click)="handleSaveAssignMailBox()"
+            class="btn-save-assign d-flex align-items-center gap-8">
+            Next
+          </button>
+        </div>
+      </ng-container>
+      <ng-template #invividual>
+        <div class="d-flex align-items-center gap-12">
+          <button
+            trudi-btn
+            [disabled]="isLoading || isDisabled"
+            (click)="handleSaveAssignMailBox()"
+            class="btn-save-assign d-flex align-items-center gap-8">
+            Save
+          </button>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+</trudi-modal>
+
+<ng-template #noResult>
+  <div class="no-result">
+    <span>No team members to display</span>
+    <button
+      (click)="inviteTeamMember()"
+      class="trudi-btn trudi-btn-primary trudi-btn-large btn-save">
+      Invite team member
+    </button>
+  </div>
+</ng-template>
+
+<trudi-modal
+  *ngIf="popupState === EMailBoxPopUp.ASSIGN_DEFAULT"
+  [visible]="popupState === EMailBoxPopUp.ASSIGN_DEFAULT"
+  [modelWidth]="624"
+  [autoFocus]="null"
+  [closable]="false"
+  title="Assign default assignee"
+  subTitle="">
+  <div class="assign-default__container">
+    <div class="assign-default__title">
+      <span>
+        We automatically direct incoming enquiries to the correct team member,
+        based on portfolio.
+      </span>
+      <br />
+      <br />
+      <span>
+        For cases where we are unable to this, please select at least one team
+        member to receive and triage these emails.
+      </span>
+    </div>
+    <div [formGroup]="myForm">
+      <trudi-multi-select
+        #multiSelect
+        [ngClass]="{'error-filed': isError}"
+        [items]="listSelectPM"
+        bindValue="companyAgentId"
+        [formControl]="assignTeamMember"
+        bindLabel="label"
+        (onCancel)="onClose()"
+        placeholder="Add team member"
+        [totalOptions]="listSelectPM.length"
+        [clearSearchOnAdd]="false">
+        <ng-template trudi-label-tmp let-items="items" let-clear="clear">
+          <div class="ng-value" *ngFor="let item of items">
+            <div class="d-flex align-items-center gap-8">
+              <app-user-avatar
+                [avatar]="item?.googleAvatar"
+                [user]="item"
+                [style]="'width: 32px; height: 32px; font-size: 16px;'"></app-user-avatar>
+              <span class="mw-160">{{item.label}}</span>
+              <trudi-icon
+                class="cursor-pointer"
+                [icon]="'closeGray64'"
+                (click)="clear(item); $event.stopPropagation()">
+              </trudi-icon>
+            </div>
+          </div>
+        </ng-template>
+
+        <ng-template
+          trudi-option-tmp
+          let-item="item"
+          let-searchTerm="searchTerm"
+          let-item$="item$">
+          <div
+            class="d-flex justify-content-between align-items-center w-100 pd-12">
+            <div class="d-flex align-items-center gap-12">
+              <app-user-avatar
+                [avatar]="item?.googleAvatar"
+                [user]="item"
+                [style]="'width: 32px; height: 32px; font-size: 16px;'"></app-user-avatar>
+              <span
+                class="item-label mw-160"
+                [ngOptionHighlight]="searchTerm ? searchTerm : ''">
+                {{(item?.firstName || '') + ' ' + (item?.lastName || '')}}</span
+              >
+            </div>
+            <div class="d-flex align-items-center">
+              <trudi-checkbox
+                [ngModel]="item$.selected"
+                [ngModelOptions]="{standalone: true}"></trudi-checkbox>
+            </div>
+          </div>
+        </ng-template>
+      </trudi-multi-select>
+      <div *ngIf="isError" class="d-flex align-items-center gap-4 mt-6">
+        <trudi-icon
+          icon="iconErrorProfile"
+          svgClass="trudi-icon-error"></trudi-icon>
+        <div class="required-field">Required field</div>
+      </div>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div class="d-flex align-items-center gap-12">
+      <ng-container>
+        <button
+          trudi-btn
+          btnType="neutral"
+          variant="outlined"
+          [disabled]="isDisabled"
+          (click)="handleBack()"
+          class="btn-back-assign d-flex align-items-center gap-8">
+          Back
+        </button>
+      </ng-container>
+      <button
+        trudi-btn
+        [disabled]="isDisabled"
+        (click)="handleSaveAssignTeam()"
+        class="btn-save-assign d-flex align-items-center gap-8">
+        Save
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>
+
+<resolve-conversation-popup
+  *ngIf="popupState === EMailBoxPopUp.SAVE_CONVERSATION_TO_NOTE && isRmEnvironment"
+  (onConfirm)="handleSaveConversationsMailbox()"
+  (onCancel)="handleCancelConversationsMailbox()">
+</resolve-conversation-popup>

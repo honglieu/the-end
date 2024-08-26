@@ -1,0 +1,19 @@
+@if(isShowCarousel) {
+<app-modal-popup
+  [transparent]="true"
+  [show]="isShowCarousel"
+  [zIndex]="999999"
+  [appendBody]="true"
+  [position]="popupModalPosition.full_screen">
+  <app-images-carousel
+    [disabled]="disabled"
+    [open]="isShowCarousel"
+    [isSyncing]="false"
+    [imageUrlList]="arrayImageCarousel"
+    [initialIndex]="initialIndex"
+    (showCarousel)="manageCarouselState($event)"
+    (showSelectPeoplePopup)="handleShowTrudiSendMsg($event)"
+    (fileEmit)="handleFileEmit($event)">
+  </app-images-carousel>
+</app-modal-popup>
+}

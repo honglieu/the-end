@@ -1,0 +1,160 @@
+<ng-container *ngIf="loadingVoicemailSetting; else voicemail">
+  <div class="voicemail-section">
+    <div class="header">Voicemail number</div>
+    <nz-skeleton
+      class="voicemail-number-skeleton"
+      [nzParagraph]="{ rows: 1 }"
+      [nzTitle]="false"
+      [nzActive]="true"></nz-skeleton>
+  </div>
+  <div class="voicemail-section">
+    <div class="header">Redirect number</div>
+    <div class="voicemail-redirect">
+      <div class="voicemail-redirect-text">
+        If your voicemail is off, your calls will be redirected to the following
+        phone number
+      </div>
+      <nz-skeleton
+        class="voicemail-redirect-form-skeleton"
+        [nzParagraph]="{ rows: 1 }"
+        [nzTitle]="false"
+        [nzActive]="true"></nz-skeleton>
+    </div>
+  </div>
+  <div class="voicemail-section">
+    <div class="header">Customise when voicemail is used</div>
+    <nz-skeleton
+      class="voicemail-customise-skeleton"
+      [nzParagraph]="{ rows: 4 }"
+      [nzTitle]="false"
+      [nzActive]="true"></nz-skeleton>
+  </div>
+</ng-container>
+
+<ng-template #voicemail>
+  <div *ngIf="!isAdminOrOwner" class="d-flex gap-4 align-items-center mb-8">
+    <trudi-icon icon="infoFill" [style]="{ 'width.px': 12, 'height.px': 12 }">
+    </trudi-icon>
+    <span class="warning-notice-text"
+      >You need to be an account administrator to edit this page.</span
+    >
+  </div>
+  <div #voicemailContainer [formGroup]="voicemailForm">
+    <div class="voicemail-section">
+      <div class="header">Voicemail number</div>
+      <div class="voicemail-number">
+        <div>{{voicemailAgencyNumber | phoneNumberFormat}}</div>
+        <button
+          trudi-btn
+          btnType="neutral"
+          variant="tonal"
+          size="extra-small"
+          shape="circle"
+          (click)="copyToClipboard()">
+          <trudi-icon icon="iconCopy"></trudi-icon>
+        </button>
+      </div>
+    </div>
+    <div class="voicemail-section">
+      <div class="header">Redirect number</div>
+      <div class="voicemail-redirect">
+        <div class="voicemail-redirect-text">
+          If your voicemail is off, your calls will be redirected to the
+          following phone number
+        </div>
+        <div class="voicemail-redirect-form">
+          <trudi-form-control
+            [control]="redirectNumber"
+            [errors]="[{errorName: 'invalidNumber', errorMessage: INVALID_NUMBER}, {errorName: 'duplicated', errorMessage: REDIRECT_NUMBER_DUPLICATED}]">
+            <div class="voicemail-redirect-form-input">
+              <trudi-number-field
+                [disableDotKey]="isRMEnvironment"
+                [disabled]="!isAdminOrOwner"
+                (onChangeData)="onPhoneNumberChange($event)"
+                (triggerEventBlur)="onTriggerBlurEvent()"
+                [prefixText]="'(' + areaCode + ')' || ''"
+                size="medium"
+                [maskPattern]="maskPattern"
+                [maxCharacter]="maxCharacter"
+                formControlName="redirectNumber">
+              </trudi-number-field>
+            </div>
+          </trudi-form-control>
+        </div>
+      </div>
+    </div>
+    <div class="voicemail-section">
+      <div class="header">Customise when voicemail is used</div>
+      <div class="voicemail-customise">
+        <trudi-radio-button
+          [enableCustomTemplate]="true"
+          formControlName="customiseVoicemail"
+          [options]="voicemailCustomiseOption">
+        </trudi-radio-button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #outsideOfficeHours
+  ><div
+    nz-tooltip
+    [nzTooltipTitle]="tooltipText"
+    nzTooltipOverlayClassName="outside-hours-tooltip"
+    class="tooltip-icon">
+    <trudi-icon icon="iconTooltip"></trudi-icon></div
+></ng-template>
+<ng-template #customHours
+  ><button
+    trudi-btn
+    size="medium"
+    variant="link"
+    [disabled]="!isAdminOrOwner || !voicemailSetting?.redirectNumber"
+    class="ml-4"
+    (click)="openCustomHoursPopup()">
+    Custom hours
+  </button></ng-template
+>
+
+<ng-template #tooltipText>
+  <div class="d-flex flex-dir-column gap-4 cursor-default">
+    <div>You can set office hours in</div>
+    <div
+      class="text-decoration-underline cursor-pointer"
+      (click)="navigateToCompanyDetails()">
+      company details
+    </div>
+  </div>
+</ng-template>
+
+<custom-hours-popup
+  *ngIf="visible"
+  [idVoicemailSetting]="voicemailSetting?.id"
+  (isCustomHoursSaved)="handleCustomHoursSaved($event)"
+  (closeModal)="visible = false"
+  [visible]="visible"></custom-hours-popup>
+
+<ng-template #customHoursDisplay>
+  <ng-container *ngIf="!isCustomHoursDataEmpty">
+    <div class="tz-hint">
+      <div *ngIf="'' | formatDateTimeAbbrev | async" class="label-hint">
+        Times displayed in {{ '' | formatDateTimeAbbrev: false : true | async }}
+      </div>
+    </div>
+  </ng-container>
+  <div *ngIf="!isCustomHoursDataEmpty" class="custom-hours-display">
+    <ng-container *ngFor="let hour of customHoursData; let index = index">
+      <div
+        *ngIf="hour.startTime && hour.endTime"
+        class="custom-hours-display__item">
+        <div class="custom-hours-display__item--day">
+          {{ daysOfWeek[index] | titlecase }}
+        </div>
+        <div class="custom-hours-display__item--time">
+          {{ hour.startTime | formatTimeString }} - {{ hour.endTime |
+          formatTimeString }}
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>

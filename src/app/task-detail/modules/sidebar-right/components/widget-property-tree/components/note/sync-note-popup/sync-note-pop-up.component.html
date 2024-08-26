@@ -1,0 +1,273 @@
+<resizable-modal-popup
+  *ngIf="isEditNote ? isEditNote : visible"
+  [show]="isEditNote ? isEditNote : visible"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [title]="'Note'"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [iconName]="'ptLogo'"
+  [styleIcon]="null"
+  [classIconTitle]="null"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [footerTemplate]="footerModal"
+  (onCancel)="handleCloseModal()"
+  [isCustomMoveable]="true"
+  class="sync-note-popup">
+  <div class="request-detail-form">
+    <div [formGroup]="widgetNoteForm">
+      <div class="d-flex justify-content-between gap-16 wrapper-type">
+        <div class="note-type-wrapper w-100">
+          <span class="title">Note type</span>
+          <div
+            class="search-box"
+            [ngClass]="{'mx-2': !noteTypeControl.valid && noteTypeControl.touched}">
+            <ng-select
+              [items]="listCategory"
+              formControlName="noteType"
+              bindValue="id"
+              bindLabel="name"
+              [searchable]="true"
+              [clearable]="true"
+              [virtualScroll]="true"
+              notFoundText="No results found"
+              class="share-ng-select"
+              [ngClass]="{'red-border': !noteTypeControl.valid && noteTypeControl.touched, 'disabled-select': disabled}"
+              (change)="handleChangeTimeSync()">
+              <ng-template
+                ng-option-tmp
+                let-item$="item$"
+                let-search="searchTerm">
+                <div class="y-center justify-content-between flex-1">
+                  <div class="d-flex">
+                    <div>
+                      <span class="file-name d-block">
+                        {{item$.label | uppercaseFirstLetter}}
+                      </span>
+                    </div>
+                  </div>
+                  <trudi-icon
+                    *ngIf="item$.selected"
+                    icon="checkSuccess"
+                    svgClass="size-16"
+                    viewBox="auto"></trudi-icon>
+                </div>
+              </ng-template>
+            </ng-select>
+            <ng-container
+              *ngIf="!noteTypeControl.valid && noteTypeControl.touched">
+              <div class="content-require d-flex align-items-center">
+                <trudi-icon
+                  [icon]="'iconWarningRedFit'"
+                  class="d-flex align-items-center"
+                  alt="error"></trudi-icon>
+                <span class="require-text">Required field</span>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="save-to-wrapper w-100">
+          <span class="title">Save to</span>
+          <div
+            class="search-box"
+            [ngClass]="{'mx-2': !saveToControl.value && saveToControl.touched}">
+            <ng-select
+              [items]="saveToLists"
+              formControlName="saveTo"
+              [ngClass]="{'red-border': !saveToControl.value && saveToControl.touched, 'disabled-select': disabled || disabledText}"
+              bindValue="id"
+              bindLabel="label"
+              [readonly]="disabledFields.saveTo"
+              [searchable]="true"
+              [clearable]="true"
+              [virtualScroll]="true"
+              notFoundText="No results found"
+              class="share-ng-select">
+              <ng-template
+                ng-option-tmp
+                let-item$="item$"
+                let-search="searchTerm">
+                <div class="y-center justify-content-between flex-1">
+                  <div class="d-flex">
+                    <div>
+                      <span class="file-name d-block">
+                        {{item$.label | uppercaseFirstLetter}}
+                      </span>
+                    </div>
+                  </div>
+                  <trudi-icon
+                    *ngIf="item$.selected"
+                    icon="checkSuccess"
+                    svgClass="size-16"
+                    viewBox="auto"></trudi-icon>
+                </div>
+              </ng-template>
+            </ng-select>
+            <ng-container *ngIf="!saveToControl.value && saveToControl.touched">
+              <div class="content-require d-flex align-items-center">
+                <trudi-icon
+                  [icon]="'iconWarningRedFit'"
+                  class="d-flex align-items-center"
+                  alt="error"></trudi-icon>
+                <span class="require-text">Required field</span>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <div
+        *ngIf="saveToControl.value === 'Tenancy'"
+        class="save-to-wrapper w-100">
+        <span class="title">Select tenancy</span>
+        <div
+          class="search-box"
+          [ngClass]="{'mx-2': !selectTenancyControl.value && selectTenancyControl.touched}">
+          <ng-select
+            [items]="listTenancy"
+            formControlName="selectTenancy"
+            [ngClass]="{'red-border': !selectTenancyControl.value && selectTenancyControl.touched, 'disabled-select': disabled || disabledText}"
+            bindValue="id"
+            bindLabel="name"
+            [searchable]="true"
+            [clearable]="true"
+            [virtualScroll]="true"
+            [readonly]="disabledFields.saveTo"
+            notFoundText="No results found"
+            class="share-ng-select">
+            <ng-template
+              ng-option-tmp
+              let-item$="item$"
+              let-search="searchTerm">
+              <div class="y-center justify-content-between flex-1">
+                <div class="d-flex">
+                  <div>
+                    <span class="file-name d-block"> {{item$.label}} </span>
+                  </div>
+                </div>
+                <trudi-icon
+                  *ngIf="item$.selected"
+                  icon="checkSuccess"
+                  svgClass="size-16"
+                  viewBox="auto"></trudi-icon>
+              </div>
+            </ng-template>
+          </ng-select>
+          <ng-container
+            *ngIf="!selectTenancyControl.value && selectTenancyControl.touched">
+            <div class="content-require d-flex align-items-center">
+              <trudi-icon
+                [icon]="'iconWarningRedFit'"
+                class="d-flex align-items-center"
+                alt="error"></trudi-icon>
+              <span class="require-text">Required field</span>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+
+      <div
+        class="text-wrapper"
+        [ngClass]="{'mx-2': !descriptionControl.valid && descriptionControl.touched}">
+        <div class="d-flex align-items-center justify-content-between">
+          <span class="title-note">Notes</span>
+          <div class="top-right-text" *ngIf="showCount">
+            {{ descriptionControl.value?.length ?? 0 }}/{{ MAX_TEXT_NOTE_LENGTH
+            }}
+          </div>
+        </div>
+        <textarea
+          formControlName="descriptionText"
+          (keyup)="handleChangeTimeSync()"
+          (focus)="showCount = true"
+          (focusout)="showCount = false"
+          type="text"
+          rows="3"
+          class="text-wrapper-input"
+          [maxlength]="MAX_TEXT_NOTE_LENGTH"
+          [ngClass]="{'active-required': !descriptionControl.valid && descriptionControl.touched, 'disabled-textarea': disabled}">
+        </textarea>
+        <ng-container
+          *ngIf="!descriptionControl.valid && descriptionControl.touched">
+          <div class="content-require d-flex align-items-center mt-0">
+            <trudi-icon
+              [icon]="'iconWarningRedFit'"
+              class="d-flex align-items-center"
+              alt="error"></trudi-icon>
+            <span class="require-text">Required field</span>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #footerModal>
+    <div
+      class="wrapper-footer-sync-notes d-flex w-100 align-items-center justify-content-between">
+      <div class="sync-request d-flex gap-4 align-items-center">
+        <ng-container *ngIf="!syncStatus">
+          <trudi-icon [icon]="'stopSync'" alt="stop-sync"></trudi-icon>
+          <span>Not synced</span>
+        </ng-container>
+        <ng-container *ngIf="syncStatus === TYPE_SYNC_WIDGET_NOTE.INPROGRESS">
+          <trudi-icon
+            [icon]="'syncingV2'"
+            class="sync-icon spin"
+            alt="syncing"></trudi-icon>
+          <span>Syncing</span>
+        </ng-container>
+        <ng-container *ngIf="syncStatus === TYPE_SYNC_WIDGET_NOTE.FAILED">
+          <div class="d-flex align-items-center gap-4">
+            <trudi-icon
+              [icon]="isUnSyncedChanges ? 'notSynced' : 'warningsync'"
+              alt="checked-sync"></trudi-icon>
+            <div class="d-flex gap-4 align-items-center">
+              <span
+                >{{isUnSyncedChanges ? 'Unsynced changes' : 'Fail to
+                sync'}}</span
+              >
+              <ng-container *ngIf="isUnSyncedChanges || lastModified">
+                <span>•</span>
+                <span>{{lastModified | formatDateTime | push}}</span>
+              </ng-container>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="syncStatus === TYPE_SYNC_WIDGET_NOTE.COMPLETED">
+          <div class="d-flex align-items-center gap-4">
+            <trudi-icon
+              [icon]="isUnSyncedChanges ? 'notSynced' : 'checkedSync'"></trudi-icon>
+            <div class="d-flex gap-4 align-items-center">
+              <span
+                >{{isUnSyncedChanges ? 'Unsynced changes' : 'Synced' }}</span
+              >
+              <ng-container *ngIf="lastModified">
+                <span>•</span>
+                <span>{{lastModified | formatDateTime | push}}</span>
+              </ng-container>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <div class="d-flex gap-12">
+        <button
+          (click)="handleBack()"
+          *ngIf="showBackBtn"
+          class="trudi-btn trudi-btn-large trudi-btn-tertiary">
+          Back
+        </button>
+        <button
+          (click)="handleSyncNotes()"
+          [disabled]="isConsole || syncStatus === TYPE_SYNC_WIDGET_NOTE.INPROGRESS || isArchiveMailbox"
+          class="trudi-btn trudi-btn-large trudi-btn-primary"
+          [appE2E]="'pt-widget-note'">
+          Sync to Property Tree
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</resizable-modal-popup>

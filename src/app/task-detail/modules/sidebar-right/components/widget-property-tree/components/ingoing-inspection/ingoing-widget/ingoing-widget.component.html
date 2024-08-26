@@ -1,0 +1,84 @@
+<widget-common
+  title="Ingoing Inspection"
+  [buttonKey]="EButtonStepKey.INGOING_INSPECTION"
+  [type]="ingoingInspection.syncStatus"
+  [errorTitle]="ingoingInspection.errorMessSync"
+  [firstTimeSyncSuccess]="ingoingInspection.firstTimeSyncSuccess"
+  (showModal)="handleEdit(ingoingInspection)"
+  (retry)="handleRetry(ingoingInspection)"
+  (remove)="handleRemove(ingoingInspection)"
+  [isDislayBtnCancel]="ingoingInspection.isSuccessful">
+  <div class="d-flex flex-dir-column gap-4">
+    <div class="d-flex w-100">
+      <span class="title">Tenancy</span>
+      <span class="tenancy"
+        >{{ingoingInspection?.userPropertyGroup?.name}}</span
+      >
+    </div>
+    <ng-container *ngIf="ingoingInspection?.ptId && ingoingInspection?.status">
+      <div class="d-flex align-items-center">
+        <span class="title">Status</span>
+        <trudi-badge
+          size="small"
+          [variant]="(ingoingInspection.status === statusPropertyTree.CANCELLED || ingoingInspection.status === statusPropertyTree.CLOSED) ? 'error' : 'primary'"
+          badgeType="tonal"
+          [text]="ingoingInspection.status | titlecase"></trudi-badge>
+      </div>
+      @if (ingoingInspection.status === statusPropertyTree.CLOSED) {
+      <div class="d-flex align-items-center">
+        <span class="title no-pointer-event">
+          <switch-checkbox
+            [disabled]="true"
+            [isChecked]="ingoingInspection.defaultChargeFee"></switch-checkbox>
+        </span>
+        <span class="tenancy">Charge default fee</span>
+      </div>
+      }
+    </ng-container>
+    <property-tree-widget-notes
+      *ngIf="ingoingInspection?.notes?.general"
+      [type]="eTypeNote.INSPECTION"
+      [notes]="ingoingInspection?.notes?.general"></property-tree-widget-notes>
+    <div>
+      <div
+        class="inspection-note"
+        *ngIf="ingoingInspection?.notes?.tenant_notes || ingoingInspection?.notes?.tenant_actions || ingoingInspection?.notes?.owner_notes || ingoingInspection?.notes?.owner_followup_items">
+        <div class="inspection-output">Inspection outputs</div>
+        <div class="inspection-content" [ngSwitch]="true">
+          <div
+            class=""
+            *ngSwitchCase="!!ingoingInspection?.notes?.tenant_notes">
+            <div class="text-truncate">
+              Tenant notes:
+              <span>{{ingoingInspection?.notes?.tenant_notes}}</span>
+            </div>
+          </div>
+          <div
+            class=""
+            *ngSwitchCase="!!ingoingInspection?.notes?.tenant_actions && !ingoingInspection?.notes?.tenant_notes">
+            <div class="text-truncate">
+              Actions: <span>{{ingoingInspection?.notes?.tenant_actions}}</span>
+            </div>
+          </div>
+          <div
+            class=""
+            *ngSwitchCase="!!ingoingInspection?.notes?.owner_notes && !ingoingInspection?.notes?.tenant_actions && !ingoingInspection?.notes?.tenant_notes">
+            <div class="text-truncate">
+              Owner notes:
+              <span>{{ingoingInspection?.notes?.owner_notes}}</span>
+            </div>
+          </div>
+          <div
+            class=""
+            *ngSwitchCase="!!ingoingInspection?.notes?.owner_followup_items && !ingoingInspection?.notes?.owner_notes
+                    && !ingoingInspection?.notes?.tenant_actions && !ingoingInspection?.notes?.tenant_notes">
+            <div class="text-truncate">
+              Follow-up Items:
+              <span>{{ingoingInspection?.notes?.owner_followup_items}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</widget-common>

@@ -1,0 +1,76 @@
+@import 'function';
+@import 'function';
+
+.head-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+trudi-form-control trudi-text-field ::ng-deep .trudi-text-field-wrapper {
+  max-width: 320px;
+  min-width: 320px;
+  padding: 8px 12px !important;
+}
+
+:host ::ng-deep .status-task-editor {
+  display: flex;
+  ::ng-deep .trudi-tabs-wrapper .ant-tabs-card .ant-tabs-tab {
+    width: 127px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .trudi-tabs-wrapper .ant-tabs-card .ant-tabs-tab:first-child {
+    border-radius: 8px 0px 0px 8px !important;
+  }
+  .trudi-tabs-wrapper .ant-tabs-card .ant-tabs-tab:nth-last-child(2) {
+    border-radius: 0px 8px 8px 0px !important;
+  }
+
+  .trudi-tabs-wrapper .ant-tabs-card .ant-tabs-tab-active {
+    background-color: var(--bg-brand-tonal-normal);
+    border: 1px solid var(--border-brand, #00aa9f);
+  }
+
+  .trudi-tabs-wrapper .ant-tabs-card .ant-tabs-nav-wrap {
+    border: unset;
+    border-radius: 8px;
+  }
+
+  .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab-active,
+  .ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab-active {
+    border-bottom-color: unset;
+  }
+}
+
+.left-act {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.box-tooltip-create-task {
+  max-width: 280px;
+  .ant-tooltip-inner {
+    text-align: left;
+  }
+}
+
+.text-button-task {
+  @include fontSetup(var(--fg-base, #fff), 14px, 20px, normal, 600);
+}
+
+@media (max-width: 1140px) {
+  trudi-form-control trudi-text-field ::ng-deep .trudi-text-field-wrapper {
+    max-width: 320px;
+    min-width: 320px;
+    padding: 8px 12px !important;
+  }
+  :host ::ng-deep .status-task-editor {
+    ::ng-deep .trudi-tabs-wrapper .ant-tabs-card .ant-tabs-tab {
+      width: auto;
+    }
+  }
+}

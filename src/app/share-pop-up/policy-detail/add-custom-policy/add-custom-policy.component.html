@@ -1,0 +1,170 @@
+<div class="add-custom-policy-template" [formGroup]="customPolicyFormGroup">
+  <div
+    [ngClass]="{'align-items-center': !policyName.invalid}"
+    class="wrapper-name-delete d-flex justify-content-between">
+    <div class="custom-policy-name">
+      <div>
+        <trudi-form-control
+          [control]="policyName"
+          [errors]="[{errorName: 'duplicate', errorMessage: 'Name already exists'}]">
+          <trudi-textarea
+            autosize
+            [rows]="1"
+            [cols]="1"
+            formControlName="policyName"
+            [placeholder]="'Enter custom policy name'"
+            (triggerEventBlur)="handleBlurPolicyName($event)"
+            [showCounting]="false"
+            [resizable]="false"
+            [maxCharacter]="100"
+            [isPressEnter]="true"></trudi-textarea>
+        </trudi-form-control>
+      </div>
+    </div>
+    <button
+      (click)="handleDeleteCustomPolicy()"
+      trudi-btn
+      variant="ghost"
+      btnType="danger"
+      size="medium"
+      shape="circle"
+      class="btn-delete">
+      <trudi-icon icon="iconDelete"></trudi-icon>
+    </button>
+  </div>
+  <div class="custom-property">
+    <div class="property-title custom-title">
+      {{ titleSelectPropertyOrTag }}
+    </div>
+    <div class="select-property-wrapper">
+      <trudi-form-control [control]="property">
+        <trudi-multi-select
+          [items]="isLoading ? [] : dataSources"
+          [virtualScroll]="true"
+          bindValue="value"
+          bindLabel="label"
+          [disabledOnlyCheckbox]="true"
+          formControlName="property"
+          [groupBy]="isGroupBy ? 'tagGroupName' : ''"
+          [loading]="isLoading"
+          dropdownPosition="auto"
+          [placeholder]="'Select ' + (isRmEnvironment ? 'property' : 'property tag')"
+          (focusChange)="onFocusChangeSelect($event)"
+          [closeOnSelect]="true"
+          [clearSearchOnAdd]="false">
+          <ng-template trudi-label-tmp let-items="items" let-clear="clear">
+            <div class="ng-value" *ngFor="let item of items">
+              <div
+                nz-tooltip
+                triggerLongContentTooltip
+                [elementRef]="propertyLabel"
+                [keepHover]="item.status === EPropertyStatus.inactive"
+                (exceedWidth)="item.exceedWidth = $event"
+                nzTooltipPlacement="top"
+                [nzTooltipOverlayClassName]="'tooltip-label'"
+                [nzTooltipTitle]="item.status === EPropertyStatus.inactive ? item.exceedWidth ? item.label + ' (Inactive)' : 'Inactive' : item.label"
+                class="d-flex gap-4 align-items-center trudi-label-wrapper label-wrapper border-rad-8"
+                [ngClass]="{'disabled': item.status === EPropertyStatus.inactive, 'tag-error': item?.duplicateProperty}">
+                @if(!isRmEnvironment) {
+                <trudi-icon
+                  icon="iconTag"
+                  [style]="{ 'width.px': 18, 'height.px': 18 }"></trudi-icon>
+                }
+                <div #propertyLabel class="tag-label text-ellipsis">
+                  {{item?.label}}
+                </div>
+                <div
+                  class="close-wrapper"
+                  (mousedown)="clear(item);$event.stopPropagation()">
+                  <trudi-icon
+                    class="cursor-pointer"
+                    icon="closeIcon"
+                    [style]="{ 'width.px': 20, 'height.px': 20 }"></trudi-icon>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template
+            trudi-option-tmp
+            let-item="item"
+            let-searchTerm="searchTerm"
+            let-item$="item$">
+            <div
+              class="option-item d-flex justify-content-between align-items-center w-100"
+              [ngClass]="{'disable': item?.disabled, 'disable-field': item?.disabled && item.status === EPropertyStatus.inactive }">
+              <div class="label-container d-flex align-items-center gap-4">
+                <span
+                  #propertyItemLabel
+                  triggerLongContentTooltip
+                  [elementRef]="propertyItemLabel"
+                  nz-tooltip
+                  nzTooltipPlacement="top"
+                  [nzTooltipTitle]="item?.label"
+                  [nzTooltipOverlayClassName]="'tooltip-label'"
+                  class="item-label mw-label"
+                  [ngClass]="{'mw-90': item?.status === EPropertyStatus.inactive}"
+                  [ngOptionHighlight]="searchTerm ? searchTerm : ''">
+                  {{(item.label)}}</span
+                >
+                @if (item?.status === EPropertyStatus.inactive) {
+                <trudi-badge
+                  text="Inactive"
+                  size="small"
+                  variant="role"
+                  [allowTruncated]="true">
+                </trudi-badge>
+                }
+              </div>
+              <div
+                class="d-flex align-items-center"
+                trudi-tooltip
+                [nzTooltipTitle]="item.tooltip"
+                nzTooltipOverlayClassName="tooltip-policy"
+                nzTooltipPlacement="topRight">
+                <trudi-checkbox
+                  [ngModel]="item$.selected || (item?.disabled && item.status === 'ACTIVE') || item?.matchingPolicy"
+                  [disabled]="item?.disabled"
+                  [ngModelOptions]="{standalone: true}"></trudi-checkbox>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template trudi-header-tmp> </ng-template>
+        </trudi-multi-select>
+      </trudi-form-control>
+    </div>
+  </div>
+  <div class="custom-replies">
+    <div class="reply-title custom-title">
+      Use this information in AI-generated replies:
+    </div>
+    <div class="reply-content">
+      <trudi-form-control [control]="generatedReplies">
+        <generated-reply
+          [formGroup]="customPolicyFormGroup"
+          [invalid]="generatedReplies.invalid"
+          (triggerUploadComputer)="handleAddFileComputer(index)"
+          (triggerEventFocus)="handleFocusReply()"
+          (triggerUploadContactCard)="openSuppierPopup.emit(this.customPolicyFormGroup)"
+          [controlName]="'generatedReplies'"></generated-reply>
+      </trudi-form-control>
+      <input
+        [attr.id]="'upload-custom-policy-' + index"
+        [multiple]="true"
+        class="input-file d-none"
+        type="file"
+        (click)="$event.stopPropagation()"
+        (change)="handleUploadFileLocal($event, index)" />
+      @if(listOfFiles?.length || selectedContactCard?.length) {
+      <attach-file
+        [files]="listOfFiles"
+        [overFileSize]="invalidFile.overFileSize"
+        [isUnSupportFile]="invalidFile.unSupportFile"
+        [isAddCustomPolicy]="true"
+        (onRemoveFile)="handleRemoveFile($event)"
+        (clearCard)="onClearContactById($event)"
+        [cards]="selectedContactCard">
+      </attach-file>
+      }
+    </div>
+  </div>
+</div>

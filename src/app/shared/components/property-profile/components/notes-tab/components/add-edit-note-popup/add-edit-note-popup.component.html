@@ -1,0 +1,178 @@
+<trudi-modal
+  *ngIf="isShow"
+  [(visible)]="isShow"
+  [modelWidth]="624"
+  [subTitle]="''"
+  title="Note"
+  [autoFocus]="null"
+  (onCancel)="closeModal()"
+  className="add-edit-note-modal"
+  [iconName]="crmSystemId === ECrmSystemId.PROPERTY_TREE ? 'propertyTreeLogo' : 'rentManager'">
+  <div class="add-edit-note-wrapper auto-height flex-dir-column x-between">
+    <div [formGroup]="addNoteForm">
+      <div class="wrapper" #wrapper>
+        <div class="body">
+          <div class="sender">
+            <div class="up-left-text">Category</div>
+            <trudi-form-control [control]="category">
+              <trudi-single-select
+                class="category-select"
+                [ngClass]="{'no-value': !isSearching && !getCategory?.value}"
+                [items]="listCategory"
+                bindLabel="name"
+                bindValue="id"
+                (search)="handleSearch($event)"
+                formControlName="category"
+                [placeholder]="'Select category for note'">
+              </trudi-single-select>
+            </trudi-form-control>
+          </div>
+          <div class="content relative">
+            <div class="content-label">Description</div>
+            <trudi-form-control [control]="textDescription">
+              <trudi-textarea
+                formControlName="textDescription"
+                [maxCharacter]="MAX_TEXT_NOTE_LENGTH"
+                [rows]="2"
+                placeholder="Enter description"
+                [required]="true">
+              </trudi-textarea>
+            </trudi-form-control>
+          </div>
+          <div
+            class="file-attchments"
+            *ngIf="crmSystemId === ECrmSystemId.RENT_MANAGER">
+            <div class="content-label">File attachments</div>
+            <div class="file-box-wrapper">
+              <div
+                class="file-box"
+                [class.file-box--error]="item.error"
+                *ngFor="let item of listFile; let i = index; trackBy: fileTrackByFn;">
+                <div class="file-container">
+                  <div
+                    class="file-logo"
+                    [class.file-logo--video]="isVideoFileLogo(item)">
+                    <img [src]="(item | getThumbOfFile)" />
+                  </div>
+                  <div class="file-content">
+                    <div
+                      #fileName
+                      class="file-name text-ellipsis"
+                      nz-tooltip
+                      nzTooltipPlacement="top"
+                      [nzTooltipTitle]="item?.fileName"
+                      [nzTooltipOverlayStyle]="{ 'max-width': '200px', 'word-break': 'break-all' }"
+                      [nzTooltipTrigger]="tooltipTriggers.get(i)">
+                      {{ item?.fileName }}
+                    </div>
+                    <div class="file-size">
+                      {{(item?.size || item?.fileSize) | convertFileSize}}
+                    </div>
+                  </div>
+                </div>
+                <button
+                  *ngIf="(item.mediaLink || item.error) && !item.FileID"
+                  type="button"
+                  class="cursor-pointer remove-button"
+                  [disabled]="!!item.isDisabled || syncStatus?.value === TYPE_SYNC_MAINTENANCE.INPROGRESS"
+                  (click)="removeFile(i)">
+                  <trudi-icon
+                    nz-tooltip
+                    [nzTooltipTitle]="!!item.isDisabled ? disableTooltipText: ''"
+                    [ngClass]="{'cursor-not-allowed': !!item.isDisabled || syncStatus?.value === TYPE_SYNC_MAINTENANCE.INPROGRESS }"
+                    [style]="{ 'width.px': 16, 'height.px': 16, color: '#646464' }"
+                    icon="closeIcon"></trudi-icon>
+                </button>
+
+                <ng-container *ngIf="!item.mediaLink && !item.error">
+                  <div class="image-rotation rotate-image">
+                    <img src="/assets/icon/loading.png" alt="loading-icon" />
+                  </div>
+                </ng-container>
+              </div>
+            </div>
+            <div
+              class="upload-button-wrapper"
+              [class.upload-button-wrapper--transform]="isInvalidFile">
+              <upload-file-button
+                #uploadFileButton
+                class="upload-file-button"
+                [disable]="syncStatus?.value === TYPE_SYNC_MAINTENANCE.INPROGRESS || this.isFileLoading"
+                [disableRemoveButton]="syncStatus?.value === TYPE_SYNC_MAINTENANCE.INPROGRESS"
+                [ngClass]="{'cursor-not-allowed': syncStatus?.value === TYPE_SYNC_MAINTENANCE.INPROGRESS || this.isFileLoading}"
+                [listFileData]="listFile"
+                (getListFile)="getListFile($event)"
+                label="Attach file"
+                icon="TrudiUpload"
+                [showListFile]="false"
+                [useListFileData]="true"
+                [multipleFile]="true"
+                [enableToast]="false"
+                [isIncludeInvalidFile]="true"
+                [isShowFileBeforeUpload]="true"
+                (loadingChange)="fileLoadingChange($event)"
+                [acceptTypeFile]="HISTORY_NOTES_FILE_VALID_TYPE">
+              </upload-file-button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #footerModal>
+        <div class="gap-12 d-flex w-100 align-items-center">
+          <div class="status-group d-flex gap-4 flex-grow-1">
+            <ng-container *ngIf="!isUpdate">
+              <trudi-icon class="sync-icon" icon="redCloseIcon"></trudi-icon>
+              <span>Not synced</span>
+            </ng-container>
+            <ng-container *ngIf="isUpdate">
+              <ng-container
+                *ngIf="syncStatus?.value === TYPE_SYNC_MAINTENANCE.INPROGRESS">
+                <trudi-icon
+                  class="sync-icon spin-syncing-v2"
+                  icon="syncingV2"></trudi-icon>
+                <span>Syncing</span>
+              </ng-container>
+              <ng-container
+                *ngIf="syncStatus?.value === TYPE_SYNC_MAINTENANCE.FAILED">
+                <trudi-icon icon="warningsync"></trudi-icon>
+                <span>Fail to sync</span>
+              </ng-container>
+              <ng-container
+                *ngIf="!isDirty && (!syncStatus?.value || syncStatus?.value === TYPE_SYNC_MAINTENANCE.COMPLETED)">
+                <trudi-icon class="synced-icon" icon="checkedSync"></trudi-icon>
+                <span>Synced</span>
+              </ng-container>
+              <ng-container
+                *ngIf="isDirty && (!syncStatus?.value || syncStatus?.value === TYPE_SYNC_MAINTENANCE.COMPLETED)">
+                <trudi-icon icon="iconUnSyncChanges"></trudi-icon>
+                <span>Unsynced changes</span>
+              </ng-container>
+              <ng-container
+                *ngIf="syncStatus?.value !== TYPE_SYNC_MAINTENANCE.INPROGRESS">
+                <span
+                  >• {{(this.getUpdateItemClone.lastModified ||
+                  this.getUpdateItemClone.createdAt) | formatDateTime |
+                  async}}</span
+                >
+              </ng-container>
+            </ng-container>
+          </div>
+          <div class="btn-group">
+            <button
+              class="note-submit-btn"
+              trudi-btn
+              [disabled]="isDisableSyncButton || isConsole ||
+              (this.isFileLoading &&
+                this.crmSystemId === ECrmSystemId.RENT_MANAGER)"
+              (click)="submitHandler()">
+              <span class="btn-text"
+                >{{crmSystemId === ECrmSystemId.PROPERTY_TREE ? 'Sync to
+                Property Tree' : 'Sync to Rent Manager' }}</span
+              >
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</trudi-modal>

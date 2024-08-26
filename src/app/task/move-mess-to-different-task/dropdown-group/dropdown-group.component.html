@@ -1,0 +1,78 @@
+<div
+  id="move-to-different-task"
+  class="dropdown-wrapper"
+  [ngClass]="{'move-task-confirmed': !isMoveTaskConfirmed}">
+  <ng-container>
+    <div class="move-task">
+      <ng-select
+        [items]="listTaskItem"
+        (change)="onItemClick($event)"
+        (search)="handleSearch($event)"
+        class="share-ng-select select-move select-move-task"
+        [ngClass]="{'input-error-select': isMissingRequiredField}"
+        bindLabel="title"
+        bindValue="id"
+        [searchable]="true"
+        [clearable]="true"
+        [virtualScroll]="true"
+        [editableSearchTerm]="true"
+        (close)="isSearching = false"
+        [searchFn]="searchTasks"
+        [appendTo]="!isMoveTaskConfirmed ? '#move-to-different-task' : '#right-side-bar'"
+        notFoundText="No results found"
+        placeholder="Select task"
+        [groupBy]="'groupTitle'">
+        <ng-template *ngIf="hasResult" ng-header-tmp>
+          <div class="checkbox-container">
+            <td-checkbox
+              class="align-items-center display-completed"
+              [size]="24"
+              [isChecked]="includeCompetedState"
+              [spaceBetween]="false"
+              [reverse]="true"
+              label="Display completed tasks"
+              (tdCheckboxChanged)="onCheckboxChange($event)">
+            </td-checkbox>
+          </div>
+        </ng-template>
+        <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+          <div class="y-center justify-content-between flex-1 w-100">
+            <div class="y-center gap-8 w-100">
+              <span
+                class="text-ellipsis"
+                [ngOptionHighlight]="isSearching ? search || '' : ''"
+                [title]="item.title"
+                [ngClass]="{'selected-task': item.id === valueSelected?.id}"
+                >{{item.title}}</span
+              >
+              <span class="task__item-label" *ngIf="item?.regionName"
+                >{{item.regionName}}</span
+              >
+              <div class="task-create y-center gap-4" *ngIf="item.createdAt">
+                <span class="task-create-open"
+                  >• Opened {{ item.createdAt | dateCase | async }}</span
+                >
+              </div>
+              <img
+                *ngIf="item.id === valueSelected?.id"
+                class="icon-check"
+                src="/assets/icon/check-success.svg"
+                alt="selected-icon" />
+            </div>
+          </div>
+          <div
+            *ngIf="isSupplierOrOtherOrExternal || isShowAddress"
+            class="y-center gap-8">
+            <div class="task-property-streetline y-center gap-4">
+              <span
+                [ngOptionHighlight]="search ? search : ''"
+                class="property-streetline"
+                >{{item?.property?.streetline || 'No property'}}</span
+              >
+            </div>
+          </div>
+        </ng-template>
+      </ng-select>
+    </div>
+  </ng-container>
+</div>

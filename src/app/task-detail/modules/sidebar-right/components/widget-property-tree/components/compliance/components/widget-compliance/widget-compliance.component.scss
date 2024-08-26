@@ -1,0 +1,67 @@
+@import 'function';
+
+:host ::ng-deep {
+  trudi-suggested-step-group {
+    margin-bottom: 0px;
+  }
+
+  widget-common {
+    .container {
+      padding: 10px 16px;
+    }
+  }
+}
+
+.content-sync-compliance {
+  align-items: flex-start;
+  .title-compliance {
+    width: 80px;
+    @include fontSetup(var(--fg-neutral-stronger), 12px, 16px, normal, 400);
+  }
+  .text-compliance {
+    @include fontSetup(var(--fg-neutral-stronger), 12px, 16px, normal, 400);
+  }
+  .text-item {
+    font-weight: 600;
+  }
+  .text-manageBy {
+    font-weight: 500;
+  }
+  .cancelled,
+  .close-status {
+    color: var(--danger-solid-default, #e1024f);
+  }
+  .active {
+    color: var(--fg-success, #40c174);
+  }
+}
+.header-modal-confirm {
+  padding: 16px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  .title-header {
+    @include fontSetup(
+      var(--fg-neutral-strongest, #202020),
+      18px,
+      28px,
+      normal,
+      600
+    );
+  }
+}
+
+.trudi-button-cancle {
+  display: flex;
+  height: 40px;
+  min-width: 100px;
+  padding: 0px 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  background: var(--bg-danger-solid-normal, #e1024f);
+  @include fontSetup(var(--fg-base, #fff), 14px, 20px, normal, 600);
+  border: none;
+  outline: unset;
+}

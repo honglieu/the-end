@@ -1,0 +1,114 @@
+@if(isShow || (!isShow && currentStep !== FacebookSteps.Initial)) {
+<div class="facebook-overlay">
+  @switch (currentStep) { @case (FacebookSteps.Initial) {
+  <div class="facebook-popup" @fadeIn>
+    <trudi-icon icon="facebookBg"></trudi-icon>
+    <div class="facebook-popup__info">
+      <p class="facebook-popup__info--title">Get started with Messenger</p>
+      <p class="facebook-popup__info--subTitle">
+        Connect your Meta Business Suite to manage messages from your Facebook
+        page here in Trudi®.
+      </p>
+    </div>
+    <button
+      trudi-tooltip
+      [nzTooltipTitle]="facebookTooltipContent"
+      [nzTooltipArrowPointAtCenter]="true"
+      [nzTooltipTrigger]="!isHasFeatureMessenger && 'hover'"
+      trudi-btn
+      btnType="info"
+      size="large"
+      [disabled]="(facebookAccountService.lockEvent | async) || !isHasFeatureMessenger || !isPermissionEdit"
+      (click)="loginMessenger()">
+      <span>Sign in with Facebook</span>
+    </button>
+    <div
+      *ngIf="!isPermissionEdit"
+      class="d-flex gap-4 align-items-center justify-content-center">
+      <trudi-icon icon="infoFill" [style]="{ 'width.px': 12, 'height.px': 12 }">
+      </trudi-icon>
+      <span class="warning-notice-text"
+        >You need to be an account administrator to edit this page.</span
+      >
+    </div>
+  </div>
+  } @case (FacebookSteps.Confirmation) {
+  <div class="facebook-popup facebook-popup-not-space" @fadeIn>
+    <div class="facebook-popup__header">
+      <span class="facebook-popup__header--title"
+        >Which Facebook page will you be using with Trudi®?</span
+      >
+    </div>
+    @if ((facebookAccountService.facebookPageLoading$ | async) === false) {
+    @if(facebookPageData.option?.length) {
+    <div [formGroup]="facebookPageForm" class="facebook-popup__container">
+      <trudi-form-control
+        [control]="facebookPageControl"
+        [showErrorMessage]="false">
+        <trudi-radio-button
+          formControlName="facebookPage"
+          [options]="facebookPageData.option">
+        </trudi-radio-button>
+      </trudi-form-control>
+    </div>
+    } @else {
+    <div class="empty-content">
+      We can't find any pages linked to your Facebook profile. Please check you
+      have required permissions and try again
+    </div>
+    } } @else {
+    <div class="facebook-popup__container">
+      <div class="d-flex flex-dir-column gap-16 w-100">
+        <ng-container *ngFor="let _ of [].constructor(6); let i = index">
+          <div class="quote-wrapper">
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    }
+    <div class="facebook-popup__action">
+      @if(facebookPageControl?.invalid && facebookPageControl?.touched ) {
+      <span class="facebook-error" @textAnimation
+        >Please select a page to continue</span
+      >
+      }
+      <button
+        [disabled]="facebookAccountService.lockEvent | async"
+        type="button"
+        class="trudi-btn trudi-btn-tertiary trudi-btn-large"
+        (click)="handleCancel()">
+        Cancel
+      </button>
+      <button
+        [disabled]="(facebookAccountService.lockEvent | async)"
+        type="button"
+        class="trudi-btn trudi-btn-primary trudi-btn-large"
+        (click)="handleConfirm()">
+        Next
+      </button>
+    </div>
+  </div>
+  } @case (FacebookSteps.Success) {
+  <div class="facebook-popup" @fadeIn>
+    <trudi-icon icon="successfullyImage"></trudi-icon>
+    <div class="facebook-popup__info">
+      <p class="facebook-popup__info--title">You're all set</p>
+      <p class="facebook-popup__info--subTitle">
+        {{textContentForSuccessPopup}}
+      </p>
+    </div>
+    <button
+      class="navigate-btn"
+      trudi-btn
+      variant="filled"
+      btnType="primary"
+      (click)="handleDone()">
+      Done
+    </button>
+  </div>
+  } }
+</div>
+}

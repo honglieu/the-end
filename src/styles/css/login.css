@@ -1,0 +1,21 @@
+body, html {
+	height: 100%;
+	background: #30bfb6 url(src/assets/images/houses.png) center bottom no-repeat;
+	position: relative;
+	background-size: contain;
+}
+.login-logo, .google-btn {
+	width: 20%;
+}
+.mt-100 {
+	margin-top: 100px;
+}
+.mt-50 {
+	margin-top: 50px;
+}
+
+@media(max-width:767px) {
+.login-logo, .google-btn {
+	width: 90%;
+}
+}

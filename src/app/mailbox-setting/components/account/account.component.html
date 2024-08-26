@@ -1,0 +1,135 @@
+<div
+  *ngIf="(inboxService.isLoadingMailBox$ | async) === false && !isLoading"
+  class="account-wrapper">
+  <div *ngIf="currentMailbox?.picture; else noneAvt" class="mailbox-avatar">
+    <img [src]="currentMailbox?.picture" alt="Mailbox avatar" />
+  </div>
+
+  <ng-template #noneAvt>
+    <div class="custom-avatar">{{currentMailbox?.name | shortenName}}</div>
+  </ng-template>
+  <div
+    *ngIf="currentMailbox?.provider === emailProvider.SENDGRID"
+    class="mailbox_description">
+    {{currentMailbox?.description}}
+  </div>
+  <div class="text-shared-mailbox" *ngIf="currentMailbox?.mailBoxOwnerAddress">
+    {{ descriptionSharedMailbox }}
+  </div>
+  <div class="grid-container">
+    <div class="grid-item">Mailbox name</div>
+    <div
+      *ngIf="!isEditting"
+      class="grid-item description d-flex align-items-center gap-8">
+      {{ currentMailbox?.name }}
+      <button
+        *ngIf="(currentMailbox?.role | checkMailboxPermission : MailboxSettingTab.ACCOUNT)"
+        [disabled]="inboxService?.isArchiveMailbox$ | async"
+        [class.cursor-not-allowed-unset]="inboxService?.isArchiveMailbox$ | async"
+        (click)="editMailboxName()"
+        class="round-btn edit-name-btn">
+        <trudi-icon icon="penIcon" alt="Edit Icon"></trudi-icon>
+      </button>
+    </div>
+    <div
+      *ngIf="isEditting"
+      class="grid-item description d-flex align-items-center gap-8"
+      [formGroup]="mailboxForm">
+      <trudi-text-field
+        maxCharacter="100"
+        [showCounting]="false"
+        style="width: 280px"
+        size="medium"
+        formControlName="mailboxName"></trudi-text-field>
+      <button
+        [disabled]="isUpdatingMailboxName"
+        (click)="updateMailboxName()"
+        class="round-btn confirm-btn">
+        <trudi-icon icon="successSmall"></trudi-icon>
+      </button>
+      <button (click)="cancelEdit()" class="round-btn cancel-btn">
+        <trudi-icon icon="closeSmall"></trudi-icon>
+      </button>
+    </div>
+    <ng-container *ngIf="currentMailbox?.provider !== emailProvider.SENDGRID">
+      <div class="grid-item">Linked email account</div>
+      <div class="grid-item description">
+        {{ currentMailbox?.emailAddress }}
+        <span class="status">{{ mailboxStatus }}</span>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="currentMailbox?.provider === emailProvider.SENDGRID">
+      <div class="grid-item">Incoming email address</div>
+      <div class="grid-item">{{currentMailbox?.incomingEmail}}</div>
+      <div class="grid-item">Outgoing email address</div>
+      <div class="grid-item">{{currentMailbox?.outgoingEmail}}</div>
+    </ng-container>
+  </div>
+  <div
+    class="btn-archive mt-24"
+    nz-tooltip
+    [tooltipMaxWidth]="173"
+    [nzTooltipTitle]="currentMailbox?.type === MailBoxType.COMPANY ? archiveAccountTooltip : ''">
+    <button
+      *ngIf="(currentMailbox?.role | checkMailboxPermission : MailboxSettingTab.ACCOUNT) && (inboxService?.isArchiveMailbox$ | async) === false || isConsole"
+      [disabled]="currentMailbox?.type === MailBoxType.COMPANY || isConsole"
+      (click)="visible = true"
+      trudi-btn
+      variant="tonal"
+      btnType="danger">
+      Archive account
+    </button>
+  </div>
+</div>
+
+<ng-template #archiveAccountTooltip>
+  <div class="archive-account-tooltip">
+    <span
+      >To archive this mailbox, you must first set up another company
+      mailbox</span
+    >
+  </div>
+</ng-template>
+
+<archive-account-popup
+  [currentMailbox]="currentMailbox"
+  [currentAgencyId]="currentAgencyId"
+  [mailboxId]="mailboxId"
+  [visible]="visible"
+  (isLoading)="handleLoadingArchive($event)"
+  (closePopup)="visible = false"></archive-account-popup>
+
+<div *ngIf="(inboxService.isLoadingMailBox$ | async) || isLoading">
+  <div class="avatar-skeleton">
+    <nz-skeleton
+      [nzParagraph]="{ rows: 0 }"
+      [nzActive]="true"
+      class="ant-skeleton-custom"></nz-skeleton>
+  </div>
+  <div class="grid-container">
+    <div class="grid-item">
+      <nz-skeleton
+        [nzParagraph]="{ rows: 0 }"
+        [nzActive]="true"
+        class="ant-skeleton-custom"></nz-skeleton>
+    </div>
+    <div class="grid-item description d-flex align-items-center gap-8">
+      <nz-skeleton
+        [nzParagraph]="{ rows: 0 }"
+        [nzActive]="true"
+        class="ant-skeleton-custom"></nz-skeleton>
+    </div>
+    <div class="grid-item-longer">
+      <nz-skeleton
+        [nzParagraph]="{ rows: 0 }"
+        [nzActive]="true"
+        class="ant-skeleton-custom"></nz-skeleton>
+    </div>
+    <div class="grid-item-longest description">
+      <nz-skeleton
+        [nzParagraph]="{ rows: 0 }"
+        [nzActive]="true"
+        class="ant-skeleton-custom"></nz-skeleton>
+    </div>
+  </div>
+</div>

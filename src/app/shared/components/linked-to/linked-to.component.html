@@ -1,0 +1,24 @@
+<div class="box-navigate d-flex align-items-center">
+  <div
+    nz-tooltip
+    nzTooltipPlacement="bottom"
+    class="content-navigate d-flex align-items-center gap-4">
+    <trudi-icon icon="iconFolder" svgClass="size-16"></trudi-icon>
+    <ng-container
+      *ngIf="portalConversation?.type === taskType.MESSAGE else typeTask">
+      <div class="text-linked">Email / {{currentTab?.tabName}}</div>
+    </ng-container>
+    <ng-template #typeTask>
+      <div class="text-ellipsis text-linked">
+        {{portalConversation?.topicName}} / Task: {{portalConversation?.title}}
+        / {{currentTab?.tabName}}
+      </div>
+    </ng-template>
+    <div
+      class="cursor-pointer d-flex align-items-center gap-4"
+      (click)="handleNavigate(portalConversation?.type)">
+      <span class="link-address">Go to message</span>
+      <trudi-icon icon="iconTrailing" svgClass="size-16"></trudi-icon>
+    </div>
+  </div>
+</div>

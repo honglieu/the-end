@@ -1,0 +1,65 @@
+@import 'function';
+
+:host {
+  .form__advance--container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    ::ng-deep trudi-text-field .trudi-ui-text-field-label {
+      @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 400);
+    }
+  }
+}
+.control__pre-screen,
+.control__pre-screen-attachment {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.control__label {
+  @include fontSetup(
+    var(--fg-neutral-stronger, #3d3d3d),
+    14px,
+    20px,
+    normal,
+    600
+  );
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.row-label__container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.row-content {
+  border-radius: 8px;
+  border: 1px solid var(--border-neutral-dark, #d8dcdf);
+
+  display: flex;
+  padding: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  align-self: stretch;
+}
+
+.control__label-content {
+  @include fontSetup(
+    var(--fg-neutral-normal, #646464),
+    12px,
+    16px,
+    normal,
+    400
+  );
+}
+
+.pre-screen__title,
+.pre-screen__amount,
+.attachment__form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}

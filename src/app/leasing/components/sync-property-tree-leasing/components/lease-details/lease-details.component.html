@@ -1,0 +1,134 @@
+<div [formGroup]="leasingForm" class="tenancy-detail-wrapper">
+  <div class="tenancy-detail-form">
+    <div class="second-block--title">Lease details</div>
+    <div class="second-block--proceeding">
+      <div class="rent-block">
+        <div class="title">Original lease start</div>
+        <div class="form-input mt-6 trudi-date">
+          <trudi-date-picker
+            [class.trudi-picker-error]="isFieldValid('originalLeaseStartDate')"
+            [trudiDisabled]="disable"
+            (trudiOnOpenChange)="triggerInputTouched($event, 'originalLeaseStart')"
+            formControlName="originalLeaseStartDate">
+          </trudi-date-picker>
+        </div>
+        <ng-container
+          *ngTemplateOutlet="
+            errorMessage;
+            context: {error: isFieldValid('originalLeaseStartDate')}
+          "></ng-container>
+      </div>
+      <div class="d-flex gap-16">
+        <div class="rent-block w-50">
+          <div class="title">Lease start</div>
+          <div class="form-input mt-6 trudi-date">
+            <trudi-date-picker
+              [trudiDisabledDate]="disableLeaseStart"
+              [class.trudi-picker-error]="leasingForm.hasError('invalidLeaseStart') && leaseStart.value || isFieldValid('leaseStartDate')"
+              (trudiOnOpenChange)="triggerInputTouched($event, 'leaseStart')"
+              [trudiDisabled]="disable"
+              formControlName="leaseStartDate">
+            </trudi-date-picker>
+          </div>
+          <ng-container
+            *ngTemplateOutlet="
+              errorMessage;
+              context: {
+                error: leasingForm.hasError('invalidLeaseStart') && leaseStart.value || isFieldValid('leaseStartDate'),
+                text: leasingForm.hasError('invalidLeaseStart') && leaseStart.value && ('Must be from Original lease start')
+              }
+            "></ng-container>
+        </div>
+        <div class="rent-block w-50">
+          <div class="title">Lease end</div>
+          <div class="form-input mt-6 trudi-date">
+            <trudi-date-picker
+              [trudiDisabledDate]="checkLeaseConditions"
+              [trudiDisabled]="disable"
+              [class.trudi-picker-error]="(leasingForm.hasError('invalidLeaseEndOriginal') || leasingForm.hasError('invalidLeaseEnd') ) && leaseEnd.value || isFieldValid('leaseEndDate')"
+              formControlName="leaseEndDate"
+              (trudiOnOpenChange)="triggerInputTouched($event, 'leaseEnd')"></trudi-date-picker>
+          </div>
+          <ng-container
+            *ngTemplateOutlet="
+            errorMessage;
+            context: {
+              error: (leasingForm.hasError('invalidLeaseEnd') || leasingForm.hasError('invalidLeaseEndOriginal')) && leaseEnd.value || isFieldValid('leaseEndDate'),
+              text: (leasingForm.hasError('invalidLeaseEndOriginal') && leaseEnd.value && ('Must be from Original lease start')) || (leasingForm.hasError('invalidLeaseEnd') && leaseEnd.value && ('Must be greater than Lease start'))
+            }
+          "></ng-container>
+        </div>
+      </div>
+      <div class="d-flex gap-16">
+        <div class="rent-block w-100">
+          <div class="title">Lease period</div>
+          <div [class]="disable ? 'form-input-disable' : 'form-input'">
+            <input
+              type="number"
+              [ngClass]="{'input-error': isFieldValid('leasePeriod') || leasePeriod.hasError('invalidNumber')}"
+              formControlName="leasePeriod"
+              appDigitOnly
+              [class.disable]="true" />
+            <ng-container
+              *ngTemplateOutlet="
+                errorMessage;
+                context: {
+                  error: (isFieldValid('leasePeriod')|| leasePeriod.hasError('invalidNumber')),
+                  text: this.leasePeriod.hasError('invalidNumber') && ('Invalid number')
+                }
+              "></ng-container>
+          </div>
+        </div>
+        <div class="rent-block w-100">
+          <div class="title">Period type</div>
+          <div [class]="disable ? 'content-disable' :'content'">
+            <ng-select
+              [(ngModel)]="defaultPeriodTypeItems"
+              [items]="periodTypeItems"
+              bindValue="value"
+              bindLabel="text"
+              [searchable]="false"
+              [clearable]="true"
+              (change)="onChangePeriodType($event)"
+              [ngClass]="{'input-error-select': isFieldValid('leasePeriodType')}"
+              formControlName="leasePeriodType"
+              class="filter-select">
+              <ng-template ng-option-tmp let-item="item">
+                <div class="y-center justify-content-between flex-1 w-100">
+                  <div class="y-center gap-8 w-100 justify-content-between">
+                    <div class="y-center gap-4">
+                      <span
+                        class="title-select"
+                        [class]="item.value === periodTypes.value ? 'item-selected' : ''"
+                        >{{ item.text }}</span
+                      >
+                    </div>
+                    <img
+                      *ngIf="item.value === periodTypes.value"
+                      class="icon-check"
+                      src="/assets/icon/check-success.svg"
+                      alt="selected-icon" />
+                  </div>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+          <ng-container
+            *ngTemplateOutlet="
+              errorMessage;
+              context: {error: isFieldValid('leasePeriodType')},
+            "></ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #errorMessage let-error="error" let-text="text">
+    <ng-container *ngIf="error">
+      <div class="a1 error-wrapper d-flex align-items-center">
+        <trudi-icon icon="iconWarning"></trudi-icon>
+        <span class="text-warning">{{text? text : 'Required field'}}</span>
+      </div>
+    </ng-container>
+  </ng-template>
+</div>

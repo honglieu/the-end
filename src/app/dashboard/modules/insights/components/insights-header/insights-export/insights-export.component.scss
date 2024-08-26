@@ -1,0 +1,23 @@
+@import 'function';
+
+:host {
+  .dropdown-open.trudi-ui-btn {
+    background-color: var(--bg-neutral-tonal-strongest);
+  }
+  ::ng-deep .skeleton-element.ant-skeleton-element .ant-skeleton-button {
+    width: 100px;
+  }
+}
+
+::ng-deep .email-export-menu {
+  .email-export-item {
+    padding: 12px;
+    cursor: pointer;
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--border-neutral-light);
+    }
+    &:focus-visible {
+      background-color: var(--bg-neutral-tonal-stronger);
+    }
+  }
+}

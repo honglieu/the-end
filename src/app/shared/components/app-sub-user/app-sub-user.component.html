@@ -1,0 +1,96 @@
+<div [ngSwitch]="mode">
+  <span #internalTooltip></span>
+  <span *ngSwitchCase="'select'" class="sub-users text-ellipsis gap-6">
+    <span class="name">{{ senderName }} </span>
+    <span
+      nz-tooltip
+      [nzTooltipTitle]="'Primary ' + userPropertyType | titlecase"
+      class="d-flex my-6"
+      *ngIf="subUser.isPrimary">
+      <img
+        [src]="
+          subUser.type === EUserType.LANDLORD ||
+          subUser.userPropertyType === EUserType.LANDLORD
+            ? '/assets/icon/check-octo-landlord.svg'
+            : '/assets/icon/check-octo-tenant.svg'
+        " />
+    </span>
+    <span class="user__label text-ellipsis">
+      <img src="/assets/icon/mail-fill.svg" />
+      <span class="user-email text-ellipsis">
+        {{ subUser.user?.email || "No email address" }}
+      </span>
+    </span>
+    <span
+      class="user__label"
+      *ngIf="
+        userService.getStatusInvite(
+          subUser.user.iviteSent || subUser.iviteSent,
+          subUser.user.lastActivity,
+          subUser.user.offBoardedDate,
+          subUser.user.trudiUserId
+        ) === EUserInviteStatusType.active
+      ">
+      <img src="/assets/icon/app-user.svg" />
+      App user
+    </span>
+  </span>
+  <span *ngSwitchCase="'send-message'" class="sub-users text-ellipsis gap-6">
+    <span
+      class="user-name"
+      *ngIf="subUser.name || subUser.firstName || subUser.lastName"
+      nz-tooltip
+      [nzTooltipTitle]="senderName + (internalTooltip ? (' ' + internalTooltip) : '')"
+      >{{ senderName }}</span
+    >
+    <span
+      nz-tooltip
+      [nzTooltipTitle]="'Primary ' + (userPropertyType | titlecase) + (internalTooltip ? (' ' + internalTooltip) : '')"
+      class="d-flex my-6"
+      *ngIf="subUser.isPrimary">
+      <img
+        [src]="
+          subUser.type === EUserType.LANDLORD ||
+          subUser.userPropertyType === EUserType.LANDLORD
+            ? '/assets/icon/check-octo-landlord.svg'
+            : '/assets/icon/check-octo-tenant.svg'
+        " />
+    </span>
+    <ng-template #displayEmail>
+      <span
+        class="my-6 user__label text-ellipsis"
+        *ngIf="subUser?.type !== EUserType.EXTERNAL">
+        <img src="/assets/icon/mail-fill.svg" />
+        <span
+          nz-tooltip
+          [nzTooltipTitle]="subUser?.email + (internalTooltip ? (' ' + internalTooltip) : '')"
+          class="user-email text-ellipsis"
+          >{{ subUser?.email || "No email address" }}
+        </span>
+      </span>
+      <span class="my-6" *ngIf="subUser?.personUserEmail">
+        <span
+          nz-tooltip
+          [nzTooltipTitle]="subUser.user?.personUserEmail + (internalTooltip ? (' ' + internalTooltip) : '')"
+          class="user-name text-ellipsis"
+          >{{ subUser?.personUserEmail }}</span
+        >
+      </span>
+    </ng-template>
+
+    <span
+      class="user__label"
+      *ngIf="
+        userService.getStatusInvite(
+          subUser.inviteSent || subUser.iviteSent,
+          subUser.lastActivity,
+          subUser.offBoardedDate,
+          subUser.user.trudiUserId
+        ) === EUserInviteStatusType.active;
+        else displayEmail
+      ">
+      <img src="/assets/icon/app-user.svg" />
+      via tenant app message
+    </span>
+  </span>
+</div>

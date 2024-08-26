@@ -1,0 +1,55 @@
+.ownership-section-skeleton {
+  padding: 12px 16px;
+  background: var(--white);
+  margin-bottom: 8px;
+
+  .heading {
+    padding-bottom: 12px;
+  }
+
+  .button-skeleton {
+    padding: 0;
+    border: none;
+
+    ::ng-deep .ant-skeleton-button {
+      width: 100%;
+      height: 100%;
+    }
+
+    &.heading {
+      width: 112px;
+      height: 20px;
+    }
+  }
+
+  .info-row {
+    padding: 15px 0px;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .button-skeleton {
+      height: 14px;
+    }
+
+    .avatar-skeleton {
+      width: 20px;
+      height: 20px;
+
+      ::ng-deep .ant-skeleton-avatar {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    &:first-child {
+      padding-top: 0px;
+    }
+
+    &:last-child {
+      padding-bottom: 0px;
+      border-bottom: none;
+    }
+  }
+}

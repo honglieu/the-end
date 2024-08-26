@@ -1,0 +1,61 @@
+<div class="container" [ngStyle]="{ height: height }">
+  <div class="header d-flex align-items-center">
+    <button trudi-btn variant="outlined" btnType="neutral" (click)="goToday()">
+      Today
+    </button>
+    <div class="current-year-container d-flex align-items-center">
+      <button
+        trudi-btn
+        variant="outlined"
+        btnType="neutral"
+        shape="square"
+        (click)="handleChangeYear(yearStatusChanges.DECREASE)">
+        <trudi-icon icon="arrowLeft" svgClass="size-16"></trudi-icon>
+      </button>
+      <span class="current-year"> {{ yearNumber }} </span>
+      <button
+        trudi-btn
+        variant="outlined"
+        btnType="neutral"
+        shape="square"
+        (click)="handleChangeYear(yearStatusChanges.INCREASE)">
+        <trudi-icon icon="arrowRight" svgClass="size-16"></trudi-icon>
+      </button>
+    </div>
+    <div class="glossary d-flex align-items-center">
+      <div class="glossary-item d-flex align-items-center">
+        <span class="glossary-today-icon"></span>
+        Today
+      </div>
+      <div class="glossary-item d-flex align-items-center">
+        <span class="glossary-dayoff-icon"></span>
+        Day off
+      </div>
+    </div>
+  </div>
+  <div
+    #yearCalendar
+    class="year-calendar d-flex auto-hide-scroll justify-content-between">
+    <ng-container *ngFor="let month of months">
+      <div
+        class="year-calendar-item d-flex justify-content-center align-items-center">
+        <month-calendar
+          [title]="month.name"
+          [monthValue]="month.value"
+          [currentYear]="yearNumber"
+          [isCurrentMonth]="
+            month.value === CURRENT_MONTH && yearNumber === CURRENT_YEAR
+          "
+          [dayNumber]="month.dayNumber"
+          [yearCalendarClientRect]="yearCalendarClientRect"
+          [startDayOfWeek]="month.startDayOfWeek"
+          [holidays]="holidays"
+          [prevMonth]="getPrevMonth(month.value)"
+          [nextMonth]="getNextMonth(month.value)"
+          [dayOffsOfWeek]="dayOffsOfWeek"
+          (onSetHoliday)="handleSetHoliday($event)"
+          (onRemoveHoliday)="handleRemoveHoliday($event)"></month-calendar>
+      </div>
+    </ng-container>
+  </div>
+</div>

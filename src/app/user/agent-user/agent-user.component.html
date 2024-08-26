@@ -1,0 +1,6 @@
+<ng-container *ngIf="isShowPtOrRm; else tenantsLandlordRM">
+  <tenants-landlords-pt></tenants-landlords-pt>
+</ng-container>
+<ng-template #tenantsLandlordRM>
+  <tenants-landlords-rm></tenants-landlords-rm>
+</ng-template>

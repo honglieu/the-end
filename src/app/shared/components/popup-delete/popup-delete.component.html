@@ -1,0 +1,27 @@
+<div class="popup-delete-wrapper">
+  <div class="header d-flex gap-16">
+    <div class="warning-icon size-48">
+      <trudi-icon icon="iconWarningRed"></trudi-icon>
+    </div>
+    <div class="popup-delete-text d-flex align-items-center">
+      <p class="bold-text">{{title}}</p>
+    </div>
+  </div>
+  <div class="btn-wrapper gap-12">
+    <button
+      data-e2e="button-cancel"
+      type="button"
+      class="trudi-btn trudi-btn-large trudi-btn-tertiary"
+      (click)="$event.stopPropagation(); handleCancel()">
+      <span class="btn-text"> Cancel </span>
+    </button>
+    <button
+      data-e2e="button-delete"
+      [disabled]="disable"
+      type="button"
+      class="trudi-btn trudi-btn-large trudi-btn-danger"
+      (click)="$event.stopPropagation(); handleDelete()">
+      <span class="btn-text"> Delete </span>
+    </button>
+  </div>
+</div>

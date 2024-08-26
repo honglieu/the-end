@@ -1,0 +1,66 @@
+<div class="integrations">
+  <div *ngIf="!isPermissionEdit" class="d-flex gap-4 align-items-center mb-8">
+    <trudi-icon icon="infoFill" [style]="{ 'width.px': 12, 'height.px': 12 }">
+    </trudi-icon>
+    <span class="warning-notice-text"
+      >You need to be an account administrator to edit this page.</span
+    >
+  </div>
+  <h2 class="integrations-title mb-20">Property management database</h2>
+  <div class="integrations-content d-flex flex-dir-column gap-8">
+    <div class="logo-wrapper y-center gap-12">
+      <trudi-icon
+        [icon]="integartionContent?.icon?.name"
+        [style]="integartionContent?.icon?.styles"></trudi-icon>
+      <div class="connect-wrapper y-center gap-4">
+        <trudi-badge
+          text="Connected"
+          icon="checkSuccess"
+          variant="success"
+          size="large"
+          fillIcon="true"
+          customIconSize="16">
+        </trudi-badge>
+      </div>
+    </div>
+    <!-- <p class="description no-margin">{{integartionContent?.description}}</p>
+    <div>
+      <button trudi-btn variant="link" size="medium">
+        <a
+          class="integrations-link"
+          [href]="integartionContent?.helpCentreLink"
+          (click)="onClick()"
+          target="new_tab">
+          {{integartionContent?.linkContent}}
+        </a>
+      </button>
+    </div> -->
+    <ng-container *ngIf="!isRmEnvironment">
+      <div class="integrations-content-activity">
+        <div
+          class="save-conversation"
+          [ngClass]="{'mt' : !isMailboxFromSendGrid}">
+          <div class="d-flex save-conversation-pt-container gap-20">
+            <div class="save-conversation-pt-content-wrapper">
+              <h3 class="save-conversation-pt-sub-title">
+                Sync completed tasks
+              </h3>
+              <span class="save-conversation-pt-description">
+                Completed task activity logs will be exported as a PDF and saved
+                into the tasks section for each property.
+              </span>
+            </div>
+            <div>
+              <trudi-switch
+                [index]="'saveMailBoxActivity'"
+                (ngModelChange)="onToggleAutoSyncTaskActivityToPT($event)"
+                [disabled]="!isPermissionEdit"
+                [(ngModel)]="isAutoSyncCompletedTask">
+              </trudi-switch>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

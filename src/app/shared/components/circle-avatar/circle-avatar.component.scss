@@ -1,0 +1,48 @@
+.img-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  position: relative;
+
+
+  &>label {
+    position: absolute;
+    text-wrap: nowrap;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+
+  img {
+    background-color: var(--white);
+    border-radius: 50%;
+  }
+
+  div {
+    border-radius: 50%;
+    text-wrap: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: var(--white);
+    background-color: var(--brand-500);
+  }
+
+  .transparent {
+    background-color: transparent;
+  }
+
+  label {
+		font-weight: 600;
+    margin-bottom: 0;
+    color: var(--white);
+    cursor: inherit;
+  }
+}
+
+.img-draft {
+  background: var(--gray-100);
+}

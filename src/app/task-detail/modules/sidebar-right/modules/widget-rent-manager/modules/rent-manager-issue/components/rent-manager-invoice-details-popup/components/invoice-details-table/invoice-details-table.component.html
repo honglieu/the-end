@@ -1,0 +1,150 @@
+<div
+  [formGroup]="formGroup"
+  class="trudi-table-wrapper"
+  id="rm-issue-invoice-table"
+  [attr.id]=""
+  [ngClass]="{'scrollWrapper': isScrollAdded }">
+  <nz-table
+    [nzFrontPagination]="false"
+    #editRowTable
+    nzTemplateMode
+    [nzFooter]="footer"
+    [nzScroll]="scrollControl">
+    <thead>
+      <tr>
+        <th nzWidth="200px">Product</th>
+        <th nzWidth="96px">Quantity</th>
+        <th nzWidth="auto">Description</th>
+        <th nzWidth="96px">Rate</th>
+        <th nzWidth="120px">Amount</th>
+        <th nzWidth="80px" nzAlign="center">Taxable</th>
+        <th nzWidth="200px">Charge type</th>
+        <th nzWidth="64px"></th>
+      </tr>
+    </thead>
+    <tbody
+      [ngClass]="{'displayedScroll': !scrollControl}"
+      class="trudi-table-body">
+      <ng-container formArrayName="invoiceDetails">
+        <tr
+          *ngFor="let control of formGroup?.get('invoiceDetails')?.controls; index as i"
+          class="editable-row">
+          <ng-container [formGroup]="control">
+            <td>
+              <trudi-single-select
+                #productSelect
+                (isOpened)="isOpened()"
+                [appendTo]="appendTo"
+                formControlName="inventoryItemId"
+                [dropdownPosition]="dropdownPosition[i]"
+                [items]="rmData?.inventoryItem"
+                (ngModelChange)="selectProduct(control)"
+                bindValue="id"
+                bindLabel="name"></trudi-single-select>
+            </td>
+
+            <td nzAlign="left">
+              <trudi-number-field
+                formControlName="quantity"
+                [maskLeadZero]="true"
+                [maskPattern]="maskPattern"
+                placeholder="0.00"
+                thousandSeparatorType=","
+                [separatorLimit]="MAX_12_DIGIT_BEFORE_DECIMAL"
+                size="large"></trudi-number-field>
+            </td>
+            <td nzAlign="center">
+              <trudi-text-field
+                [maxCharacter]="2000"
+                [showCounting]="false"
+                formControlName="comment"
+                size="large"></trudi-text-field>
+            </td>
+            <td nzAlign="left">
+              <trudi-number-field
+                formControlName="unitCost"
+                [maskLeadZero]="true"
+                [maskPattern]="maskPattern"
+                thousandSeparatorType=","
+                placeholder="0.00"
+                [separatorLimit]="MAX_7_DIGIT_BEFORE_DECIMAL"
+                size="large"></trudi-number-field>
+            </td>
+            <td>
+              <trudi-number-field
+                formControlName="totalPrice"
+                prefixText="$"
+                [maskLeadZero]="true"
+                [maskPattern]="maskPattern"
+                thousandSeparatorType=","
+                placeholder="0.00"
+                size="large"></trudi-number-field>
+            </td>
+            <td nzAlign="center">
+              <div class="d-flex justify-content-center align-items-center">
+                <trudi-checkbox
+                  nz-tooltip
+                  [nzTooltipTitle]="control.get('isTaxable')?.disabled ? 'Line items cannot be marked as taxable if the invoice is not taxable.' : ''"
+                  nzTooltipPlacement="top"
+                  formControlName="isTaxable"></trudi-checkbox>
+              </div>
+            </td>
+            <td>
+              <trudi-single-select
+                (isOpened)="isOpened()"
+                [appendTo]="appendTo"
+                [items]="chargeTypes"
+                [dropdownPosition]="dropdownPosition[i]"
+                bindValue="id"
+                bindLabel="name"
+                formControlName="chargeTypeId"></trudi-single-select>
+            </td>
+            <td>
+              <trudi-icon
+                nz-dropdown
+                svgClass="size-16"
+                class="option-icon size-16"
+                icon="threeDotPrimary"
+                nzTrigger="click"
+                nzPlacement="bottomLeft"
+                [nzDropdownMenu]="menu">
+              </trudi-icon>
+              <nz-dropdown-menu #menu="nzDropdownMenu">
+                <ul nz-menu class="rm-menu-option">
+                  <li
+                    nz-menu-item
+                    (click)="duplicateTableRow(control)"
+                    class="rm-menu-item">
+                    Duplicate
+                  </li>
+                  <li
+                    nz-menu-item
+                    (click)="!control?.get('externalId')?.value? deleteTableRow(i) : null"
+                    nz-tooltip
+                    [nzTooltipTitle]="control?.get('externalId')?.value ? 'Item can only be deleted directly from Rent Manager': ''"
+                    class="rm-delete-option rm-menu-item"
+                    [ngClass]="{disabled: control?.get('externalId')?.value}">
+                    <span>Delete</span>
+                  </li>
+                </ul>
+              </nz-dropdown-menu>
+            </td>
+          </ng-container>
+        </tr></ng-container
+      >
+    </tbody>
+  </nz-table>
+  <ng-template #footer>
+    <button
+      type="button"
+      (click)="addNewTableRow()"
+      trudi-btn
+      [ngClass]="{'cursor-not-allowed' : isDisabled}"
+      [disabled]="isDisabled"
+      btnType="neutral"
+      variant="outlined">
+      <trudi-icon svgClass="size-20" viewBox="auto" icon="iconPlus"></trudi-icon
+      >Add
+    </button>
+  </ng-template>
+</div>

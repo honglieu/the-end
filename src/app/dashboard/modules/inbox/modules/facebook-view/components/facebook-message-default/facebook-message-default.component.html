@@ -1,0 +1,63 @@
+<div
+  class="facebook-message-default"
+  [ngClass]="{
+    'facebook-message-default-sending': isSending,
+    'facebook-message-default-error': message.isError,
+    'facebook-message-default-user': message.userSendType === EUserSendType.USER
+  }">
+  <div class="message-wrapper">
+    @if(message.messageReply) {
+    <facebook-reply-header
+      [message]="message"
+      [currentConversation]="currentConversation"></facebook-reply-header>
+    <message-reply
+      [isSending]="isSending"
+      [message]="message.messageReply"
+      [position]="message.userSendType === EUserSendType.USER ? 'left' : 'right'">
+    </message-reply>
+    }
+    <div class="message-content">
+      @if(message.languageCode && message.languageCode !== 'en' &&
+      message.languageCode !== 'und') {
+      <div class="message-translation-label">
+        <language-translation-label
+          [messagesTranslate]="message.messagesTranslate"
+          [inputLanguage]="message.languageCode"></language-translation-label>
+      </div>
+      }
+      <div
+        class="message-avatar"
+        [class.message-avatar--clickable]="message.userSendType === EUserSendType.USER">
+        <app-circle-avatar
+          (click)="handleOpenProfileDrawer($event)"
+          [size]="24"
+          [avatar]="message.avatar"></app-circle-avatar>
+      </div>
+      @if(message?.reaction && message?.reaction?.action ===
+      EReactionStatus.REACT){
+      <div
+        class="message-emotions"
+        nz-tooltip
+        [class.message-emotions-user]="message.userSendType === EUserSendType.USER"
+        nzTooltipPlacement="top"
+        [innerHTML]="message?.reaction?.emoji | twemoji"
+        [nzTooltipTitle]="currentConversation?.participants[0]?.name"></div>
+      }
+      <div
+        #textContain
+        [triggerTextSelectionAddPolicy]="message.userId !== trudiUserId"
+        class="message-content-text"
+        [innerHTML]="(!message.languageCode || message.languageCode === 'en' ? message.message : message.messagesTranslate) | twemoji"></div>
+      @if(message.messagesTranslate && message.languageCode &&
+      message.languageCode !== 'en' && message.languageCode !== 'und') {
+      <div>
+        <language-original-content
+          [senderType]="message.userSendType === EUserSendType.USER ? 'user' : 'admin'"
+          [content]="message.message"></language-original-content>
+      </div>
+      } @if(isUserVerified && !message.isError && !message.isSending) {
+      <reply-message-btn [message]="message"></reply-message-btn>
+      }
+    </div>
+  </div>
+</div>

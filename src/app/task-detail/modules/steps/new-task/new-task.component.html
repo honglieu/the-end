@@ -1,0 +1,14 @@
+<trudi-step
+  [model]="model"
+  (onProcess)="openCreateTaskPopup()"
+  [buttonKey]="buttonKey"
+  [hideProcessLine]="hideProcessLine"></trudi-step>
+<ng-container *ngIf="popupState.createTask">
+  <create-new-task-pop-up
+    [openFrom]="createTaskByCateOpenFrom.TASK_DETAIL"
+    [selectedTaskNameId]="taskNameId"
+    [configs]="configs"
+    [taskNameList]="listTaskName"
+    [isStepPrescreen]="true"
+    (stopProcessCreateNewTask)="handleStopProcessCreateNewTask($event)"></create-new-task-pop-up>
+</ng-container>

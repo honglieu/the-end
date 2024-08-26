@@ -1,0 +1,57 @@
+<ng-container *ngIf="hasAppUser && activeMobileApp">
+  <ng-template #contentTemplate>
+    <div class="menu-content">
+      <div
+        *ngFor="let item of dataList"
+        class="option-item"
+        (click)="handleOnChange($event, item)"
+        [ngClass]="{'selected': model?.id === item.id, 'disable': !item.active }">
+        <span>{{ item.name }}</span>
+        <trudi-icon
+          *ngIf="model?.id === item.id"
+          class="checkmark-down"
+          svgClass="size-16"
+          viewBox="auto"
+          [icon]="'check'"></trudi-icon>
+        <trudi-icon
+          *ngIf="item.id === 0"
+          svgClass="size-16"
+          viewBox="auto"
+          [icon]="'infoFill'"
+          nz-tooltip
+          [nzTooltipTitle]="'Prioritize in-app messaging for app users and email for non-app users'"></trudi-icon>
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="trudi-send-option-menu">
+    <!-- TTT-17707 - Issue 4 -->
+    <!-- <span class="title"
+      >App users will receive this message via the tenant app & email</span
+    > -->
+    <!-- <div class="send-option-btn-group">
+      <button *ngIf="isDropdownMenuOpen" class="send-option-btn">
+        <trudi-icon
+          [style]="{ 'width.px': 12, 'height.px': 12 }"
+          viewBox="auto"
+          [icon]="'arrowGray99'"></trudi-icon>
+      </button>
+      <button
+        class="send-option-btn"
+        [ngClass]="{'selected': isDropdownMenuOpen}"
+        nz-popover
+        [nzPopoverPlacement]="'bottomLeft'"
+        [nzPopoverContent]="contentTemplate"
+        nzPopoverTrigger="click"
+        nzPopoverOverlayClassName="dropdown-list-overlay"
+        [nzPopoverVisible]="isDropdownMenuOpen"
+        (nzPopoverVisibleChange)="isDropdownMenuOpen = $event"
+        #popover="nzPopover">
+        <trudi-icon
+          [style]="{ 'width.px': 12, 'height.px': 12 }"
+          viewBox="auto"
+          [icon]="'arrowGray99'"></trudi-icon>
+      </button>
+    </div> -->
+  </div>
+</ng-container>

@@ -1,0 +1,39 @@
+<div class="trudi_workflow">
+  <div class="trudi_workflow--input">
+    <input
+      [disabled]="readonly"
+      [checked]="finished"
+      [id]="uuid"
+      type="checkbox" />
+    <div
+      *ngIf="customChecked?.templateRef && customUnCheck?.templateRef; else defaultCheckBox"
+      class="trudi_workflow--mark">
+      <div class="mark_checked">
+        <ng-container *ngTemplateOutlet="customChecked?.templateRef">
+        </ng-container>
+      </div>
+      <div class="mark_uncheck">
+        <ng-container *ngTemplateOutlet="customUnCheck?.templateRef">
+        </ng-container>
+      </div>
+    </div>
+    <ng-template #defaultCheckBox>
+      <div class="trudi_workflow--mark">
+        <span class="mark_default">
+          <span class="mark_uncheck"></span>
+          <trudi-icon class="mark_checked" icon="checkInput"></trudi-icon>
+        </span>
+      </div>
+    </ng-template>
+    <div class="trudi_workflow--line"></div>
+  </div>
+  <div class="trudi_workflow--content">
+    <label [for]="uuid" *ngIf="title">{{title}}</label>
+    <div class="custom_content">
+      <ng-container *ngIf="customContent">
+        <ng-container
+          [ngTemplateOutlet]="customContent?.templateRef"></ng-container>
+      </ng-container>
+    </div>
+  </div>
+</div>

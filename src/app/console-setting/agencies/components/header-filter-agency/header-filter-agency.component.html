@@ -1,0 +1,9 @@
+<div class="head-wrapper d-flex gap-16 align-items-center">
+  <dropdown-menu-console
+    [listItem]="crmStatus"
+    [label]="'CRM'"
+    [noResetListItem]="true"
+    [type]="filterType.CRM"
+    [formDropdown]="formDropdown"
+    (itemsSelected)="handleItemsSelected($event)"></dropdown-menu-console>
+</div>

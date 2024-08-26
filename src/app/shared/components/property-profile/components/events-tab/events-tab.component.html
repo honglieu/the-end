@@ -1,0 +1,55 @@
+<div class="event-tab">
+  <filter-events class="filter-events"></filter-events>
+  <div
+    class="wrapper-event-item"
+    infiniteScroll
+    [scrollWindow]="false"
+    [infiniteScrollDistance]="2"
+    [infiniteScrollThrottle]="300"
+    [immediateCheck]="true"
+    (scrolled)="onScrollDown()">
+    <ng-container
+      *ngIf="(eventsTabService.isEventLoading$ | async) === false ||
+     (eventsTabService.isEventLoadMore$ | async) === true; else skeleton">
+      <ng-container *ngIf="eventsList.length > 0; else noEvent">
+        <event-item
+          *ngFor="let eventItem of eventsList; trackBy: trackByFunction;"
+          [eventItem]="eventItem"></event-item>
+      </ng-container>
+      <ng-container
+        *ngIf="(eventsTabService.isEventLoadMore$ | async) === false; else skeleton">
+      </ng-container>
+    </ng-container>
+    <ng-template #noEvent>
+      <div class="no-event">
+        <span>No events</span>
+      </div>
+    </ng-template>
+  </div>
+</div>
+<ng-template #skeleton>
+  <div class="d-flex flex-dir-column">
+    <div
+      *ngFor="let _ of [].constructor((eventsTabService.isEventLoadMore$ | async) === false ? 3 : 1)"
+      class="skeleton-container">
+      <div class="wrapper-skeleton-event">
+        <nz-skeleton
+          class="skeleton-event"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+        <nz-skeleton
+          class="skeleton-event-label"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+        <nz-skeleton
+          class="skeleton-event-label"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+        <nz-skeleton
+          class="skeleton-event"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,290 @@
+<div class="wrapper-background">
+  <div class="nav-section d-flex align-items-center">
+    <div
+      data-e2e="button-close"
+      class="close-btn"
+      (click)="isOpenAddFileModal(false)">
+      <img src="/assets/icon/close-modal.svg" alt="close modal" />
+    </div>
+    <div class="nav-section-title">
+      {{editingFile ? 'Edit File' : 'Add File'}}
+    </div>
+  </div>
+  <div
+    class="content-section"
+    [formGroup]="addFileForm"
+    [ngClass]="{'edit-file': editingFile}"
+    #contentSection>
+    <div
+      class="dropzone"
+      *ngIf="!selectedFile && !editingFile"
+      appDnd
+      (filesDropped)="onFilesDropped($event)">
+      <input
+        type="file"
+        onfocus="this.value=''"
+        #fileDropRef
+        id="fileDropRef"
+        (change)="fileBrowseHandler($event)" />
+      <img src="assets/icon/icon_upload.svg" alt="" />
+      <p>
+        Drag and Drop here <br />
+        or
+      </p>
+      <label for="fileDropRef">Browse files</label>
+      <div class="text-file-over">Drop here</div>
+    </div>
+    <div class="warning" *ngIf="overFileSize">
+      Your file is larger than 25MB. Please upload a smaller file.
+    </div>
+    <div class="warning" *ngIf="!isValidFileUploadType">
+      Unsupported file type
+    </div>
+    <div class="files-list" *ngIf="selectedFile">
+      <div class="file-item" *ngFor="let item of selectedFile">
+        <div class="file-logo">
+          <img
+            class="position-center-w"
+            src="assets/images/icons/{{ item.icon }}" />
+        </div>
+        <div class="file">
+          <div class="name-extension">
+            <div class="file-name">{{item.fileName}}</div>
+            <div class="file-extension">{{item.extension}}</div>
+          </div>
+          <div class="date-upload">{{timeUpload | formatDate | async}}</div>
+        </div>
+        <div class="remove-btn" (click)="removeFile()">
+          <img
+            class="position-center-w"
+            src="/assets/icon/small-close-black.svg"
+            alt="" />
+        </div>
+      </div>
+    </div>
+    <div class="files-list" *ngIf="editingFile">
+      <div class="file-item">
+        <div class="file-logo">
+          <img
+            class="position-center-w"
+            src="assets/images/icons/{{editingFile?.icon || editingFile.fileType?.icon}}" />
+        </div>
+        <div class="file">
+          <div class="name-extension">
+            <div class="file-name">{{editingFile?.fileName}}</div>
+            <div class="file-extension">{{editingFile?.extension}}</div>
+          </div>
+          <div class="date-upload">
+            {{editingFile?.createdAt | formatDate | async}}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="document-input">
+      <div class="up-left-text">
+        Document Type <span *ngIf="topic.invalid">*</span>
+      </div>
+      <ng-select
+        formControlName="topic"
+        [items]="selectTopicItems"
+        bindLabel="text"
+        bindValue="id"
+        [searchable]="false"
+        [clearable]="false"></ng-select>
+    </div>
+    <div class="document-input">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="up-left-text">
+          Title <span *ngIf="title.invalid">*</span>
+        </div>
+        <div class="down-right-text">
+          <app-remaining-character
+            [maxlength]="32"
+            [currentTextLength]="title.value?.length"></app-remaining-character>
+        </div>
+      </div>
+      <input
+        type="text"
+        class="input title-text"
+        maxlength="32"
+        formControlName="title" />
+    </div>
+    <div class="permission-header">
+      <div class="des-text">Who can see this file?</div>
+      <div class="check-all">
+        Select all
+        <div class="check-box">
+          <input
+            type="checkbox"
+            id="cb-all-filearea"
+            class="def-checkbox"
+            (change)="onCheckboxAllChange($event)" />
+          <label for="cb-all-filearea" class="checkbox-label">
+            <img
+              [src]="getCheckboxAllDisplay()"
+              class="user-checkbox checkbox-head" />
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="viewing-permission">
+      <tbody class="table-user" *ngIf="listUserPropertyGroup">
+        <ng-container
+          *ngFor="let item of listUserPropertyGroup.ownerships; let i = index">
+          <tr [ngClass]="isGroupChecked(item.id) ? 'row-checked' : ''">
+            <td class="group">
+              <div class="group-property">
+                <div class="check-box hide">
+                  <input
+                    type="checkbox"
+                    id="cb-{{item.id}}-filearea"
+                    class="def-checkbox" />
+                  <label for="cb-{{item.id}}-filearea" class="checkbox-label">
+                    <img class="user-checkbox checkbox-head" />
+                  </label>
+                </div>
+                <div class="group-name">
+                  {{item.type | titlecase}}: {{item.name}}
+                  <text-badge [text]="item.status"></text-badge>
+                </div>
+              </div>
+              <div
+                class="user-property"
+                *ngFor="let userProperty of item.userProperties">
+                <div class="check-box">
+                  <input
+                    type="checkbox"
+                    id="cb-{{userProperty.id}}-filearea"
+                    class="def-checkbox"
+                    (change)="onCheckboxChange(userProperty.id)" />
+                  <label
+                    for="cb-{{userProperty.id}}-filearea"
+                    class="checkbox-label">
+                    <img
+                      [src]="isChecked(userProperty.id) ? '/assets/icon/checkbox-on.svg' : '/assets/icon/checkbox-off.svg'"
+                      class="user-checkbox checkbox-head" />
+                  </label>
+                </div>
+                <div class="d-flex align-items-center flex-wrap">
+                  <span class="text-fix-space user-name"
+                    >{{userProperty.user.firstName}}
+                    {{userProperty.user.lastName}}</span
+                  >
+                  <span class="text-fix-space small-circle"></span>
+                  <span class="text-fix-space role"
+                    >{{userProperty.isPrimary ? 'Primary ':
+                    ''}}{{userProperty.type | titlecase}}</span
+                  >
+                  <span class="text-fix-space small-circle"></span>
+                  <span class="text-fix-space invite-status"
+                    >{{ userService.getStatusInvite(userProperty.user.iviteSent,
+                    userProperty.user.lastActivity,
+                    userProperty.user.offBoardedDate) | titlecase}}</span
+                  >
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container
+          *ngFor="let item of listUserPropertyGroup.tenancies; let i = index">
+          <tr [ngClass]="isGroupChecked(item.id) ? 'row-checked' : ''">
+            <td class="group">
+              <div class="group-property">
+                <div class="check-box hide">
+                  <input
+                    type="checkbox"
+                    id="cb-{{item.id}}-filearea"
+                    class="def-checkbox" />
+                  <label for="cb-{{item.id}}-filearea" class="checkbox-label">
+                    <img class="user-checkbox checkbox-head" />
+                  </label>
+                </div>
+                <div class="group-name">
+                  {{item.type | titlecase}}: {{item.name}}
+                  <text-badge [text]="item.status"></text-badge>
+                </div>
+              </div>
+              <div
+                class="user-property"
+                *ngFor="let userProperty of item.userProperties">
+                <div class="check-box">
+                  <input
+                    type="checkbox"
+                    id="cb-{{userProperty.id}}-filearea"
+                    class="def-checkbox"
+                    (change)="onCheckboxChange(userProperty.id)" />
+                  <label
+                    for="cb-{{userProperty.id}}-filearea"
+                    class="checkbox-label">
+                    <img
+                      [src]="isChecked(userProperty.id) ? '/assets/icon/checkbox-on.svg' : '/assets/icon/checkbox-off.svg'"
+                      class="user-checkbox checkbox-head" />
+                  </label>
+                </div>
+                <div class="d-flex align-items-center flex-wrap">
+                  <span class="text-fix-space user-name"
+                    >{{userProperty.user.firstName}}
+                    {{userProperty.user.lastName}}</span
+                  >
+                  <span class="text-fix-space small-circle"></span>
+                  <span class="text-fix-space role"
+                    >{{userProperty.isPrimary ? 'Primary ':
+                    ''}}{{userProperty.type | titlecase}}</span
+                  >
+                  <span class="text-fix-space small-circle"></span>
+                  <span class="text-fix-space invite-status"
+                    >{{ userService.getStatusInvite(userProperty.user.iviteSent,
+                    userProperty.user.lastActivity,
+                    userProperty.user.offBoardedDate) | titlecase}}</span
+                  >
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+        <ng-container
+          *ngFor="let propertyManager of listUserPropertyGroup.propertyManagers">
+          <tr class="row-checked">
+            <td class="group">
+              <div class="group-property">
+                <div class="check-box">
+                  <input
+                    type="checkbox"
+                    id="cb-{{propertyManager.id}}-filearea"
+                    class="def-checkbox" />
+                  <label
+                    for="cb-{{propertyManager.id}}-filearea"
+                    class="checkbox-label minus-margin-left">
+                    <img
+                      [src]="'/assets/icon/checkbox-on.svg'"
+                      class="user-checkbox checkbox-head" />
+                  </label>
+                </div>
+                <div class="group-name no-margin">
+                  Property Manager: {{propertyManager.user.firstName}}
+                  {{propertyManager.user.lastName}}
+                  <text-badge [text]="propertyManager.status"></text-badge>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </div>
+  </div>
+  <div class="footer-section">
+    <div
+      class="btn-save"
+      (click)="!editingFile ? onSend2() : onEdit()"
+      [ngClass]="{'unclick': addFileForm.invalid || (!editingFile ? !selectedFile : !editingFile) }">
+      Save
+    </div>
+    <div
+      class="btn-cancel"
+      *ngIf="editingFile"
+      (click)="isOpenAddFileModal(false)">
+      Cancel
+    </div>
+  </div>
+</div>

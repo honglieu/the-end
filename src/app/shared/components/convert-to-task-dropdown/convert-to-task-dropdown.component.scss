@@ -1,0 +1,246 @@
+@import 'function';
+
+.convert-to-task {
+  &-container {
+    & ::ng-deep .cdk-virtual-scroll-content-wrapper {
+      max-width: 100%;
+    }
+
+    .remove-task {
+      width: 20px;
+      height: 20px;
+      border-radius: 50px;
+      border: 1px solid var(--border-neutral-dark, #d8dcdf);
+      background: var(--bg-base, #fff);
+      position: absolute;
+      left: calc(100% - 60px);
+      top: calc(50% - 10px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &:hover {
+        background: var(--bg-neutral-tonal-stronger, #e7eaed);
+      }
+      &:active {
+        background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+      }
+    }
+
+    &:focus-visible {
+      border-radius: 8px;
+      box-shadow: inset var(--shadow-brand) !important;
+    }
+    .main-text {
+      @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+    }
+
+    label {
+      position: absolute;
+      left: calc(100% - 36px);
+      top: calc(50% - 10px);
+    }
+    img.size-20 {
+      transition: 0.4s;
+      transform: rotate(-180deg);
+    }
+
+    .show-dropdown {
+      img {
+        transform: rotate(0deg);
+      }
+      ~ .share-input-text {
+        border: 1px solid white !important;
+        background: var(--bg-neutral-tonal-normal, #f2f5f7);
+        outline: none !important;
+        height: 36px !important;
+        &:hover {
+          border: 1px solid var(--gray-200, #d8dcdf) !important;
+          background: var(--bg-neutral-tonal-stronger, #e7eaed);
+          outline: none !important;
+        }
+        &:focus {
+          border: 1px solid var(--gray-200, #d8dcdf) !important;
+          background: var(--bg-neutral-tonal-normal, #f2f5f7);
+          @include box-shadow-input-select(var(--shadow-brand));
+          outline: none !important;
+        }
+      }
+      ~ .input-error {
+        background: var(--white);
+        @include box-shadow-input-select(var(--shadow-danger));
+        &:focus {
+          background: var(--white);
+          @include box-shadow-input-select(var(--shadow-danger));
+
+          &::-webkit-input-placeholder {
+            opacity: 0;
+          }
+        }
+      }
+    }
+
+    .share-input-text {
+      margin: 0;
+      padding-right: 35px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .input-error {
+      background: var(--white);
+      @include box-shadow-input-select(var(--shadow-danger));
+      &:focus {
+        background: var(--white);
+        @include box-shadow-input-select(var(--shadow-danger));
+
+        &::-webkit-input-placeholder {
+          opacity: 0;
+        }
+      }
+    }
+
+    .dropdown-label {
+      border-radius: 8px;
+      background-color: var(--gray-200);
+      height: 36px !important;
+      min-width: 100%;
+      border: none;
+      padding: 8px 12px;
+      color: var(--gray-700);
+      font-size: 14px;
+      line-height: 18px;
+      font-style: normal;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--gray-200, white);
+      &:hover {
+        border: 1px solid var(--gray-200, #d8dcdf) !important;
+        background: var(--gray-100, #e7eaed) !important;
+      }
+      &:focus {
+        border: 1px solid var(--gray-200, #d8dcdf) !important;
+        background: var(--bg-neutral-tonal-normal, #f2f5f7) !important;
+      }
+      span {
+        vertical-align: middle;
+        &.placeholder {
+          @include fontSetup(
+            var(--fg-neutral-weaker, #999),
+            14px,
+            20px,
+            normal,
+            500
+          );
+        }
+      }
+
+      .task__item-label {
+        background-color: var(--white);
+      }
+    }
+  }
+
+  &-dropdown {
+    position: absolute;
+    left: 0;
+    top: calc(100% + 8px);
+    overflow: hidden;
+    z-index: 1000;
+    filter: drop-shadow(0px 4px 16px rgba(0, 0, 0, 0.15));
+    &.on-top {
+      top: unset !important;
+      bottom: calc(100% + 8px);
+    }
+    .dropdown-title {
+      padding: 9px 16px;
+      @include fontSetup(var(--gray-700), 14px, 18px, normal, 600);
+    }
+
+    .task__group {
+      background-color: var(--bg-neutral-tonal-normal);
+      padding: 8px 12px;
+      @include fontSetup(var(--fg-neutral-weaker), 14px, 20px, normal, 600);
+    }
+
+    .dropdown-list {
+      max-height: calc(37px * 7);
+      overflow-y: auto;
+      .vitrual-viewport {
+        max-height: calc(37px * 7);
+        height: calc(37px * 7);
+      }
+      .dropdown-item {
+        width: 100%;
+        padding: 12px;
+        @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+        border-bottom: 1px solid var(--gray-200);
+
+        &.disable-item {
+          pointer-events: none;
+          @include fontSetup(var(--gray-300), 14px, 20px, normal, 500);
+
+          .coming-soon {
+            @include fontSetup(var(--gray-300), 12px, 18px, normal, 500);
+            padding: 3px 4px;
+            border-radius: 12px;
+            background-color: var(--gray-200);
+            margin-left: 8px;
+          }
+        }
+
+        &:hover {
+          border: 1px solid var(--border-neutral-light) !important;
+          background: var(--bg-brand-tonal-stronger);
+          outline: none !important;
+        }
+        .item-text mark {
+          color: var(--brand-500);
+        }
+      }
+
+      .task-item-selected {
+        border: 1px solid var(--border-neutral-light) !important;
+        background: var(--bg-brand-tonal-strongest);
+        outline: none !important;
+      }
+
+      .no-result {
+        padding: 12px 16px;
+        @include fontSetup(var(--fg-neutral-weaker), 14px, 100%, normal, 400);
+        font-style: italic !important;
+      }
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      background-color: white;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      @include fontSetup(var(--brand-500), 14px, 20px, normal, 500);
+      span {
+        margin-left: 8px;
+      }
+    }
+  }
+}
+
+.task__item-label {
+  @include fontSetup(var(--gray-500), 12px, 18px, normal, 600);
+  padding: 3px 6px;
+  border-radius: 12px;
+  background-color: var(--gray-200);
+  margin-left: 6px;
+}
+
+::ng-deep input[type='text'].share-input-text {
+  &:hover {
+    border: 1px solid var(--gray-200, #d8dcdf) !important;
+    background: var(--gray-100, #e7eaed) !important;
+  }
+}
+::ng-deep .convert-to-task-container input {
+  width: 100%;
+}

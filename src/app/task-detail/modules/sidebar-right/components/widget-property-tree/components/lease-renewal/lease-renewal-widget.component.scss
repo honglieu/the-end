@@ -1,0 +1,61 @@
+@import 'function';
+
+.lease-footer-wrap {
+  border-top: 1px solid var(--gray-100);
+  padding: 20px 24px;
+  .info-status {
+    white-space: nowrap;
+
+    span {
+      @include fontSetup(var(--bg-overlay-dark), 12px, 20px, normal, 500);
+      margin-left: 4px;
+    }
+  }
+
+  img {
+    margin-right: 0.5rem;
+  }
+
+  .sync-icon {
+    height: 1.6rem;
+    width: 1.6rem;
+  }
+
+  .spin {
+    -webkit-animation: spin 4s linear infinite;
+    -moz-animation: spin 4s linear infinite;
+    animation: spin 4s linear infinite;
+  }
+
+  .footer-wrapper {
+  }
+}
+
+.lease-header-wrap {
+  &-title {
+    flex: 1 15%;
+  }
+
+  .size-icon {
+    width: 84px !important;
+    height: 20px !important;
+  }
+}
+
+:host ::ng-deep .lease-renewal-popup .modal-popup-content {
+  padding: 20px 24px;
+  overflow-y: unset !important;
+}
+
+::ng-deep .lease-renewal-popup .resizable-modal-header .title {
+  flex: initial;
+  display: flex;
+  justify-content: center;
+  span {
+    flex: initial;
+  }
+}
+
+::ng-deep .lease-renewal-popup .resizable-modal-header__title--default {
+  column-gap: unset !important;
+}

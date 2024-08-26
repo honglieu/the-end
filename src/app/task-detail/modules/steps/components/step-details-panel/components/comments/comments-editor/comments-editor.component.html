@@ -1,0 +1,103 @@
+<form
+  [formGroup]="commentEditorForm"
+  (ngSubmit)="onSubmit()"
+  (keydown.enter)="handleFormKeydown($event)">
+  <div
+    class="comment-input-wrapper"
+    [class.active]="isFocused"
+    [class.invalid]="isOnlySpaces && !updatedFiles.length && action === 'edit'"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragEnd($event)"
+    (drop)="onDrop($event)">
+    <!-- comment input -->
+    <div class="comment-input" #commentInputWrapperElRef>
+      <editor
+        #commentInputElRef
+        [formControlName]="controlName"
+        allowedEvents="onFocus, onClick, onKeyDown, onPaste, onBlur, onDrop, onDragOver"
+        (onDrop)="onDrop($event.event)"
+        (onDragOver)="onDragOver($event.event)"
+        (onDragEnd)="onDragEnd($event.event)"
+        (onFocus)="focusEditor()"
+        (onBlur)="blurEditor()"
+        (onKeyDown)="handleOnKeyDown($event)"
+        (onPaste)="onPaste($event)"
+        [init]="initConfig">
+      </editor>
+    </div>
+
+    <!-- comment actions -->
+    <div class="comment-action">
+      <!-- emoji button -->
+      <button
+        #emojiPopover="nzPopover"
+        nz-popover
+        nz-tooltip
+        nzPopoverTrigger="click"
+        nzPopoverPlacement="bottom"
+        nzPopoverOverlayClassName="emoji-wrapper"
+        (nzPopoverVisibleChange)="changeEmojiPicker($event)"
+        [(nzPopoverVisible)]="isShowEmojiPicker"
+        [nzPopoverContent]="emojiPickerTpl"
+        nzTooltipTitle="Insert an emoji"
+        nzTooltipPlacement="bottom"
+        type="button"
+        class="action-button emoji-btn"
+        [disabled]="isConsoleUser">
+        <trudi-icon icon="emojiIcon" svgClass="size-28"></trudi-icon>
+      </button>
+
+      <!-- attach file button -->
+      <button
+        nz-tooltip
+        nzTooltipTitle="Attach a file"
+        nzTooltipPlacement="bottom"
+        type="button"
+        class="action-button attach-btn"
+        (click)="openSelectFile()"
+        [disabled]="isConsoleUser">
+        <trudi-icon icon="attach" svgClass="size-28"></trudi-icon>
+      </button>
+
+      <!-- trigger upload file from computer -->
+      <input
+        #inputSelectFileRef
+        id="upload-file"
+        [multiple]="true"
+        class="input-file d-none"
+        type="file"
+        (click)="handleResetFileSelected($event)"
+        [accept]="ACCEPT_ONLY_SUPPORTED_FILE"
+        hidden
+        (change)="handleFileSelection($event)" />
+
+      <!-- send button -->
+      <button
+        class="action-button send-button"
+        type="submit"
+        [class.active]="!isOnlySpaces || createdFiles.length && action === 'create' || updatedFiles.length && action === 'edit'"
+        [disabled]="isConsoleUser || (isOnlySpaces && !createdFiles.length && !updatedFiles.length) ||
+                    (isNewFileUploading && action === 'create') ||
+                    (isUpdateFileUploading && action === 'edit') ||
+                    (isNewFileInvalid && action === 'create') ||
+                    (isUpdateFileInvalid && action === 'edit')">
+        <trudi-icon icon="sendArrow" svgClass="size-16"></trudi-icon>
+      </button>
+    </div>
+  </div>
+</form>
+
+<!-- emoji picker -->
+<ng-template #emojiPickerTpl>
+  <emoji-mart
+    [emojiSize]="20"
+    [sheetSize]="20"
+    [hideObsolete]="true"
+    [isNative]="true"
+    perLine="7"
+    (emojiSelect)="addEmoji($event)"
+    [darkMode]="false"
+    [emojisToShowFilter]="emojiFilter"
+    title="Pick your emoji…"
+    emoji="point_up"></emoji-mart>
+</ng-template>

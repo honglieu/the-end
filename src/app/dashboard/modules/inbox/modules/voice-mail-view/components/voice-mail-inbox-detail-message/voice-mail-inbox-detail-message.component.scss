@@ -1,0 +1,345 @@
+@import 'function';
+
+.voice-mail-inbox-detail-message {
+  padding-inline: 16px;
+
+  ::ng-deep .highlighted {
+    color: var(--fg-neutral-strongest, #202020);
+    font-weight: 600;
+  }
+}
+
+.voice-mail-inbox-detail-message .message-body {
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .row-reverse {
+    flex-direction: row-reverse;
+  }
+
+  .message-container {
+    display: flex;
+
+    .sent-time {
+      @include fontSetup(
+        var(--fg-neutral-normal, #51525c),
+        10px,
+        12px,
+        normal,
+        400
+      );
+    }
+
+    .message-box {
+      width: fit-content;
+    }
+  }
+
+  app-message-header {
+    display: flex;
+    justify-content: flex-start;
+    padding-bottom: 1px;
+    margin-top: 12px;
+  }
+
+  &:hover ::ng-deep .message-file .attachment-message-action-button {
+    visibility: visible !important;
+  }
+
+  app-message-default {
+    display: flex;
+    width: fit-content;
+    align-self: flex-end;
+  }
+
+  app-message-footer {
+    padding-top: 1px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  &_nav-link {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  & .trudi-url {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+  }
+
+  &.not-message {
+    ::ng-deep {
+      .trudi-url {
+        .link {
+          margin-top: 0;
+        }
+      }
+    }
+  }
+
+  & .with-message {
+    margin-top: 16px;
+  }
+
+  &.full-width {
+    max-width: 100% !important;
+    width: 100%;
+  }
+
+  & .header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  ::ng-deep app-message-default {
+    & .message-text {
+      position: relative;
+      border-radius: 6px;
+      padding: 8px 12px;
+      word-break: break-word;
+      white-space: pre-wrap;
+
+      .text {
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 20px;
+      }
+
+      .url {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.voice-mail-inbox-detail-message .ticket-wrapper {
+  max-width: 320px;
+  position: relative;
+  margin-top: 16px;
+
+  .forward-button {
+    cursor: pointer;
+    position: absolute;
+    top: 37%;
+    left: -43px;
+  }
+}
+
+.voice-mail-inbox-detail-message .message-body-wrapper {
+  flex-direction: column;
+  align-items: flex-end;
+
+  .message-options {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    padding: 0 8px 0 4px;
+  }
+}
+
+.voice-mail-inbox-detail-message .time-stamp-wrapper {
+  &.user {
+    left: 12px;
+  }
+
+  &.admin,
+  &.trudi {
+    right: 8px;
+  }
+
+  &.send-from-email {
+    right: 8px;
+    bottom: -4px;
+  }
+}
+
+.voice-mail-inbox-detail-message .user {
+  .message-box {
+    box-shadow: 0px 1px 2px 0px #1018280D;
+  }
+
+  & .message-body {
+    max-width: 60%;
+    transform: translateX(8px);
+  }
+
+  & .message-body {
+    ::ng-deep app-message-footer {
+      align-self: flex-start !important;
+    }
+
+    ::ng-deep app-message-default {
+      align-self: flex-start !important;
+
+      .message-text {
+        background-color: var(--white);
+
+        .text {
+          color: var(--gray-600);
+        }
+
+        .url {
+          color: var(--gray-700);
+        }
+      }
+    }
+
+    ::ng-deep app-message-file {
+      flex-direction: row !important;
+    }
+  }
+
+  & .text-muted {
+    font-size: 12px;
+    line-height: 1.33;
+    text-align: right;
+    color: rgba(0, 0, 0, 0.54);
+    opacity: 0.5;
+  }
+}
+
+.voice-mail-inbox-detail-message .admin {
+  display: flex;
+  flex-direction: row-reverse;
+
+  & .text-muted {
+    font-size: 12px;
+    line-height: 1.33;
+    text-align: right;
+    color: rgba(0, 0, 0, 0.54);
+    opacity: 0.5;
+
+    &:first-child::after {
+      content: 'as Trudi';
+      padding-right: 5px;
+    }
+  }
+
+  & .header-message-file {
+    padding-left: 32px;
+  }
+
+  & .message-body {
+    max-width: 60%;
+
+    @media all and (max-width: 1200px) {
+      &.call {
+        max-width: 100%;
+      }
+    }
+  }
+
+  & .message-body {
+    ::ng-deep app-message-footer {
+      justify-content: flex-end !important;
+    }
+
+    ::ng-deep app-message-default {
+      .message-text {
+        background-color: var(--bg-brand-solid-normal, #28ad99);
+        color: var(--white);
+
+        .url {
+          color: var(--white);
+        }
+
+        a[data-action='via_link'] {
+          color: var(--white);
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+.voice-mail-inbox-detail-message .trudi {
+  flex-direction: row-reverse;
+
+  & .text-muted {
+    font-size: 12px;
+    line-height: 1.33;
+    text-align: right;
+    color: rgba(0, 0, 0, 0.54);
+    opacity: 0.5;
+
+    &:first-child::after {
+      content: 'as Trudi';
+      padding-right: 5px;
+    }
+  }
+
+  & .message-body {
+    & .message-container {
+      margin-left: auto;
+      max-width: 60%;
+
+      .sent-time {
+        align-self: flex-end;
+      }
+    }
+
+    &__nav {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      width: 100%;
+    }
+
+    &_nav-link {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    ::ng-deep app-message-footer {
+      justify-content: flex-end !important;
+    }
+
+    ::ng-deep app-message-default {
+      .message-text {
+        max-width: 600px;
+        background-color: var(--bg-neutral-solid-normal, #85888e);
+        color: var(--white);
+
+        .url {
+          color: var(--white);
+        }
+      }
+    }
+
+    & .ticket-wrapper {
+      max-width: 320px;
+      position: relative;
+      margin-right: auto;
+    }
+
+    & ::ng-deep app-chat-ticket .ticket {
+      min-width: 320px !important;
+    }
+  }
+}
+
+.voice-mail-inbox-detail-message .custom-end {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  padding: 20px 0px;
+
+  .custom-text {
+    color: var(--fg-neutral-weaker);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+  }
+}
+
+.voice-mail-inbox-detail-message .deleted-mark {
+  width: 100%;
+  @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+  white-space: nowrap;
+  margin: 2px 0;
+}

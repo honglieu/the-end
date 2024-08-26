@@ -1,0 +1,38 @@
+<div class="profile-wrapper">
+  <sidebar-wrapper class="sidebar-wrapper">
+    <ng-container leftContent>
+      <div class="wrapper-left">
+        <div class="header mb-12">
+          <button
+            trudi-btn
+            variant="outlined"
+            btnType="neutral"
+            size="medium"
+            shape="circle"
+            class="header_icon cursor-pointer"
+            (click)="handleClick()">
+            <trudi-icon
+              class="exit-btn"
+              [style]="{ 'width.px': 16, 'height.px': 16 }"
+              icon="closeV2">
+            </trudi-icon>
+          </button>
+          <div class="mt-12">
+            <span class="header_title">Profile settings</span>
+          </div>
+        </div>
+        <sidebar-item-shared
+          class="sidebar-background"
+          [listItem]="menuItems"></sidebar-item-shared>
+      </div>
+    </ng-container>
+    <ng-container rightContent>
+      <router-outlet></router-outlet>
+    </ng-container>
+  </sidebar-wrapper>
+</div>
+<app-warning-popup
+  *ngIf="leaveWarning"
+  (onClose)="onClose()"
+  (onSubmit)="redirect()">
+</app-warning-popup>

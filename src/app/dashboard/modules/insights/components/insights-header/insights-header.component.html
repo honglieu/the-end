@@ -1,0 +1,91 @@
+<div class="insights-header">
+  <div class="insights-header-left-container">
+    <div class="header-filter-wrapper">
+      <div class="property-manager-dropdown">
+        <div class="property-manager-dropdown__title">Show insights for</div>
+        <nz-skeleton-element
+          *ngIf="isLoading; else selectAgencyTemplate"
+          class="skeleton-element"
+          nzType="button"
+          [nzActive]="true"></nz-skeleton-element>
+        <ng-template #selectAgencyTemplate>
+          <trudi-select-dropdown-v2
+            *ngIf="listOfAgents && !isMemberNotConsole"
+            [items]="listOfAgents"
+            [searchable]="true"
+            bindValue="id"
+            placeholder="Search"
+            bindLabel="fullName"
+            itemImage="googleAvatar"
+            groupBy="groupBy"
+            [groupOrders]="groupOrders"
+            [virtualScroll]="true"
+            [clearable]="false"
+            [dropdownWidth]="290"
+            (valueChange)="handleChangeAgent($event)"
+            [(ngModel)]="selectedAgentId"></trudi-select-dropdown-v2>
+          <button
+            *ngIf="isMemberNotConsole"
+            trudi-btn
+            size="medium"
+            class="btn-not-action"
+            btnType="neutral"
+            variant="outlined">
+            <img
+              class="avatarUser-image"
+              loading="lazy"
+              src="{{currentUser?.googleAvatar}}"
+              alt="googleAvatar" />
+            {{(currentUser?.firstName ?? '') + ' ' + (currentUser?.lastName ??
+            '')}}
+          </button>
+        </ng-template>
+      </div>
+      <div>
+        <nz-skeleton-element
+          *ngIf="isLoading; else selectDateTypeTemplate"
+          class="skeleton-element"
+          nzType="button"
+          [nzActive]="true"></nz-skeleton-element>
+        <ng-template #selectDateTypeTemplate>
+          <div #datePickerOrigin nzTrigger="click">
+            <trudi-select-dropdown
+              [items]="insightsRangeTimeData"
+              prefixIcon="iconCalendarV2"
+              bindValue="value"
+              [customTitle]="ERangeDateType.CUSTOM === rangeDateType ? rangeTimeTitle : null"
+              [clearable]="false"
+              (click)=" isShowRangePicker = false; $event.stopPropagation();"
+              overlayClassName="select-range-date-type"
+              (valueChange)="handleChangeRangeTime($event)"
+              [(ngModel)]="rangeDateType"></trudi-select-dropdown>
+          </div>
+
+          <trudi-single-range-picker
+            [nzAutoFocus]="true"
+            [nzDisabledDate]="disabledStartDate"
+            #datePicker
+            [customOrigin]="datePickerOrigin"
+            [nzDropdownClassName]="'trudi-picker-dropdown'"
+            nzInline
+            [nzOpen]="isShowRangePicker"
+            (nzOnOpenChange)="isShowRangePicker = false"
+            [nzFormat]=" datePickerFormatPipe$ | async"
+            [(ngModel)]="rangeDate"
+            (nzOnOk)="handleCalendarChange($event)"
+            (nzOnCancel)="handleCancel()"
+            [class.d-none]="true"
+            [class.show-range-picker]="isShowRangePicker">
+          </trudi-single-range-picker>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+  <div class="insight-header-right-container">
+    <insights-setting [isLoading]="isLoading"></insights-setting>
+    <insights-export
+      [isLoading]="isLoading"
+      [listOfAgents]="listOfAgents"
+      [selectedAgentId]="selectedAgentId"></insights-export>
+  </div>
+</div>

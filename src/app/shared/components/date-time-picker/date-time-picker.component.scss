@@ -1,0 +1,192 @@
+@import 'function';
+.date-time-picker {
+  input[type='date']::-webkit-clear-button {
+    display: none;
+  }
+
+  .date-time-group {
+    margin-top: 12px;
+  }
+
+  label {
+    @include fontSetup(var(--gray-500), 12px, 18px, normal, 400);
+    margin-bottom: 6px;
+    margin-top: 0;
+  }
+
+  .input-wrapper {
+    @include fontSetup(var(--gray-500), 12px, 20px, normal, 500);
+    img {
+      max-width: 12px;
+    }
+    .disabled-field {
+      @include fontSetup(var(--bg-overlay-light), 14px, 20px, normal, 500);
+    }
+    input {
+      @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+      background: var(--gray-50);
+      border: none;
+      padding: 8px;
+
+      &:focus {
+        line-height: 17px;
+        border: 1px solid var(--brand-500) !important;
+        outline: 2px solid rgba(var(--brand-500-rgb), 0.6) !important;
+      }
+
+      &:hover {
+        border-color: var(--gray-100) !important;
+        background: var(--gray-100) !important;
+        box-shadow: none !important;
+      }
+
+      //&:focus ~ span {
+      //  line-height: 17px;
+      //  background: var(--white) !important;
+      //}
+
+      &.input-number {
+        margin-right: 20px;
+        width: 10rem;
+      }
+    }
+    .btn-group {
+      position: relative;
+      img,
+      span {
+        position: absolute;
+        top: 50%;
+      }
+      span {
+        @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+        left: 12px;
+        transform: translateY(-50%);
+      }
+
+      img {
+        right: 12px;
+        max-width: 20px;
+        transition: all 0.2s;
+        transform: translateY(-50%) rotate(180deg);
+      }
+
+      &.dropdown-show {
+        img {
+          transform: translateY(-50%) rotate(0deg);
+        }
+      }
+    }
+
+    .dropdown-button {
+      min-width: 14rem;
+    }
+
+    .calendar-icon {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+    }
+  }
+
+  input[type='date']::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+    z-index: 10;
+  }
+
+  .input-relative {
+    position: relative;
+    width: 100%;
+
+    input {
+      width: 100%;
+      &::-webkit-input-placeholder {
+        color: var(--gray-500) !important;
+      }
+      &:hover {
+        background: var(--gray-100) !important;
+      }
+    }
+
+    &:hover {
+      .value-format {
+        border-color: var(--gray-100) !important;
+        background: var(--gray-100) !important;
+        box-shadow: none !important;
+      }
+    }
+
+    .value-format {
+      @include fontSetup(var(--gray-500), 12px, 16px, normal, 500);
+      background: var(--gray-50);
+      border: none;
+      padding: 4px 6px;
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 78%;
+      height: 65%;
+
+      &.date {
+        @include fontSetup(var(--gray-700), 12px, 16px, normal, 500);
+      }
+    }
+  }
+
+  .validate-msg {
+    @include fontSetup(var(--danger-500), 1.2rem, 16px, normal, 400);
+    margin-left: 4px;
+  }
+  .input-error {
+    border: 1px solid var(--danger-500) !important;
+    outline: 2px solid rgba(225, 2, 79, 0.6) !important;
+    margin-bottom: 6px;
+  }
+}
+
+.dropdown-list {
+  position: relative;
+  min-width: 14rem;
+  white-space: nowrap;
+  padding: 0;
+  border-radius: 4px;
+  color: var(--gray-800);
+  background-color: var(--white);
+  box-shadow: 0 2px 5px 0 rgb(0 0 0 / 26%);
+  margin-top: 10px;
+
+  .item {
+    @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+    text-align: left;
+    user-select: none;
+    padding: 11px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &:after {
+    display: block;
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid var(--white);
+    top: -10px;
+    right: 7px;
+  }
+}

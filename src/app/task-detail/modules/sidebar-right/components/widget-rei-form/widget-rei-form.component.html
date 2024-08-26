@@ -1,0 +1,170 @@
+<ng-container *ngIf="reiForms$ | push as reiForms">
+  <div class="wrapper-skeleton-rei-form" [hidden]="!reiForms.isLoading">
+    <div
+      class="justify-content-between align-items-center files-item pd-12 skeleton-bg">
+      <div class="skeleton-rectangle">
+        <nz-skeleton
+          [nzParagraph]="paragraph"
+          [nzActive]="true"
+          class="w-100"></nz-skeleton>
+      </div>
+      <div class="w-25">
+        <nz-skeleton-element
+          class="skeleton-circle"
+          nzType="avatar"
+          [nzActive]="true"
+          [nzSize]="'small'"></nz-skeleton-element>
+      </div>
+      <div class="d-flex justify-content-end w-25">
+        <nz-skeleton-element
+          class="skeleton-circle"
+          nzType="avatar"
+          [nzActive]="true"
+          [nzSize]="'small'"></nz-skeleton-element>
+      </div>
+    </div>
+  </div>
+  <trudi-collapse-widget
+    *ngIf="!reiForms.isLoading"
+    class="widget-rei-form"
+    [titleHeader]="headerTemplate"
+    [titleHeaderRight]="reiForms?.result?.length && headerRightTemplate"
+    [activeExpand]="true"
+    [isShowItemsCount]="true"
+    [itemsCount]="reiForms?.result?.length || 0"
+    [buttonKey]="EButtonWidget.REI_FORM"
+    [buttonType]="EButtonType.WIDGET">
+    <ng-container
+      *ngIf="!reiForms.isLoading && reiForms?.result?.length;else noDataTemplate">
+      <div class="list-rei-form">
+        <ng-container *ngFor="let form of reiForms?.result; trackByFormId">
+          <ng-container
+            *ngTemplateOutlet="formItemTemplate; context: { form }"></ng-container>
+        </ng-container>
+      </div>
+    </ng-container>
+  </trudi-collapse-widget>
+</ng-container>
+
+<ng-template #headerTemplate>
+  <trudi-icon icon="iconReiFormWidget"></trudi-icon>
+</ng-template>
+<ng-template [ngSwitch]="isStatusSync" #headerRightTemplate>
+  <div
+    #syncAll
+    [tabIndex]="0"
+    nz-tooltip
+    [nzTooltipTitle]="textToolTipSync"
+    nzTooltipPlacement="bottom"
+    [nzTooltipOverlayStyle]="{'max-width': '108px'}"
+    class="wrapper-icon"
+    [ngClass]="{ 'disabled': isConsole }"
+    (keyup.enter)="syncAll.click()"
+    (click)="onSyncAll($event)">
+    <trudi-icon
+      *ngSwitchCase="TYPE_SYNC.UNSYNC || ''"
+      svgClass="size-20"
+      class="sync-icon"
+      icon="iconSync"></trudi-icon>
+    <trudi-icon
+      *ngSwitchCase="TYPE_SYNC.INPROGRESS"
+      [ngClass]="'spin'"
+      svgClass="size-20"
+      class="sync-icon"
+      icon="syncingV3"></trudi-icon>
+    <trudi-icon
+      *ngSwitchCase="TYPE_SYNC.FAILED"
+      svgClass="size-20"
+      class="sync-icon"
+      icon="syncFailCloudGrey"></trudi-icon>
+    <trudi-icon
+      *ngSwitchCase="TYPE_SYNC.COMPLETED"
+      svgClass="size-20"
+      class="sync-icon"
+      icon="syncSuccessCloudGrey"></trudi-icon>
+  </div>
+</ng-template>
+
+<ng-template #noDataTemplate>
+  <div class="no-data-text">No forms to display</div>
+</ng-template>
+
+<ng-template #formItemTemplate let-form="form">
+  <button
+    class="form-item"
+    [attr.data-button-key]="EButtonWidget.REI_FORM"
+    [attr.data-button-type]="EButtonType.WIDGET"
+    PreventButton
+    (leftClick)="openReviewAttacmentPopup(form?.id)">
+    <div
+      class="form-item-name two-line-ellipsis"
+      nz-tooltip
+      [nzTooltipTitle]="form?.name">
+      {{ form.name }}
+    </div>
+    <div class="w-100 d-flex justify-content-between">
+      <div class="d-flex gap-8 align-items-center">
+        <ng-container *ngFor="let signer of form.signers">
+          <ng-container
+            *ngTemplateOutlet="signerAvatarTemplate; context: {signer}">
+          </ng-container>
+        </ng-container>
+        <ng-container
+          *ngTemplateOutlet="signStatusTemplate; context: {signStatus: form.status}"></ng-container>
+      </div>
+      <ng-container
+        *ngIf="form.status === reiFormDocumentStatus.SIGNED; else buttonRefreshTemplate">
+        <button
+          #buttonDownload
+          class="form-item-icon -download"
+          (click)="downloadFile($event, form, buttonDownload)"></button>
+      </ng-container>
+      <ng-template #buttonRefreshTemplate>
+        <button
+          #buttonRefresh
+          class="form-item-icon -refresh"
+          (click)="refreshForm($event, form, buttonRefresh)"></button>
+      </ng-template>
+    </div>
+  </button>
+</ng-template>
+
+<ng-template #signerAvatarTemplate let-signer="signer">
+  <div class="signer-avatar">
+    <img
+      *ngIf="signer.avatar; else defaultAvatarTemplate"
+      class="signer-avatar-img"
+      [ngClass]="{'signer-avatar-disabled': !signer.isSigned}"
+      [src]="signer.avatar" />
+    <ng-template #defaultAvatarTemplate>
+      <div
+        class="signer-avatar-img"
+        [style.background]="signer.propertyType | signerAvatarColor"
+        [ngClass]="{'signer-avatar-disabled': !signer.isSigned}">
+        {{ signer.name | initialsName }}
+        <trudi-icon
+          *ngIf="signer.isSigned"
+          class="icon-signed"
+          [icon]="'iconCheckboxRound'">
+        </trudi-icon>
+      </div>
+    </ng-template>
+  </div>
+</ng-template>
+
+<ng-template #signStatusTemplate let-status="signStatus">
+  <ng-container [ngSwitch]="status">
+    <ng-container *ngSwitchCase="reiFormDocumentStatus.SIGNED">
+      <div class="sign-status-card -signed">Signed</div>
+    </ng-container>
+    <ng-container *ngSwitchCase="reiFormDocumentStatus.SIGNING">
+      <div class="sign-status-card -signing">Signing</div>
+    </ng-container>
+    <ng-container *ngSwitchCase="reiFormDocumentStatus.FINALIZED">
+      <div class="sign-status-card -finalised">Finalised</div>
+    </ng-container>
+    <ng-container *ngSwitchCase="reiFormDocumentStatus.DRAFT">
+      <div class="sign-status-card -draft">Draft</div>
+    </ng-container>
+  </ng-container>
+</ng-template>

@@ -1,0 +1,416 @@
+@import 'function';
+.invoice-form-wrapper {
+  flex-grow: 1;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-right: 10px;
+  padding-left: 14px;
+  max-height: 496px;
+
+  .property-address {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-start;
+    padding-bottom: 24px;
+
+    .property-address-info {
+      @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 400);
+
+      span {
+        font-weight: 500;
+      }
+    }
+  }
+
+  .input-wrapper {
+    display: block;
+    position: relative;
+
+    &::before {
+      content: '$';
+      position: absolute;
+      display: block;
+      z-index: 100;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      @include fontSetup(var(--gray-400, #999), 14px, 20px, normal, 400);
+    }
+
+    > input {
+      padding-left: 26px !important;
+    }
+  }
+
+  &.selected-file {
+    padding-right: 24px;
+  }
+
+  .trudi-form-group {
+    gap: 12px;
+  }
+  .trudi-input {
+    @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+    &[disabled] {
+      color: var(--gray-500);
+      background-color: var(--bg-neutral-tonal-normal);
+      border: none;
+      @include fontSetup(var(--fg-neutral-weakest), 14px, 20px, normal, 500);
+    }
+    line-height: 20px !important;
+    padding: 10px 12px !important;
+    border: none;
+  }
+
+  .trudi-picker {
+    max-width: 100%;
+    padding: 10px 12px;
+    height: auto;
+    ::ng-deep .trudi-picker-input > input {
+      @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+    }
+    ::ng-deep .trudi-picker-input .trudi-input-disabled {
+      color: var(--fg-neutral-weakest) !important;
+    }
+  }
+  ::ng-deep .trudi-picker.trudi-picker-disabled {
+    background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+    .trudi-picker-suffix {
+      cursor: not-allowed !important;
+    }
+  }
+  ::ng-deep .trudi-input:disabled {
+    background: var(--bg-neutral-tonal-strongest, #d8dcdf) !important;
+  }
+}
+.link-img {
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  img {
+    border-radius: 50%;
+    width: 28px !important;
+    height: 28px !important;
+  }
+}
+.container-file {
+  max-width: 95%;
+}
+.container-file-name {
+  max-width: 90%;
+}
+.file-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pdf-preview {
+  width: 600px;
+  padding-right: 14px;
+}
+
+.invoice-footer-wrap {
+  display: flex;
+  justify-content: flex-end;
+
+  .check-upload-invoice {
+    flex-grow: 1;
+    justify-content: flex-start;
+    &.checkbox-disabled {
+      opacity: 0.5;
+    }
+  }
+
+  .button-back {
+    border-radius: 8px;
+    border: 1px solid var(--border-neutral-dark, #d8dcdf);
+    background: var(--bg-base, #fff);
+    min-width: 100px;
+    min-height: 40px;
+    padding: 0px 16px;
+    &:hover {
+      background: var(--bg-neutral-tonal-stronger, #e7eaed);
+    }
+    &:focus {
+      background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+    }
+  }
+  .text-btn-back {
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      14px,
+      20px,
+      normal,
+      600
+    );
+  }
+}
+
+.preview-file {
+  height: 450px;
+  width: 100%;
+  text-align: center;
+}
+
+.img-file {
+  overflow: auto;
+}
+
+.show-dropdown-document {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: space-between;
+  overflow: hidden;
+}
+.document-dropdown {
+  ::ng-deep ng-select {
+    .ng-select-container .ng-input {
+      padding-top: 10px !important;
+      padding-bottom: 10px !important;
+      padding-left: 12px !important;
+    }
+    .ng-dropdown-panel-items {
+      .ng-option-disabled,
+      .ng-option {
+        height: auto !important;
+        padding: 8px 12px !important;
+      }
+    }
+
+    .ng-dropdown-panel .ng-dropdown-panel-items .ng-option span {
+      @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+    }
+    .ng-dropdown-panel .ng-dropdown-panel-items .ng-option span.sub-title {
+      @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 400);
+    }
+  }
+}
+.creditor-dropdown {
+  ::ng-deep ng-select .ng-dropdown-panel-items .ng-option {
+    padding: 12px !important;
+  }
+
+  .payment-method {
+    @include fontSetup(var(--fg-neutral-weaker), 12px, 16px, normal, 400);
+    margin-top: 6px;
+
+    span {
+      font-weight: 600;
+    }
+  }
+}
+
+.invoice-view {
+  @include fontSetup(var(--fg-neutral-weaker, #999), 14px, 20px, italic, 400);
+  padding: 12px;
+  overflow-x: hidden;
+  width: 50%;
+  preview-invoice-file {
+    width: 100%;
+  }
+}
+.cancel-invoice-btn {
+  @include fontSetup(var(--fg-danger, #e1024f), 14px, 20px, normal, 600);
+  background-color: var(--bg-danger-tonal-normal, #ffe1e7);
+  padding: 0px 16px;
+  &:hover {
+    background: var(--bg-danger-tonal-stronger, #ffc8d6);
+  }
+  &:active {
+    background: var(--bg-danger-tonal-strongest);
+  }
+}
+.cancel-button-disabled {
+  cursor: not-allowed !important;
+  background: var(--danger-50) !important;
+  @include fontSetup(var(--danger-500), 14px, 20px, normal, 600);
+}
+.container-footer {
+  ::ng-deep .trudi-btn-primary:disabled {
+    pointer-events: unset;
+    cursor: not-allowed !important;
+  }
+  ::ng-deep.trudi-ui-btn-filled-primary:disabled {
+    pointer-events: unset;
+    cursor: not-allowed !important;
+  }
+}
+.invoice-footer-wrap button[disabled] {
+  cursor: not-allowed !important;
+}
+.label-check-invoice {
+  @include fontSetup(
+    var(--fg-neutral-strongest, #202020),
+    14px,
+    20px,
+    normal,
+    400
+  );
+}
+.checkbox-label {
+  @include fontSetup(
+    var(--fg-neutral-strongest, #202020),
+    14px,
+    20px,
+    normal,
+    400
+  );
+}
+.container-header {
+  justify-content: space-between;
+}
+.title-header {
+  @include fontSetup(
+    var(--fg-neutral-strongest, #202020),
+    18px,
+    28px,
+    normal,
+    600
+  );
+  text-align: center;
+}
+.wrap-invoice-name {
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+::ng-deep .disabled-select {
+  .ng-select-container {
+    cursor: not-allowed;
+    background: var(--bg-neutral-tonal-strongest, #d8dcdf) !important;
+    .ng-value-label {
+      color: var(--fg-neutral-weakest, #b9bec0);
+    }
+    input {
+      cursor: not-allowed !important;
+    }
+    .ng-value-container .ng-input > input {
+      cursor: not-allowed !important;
+    }
+  }
+}
+::ng-deep .maintenance-invoice-body {
+  padding: 20px 24px;
+  ng-select.share-ng-select .ng-select-container {
+    height: 40px !important;
+  }
+}
+
+.container-footer {
+  justify-content: space-between;
+  width: 100%;
+  padding: 16px 24px;
+  border-top: 1px solid var(--gray-100);
+
+  .sync-status {
+    .text-sync-button {
+      @include fontSetup(
+        var(--fg-neutral-normal, #646464),
+        12px,
+        16px,
+        normal,
+        400
+      );
+      text-align: center;
+    }
+  }
+
+  .sync-button {
+    height: 40px;
+    min-width: 100px;
+    padding: 0px 16px;
+    justify-content: center;
+    border-radius: 8px;
+    background: var(--bg-brand-solid-normal);
+    cursor: pointer;
+    outline: none;
+    border: none;
+    @include fontSetup(var(--fg-base), 14px, 20px, normal, 600);
+    text-align: center;
+  }
+}
+.has-error-amount {
+  ::ng-deep .trudi-number-field-wrapper {
+    margin: 0 2px;
+    padding: 12px 10px;
+    border: 1px solid var(--danger-500) !important;
+    box-shadow: none !important;
+    outline: 2px solid rgba(var(--danger-500-rgb), 0.6) !important;
+  }
+  ::ng-deep .trudi-number-field-wrapper:focus-within {
+    margin: 0 2px;
+    padding: 12px 10px;
+    border: 1px solid var(--danger-500) !important;
+    box-shadow: none !important;
+    outline: 2px solid rgba(var(--danger-500-rgb), 0.6) !important;
+  }
+}
+
+:host {
+  ::ng-deep
+    .checkbox-input:checked:disabled
+    + .trudi-checkbox
+    span:first-child {
+    background: var(--brand-500) !important;
+    border-color: var(--brand-500) !important;
+    cursor: not-allowed !important;
+  }
+}
+::ng-deep .checkbox-input:disabled + .trudi-checkbox .label-text {
+  cursor: not-allowed !important;
+}
+::ng-deep .checkbox-input:disabled + .trudi-checkbox span:first-child {
+  cursor: not-allowed !important;
+}
+
+.container-invoice-doc {
+  ::ng-deep .trudi-form-control-wrapper {
+    width: auto;
+  }
+  ::ng-deep {
+    ng-select.share-ng-select.ng-select-opened .ng-select-container input {
+      max-width: 95% !important;
+    }
+    ng-select.share-ng-select .ng-select-container input {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 95%;
+    }
+    .ng-dropdown-footer {
+      background-color: var(--white);
+      padding: 10px 10px;
+      .upload-footer {
+        width: 100%;
+        &-text {
+          @include fontSetup(var(--brand-500), 14px, 20px, normal, 500);
+        }
+      }
+    }
+  }
+}
+::ng-deep .ng-select.ng-select-disabled .ng-arrow-wrapper {
+  cursor: not-allowed !important;
+}
+::ng-deep mark.highlight {
+  background: var(--bg-tenant-solid-normal);
+  color: var(--fg-neutral-stronger, #3d3d3d);
+}
+
+::ng-deep ng-select.share-ng-select.ng-select-opened .ng-value .ng-value-label {
+  display: block !important;
+}
+
+::ng-deep .maintainance-invoice-popup .resizable-modal-header .title {
+  flex: initial;
+  display: flex;
+  justify-content: center;
+  span {
+    flex: initial;
+  }
+}
+
+::ng-deep .maintainance-invoice-popup .resizable-modal-header__title--default {
+  column-gap: unset !important;
+}

@@ -1,0 +1,272 @@
+@import 'function';
+
+:host ::ng-deep {
+  .inbox-sidebar-wrapper {
+    background-color: var(--white);
+  }
+  .inbox-sidebar-container {
+    overflow-x: hidden;
+    min-width: 266px;
+
+    .filter-focus-wrapper {
+      padding: 12px 11px 12px 12px;
+      width: calc(100% - 1px);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background-color: var(--white);
+    }
+
+    .folder-wrapper {
+      padding: 4px 12px 12px 12px;
+      border-bottom: 1px solid var(--border-neutral-dark);
+      border-right: 1px solid var(--border-neutral-dark);
+      background-color: var(--white);
+
+      .more-folder,
+      .task-block {
+        margin-top: 12px;
+      }
+
+      .voice-mail-block {
+        margin-top: 4px;
+      }
+    }
+
+    .mail-block {
+      padding: 12px;
+
+      .mail-sidebar-title-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        width: 100%;
+
+        .mail-sidebar-title {
+          @include fontSetup(var(--fg-neutral-weaker), 12px, 16px, normal, 600);
+        }
+
+        .mail-sidebar-icon {
+          color: var(--fg-neutral-normal) !important;
+          padding: 4px;
+          &:hover {
+            border-radius: 60px;
+            background: var(--bg-neutral-tonal-strongest) !important;
+          }
+        }
+      }
+    }
+    .ai-assistant-block {
+      padding: 20px;
+    }
+    ul {
+      background-color: var(--bg-neutral-tonal-normal, #f2f5f7);
+    }
+  }
+  .inbox-sidebar-footer {
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      14px,
+      24px,
+      normal,
+      600
+    );
+    &:focus-visible {
+      border: 1px solid var(--brand-500) !important;
+    }
+  }
+  .inbox-sidebar-footer,
+  .inbox-sidebar-skeleton-footer {
+    padding: 14px 16px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    border-top: 1px solid var(--border-neutral-dark, #d8dcdf);
+    margin-top: auto;
+    &:hover {
+      background: var(--bg-neutral-tonal-stronger, #e7eaed);
+    }
+    &:active,
+    &.active {
+      background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+    }
+  }
+  .inbox-sidebar-skeleton-footer {
+    padding: 0px 20px;
+  }
+  .wrapper-email-folder {
+    padding: 12px 12px 0 12px;
+    background: var(--white);
+    border-right: 1px solid var(--border-neutral-dark);
+  }
+  .wrapper-skeleton-msg {
+    .message-block {
+      padding: 20px 20px 0 20px;
+
+      .ant-skeleton-custom {
+        margin-top: -15px;
+        margin-left: -5px;
+      }
+
+      span.ant-skeleton-avatar.ant-skeleton-avatar-circle {
+        width: 20px;
+        height: 20px;
+        margin-top: -1px;
+        margin-right: 10px;
+        margin-left: 10px;
+      }
+    }
+
+    .task-block {
+      padding: 20px;
+    }
+  }
+  .tabs-inbox-skeleton {
+    &__container {
+      height: 53px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 20px 20px 0 20px;
+      border-radius: 8px;
+      background: var(--bg-neutral-tonal-stronger, #e7eaed);
+      padding: 6px;
+      gap: 20px;
+      ::ng-deep .ant-skeleton-content .ant-skeleton-title {
+        margin-top: 24px;
+      }
+    }
+  }
+
+  ::ng-deep .ant-menu-inline {
+    overflow: hidden !important;
+    & > .ant-menu-submenu > .ant-menu-submenu-title {
+      height: 24px;
+      border-radius: 4px;
+      margin-bottom: 4px;
+
+      &:hover {
+        background-color: var(--bg-brand-tonal-stronger);
+        color: var(--fg-neutral-weaker, #999);
+      }
+
+      &:active {
+        background-color: var(--bg-brand-tonal-strongest);
+        color: var(--fg-neutral-weaker, #999);
+      }
+    }
+
+    & > .ant-menu-submenu.active-status > .ant-menu-submenu-title {
+      background: var(--bg-neutral-tonal-normal);
+    }
+
+    & > ul .ant-menu-item-selected {
+      .item-name {
+        @include fontSetup(
+          var(--fg-neutral-strongest) !important,
+          14px,
+          20px,
+          normal,
+          600 !important
+        );
+      }
+      background-color: var(--brand-200) !important;
+    }
+
+    & > .ant-menu-item-selected {
+      background-color: var(--bg-brand-tonal-stronger);
+    }
+
+    & > .ant-menu-submenu.active-status > .ant-menu-submenu-title {
+      background: var(--bg-neutral-tonal-normal);
+    }
+
+    & > ul .ant-menu-item-selected {
+      .item-name {
+        @include fontSetup(
+          var(--fg-neutral-strongest) !important,
+          14px,
+          20px,
+          normal,
+          600 !important
+        );
+      }
+      background-color: var(--brand-200) !important;
+    }
+
+    & > .ant-menu-item-selected {
+      background-color: var(--bg-brand-tonal-stronger);
+    }
+  }
+
+  ::ng-deep .ant-menu-submenu-title {
+    padding: 0 0px !important;
+    margin-bottom: 8px;
+    @include fontSetup(
+      var(--fg-neutral-weaker),
+      12px,
+      16px !important,
+      normal,
+      600
+    );
+  }
+
+  ::ng-deep
+    .ant-menu-submenu-open.ant-menu-submenu-inline
+    > .ant-menu-submenu-title
+    > .ant-menu-submenu-arrow::before {
+    transform: rotate(180deg) translateX(4px) translateY(12px);
+  }
+
+  ::ng-deep .ant-menu-submenu-arrow {
+    left: 92%;
+    display: block;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 4px;
+      right: -3px;
+      width: 16px;
+      height: 14px;
+      transform: rotate(0) translateY(-7px);
+      background-repeat: no-repeat;
+      background-color: transparent;
+      background-image: url('/assets/images/arow.png');
+    }
+
+    &::after {
+      content: none;
+    }
+  }
+
+  ::ng-deep .ant-menu-submenu-title {
+    padding: 0 0 0 40px !important;
+    margin-bottom: 8px;
+    @include fontSetup(
+      var(--fg-neutral-weaker),
+      12px,
+      16px !important,
+      normal,
+      600
+    );
+  }
+
+  .email-folder-title {
+    color: var(--fg-neutral-subtle);
+    font-size: 12px;
+    line-height: 16px;
+    font-style: normal;
+    font-weight: 600;
+    padding-left: 4px;
+  }
+}
+
+.border-r {
+  border-right: 1px solid var(--border-neutral-dark, #d8dcdf);
+}
+
+.pd-top-12 {
+  padding-top: 12px !important;
+}

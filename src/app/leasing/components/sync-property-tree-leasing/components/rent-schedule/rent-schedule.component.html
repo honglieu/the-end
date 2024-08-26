@@ -1,0 +1,131 @@
+<div [formGroup]="leasingForm" class="tenancy-detail-wrapper">
+  <div class="tenancy-detail-form">
+    <div class="second-block--title">Rent schedule</div>
+    <div class="second-block--proceeding">
+      <div class="d-flex gap-20">
+        <div class="rent-block w-50">
+          <trudi-form-control [errors]="amountErrors">
+            <trudi-number-field
+              formControlName="rentAmount"
+              [maskPattern]="maskPattern"
+              thousandSeparatorType=","
+              label="Rental amount"
+              prefixText="$">
+            </trudi-number-field>
+          </trudi-form-control>
+        </div>
+        <div class="rent-block w-50">
+          <div class="title">Payment period</div>
+          <div [class]="disable ? 'content-disable' : 'content'">
+            <div class="content--select">
+              <ng-select
+                [items]="paymentPeriodItems"
+                bindValue="value"
+                bindLabel="text"
+                [searchable]="false"
+                [clearable]="true"
+                [ngClass]="{'input-error-select': isFieldValid('paymentPeriod')}"
+                formControlName="paymentPeriod"
+                class="filter-select">
+                <ng-template ng-option-tmp let-item="item">
+                  <div class="y-center justify-content-between flex-1 w-100">
+                    <div class="y-center gap-8 w-100 justify-content-between">
+                      <div class="y-center gap-4">
+                        <span
+                          class="title-select"
+                          [class]="item.value === paymentPeriod.value ? 'item-selected' : ''"
+                          >{{ item.text }}</span
+                        >
+                      </div>
+                      <img
+                        *ngIf="item.value === paymentPeriod.value"
+                        class="icon-check"
+                        src="/assets/icon/check-success.svg"
+                        alt="selected-icon" />
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </div>
+          <ng-container
+            *ngTemplateOutlet="
+              errorMessage;
+              context: {error: isFieldValid('paymentPeriod')}
+            "></ng-container>
+        </div>
+      </div>
+      <div class="rent-block">
+        <div class="title">Rent start date</div>
+        <div class="form-input mt-6 trudi-date">
+          <trudi-date-picker
+            [class.trudi-picker-error]="isValidOriginalRentStart ? isValidOriginalRentStart : isFieldValid('rentStartDate')"
+            [trudiDisabledDate]="disableOriginStart"
+            [trudiDisabled]="disable"
+            formControlName="rentStartDate"
+            (trudiOnOpenChange)="triggerInputTouched($event, 'rentStartDate')"></trudi-date-picker>
+        </div>
+        <ng-container
+          *ngTemplateOutlet="
+            errorMessage;
+            context: {
+              error: isValidOriginalRentStart ? isValidOriginalRentStart : isFieldValid('rentStartDate'),
+              text: isValidOriginalRentStart ? 'Must be from Original lease start': ''
+            }
+          "></ng-container>
+      </div>
+      <div class="rent-block">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="title">Rent description</div>
+          <div class="title">
+            {{30 - leasingForm.get('rentDescription').value.length}}/30
+          </div>
+        </div>
+        <div class="rent-block-description mt-6">
+          <trudi-form-control [control]="rentDescription">
+            <trudi-text-field
+              [disabled]="disable"
+              [formControl]="rentDescription"
+              [maxCharacter]="30"></trudi-text-field>
+          </trudi-form-control>
+        </div>
+      </div>
+      <div class="rent-block">
+        <div class="title">Next rent review (optional)</div>
+        <div class="form-input mt-6 trudi-date">
+          <trudi-date-picker
+            [class.trudi-picker-error]="inValidOriginalNextRent ? inValidOriginalNextRent : isFieldValid('nextRentReview')"
+            [trudiDisabledDate]="disableOriginStart"
+            [trudiDisabled]="disable"
+            formControlName="nextRentReview"></trudi-date-picker>
+        </div>
+        <ng-container
+          *ngTemplateOutlet="
+            errorMessage;
+            context: {
+              error: inValidOriginalNextRent ? inValidOriginalNextRent : isFieldValid('nextRentReview'),
+              text: inValidOriginalNextRent ? 'Must be from Original lease start': '' }
+          "></ng-container>
+      </div>
+      <div class="checkbox">
+        <td-checkbox
+          [size]="24"
+          [isChecked]="fees.value"
+          [reverse]="true"
+          [spaceBetween]="false"
+          [disableCheckbox]="disable"
+          [label]="'Charge new tenancy fees'"
+          (tdCheckboxChanged)="onCheckboxChange($event)"></td-checkbox>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #errorMessage let-error="error" let-text="text">
+    <ng-container *ngIf="error">
+      <div class="a1 error-wrapper d-flex align-items-center">
+        <trudi-icon icon="iconWarning"></trudi-icon>
+        <span class="text-warning">{{text ? text : 'Required field'}}</span>
+      </div>
+    </ng-container>
+  </ng-template>
+</div>

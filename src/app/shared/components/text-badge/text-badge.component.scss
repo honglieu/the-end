@@ -1,0 +1,31 @@
+:host {
+    display: inline-block;
+}
+.cls-badge {
+  height: 20px;
+  width: fit-content;
+  padding: 2px 6px;
+  font-size: 12px !important;
+  border-style: solid;
+  border: none;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+}
+.cls-badge-success {
+  background-color: rgba(var(--brand-500-rgb), 0.12);
+  color: var(--brand-500);
+}
+.cls-badge-warning {
+  background-color: rgba(var(--tenant-500-rgb), 0.12);
+  color: var(--tenant-500-badge-color);
+}
+.text-white {
+  color: var(--white);
+}
+.userpro-badge-warning {
+  background-color: var(--tenant-500);
+}
+.userpro-badge-success {
+  background-color: var(--brand-500);
+}

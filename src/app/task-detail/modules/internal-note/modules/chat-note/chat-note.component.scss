@@ -1,0 +1,132 @@
+@import 'function';
+
+:host ::ng-deep {
+  .chat-note-container {
+    .resize {
+      margin-inline: -12px;
+      height: 12px;
+      cursor: row-resize;
+      border-top: 2px solid transparent;
+      &:hover {
+        border-color: var(--tenant-500);
+      }
+    }
+
+    .note-container {
+      background-color: var(--gray-200);
+      box-shadow: unset;
+
+      &.focus {
+        @include box-shadow-input-select(var(--shadow-tenant));
+        .tox-edit-area__iframe {
+          background-color: var(--white) !important;
+        }
+      }
+      .toolbar {
+        background-color: var(--gray-200);
+        padding: 8px;
+        border-radius: 8px 8px 0 0;
+        .internal-text {
+          @include fontSetup(var(--gray-700), 12px, 20px, normal, 600);
+          cursor: default;
+        }
+
+        .divider {
+          height: 16px;
+          margin: 0 16px;
+          border-right: 1px solid var(--gray-300);
+        }
+
+        .list-btn {
+          .btn-item {
+            border: 0;
+            background-color: transparent;
+            @include FlbMiddleAll;
+
+            &:hover:not(.disabled) {
+              background-color: var(--gray-100);
+            }
+            &.selected {
+              background-color: var(--gray-200) !important;
+            }
+            &:focus {
+              border: 1px solid var(--tenant-solid-focused);
+              border-radius: 4px;
+            }
+          }
+        }
+
+        .send-btn {
+          background-color: var(--tenant-500);
+          &:hover {
+            background-color: var(--tenant-600);
+          }
+          &:active {
+            background-color: var(--tenant-700);
+          }
+          &.disabled {
+            background-color: var(--gray-300);
+          }
+        }
+      }
+
+      .editor-container {
+        .editor {
+          height: 100%;
+          editor {
+            height: 100%;
+            .tox-tinymce {
+              height: 100% !important;
+              min-height: 72px;
+              border: 0;
+              border-radius: 0 0 8px 8px !important;
+              .tox-edit-area__iframe {
+                background-color: transparent;
+                &:hover {
+                  background-color: var(--gray-100);
+                }
+              }
+            }
+          }
+        }
+
+        .down-right-text {
+          position: absolute;
+          right: 12px;
+          bottom: 8px;
+          @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+        }
+      }
+    }
+  }
+}
+::ng-deep {
+  .action-popup {
+    //max height = 6 items
+    max-height: calc(44px * 6);
+    max-width: 360px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.1),
+      0px 8px 28px 0px rgba(0, 0, 0, 0.05);
+    background-color: var(--white) !important;
+    &::before {
+      content: unset !important;
+    }
+    &::-webkit-scrollbar-track {
+      margin-block: 8px;
+    }
+    .action-menu {
+      margin: 0 !important;
+      box-shadow: unset;
+      li {
+        max-height: 44px;
+        &:hover {
+          background-color: var(--bg-brand-tonal-stronger);
+        }
+        .item-text {
+          @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+        }
+      }
+    }
+  }
+}

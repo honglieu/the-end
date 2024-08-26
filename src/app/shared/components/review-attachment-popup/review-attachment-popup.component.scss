@@ -1,0 +1,220 @@
+@import 'function';
+
+::ng-deep .ant-modal.trudi-modal.trudi-modal-review-attachment {
+  min-width: 1090px;
+
+  .ant-modal-header {
+    border-bottom: 0px !important;
+    padding-bottom: 0px !important;
+
+    .review-attachment-wrapper {
+      .edit-name-wrapper {
+        input {
+          font-size: 18px !important;
+          font-weight: 600 !important;
+        }
+      }
+    }
+  }
+
+  .ant-modal-body {
+    padding-top: 0px !important;
+  }
+
+  .ant-modal-footer {
+    display: none !important;
+  }
+}
+
+:host ::ng-deep .review-attachment-popup .modal-popup-content {
+  border-top: 0px !important;
+  padding: 0 24px 20px 24px;
+}
+
+.review-attachment-wrapper-body {
+  padding-top: 0px;
+}
+
+.review-attachment-header {
+  width: 100%;
+  padding: 20px 24px;
+  padding-bottom: 0;
+}
+
+.review-attachment-wrapper {
+  .header {
+    padding: 16px 20px;
+    padding-bottom: 0;
+    .detail-invite {
+      gap: 16px;
+
+      .send-invite-text {
+        flex-grow: 1;
+        min-width: 476px;
+        .reiForm-status {
+          margin-top: 2px;
+          margin-bottom: 0px;
+          @include fontSetup(var(--gray-500), 14px, 16px, normal, 500);
+        }
+        .form-title {
+          @include fontSetup(var(--gray-950), 18px, 24px, normal, 600);
+          flex: 1;
+          word-wrap: break-word;
+          text-overflow: ellipsis;
+          max-width: calc(100% - 5px);
+          margin: 0;
+          display: inline-block;
+        }
+        .form-title-edit {
+          @include fontSetup(var(--gray-950), 18px, 24px, normal, 600);
+          min-width: fit-content;
+          margin: 0;
+        }
+
+        .btn-icon {
+          width: fit-content;
+          height: fit-content;
+          border: none;
+          background: none;
+          border-radius: 50%;
+          padding: 4px;
+
+          &.btn-confirm,
+          &.btn-cancel,
+          &.btn-edit {
+            &:hover {
+              border: none !important;
+            }
+
+            &:active {
+              border: none !important;
+            }
+          }
+
+          &.btn-confirm {
+            margin-left: 16px;
+
+            &:hover {
+              background: var(--bg-brand-tonal-stronger) !important;
+            }
+
+            &:active {
+              background: var(--bg-brand-tonal-strongest) !important;
+            }
+          }
+
+          &.btn-cancel {
+            margin-left: 8px;
+
+            &:hover {
+              background: var(--bg-danger-tonal-stronger) !important;
+            }
+
+            &:active {
+              background: var(--bg-danger-tonal-strongest) !important;
+            }
+          }
+
+          &.btn-edit {
+            padding: 4px;
+            display: inline-block;
+            vertical-align: middle;
+          }
+        }
+      }
+
+      .close-btn {
+        min-width: 28px;
+      }
+    }
+    .edit-name-wrapper {
+      width: 100%;
+      font-weight: 600;
+
+      trudi-form-control {
+        flex: 1;
+      }
+    }
+  }
+
+  .review-attachment-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 14px 0 14px;
+    border: 1px solid var(--bg-opacity-strongest);
+    border-radius: 8px;
+    height: 600px;
+    max-height: calc(100vh - 260px);
+    min-height: 200px;
+    position: relative;
+    overflow: hidden;
+
+    @media screen and (max-width: 1440px) {
+      .btn-gr {
+        ::ng-deep outline-rounded-button {
+          padding: 11px 0;
+          justify-content: center;
+        }
+      }
+    }
+
+    .loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 110px;
+      height: 110px;
+    }
+
+    iframe {
+      border: unset;
+    }
+  }
+
+  .review-attachment-footer {
+    padding: 20px 14px 0 14px;
+
+    .left-btn-wrapper {
+      gap: 16px;
+
+      div {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        border: 1px solid var(--gray-200);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    .right-btn-wrapper {
+      gap: 12px;
+    }
+  }
+
+  .mb-70 {
+    margin-bottom: 70px;
+  }
+}
+
+.btn-close {
+  height: 40px;
+  width: 40px;
+  background: transparent;
+  border: unset;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    border: 1px solid var(--gray-200) !important;
+    background: var(--gray-100, #e7eaed) !important;
+  }
+  &:active {
+    border: 1px solid var(--gray-200);
+    background: var(--gray-200) !important;
+  }
+}

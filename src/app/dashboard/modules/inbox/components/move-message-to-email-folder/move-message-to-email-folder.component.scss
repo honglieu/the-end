@@ -1,0 +1,78 @@
+@import 'function';
+
+.wrapper {
+  width: 100%;
+  .dropdown-title {
+    margin-bottom: 6px;
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      12px,
+      16px,
+      normal,
+      400
+    );
+  }
+
+  .dropdown-input {
+    width: 100% !important;
+    .list-item-folder {
+      width: 100% !important;
+      .wrapper-item {
+        width: 100% !important;
+        display: flex;
+        justify-content: space-between;
+      }
+      .wrapper-icon {
+        display: flex;
+        align-items: center;
+        margin-left: 8px;
+      }
+      .item-text {
+        height: 44px;
+        align-items: center;
+        margin: 0;
+        margin-left: 8px;
+        display: inline-block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        @include fontSetup(
+          var(--fg-neutral-stronger, #3d3d3d) !important,
+          14px,
+          44px,
+          normal,
+          500
+        );
+      }
+    }
+  }
+
+  ::ng-deep .select-move-task {
+    td-checkbox .checkbox-label {
+      @include fontSetup(
+        var(--fg-neutral-stronger, #3d3d3d) !important,
+        14px,
+        20px,
+        normal,
+        500
+      );
+    }
+    ng-dropdown-panel .ng-dropdown-panel-items {
+      .ng-optgroup {
+        padding: 8px 12px;
+        background: var(--bg-neutral-tonal-normal, #f2f5f7) !important;
+      }
+      .ng-option span {
+        color: var(--fg-neutral-stronger, #3d3d3d);
+      }
+      .ng-option .property-streetline {
+        @include fontSetup(
+          var(--fg-neutral-weaker, #999) !important,
+          12px,
+          16px !important,
+          normal,
+          500 !important
+        );
+      }
+    }
+  }
+}

@@ -1,0 +1,237 @@
+<div class="task-header-container">
+  <header-left />
+  <div *ngIf="!isLoadingSkeleton" class="action-button-container">
+    <div id="action-button-change-status">
+      @for(button of HEADER_RIGHT_CHANGE_STATUS_BUTTON; track button) {
+      <button
+        *ngIf="button.visible"
+        (click)="button.action()"
+        [disabled]="isConsole || isLoadingAction"
+        trudi-btn
+        size="medium"
+        variant="outlined"
+        btnType="neutral"
+        class="action-button"
+        [appE2E]="button?.dataE2e || ''">
+        <ng-template [iconPrefix]>
+          <trudi-icon
+            color="red"
+            [style]="{ 'width.px': 20, 'height.px': 20 }"
+            [icon]="button.icon">
+          </trudi-icon>
+        </ng-template>
+        {{button.name}}
+      </button>
+      }
+    </div>
+
+    <button
+      #btnThreeDot
+      [tabIndex]="0"
+      trudi-btn
+      btnType="neutral"
+      variant="outlined"
+      shape="square"
+      size="medium"
+      nz-dropdown
+      nzTrigger="click"
+      [nzClickHide]="false"
+      [nzDropdownMenu]="threeDotsMenu"
+      [nzVisible]="isThreeDotsMenuVisible"
+      [selected]="isThreeDotsMenuVisible"
+      (nzVisibleChange)="isThreeDotsMenuVisible = $event"
+      class="relative"
+      (keyup.enter)="btnThreeDot.click()">
+      <trudi-icon icon="verticalMore"></trudi-icon>
+    </button>
+  </div>
+</div>
+
+<nz-dropdown-menu #threeDotsMenu>
+  <div tabindex="0" focusElement [isFocus]="isThreeDotsMenuVisible" nz-menu>
+    <div class="menu-wrapper border-rad-8">
+      <div
+        [ngClass]="{'disabled': isDisallowReassignProperty || isConsole}"
+        tabindex="0"
+        (keydown.enter)="onOpenPopupEditProperty()"
+        (click)="onOpenPopupEditProperty()"
+        class="item d-flex align-items-center gap-8">
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          class="no-pointer-event"
+          icon="locationReassign"></trudi-icon>
+        <p class="text no-pointer-event">Reassign property</p>
+      </div>
+      @if (!isRmEnvironment) {
+      <div
+        nz-submenu
+        [nzTitle]="exportTaskActivity"
+        nzMenuClassName="sub-menu-nongap">
+        <div
+          nz-menu-item
+          class="submenu-option-item d-flex align-items-center gap-8"
+          [ngClass]="{'disabled': isDisabledSyncActivity || isConsole}"
+          PreventButton
+          [attr.data-button-key]="EButtonTask.SAVE_TASK_TO_PT"
+          [attr.data-button-type]="EButtonType.TASK"
+          (leftClick)="(!isDisabledSyncActivity && !isConsole) && saveTaskActivityToPT()">
+          <trudi-icon
+            svgClass="size-20"
+            class="no-pointer-event"
+            [icon]="'archive'"></trudi-icon>
+          <p class="text no-pointer-event no-margin">Save to Property Tree</p>
+        </div>
+        <div
+          nz-menu-item
+          class="submenu-option-item d-flex align-items-center gap-8"
+          [ngClass]="{'disabled': disabledDownloadPDF}"
+          (click)="!disabledDownloadPDF && saveTaskActivityToPT(true)">
+          <trudi-icon
+            svgClass="size-20"
+            class="no-pointer-event"
+            [icon]="'iconDownload'"></trudi-icon>
+          <p class="text no-pointer-event no-margin">Download as PDF</p>
+        </div>
+      </div>
+      }
+      <ng-template #exportTaskActivity>
+        <div
+          class="item submenu-option d-flex justify-content-between align-items-center gap-8">
+          <div class="d-flex align-items-center gap-8">
+            <trudi-icon
+              svgClass="size-20"
+              class="no-pointer-event"
+              icon="conversationExport"></trudi-icon>
+            <div class="no-pointer-event">Export task activity</div>
+          </div>
+          <trudi-icon svgClass="size-20" icon="iconChevronRight"></trudi-icon>
+        </div>
+      </ng-template>
+      <div
+        PreventButton
+        [attr.data-button-key]="EButtonTask.PERMANENTLY_DELETE_TASK"
+        [attr.data-button-type]="EButtonType.TASK"
+        (leftClick)="handleTaskStatus(TaskStatusType.deleted)"
+        (keydown.enter)="handleTaskStatus(TaskStatusType.deleted)"
+        appE2E="task-details-delete-button"
+        tabindex="0"
+        [ngClass]="{'disabled': isConsole}"
+        class="item menu-error d-flex align-items-center gap-8">
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          class="no-pointer-event"
+          icon="deleteIconOutline"></trudi-icon>
+        <p class="text no-pointer-event">Permanently delete task</p>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<trudi-modal
+  *ngIf="isShowModalWarning"
+  [visible]="isShowModalWarning"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  className="trudi-modal-custom">
+  <warning-note-popup
+    [warningMessage]="errorMessage"
+    [timeToCloseModal]="3000"
+    (isCloseModal)="isShowModalWarning = $event">
+  </warning-note-popup>
+</trudi-modal>
+
+<trudi-modal
+  *ngIf="isShowMoveFolder"
+  [visible]="isShowMoveFolder"
+  title="Move to folder"
+  [hiddenCancelBtn]="true"
+  (onOk)="handleMoveToFolder()"
+  (onCancel)="handleCancel()">
+  <div class="task-folder-modal">
+    <div [formGroup]="formSelectGroup">
+      <p class="label-folder">Folder</p>
+      <trudi-form-control [control]="taskGroup">
+        <trudi-select-dropdown
+          *ngIf="taskFolderGroups?.length"
+          [items]="taskFolderGroups"
+          [searchable]="true"
+          placeholder="Search folder, group"
+          bindLabel="name"
+          groupBy="taskFolderId"
+          [clearable]="false"
+          [dropdownWidth]="576"
+          [groupOrders]="groupOrders"
+          [ngClass]="{required: formSelectGroup.invalid && formSelectGroup.touched}"
+          [customSearchFn]="customSearchFn"
+          formControlName="taskGroup"
+          [disabled]="isConsole">
+          <ng-template trudi-select-dropdown-title-tmp let-item="item$">
+            <span
+              class="select-folder-no-value"
+              *ngIf="formSelectGroup.invalid; else taskGroupHasValue">
+              Select folder
+            </span>
+            <ng-template #taskGroupHasValue>
+              <div class="d-flex align-items-center gap-4 overflow-hidden">
+                <trudi-icon
+                  [icon]="item?.icon"
+                  [style]="{ 'width.px': 16, 'height.px': 16}"></trudi-icon>
+                <div class="folder-name">{{item?.taskFolderName}}</div>
+                <div>/</div>
+                <div class="group-name">{{item?.name}}</div>
+              </div>
+            </ng-template>
+          </ng-template>
+          <ng-template trudi-select-dropdown-group-tmp let-item="item">
+            {{item.taskFolderName}}
+          </ng-template>
+        </trudi-select-dropdown>
+      </trudi-form-control>
+    </div>
+  </div>
+</trudi-modal>
+
+<trudi-modal
+  *ngIf="isShowModalUpdateProperty"
+  [visible]="isShowModalUpdateProperty"
+  [autoFocus]="null"
+  [modelWidth]="624"
+  title="Select property"
+  [hiddenCancelBtn]="true"
+  (onOk)="handleConfirmUpdateProperty()"
+  (onCancel)="onCloseUpdatePropertyModal($event)"
+  [disableOkBtn]="isPropertyUpdating">
+  <div [formGroup]="formSelectProperty">
+    <trudi-form-control>
+      <trudi-single-select
+        [items]="currentTask?.taskType === TaskType.MESSAGE ? listPropertyAllStatus : listPropertyActive"
+        bindLabel="streetline"
+        bindValue="id"
+        label="Assign a property"
+        [enableSearch]="true"
+        formControlName="propertyId"></trudi-single-select>
+    </trudi-form-control>
+  </div>
+  <ng-container *ngIf="warningChangeProperty.isShow">
+    <warning-property [msgContent]="warningChangeProperty.msg">
+    </warning-property>
+  </ng-container>
+</trudi-modal>
+
+<ng-template #permanentlyDeleteConfirmModalContent>
+  <div class="d-flex justify-content-end">
+    <ul class="content pd-0">
+      <li>
+        <span>Any data or task history will be permanently deleted</span>
+      </li>
+      <li>
+        <span>
+          Any messages within this task will be automatically marked as
+          deleted</span
+        >
+      </li>
+    </ul>
+  </div>
+</ng-template>

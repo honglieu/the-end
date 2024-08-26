@@ -1,0 +1,139 @@
+<div
+  class="tenant-info-wrapper d-flex gap-24"
+  *ngIf="!isLoading else skeletonBlock">
+  <div class="name-section section-wrapper" [formGroup]="nameForm">
+    <div class="title cursor-default">Name</div>
+    <trudi-form-control class="w-100">
+      <trudi-text-field
+        size="large"
+        label="First name"
+        [showCounting]="false"
+        formControlName="firstName"
+        maxCharacter="25"></trudi-text-field>
+    </trudi-form-control>
+    <trudi-form-control class="w-100" [checkSubmit]="!isSubmitted">
+      <trudi-text-field
+        size="large"
+        [checkSubmit]="!isSubmitted"
+        [showCounting]="false"
+        label="Last name (required)"
+        formControlName="lastName"
+        (triggerEventBlur)="handleBlurCheckAllWhitespace(nameForm?.get('lastName'))"
+        maxCharacter="75"></trudi-text-field>
+    </trudi-form-control>
+  </div>
+
+  <div class="addresses-section section-wrapper">
+    <div class="title cursor-default">Addresses</div>
+    <ng-container>
+      <addresses-tab>
+        <div
+          *ngFor="let itemForm of addressesForm.controls; let i = index"
+          tabPanel
+          [formGroup]="itemForm"
+          [tabTitle]="itemForm.value.typeName">
+          <trudi-form-control class="w-100">
+            <trudi-text-field
+              size="large"
+              [showCounting]="false"
+              [label]="itemForm.value.typeName | labelAddress: typeName"
+              formControlName="address"
+              maxCharacter="255"></trudi-text-field>
+            <trudi-checkbox
+              label="Default"
+              (change)="onSelectDefault(i)"
+              formControlName="isPrimary"></trudi-checkbox>
+          </trudi-form-control>
+        </div>
+      </addresses-tab>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #skeletonBlock>
+  <div class="tenant-info-wrapper d-flex gap-24">
+    <div class="skeleton-wrapper d-flex flex-dir-column section-wrapper">
+      <nz-skeleton
+        class="skeleton-section-name"
+        [nzParagraph]="paragraph"
+        [nzActive]="true"></nz-skeleton>
+
+      <div class="skeleton-input">
+        <nz-skeleton
+          class="skeleton-label"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+        <div class="skeleton-bg">
+          <nz-skeleton
+            class="content"
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </div>
+      <div class="skeleton-input">
+        <nz-skeleton
+          class="skeleton-label"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+        <div class="skeleton-bg">
+          <nz-skeleton
+            class="content"
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </div>
+    </div>
+
+    <div class="skeleton-wrapper d-flex flex-dir-column section-wrapper">
+      <nz-skeleton
+        class="skeleton-section-name"
+        [nzParagraph]="paragraph"
+        [nzActive]="true"></nz-skeleton>
+
+      <div class="skeleton-tab d-flex gap-20">
+        <nz-skeleton
+          class="skeleton-tab-item"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+        <nz-skeleton
+          class="skeleton-tab-item"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+        <nz-skeleton
+          class="skeleton-tab-item"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+        <nz-skeleton
+          class="skeleton-tab-item"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+        <nz-skeleton
+          class="skeleton-tab-item"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+      </div>
+      <div class="skeleton-input">
+        <nz-skeleton
+          class="skeleton-label"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+        <div class="skeleton-bg">
+          <nz-skeleton
+            class="content"
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </div>
+      <div class="skeleton-checkbox d-flex gap-8">
+        <nz-skeleton
+          [nzParagraph]="paragraph"
+          [nzActive]="true"
+          class="checkbox-btn"></nz-skeleton>
+        <nz-skeleton
+          class="skeleton-label"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+      </div>
+    </div>
+  </div>
+</ng-template>

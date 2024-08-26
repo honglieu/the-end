@@ -1,0 +1,182 @@
+@import 'function';
+
+::ng-deep .purchase-detail {
+  &-wrapper {
+    height: calc(100vh - 194px);
+    .detail-info {
+      display: grid;
+      grid-auto-rows: 1fr;
+      grid-template-columns: 2fr 4fr 2fr;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 24px;
+
+      .detail {
+        &-one,
+        &-two,
+        &-summary {
+          padding: 16px;
+          height: 100%;
+          border-radius: 8px;
+          border: 1px solid var(--border-neutral-dark);
+        }
+        &-summary {
+          .total {
+            padding: 16px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            &-text {
+              @include fontSetup(
+                var(--fg-neutral-stronger),
+                14px,
+                20px,
+                normal,
+                500
+              );
+            }
+            &-price {
+              @include fontSetup(
+                var(--fg-neutral-stronger),
+                14px,
+                20px,
+                normal,
+                400
+              );
+            }
+          }
+        }
+        &-one,
+        &-two {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
+        &-two {
+          .accountType-select {
+            width: 175px;
+          }
+          trudi-text-field {
+            .trudi-text-field-wrapper {
+              height: 40px;
+            }
+          }
+          trudi-checkbox {
+            .label-text {
+              color: var(--fg-neutral-stronger);
+            }
+          }
+        }
+        &-one {
+          .issue-date-wrapper {
+            display: flex;
+            flex-direction: column;
+            .date-title {
+              margin-bottom: 6px;
+              @include fontSetup(
+                var(--fg-neutral-normal),
+                12px,
+                16px,
+                normal,
+                400
+              );
+            }
+
+            trudi-date-picker {
+              min-width: 100%;
+              height: 40px;
+            }
+          }
+        }
+      }
+    }
+
+    .detail-order {
+      .no-item {
+        padding: 16px 16px 0 16px;
+
+        .error-text {
+          @include fontSetup(var(--fg-danger), 12px, 16px, normal, 400);
+        }
+      }
+
+      .order {
+        &-footer {
+          padding: 16px;
+          color: var(--fg-neutral-normal);
+          border: 1px solid var(--border-neutral-dark);
+          border-top: unset;
+          border-bottom-left-radius: 8px;
+          border-bottom-right-radius: 8px;
+        }
+
+        &-header {
+          border-top-right-radius: 8px;
+          border-top-left-radius: 8px;
+          border: 1px solid var(--border-neutral-dark);
+
+          background: var(--bg-neutral-tonal-normal);
+          display: grid;
+          height: 44px;
+          grid-template-columns: 1fr 1fr 0.4fr 0.4fr 1fr 256px;
+          align-items: center;
+          .item {
+            padding: 12px 16px;
+            @include fontSetup(
+              var(--fg-neutral-normal),
+              12px,
+              18px,
+              normal,
+              500
+            );
+          }
+        }
+
+        &-content {
+          position: relative;
+          border: 1px solid var(--border-neutral-dark);
+          border-top: unset;
+          border-bottom: unset;
+          .order-item {
+            @include fontSetup(
+              var(--fg-neutral-normal),
+              12px,
+              18px,
+              normal,
+              500
+            );
+          }
+
+          .ng-dropdown-panel {
+            .ng-dropdown-panel-items .ng-option {
+              padding: 12px !important;
+              border-bottom: none;
+            }
+          }
+
+          .ng-dropdown-panel {
+            margin: 10px 0px !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+.tenants_list {
+  padding: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  width: 100%;
+}
+
+.tenants_preview {
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

@@ -1,0 +1,114 @@
+<div class="wrapper d-flex">
+  <div class="wrapper-left flex-1 d-flex flex-dir-column">
+    <div class="d-flex header">
+      <div class="logo-wrapper size-48">
+        <img
+          src="/assets/icon/trudi-logo.svg"
+          alt="Trudi"
+          data-e2e="trudi-logo" />
+      </div>
+      <div class="content" data-e2e="title">
+        I will be uploading the following invoice details against this
+        maintenance request in Property Tree
+      </div>
+    </div>
+    <div class="information-box flex-1">
+      <div
+        [formGroup]="invoiceInformation"
+        class="form-wrapper d-flex flex-dir-column gap-18">
+        <div
+          class="input-wrapper d-flex flex-dir-column justify-content-between">
+          <span data-e2e="creditor-text"> Creditor </span>
+          <input
+            data-e2e="creditor-box"
+            disabled
+            class="resize-none border-rad-8 disabled-field"
+            formControlName="creditor"
+            [ngClass]="{'warning-required': creditor.invalid && creditor.dirty}" />
+        </div>
+        <div
+          class="input-wrapper d-flex flex-dir-column justify-content-between">
+          <span data-e2e="invoice-description"> Invoice Description </span>
+          <input
+            data-e2e="invoice-des-textbox"
+            class="resize-none border-rad-8"
+            formControlName="invoiceDescription"
+            [ngClass]="{'warning-required': invoiceDescription.invalid && invoiceDescription.dirty}" />
+        </div>
+        <div
+          class="input-wrapper d-flex flex-dir-column justify-content-between">
+          <span data-e2e="due-date-text"> Due Date </span>
+          <input
+            data-e2e="calendar-textbox"
+            type="date"
+            min="0001-01-01"
+            max="9999-12-31"
+            class="resize-none border-rad-8"
+            formControlName="dueDate"
+            [ngClass]="{'warning-required': dueDate.invalid && dueDate.dirty}" />
+        </div>
+        <div class="d-flex gap-16">
+          <div
+            class="input-wrapper d-flex flex-dir-column justify-content-between flex-1">
+            <span data-e2e="amount-excluding-text">
+              Amount excluding GST (AUD)
+            </span>
+            <input
+              data-e2e="amount-ex-textbox"
+              type="number"
+              class="resize-none border-rad-8"
+              formControlName="amountExcludingGST"
+              [ngClass]="{'warning-required': amountExcludingGST.invalid && amountExcludingGST.dirty}" />
+          </div>
+          <div
+            class="input-wrapper d-flex flex-dir-column justify-content-between flex-1">
+            <span data-e2e="gst-amount-text"> GST Amount (AUD) </span>
+            <input
+              [attr.data-e2e]="dataE2e ? 'gst-amount-textbox' : ''"
+              type="number"
+              class="resize-none border-rad-8"
+              formControlName="gstAmount"
+              [ngClass]="{'warning-required': gstAmount.invalid && gstAmount.dirty}" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex align-items-center justify-content-between">
+      <td-checkbox
+        [size]="24"
+        [isChecked]="isSendFile.value"
+        [reverse]="true"
+        label="Upload invoice PDF to Property Tree"
+        (tdCheckboxChanged)="onCheckboxChange($event)">
+      </td-checkbox>
+      <button
+        data-e2e="create-invoice-btn"
+        [disabled]="invoiceInformation.invalid"
+        type="button"
+        class="background--brand-500 color--white border-rad-12 color--white btn-confirm"
+        [ngClass]="{'unclick': invoiceInformation.invalid}"
+        (click)="syncToPropertyTree()">
+        Create invoice
+      </button>
+    </div>
+  </div>
+  <div class="wrapper-right flex-1 d-flex">
+    <trudi-pdf-viewer
+      *ngIf="invoiceFile && invoiceFile.fileUrl"
+      class="'pdf-viewer'"
+      [showSpinner]="true"
+      [download]="false"
+      [openFile]="false"
+      [viewBookmark]="false"
+      [pdfUrl]="invoiceFile.fileUrl"></trudi-pdf-viewer>
+    <div
+      data-e2e="button-close"
+      class="size-28 cursor-pointer"
+      (click)="close()">
+      <img
+        src="/assets/icon/close-modal.svg"
+        alt="close modal"
+        data-e2e="exit-btn" />
+    </div>
+  </div>
+</div>

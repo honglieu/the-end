@@ -1,0 +1,128 @@
+<div class="wrapper d-flex justify-content-between align-items-center">
+  <div class="title">MAILBOXES</div>
+  <button
+    (click)="isDropdownVisible = !isDropdownVisible"
+    trudi-btn
+    size="extra-small"
+    btnType="neutral"
+    variant="ghost"
+    shape="circle"
+    [selected]="isDropdownVisible"
+    cdkOverlayOrigin
+    #trigger="cdkOverlayOrigin"
+    nz-tooltip
+    [nzTooltipTitle]="'Add mailbox'"
+    nzTooltipPlacement="top"
+    nzTooltipOverlayClassName="move-to-icon"
+    [nzTooltipOverlayStyle]="{'padding-right': '5px', 'padding-top': '5px' }">
+    <trudi-icon icon="iconPlus2" [svgClass]="'size-16'"></trudi-icon>
+  </button>
+</div>
+
+<!-- <ng-template #noMailBox> -->
+<ng-container *ngIf="!listMailBoxs?.length">
+  <div class="no-mailbox">
+    <div class="no-mailbox--content">
+      <div class="icon-wrapper">
+        <trudi-icon
+          class="d-flex align-items-center justify-content-center"
+          icon="emptyMessage" />
+        <trudi-icon
+          class="d-flex align-items-center justify-content-center"
+          icon="emptyBox" />
+      </div>
+      <p class="empty-msg">It's a bit quiet in here!</p>
+      <p class="empty-msg">Let's start by setting up your first mailbox.</p>
+      <button
+        class="add-new-mailbox"
+        trudi-btn
+        (click)="handleEncourageUser(); $event.stopPropagation()">
+        <ng-template [iconPrefix]>
+          <trudi-icon
+            class="plus-icon"
+            svgClass="size-20"
+            icon="mailboxNewIcon" />
+        </ng-template>
+        Add mailbox
+      </button>
+    </div>
+  </div>
+</ng-container>
+<!-- </ng-template> -->
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="isDropdownVisible"
+  (overlayOutsideClick)="overlayOutsideClick($event)">
+  <div class="box-add">
+    <div
+      class="add-mailbox d-flex align-items-center"
+      (click)="handleEncourageUser(); $event.stopPropagation()">
+      <button class="icon-add">
+        <trudi-icon icon="iconPlus2" [svgClass]="'size-20'"></trudi-icon>
+      </button>
+      <div>Add mailbox</div>
+    </div>
+    <div
+      class="add-shared-mailbox d-flex align-items-center"
+      *ngIf="isOwnerOutlook"
+      (click)="handleSharedMailbox(); $event.stopPropagation()">
+      <button class="icon-add">
+        <trudi-icon icon="addShareMailbox" [svgClass]="'size-20'"></trudi-icon>
+      </button>
+      <div>Add shared mailbox</div>
+    </div>
+  </div>
+</ng-template>
+
+<encourage-user
+  *ngIf="onStepBeforeIntegrateMailbox"
+  [visible]="popupState === EPopupState.ENCOURAGE_USER"
+  (onNext)="handleAddAcount()"
+  (onCancel)="handleCancel()">
+</encourage-user>
+
+<select-mailbox-type
+  *ngIf="onStepBeforeIntegrateMailbox"
+  [visible]="popupState === EPopupState.MAILBOX_TYPE"
+  (onNext)="onNextSelectMailboxType($event)"
+  (onCancel)="handleCancel()"></select-mailbox-type>
+
+<confirm-existing-company-mailbox
+  *ngIf="onStepBeforeIntegrateMailbox"
+  [visible]="popupState === EPopupState.CONFIRM_EXISTING_COMPANY"
+  (onCancel)="handleCancel()"></confirm-existing-company-mailbox>
+
+<select-email-provider
+  *ngIf="onStepBeforeIntegrateMailbox"
+  [visible]="popupState === EPopupState.EMAIL_PROVIDER"
+  [isConsole]="isConsole"
+  [isOwner]="isOwner"
+  (onCancel)="handleCancel()"
+  (onNext)="onNextEmailProvider($event)"></select-email-provider>
+
+<integrate-imap-smtp-server
+  *ngIf="popupState === EPopupState.INTEGRATE_IMAP_SMTP_SERVER"
+  [visible]="popupState === EPopupState.INTEGRATE_IMAP_SMTP_SERVER"
+  [disableForm]="disableFormIntegrateIMAP"
+  [isConnectAgain]="isConnectAgainIMAP"
+  (onCancel)="handleCancel()"
+  (onSave)="integrateIMAP($event)"></integrate-imap-smtp-server>
+
+<assign-team
+  *ngIf="popupState === EPopupState.ASSIGN_TEAM || popupState === EPopupState.ASSIGN_DEFAULT || popupState === EPopupState.SAVE_CONVERSATION_TO_NOTE"
+  [isCompanyMailbox]="selectedmailboxType === mailBoxType.COMPANY"
+  (onCancel)="handleCancel()"
+  (onSaveAssignDefault)="onSaveAssignDefault()"></assign-team>
+
+<save-mailbox-activity-popup
+  *ngIf="popupState === EPopupState.SAVE_MAILBOX_ACTIVITY_TO_PT && !isRm">
+</save-mailbox-activity-popup>
+
+<shared-mailbox
+  *ngIf="popupState === EPopupState.SHARED_MAILBOX"
+  [visible]="popupState === EPopupState.SHARED_MAILBOX"
+  (onCancel)="handleCancel()"
+  (onSave)="handleAddSharedMailbox($event)">
+</shared-mailbox>

@@ -1,0 +1,108 @@
+<ng-container *ngIf="showError500 else dashboard">
+  <des-internet-error></des-internet-error>
+</ng-container>
+
+<ng-template #dashboard>
+  <header-dashboard [hidden]=" isHiddenSidebar"></header-dashboard>
+  <div
+    class="dashboard-container"
+    [style.height]=" isHiddenSidebar ? '100%' : 'calc(100vh - 52px)'">
+    <div
+      class="dashboard-content"
+      [style.width]="(isHiddenSidebar) ? '100%' : 'calc(100vw - 52px)'">
+      <loading-dashboard *ngIf="isLoading"></loading-dashboard>
+      <router-outlet></router-outlet>
+    </div>
+    <sidebar [hidden]="isHiddenSidebar"></sidebar>
+  </div>
+</ng-template>
+
+<!-- TODO replace by using new modal component from trudi-ui -->
+<app-modal-popup
+  [show]="popupStatusUser"
+  [position]="popupModalPosition.center">
+  <app-success-modal-popup
+    title="I can't locate your profile on Property Tree."
+    message="This may mean your access has been revoked."
+    message2="Please contact your account administrator."
+    [closeOverflowAble]="true"
+    (onClose)="handleClosePopupStatusUser()"></app-success-modal-popup>
+</app-modal-popup>
+
+<trudi-modal
+  [visible]="isShowMailboxPerWarning"
+  iconName="iconWarningRed"
+  [closable]="false"
+  [modelWidth]="510"
+  type="confirm"
+  colorBtn="danger"
+  okText="Ok, got it"
+  title="You haven't been shared to mailbox yet"
+  subTitle="Please contact mailbox owner to continue"
+  [hiddenCancelBtn]="true"
+  [autoFocus]="null"
+  (onOk)="handleCloseWarningMailbox()">
+</trudi-modal>
+
+<plans-summary-pop-up
+  [isShowModal]="popupPlanState === EPopupPlanState.SUMMARY_PLAN_POPUP"
+  [currentPlan]="agencyPlans"
+  (onQuit)="resetPopupPlanState()"
+  (changePlan)="handleChangePlan($event)">
+</plans-summary-pop-up>
+
+<trudi-modal
+  [visible]="popupPlanState === EPopupPlanState.CONFIRM_PLAN_POPUP"
+  [autoFocus]="null"
+  okText="Ok, got it"
+  title="We’re on it"
+  [closable]="false"
+  (onOk)="resetPopupPlanState()"
+  [hiddenCancelBtn]="true">
+  <div class="confirm-request-title">
+    <p>
+      We’ve received your request to {{planModifyingText}} your subscription.
+    </p>
+    <p>One of our Customer Support team will be in contact shortly.</p>
+  </div>
+</trudi-modal>
+
+<promotions-modal
+  *ngIf="isShowPromotionsModal"
+  [promotionsData]="promotionsData"
+  [isShowPromotionsModal]="isShowPromotionsModal"
+  (closePromotionModal)="closePromotionModal($event)"
+  [position]="{'bottom': bottomHeight, 'right': '64px'}">
+</promotions-modal>
+
+<confirm-properties-popup
+  *ngIf="isShowModalConfirmProperties"
+  [showModal]="isShowModalConfirmProperties"
+  [isActionSyncConversationToRM]="isActionSyncConversationToRM"
+  [isInTaskOrMessageDetail]="isResolveMsgInTaskDetail"
+  [listConversation]="listConversationConfirmProperties"
+  (quitModal)="handleCancelConfirmProperties($event)"
+  (onConfirm)="handleConfirmProperties()"></confirm-properties-popup>
+
+<message-flow></message-flow>
+<merge-similar-enquiries
+  *ngIf="visible"
+  [visible]="visible"
+  (selectedReplies)="handleSelectedReplies($event)"></merge-similar-enquiries>
+<merged-enquiries-popup
+  *ngIf="isShowPopupMerge"
+  [visible]="isShowPopupMerge"
+  [openToast]="true"
+  (isCloseModal)="handleCloseModal($event)"
+  (saveMerge)="handleCloseModal($event)"
+  [selectedAiReplies]="selectedReplies"></merged-enquiries-popup>
+
+<confirm-properties-task-pt-popup
+  *ngIf="isShowModalConfirmTaskProperties"
+  [showModal]="isShowModalConfirmTaskProperties"
+  [listConversationTask]="listTaskConfirmProperties"
+  (quitModal)="handleCancelConfirmTaskProperties($event)"
+  (onConfirm)="handleConfirmTaskProperties()">
+</confirm-properties-task-pt-popup>
+
+<select-facebook-page></select-facebook-page>

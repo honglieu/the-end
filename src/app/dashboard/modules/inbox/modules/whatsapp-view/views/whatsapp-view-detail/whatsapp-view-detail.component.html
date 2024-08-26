@@ -1,0 +1,214 @@
+@if (!isLoadingDetail && !isLoadingIndex) {
+<div class="whatsapp-detail">
+  <whatsapp-view-detail-header
+    #headerSection
+    [conversation]="currentConversation"
+    [task]="currentTask"
+    [listPropertyAllStatus]="listPropertyAllStatus"
+    [isRmEnvironment]="isRmEnvironment"
+    [isArchivedMailbox]="isArchivedMailbox"
+    [isConsole]="isConsole"
+    [isUserVerified]="isUserVerified"
+    (openProfileDrawer)="openProfileDrawerHandler($event)"
+    (openPropertyDrawer)="openPropertyDrawerHandler($event)"></whatsapp-view-detail-header>
+  <div class="whatsapp-detail-body">
+    <div
+      #messageSection
+      (scroll)="checkRemoveTimestampHorizontalLine()"
+      infiniteScroll
+      [scrollWindow]="false"
+      [infiniteScrollUpDistance]="0"
+      [infiniteScrollDistance]="2"
+      [infiniteScrollThrottle]="300"
+      [immediateCheck]="true"
+      [alwaysCallback]="true"
+      (scrolledUp)="onScrolled('up')"
+      (scrolled)="onScrolled('down')"
+      [style.padding-bottom.px]="isUserVerified ? 72 : 110"
+      class="message-section scroll-container-wrapper">
+      @if(isFetchingOlderMessages) {
+      <div class="loading-spinner loading-spinner-top">
+        <ng-container *ngTemplateOutlet="loadingSpinner"></ng-container>
+      </div>
+      } @for (group of groupedMessages; let groupIndex = $index; track
+      group.timestamp) {
+      <div>
+        <div
+          class="timestamp-badge wrap-order-day y-center"
+          [class.mt-0]="groupIndex === 0">
+          <div class="divider flex-1 hide-divider"></div>
+          <div class="order-day timestamp">
+            {{group?.timestamp | dateTimeString | async | uppercaseFirstLetter}}
+          </div>
+          <div class="divider flex-1 hide-divider"></div>
+        </div>
+        <div class="d-flex flex-dir-column gap-12">
+          @for (message of group.messages; let messageIndex = $index; let last =
+          $last; track message.createdAt) {
+          <div class="message-item" [id]="'message-' + message.id">
+            <whatsapp-view-detail-message
+              [message]="message"
+              [isUserVerified]="isUserVerified"
+              [currentConversation]="currentConversation"
+              (reSendMessage)="onResendTheMessage($event)">
+            </whatsapp-view-detail-message>
+            @if(message.id === lastReadMessageId && !last) {
+            <div class="red-line" #redLineNew>
+              <hr />
+              <trudi-icon icon="newMessageTag"> </trudi-icon>
+            </div>
+            }
+          </div>
+          }
+        </div>
+      </div>
+      } @if(isFetchingNewerMessages) {
+      <div class="loading-spinner loading-spinner-bottom">
+        <ng-container *ngTemplateOutlet="loadingSpinner"></ng-container>
+      </div>
+      }
+    </div>
+    <div class="action-panel">
+      @if(isViewMostRecentButtonVisible && hasScroll) {
+      <button
+        trudi-btn
+        btnType="neutral"
+        variant="outlined"
+        size="extra-small"
+        class="view-most-recent"
+        (click)="viewMostRecentMessagesHandler(EBehaviorScroll.SMOOTH)">
+        <trudi-icon icon="chevronDown" svgClass="size-16"> </trudi-icon>
+        <span>View most recent</span>
+      </button>
+      }
+      <div class="conversation-summary-general">
+        <conversation-summary
+          [currentConversation]="currentConversation"
+          [currentTask]="currentTask"
+          [elementRefHeight]="messageSectionHeight"
+          (triggerCurrentConversation)="triggerUpdateConversation($event)"></conversation-summary>
+      </div>
+      @if(!isUserVerified && showJoinConversationButton) {
+      <div class="conversation-summary-general mt-12">
+        <join-conversation
+          [disabled]="isDisabledJoinButton"
+          [currentConversation]="currentConversation"
+          (joinConversation)="handleJoinConversation()"></join-conversation>
+      </div>
+      }
+    </div>
+  </div>
+  <div class="whatsapp-detail-footer">
+    @if(isUserVerified) {
+    <div #textareaContainer>
+      <whatsapp-inline-editor
+        #composeMessage
+        [configs]="whatsappEditorConfigs"
+        [currentProperty]="currentTask?.property"
+        (onSendMsg)="handleOnSendMsg($event)"
+        [currentConversation]="currentConversation"></whatsapp-inline-editor>
+    </div>
+    }
+  </div>
+</div>
+} @else {
+<ng-container *ngTemplateOutlet="whatsappDetailSkeletonTemplate"></ng-container>
+}
+
+<ng-template #whatsappDetailSkeletonTemplate>
+  <div class="whatsapp-detail">
+    <div class="whatsapp-detail-header">
+      <div class="whatsapp-detail-header-first-row">
+        <div class="mr-8">
+          <nz-skeleton
+            [nzTitle]="true"
+            [nzParagraph]="false"
+            [style.width.px]="300"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+        <nz-skeleton
+          [nzTitle]="true"
+          [nzParagraph]="false"
+          [style.width.px]="50"
+          [nzActive]="true"></nz-skeleton>
+        <div class="action-buttons">
+          <ng-container *rxFor="let _ of [].constructor(3)">
+            <nz-skeleton
+              [nzTitle]="true"
+              [nzParagraph]="false"
+              [style.width.px]="32"
+              [nzActive]="true"></nz-skeleton
+          ></ng-container>
+        </div>
+      </div>
+      <div class="whatsapp-detail-header-second-row">
+        <nz-skeleton
+          [nzTitle]="true"
+          [nzParagraph]="false"
+          [style.width.px]="376"
+          [nzActive]="true"></nz-skeleton>
+        <div class="assignees ml-auto">
+          <nz-skeleton
+            [nzTitle]="false"
+            [nzParagraph]="false"
+            [nzAvatar]="true"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </div>
+    </div>
+    <div
+      class="whatsapp-detail-body whatsapp-detail-body-skeleton d-flex flex-dir-column">
+      <div class="mb-12" style="align-self: end">
+        <div class="text-skeleton">
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"></nz-skeleton-element>
+          <div class="avatar-skeleton"></div>
+        </div>
+      </div>
+      <div class="mb-12">
+        <div class="text-skeleton ml-12">
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"></nz-skeleton-element>
+          <div class="avatar-skeleton"></div>
+        </div>
+      </div>
+      <div class="mb-12" style="align-self: end">
+        <div class="text-skeleton">
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"></nz-skeleton-element>
+          <div class="avatar-skeleton"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #loadingSpinner>
+  <img src="assets/images/loading-spinner.gif" />
+</ng-template>
+
+<property-profile-drawer
+  [visible]="isPropertyProfileVisible"
+  [openFrom]="ETypePage.TASK_DETAIL"
+  [currentDataUser]="currentDataUserProfile"
+  (triggerCloseDrawer)="isPropertyProfileVisible = false"
+  [propertyId]="currentTask?.property?.id">
+</property-profile-drawer>
+
+<div
+  appOutsideClickListener
+  (clickOutside)="clickOutsideUserProfileDrawerHandler()"
+  [whiteList]="whiteListMsgDetail">
+  <user-info-drawer
+    [openFrom]="ETypePage.TASK_DETAIL"
+    [currentDataUser]="currentDataUserProfile"
+    [visible]="isUserProfileDrawerVisible"
+    [isWhatsApp]="true"></user-info-drawer>
+</div>
+
+<conversation-summary-file
+  [currentConversation]="currentConversation"
+  [currentTask]="currentTask" />

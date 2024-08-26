@@ -1,0 +1,25 @@
+<div
+  [class.cursor-not-allowed]="disabled"
+  [ngClass]="{'switch-checkbox-container': true,'switch-checkbox-reminder': reminderToggle}"
+  [style.flexDirection]="reverse ? 'row-reverse' : 'row'">
+  <input
+    type="checkbox"
+    hidden="hidden"
+    [id]="'resol' + index"
+    [(ngModel)]="isChecked"
+    (ngModelChange)="onCheckboxChange($event)"
+    [disabled]="disabled" />
+  <label
+    [class.disable-field]="disabled"
+    class="switch"
+    [for]="'resol' + index"></label>
+  <ng-container *ngIf="labelTemplate; else labelDefault">
+    <ng-container *ngTemplateOutlet="labelTemplate"></ng-container>
+  </ng-container>
+  <ng-template #labelDefault>
+    <div
+      [class.disable-field]="disabled"
+      class="checkbox-label cpn-label break-word"
+      [innerHTML]="label"></div>
+  </ng-template>
+</div>

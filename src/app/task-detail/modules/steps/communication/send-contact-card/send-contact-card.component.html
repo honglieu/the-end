@@ -1,0 +1,17 @@
+<trudi-step
+  [model]="model"
+  [disabled]="false"
+  [showIconTitle]="false"
+  [hideProcessLine]="false"
+  [propertyTreeStep]="false"
+  [buttonKey]="buttonKey"
+  (onProcess)="enableProcess()"></trudi-step>
+<!-- <trudi-send-msg-v2
+  *ngIf="popupState.isTrudiSendMessage && listContactCard"
+  [configs]="sendMessageConfigs"
+  [rawMsg]="model?.fields.msgBody"
+  [listOfFiles]="model?.fields?.files || []"
+  (onQuit)="handleCloseModal()"
+  (onSendMsg)="handleOnSendMsg($event)"
+  [listContactCard]="listContactCard"
+  (onBack)="onBack()"></trudi-send-msg-v2> -->

@@ -1,0 +1,13 @@
+import { IOtherContactFilter } from '@/app/user/utils/user.type';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
+
+export const otherContactPageActions = createActionGroup({
+  source: 'Other Contact Page',
+  events: {
+    'Enter Page': emptyProps(),
+    'Exit Page': emptyProps(),
+    'Next Page': emptyProps(),
+    'Prev Page': emptyProps(),
+    'Payload Change': props<{ payload: IOtherContactFilter }>()
+  }
+});

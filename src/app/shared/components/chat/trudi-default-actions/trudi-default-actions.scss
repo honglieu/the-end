@@ -1,0 +1,18 @@
+:host {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.trudi-default-actions {
+  min-height: 53px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  background-color: var(--white);
+  line-height: 21px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--gray-950);
+  margin-bottom: 8px;
+  display: inline-block;
+  padding: 16px;
+}

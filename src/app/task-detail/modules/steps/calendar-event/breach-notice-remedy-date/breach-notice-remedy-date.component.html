@@ -1,0 +1,15 @@
+<trudi-step
+  [model]="model"
+  (onProcess)="enableProcess()"
+  [buttonKey]="buttonKey"></trudi-step>
+<ng-container *ngIf="popupState.isShowBreachNoticeRemedyDate">
+  <breach-contract-form
+    [modalId]="modalId"
+    [isStep]="true"
+    [breachData]="model"
+    [visible]="popupState.isShowBreachNoticeRemedyDate"
+    [isTaskEditor]="true"
+    [visible]="popupState.isShowBreachNoticeRemedyDate"
+    (onCloseStep)="onClose()"
+    (onConfirmSuccess)="onSuccess($event)"></breach-contract-form>
+</ng-container>

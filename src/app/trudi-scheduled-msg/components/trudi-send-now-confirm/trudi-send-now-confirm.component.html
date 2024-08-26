@@ -1,0 +1,28 @@
+<div class="trudi-send-now-confirm-header d-flex flex-dir-row gap-16">
+  @if (!!configs.header.icon) {
+  <trudi-icon
+    [icon]="configs.header.icon"
+    [style]="{'width.px': 48, 'height.px': 48}"></trudi-icon>
+  }
+  <p class="trudi-send-now-confirm-header-title" data-e2e="title">
+    {{ configs.header.title }}
+  </p>
+</div>
+<div class="trudi-send-now-confirm-footer">
+  <div class="trudi-send-now-confirm-footer-btn-wrapper">
+    <button
+      trudi-btn
+      variant="outlined"
+      btnType="neutral"
+      (click)="handleBackScheduleMsg()">
+      Back
+    </button>
+    <button
+      trudi-btn
+      data-e2e="send-btn"
+      (click)="handleSendNowMessage()"
+      [disabled]="isDisabledSendNowBtn">
+      Send now
+    </button>
+  </div>
+</div>

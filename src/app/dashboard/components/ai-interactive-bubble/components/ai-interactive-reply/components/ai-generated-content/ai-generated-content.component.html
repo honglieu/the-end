@@ -1,0 +1,36 @@
+<div class="ai__generated">
+  <div class="ai__generated--prompt">
+    <trudi-icon icon="noteText"></trudi-icon>
+    <p expandableEllipsis [parentSelector]="'.ai__generated--prompt'">
+      {{interactiveAi.prompt}}
+    </p>
+  </div>
+
+  <div class="ai__generated--reply">
+    <p
+      class="reply__text"
+      [innerHTML]="(interactiveAi?.reply || '') | generatedContent"></p>
+    @if (!interactiveAi?.isGenerating) {
+    <div class="reply__action">
+      <button
+        [disabled]="isGeneratingText$ | push"
+        (click)="handleInsertText()"
+        trudi-btn
+        size="small"
+        btnType="primary">
+        Insert
+      </button>
+      <div class="reply__action--copy" tabindex="0" #copyReply>
+        <trudi-icon (click)="handleCopy()" icon="copy"></trudi-icon>
+      </div>
+    </div>
+    }@else{
+    <div class="reply_dot"></div>
+    <div class="reply__stop">
+      <trudi-icon
+        (click)="handleStopGeneratingText()"
+        icon="stopCircle"></trudi-icon>
+    </div>
+    }
+  </div>
+</div>

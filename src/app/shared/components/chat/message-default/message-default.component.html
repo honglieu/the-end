@@ -1,0 +1,96 @@
+@if(message.messageReply) {
+<message-reply
+  [isSending]="isSending"
+  [message]="message.messageReply"
+  [position]="message.senderType === 'user' ? 'left' : 'right'">
+</message-reply>
+}
+<div
+  class="message-default message-wrapper"
+  [style.width]="message.senderType === 'user' ? 'fit-content' : 'auto'"
+  [ngClass]="{'sending-from-user': isSending, 'mt-12': message.languageCode && message.languageCode !== 'en' && message.languageCode !== 'und', 'no-avatar': !showAvatar}">
+  <div class="wrapper-panel" [ngClass]="{'w-100': !visibleMessageText}">
+    <app-message-header
+      [senderType]="message.senderType"
+      [currentConversation]="currentConversation"
+      [message]="message"
+      [firstName]="message.firstName"
+      [lastName]="message.lastName"
+      *ngIf="message.options?.contacts?.length > 0"></app-message-header>
+    <div class="message-text" *ngIf="visibleMessageText">
+      @if(showAvatar) {
+      <app-circle-avatar
+        class="message-avatar"
+        [class.cursor-default]="isTrudiSender"
+        [size]="24"
+        [userId]="message.userId"
+        [avatar]="message.googleAvatar"
+        [firstName]="message.firstName"
+        [lastName]="message.lastName"
+        (click)="!isTrudiSender && handleClickAvatar($event)"
+        [userType]="[EUserPropertyType.OTHER, EUserPropertyType.SUPPLIER].includes(message.userType) ? message.userType : (isExternalPropertyContact ? EUserPropertyType.EXTERNAL : message.userPropertyType)"></app-circle-avatar>
+      }
+      <!-- <div
+    *ngIf="!isAppFolder && !isFromAIAssistant && message?.status !== taskStatusType.deleted && message?.status !== taskStatusType.completed && message?.status !== taskStatusType.resolved && message?.status !== taskStatusType.cancelled"
+    nz-dropdown
+    [nzDropdownMenu]="menu"
+    nzPlacement="bottomRight"
+    [nzTrigger]="'click'"
+    [class]="(isUserSender || isTrudiSender) ? 'btn-action' : 'btn-action-admin'"
+    [ngStyle]="isTrudiSender ? { 'background-color': 'var(--bg-neutral-tonal-stronger)' } : {}"
+    [class.active]="isShowDropdownMenu">
+    <trudi-icon
+      [icon]="(isUserSender || isTrudiSender) ? 'threeDotMessageIcon' : 'threeDotMessageIconV2'"></trudi-icon>
+    </div> -->
+      <nz-dropdown-menu #menu="nzDropdownMenu">
+        <div nz-menu>
+          <div class="menu-wrapper border-rad-8">
+            <ng-container *ngFor="let item of listItemDropdown">
+              <div
+                *ngIf="!item.hidden"
+                nz-menu-item
+                class="item-dropdown d-flex align-items-center gap-8"
+                (click)="item.action()"
+                ripple>
+                <trudi-icon
+                  svgClass="size-20"
+                  viewBox="auto"
+                  [icon]="item.icon"></trudi-icon>
+                <p class="text">{{item.text}}</p>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </nz-dropdown-menu>
+      <div>
+        <span *ngFor="let mes of message.message; trackBy: messageTrackBy">
+          <span
+            #textContain
+            [triggerTextSelectionAddPolicy]="triggerAddPolicy"
+            [innerHTML]="(updatedMessage || mes.value) | safe: 'html'"
+            (click)="onClickMsg($event)"></span>
+          <div
+            *ngIf="message.languageCode && message.languageCode !== 'en' && message.languageCode !== 'und'"
+            class="message-translation-label">
+            <language-translation-label
+              [isFromAIAssistant]="isFromAIAssistant"
+              (languageTranslationDisabled)="updateMessage($event, mes.value)"
+              [messagesTranslate]="message.messagesTranslate"
+              [inputLanguage]="message.languageCode"></language-translation-label>
+          </div>
+          <div
+            *ngIf="updatedMessage && message.messagesTranslate && message.languageCode && message.languageCode !== 'en' && message.languageCode !== 'und'">
+            <language-original-content
+              [senderType]="message.senderType"
+              [content]="mes.value"></language-original-content>
+          </div>
+        </span>
+      </div>
+    </div>
+  </div>
+  <div class="list-contact" *ngIf="message.options?.contacts?.length > 0">
+    <ng-container *ngFor="let contact of message.options?.contacts">
+      <info-ticket [contact]="contact" [size]="'small'"></info-ticket>
+    </ng-container>
+  </div>
+</div>

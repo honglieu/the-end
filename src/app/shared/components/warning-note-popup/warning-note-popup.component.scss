@@ -1,0 +1,19 @@
+.warning-container{
+  align-items: flex-start;
+  padding: 6px 14px;
+}
+
+.title-popup{
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--gray-700);
+}
+
+.text-msg{
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--gray-500);
+  white-space: pre-line;
+}

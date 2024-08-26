@@ -1,0 +1,13 @@
+<trudi-suggested-step-group
+  *ngIf="rmInspection?.length"
+  groupTitle="INSPECTION"
+  class="mb-0">
+  <rent-manager-inspection-card
+    *ngFor="let cardData of rmInspection"
+    [inspectionCard]="cardData"
+    [syncStatus]="cardData?.syncStatus"
+    (clickCard)="handleClickRmInspection(cardData)"
+    (retry)="handleRetrySyncRmInspection(cardData)"
+    (cancel)="handleCancelRmIssue(cardData)"
+    (remove)="handleRemoveRmInspection(cardData)"></rent-manager-inspection-card>
+</trudi-suggested-step-group>

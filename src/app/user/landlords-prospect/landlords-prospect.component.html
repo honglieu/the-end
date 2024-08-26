@@ -1,0 +1,30 @@
+<table-user-shared
+  [dataTableDataSource]="dataTableDataSource"
+  [dataTableColumns]="tableColumns"
+  [activeMobileApp]="activeMobileApp"
+  [totalItems]="totalItems"
+  [totalPages]="totalPages"
+  [searchValue]="searchValue"
+  [isLoading]="isLoading"
+  [pageIndex]="pageIndex"
+  [isLoadingMore]="isLoadingMore"
+  [typePage]="typePage.LANLORDS_PROSPECT"
+  (handleEventRow)="handleEventClickRow($event)">
+</table-user-shared>
+
+<app-common-agent-user-component (refreshListData)="handleRefreshList($event)">
+</app-common-agent-user-component>
+
+<user-info-drawer
+  [visible]="visible"
+  [currentDataUser]="currentDataUser"
+  [openFrom]="typePage.LANLORDS_PROSPECT"
+  (triggerCloseDrawer)="visible = false"></user-info-drawer>
+
+<property-profile-drawer
+  (triggerCloseDrawer)="visiblePropertyProfile = false"
+  [openFrom]="typePage.LANLORDS_PROSPECT"
+  [currentDataUser]="currentDataUser"
+  [propertyId]="currentDataUser?.propertyId"
+  [visible]="visiblePropertyProfile">
+</property-profile-drawer>

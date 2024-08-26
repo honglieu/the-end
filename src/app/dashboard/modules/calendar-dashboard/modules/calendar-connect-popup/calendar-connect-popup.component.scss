@@ -1,0 +1,52 @@
+@import 'function';
+
+.popup-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 6.4rem;
+  margin-left: 3.2rem;
+  margin-right: 3.6rem;
+  padding: 0 1.2rem;
+  border-radius: 8px;
+  border: 1px solid;
+
+  .title-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+
+    .text-group {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+
+      .text-title {
+        font-weight: 600;
+        color: var(--fg-neutral-stronger);
+      }
+
+      .text-description {
+        font-size: 12px;
+        color: var(--fg-neutral-normal);
+      }
+    }
+  }
+
+  .btn-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+
+    .btn-close {
+      padding: 10px;
+    }
+
+    .btn-close:hover {
+      cursor: pointer;
+    }
+  }
+}

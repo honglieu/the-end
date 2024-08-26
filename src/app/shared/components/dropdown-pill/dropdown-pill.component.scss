@@ -1,0 +1,27 @@
+@import 'function';
+
+.dropdown-pill {
+  & ::ng-deep trudi-badge.custom-trudi-badge {
+    flex-direction: row-reverse;
+    cursor: pointer;
+    max-width: none;
+  }
+}
+
+.dropdown-pill-list {
+  min-width: 161px;
+
+  &__item {
+    height: 44px;
+    display: flex;
+    justify-content: space-between;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--gray-50);
+    }
+
+    &:hover {
+      background-color: var(--gray-100);
+    }
+  }
+}

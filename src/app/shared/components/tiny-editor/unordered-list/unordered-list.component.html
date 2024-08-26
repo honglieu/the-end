@@ -1,0 +1,14 @@
+<button
+  class="btn-action"
+  (click)="handleToggleAction()"
+  nz-dropdown
+  nz-button
+  trudi-tooltip
+  class="btn-item size-24 border-rad-4"
+  [class.disable-btn]="disabled"
+  [ngClass]="{'selected': isActive}"
+  [nzTooltipTitle]="'Bullet list'">
+  <trudi-icon [icon]="isActive ? 'bulllistSelected' : 'bulllist'"
+    >&nbsp;</trudi-icon
+  >
+</button>

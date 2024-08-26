@@ -1,0 +1,92 @@
+<div class="lease-wrapper" [formGroup]="form">
+  <div
+    class="d-flex justify-content-between align-items-center label-wrapper mb-8">
+    <label class="lease-label">Pre-screen</label>
+    <div class="required-checkbox mb-4">
+      <trudi-checkbox formControlName="preScreenIsRequired" label="Required">
+      </trudi-checkbox>
+    </div>
+  </div>
+  <div class="form-content-wrapper">
+    <div class="w-100">
+      <trudi-form-control [checkSubmit]="!isSubmittedCommunicationForm">
+        <trudi-text-field
+          [checkSubmit]="!isSubmittedCommunicationForm"
+          label="Title"
+          formControlName="title"
+          [maxCharacter]="100">
+          >
+        </trudi-text-field>
+      </trudi-form-control>
+    </div>
+    <div class="lease-form">
+      <div class="label">Lease duration</div>
+      <div class="d-flex gap-16">
+        <trudi-form-control class="w-50">
+          <trudi-text-field formControlName="leasePeriod" placeholder="Period">
+          </trudi-text-field>
+        </trudi-form-control>
+        <trudi-form-control class="w-50">
+          <trudi-text-field
+            formControlName="periodType"
+            placeholder="Period type">
+          </trudi-text-field>
+        </trudi-form-control>
+      </div>
+    </div>
+    <div class="rental-form">
+      <div class="label">Rental amount</div>
+      <div class="rental-form_container">
+        <trudi-form-control>
+          <trudi-text-field
+            formControlName="rentedAt"
+            placeholder="Increase/Decrease/Maintain">
+          </trudi-text-field>
+        </trudi-form-control>
+        <trudi-form-control>
+          <trudi-text-field
+            formControlName="rentAmount"
+            placeholder="Amount"
+            [showCounting]="false">
+          </trudi-text-field>
+        </trudi-form-control>
+        <trudi-form-control>
+          <trudi-text-field
+            formControlName="frequency"
+            placeholder="Payment period ">
+          </trudi-text-field>
+        </trudi-form-control>
+      </div>
+    </div>
+    <div class="bond-form">
+      <div class="label">Bond</div>
+      <div class="d-flex gap-16">
+        <trudi-form-control class="w-50">
+          <trudi-text-field
+            formControlName="bondAt"
+            placeholder="Increase/Decrease/Maintain">
+          </trudi-text-field>
+        </trudi-form-control>
+        <trudi-form-control class="w-50">
+          <trudi-text-field formControlName="bondAmount" placeholder="Amount">
+          </trudi-text-field>
+        </trudi-form-control>
+      </div>
+    </div>
+    <div class="bond-amount-form">
+      <div class="label">Bond Increase amount to be paid</div>
+      <div class="d-flex gap-16 align-items-center">
+        <trudi-form-control ngClass="flex-grow-1">
+          <trudi-text-field
+            formControlName="bondIncreaseAmount"
+            [showCounting]="false"
+            placeholder="Amount">
+          </trudi-text-field>
+        </trudi-form-control>
+        <trudi-checkbox
+          label="Not applicable"
+          formControlName="isNotApplicable"></trudi-checkbox>
+      </div>
+    </div>
+  </div>
+</div>

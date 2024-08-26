@@ -1,0 +1,58 @@
+<div [formGroup]="control">
+  <trudi-single-select
+    [appendTo]="'.scrollable-box'"
+    class="billableTo-select"
+    formControlName="billableTo"
+    bindLabel="bindLabel"
+    bindValue="id"
+    [dropdownPosition]="dropdownPosition"
+    [formControl]="control?.get('billableTo')"
+    [searchFn]="customSearchFn"
+    [items]="listUser"
+    (isOpened)="isOpened.emit()">
+    <ng-template trudi-header-tmp let-item="item">
+      <div class="header-group">
+        <trudi-radio-button
+          [formControl]="control?.get('accountType')"
+          classType="ROW"
+          [options]="billableToOptions"
+          (ngModelChange)="handleChangeAccountType(control)"></trudi-radio-button>
+      </div>
+    </ng-template>
+    <ng-template
+      trudi-option-tmp
+      let-item="item"
+      let-searchTerm="searchTerm"
+      let-index="index"
+      let-valueSelected="valueSelected">
+      <div
+        class="trudi-select-label d-flex justify-content-between align-items-center w-100 gap-8">
+        <ng-container
+          *ngTemplateOutlet="
+                      customizeOptionTemplate;
+                      context: { item: item, searchTerm: searchTerm }
+                    "></ng-container>
+        <div
+          *ngIf="valueSelected && (valueSelected.id === item?.id && valueSelected.propertyId === item?.propertyId)"
+          class="d-flex align-items-center option-selected">
+          <trudi-icon icon="checkSuccess"></trudi-icon>
+        </div>
+      </div>
+    </ng-template>
+  </trudi-single-select>
+</div>
+<ng-template
+  #customizeOptionTemplate
+  let-item="item"
+  let-searchTerm="searchTerm">
+  <div class="d-flex flex-dir-column gap-8">
+    <div class="gap-6 d-flex align-items-center">
+      <span
+        class="select-item__title overflow-text"
+        [ngOptionHighlight]="searchTerm ? searchTerm : ''">
+        {{ ((item?.firstName || "") + " " + (item?.lastName || "") |
+        titlecase)}}
+      </span>
+    </div>
+  </div>
+</ng-template>

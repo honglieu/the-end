@@ -1,0 +1,23 @@
+<div class="d-flex flex-dir-column gap-2" *ngIf="reminderTimes?.length > 0">
+  <div
+    class="time-reminder d-flex gap-2 align-items-center text-left"
+    *ngFor="let reminder of reminderTimes">
+    <div class="mt-4">
+      {{ reminder.time | formatDateTime: false : true | async }}&nbsp;
+    </div>
+    <trudi-badge
+      *ngIf="reminder.status === reminderTimeStatus.COMPLETE"
+      icon="tickSuccess"
+      customIconSize="14"
+      variant="success"
+      text="Sent"
+      size="small"></trudi-badge>
+    <trudi-badge
+      *ngIf="reminder.status === reminderTimeStatus.PENDING"
+      icon="calendarGrey"
+      customIconSize="14"
+      variant="role"
+      text="Scheduled"
+      size="small"></trudi-badge>
+  </div>
+</div>

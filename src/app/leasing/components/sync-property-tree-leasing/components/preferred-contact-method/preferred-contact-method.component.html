@@ -1,0 +1,59 @@
+<div class="contact-method--wrapper" [formGroup]="contactMethodForm">
+  <div class="section--header">
+    <div class="section--title">Preferred contact method</div>
+    <ng-container *ngIf="!!tenantContacts.value?.length">
+      @if (hasManyTenantContact) {
+      <ng-container *ngTemplateOutlet="emailSelection"></ng-container>
+      } @else {
+      <ng-container *ngTemplateOutlet="badgeEmail"></ng-container>
+      }
+    </ng-container>
+  </div>
+  <div class="section--content d-flex flex-dir-column gap-8 align-items-start">
+    @for (item of CONTACT_METHOD_DATA; track item) {
+    <div class="d-flex align-items-center gap-4">
+      <trudi-checkbox
+        [label]="item.label"
+        [disabled]="item.disabled"
+        [formControlName]="item.controlName" />
+      <trudi-icon
+        *ngIf="!!item.tooltip"
+        icon="circleInfoOutline"
+        nz-tooltip
+        [nzTooltipTitle]="item.tooltip"
+        nzTooltipPlacement="top" />
+    </div>
+    }
+  </div>
+</div>
+<ng-template #badgeEmail>
+  <div class="badge-email">{{contactEmailControl?.value}}</div>
+</ng-template>
+
+<ng-template #emailSelection>
+  <div
+    class="email-selection"
+    nz-dropdown
+    [nzDropdownMenu]="menu"
+    nzPlacement="bottomRight">
+    <span class="email-name">{{contactEmailControl?.value}}</span>
+    <trudi-icon icon="chevronDown" />
+  </div>
+
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <ul nz-menu class="email-list">
+      @for (item of contactInfos; track item; let last = $last) {
+      <li
+        class="email-item"
+        nz-menu-item
+        (click)="onSelectContactEmail(item?.details || '')">
+        <span class="item-name text-ellipsis">{{item?.details}}</span>
+        <trudi-icon
+          *ngIf="item?.details === contactEmailControl?.value"
+          icon="checkSuccess" />
+      </li>
+      <div *ngIf="!last" class="break-line"></div>
+      }
+    </ul>
+  </nz-dropdown-menu>
+</ng-template>

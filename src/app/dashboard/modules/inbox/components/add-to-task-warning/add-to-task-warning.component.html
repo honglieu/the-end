@@ -1,0 +1,14 @@
+<trudi-modal
+  [visible]="true"
+  [closable]="false"
+  [title]="warningTitle"
+  cancelText="Cancel"
+  okText="Continue"
+  [modelWidth]="510"
+  (onCancel)="onCancel()"
+  (onOk)="onOk($event)"
+  [allowCheckbox]="true"
+  checkboxLabel="Don't ask me again"
+  [autoFocus]="null">
+  <div>{{ description }}</div>
+</trudi-modal>

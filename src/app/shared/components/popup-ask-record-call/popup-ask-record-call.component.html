@@ -1,0 +1,26 @@
+<div class="popup-wrapper">
+  <div class="popup-content">
+    <div class="popup-content-img">
+      <trudi-icon class="popup-content-img-record" icon="record"></trudi-icon>
+    </div>
+    <div class="popup-content-text">
+      <p class="popup-content-text-header">Start recording video</p>
+      <p class="popup-content-text-description">
+        Video recordings can be a maximum of 2 minutes 30 seconds.
+      </p>
+      <div class="space"></div>
+      <p class="popup-content-text-description">
+        Recordings will be available to view in the files section after
+        approximately 5 minutes. Please refresh your browser to see new videos.
+      </p>
+    </div>
+  </div>
+  <div class="popup-group-btn">
+    <button class="popup-group-btn-cancel" (click)="onStartRecord(false)">
+      Cancel
+    </button>
+    <button class="popup-group-btn-submit" (click)="onStartRecord(true)">
+      Start
+    </button>
+  </div>
+</div>

@@ -1,0 +1,74 @@
+@import 'function';
+
+.events-provider {
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__events_sync {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      14px,
+      20px,
+      normal,
+      600
+    );
+
+    ::ng-deep trudi-icon svg-icon svg {
+      height: 20px !important;
+      width: auto;
+    }
+  }
+
+  &__items {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 12px;
+    align-self: stretch;
+
+    .list_items {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .btn-checkbox {
+        border: none;
+        padding: 0;
+        background-color: transparent;
+      }
+
+      button {
+        border: none;
+        background: transparent;
+      }
+    }
+
+    .events_name {
+      @include fontSetup(
+        var(--fg-neutral-strongest, #202020),
+        14px,
+        20px,
+        normal,
+        400
+      );
+    }
+  }
+}
+
+::ng-deep .switch-checkbox-container {
+  gap: 0px !important;
+}

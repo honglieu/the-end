@@ -1,0 +1,8 @@
+<lease-renewal-form
+  *ngIf="popupState.showRMLeaseRenewalModal"
+  (handleOpenRecurringCharges)="handleOpenRecurringCharges($event)"
+  (handleCloseModal)="handleCloseModal()"
+  (handleSync)="handleSync($event)"></lease-renewal-form>
+<recurring-charge-details
+  *ngIf="popupState.showRecurringChargeDetails"
+  (handleBackModal)="handleBackModal()"></recurring-charge-details>

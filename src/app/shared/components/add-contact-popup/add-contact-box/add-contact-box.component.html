@@ -1,0 +1,126 @@
+<app-modal-popup
+  [hasPadding]="false"
+  [show]="showCreateNewContact"
+  [position]="ModalPopupPosition.center">
+  <create-new-contact-popup
+    [participant]="participantInfo"
+    [isReassign]="isReassign"
+    (onClose)="handleOnCloseCreateContact($event)"></create-new-contact-popup>
+</app-modal-popup>
+<div
+  *ngIf="isOpenContactList"
+  class="leading messages-header"
+  (click)="onClickPopup($event)">
+  <div class="contact-search-bar d-flex border-rad-8 align-items-center">
+    <input
+      type="text"
+      tabindex="0"
+      focusable
+      class="search-contact-input w-100"
+      placeholder="Search contact"
+      onfocus="this.placeholder = ''"
+      onblur="this.placeholder = 'Search contact'"
+      [formControl]="searchText$" />
+
+    <div
+      class="clear-wrapper"
+      *ngIf="searchText$.value"
+      (click)="onClearSearch()">
+      <trudi-icon
+        class="size-12 clear-icon"
+        icon="clearFilterIcon"></trudi-icon>
+    </div>
+  </div>
+</div>
+<ng-template #content>
+  <div class="contact-list-items auto-hide-scroll">
+    <div *ngIf="contactList?.length > 0 else noResult">
+      <cdk-virtual-scroll-viewport
+        class="cdk-virtual-scroll-contact"
+        [ngStyle]="getStyle"
+        itemSize="58"
+        minBufferPx="320"
+        (scroll)="onScroll()"
+        maxBufferPx="326">
+        <div
+          *cdkVirtualFor="let item of contactList; index as i; trackBy: trackByFn"
+          tabindex="0"
+          focusable
+          class="cursor-pointer"
+          [ngClass]="{'disable': item.isLastItem, 'active': item.selected}">
+          <div class="item-contact gap-8">
+            <div class="item-contact--item">
+              <div>
+                <span
+                  [innerHTML]="(item?.firstName ? item?.firstName + ' ': '') + item?.lastName + (item?.propertyTypeOrAddress ? ' • ' + item?.propertyTypeOrAddress : '') | highlight: (searchText$.value ? (searchText$.value | nzTrim) : '' )">
+                </span>
+                <div
+                  class="badge"
+                  *ngIf="(item?.userPropertyStatus || item?.status) === EPropertyStatus.archived">
+                  Archived
+                </div>
+              </div>
+              <span
+                [innerHTML]="(item?.property?.streetline ? item?.property?.streetline : '') | highlight: (searchText$.value ? (searchText$.value | nzTrim) : '')"></span>
+            </div>
+            <button
+              [disabled]="isAddingContact || isConsole || isArchiveMailbox || isDisconnectedMailbox"
+              type="button"
+              class="item-contact--action cursor-pointer"
+              PreventButton
+              [attr.data-button-key]="EButtonTask.ADD_CONTACT"
+              [attr.data-button-type]="EButtonType.TASK"
+              (leftClick)="handleClickAddContact(item)">
+              Add
+            </button>
+          </div>
+        </div>
+        <div *ngIf="isScrolledToBottom">
+          <ng-container
+            *ngTemplateOutlet="skeletonLoadingItem; context: {rowNumber: 1}">
+          </ng-container>
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </div>
+    <ng-template #noResult>
+      <div class="no-result">No items found</div>
+    </ng-template>
+  </div>
+  <div class="add-new-contact">
+    <span
+      class="cursor-pointer"
+      PreventButton
+      [attr.data-button-key]="EButtonTask.ADD_CONTACT"
+      [attr.data-button-type]="EButtonType.TASK"
+      (leftClick)="onAddNewContact()">
+      <img
+        style="margin-right: 8px"
+        src="/assets/icon/icon-plus.svg"
+        alt="icon plus" />Add new contact
+    </span>
+  </div>
+</ng-template>
+
+<ng-container *ngIf="isOpenContactList">
+  <ng-container
+    *ngIf="(isLoadingList || (totalPage > 1 && totalPage !== currentPage)) && contactList.length === 0; else content">
+    <ng-container
+      *ngTemplateOutlet="skeletonLoadingItem; context: {rowNumber: 8}">
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+<ng-template #skeletonLoadingItem let-row="rowNumber">
+  <div
+    *ngFor="let _ of [].constructor(row); let i = index"
+    class="d-flex flex-dir-column">
+    <div class="grid-contact d-flex align-items-center gap-16">
+      <div class="grid-item w-100">
+        <nz-skeleton
+          [nzParagraph]="paragraph"
+          [nzActive]="true"
+          class="ant-skeleton-custom"></nz-skeleton>
+      </div>
+    </div>
+  </div>
+</ng-template>

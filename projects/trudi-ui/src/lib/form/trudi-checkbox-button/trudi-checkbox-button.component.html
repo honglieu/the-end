@@ -1,0 +1,14 @@
+<div
+  class="trudi-checkbox-button"
+  [ngClass]="{
+    'disabled': disabled, 
+    'checked': isChecked,
+    'has-icon': icon
+  }"
+  (click)="toggleCheckbox($event)">
+  <trudi-icon
+    *ngIf="icon"
+    [icon]="icon"
+    [style]="{'width.px': 16, 'height.px': 16}"></trudi-icon>
+  <div class="trudi-checkbox-button-content">{{ label }}</div>
+</div>

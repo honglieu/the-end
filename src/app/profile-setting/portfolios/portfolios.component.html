@@ -1,0 +1,15 @@
+<div class="portfolios-main">
+  <div class="portfolios-main-header">
+    <div class="portfolios-main-header-title">Portfolios</div>
+    <div class="portfolios-main-header-subtitle">
+      Select the portfolios you work across for a focused inbox and relevant
+      notifications.
+    </div>
+    <div
+      *ngFor="let group of portfoliosGroups; trackBy: groupTrackBy"
+      [ngClass]="{'disable-header' : portfoliosGroups.length === 1}"
+      class="portfolios-group mt-24">
+      <portfolios-groups [portfoliosGroup]="group"></portfolios-groups>
+    </div>
+  </div>
+</div>

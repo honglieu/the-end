@@ -1,0 +1,16 @@
+<div
+  class="container"
+  *ngIf="!isRemoveMessage"
+  [style.transform]="isShowNoti ? 'translateY(0px)' : 'translateY(-100px)'">
+  <div class="message d-flex justify-content-between align-items-center">
+    <div class="content d-flex justify-content-center align-items-center">
+      <div class="icon">
+        <trudi-icon icon="inprogressCallAlert"></trudi-icon>
+      </div>
+      <div class="text">Call in progress</div>
+    </div>
+    <div class="close-invite-message-btn timer">
+      {{ callTime || message && message?.messageCall.callTime}}
+    </div>
+  </div>
+</div>

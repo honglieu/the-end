@@ -1,0 +1,149 @@
+<div class="integrations">
+  <div *ngIf="!isPermissionEdit" class="d-flex gap-4 align-items-center mb-8">
+    <trudi-icon icon="infoFill" [style]="{ 'width.px': 12, 'height.px': 12 }">
+    </trudi-icon>
+    <span class="warning-notice-text"
+      >You need to be an account administrator to edit this page.</span
+    >
+  </div>
+  <div class="integrations-messenger-content">
+    <div class="messenger-box">
+      <trudi-icon icon="messengerIcon"></trudi-icon>
+      <span class="messenger-text">Messenger</span>
+
+      @if (pageMessengerConnected?.status ===
+      EPageMessengerConnectStatus.ACTIVE) {
+      <div class="connect-wrapper y-center gap-4">
+        <trudi-badge
+          text="Connected"
+          icon="checkSuccess"
+          variant="success"
+          size="large"
+          fillIcon="true"
+          customIconSize="16">
+        </trudi-badge>
+      </div>
+      }
+    </div>
+
+    @if (!pageMessengerConnected || pageMessengerConnected?.status !==
+    EPageMessengerConnectStatus.ACTIVE) {
+    <span class="integrations-messenger-description">
+      Integrate your Meta Business Suite to manage messages received on your
+      Facebook Page.
+    </span>
+
+    <button
+      trudi-tooltip
+      [nzTooltipTitle]="facebookTooltipContent"
+      [nzTooltipArrowPointAtCenter]="true"
+      [nzTooltipTrigger]="!isHasFeatureMessenger && 'hover'"
+      [disabled]="!isPermissionEdit || !isHasFeatureMessenger"
+      class="signIn-btn"
+      trudi-btn
+      variant="filled"
+      btnType="info"
+      size="medium"
+      (click)="loginMessenger()">
+      Sign in with Facebook
+    </button>
+    } @else {
+    <div class="integrations-messenger-connected-description">
+      <span class="integrations-messenger-connected-description__title"
+        >Connected page:</span
+      >
+      <div
+        class="d-flex justify-content-start align-items-start flex-1 gap-8 overflow-hidden">
+        <span class="integrations-messenger-connected-description__page-name"
+          >{{pageMessengerConnected?.name}}</span
+        >
+        @if (!isHasFeatureMessenger) {
+        <trudi-icon
+          class="size-16"
+          icon="alertOctagonIcon"
+          trudi-tooltip
+          [nzTooltipTitle]="facebookTooltipContent"
+          [nzTooltipArrowPointAtCenter]="true"
+          nzTooltipTrigger="hover"></trudi-icon>
+        }
+      </div>
+    </div>
+
+    <button
+      [disabled]="!isPermissionEdit"
+      class="disconnect-btn"
+      trudi-btn
+      variant="tonal"
+      btnType="danger"
+      size="medium"
+      (click)="showConfirmDisconnectMessenger = true">
+      Disconnect your Facebook account
+    </button>
+    }
+  </div>
+</div>
+
+<trudi-modal
+  [autoFocus]="null"
+  [modelWidth]="400"
+  [visible]="showModalAddMailboxInfo"
+  className="trudi-modal-custom">
+  <div class="modal-add-mailbox-info">
+    @if (permissionService.isOwner) {
+    <div class="modal-add-mailbox-info__content">
+      Please add a company mailbox first!
+    </div>
+
+    <div class="button-box">
+      <button
+        trudi-btn
+        variant="outlined"
+        btnType="neutral"
+        (click)="handleCancel()">
+        Cancel
+      </button>
+      <button
+        class="navigate-btn"
+        trudi-btn
+        variant="filled"
+        btnType="primary"
+        (click)="navigateToInboxPage()">
+        Go to inbox
+      </button>
+    </div>
+    } @else {
+    <div class="modal-add-mailbox-info__content">
+      Please ask the owner to add a company mailbox first!
+    </div>
+
+    <div class="button-box">
+      <button
+        trudi-btn
+        variant="filled"
+        btnType="primary"
+        (click)="handleCancel()">
+        Ok
+      </button>
+    </div>
+    }
+  </div>
+</trudi-modal>
+
+<trudi-modal
+  [visible]="showConfirmDisconnectMessenger"
+  [autoFocus]="null"
+  [modelWidth]="520"
+  className="trudi-modal-custom">
+  <confirm-popup
+    [iconUrl]="'/assets/icon/icon-warning-red.svg'"
+    [backgroundRightBtn]="'var(--danger-500)'"
+    [titleText]="'Are you sure you want to disconnect?'"
+    [subTexts]="['Your Messenger account will be archived in your Trudi® inbox.']"
+    [buttonLeft]="'No, cancel'"
+    [buttonRight]="'Yes, disconnect'"
+    btnType="danger"
+    (onButtonLeftClick)="showConfirmDisconnectMessenger = false"
+    (onButtonRightClick)="handleDisconnectMessenger()">
+    >
+  </confirm-popup>
+</trudi-modal>

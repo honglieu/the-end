@@ -1,0 +1,53 @@
+<div class="message-view-index-container">
+  <div
+    class="header-wrapper d-flex align-items-center justify-content-between gap-8"
+    [class.d-block]="(sharedMessageViewService.isSearchBoxFocused$ | async)">
+    <div class="d-flex gap-8 align-items-center">
+      <div class="w-100">
+        <inbox-filter
+          [taskDetailViewMode]="EViewDetailMode.APP_MESSAGE"></inbox-filter>
+      </div>
+      <button
+        *ngIf="(sharedMessageViewService.isSearchBoxFocused$ | async) === false"
+        (click)="(handleClickOpenSendMessage())"
+        [disabled]="!activeMobileApp"
+        class="compose-wrapper">
+        <trudi-icon icon="compose" [style]="{'width.px': 20, 'height.px': 20}">
+        </trudi-icon>
+      </button>
+    </div>
+    <button
+      trudi-btn
+      variant="ghost"
+      *ngIf="(inboxService.isAllFiltersDisabled$ | async) === false && (sharedMessageViewService.isSearchBoxFocused$ | async) === false
+      && (sharedMessageViewService.isShowSelect$ | async ) === true && !isConsole && params['status'] !== TaskStatusType.draft"
+      (click)="setIsSelectingMode(!isSelecting)">
+      {{isSelecting ? 'Cancel' : 'Select'}}
+    </button>
+  </div>
+  <div class="tabs-wrapper trudi-tabs-wrapper">
+    <div>
+      <nz-tabset nzLinkRouter nzLinkExact="false" class="trudi-tabs">
+        <nz-tab [tabindex]="-1" *ngFor="let tab of messageTabs">
+          <a
+            class="trudi-tab-link-text"
+            [ngClass]="{'trudi-tab-link-active': params?.status === tab?.queryParam?.status}"
+            *nzTabLink
+            nz-tab-link
+            [routerLink]="[tab?.link]"
+            queryParamsHandling="merge"
+            [queryParams]="tab?.queryParam">
+            {{tab.title}}
+            <trudi-icon
+              *ngIf="tab.unread"
+              class="check-unread"
+              icon="redDotUnreadMessage"></trudi-icon>
+          </a>
+        </nz-tab>
+      </nz-tabset>
+    </div>
+  </div>
+  <app-message-view-list
+    [activeMobileApp]="activeMobileApp"
+    [ngClass]="{'more-folder': params?.['status'] !== 'INPROGRESS'}"></app-message-view-list>
+</div>

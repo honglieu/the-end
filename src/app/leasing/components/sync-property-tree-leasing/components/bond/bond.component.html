@@ -1,0 +1,62 @@
+<div [formGroup]="bondForm" class="tenancy-detail-wrapper">
+  <div class="tenancy-detail-form">
+    <div class="second-block--title">Bond</div>
+    <div class="second-block--proceeding">
+      <div class="rent-block">
+        <div class="title">Account name</div>
+        <div [class]="disable ? 'content-disable' :'content content-bond'">
+          <div class="content--select">
+            <trudi-form-control>
+              <trudi-single-select
+                className="filter-select"
+                [items]="listAccountPT"
+                bindValue="name"
+                bindLabel="name"
+                [clearable]="true"
+                [virtualScroll]="true"
+                (triggerEventChange)="onChangeState($event)"
+                formControlName="accountName"
+                [searchFn]="searchFn"></trudi-single-select>
+            </trudi-form-control>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex gap-20">
+        <div class="rent-block w-50">
+          <trudi-form-control [errors]="amountErrors" [control]="amount">
+            <trudi-number-field
+              formControlName="amount"
+              [maskPattern]="maskPattern"
+              thousandSeparatorType=","
+              label="Required amount"
+              prefixText="$">
+            </trudi-number-field>
+          </trudi-form-control>
+        </div>
+        <div class="rent-block w-50">
+          <trudi-form-control
+            [errors]="amountLodgedDirectErrors"
+            [control]="amountLodgedDirect"
+            hi="amountLodgedDirect">
+            <trudi-number-field
+              formControlName="amountLodgedDirect"
+              [maskPattern]="maskPattern"
+              thousandSeparatorType=","
+              label="Amount lodged direct"
+              prefixText="$">
+            </trudi-number-field>
+          </trudi-form-control>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #errorMessage let-error="error" let-text="text">
+    <ng-container *ngIf="error">
+      <div class="a1 error-wrapper d-flex align-items-center">
+        <trudi-icon icon="iconWarning"></trudi-icon>
+        <span class="text-warning">{{text ? text : 'Required field'}}</span>
+      </div>
+    </ng-container>
+  </ng-template>
+</div>

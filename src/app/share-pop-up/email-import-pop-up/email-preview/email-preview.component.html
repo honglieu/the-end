@@ -1,0 +1,204 @@
+<trudi-modal
+  [modelWidth]="640"
+  [visible]="visible"
+  className="email-import-modal"
+  (onCancel)="handleClose.emit()">
+  <ng-template #headerModal>
+    <div class="d-flex gap-16 align-items-center">
+      <trudi-icon
+        class="size-48"
+        icon="trudiAvt"
+        [style]="{ 'width.px': 48, 'height.px': 48 }">
+      </trudi-icon>
+      <div class="title w-100 flex-1">
+        <span class="flex-1">Mail import preview</span>
+        <div #dropdown *ngIf="currentMailbox" class="sub-title">
+          <div class="sub-title d-flex align-items-center gap-4">
+            Destination mailbox:
+            <span
+              #mailboxInfo
+              nz-tooltip
+              nzTooltipPlacement="bottom"
+              [nzTooltipTitle]="tooltipTemplate"
+              [nzTooltipOverlayStyle]="{ 'max-width': '484px', 'word-break': 'break-all' }"
+              [nzTooltipTrigger]="mailboxInfo?.offsetWidth < mailboxInfo?.scrollWidth ? 'hover' : null"
+              class="destination-title text-ellipsis">
+              <span class="mailbox-text text-ellipsis">
+                {{currentMailbox?.name || ''}}
+              </span>
+              - {{currentMailbox?.emailAddress || ''}}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <div class="preview-wrapper">
+    <div
+      *ngIf="isImporting"
+      class="pac-container w-100 d-flex align-items-center flex-dir-column position-center-w">
+      <img class="m-auto" width="110" src="/assets/images/loading-iframe.gif" />
+    </div>
+    <div
+      *ngIf="previewData"
+      class="d-flex flex-dir-column gap-16 email-preview-body"
+      [ngClass]="{blur: isImporting}">
+      <div class="header-info d-flex flex-dir-column gap-8">
+        <div class="d-flex gap-8">
+          <span class="label-name">Title: </span>
+          <span class="info-data"> {{previewData.subject}}</span>
+        </div>
+        <div
+          *ngIf="previewData.from?.name || previewData.from?.email"
+          class="from d-flex gap-8">
+          <span class="label-name">From: </span>
+          <div>
+            <span class="info-data"
+              >{{previewData.from?.name}}
+              <ng-container
+                *ngIf="previewData.from?.name &&
+              previewData.from?.email"
+                >&#8211;
+              </ng-container>
+              {{previewData.from?.email}}
+            </span>
+            <ng-template
+              *ngTemplateOutlet="role; context: {isPrimary: previewData.from?.isPrimary, type: previewData.from?.type}">
+            </ng-template>
+          </div>
+        </div>
+        <div *ngIf="previewData.to?.length" class="to d-flex gap-8">
+          <span class="label-name">To: </span>
+          <div class="info-data">
+            <ng-template
+              *ngTemplateOutlet="toAndCc; context: {data: previewData.to}"></ng-template>
+          </div>
+        </div>
+        <div *ngIf="previewData.cc?.length" class="cc d-flex gap-8">
+          <span class="label-name">Cc: </span>
+          <div class="info-data">
+            <ng-template
+              *ngTemplateOutlet="toAndCc; context: {data: previewData.cc}"></ng-template>
+          </div>
+        </div>
+        <div *ngIf="previewData.property?.id" class="property d-flex gap-8">
+          <span class="label-name">Property: </span>
+          <span class="info-data">{{previewData.property?.streetline}}</span>
+        </div>
+      </div>
+      <div>
+        <ng-container
+          *ngTemplateOutlet="isShowIframeContent ? iframeContent: noIframeContent"></ng-container>
+      </div>
+      <ng-template #iframeContent>
+        <div class="email-content iframe-content">
+          <iframe
+            #emailFrame
+            width="100%"
+            height="0"
+            src="about:blank"
+            frameborder="0"
+            scrolling="auto"
+            (load)="loadHtmlContent($event)"></iframe>
+        </div>
+      </ng-template>
+      <ng-template #noIframeContent>
+        <div
+          class="email-content"
+          style="white-space: pre-line"
+          [ngClass]="{'no-content': !htmlContent || !previewData.textContent}"
+          [innerHTML]="htmlContent && previewData.textContent ? (htmlContent | safeHtml) : 'No contents'"></div>
+      </ng-template>
+      <div class="attachment-file">
+        <ng-container *ngFor="let file of files">
+          <div class="file d-flex gap-8 align-items-center">
+            <div class="file-logo" *ngIf="file.mediaType === 'photo'">
+              <img *ngIf="file.mediaLink" [src]="file.mediaLink" />
+              <img
+                *ngIf="!file.mediaLink"
+                [src]="((file.fileName | getFileIconType))" />
+            </div>
+            <div
+              class="file-logo"
+              [class.dim-brightness]="file.thumbMediaLink"
+              *ngIf="file.mediaType === 'video'">
+              <ng-container *ngIf="file.thumbMediaLink">
+                <img [src]="file.thumbMediaLink" />
+                <div class="play-icon">
+                  <trudi-icon icon="playSolid"></trudi-icon>
+                </div>
+              </ng-container>
+              <img
+                *ngIf="!file.thumbMediaLink"
+                [src]="((file.fileName | getFileIconType))" />
+            </div>
+            <div
+              class="file-logo"
+              *ngIf="file.mediaType !== 'photo' && file.mediaType !== 'video'">
+              <trudi-icon [icon]="file.icon"> </trudi-icon>
+            </div>
+            <div class="text-ellipsis d-flex flex-dir-column gap-4">
+              <h6
+                #previewFileName
+                nz-tooltip
+                nzTooltipPlacement="top"
+                [nzTooltipTitle]="file.fileName"
+                [nzTooltipOverlayStyle]="{ 'max-width': '181px', 'word-break': 'break-all' }"
+                [nzTooltipTrigger]="previewFileName?.offsetWidth < previewFileName?.scrollWidth ? 'hover' : null"
+                class="file-name m-0">
+                {{file.fileName}}
+              </h6>
+              <p class="file-size m-0">{{file.size | convertFileSize}}</p>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <ng-template #footerModal>
+        <div class="trudi-modal-footer__button--default">
+          <button
+            trudi-btn
+            size="large"
+            btnType="neutral"
+            variant="outlined"
+            class="email-preview-back-btn"
+            [ngClass]="{preventClick: isImporting}"
+            [disabled]="isImporting"
+            (click)="handleBack.emit()">
+            Back
+          </button>
+          <button
+            [disabled]="isImporting || isConsole"
+            trudi-btn
+            [btnType]="'primary'"
+            (click)="handleImport.emit()">
+            Import
+          </button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</trudi-modal>
+<ng-template #toAndCc let-data="data">
+  <ng-container *ngFor="let email of data; let last=last">
+    <span *ngIf="email.name && email.name !== email.email" class="info-name"
+      >{{email.name}}</span
+    >
+    <span *ngIf="email.email" class="info-email"> &lt;{{email.email}}&gt;</span>
+    <ng-template
+      *ngTemplateOutlet="role; context: {isPrimary: email?.isPrimary, type: email?.type}">
+    </ng-template>
+    <ng-container *ngIf="!last">,&nbsp;</ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #role let-isPrimary="isPrimary" let-type="type">
+  <span *ngIf="type" class="from-role role">
+    ({{type | userEmailType : isPrimary : crmStatus }})</span
+  >
+</ng-template>
+
+<ng-template #tooltipTemplate>
+  <div>
+    {{currentMailbox?.name || ''}} - {{currentMailbox?.emailAddress || ''}}
+  </div>
+</ng-template>

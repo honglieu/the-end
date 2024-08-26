@@ -1,0 +1,55 @@
+<div *ngIf="firstLoadingStatus; else sync" class="sidebar-item-skeleton">
+  <nz-skeleton-element
+    nzType="avatar"
+    [nzActive]="true"
+    [nzSize]="'large'"
+    [nzShape]="'circle'">
+  </nz-skeleton-element>
+</div>
+<ng-template #sync class="wrapper-sync">
+  <sidebar-item
+    *ngIf="iconName && className && title"
+    tabindex="0"
+    [titleName]="title"
+    [iconName]="iconName"
+    [className]="className"
+    nz-tooltip
+    nzTooltipPlacement="right"
+    [nzTooltipTitle]="(titleTooltip.click || titleTooltip.hover) ? titleTemplate : ''"
+    [nzTooltipTitleContext]="{ $implicit: titleTooltip }"
+    #visibleTrigger></sidebar-item>
+  <ng-template #titleTemplate let-thing class="sidebar-item-sync-tooltip">
+    <span>
+      <div class="sidebar-item-sync-tooltip_header">
+        {{thing.click?.header || thing.hover?.header}}
+      </div>
+      <div
+        *ngIf="lastCompleteSubscription?.lastTimeSyncComplete"
+        class="sidebar-item-sync-tooltip_name">
+        {{titleTooltip.click ? thing.click?.subscriptionName :
+        thing.hover?.subscriptionName}}
+      </div>
+      <div
+        *ngIf="lastCompleteSubscription?.lastTimeSyncComplete"
+        class="sidebar-item-sync-tooltip_content">
+        {{thing.click?.content || thing.hover?.content}}
+      </div>
+    </span>
+  </ng-template>
+  <div
+    class="list-subscriptions"
+    *ngIf="showSubscription && subscriptionsList?.length">
+    <div *ngFor="let subscription of subscriptionsList">
+      <div class="subscription-item" (click)="onSync(subscription.agencyId)">
+        <div class="subscription-name">{{subscription.subscriptionName}}</div>
+        <div class="last-sync" *ngIf="subscription?.lastTimeSyncComplete">
+          Last sync: {{subscription?.lastTimeSyncCompleteFormatted}}
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<!-- fake load svg -->
+<ng-container *ngFor="let icon of iconsSync">
+  <trudi-icon class="d-none" [icon]="icon"> </trudi-icon>
+</ng-container>

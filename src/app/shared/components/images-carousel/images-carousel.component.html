@@ -1,0 +1,186 @@
+<div class="carousel-wrapper">
+  <div class="header">
+    <div class="round-gray-btn pos" (click)="closeCarousel()">
+      <img lazy="true" class="icon" src="/assets/icon/close-modal.png" />
+    </div>
+    <div
+      *ngIf="!hideSendButton && open"
+      disableOpenSendMsgModal
+      class="round-gray-btn pos"
+      (click)="onSendFile(imageUrlList[showingItemIndex])">
+      <img lazy="true" class="icon" src="/assets/icon/forward-icon-black.svg" />
+    </div>
+    <div
+      class="round-gray-btn pos"
+      (click)="fileService.downloadResource(imageUrlList[showingItemIndex].mediaLink, imageUrlList[showingItemIndex].fileName)">
+      <img
+        lazy="true"
+        class="icon"
+        src="/assets/icon/icon_download_carousel-black.svg" />
+    </div>
+    <ng-container *ngIf="!hideSyncButton && open">
+      <div
+        *ngIf="!isSyncing; else showSyncing"
+        class="round-gray-btn pos"
+        [ngClass]="{disabled: isConsole || imageUrlList?.[showingItemIndex]?.isTemporaryProperty}"
+        (click)="!(isConsole || imageUrlList?.[showingItemIndex]?.isTemporaryProperty) && handleSync(imageUrlList[showingItemIndex])">
+        <img class="icon" src="/assets/icon/icon_sync_black.svg" />
+      </div>
+    </ng-container>
+  </div>
+
+  <swiper
+    #swiper
+    [config]="swiperConfig"
+    [thumbs]="{ swiper: thumbsSwiper }"
+    [initialSlide]="initialIndex"
+    [noSwiping]="true"
+    [noSwipingClass]="'mySwiper2'"
+    (slideChange)="handleSwipe($event)"
+    class="mySwiper2 my-swiper-2">
+    <ng-template swiperSlide *ngFor="let file of imageUrlList; let i = index">
+      <div
+        class="slider-img-wrapper slide-image-wrapper close-carousel"
+        (click)="closeCarouselOutsideFile($event)">
+        <ng-container
+          [ngSwitch]="file.fileType"
+          *ngIf="!file?.isUnsupportedFile; else unsupportedFile">
+          <ng-container *ngSwitchCase="'photo'">
+            <div class="wrapper-photo close-carousel">
+              <zoomable-media>
+                <img lazy="true" class="photo" [src]="file.mediaLink" />
+              </zoomable-media>
+            </div>
+          </ng-container>
+          <ng-container *ngSwitchCase="'file'">
+            <ng-container [ngSwitch]="file.extension">
+              <ng-container *ngSwitchCase="'pdf'">
+                <pdf-viewer-document [mediaLink]="file.mediaLink">
+                </pdf-viewer-document>
+              </ng-container>
+              <ng-container *ngSwitchDefault>
+                <div class="wrapper-doc close-carousel">
+                  <svg class="spinner" viewBox="0 0 50 50" *ngIf="!dataLoaded">
+                    <circle
+                      class="path"
+                      cx="25"
+                      cy="25"
+                      r="20"
+                      fill="none"
+                      stroke-width="5"></circle>
+                  </svg>
+                  <ngx-doc-viewer
+                    #docViewer
+                    class="preview-doc"
+                    [url]="file.mediaLink"
+                    viewer="google"
+                    (loaded)="onDocumentLoad()"
+                    queryParams="hl=en">
+                  </ngx-doc-viewer>
+                </div>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngSwitchCase="'video'">
+            <div class="wrapper-video close-carousel">
+              <app-video-player
+                [mediaLink]="file.mediaLink"
+                [isActive]="this.showingItemIndex === i"
+                [poster]="file.thumbMediaLink">
+              </app-video-player>
+            </div>
+          </ng-container>
+          <ng-container *ngSwitchCase="'audio'">
+            <audio class="audio close-carousel" controls>
+              <source [src]="file.mediaLink" type="audio/mpeg" />
+              Your browser does not support the audio element.
+            </audio>
+          </ng-container>
+        </ng-container>
+        <ng-template #unsupportedFile>
+          <div class="icon">
+            <zoomable-media>
+              <img
+                lazy="true"
+                class="unsupport-file"
+                src="/assets/images/icons/unsupported-file.svg" />
+              <div class="unsupported-file-text">Unsupported file</div>
+            </zoomable-media>
+          </div>
+        </ng-template>
+      </div>
+    </ng-template>
+  </swiper>
+  <swiper
+    (swiper)="onSwiperThumbInit($event)"
+    [mousewheel]="{ invert: true }"
+    [slidesPerView]="'auto'"
+    [spaceBetween]="12"
+    [freeMode]="true"
+    [watchSlidesProgress]="true"
+    [ngClass]="{'center-thumbnail': imageUrlList.length < 12}"
+    class="mySwiper my-swiper">
+    <ng-template
+      swiperSlide
+      *ngFor="let file of imageUrlList; let thumbIndex = index">
+      <ng-container
+        [ngSwitch]="file?.extension"
+        *ngIf="!file?.isUnsupportedFile; else unsupportExtension"
+        (click)="handleClickThumbnail($event, thumbIndex)">
+        <ng-container
+          *ngSwitchCase="file?.extension === EFileExtension.DOCX || file?.extension === EFileExtension.DOC ? file?.extension : '' ">
+          <ng-container *ngIf="file.thumbMediaLink; else notExistDocThumnail">
+            <img lazy="true" [src]="file.thumbMediaLink" />
+          </ng-container>
+          <ng-template #notExistDocThumnail>
+            <img lazy="true" src="/assets/images/icons/doc-square.svg" />
+          </ng-template>
+        </ng-container>
+        <ng-container *ngSwitchCase="EFileExtension.XLS">
+          <img
+            lazy="true"
+            class="icon"
+            src="/assets/images/icons/excel-square.svg" />
+        </ng-container>
+        <ng-container *ngSwitchCase="EFileExtension.XLSX">
+          <img
+            lazy="true"
+            class="icon"
+            src="/assets/images/icons/excel-square.svg" />
+        </ng-container>
+        <ng-container *ngSwitchCase="EFileExtension.XLSM">
+          <img
+            lazy="true"
+            class="icon"
+            src="/assets/images/icons/excel-square.svg" />
+        </ng-container>
+        <ng-container *ngSwitchCase="EFileExtension.MP3 || EFileExtension.GPP">
+          <img
+            lazy="true"
+            class="icon"
+            src="/assets/images/icons/audio-slide.svg" />
+        </ng-container>
+        <ng-container *ngSwitchCase="EFileExtension.GPP">
+          <img
+            lazy="true"
+            class="icon"
+            src="/assets/images/icons/audio-slide.svg" />
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          <img lazy="true" [src]="file.thumbMediaLink || file.mediaLink" />
+        </ng-container>
+      </ng-container>
+      <ng-template #unsupportExtension
+        ><img
+          lazy="true"
+          class="icon"
+          src="/assets/images/icons/unsupported-file.svg"
+      /></ng-template>
+    </ng-template>
+  </swiper>
+</div>
+<ng-template #showSyncing>
+  <div class="round-gray-btn pos disabled spin">
+    <img lazy="true" class="icon" src="/assets/icon/sync-success-pic.svg" />
+  </div>
+</ng-template>

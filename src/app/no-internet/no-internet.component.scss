@@ -1,0 +1,32 @@
+@import 'function';
+
+.wrapNoInternet {
+  height: 100vh;
+  background: white;
+  .noInternet {
+    .wrapNoInternetContent {
+      width: 283px;
+      margin: 48px 0 28px 0;
+
+      .noInternetContent {
+        @include fontSetup(var(--text-no-internet), 16px, 20px, normal, 500);
+        margin: 0;
+        text-align: center;
+        color: rgba(100, 100, 100, 0.6);
+      }
+    }
+
+    .refreshBtn {
+      padding: 12px;
+      background-color: var(--gray-200);
+      border: none;
+      border-radius: 8px;
+      width: 114px;
+      height: 40px;
+
+      .refreshContent {
+        @include fontSetup(var(--gray-700), 14px, 16px, normal, 600);
+      }
+    }
+  }
+}

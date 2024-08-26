@@ -1,0 +1,65 @@
+<div *ngIf="!enableCustomTemplate; else customTemplate">
+  <nz-radio-group
+    [disabled]="disabled"
+    class="radio-group gap-12 d-flex flex-dir-column"
+    [ngClass]="{'flex-dir-column': classType==='COLUMN'}"
+    [ngModel]="selectedValue"
+    (ngModelChange)="handleChange($event)">
+    <div
+      *ngFor="let o of options; trackBy: trackByFn"
+      class="container-trudi-radio">
+      <label
+        class="radio-label d-flex align-items-center"
+        nz-radio
+        (keydown.enter)="handleChange(o.value)"
+        [nzValue]="o.value"
+        [nzDisabled]="disabled"
+        tabindex="0">
+        <div class="content-trudi-radio">
+          <trudi-icon
+            *ngIf="showIcon"
+            svgClass="size-20"
+            [icon]="o.icon"></trudi-icon>
+          <span class="label-trudi-radio">{{ o.label }}</span>
+        </div>
+      </label>
+      <ng-container *ngIf="templateLabel && selectedValue === o.value">
+        <ng-template
+          *ngTemplateOutlet="templateLabel?.templateRef; context:{value: o.value}"></ng-template>
+      </ng-container>
+    </div>
+  </nz-radio-group>
+</div>
+
+<ng-template #customTemplate>
+  <div>
+    <nz-radio-group
+      class="radio-group gap-12 d-flex flex-dir-column"
+      [ngClass]="{'flex-dir-column': classType==='COLUMN'}"
+      [ngModel]="selectedValue"
+      (ngModelChange)="handleChange($event)">
+      <div *ngFor="let o of options; trackBy: trackByFn">
+        <div class="d-flex align-items-center flex-dir-column radio-group-row">
+          <div class="d-flex align-items-center radio-group-row-content">
+            <label
+              class="radio-label d-flex align-items-center"
+              nz-radio
+              [nzValue]="o.value"
+              [nzDisabled]="o.disabled"
+              tabindex="0">
+              {{ o.label }}
+            </label>
+            <ng-container>
+              <ng-container
+                *ngTemplateOutlet="o.template; context:{value: o}"></ng-container>
+            </ng-container>
+          </div>
+          <ng-container>
+            <ng-container
+              *ngTemplateOutlet="o.additionalTemplate"></ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </nz-radio-group>
+  </div>
+</ng-template>

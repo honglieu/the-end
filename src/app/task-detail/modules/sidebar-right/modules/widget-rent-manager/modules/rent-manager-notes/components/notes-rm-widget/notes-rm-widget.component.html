@@ -1,0 +1,13 @@
+<div class="notes-rm-widget-wrapper">
+  <trudi-suggested-step-group *ngIf="rmNotes?.length" groupTitle="Note">
+    <note-card
+      *ngFor="let cardData of rmNotes"
+      [syncStatus]="cardData.syncStatus"
+      (clickCard)="handleClickRmNote(cardData)"
+      (retry)="handleRetrySyncRmNote(cardData)"
+      (cancel)="handleCancelRmNote(cardData)"
+      (remove)="handleRemoveRmNote(cardData)"
+      [cardData]="cardData">
+    </note-card>
+  </trudi-suggested-step-group>
+</div>

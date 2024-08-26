@@ -1,0 +1,87 @@
+@import 'function';
+
+:host {
+  .insights-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding-bottom: 19px;
+    margin: 0 32px;
+    border-bottom: 1px solid var(--border-neutral-dark);
+
+    .insights-header-left-container {
+      display: flex;
+      column-gap: 8px;
+      .header-filter-wrapper {
+        display: flex;
+        column-gap: 32px;
+        ::ng-deep trudi-select-dropdown {
+          .trudi-select-dropdown-button trudi-icon svg {
+            width: 20px;
+            height: 20px;
+          }
+        }
+        nz-range-picker,
+        trudi-range-picker {
+          display: none;
+          &.show-range-picker {
+            display: inline-flex;
+          }
+        }
+        .property-manager-dropdown {
+          display: flex;
+          align-items: center;
+          column-gap: 12px;
+
+          &__title {
+            @include fontSetup(
+              var(--fg-neutral-normal),
+              14px,
+              20px,
+              normal,
+              500
+            );
+          }
+
+          .avatarUser-image {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+          }
+
+          .btn-not-action {
+            cursor: unset;
+            min-width: unset;
+            &:hover {
+              background-color: unset;
+            }
+          }
+
+          ::ng-deep .trudi-select-dropdown-button {
+            height: 32px;
+          }
+        }
+        ::ng-deep .skeleton-element.ant-skeleton-element .ant-skeleton-button {
+          width: 132px;
+        }
+      }
+    }
+    .insight-header-right-container {
+      display: flex;
+      column-gap: 12px;
+    }
+  }
+}
+
+::ng-deep
+  .ant-dropdown.select-range-date-type
+  .trudi-select-dropdown-container
+  .trudi-select-dropdown-scroll {
+  .trudi-select-dropdown-item {
+    border-bottom: none !important;
+  }
+  .trudi-select-dropdown-item:nth-child(5),
+  .trudi-select-dropdown-item:last-child {
+    border-top: 1px solid var(--border-neutral-light);
+  }
+}

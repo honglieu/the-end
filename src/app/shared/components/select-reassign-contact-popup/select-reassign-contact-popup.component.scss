@@ -1,0 +1,355 @@
+@import 'function';
+
+::ng-deep .popover-animation {
+  transition: opacity 0.3s ease-in-out;
+}
+
+::ng-deep .cdk-overlay-container:has(.reassign-contact) {
+  .ant-tooltip-placement-top {
+    padding-bottom: 11px !important;
+  }
+}
+
+::ng-deep .nz-reassign-overlay {
+  padding-bottom: 8px !important;
+  padding-top: 5px !important;
+
+  .ant-popover-arrow {
+    display: none;
+  }
+
+  .ant-popover-inner {
+    box-shadow: 0px 8px 28px rgba(0, 0, 0, 0.05),
+      0px 4px 12px var(--bg-overlay-light);
+    border-radius: 8px;
+  }
+}
+
+::ng-deep .assign-contact-overlay {
+  width: 330px;
+  left: -16px;
+}
+
+::ng-deep .user-profile-overlay {
+  width: 343px;
+
+  .ant-popover-inner-content {
+    padding: 0 !important;
+
+    .header {
+      display: flex;
+      overflow: hidden;
+      white-space: normal;
+      line-break: anywhere;
+
+      gap: 4px;
+      border-radius: 8px 8px 0px 0px;
+      background: var(--fg-brand, #00aa9f);
+      padding: 16px 12px;
+
+      @include fontSetup(var(--fg-base, #fff), 14px, 20px, normal, 400);
+    }
+
+    .content {
+      padding: 8px 16px 16px 16px;
+      display: flex;
+      flex-direction: column;
+      border-bottom: 1px solid var(--border-neutral-dark, #d8dcdf);
+
+      .assigned {
+        @include fontSetup(
+          var(--fg-neutral-weaker, #999),
+          12px,
+          20px,
+          normal,
+          400
+        );
+      }
+
+      .role {
+        flex-wrap: wrap;
+        @include fontSetup(
+          var(--fg-neutral-stronger, #3d3d3d),
+          16px,
+          18px,
+          normal,
+          600
+        );
+      }
+
+      .address {
+        display: flex;
+        gap: 4px;
+
+        @include fontSetup(
+          var(--fg-neutral-normal, #646464),
+          12px,
+          20px,
+          normal,
+          400
+        );
+
+        trudi-icon {
+          margin-top: 1px;
+        }
+      }
+
+      .address-no-property {
+        font-style: italic;
+      }
+
+      button {
+        display: flex;
+        width: 120px;
+        height: 32px;
+        padding: 4px 12px;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        border-radius: 8px;
+        background: var(--bg-neutral-tonal-normal, #f2f5f7);
+        outline: 0;
+        border: 0;
+        margin-top: 12px;
+
+        @include fontSetup(
+          var(--fg-neutral-normal, #646464),
+          14px,
+          20px,
+          normal,
+          600
+        );
+
+        &:hover {
+          background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+        }
+      }
+    }
+
+    .action {
+      display: flex;
+      padding: 16px;
+
+      .title {
+        width: fit-content;
+        @include fontSetup(
+          var(--fg-neutral-stronger, #3d3d3d),
+          14px,
+          20px,
+          normal,
+          400
+        );
+      }
+
+      .reassign {
+        flex: 1;
+        padding-left: 4px;
+        cursor: pointer;
+        @include fontSetup(var(--fg-brand, #00aa9f), 14px, 20px, normal, 600);
+
+        &:hover {
+          color: var(--bg-brand-solid-stronger, #33bbb2);
+          text-decoration-line: underline;
+        }
+      }
+
+      .reassign-active {
+        color: var(--bg-brand-solid-strongest, #0aa095);
+        text-decoration-line: underline;
+      }
+    }
+  }
+}
+
+::ng-deep .cdk-overlay-pane:has(.user-profile-overlay) {
+  margin-left: 0px !important;
+
+  .ant-popover-placement-leftTop {
+    margin-top: 20px;
+  }
+}
+
+::ng-deep .reassign-contact-overlay {
+  width: 316px;
+  padding-top: 0 !important;
+
+  .ant-popover-inner-content {
+    padding: 16px;
+
+    .header-email {
+      color: var(--fg-brand, #00aa9f) !important;
+    }
+  }
+}
+
+::ng-deep .cdk-overlay-pane:has(.reassign-contact-overlay) {
+  .ant-popover-placement-rightTop {
+    margin-top: -50px !important;
+    margin-left: 26px;
+  }
+
+  .ant-popover-placement-bottomRight {
+    margin-top: 30px !important;
+    left: 0 !important;
+  }
+}
+
+::ng-deep .columns-icon .ant-tooltip-arrow {
+  right: 0;
+}
+
+.contact-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .address-title {
+    @include fontSetup(var(--text-text-subtitle), 12px, 16px, normal, 400);
+
+    .info-property-address {
+      margin: 0;
+    }
+
+    .strike-through {
+      text-decoration: line-through;
+    }
+  }
+
+  .title-conversation {
+    &__name {
+      vertical-align: middle;
+      @include fontSetup(var(--gray-600), 16px, 24px, normal, 600);
+    }
+
+    &__status {
+      display: inline-block;
+      margin-left: 8px;
+      @include fontSetup(var(--brand-500), 12px, 16px, normal, 500);
+    }
+  }
+
+  .empty-title {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--fg-neutral-weaker);
+  }
+  &__deleted {
+    cursor: not-allowed !important;
+    color: var(--fg-neutral-weaker);
+  }
+
+  &__external-type {
+    ::ng-deep select-contact-popup .detail-item .info.task-email {
+      display: block;
+      font-size: 14px !important;
+      line-height: 20px !important;
+    }
+  }
+
+  &__user-info {
+    width: fit-content;
+    display: flex;
+    padding: 2px 6px;
+    margin-left: -6px;
+    align-items: center;
+    gap: 4px;
+    border-radius: 24px;
+    transition: background-color 150ms linear;
+
+    &--name {
+      @include fontSetup(
+        var(--fg-neutral-normal, #646464),
+        12px,
+        16px,
+        normal,
+        400
+      );
+      cursor: pointer;
+    }
+
+    &:hover {
+      background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+    }
+  }
+
+  &__phone-unidentified,
+  &__email-unidentified {
+    display: flex;
+
+    .info-phone-unidentified,
+    .info-email-unidentified {
+      width: fit-content;
+      border-radius: 24px;
+      background: var(--bg-danger-tonal-stronger, #ffc8d6);
+      display: flex;
+      padding: 2px 6px;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+
+      @include fontSetup(var(--fg-danger, #e1024f), 12px, 16px, normal, 400);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &:hover {
+        transition: background-color 150ms linear;
+        background-color: var(--bg-danger-tonal-strongest, #ff9cb3) !important;
+      }
+    }
+
+    .assign-to-contact {
+      color: var(--brand-500);
+      font-weight: 500;
+      line-height: 16px;
+      font-size: 12px;
+      border: none;
+      background-color: white;
+      width: 103px;
+      padding: 0;
+    }
+  }
+}
+
+.reverse {
+  display: flex;
+  flex-direction: row-reverse;
+  pointer-events: none;
+
+  div:hover {
+    background: none !important;
+  }
+}
+
+.contact-block:has(.ant-popover-open) {
+  .contact-block__user-info {
+    transition: background-color 150ms linear;
+    background-color: var(--bg-neutral-tonal-strongest, #d8dcdf) !important;
+  }
+
+  .contact-block__phone-unidentified .info-phone-unidentified,
+  .info-email-unidentified {
+    transition: background-color 150ms linear;
+    background-color: var(--bg-danger-tonal-strongest, #ff9cb3) !important;
+  }
+}
+
+.sync {
+  @include fontSetup(var(--brand-500), 12px, 16px, normal, 400);
+  padding: 2px;
+  &-success {
+    color: var(--success-500);
+  }
+
+  &-fail {
+    color: var(--danger-500);
+  }
+}
+
+.title-conversation__status {
+  ::ng-deep trudi-badge {
+    height: 20px;
+  }
+}

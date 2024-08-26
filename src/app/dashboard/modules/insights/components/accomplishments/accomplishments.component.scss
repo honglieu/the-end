@@ -1,0 +1,23 @@
+@import 'function';
+
+.accomplish-wrappper {
+  width: 704px;
+
+  .accomplish-title {
+    width: 100%;
+  }
+
+  .text-title {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 28px;
+    color: var(--gray-600);
+  }
+}
+
+.accomplish-box {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 24px;
+}

@@ -1,0 +1,88 @@
+<div
+  class="convert-to-task-container"
+  [tabIndex]="0"
+  (keyup.enter)="inputSelectTask.click()">
+  <div class="relative">
+    <label [ngClass]="{'show-dropdown': showDropdown}" for="convert-to-task">
+      <img
+        class="size-20 cursor-pointer"
+        [src]="ImgPath.chevronUp"
+        alt="arrow"
+        #dropdownBtn />
+    </label>
+    <div
+      *ngIf="searchInput.value && showDropdown"
+      (click)="onClearInput($event)"
+      class="remove-task cursor-pointer">
+      <trudi-icon
+        [style]="{'width.px': 12, 'height.px': 12}"
+        icon="smallCloseBlack"></trudi-icon>
+    </div>
+    <input
+      [tabIndex]="-1"
+      id="convert-to-task"
+      #inputSelectTask
+      type="text"
+      placeholder="Select task"
+      class="cursor-pointer share-input-text"
+      autocomplete="off"
+      [ngClass]="{'input-error': isError}"
+      [formControl]="searchInput"
+      (click)="onDropdownClick()" />
+  </div>
+  <div
+    #dropdownBox
+    class="convert-to-task-dropdown background--white w-100 border-rad-8"
+    [ngClass]="{'visibility-hidden': !showDropdown}"
+    data-e2e="task-name-dropdown">
+    <div class="dropdown-list">
+      <ng-container *ngIf="listOtherConvertToTask.length; else noResult">
+        <cdk-virtual-scroll-viewport itemSize="50" class="vitrual-viewport">
+          <ng-container *cdkVirtualFor="let task of listOtherConvertToTask">
+            <div *ngIf="task.groupName" class="task__group">
+              {{task.groupName | uppercase}}
+            </div>
+            <ng-container *ngIf="!task.groupName">
+              <div
+                class="dropdown-item d-flex gap-8 justify-content-between align-items-center cursor-pointer"
+                (click)="onItemClick(task, $event)"
+                data-e2e="task-name-option"
+                [ngClass]="{'task-item-selected': task?.taskNameRegion?.taskNameRegionId === selectedTask?.taskNameRegion?.taskNameRegionId}">
+                <div class="d-flex overflow-hidden">
+                  <span
+                    [innerHTML]="(task?.name || task?.label) | highlight: searchText"
+                    class="text-ellipsis item-text"></span>
+                  <span
+                    class="task__item-label"
+                    *ngIf="task?.taskNameRegion?.regionName"
+                    >{{task.taskNameRegion.regionName}}</span
+                  >
+                </div>
+                <trudi-icon
+                  *ngIf="task?.taskNameRegion?.taskNameRegionId === selectedTask?.taskNameRegion?.taskNameRegionId"
+                  icon="checkSuccess"></trudi-icon>
+              </div>
+            </ng-container>
+          </ng-container>
+        </cdk-virtual-scroll-viewport>
+      </ng-container>
+      <ng-template #noResult>
+        <div class="no-result">No results found</div>
+      </ng-template>
+    </div>
+    <!--  <button (click)="onCreateBlankTask()" >
+      <img src="/assets/icon/icon-plus.svg" alt="error">
+      <span>Create blank task</span>
+    </button> -->
+  </div>
+</div>
+
+<create-new-task-pop-up
+  *ngIf="newTaskPopupState"
+  [taskNameList]="listTaskName"
+  [configs]="configs"
+  [openFrom]="createTaskByCateType.CONVERT_TO_TASK"
+  (stopProcessCreateNewTask)="newTaskPopupState = false"
+  [activeProperty]="activeProperty"
+  [isCreateBlankTask]="true">
+</create-new-task-pop-up>

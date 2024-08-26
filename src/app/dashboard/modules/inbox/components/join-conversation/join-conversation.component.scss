@@ -1,0 +1,48 @@
+@import 'function';
+
+.join-conversation-wrapper {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin: auto;
+  transition: width 0.25s ease-in-out, height 0.25s ease-in-out;
+  width: fit-content;
+  background: var(--white);
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: var(--white);
+  height: 44px;
+  gap: 12px;
+  border: 1px solid var(--border-neutral-dark, #ececed);
+  box-shadow: 0px 0px 4px 0px rgba(12, 17, 29, 0.02),
+    0px 2px 8px 1px rgba(12, 17, 29, 0.04);
+
+  .ai-text {
+    @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 500);
+
+    .bold-text {
+      @include fontSetup(var(--fg-neutral-strongest), 14px, 20px, normal, 700);
+      margin: 0px;
+    }
+  }
+
+  .join-btn {
+    min-width: 85px;
+    height: 28px;
+  }
+}
+
+::ng-deep .cdk-overlay-container:has(.join-conversation-tooltip) {
+  .ant-tooltip {
+    max-width: 400px;
+  }
+
+  .ant-tooltip-placement-top {
+    padding-bottom: 7px !important;
+  }
+
+  .ant-tooltip-placement-bottom {
+    padding-top: 4px !important;
+  }
+}

@@ -1,0 +1,23 @@
+@import 'function';
+
+::ng-deep .container-skeleton {
+    .avatar-skeleton {
+        .ant-skeleton-element .ant-skeleton-avatar {
+            width: 24px !important;
+            height: 24px !important;
+        }
+    }
+    .rows {
+        display: grid;
+        gap: 8px;
+        nz-skeleton.custom-skeleton-height {
+            .ant-skeleton-content {
+                .ant-skeleton-paragraph {
+                    li {
+                        height: 12px;
+                    }
+                }
+            }
+        }
+    }
+}

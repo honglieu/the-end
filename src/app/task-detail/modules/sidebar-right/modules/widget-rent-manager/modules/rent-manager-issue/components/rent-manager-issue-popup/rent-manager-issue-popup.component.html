@@ -1,0 +1,70 @@
+<trudi-modal
+  [visible]="isShowModal"
+  [autoFocus]="null"
+  (triggerAfterClose)="handleAfterClose()">
+  <ng-template #headerModal>
+    <div class="rent-manager-issue-popup-header d-flex align-items-center">
+      <div class="flex-1">
+        <img src="assets/images/rent-manager-icon.png" class="size-icon" />
+      </div>
+      <div class="title flex-1 w-100">
+        <span>Issue</span>
+      </div>
+    </div>
+  </ng-template>
+  <div *ngIf="rentManagerIssueForm" class="rent-manager-issue-popup-body">
+    <general-information></general-information>
+    <div>
+      <nz-tabset
+        (nzSelectedIndexChange)="onTabSelected($event)"
+        [(nzSelectedIndex)]="resetToInitialTab"
+        class="trudi-tabs">
+        <nz-tab
+          [nzTitle]="titleTemplate"
+          *ngFor="let tab of RENT_MANAGER_ISSUE_TABS; trackBy: trackByFn">
+          <ng-template #titleTemplate> {{ tab.title }} </ng-template>
+          <ng-container [ngSwitch]="tab.value">
+            <issue-details
+              *ngSwitchCase="ERentManagerIssueTab.DETAILS"></issue-details>
+            <work-order
+              *ngSwitchCase="ERentManagerIssueTab.WORK_ORDER"></work-order>
+            <ng-container *ngIf="indexCurrentTab === tab.indexTab">
+              <issue-check-list
+                *ngSwitchCase="ERentManagerIssueTab.CHECKLIST"></issue-check-list>
+            </ng-container>
+            <ng-container *ngIf="indexCurrentTab === tab.indexTab">
+              <issue-history-notes
+                *ngSwitchCase="ERentManagerIssueTab.HISTORY_NOTES"></issue-history-notes>
+            </ng-container>
+          </ng-container>
+        </nz-tab>
+      </nz-tabset>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div
+      class="rent-manager-issue-popup-footer d-flex align-items-center justify-content-between w-100">
+      <div class="info-status d-flex align-items-center">
+        <sync-status
+          [syncStatus]="(syncStatus$ | push).status"
+          [lastTimeSynced]="(syncStatus$ | push).lastTimeSynced"></sync-status>
+      </div>
+
+      <div class="footer-wrapper d-flex" [style.gap.px]="12">
+        <button
+          *ngIf="isUpdateIssueModal"
+          class="button-back"
+          (click)="handleBack()">
+          <div class="text-btn-back">Back</div>
+        </button>
+        <button
+          type="button"
+          [disabled]="isConsole || disabledForm || isLoading || isArchiveMailbox"
+          class="btn-confirm trudi-btn trudi-btn-semi-large trudi-btn-primary"
+          (click)="handleSyncRM()">
+          <span class="btn-text">Sync to Rent Manager</span>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</trudi-modal>

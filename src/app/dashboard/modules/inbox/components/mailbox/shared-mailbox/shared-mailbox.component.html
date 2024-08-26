@@ -1,0 +1,77 @@
+<trudi-modal
+  [visible]="visible"
+  [modelWidth]="624"
+  [autoFocus]="null"
+  title="Add shared mailbox"
+  subTitle=""
+  (onCancel)="handleCancel()">
+  <div
+    class="shared-mailbox d-flex flex-dir-column gap-12"
+    [formGroup]="sharedMailboxForm">
+    <trudi-form-control class="w-100">
+      <trudi-single-select
+        label="Owned account"
+        bindValue="id"
+        [items]="listOwnerOutlook"
+        [searchFn]="customSearchFn"
+        placeholder="Select owned account"
+        formControlName="ownerMailBox">
+        <ng-template
+          trudi-option-tmp
+          let-item="item"
+          let-item$="item$"
+          let-searchTerm="searchTerm">
+          <div class="owner_list">
+            <div class="d-flex flex-dir-column">
+              <span class="text-name" [ngOptionHighlight]="searchTerm"
+                >{{item?.name}}</span
+              >
+              <span class="text-email" [ngOptionHighlight]="searchTerm"
+                >{{item?.emailAddress}}</span
+              >
+            </div>
+            <div *ngIf="item$.selected" class="d-flex align-items-center">
+              <trudi-icon icon="checkSuccess"></trudi-icon>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template
+          trudi-label-tmp
+          let-item="item"
+          let-searchTerm="searchTerm">
+          <div class="tenants_preview">
+            <span class="text-name">{{item?.name}}</span>&nbsp;<span
+              class="text-email-label"
+              >({{item?.emailAddress}})</span
+            >
+          </div>
+        </ng-template>
+      </trudi-single-select>
+    </trudi-form-control>
+    <trudi-form-control class="w-100" [checkSubmit]="checkSubmit">
+      <trudi-text-field
+        [checkSubmit]="checkSubmit"
+        class="field-shared-email"
+        formControlName="sharedMailbox"
+        maxCharacter="255"
+        [showCounting]="false"
+        label="Shared email address"
+        placeholder="Enter your shared email address">
+      </trudi-text-field>
+    </trudi-form-control>
+  </div>
+
+  <ng-template #footerModal>
+    <button
+      trudi-btn
+      size="large"
+      [disabled]="isConsole"
+      btnType="primary"
+      variant="filled"
+      appE2E="mailbox-add-shared-mailbox-button"
+      class="trudi-btn trudi-btn-large ml-auto"
+      (click)="onSubmit()">
+      Save
+    </button>
+  </ng-template>
+</trudi-modal>

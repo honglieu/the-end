@@ -1,0 +1,53 @@
+<div class="move-wrapper">
+  <div class="header">
+    <div
+      class="detail-invite d-flex justify-content-between align-items-center">
+      <div class="detail-invite-text d-flex">
+        <p>Move to task</p>
+      </div>
+      <div
+        data-e2e="button-close"
+        class="close-btn cursor-pointer"
+        (click)="onQuitModal($event)">
+        <trudi-icon icon="closeModal"></trudi-icon>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div class="body">
+    <div class="move-header">
+      <p class="move-header-title">{{currentConversation?.categoryName}}</p>
+      <div class="move-info d-flex flex-dir-column">
+        <span
+          >{{currentProperty.streetline ? currentProperty.streetline : "No
+          property"}}</span
+        >
+      </div>
+    </div>
+
+    <div class="move-select" id="task-select">
+      <div class="move-title">Select task</div>
+
+      <dropdown-group
+        [show]="show"
+        [items]="items"
+        [isMissingRequiredField]="isMissingRequiredField"
+        [isShowAddress]="isShowAddress"
+        [isUnHappyPath]="isUnHappyPath"
+        (onChange)="onItemChange($event)">
+      </dropdown-group>
+    </div>
+  </div>
+  <div class="move-footer d-flex justify-content-end">
+    <div class="btn-wrapper">
+      <button
+        data-e2e="button-add-to-task"
+        type="button"
+        class="confirm-btn d-flex align-items-center"
+        [disabled]="disabledMoveToTaskBtn"
+        (click)="onSubmit()">
+        <span class="btn-text"> Add to task </span>
+      </button>
+    </div>
+  </div>
+</div>

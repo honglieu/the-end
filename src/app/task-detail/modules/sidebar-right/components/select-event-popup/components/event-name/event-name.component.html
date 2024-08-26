@@ -1,0 +1,14 @@
+<div *ngIf="name" class="name-wrapper d-flex align-items-center gap-4">
+  <div
+    class="name-status"
+    [ngClass]="{
+  'name-active': !isOverDeal,
+  'name-error': isOverDeal
+}"></div>
+  <div
+    nz-tooltip
+    [nzTooltipTitle]="name"
+    [nzTooltipOverlayStyle]="{'max-width': '280px'}"
+    [innerHTML]="name | titleCasePipe | highlight: searchText"
+    class="name-text text-ellipsis"></div>
+</div>

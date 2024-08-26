@@ -1,0 +1,87 @@
+<ng-container *ngIf="externalLink; else otherContent">
+  <a
+    (mouseenter)="mouseenter()"
+    (mouseleave)="mouseleave()"
+    class="sidebar-link"
+    [href]="externalLink"
+    target="_blank"
+    [ngClass]="{'active': isSelected, 'sidebar-link-custom': hasCustomClass}"
+    [ngStyle]="{'cursor': disabled ? 'not-allowed': 'pointer'}"
+    [id]="idSidebarItem">
+    <div *ngIf="logoLink" class="wrapper-logo">
+      <img class="logo" [src]="logoLink" alt="logo" alt="" />
+    </div>
+    <div class="item-icon-wrapper">
+      <trudi-icon
+        *ngIf="!logoLink"
+        class="item-icon"
+        [icon]="iconSidebarName"></trudi-icon>
+      <trudi-icon
+        *ngIf="isUnread"
+        class="check-unread"
+        icon="redDotUnreadMessage"></trudi-icon>
+    </div>
+    <trudi-icon *ngIf="isOpenNewTab" icon="iconNavigate"></trudi-icon>
+    <trudi-icon
+      *ngIf="!isVertical && isSelected && !isOpenNewTab"
+      icon="checkSuccess">
+    </trudi-icon>
+    <trudi-icon *ngIf="isSubmenu" icon="iconChevronRight"> </trudi-icon>
+  </a>
+</ng-container>
+<ng-template #otherContent>
+  <a
+    (isActiveChange)="onLinkActiveChange($event)"
+    routerLinkActive="active"
+    (mouseenter)="mouseenter()"
+    (mouseleave)="mouseleave()"
+    [appE2E]="dataE2e || ''"
+    class="sidebar-link"
+    [routerLink]="routerLink"
+    [queryParams]="queryParams"
+    [ngClass]="{'active': isSelected, 'sidebar-link-custom': hasCustomClass}"
+    [id]="idSidebarItem"
+    [ngStyle]="{'cursor': disabled ? 'not-allowed': 'pointer'}">
+    <div *ngIf="logoLink" class="wrapper-logo">
+      <img
+        *ngIf="className !== 'avatar circle'"
+        class="logo"
+        [src]="logoLink"
+        alt="logo"
+        alt="" />
+      <app-user-avatar
+        *ngIf="className === 'avatar circle'"
+        [avatar]="logoLink"
+        [user]="currentUser"
+        [style]="'width: 48px; height: 48px; font-size: 18px;'"></app-user-avatar>
+    </div>
+    <div
+      trudi-tooltip
+      nzTooltipTrigger="hover"
+      [nzTooltipTitle]="titleName | titlecase"
+      nzTooltipPlacement="right"
+      class="item-icon-wrapper">
+      <trudi-icon
+        *ngIf="!logoLink"
+        class="item-icon no-pointer-event"
+        svgClass="size-24"
+        [icon]="iconSidebarName"></trudi-icon>
+      <trudi-icon
+        *ngIf="isUnread"
+        class="check-unread"
+        icon="redDotUnreadMessage"></trudi-icon>
+    </div>
+    <span *ngIf="!isVertical" class="d-flex flex-1">
+      {{ isVertical ? (titleName | uppercase) : (titleName) }}
+    </span>
+    <trudi-icon *ngIf="isOpenNewTab" icon="iconNavigate"></trudi-icon>
+    <trudi-icon
+      *ngIf="!isVertical && isSelected && !isOpenNewTab"
+      icon="checkSuccess">
+    </trudi-icon>
+    <trudi-icon *ngIf="isSubmenu" icon="iconChevronRight"> </trudi-icon>
+  </a>
+</ng-template>
+<div class="content" [@menuAnimation] *ngIf="isCheckedHover">
+  <ng-content></ng-content>
+</div>

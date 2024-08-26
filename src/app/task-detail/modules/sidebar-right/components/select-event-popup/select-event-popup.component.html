@@ -1,0 +1,65 @@
+<ng-template #listEventNoSkeleton>
+  <ng-container *ngIf="listEvents.length; else noItems">
+    <div class="calendar-wrapper">
+      <cdk-virtual-scroll-viewport
+        #scrollContainer
+        class="d-flex flex-dir-column w-100 h-100"
+        (scroll)="onScroll($event)"
+        [itemSize]="45">
+        <event-row
+          *cdkVirtualFor="let calendar of listEvents;let lastRowData = last"
+          [rowData]="calendar"
+          [lastRowData]="lastRowData"
+          (onOptionChange)="handleOptionChange($event)"></event-row>
+
+        <ng-container *ngIf="(loadingService.isLoading$ | push)">
+          <div *ngFor="let _ of [].constructor(2)">
+            <ng-container
+              [ngTemplateOutlet]="skeletonListEvents"></ng-container>
+          </div>
+        </ng-container>
+      </cdk-virtual-scroll-viewport>
+    </div>
+  </ng-container>
+  <ng-template #noItems>
+    <div class="body">
+      <div class="header-text">No events found for this property</div>
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-container
+  *ngIf="!listEvents.length && (loadingService.isLoading$ | push); else listEventNoSkeleton">
+  <div class="calendar-wrapper">
+    <ng-container *ngIf="(loadingService.isLoading$ | push)">
+      <div *ngFor="let _ of [].constructor(5)">
+        <ng-container [ngTemplateOutlet]="skeletonListEvents"></ng-container>
+      </div>
+    </ng-container>
+  </div>
+</ng-container>
+
+<ng-template #skeletonListEvents>
+  <div class="skeleton d-flex gap-12">
+    <nz-skeleton
+      style="width: 108px"
+      [nzActive]="true"
+      [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+    <nz-skeleton
+      style="width: 120px"
+      [nzActive]="true"
+      [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+    <nz-skeleton
+      style="width: 280px"
+      [nzActive]="true"
+      [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+    <nz-skeleton
+      style="width: 20px"
+      class="ml-auto mr-12"
+      [nzActive]="true"
+      [nzParagraph]="{ rows: 0}"></nz-skeleton>
+  </div>
+</ng-template>

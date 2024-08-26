@@ -1,0 +1,39 @@
+<div class="lease-box">
+  <span class="hide">{{timeOfLease}}</span>
+  <div class="lease-duration-date">
+    <div class="date-start-end">
+      <div class="day">{{startLeaseDay}}</div>
+      <div class="day">{{endLeaseDay}}</div>
+    </div>
+    <div
+      *ngIf="dayRemain > 1"
+      class="days-remaining"
+      [ngClass]="{
+        'lease-in-duration': this.startDate && this.endDate && dayRemain !== 0,
+        'lease-expired': this.startDate && this.endDate && dayRemain === 0,
+        'lease-not-available': !(this.startDate && this.endDate)}">
+      {{dayRemain}} days remaining
+    </div>
+    <div
+      *ngIf="dayRemain === 1 || dayRemain === 0"
+      class="days-remaining"
+      [ngClass]="{
+      'lease-expired': this.startDate && this.endDate && dayRemain === 0,
+      'lease-not-available': !(this.startDate && this.endDate)}">
+      {{dayRemain}} day remaining
+    </div>
+    <div
+      *ngIf="!startDate && !endDate"
+      class="days-remaining"
+      [ngClass]="{
+      'lease-expired': this.startDate && this.endDate && dayRemain === 0,
+      'lease-not-available': !(this.startDate && this.endDate)}">
+      - - day remaining
+    </div>
+    <div
+      *ngIf="dayRemain === -1 || dayRemain === null"
+      class="days-remaining lease-in-duration">
+      Periodic lease
+    </div>
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<trudi-drawer
+  *ngIf="showDrawer"
+  [(visible)]="showDrawer"
+  [wrapClassName]="isJiggling ? 'shaking-task-editor-drawer' : ''"
+  [enableBackBtn]="!editStep || isDisableForm"
+  [enableDeleteBtn]="editStep && !isDisableForm"
+  [enableOkBtn]="!isDisableForm"
+  [enableCancel]="!isDisableForm"
+  [okText]="editStep ? 'Update' : 'Add'"
+  [nzClosable]="true"
+  (onOk)="handleOk()"
+  (onBack)="handleBack()"
+  (onDelete)="handleDelete()"
+  (onCancel)="handleCancel()"
+  (onClose)="handleCancel(true)"
+  [headerTpl]="headerTpl">
+  <new-task-step-form
+    [currentAgencyId]="currentAgencyId"
+    [regions]="regions"
+    [isOpen]="showDrawer"
+    [isDisableForm]="isDisableForm"
+    [isShowUpgradeMessage]="canEdit && isDisableForm"></new-task-step-form>
+</trudi-drawer>
+
+<ng-template #headerTpl>
+  <div
+    [formGroup]="newTaskStepForm"
+    class="new-task-step-header d-flex flex-dir-column gap-4">
+    <trudi-badge *ngIf="canEdit" text="New task" size="small"></trudi-badge>
+    <trudi-text-field
+      [disabled]="isDisableForm"
+      class="step-name-field"
+      formControlName="stepName"
+      placeholder="Add your step name here"></trudi-text-field>
+  </div>
+</ng-template>

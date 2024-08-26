@@ -1,0 +1,273 @@
+<div
+  class="detail-item"
+  (mouseenter)="showPopup = true"
+  (mouseleave)="showPopup = false">
+  <ng-container *ngIf="isUnHappyPath; else notUnHappyPath">
+    <ng-container *ngIf="appChatHeader; else NotAppChatHeader">
+      <div
+        class="unidentified d-flex assign-contact-header"
+        style="padding: 0; align-items: center">
+        <div
+          class="info"
+          nz-tooltip
+          nzTooltipPlacement="top"
+          nzTooltipTitle="Unidentified email">
+          {{email}}
+        </div>
+        <div class="detail-label">
+          <div class="position-relative">
+            <button
+              *ngIf="showPopover"
+              class="assign-to-contact"
+              [style.zIndex]="1">
+              Assign to contact
+            </button>
+            <button
+              class="assign-to-contact"
+              nz-popover
+              [nzPopoverPlacement]="'bottomLeft'"
+              [nzPopoverContent]="contentTemplate"
+              nzPopoverTrigger="click"
+              [nzPopoverVisible]="showPopover"
+              (nzPopoverVisibleChange)="showPopover = $event"
+              nzPopoverOverlayClassName="assign-contact-overlay">
+              Assign to contact
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #NotAppChatHeader>
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-8">
+          <div class="detail-child">
+            <img src="assets/icon/sender-icon-unidentified.svg" />
+          </div>
+          <div class="description">
+            <div
+              [ngClass]="conversation?.propertyType === userPropertyType.UNIDENTIFIED ? 'info-sender-unidentified' : 'info'"
+              class="cursor-pointer"
+              (click)="onUserProfilePage()">
+              {{senderName | titlecase}}
+            </div>
+            <div class="detail-label">
+              <span class="text-capitalize"> Unidentified </span>
+            </div>
+          </div>
+        </div>
+        <ng-container
+          *ngIf="!(conversation?.propertyType === userPropertyType.EXTERNAL)">
+          <div class="box-btn-call">
+            <div
+              class="btn-call"
+              [class]="{'cursor-default': !requestDataCall?.enableCallBtn?.voiceCall}"
+              nz-tooltip
+              [nzTooltipTitle]="requestDataCall?.isProgressCall ? 'Call in progress': requestDataCall?.callBtnTooltip"
+              (click)="requestToCall(callType.voiceCall)">
+              <img
+                class="size-20"
+                [src]="(requestDataCall?.enableCallBtn?.voiceCall && !requestDataCall?.isProgressCall) ? ImgPath.voiceCall : ImgPath.disableVoiceCall" />
+            </div>
+            <div
+              *ngIf="!(conversation?.propertyType === userPropertyType.SUPPLIER ||
+              conversation?.propertyType === userPropertyType.OTHER)"
+              class="btn-call"
+              [class]="{'cursor-default': !requestDataCall?.enableCallBtn?.videoCall}"
+              nz-tooltip
+              [nzTooltipTitle]="requestDataCall?.isProgressCall ? 'Call in progress': ''"
+              (click)="requestToCall(callType.videoCall)">
+              <img
+                class="size-20"
+                [src]="(requestDataCall?.enableCallBtn?.videoCall && !requestDataCall?.isProgressCall) ? ImgPath.videoCall : ImgPath.disableVideoCall" />
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <ng-container
+        *ngIf="conversation?.propertyType !== userPropertyType.EXTERNAL">
+        <div class="d-flex gap-8">
+          <div class="detail-child">
+            <img src="assets/icon/email-icon-border.svg" />
+          </div>
+          <div class="description">
+            <div
+              *ngIf="conversation.email"
+              class="info-email-unidentified"
+              nz-tooltip
+              nzTooltipPlacement="top"
+              nzTooltipTitle="Unidentified email">
+              {{conversation.email}}
+            </div>
+            <div class="detail-label">
+              <span> Unidentified email </span>
+              <div class="position-relative">
+                <button
+                  *ngIf="showPopover"
+                  class="assign-to-contact"
+                  [style.zIndex]="1">
+                  Assign to contact
+                </button>
+                <button
+                  class="assign-to-contact"
+                  nz-popover
+                  [nzPopoverPlacement]="'bottomLeft'"
+                  [nzPopoverContent]="contentTemplate"
+                  nzPopoverTrigger="click"
+                  [nzPopoverVisible]="showPopover"
+                  (nzPopoverVisibleChange)="showPopover = $event"
+                  nzPopoverOverlayClassName="assign-contact-overlay">
+                  Assign to contact
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container
+        *ngIf="conversation?.propertyType === userPropertyType.UNIDENTIFIED || conversation?.propertyType === userPropertyType.TENANT || conversation?.propertyType === userPropertyType.LANDLORD">
+        <div class="d-flex gap-8">
+          <div class="detail-child">
+            <img src="assets/icon/property-address-icon.svg" />
+          </div>
+          <div class="description">
+            <div
+              [ngClass]="
+                conversation?.propertyType === userPropertyType.UNIDENTIFIED
+                  ? 'info-property-address-unidentified'
+                  : 'info'
+                  "
+              class="cursor-pointer"
+              (click)="onInfoUser()">
+              {{conversation?.propertyType === userPropertyType.UNIDENTIFIED ?
+              "Unidentified property" : taskMsgDetail?.property?.streetline}}
+            </div>
+            <div class="detail-label">
+              <span> Property address </span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-template>
+
+    <ng-template #contentTemplate>
+      <!-- unhappyPathLoading -->
+      <div class="box-contact border-rad-8 d-block">
+        <div class="section-trudi">
+          <ng-container>
+            <header-trudi-page
+              [isSelectContact]="true"
+              [isHideLogo]="false"
+              [size]="36"
+              [text]="trudiResponse?.data[0]?.header?.text"
+              [email]="trudiResponse?.data[0]?.header?.email"
+              [isUnindentifiedEmail]="isUnindentifiedEmail">
+            </header-trudi-page>
+          </ng-container>
+          <app-unhappy-path-trudi
+            [overlayDropdown]="overlayDropdown"
+            [taskId]="currentTask?.id"
+            [title]="'Select contact'"
+            [items]="contactList"
+            [propertyList]="propertyList"
+            [taskNameList]="taskNameList"
+            [isUnHappyPath]="isUnHappyPath"
+            [isUnidentifiedEmail]="isUnindentifiedEmail"
+            [isUnindentifiedProperty]="isUnindentifiedProperty"
+            [unhappyStatus]="unhappyStatus"
+            [placeholder]="placeHolderTrudiUnhappy"
+            [loading]="unhappyPathLoading"
+            (onConfirm)="handleConfirmSelectContact($event)"
+            (onSearch)="handleOnSearchUnHappyPath($event)">
+          </app-unhappy-path-trudi>
+        </div>
+      </div>
+    </ng-template>
+  </ng-container>
+  <ng-template #notUnHappyPath>
+    <div class="d-flex justify-content-between align-items-center">
+      <div
+        class="d-flex align-items-center gap-8 cursor-pointer w-full"
+        (click)="onUserProfilePage()">
+        <div class="detail-child">
+          <img src="assets/icon/sender-icon.svg" />
+        </div>
+        <div class="description">
+          <div
+            [ngClass]="conversation?.propertyType === userPropertyType.UNIDENTIFIED ? 'info-sender-unidentified' : 'info'">
+            {{senderName | titlecase}}
+          </div>
+          <div class="detail-label">
+            <span>
+              {{ ((conversation?.propertyType === userPropertyType.OTHER ?
+              conversation?.contactType : (conversation?.propertyType ===
+              userPropertyType.UNIDENTIFIED ? '' : conversation?.ExternalType ||
+              (conversation?.propertyType ? ((isDeletedOrArchived ?
+              conversation.crmStatus + ' ' : '') + (conversation.isPrimary ?
+              'primary ' : '') + (conversation.propertyType)) : ''))) |
+              lowercase) | uppercaseFirstLetter}}
+            </span>
+          </div>
+        </div>
+      </div>
+      <ng-container
+        *ngIf="!(conversation?.propertyType === userPropertyType.EXTERNAL)">
+        <div class="box-btn-call">
+          <div
+            class="btn-call"
+            [class]="{'cursor-default': !requestDataCall?.enableCallBtn?.voiceCall}"
+            nz-tooltip
+            [nzTooltipTitle]="requestDataCall?.isProgressCall ? 'Call in progress': requestDataCall?.callBtnTooltip"
+            (click)="requestToCall(callType.voiceCall)">
+            <img
+              class="size-20"
+              [src]="(requestDataCall?.enableCallBtn?.voiceCall && !requestDataCall?.isProgressCall) ? ImgPath.voiceCall : ImgPath.disableVoiceCall" />
+          </div>
+          <div
+            *ngIf="!(conversation?.propertyType === userPropertyType.SUPPLIER ||
+              conversation?.propertyType === userPropertyType.OTHER)"
+            class="btn-call"
+            [class]="{'cursor-default': !requestDataCall?.enableCallBtn?.videoCall}"
+            nz-tooltip
+            [nzTooltipTitle]="requestDataCall?.isProgressCall ? 'Call in progress': ''"
+            (click)="requestToCall(callType.videoCall)">
+            <img
+              class="size-20"
+              [src]="(requestDataCall?.enableCallBtn?.videoCall && !requestDataCall?.isProgressCall) ? ImgPath.videoCall : ImgPath.disableVideoCall" />
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <ng-container
+      *ngIf="conversation?.propertyType !== userPropertyType.EXTERNAL">
+      <div class="d-flex gap-8">
+        <div class="detail-child">
+          <img src="assets/icon/email-icon-border.svg" />
+        </div>
+        <div class="description">
+          <div class="info">{{conversation.email}}</div>
+          <div class="detail-label">
+            <span> Email </span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container
+      *ngIf="conversation?.propertyType === userPropertyType.UNIDENTIFIED || conversation?.propertyType === userPropertyType.TENANT || conversation?.propertyType === userPropertyType.LANDLORD">
+      <div class="d-flex gap-8 cursor-pointer w-full" (click)="onInfoUser()">
+        <div class="detail-child">
+          <img src="assets/icon/property-address-icon.svg" />
+        </div>
+        <div class="description">
+          <div
+            [ngClass]="conversation?.propertyType === userPropertyType.UNIDENTIFIED ? 'info-property-address-unidentified' : 'info'">
+            {{conversation?.propertyType === userPropertyType.UNIDENTIFIED ?
+            "Unidentified property" : taskMsgDetail?.property?.streetline}}
+          </div>
+          <div class="detail-label">
+            <span> Property address </span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-template>
+</div>

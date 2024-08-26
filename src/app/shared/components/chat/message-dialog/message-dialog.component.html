@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="body d-flex">
+    <div class="modal-icon">
+      <img src="assets/icon/icon-phone-circle.svg" alt="" />
+    </div>
+    <div class="content d-flex flex-dir-column">
+      <span class="content-title"
+        >Are you sure you want to join this conversation?</span
+      >
+      <span class="content-subtitle"
+        >Trudi will no longer be able to participate in this conversation</span
+      >
+    </div>
+  </div>
+  <div class="buttonGroup d-flex justify-content-end align-items-center">
+    <button
+      class="trudi-btn trudi-btn-tertiary trudi-btn-large"
+      (click)="close()">
+      Cancel
+    </button>
+    <button
+      class="trudi-btn trudi-btn-primary trudi-btn-large"
+      (click)="confirm()">
+      Confirm
+    </button>
+  </div>
+</div>

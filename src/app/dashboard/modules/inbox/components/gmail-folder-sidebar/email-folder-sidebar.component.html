@@ -1,0 +1,244 @@
+<ul
+  nz-menu
+  nzMode="inline"
+  class="email-folder-sidebar border-r-none"
+  #emailFolders>
+  <li
+    appE2E
+    e2eId="inbox-email-folder-dropdown"
+    nz-submenu
+    [nzTitle]="sidebarTitle"
+    class="submenu"
+    [(nzOpen)]="item.isOpen"
+    [ngClass]="['relative']"
+    tabindex="0">
+    <ng-container *ngIf="isLoading; else folderList">
+      <div
+        class="inbox-sidebar-container d-flex flex-dir-column auto-hide-scroll">
+        <div class="wrapper-skeleton-msg">
+          <div
+            class="d-flex flex-row align-items-center"
+            *ngFor="let _ of [].constructor(5); let i = index">
+            <div class="size-44 d-flex align-items-center skeleton-avt-folder">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"
+                class="ant-skeleton-custom size-16"></nz-skeleton>
+            </div>
+            <div
+              class="size-44 d-flex align-items-center skeleton-title-folder">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #folderList>
+      <cdk-tree
+        [ngClass]="{'d-none': !item.isOpen}"
+        [dataSource]="dataSource"
+        [treeControl]="treeControl">
+        <cdk-nested-tree-node
+          *cdkTreeNodeDef="let node"
+          class="example-tree-node"
+          [ngClass]="{'selected': folderActivedId === node.externalId }"
+          #treeNodeElement>
+          <div
+            [attr.folder-type]="EFolderType.MAIL"
+            [attr.folder-data]="{moveAble: node.moveAble, internalId: node.internalId, wellKnownName: node?.wellKnownName} | json"
+            [attr.folder-mailbox-id]="mailBox?.id"
+            class="wrapper-node drop_task--folder"
+            tabindex="0"
+            id="wrapper-node"
+            (keydown.enter)="activeNode(node.externalId, mailBox?.id)">
+            <div
+              [style.padding-left.px]="treeNodeElement.ariaLevel * 8"
+              style="opacity: 0"></div>
+            <div
+              (click)="activeNode(node.externalId, mailBox?.id)"
+              class="folder-wraper"
+              [appE2E]="mailFolderE2EData[node?.id] || undefined">
+              <img
+                class="ant-tree-switcher-line-icon no-pointer-event"
+                src="/assets/icon/folder.svg" />
+              <div
+                appE2E
+                e2eId="inbox-email-folder"
+                class="folder-name"
+                [ngClass]="'no-pointer-event folder-name-lv-'+node.level">
+                {{ node.title }}
+              </div>
+              <div class="folder-unread-msg no-pointer-event">
+                <span
+                  class="folder-unread-msg-count border-rad-16 no-pointer-event"
+                  [attr.id]="node.id"
+                  [attr.mailBoxId]="mailBox.id"
+                  [class.d-none]="node.unReadMsgCount < 1">
+                  {{ node.unReadMsgCount }}
+                </span>
+              </div>
+            </div>
+            <div
+              *ngIf="!isConsole && node.editAble"
+              class="icon-more-wrapper icon-more-wrapper-no-child"
+              (click)="$event.preventDefault(); $event.stopPropagation(); currentGmailFolder = node;"
+              nz-dropdown
+              nzPlacement="bottomRight"
+              nzTrigger="click"
+              [nzDropdownMenu]="menu">
+              <img
+                [style]="{'width.px': 16, 'height.px': 16}"
+                src="/assets/icon/vertical-custom.svg"
+                class="icon-more no-pointer-event" />
+            </div>
+          </div>
+        </cdk-nested-tree-node>
+        <cdk-nested-tree-node
+          *cdkTreeNodeDef="let node; when: hasChild"
+          class="example-tree-node"
+          [ngClass]="{'selected': folderActivedId === node.externalId }"
+          #treeNodeElement>
+          <ng-container class="ng-my-select-option">
+            <div
+              [attr.folder-type]="EFolderType.MAIL"
+              [attr.folder-data]="{moveAble: node.moveAble, internalId: node.internalId,  wellKnownName: node?.wellKnownName} | json"
+              [attr.folder-mailbox-id]="mailBox?.id"
+              [ngClass]="['wrapper-node', 'drop_task--folder', node.name | formatClassName:'sub-':'-collapse-title']"
+              title=""
+              tabindex="0"
+              id="wrapper-node"
+              (keydown.enter)="activeNode(node.externalId, mailBox?.id)">
+              <div
+                [style.padding-left.px]="treeNodeElement.ariaLevel * 8"
+                style="opacity: 0"></div>
+              <div
+                (click)="activeNode(node.externalId, mailBox?.id)"
+                class="folder-wraper">
+                <img
+                  src="/assets/icon/folder.svg"
+                  class="ant-tree-switcher-line-icon" />
+                <div appE2E e2eId="inbox-email-folder" class="folder-name">
+                  {{ node.title }}
+                </div>
+                <div class="folder-unread-msg">
+                  <span
+                    class="folder-unread-msg-count border-rad-16"
+                    [attr.id]="node.id"
+                    [attr.mailBoxId]="mailBox.id"
+                    [class.d-none]="node.unReadMsgCount < 1">
+                    {{ node.unReadMsgCount }}
+                  </span>
+                </div>
+              </div>
+              <button
+                class="icon-chevron"
+                [ngClass]="{'icon-rotate': treeControl.isExpanded(node)}"
+                [style]="{'width.px': 12, 'height.px': 12}"
+                [attr.aria-label]="'Toggle ' + node.name"
+                cdkTreeNodeToggle
+                (keydown.enter)="$event.stopPropagation();">
+                <img src="/assets/images/chevron-right.png" />
+              </button>
+              <div
+                *ngIf="!isConsole && node.editAble"
+                class="icon-more-wrapper"
+                (click)="$event.preventDefault(); $event.stopPropagation(); currentGmailFolder = node;"
+                nz-dropdown
+                nzPlacement="bottomRight"
+                nzTrigger="click"
+                [nzDropdownMenu]="menu">
+                <img
+                  [style]="{'width.px': 16, 'height.px': 16}"
+                  src="/assets/icon/vertical-custom.svg"
+                  class="icon-more" />
+              </div>
+            </div>
+          </ng-container>
+          <div [class.example-tree-invisible]="!treeControl.isExpanded(node)">
+            <ng-container cdkTreeNodeOutlet></ng-container>
+          </div>
+        </cdk-nested-tree-node>
+      </cdk-tree>
+    </ng-template>
+    <ng-template #sidebarTitle>
+      <div
+        [ngClass]="{
+          'email-folder-sidebar-title-wrapper': true,
+          'gmail-folder-group-collapse-title': item.type === EFolderType.GMAIL,
+          'mail-folder-group-collapse-title': item.type === EFolderType.MAIL
+        }"
+        [attr.folder-mailbox-id]="mailBox?.id">
+        <div
+          appE2E
+          e2eId="inbox-email-folder-name"
+          class="email-folder-sidebar-title">
+          <trudi-icon [icon]="item?.icon" svgClass="size-20"></trudi-icon>
+          <span class="mailbox-name">{{ item?.name }}</span>
+        </div>
+        <button
+          appE2E
+          e2eId="inbox-email-folder-create-button"
+          *ngIf="!isConsole && item?.icon"
+          class="email-folder-sidebar-icon add-mail-folder"
+          (click)="$event.stopPropagation(); handleGmailFolderPopup( {isCreateNewFolder: true})">
+          <trudi-icon
+            trudi-tooltip
+            nzTooltipTrigger="hover"
+            nzTooltipTitle="New folder"
+            nzTooltipPlacement="top"
+            [icon]="'iconPlus3'"
+            [style]="{'width.px': 16, 'height.px': 16}"></trudi-icon>
+        </button>
+      </div>
+    </ng-template>
+  </li>
+  <div *cdkDragPreview class="email-client drag-preview">
+    <div
+      [ngClass]="{
+      'email-folder-sidebar-title-wrapper': true,
+      'gmail-folder-group-collapse-title': item.type === EFolderType.GMAIL,
+      'mail-folder-group-collapse-title': item.type === EFolderType.MAIL
+    }">
+      <div
+        appE2E
+        e2eId="inbox-email-folder-name"
+        class="email-folder-sidebar-title d-flex">
+        <trudi-icon [icon]="item?.icon" svgClass="size-20"></trudi-icon>
+        <span class="mailbox-name">{{ item?.name }}</span>
+      </div>
+    </div>
+    <img class="chevron-icon" src="/assets/images/chevron-right.png" />
+  </div>
+</ul>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div nz-menu class="gmail-folder-dropdown">
+    <div
+      (click)="handleGmailFolderPopup({isCreateNewFolder: false})"
+      nz-menu-item
+      class="dropdown-item">
+      <trudi-icon icon="editIconOutline"></trudi-icon>
+      Edit folder
+    </div>
+    <div
+      nz-menu-item
+      (click)="handleDeleteGmailFolder()"
+      class="dropdown-item delete">
+      <trudi-icon class="delete-icon" icon="deleteIconOutline"></trudi-icon>
+      Delete
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<ng-container *ngIf="isShowGmailFolderPopup">
+  <create-edit-gmail-folder-pop-up
+    [mailBoxIdEmailFolder]="mailBox.id"
+    [folders]="nestedFolders"
+    [isVisible]="isShowGmailFolderPopup"
+    [isCreateNewFolder]="isCreateNewFolder"
+    [currentGmailFolder]="currentGmailFolder"
+    (onClose)="handleClosePopup($event)">
+  </create-edit-gmail-folder-pop-up>
+</ng-container>

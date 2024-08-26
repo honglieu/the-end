@@ -1,0 +1,89 @@
+@import 'function';
+::ng-deep {
+  ng-select.share-ng-select .ng-select-container {
+    height: 44px !important;
+  }
+}
+.header {
+  padding: 20px;
+  border-bottom: 1px solid var(--gray-200);
+  &--title {
+    @include fontSetup(var(--gray-700), 18px, 24px, normal, 600);
+  }
+  &--sub-title {
+    @include fontSetup(var(--gray-500), 14px, 16px, normal, 500);
+  }
+}
+
+.footer-section {
+  padding: 20px 24px;
+}
+
+.content {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.input-wrapper {
+  p {
+    margin: 0 0 0 2px;
+    @include fontSetup(var(--gray-600), 12px, 16px, normal, 400);
+  }
+  input {
+    @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+    background: var(--gray-200);
+    border: none;
+    padding: 12px;
+  }
+
+  &:has(#select.ng-valid-form.ng-touched-form) {
+    ::ng-deep ng-select .ng-select-container {
+      border-radius: 8px;
+      border: none !important;
+      width: 100%;
+      background: var(--white) !important;
+      outline: none !important;
+      box-shadow: inset 0px 0px 0px 1px var(--danger-500),
+        0px 0px 0px 2px rgba(var(--danger-500-rgb), 0.6) !important;
+      &::-webkit-input-placeholder {
+        opacity: 0;
+      }
+    }
+  }
+}
+
+::ng-deep .ng-select.ng-select-single .ng-select-container .ng-value-container,
+.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-value {
+  @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+}
+
+.ng-placeholder {
+  @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+}
+
+.warning-required {
+  border: 3px solid var(--danger-500) !important;
+}
+
+.btn-confirm {
+  padding: 12px 16px;
+  border: none;
+  @include fontSetup(var(--white), 14px, 20px, normal, 600);
+}
+
+.warning-wrapper {
+  align-items: center;
+  margin-top: 6px;
+
+  .warning-icon {
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+  }
+
+  .warning-text {
+    margin: 0;
+    padding: 0;
+    @include fontSetup(var(--danger-500), 12px, 16px, normal, 400);
+  }
+}

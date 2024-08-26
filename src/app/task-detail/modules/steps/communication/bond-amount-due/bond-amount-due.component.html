@@ -1,0 +1,91 @@
+<trudi-step
+  [model]="model"
+  [showIconTitle]="false"
+  [hideProcessLine]="false"
+  [propertyTreeStep]="false"
+  [reiFormDetail]="reiFormBadge"
+  [buttonKey]="buttonKey"
+  (onProcess)="enableProcess()">
+</trudi-step>
+
+<ng-container *ngIf="isProcessing">
+  <one-field-popup
+    [modalId]="modalId"
+    [isShow]="popupState.bondLodgement"
+    [titleHeader]="modelBondAmountTitle"
+    [label]="'Bond amount due?'"
+    [openFrom]="modelData?.action"
+    [value]="bondAmount"
+    [isRequired]="bondAmountRequired"
+    [hasBackButton]="hasConfirmEssential"
+    (getValue)="onNextBondLodgement($event)"
+    (closePopup)="resetPopupState()"
+    (onCancel)="onBack()">
+  </one-field-popup>
+
+  <attach-entry-note
+    [modalId]="modalId"
+    [showAttachEntryNotePopup]="popupState.attachEntryNote"
+    [isShowSelectReiForm]="isShowUploadReiFormBox"
+    [headerName]="modelAttachmentTitle"
+    [acceptType]="ACCEPT_ONLY_SUPPORTED_FILE"
+    [hasBackButton]="true"
+    [canSkip]="!fileRequired"
+    (onNextModal)="onNextAttachEntryNote()"
+    (onCloseModal)="resetPopupState()"
+    (listSelectedFile)="getSelectedFile($event)"
+    (onCreateOrSelectForm)="onNextToSelectREIForm()"
+    (onBackModal)="onBackAttachEntryNote()">
+  </attach-entry-note>
+
+  <app-select-document
+    [modalId]="modalId"
+    [isStep]="true"
+    [showSelectDocumentPopup]="popupState.selectREIDocument"
+    [title]="modelAttachmentTitle"
+    [isResizableModal]="true"
+    (onBackAttachModal)="handlePopupState({ attachEntryNote: true, selectREIDocument: false })"
+    (onCloseDocumentModal)="resetPopupState()"
+    (onNext)="getSelectedREIDocument($event)">
+  </app-select-document>
+
+  <review-attachment-popup
+    [modalId]="modalId"
+    [isStep]="true"
+    [showReviewAttachPopup]="popupState.reviewREIDocument"
+    [showAttachDaftFormPopup]="popupState.attachDraftForm"
+    [reiFormLink]="reiFormLink"
+    [isHideBottomWrapper]="isHideReviewAttachmentBottomWrapper"
+    [isResizableModal]="true"
+    (onHandleClose)="resetPopupState()"
+    (onHandleBack)="handlePopupState({ reviewREIDocument: false, selectREIDocument: true })"
+    (onHandleBackDraftForm)="handlePopupState({ reviewREIDocument: true, attachDraftForm: false })"
+    (onHandleContinue)="onConfirmFromReviewAttachment($event)"
+    (onHandleContinueDraftForm)="handlePopupState({ reviewREIDocument: false, attachDraftForm: true })">
+  </review-attachment-popup>
+
+  <upload-attachments
+    [modalId]="modalId"
+    [hasBack]="true"
+    [fileRequired]="fileRequired"
+    [acceptType]="ACCEPT_ONLY_SUPPORTED_FILE"
+    [showAddFilesModal]="popupState.uploadAttachments"
+    [titleHeader]="modelAttachmentTitle"
+    [listFileUpload]="listFileUpload"
+    (onRemoveFile)="handleBackUploadAttachments()"
+    (onStopProcess)="resetPopupState()"
+    (backStep)="handleBackUploadAttachments()"
+    (onSubmit)="handleSubmitFile()">
+  </upload-attachments>
+
+  <!-- <trudi-send-msg-v2
+    *ngIf="popupState.isTrudiSendMessage"
+    [rawMsg]="textForwardMessg"
+    [configs]="sendMessageConfigs"
+    [listOfFiles]="listFile"
+    [reiformData]="reiFormData"
+    (onQuit)="resetPopupState()"
+    (onBack)="onBackSendMsg()"
+    (onSendMsg)="onSendMsg($event)">
+  </trudi-send-msg-v2> -->
+</ng-container>

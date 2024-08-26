@@ -1,0 +1,17 @@
+@import 'function';
+
+.trudi-input-label {
+  @include fontSetup(var(--gray-600), 14px, 20px, normal, 600);
+}
+.task-template-option {
+  &__label {
+    max-width: calc(100% - 52px);
+    .item-label {
+      max-width: calc(100% - 120px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+    }
+  }
+}

@@ -1,0 +1,143 @@
+<div
+  class="modal-container"
+  [id]="'modal-popup-wrapper'"
+  [ngClass]="{ 'modal-position-center': position === modalPopupPosition.center,
+              'modal-position-right': position === modalPopupPosition.right,
+              'modal-position-full-screen': position === modalPopupPosition.full_screen
+            }"
+  [style.zIndex]="zIndex"
+  [style.display]="(show ? 'flex' : 'none')">
+  <div
+    class="modal-popup-bk"
+    [style.zIndex]="zIndex + 1"
+    *ngIf="hasBackdrop"
+    (click)="onClose($event)">
+    &nbsp;
+  </div>
+  <div
+    class="modal-window box"
+    [style.height]="isBrowserSafari ? 'auto' : 'fit-content'"
+    [ngClass]="{'modal-fullscreen' : isFullScreenModal}"
+    [style.background-color]="transparent && 'transparent'"
+    [ngStyle]="{'border': styleCustom?.border}"
+    cdkDrag
+    #dragModal="cdkDrag"
+    #modalContainer
+    [cdkDragDisabled]="!draggable"
+    cdkDragBoundary="body"
+    [style.zIndex]="zIndex + 2"
+    nz-resizable
+    #resizableDirective="nzResizable"
+    [nzBounds]="'window'"
+    [style.height.px]="isFullScreenModal ? maxHeight : heightCustom ? heightCustom : height"
+    [style.width.px]="isFullScreenModal ? maxWidth : widthCustom ? widthCustom : width"
+    [nzMaxWidth]="maxWidth"
+    [nzMinWidth]="minWidth"
+    [nzMaxHeight]="maxHeight"
+    [nzMinHeight]="minHeight"
+    [nzDisabled]="!resizable"
+    (cdkDragStarted)="handleResizeOrDragStarted()"
+    (nzResizeStart)="handleResizeOrDragStarted()"
+    (nzResize)="onResize($event, resizableDirective)"
+    (cdkDragMoved)="moved.emit($event)"
+    #modalContent
+    tabindex="0">
+    <nz-resize-handle
+      *ngFor="let option of resizeHandleOptions"
+      [nzDirection]="option.direction"
+      [nzCursorType]="option.cursorType"
+      (nzMouseDown)="onMouseDown($event)"></nz-resize-handle>
+    <div
+      *ngIf="showTitle || headerTemplate"
+      class="modal-popup-header"
+      [ngStyle]="{'background': styleCustom?.backgroundColor, 'height': heightCustom}"
+      cdkDragHandle>
+      <ng-container
+        *ngTemplateOutlet="headerTemplate ? headerTemplate : defaultHeaderTmp"></ng-container>
+    </div>
+    <div class="modal-popup-content" (scroll)="triggerEventScroll.emit()">
+      <ng-content></ng-content>
+    </div>
+    <div class="modal-popup-footer" *ngIf="isShowFooter || footerTemplate">
+      <ng-container
+        *ngTemplateOutlet="footerTemplate ? footerTemplate : defaultFooterTmp">
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<ng-template #headerTmp> </ng-template>
+
+<ng-template #defaultHeaderTmp>
+  <div class="resizable-modal-header">
+    <div class="resizable-modal-header__title wrapper-title break-word">
+      <ng-container *ngTemplateOutlet="titleTemplate"></ng-container>
+    </div>
+    <button
+      *ngIf="closable"
+      (click)="handleCancel()"
+      class="trudi-icon close-btn cursor-pointer close-icon trudi-ui-btn-circle">
+      <trudi-icon
+        class="trudi-icon"
+        [style]="{ 'width.px': 24, 'height.px': 24, color: '#646464' }"
+        icon="closeIcon"></trudi-icon>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #titleTemplate>
+  <div class="resizable-modal-header__title--default">
+    @if (!!iconName) {
+    <trudi-icon
+      [svgClass]="classIconTitle"
+      [icon]="iconName"
+      [style]="styleIcon"></trudi-icon>
+    }
+    <div class="title w-100 flex-1 cursor-default">
+      <span class="flex-1">{{ title }}</span>
+      <div class="sub-title" *ngIf="subTitle">{{ subTitle }}</div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #defaultFooterTmp>
+  <div class="modal-popup-footer-custom">
+    <div class="d-flex flex-1 justify-content-end">
+      <ng-container [ngTemplateOutlet]="footerBtn"></ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footerBtn>
+  <div class="resizable-modal-footer__button--default">
+    <button
+      *ngIf="showBackBtn"
+      trudi-btn
+      size="large"
+      btnType="neutral"
+      variant="outlined"
+      [appE2E]="dataE2E?.backBtn || ''"
+      (click)="handleBack()">
+      Back
+    </button>
+    <button
+      *ngIf="!hiddenCancelBtn"
+      trudi-btn
+      size="large"
+      btnType="neutral"
+      variant="outlined"
+      [appE2E]="dataE2E?.cancelBtn || ''"
+      (click)="handleCancel()">
+      {{ cancelText }}
+    </button>
+    <button
+      [disabled]="disableOkBtn"
+      *ngIf="!hiddenOkBtn"
+      trudi-btn
+      [btnType]="colorBtn"
+      (click)="handleOk()"
+      [appE2E]="dataE2E?.okBtn || ''">
+      {{ okText }}
+    </button>
+  </div>
+</ng-template>

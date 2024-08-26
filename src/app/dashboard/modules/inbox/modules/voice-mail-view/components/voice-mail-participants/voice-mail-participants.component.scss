@@ -1,0 +1,35 @@
+@import 'function';
+
+:host {
+  width: 100%;
+  display: block;
+  .participants-container {
+    flex: 1;
+    @include fontSetup(var(--gray-700), 14px, 20px, normal, 600);
+
+    .participants-item-wrapper {
+      display: flex;
+      align-items: center;
+      max-width: 100%;
+      .participants-name {
+        max-width: 100%;
+        display: flex;
+      }
+    }
+
+    .count {
+      @include fontSetup(
+        var(--fg-neutral-weaker, #999),
+        14px,
+        20px,
+        normal,
+        400
+      );
+      letter-spacing: 0.14px;
+    }
+    &.seen {
+      color: var(--gray-600) !important;
+      font-weight: 400 !important;
+    }
+  }
+}

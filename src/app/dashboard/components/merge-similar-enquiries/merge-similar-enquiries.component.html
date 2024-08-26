@@ -1,0 +1,95 @@
+<trudi-modal
+  *ngIf="visible"
+  [visible]="visible"
+  [modelWidth]="1120"
+  [autoFocus]="null"
+  title="Merge similar enquiries"
+  [showIconName]="false"
+  [hiddenCancelBtn]="true"
+  okText="Merge"
+  (onCancel)="handleCancel()"
+  (onOk)="handleConfirm()"
+  className="modal-merge"
+  subTitle="">
+  <ng-container *ngIf="isLoadingModal; else showSimilarReplies">
+    <div class="wrap-all-skeleton">
+      <div
+        *ngFor="let _ of [].constructor(6)"
+        class="skeleton-wrapper w-100 gap-40 d-flex align-items-center justify-content-between">
+        <div class="skeleton-checkbox-container">
+          <div class="skeleton-checkbox"></div>
+        </div>
+        <div class="d-flex gap-2 w-100 flex-dir-column">
+          <nz-skeleton
+            [nzParagraph]="false"
+            [nzRound]="true"
+            [nzActive]="true"></nz-skeleton>
+          <div class="d-flex w-100 gap-10">
+            <ng-container *ngFor="let width of ['40%', '30%']">
+              <nz-skeleton
+                [nzRound]="true"
+                [nzParagraph]="false"
+                [nzActive]="true"
+                [ngStyle]="{'width': width}"></nz-skeleton>
+            </ng-container>
+          </div>
+          <div class="d-flex w-100 gap-10">
+            <ng-container *ngFor="let width of ['33%', '33%', '25%']">
+              <nz-skeleton
+                [nzRound]="true"
+                [nzParagraph]="false"
+                [nzActive]="true"
+                [ngStyle]="{'width': width}"></nz-skeleton>
+            </ng-container>
+          </div>
+        </div>
+        <div class="d-flex gap-2 w-100 flex-dir-column">
+          <ng-container *ngFor="let width of ['100%', '70%', '50%']">
+            <nz-skeleton
+              [nzRound]="true"
+              [nzParagraph]="false"
+              [nzActive]="true"
+              [ngStyle]="{'width': width}"></nz-skeleton>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #showSimilarReplies>
+    <div class="enquiries-popup">
+      <cdk-virtual-scroll-viewport
+        #scrollViewport
+        autosize
+        itemSize="150"
+        appendOnly
+        class="reply-viewport"
+        (scroll)="onScrollDown()">
+        <div class="wrapper-replies">
+          <div class="recent-save-reply">
+            <div class="title">Recently saved reply</div>
+            <div class="wrapper-row recent-row">
+              <automated-reply-row
+                [isCurrentQuestion]="isCurrentQuestion"
+                [disabled]="disabledRecentReply"
+                [aiReply]="recentReply"
+                [isLoading]="isLoading"></automated-reply-row>
+            </div>
+          </div>
+          <div class="similar-reply">
+            <div class="title">Similar replies in your database</div>
+            <div class="wrapper-row">
+              <automated-reply-row
+                *cdkVirtualFor="let aiReply of listReplies"
+                [aiReply]="aiReply"
+                [isLoading]="isLoading"></automated-reply-row>
+            </div>
+          </div>
+        </div>
+      </cdk-virtual-scroll-viewport>
+      <div *ngIf="isShowError" class="validate d-flex align-items-center gap-4">
+        <trudi-icon icon="iconWarning"></trudi-icon>
+        <span>Please add one more enquiry to merge</span>
+      </div>
+    </div>
+  </ng-template>
+</trudi-modal>

@@ -1,0 +1,48 @@
+<trudi-modal
+  [visible]="visible"
+  [modelWidth]="624"
+  (onCancel)="handleCancel()"
+  className="connect-calendar"
+  title="Connect calendar"
+  subTitle=""
+  [isHideFooter]="false"
+  [autoFocus]="null">
+  <ng-template #footerModal>
+    <div class="d-flex gap-8">
+      <button
+        trudi-btn
+        class="btn-next-connect d-flex align-items-center gap-8"
+        (click)="handleNext()">
+        Next
+      </button>
+    </div>
+  </ng-template>
+  <div class="container-connect-calendar">
+    <div class="d-flex justify-content-center gap-16">
+      <button
+        [ngClass]="{'active': active === emailProvider.GOOGLE}"
+        class="btn-connect-calendar"
+        (keydown.enter)="onSelectCalendarProvider(emailProvider.GOOGLE, true);$event.preventDefault()"
+        (click)="onSelectCalendarProvider(emailProvider.GOOGLE)">
+        <trudi-icon
+          svgClass="size-20"
+          [icon]="'iconGoogleCalendar'"></trudi-icon>
+        <div>Google calendar</div>
+      </button>
+      <button
+        class="btn-connect-calendar"
+        [ngClass]="{'active': active === emailProvider.OUTLOOK}"
+        (keydown.enter)="onSelectCalendarProvider(emailProvider.OUTLOOK, true);$event.preventDefault()"
+        (click)="onSelectCalendarProvider(emailProvider.OUTLOOK)">
+        <trudi-icon
+          svgClass="size-28"
+          [icon]="'iconOutlookCalendar'"></trudi-icon>
+        <div>Outlook calendar</div>
+      </button>
+    </div>
+    <div *ngIf="isErrorSelect" class="error-no-select">
+      <trudi-icon svgClass="size-16" icon="errorInputIcon"></trudi-icon>
+      <span>You must select a calendar provider</span>
+    </div>
+  </div>
+</trudi-modal>

@@ -1,0 +1,99 @@
+<div class="forward-email-wrapper">
+  <div class="header">
+    <div
+      class="detail-invite d-flex justify-content-between align-items-center">
+      <div class="detail-invite-icon">
+        <div
+          class="background-icon d-flex align-items-center justify-content-around">
+          <trudi-icon svgClass="size-48" icon="trudiAvt"></trudi-icon>
+        </div>
+      </div>
+      <div class="detail-invite-text d-flex align-items-center">
+        <p>Who would you like to forward this email to?</p>
+      </div>
+      <div
+        data-e2e="button-close"
+        class="close-btn close-modal-btn"
+        (click)="onQuitModal($event)">
+        <trudi-icon
+          [style]="{ 'width.px': 14, 'height.px': 14, color: '#646464' }"
+          icon="closeBtn"
+          class="trudi-icon"></trudi-icon>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div class="body">
+    <div class="text-header">Email address</div>
+    <div class="supplier-tab">
+      <ng-select
+        [items]="listEmail"
+        [(ngModel)]="selected"
+        class="supplier-select supplier-dropdown"
+        [ngClass]="isDirty || validateEmail ? 'required-border' : ''"
+        bindLabel="email"
+        bindValue="id"
+        placeholder="Enter email address"
+        [multiple]="true"
+        (search)="onSearchEmail($event)"
+        [loading]="loading"
+        [addTag]="addEmail"
+        [selectOnTab]="true"
+        (blur)="onBlur($event)"
+        [isOpen]="isOpenDropdown"
+        notFoundText="{{!currentSearch ? 'Please enter the word' : 'No results found'}}"
+        (change)="changeSelectedEmail($event)"
+        (click)="handleClickSelected()">
+        <ng-template ng-label-tmp let-item="item" let-clear="clear">
+          <div class="select_email">
+            <div
+              [ngClass]="item.valid ? 'valid_email' : ''"
+              class="select_email--item">
+              <trudi-icon *ngIf="item.valid" icon="errorInputIcon"></trudi-icon>
+              {{item.email}}
+            </div>
+            <trudi-icon (click)="clear(item)" icon="closeGray64"></trudi-icon>
+          </div>
+        </ng-template>
+        <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+          <span
+            [ngOptionHighlight]="search ? search : ''"
+            class="supplier-name-item"
+            >{{item.email}}</span
+          >
+          <div class="supplier-dot"></div>
+          <span class="supplier-email-item">
+            {{(item.userTypeName === 'Landlord' ? 'Owner' : item.userTypeName) |
+            userTypeInRm: pipeType : isRmEnvironment}}
+          </span>
+          <div
+            *ngIf="item.userTypeName !== 'Property Manager' && ![
+            userPropertyType.TENANT_PROSPECT
+          ].includes(item?.userPropertyType)"
+            class="supplier-address white-space-normal">
+            {{isRmEnvironment ? item.streetline : item.address}}
+          </div>
+        </ng-template>
+      </ng-select>
+    </div>
+    <div *ngIf="isDirty" class="required-message d-flex">
+      <trudi-icon class="mt-2" icon="errorInputIcon"></trudi-icon>
+      <span>Required field</span>
+    </div>
+    <div *ngIf="validateEmail" class="required-message d-flex">
+      <trudi-icon class="mt-2" icon="errorInputIcon"></trudi-icon>
+      <span>Please remove invalid email</span>
+    </div>
+  </div>
+  <hr />
+  <div class="move-footer d-flex justify-content-between">
+    <div class="btn-wrapper">
+      <button
+        trudi-btn
+        [disabled]="!isPortalUser || disabledForwardButton || isArchiveMailbox || isConsole || isDisconnectMailbox"
+        (click)="onSubmit($event)">
+        <span class="btn-text"> Forward </span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,43 @@
+<div class="side-panel-header">
+  <div class="w-100 title-wrapper" (click)="$event.stopPropagation()">
+    <div
+      tabindex="0"
+      (keyup.enter)="!isConsole || !isArchiveMailbox ? onEditTitle() : null"
+      (click)="!isConsole || !isArchiveMailbox ? onEditTitle() : null"
+      [class.visibility-hidden]="isEditTitle"
+      *ngIf="!isEditTitle"
+      class="title"
+      data-e2e="task-name">
+      {{ title.value }}
+    </div>
+    <div *ngIf="isEditTitle" class="dummySpace"></div>
+    <div class="title-text-field w-100" [class.editing]="isEditTitle">
+      <trudi-text-field
+        #trudiTextField
+        (keyup.enter)="trudiTextField.inputElem.nativeElement.blur()"
+        (triggerEventBlur)="saveEditTitle()"
+        [formControl]="title"
+        class="title relative"
+        [showCounting]="false"
+        [maxCharacter]="75">
+      </trudi-text-field>
+    </div>
+  </div>
+  <button
+    [disabled]="!property?.streetline"
+    class="button-address"
+    [ngClass]="{'disabled': !property?.streetline,'cursor-not-allowed' : (property?.status && property.status === EPropertyStatus.deleted)}"
+    [attr.data-button-key]="EButtonTask.VIEW_PROPERTY"
+    [attr.data-button-type]="EButtonType.TASK"
+    PreventButton
+    (leftClick)="openPropertyProfile()">
+    <div
+      class="street-property"
+      [ngClass]="{'un-highlight': property?.status && property.status !== EPropertyStatus.active}">
+      {{ property?.streetline || 'No property' }}
+    </div>
+  </button>
+  <button trudi-btn (click)="navigateToTaskDetail()" class="w-100 mt-16">
+    Go to task
+  </button>
+</div>

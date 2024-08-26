@@ -1,0 +1,77 @@
+<tiny-editor
+  [from]="TinyEditorOpenFrom.AppChat"
+  [createMessageFrom]="ECreateMessageFrom.SMS_MESSAGES"
+  [text]="prefillText"
+  placeholder="Type your message here"
+  [toolbarPosition]="'BOTTOM'"
+  [isEmailSignature]="false"
+  [isShowEmailSignature]="false"
+  [inlineMessage]="true"
+  [listCodeOptions]="listDynamicParams"
+  [isShowBackBtn]="false"
+  [isShowEmbedCodeOptionsFunction]="configs?.body?.tinyEditor?.isShowDynamicFieldFunction"
+  [isReplaceDynamicParamWithData]="true"
+  [enableAiGenerateMsgCopy]="true"
+  [isAppReply]="true"
+  [currentProperty]="currentProperty"
+  (value)="handleValueChange($event)"
+  (onChangeSendOption)="handleChangeSendOption($event)"
+  [allowInsertContactCardToContent]="true"
+  (submitSend)="handleSubmit($event)"
+  (addFileComputer)="editorAddFileComputer()"
+  (addContactCard)="editorAddContactCard()"
+  (contentHeightChange)="handleContentHeightChange($event)"
+  (addFileCRM)="editorAddFileFromCrm()"
+  [isDisabledSendBtn]="isDisableSendBtn"
+  [deleteInlineType]="deleteInlineType"
+  [defaultSelectedSendOption]="defaultBtnOption"
+  [errorMsg]="errorMsg"
+  [timeSecond]="timeSecond"
+  [date]="date"
+  [maxRemainCharacter]="1600"
+  [countCharacterUp]="true"
+  class="sms-message-container"
+  [allowFontFamily]="false"
+  [allowFontSize]="false"
+  #editorContainer></tiny-editor>
+
+<trudi-add-contact-card
+  *ngIf="contactCardPopupState.addContactCard"
+  [visible]="contactCardPopupState.addContactCard"
+  [openFrom]="configs?.inputs?.openFrom"
+  [configs]="attachmentTextEditorConfigs"
+  [listContactCard]="configs?.inputs?.listContactCard"
+  [form]="sendMsgForm"
+  [closable]="false"
+  [selectedContactCard]="selectedContactCard"
+  (onTrigger)="onTriggerAddContactCard()"
+  (changeValue)="handleChangeFormValue('contact')"
+  (onClose)="onCloseAddContactCard()"></trudi-add-contact-card>
+
+<upload-from-crm
+  [configs]="attachmentTextEditorConfigs"
+  (onTrigger)="onTriggerAddFilesFromCrm()"
+  (onClose)="onCloseUploadFromCRM()"
+  (changeValue)="handleChangeFormValue('crmFile')"
+  *ngIf="uploadFileFromCRMPopupState.uploadFileFromCRM"></upload-from-crm>
+
+<div
+  *ngIf="popupState.addReiFormOutside"
+  [show]="popupState.addReiFormOutside"
+  [position]="ModalPopupPosition.center">
+  <trudi-rei-form-card></trudi-rei-form-card>
+</div>
+
+<trudi-modal
+  type="confirm"
+  okText="Confirm"
+  title="Are you sure you want to resolve this message?"
+  subTitle="To satisfy spam legislation, only the customer can re-open an SMS conversation once it has been resolved."
+  className="send-and-resole-confirm-modal"
+  (onOk)="handleSendAndResolveMessage()"
+  (visibleChange)="handleVisibleChange($event)"
+  [modelWidth]="470"
+  [visible]="isShowConfirmModal"
+  [closable]="false"
+  [autoFocus]="null">
+</trudi-modal>

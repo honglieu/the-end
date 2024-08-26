@@ -1,0 +1,251 @@
+<div class="contact-block">
+  <!-- User label section -->
+  <div class="d-flex gap-4">
+    <div
+      *ngIf="isShowLabel"
+      class="title-conversation"
+      [class.empty-title]="!currentConversation.categoryName"
+      data-e2e="conversation-name"
+      nz-tooltip
+      [nzTooltipTitle]="currentConversation?.categoryName"
+      nzTooltipOverlayClassName="reassign-contact"
+      nzTooltipPlacement="top">
+      <span class="title-conversation__name">
+        {{currentConversation.categoryName || 'No title'}}
+      </span>
+      <span
+        class="title-conversation__status"
+        *ngIf="(currentConversation?.status | conversationStatus).text && !currentConversation?.isScratchDraft">
+        <trudi-badge
+          [text]="(currentConversation?.status | conversationStatus).text"
+          [allowTruncated]="true"
+          [variant]="(currentConversation?.status | conversationStatus).variant"></trudi-badge>
+      </span>
+    </div>
+
+    <ng-container *ngIf="isSyncInprogress else syncStatus">
+      <div class="d-flex align-items-start gap-4 mt-4 ml-4">
+        <trudi-icon
+          svgClass="size-20 spin-syncing-v2"
+          [icon]="'syncingV2'"
+          class="spin-syncing-v2"
+          viewBox="auto">
+        </trudi-icon>
+        <span class="sync">Syncing</span>
+      </div>
+    </ng-container>
+
+    <ng-template #syncStatus>
+      <div
+        *ngIf="currentConversation?.syncStatus || currentConversation?.conversationSyncDocumentStatus"
+        class="synced y-center gap-4 mt-4 ml-4"
+        nz-tooltip
+        nzTooltipOverlayClassName="move-to-icon"
+        [nzTooltipTitle]="(currentConversation?.updatedSyncAt || currentConversation?.conversationSyncDocumentAt | formatDateTime | async)"
+        nzTooltipPlacement="bottomLeft">
+        <trudi-icon
+          svgClass="size-20"
+          [icon]="isSyncSuccess ? 'syncSuccessCloud' : 'syncFailCloud'">
+        </trudi-icon>
+        <span
+          class="sync"
+          [class]="isSyncSuccess ? 'sync-success' : 'sync-fail'">
+          {{isSyncSuccess ? 'Synced' : 'Fail to sync' }}
+        </span>
+      </div>
+    </ng-template>
+  </div>
+
+  <!-- User information section -->
+  <!-- <div
+    *ngIf="shouldDisplayUserDetails; else emailUnidentified"
+    class="contact-block__user-info"
+    [ngClass]="{
+      'contact-block__deleted': currentConversation?.crmStatus === EUserDetailStatus.DELETED,
+      'reverse': currentConversation?.startMessageBy === EUserPropertyType.EXTERNAL
+    }"
+    (click)="currentConversation?.startMessageBy !== EUserPropertyType.EXTERNAL && handleNzPopoverProfile()">
+    <div
+      class="contact-block__user-info--name text-ellipsis d-flex gap-4"
+      [ngClass]="{
+      'reverse': currentConversation?.startMessageBy === EUserPropertyType.EXTERNAL
+    }">
+      <span class="role-email">{{ generateUserName }}</span>
+      <div *ngIf="shouldDisplayUserDetails">
+        <span *ngIf="shouldShowBullet"> &#8226;</span>
+        {{ determineUserType | titleCasePipe | lowercase | uppercaseFirstLetter
+        }}
+        <div
+          nz-popover
+          [nzPopoverPlacement]="placement"
+          [nzPopoverContent]="contentProfileTemplate"
+          nzPopoverTrigger="click"
+          [nzPopoverVisible]="showPopoverProfile"
+          (nzPopoverVisibleChange)="showPopoverProfile = $event"
+          nzPopoverOverlayClassName="nz-reassign-overlay user-profile-overlay"></div>
+      </div>
+    </div>
+  </div> -->
+
+  <!-- Email details section -->
+  <!-- <ng-template #emailUnidentified>
+    <div
+      *ngIf="shouldDisplayContactDetails; else phoneUnidentified;"
+      class="contact-block__email-unidentified"
+      [ngClass]="{
+        'contact-block__delete': currentConversation?.crmStatus === 'DELETED',
+        'contact-block__external-type': currentConversation?.startMessageBy === EUserPropertyType.EXTERNAL
+      }"
+      (click)="handleNzPopover()">
+      <div class="info-email-unidentified">
+        <div
+          nz-tooltip
+          nzTooltipPlacement="top"
+          nzTooltipOverlayClassName="reassign-contact"
+          nzTooltipTitle="Unidentified contact, click to identify">
+          {{currentConversation.email}}
+        </div>
+      </div>
+      <ng-container *ngTemplateOutlet="nzPopoverDefault"> </ng-container>
+    </div>
+  </ng-template> -->
+
+  <!-- Phone number details section -->
+  <!-- <ng-template #phoneUnidentified>
+    <div
+      *ngIf="shouldDisplayPhoneUnidentified && currentConversation.phoneNumber; else unidentifiedExternal;"
+      class="contact-block__phone-unidentified">
+      <div
+        class="info-phone-unidentified"
+        nz-tooltip
+        nzTooltipOverlayClassName="reassign-contact"
+        [nzTooltipTitle]="'Unidentified contact, click to identify'"
+        (click)="handleNzPopover()">
+        <span>
+          {{ currentConversation.phoneNumber | phoneNumberFormat:
+          isRmEnvironment}}
+        </span>
+      </div>
+      <ng-container *ngTemplateOutlet="nzPopoverDefault"> </ng-container>
+    </div>
+  </ng-template> -->
+
+  <!-- Show user type details section -->
+  <!-- <ng-template #unidentifiedExternal>
+    <div
+      *ngIf="shouldDisplayUserDetails && !shouldShowUserEmail"
+      class="contact-block__user-info"
+      (click)="handleNzPopover()">
+      <div class="contact-block__user-info--name text-ellipsis d-flex gap-4">
+        <span *ngIf="shouldShowBullet">&#8226;</span>
+        {{ determineUserType | lowercase | uppercaseFirstLetter }}
+        <ng-container *ngTemplateOutlet="nzPopoverDefault"> </ng-container>
+      </div>
+    </div>
+  </ng-template> -->
+</div>
+
+<!-- <ng-template #contentProfileTemplate>
+  <div class="header">
+    <trudi-icon
+      class="size-20"
+      [icon]="[EMessageComeFromType.VOICE_MAIL, EMessageComeFromType.VOICE_CALL].includes(currentConversation.createdFrom) ? 'iconPhoneWhite' : 'iconGmailWhite'"></trudi-icon>
+    <span> {{userProfile}} </span>
+  </div>
+  <div class="content">
+    <span class="assigned">Assigned to:</span>
+    <span class="role" [ngSwitch]="currentConversation.startMessageBy">
+      <ng-container *ngSwitchCase="EUserPropertyType.EXTERNAL">
+        {{'External email • ' + this.generateUserName}}
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <span>{{this.generateUserName}}</span>
+        {{ this.shouldShowBullet ? '•' : '' }} {{ this.shouldDisplayUserDetails
+        ? ( determineUserType | titleCasePipe | lowercase |
+        uppercaseFirstLetter) : '' }}
+      </ng-container>
+    </span>
+    <div
+      *ngIf="determinePropertyAddress"
+      class="address"
+      [ngClass]="{
+      'address-no-property': determinePropertyAddress === 'No property'
+    }">
+      <trudi-icon
+        class="size-16"
+        icon="iconAddress"
+        *ngIf="determinePropertyAddress !== 'No property'"></trudi-icon>
+
+      <span>{{ determinePropertyAddress }}</span>
+    </div>
+    <button *ngIf="!shouldHideUserProfile" (click)="handleUserInfoClick()">
+      View profile
+    </button>
+  </div>
+  <div class="action" *ngIf="isMultipleContact">
+    <span class="title" #titleContainer> Not {{generateUserName}}? </span>
+    <span
+      class="reassign"
+      (click)="handleNzPopover()"
+      [ngClass]="{
+      'reassign-active': showPopover
+    }"
+      >Reassign
+    </span>
+    <ng-container
+      *ngTemplateOutlet="
+        nzPopoverDefault;
+        context: { custom: 'nz-reassign-overlay reassign-contact-overlay', placement: placementReassign}">
+    </ng-container>
+  </div>
+</ng-template> -->
+
+<ng-template #contentTemplate>
+  <div class="box-contact border-rad-8 d-block">
+    <div class="section-trudi">
+      <header-trudi-page
+        [appChatHeader]="true"
+        [isSelectContact]="true"
+        [isHideLogo]="false"
+        [size]="36"
+        [text]="headerTrudiPageText"
+        [email]="headerTrudiPageEmail"
+        [identifiedEmail]="currentConversation?.trudiResponse?.data[0]?.header?.identifiedEmail"
+        [phoneNumber]="currentConversation?.trudiResponse?.data[0]?.header?.phoneNumber"
+        [isUnindentifiedEmail]="currentConversation.createdFrom !==
+        EMessageComeFromType.VOICE_MAIL && isUnindentifiedEmail"
+        [isUnindentifiedPhoneNumber]="currentConversation.createdFrom ===
+        EMessageComeFromType.VOICE_MAIL && isUnindentifiedPhoneNumber"></header-trudi-page>
+      <app-unhappy-path-trudi
+        [overlayDropdown]="overlayDropdown"
+        [taskId]="task?.id"
+        [title]="'Select contact'"
+        [items]="contactList"
+        [propertyList]="propertyList"
+        [taskNameList]="taskNameList"
+        [isUnHappyPath]="isUnHappyPath"
+        [isUnidentifiedEmail]="isUnindentifiedEmail"
+        [isUnindentifiedProperty]="isUnindentifiedProperty"
+        [isUnindentifiedPhoneNumber]="isUnindentifiedPhoneNumber"
+        [unhappyStatus]="showPopoverContact? unhappyStatusReassign: unhappyStatus"
+        [placeholder]="placeHolderTrudiUnhappy"
+        [loading]="unhappyPathLoading"
+        (onConfirm)="handleConfirmSelectContact($event, this.showPopoverProfile)"
+        (onSearch)="handleOnGetUnHappyPath($event, this.showPopoverProfile)"
+        (onSetEmptyContactList)="setEmptyContactList()">
+      </app-unhappy-path-trudi>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #nzPopoverDefault let-custom="custom" let-placement="placement">
+  <div
+    nz-popover
+    [disabled]="isConsole"
+    [nzPopoverPlacement]="placement || 'bottomLeft'"
+    [nzPopoverContent]="contentTemplate"
+    nzPopoverTrigger="click"
+    [nzPopoverVisible]="showPopover"
+    (nzPopoverVisibleChange)="showPopover = $event"
+    [nzPopoverOverlayClassName]="'assign-contact-overlay '+ custom"></div>
+</ng-template>

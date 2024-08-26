@@ -1,0 +1,57 @@
+<div
+  class="d-flex gap-8 align-items-center mt-8"
+  [ngClass]="{'mt-12': message.languageCode && message.languageCode !== 'en' && message.languageCode !== 'und', 'flex-dir-row-reverse': isFileType && !message.isUserFromSms}">
+  <div
+    class="message-default message-wrapper"
+    [style.width]="message.senderType === 'user' ? 'fit-content' : 'auto'"
+    [ngClass]="{'sending-from-user': isSending}">
+    @if (visibleMessageText) {
+    <div class="message-text">
+      <div class="message-content-wrapper">
+        <span *ngFor="let mes of message.message; trackBy: messageTrackBy">
+          <span
+            #textContain
+            [triggerTextSelectionAddPolicy]="isSelectionAddPolicy"
+            [innerHTML]="(updatedMessage || mes.value) | safe: 'html'"
+            (click)="onClickMsg($event)"></span>
+          <div
+            *ngIf="message.languageCode && message.languageCode !== 'en' && message.languageCode !== 'und'"
+            class="message-translation-label">
+            <language-translation-label
+              [isFromAIAssistant]="isFromAIAssistant"
+              (languageTranslationDisabled)="updateMessage($event, mes.value)"
+              [messagesTranslate]="message.messagesTranslate"
+              [inputLanguage]="message.languageCode"></language-translation-label>
+          </div>
+          <div
+            *ngIf="updatedMessage && message.messagesTranslate && message.languageCode && message.languageCode !== 'en' && message.languageCode !== 'und'">
+            <language-original-content
+              [senderType]="message.isUserFromSms ? 'user' : 'admin'"
+              [content]="mes.value"></language-original-content>
+          </div>
+        </span>
+      </div>
+    </div>
+    }
+    <div class="list-contact" *ngIf="message.options?.contacts?.length > 0">
+      <ng-container *ngFor="let contact of message.options?.contacts">
+        <info-ticket [contact]="contact" [size]="'small'"></info-ticket>
+      </ng-container>
+    </div>
+  </div>
+
+  @if (isFileType && !isSending) {
+  <div
+    class="file-action-container"
+    [ngClass]="{'visibility-hidden': !smsFileAction?.showFileActionMenu}"
+    [style.z-index]="1">
+    <sms-file-action
+      #smsFileAction
+      [userVerified]="userVerified"
+      [message]="message"
+      (fileEmit)="fileEmit.emit($event)"
+      (showSelectPeople)="showSelectPeople.emit($event)">
+    </sms-file-action>
+  </div>
+  }
+</div>

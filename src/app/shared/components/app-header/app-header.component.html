@@ -1,0 +1,222 @@
+<app-modal-popup
+  *ngIf="isShowQuitConfirmModal"
+  [show]="isShowQuitConfirmModal"
+  [position]="ModalPopupPosition.center"
+  [specificWidth]="510">
+  <app-quit-confirm
+    (isCloseModal)="showQuitConfirm($event)"
+    (isOpenSendMessageModal)="showAppSendMessage($event)"
+    (isOpenFileModal)="showAddFiles($event)"
+    (delete)="deleteTask($event)"></app-quit-confirm>
+</app-modal-popup>
+
+<app-modal-popup
+  *ngIf="showTaskCompleteState"
+  [show]="showTaskCompleteState"
+  [position]="ModalPopupPosition.center"
+  [specificWidth]="510">
+  <confirm-popup
+    [titleText]="completeStep === 1 ? completeTaskContent.step1Text : completeTaskContent.step2Text"
+    [subTexts]="completeStep === 1 ? [completeTaskContent.step1SubText, completeTaskContent.step2SubText] : []"
+    [buttonLeft]="completeStep === 1 ? 'Cancel' : ''"
+    [buttonRight]="completeStep === 1 ? 'Confirm' : ''"
+    (onButtonLeftClick)="closeCompleteTask()"
+    (onButtonRightClick)="confirmCompleteTask()">
+  </confirm-popup>
+</app-modal-popup>
+
+<app-modal-popup
+  *ngIf="editLeadTitle"
+  [show]="editLeadTitle"
+  [position]="ModalPopupPosition.center">
+  <popup-layout
+    [dividerBottom]="false"
+    (whenCancel)="onCancelOfPopupPressed()"
+    [disabledRightButton]="taskMode === 'edit' ? isEditPopup : !taskNameCreateForm.valid"
+    (whenConfirmed)="taskMode === 'edit' ? onConfirmEdit() : onConfirmCreate()"
+    (whenClosed)="onClose()"
+    headerText="Change task type"
+    logoSvgSegmentId="#trudi-default-logo"
+    [leftButtonText]="taskMode === 'edit' ? '' : 'Go Back'">
+    <!-- [headerText]="'Let’s ' + (taskMode === 'edit' ? 'edit the name of this task' : 'create a new task name ')" -->
+    <ng-container *ngIf="taskMode === 'edit'; else createMode">
+      <div class="search-box" id="task-select">
+        <div class="small-label">Select task name</div>
+        <ng-select
+          [items]="taskNameList"
+          [(ngModel)]="selectedTask"
+          (change)="onTaskSelectChanged($event)"
+          bindValue="value"
+          bindLabel="label"
+          groupBy="group"
+          (search)="searchNotFound()"
+          (close)="closeTaskName()"
+          [searchable]="true"
+          [clearable]="false"
+          [virtualScroll]="true"
+          [compareWith]="compareFn"
+          [editableSearchTerm]="true">
+          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+            <span
+              [ngOptionHighlight]="search ? search : ''"
+              [title]="item.label"
+              >{{item.label}}</span
+            >
+          </ng-template>
+        </ng-select>
+      </div>
+      <div class="cc-text hide">
+        Can’t see a suitable name?
+        <span (click)="onOpenCreateMode()" class="create-func"
+          >Create a new task name
+        </span>
+      </div>
+    </ng-container>
+    <ng-template #createMode>
+      <div class="create-form" [formGroup]="taskNameCreateForm">
+        <div class="small-label">Select Topic</div>
+        <ng-select
+          formControlName="topicId"
+          [items]="selectTopicItems"
+          class="underline-box"
+          bindLabel="name"
+          bindValue="id"
+          [searchable]="false"
+          [clearable]="false"></ng-select>
+        <div class="small-label">Task Name</div>
+        <input
+          formControlName="taskName"
+          type="text"
+          class="input input-underline"
+          maxlength="30" />
+        <div
+          class="text-noti d-flex justify-content-between"
+          [ngClass]="{'justify-content-end': !isAddDuplicate}">
+          <div
+            *ngIf="isAddDuplicate"
+            class="duplicate-noti d-flex align-items-center">
+            <img src="/assets/images/icons/error-bg-red.svg" alt="error" />
+            <span>The task name has existed</span>
+          </div>
+          <div class="down-right-text">
+            <app-remaining-character
+              [maxlength]="30"
+              [currentTextLength]="getTaskNameOnCreate?.length"></app-remaining-character>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </popup-layout>
+</app-modal-popup>
+
+<div class="appbar-wrapper d-flex align-items-center">
+  <div class="content-left d-flex align-items-center">
+    <div
+      *ngIf="currentTask"
+      (click)="onBack()"
+      class="back-btn cursor-pointer d-flex align-items-center justify-content-center">
+      <img src="/assets/icon/icon-arrow-back.svg" alt="" />
+    </div>
+    <div class="title-wrapper d-flex align-items-center">
+      <img
+        class="icon_warning"
+        *ngIf="currentTask?.isSuperHappyPath || currentTask?.isUnHappyPath"
+        src="/assets/icon/icon-warning-orange.svg"
+        alt="warning" />
+      <div class="title" data-e2e="task-name">{{title}}</div>
+    </div>
+    <assign-to-agents
+      *ngIf="(taskService.currentTask$ | async)"
+      [displayText]="'Assign'"
+      [ngClass]="{'disable-button border-rad-full': currentTaskDeleted}"
+      [agents]="(taskService.currentTask$ | async).assignToAgents"
+      [task]="taskService.currentTask$ | async">
+    </assign-to-agents>
+  </div>
+  <div class="navigation-block">
+    <div *ngIf="currentTask" class="btn-task-wrapper d-flex align-items-center">
+      <div
+        (click)="onClickBtn()"
+        class="trudi-btn trudi-btn-semi-large trudi-btn-secondary">
+        <img [src]="iconURL" alt="completed" />
+        <span>{{buttonText}}</span>
+      </div>
+      <div
+        (click)="onDeleteTask()"
+        *ngIf="currentStatus !== taskStatusType.deleted && currentTask?.status.toLowerCase() !== taskStatusType.deleted"
+        class="trudi-btn trudi-btn-semi-large trudi-btn-secondary--danger">
+        <img src="/assets/icon/icon-delete-red.svg" alt="trash" />
+        <span>Delete</span>
+      </div>
+    </div>
+    <div *ngIf="!currentTask && isShowSearchBox" class="search-wrapper">
+      <img class="icon-search" src="/assets/icon/icon-search.svg" alt="" />
+      <input
+        type="text"
+        class="form-control search-property-input"
+        placeholder="Search"
+        onfocus="this.placeholder = ''"
+        onblur="this.placeholder = 'Search'"
+        data-e2e="search-tasks-button"
+        [formControl]="searchFormControl$" />
+    </div>
+
+    <div
+      (click)="onClickBell()"
+      appOutsideClickListener
+      (clickOutside)="closeNotificationList()"
+      class="noti-wrapper d-flex align-items-center justify-content-center cursor-pointer">
+      <img src="/assets/icon/icon-bell.svg" alt="" />
+      <span
+        *ngIf="notificationService.isUnseen | async"
+        class="unread-indicator"></span>
+      <!-- <list-notification></list-notification> -->
+    </div>
+
+    <div class="normal-spacing">
+      <div
+        class="user-avatar cursor-pointer"
+        *ngIf="userInfo?.googleAvatar !== ''; else noImage"
+        (click)="openOption()"
+        [menuTrigger]="options"
+        #menu="menu">
+        <img [src]="userInfo?.googleAvatar" alt="" data-e2e="avatar-button" />
+      </div>
+    </div>
+    <ng-template #noImage>
+      <div class="user-avatar loading"></div>
+    </ng-template>
+  </div>
+
+  <ng-template #options>
+    <div class="menu-options profile-menu">
+      <div
+        class="item d-flex align-items-center"
+        ripple
+        (click)="handleNavigateToUserProfile()"
+        data-e2e="profile-button">
+        <img src="/assets/icon/user-gray-outline.svg" alt="profile-settings" />
+        <span class="item-text"> Profile Settings </span>
+      </div>
+      <ng-container
+        *ngIf="userInfo.type === UserType.AGENT || userInfo.type === UserType.ADMIN || userInfo.type === UserType.SUPERVISOR">
+        <div
+          class="item d-flex align-items-center"
+          ripple
+          (click)="handleNavigateToConsoleSetting()"
+          data-e2e="console-button">
+          <img src="/assets/icon/settings-gray-outline.svg" alt="setting" />
+          <span class="item-text"> Console Settings </span>
+        </div>
+      </ng-container>
+      <div
+        class="item d-flex align-items-center"
+        (click)="logout()"
+        ripple
+        data-e2e="logout-button">
+        <img src="/assets/icon/logout-gray-icon.svg" alt="trash" />
+        <span class="item-text"> Logout </span>
+      </div>
+    </div>
+  </ng-template>
+</div>

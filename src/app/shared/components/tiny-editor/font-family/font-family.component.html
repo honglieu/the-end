@@ -1,0 +1,46 @@
+<div class="font-family-wrapper">
+  <button
+    id="fontFamilyBtn"
+    class="btn-action"
+    (click)="$event.stopPropagation()"
+    nz-dropdown
+    nz-button
+    [nzClickHide]="false"
+    [nzDropdownMenu]="menu"
+    [nzTrigger]="'click'"
+    [nzPlacement]="'topLeft'"
+    [nzVisible]="visibleDropdown"
+    (nzVisibleChange)="visibleDropdown = $event"
+    trudi-tooltip
+    [nzTooltipTitle]="'Font styles'">
+    <trudi-icon
+      [icon]="visibleDropdown ? 'chevronUp' : 'chevronDown'"></trudi-icon>
+    <span
+      class="btn-label"
+      [style.font-family]="currentFontFamily.format.indexOf('dings') === -1 ? currentFontFamily.format : ''"
+      >{{ currentFontFamily.title }}</span
+    >
+  </button>
+</div>
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div nz-menu focusElement [isFocus]="visibleDropdown" tabindex="0">
+    <div class="font-family-menu-wrapper">
+      <ng-container *ngFor="let item of fontFamilies">
+        <div
+          nz-menu-item
+          class="item d-flex align-items-center gap-8"
+          tabindex="0"
+          (click)="$event.stopPropagation();onHandleChangeFontFamily(item)"
+          (keydown.enter)="onHandleChangeFontFamily(item)">
+          <span
+            [style.font-family]="item.format.indexOf('dings') === -1 ? item.format : ''"
+            >{{item.title}}</span
+          >
+          <trudi-icon
+            *ngIf="item.format === currentFontFamily.format"
+            icon="checkSuccess"></trudi-icon>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</nz-dropdown-menu>

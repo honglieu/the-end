@@ -1,0 +1,19 @@
+<ng-template [ngIfElse]="detailUserList" [ngIf]="isLoading">
+  <tenant-detail-skeleton></tenant-detail-skeleton>
+</ng-template>
+<ng-template #detailUserList>
+  <ng-template [ngForOf]="userPropertyList" let-userProperty ngFor>
+    <div class="profile-details gap-12 d-flex flex-dir-column">
+      <user-property-details-header
+        [currentDataUser]="currentDataUser"
+        [openFrom]="openFrom"
+        [userProperty]="userProperty"></user-property-details-header>
+      <user-property-details-body
+        [currentDataUser]="currentDataUser"
+        [openFrom]="openFrom"
+        [userProperty]="userProperty"></user-property-details-body>
+      <user-property-details-footer
+        [userProperty]="userProperty"></user-property-details-footer>
+    </div>
+  </ng-template>
+</ng-template>

@@ -1,0 +1,469 @@
+<app-modal-popup
+  *ngIf="isShowAsignOwnerModal"
+  [show]="isShowAsignOwnerModal"
+  [position]="popupModalPosition.center"
+  [specificWidth]="510">
+  <app-team-assign-owner
+    (isCloseModal)="showAssignOwner($event)"
+    (emitConfirm)="confirmAssignOwner($event)"
+    [nameOfUser]="currentUserName"
+    [id]="currentId">
+  </app-team-assign-owner>
+</app-modal-popup>
+
+<app-modal-popup
+  *ngIf="isShowAsignAdminModal"
+  [show]="isShowAsignAdminModal"
+  [position]="popupModalPosition.center"
+  [specificWidth]="510">
+  <app-team-assign-admin
+    (isCloseModal)="showAssignAdmin($event)"
+    (emitConfirm)="confirmAssignAdmin($event)"
+    [nameOfUser]="currentUserName"
+    [id]="currentId">
+  </app-team-assign-admin>
+</app-modal-popup>
+
+<app-modal-popup
+  *ngIf="isShowDeactivateModal"
+  [show]="isShowDeactivateModal"
+  [position]="popupModalPosition.center"
+  [specificWidth]="510">
+  <app-team-deactive
+    (isCloseModal)="showDeactivate($event)"
+    (emitDeactivate)="changeActivated($event, UserStatus.DEACTIVATED)"
+    [nameOfUser]="currentUserName"
+    [id]="currentId">
+  </app-team-deactive>
+</app-modal-popup>
+
+<app-modal-popup
+  *ngIf="isShowDeleteProfileModal"
+  [show]="isShowDeleteProfileModal"
+  [position]="popupModalPosition.center"
+  [specificWidth]="510">
+  <app-team-delete-profile
+    (isCloseModal)="cancelDeleteProfile()"
+    (emitDeleteProfile)="deleteProfile()"
+    [id]="currentId">
+  </app-team-delete-profile>
+</app-modal-popup>
+
+<invite-team-members
+  *ngIf="isOpenInviteModal"
+  [show]="isOpenInviteModal"
+  [canAssignOwner]="!hasOwner && currentUserType === UserPropertyType.ADMIN"
+  (onClose)="handleCloseInviteModal()"
+  (onSubmit)="onInviteTeamMember($event)"></invite-team-members>
+
+<div class="team-wrapper">
+  <div *ngIf="!isPermissionEdit" class="d-flex gap-4 align-items-center mb-8">
+    <trudi-icon icon="infoFill" [style]="{ 'width.px': 12, 'height.px': 12 }">
+    </trudi-icon>
+    <span class="warning-notice-text"
+      >You need to be an account administrator to edit this page.</span
+    >
+  </div>
+  <div class="team-table scroll-small table-setting-all">
+    <table>
+      <colgroup>
+        <ng-container>
+          <col style="width: 25%" />
+          <col style="width: 15%" />
+          <col style="width: 15%" />
+          <col style="width: 20%" />
+          <col style="width: 10%" />
+          <col style="width: 15%" />
+          <col style="width: 5%" />
+        </ng-container>
+      </colgroup>
+      <thead>
+        <tr>
+          <th class="text-left">
+            <div class="pd-16">Name</div>
+          </th>
+          <th class="text-left">Role</th>
+          <th class="text-left">Title</th>
+          <th class="text-left">Portfolio (Properties)</th>
+          <th class="text-left">Invite status</th>
+          <th
+            class="text-center d-flex justify-content-center align-items-center gap-4">
+            <div class="d-flex profile-wrapper gap-4">
+              <div class="position-relative facing-title">
+                Public-facing profile
+              </div>
+              <trudi-icon
+                icon="toolTip"
+                class="tool-tip tool-tip-icon"
+                nzTooltipTitle="Display user profile to tenants and owners in the Tenant app"
+                nzTooltipPlacement="top"
+                nz-tooltip>
+              </trudi-icon>
+            </div>
+          </th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody
+        [ngClass]="{ 'skeleton-wrapper' : loadingService.isLoading$ | async,
+            'empty-block': isEmpty()
+          }">
+        <!-- SKELETON START -->
+        <ng-container *ngIf="loadingService.isLoading$ | async">
+          <tr
+            *ngFor="let item of [].constructor(10)"
+            class="white-row gray-border">
+            <td class="name-td">
+              <div class="name-wrapper pd-16">
+                <div class="agency-logo">
+                  <nz-skeleton-element
+                    nzType="avatar"
+                    [nzActive]="true"
+                    [nzSize]="40"></nz-skeleton-element>
+                </div>
+                <div class="name-email">
+                  <nz-skeleton
+                    [nzTitle]="false"
+                    [nzParagraph]="{ rows: 2, width: '100%' }"
+                    [nzActive]="true"></nz-skeleton>
+                </div>
+              </div>
+            </td>
+            <td>
+              <nz-skeleton
+                [nzTitle]="false"
+                [nzParagraph]="{ rows: 1, width: '100%' }"
+                [nzActive]="true"></nz-skeleton>
+            </td>
+            <td>
+              <nz-skeleton
+                [nzTitle]="false"
+                [nzParagraph]="{ rows: 3, width: '100%' }"
+                [nzActive]="true"></nz-skeleton>
+            </td>
+            <td>
+              <nz-skeleton
+                [nzTitle]="false"
+                [nzParagraph]="{ rows: 1, width: '100%' }"
+                [nzActive]="true"></nz-skeleton>
+            </td>
+            <td>
+              <nz-skeleton
+                [nzTitle]="false"
+                [nzParagraph]="{ rows: 1, width: '100%' }"
+                [nzActive]="true"></nz-skeleton>
+            </td>
+            <td>
+              <nz-skeleton
+                [nzTitle]="false"
+                [nzParagraph]="{ rows: 1, width: '100%' }"
+                [nzActive]="true"></nz-skeleton>
+            </td>
+            <td class="action"></td>
+          </tr>
+        </ng-container>
+        <!-- SKELETON STOP -->
+        <ng-container *ngFor="let team of dataTable?.list; let i = index">
+          <tr
+            class="white-row gray-border {{team.inviteStatus === UserStatus.DEACTIVATED ? 'deactivate'  : ''}}">
+            <td data-title="Name" class="name-td">
+              <div class="name-wrapper pd-16">
+                <div class="agency-logo">
+                  <app-user-avatar
+                    [avatar]="team.googleAvatar"
+                    [user]="team"
+                    [style]="'width: 34px; height: 34px; font-size: 16px;'"></app-user-avatar>
+                </div>
+                <div class="name-email">
+                  <div class="d-flex gap-6">
+                    <span
+                      class="name"
+                      [innerHTML]="(team.firstName ? team.firstName + ' ' + (team.lastName || '') : team.lastName) | highlight: searchValue">
+                      {{team.firstName}} {{team.lastName}}
+                    </span>
+                  </div>
+                  <span class="email"> {{team.email}} </span>
+                  <ng-container *ngIf="team?.phoneNumber">
+                    <span class="email">
+                      {{team?.phoneNumber | phoneNumberFormat }}
+                    </span>
+                  </ng-container>
+                </div>
+              </div>
+            </td>
+            <td data-title="Role">
+              <trudi-badge
+                [text]="team.role | convertRoleName"
+                [variant]="team.role | convertRoleName: { convertVariant: true }"></trudi-badge>
+            </td>
+            <td data-title="Title" class="title">
+              <div>{{team.title}}</div>
+            </td>
+            <td class="portfolio" data-title="Portfolio (Properties)">
+              <ng-container
+                *ngIf="team.inviteStatus !== UserStatus.DEACTIVATED; else deactived">
+                <ul class="portfolio-properties">
+                  <li
+                    class="properties-item d-flex align-items-center"
+                    *ngFor="let portfolio of team.portfolios">
+                    <span class="properties-name">
+                      <span class="vertical-align-middle">
+                        {{portfolio.firstName}} {{portfolio.lastName}}
+                      </span>
+                      <div class="vertical-align-middle portfolio-icon">
+                        <span
+                          class="properties-icon d-flex align-items-center gap-4">
+                          <trudi-icon icon="home2" class="d-flex"></trudi-icon>
+                          <span>{{portfolio.portfolioCount}}</span>
+                        </span>
+                      </div>
+                    </span>
+                  </li>
+                </ul>
+              </ng-container>
+              <ng-template #deactived> ⸺ </ng-template>
+            </td>
+            <td data-title="Invite status">
+              <span
+                *ngIf="team.inviteStatus !== UserStatus.ACTIVE; else statusActive "
+                [innerHTML]="capitalizeFirstLetter(team.inviteStatus === 'PENDING' ? 'Invite sent' : team.inviteStatus.toLowerCase()) | highlight: searchValue"
+                >{{team.inviteStatus}}
+              </span>
+              <ng-template #statusActive>
+                <span
+                  >Last active {{team.lastActivity | formatDate | async}}</span
+                >
+              </ng-template>
+            </td>
+            <td
+              data-title="Public-facing profile"
+              class="emergency text-center">
+              <ng-container
+                *ngIf="team.inviteStatus !== UserStatus.DEACTIVATED; else deactived">
+                <input
+                  (change)="onCheckboxChange(team.id)"
+                  class="d-none"
+                  id="cb-emer-{{i}}"
+                  name="cb-emer-{{i}}"
+                  type="checkbox"
+                  [disabled]="!activeMobileApp || !canEditPublicFacing" />
+                <label
+                  for="cb-emer-{{i}}"
+                  class="checkbox-label"
+                  [tabindex]="(!activeMobileApp || !canEditPublicFacing) ? '-1' : '0'"
+                  [ngClass]="{'disabled': !activeMobileApp}"
+                  (keydown.enter)="onCheckboxChange(team.id)">
+                  <ng-container>
+                    <ng-container *ngIf="team.isMeetTheTeam; else notEmerCheck">
+                      <trudi-icon
+                        [icon]="'userChecked'"
+                        svgClass="size-24"
+                        class="checkbox-icon"
+                        [ngClass]="{'cursor-pointer': permissionService.getCurrentRole !== Role.MEMBER}"></trudi-icon>
+                    </ng-container>
+                    <ng-template #notEmerCheck>
+                      <trudi-icon
+                        [icon]="'uncheckDeactivated'"
+                        class="checkbox-icon"
+                        svgClass="size-24 user-uncheck"
+                        [ngClass]="{'cursor-pointer': permissionService.getCurrentRole !== Role.MEMBER}"></trudi-icon>
+                    </ng-template>
+                  </ng-container>
+                </label>
+              </ng-container>
+            </td>
+            <td class="action" *ngIf="canEdit">
+              <button
+                class="btn-action"
+                [dropdownTriggerFor]="dropdown"
+                *ngIf="!(team.id === userId && team?.role === Role.ADMIN) && team?.role !== Role.OWNER && permissionService.getCurrentRole !== Role.MEMBER">
+                <trudi-icon
+                  class="three-dot-outlined-icon"
+                  icon="threeDotOutlined"></trudi-icon>
+              </button>
+              <dropdown-menu #dropdown>
+                <div class="team-menu-options">
+                  <div
+                    class="item"
+                    *ngIf="team.inviteStatus !== UserStatus.ACTIVE && team.inviteStatus !== UserStatus.PENDING && team.inviteStatus !== UserStatus.UNINVITED"
+                    (click)="changeActivated(team.id, UserStatus.ACTIVATED)"
+                    ripple>
+                    <span class="icon">
+                      <trudi-icon icon="checkBlack"></trudi-icon>
+                    </span>
+                    <span>Activate</span>
+                  </div>
+                  <div
+                    class="item"
+                    *ngIf="team.inviteStatus !== UserStatus.ACTIVE && team.inviteStatus !== UserStatus.PENDING && team.inviteStatus !== UserStatus.UNINVITED"
+                    (click)="showDeleteProfileModal(team.id)"
+                    ripple>
+                    <span class="icon icon-delete">
+                      <trudi-icon icon="deleteIconOutline"></trudi-icon>
+                    </span>
+                    <span class="btn-delete">Delete permanently</span>
+                  </div>
+                  <ng-container
+                    *ngIf="team.inviteStatus !== UserStatus.DEACTIVATED && team.inviteStatus !== UserStatus.UNINVITED && userId !== team.id">
+                    <div
+                      class="item"
+                      *ngIf="canDeactive"
+                      (click)="deactive(team)"
+                      ripple>
+                      <span class="icon">
+                        <trudi-icon
+                          class="icon-rotate"
+                          icon="closeCircle"></trudi-icon>
+                      </span>
+                      <span>Deactivate</span>
+                    </div>
+                  </ng-container>
+
+                  <ng-container
+                    *ngIf="team.inviteStatus !== UserStatus.DEACTIVATED && !(team.role === Role.OWNER) && team.inviteStatus !== UserStatus.PENDING">
+                    <div
+                      class="item"
+                      *ngIf="canAssignOwner"
+                      (click)="assignOwner(team)"
+                      ripple>
+                      <span class="icon no-border">
+                        <trudi-icon icon="crown"></trudi-icon>
+                      </span>
+                      <span>Assign owner</span>
+                    </div>
+                  </ng-container>
+                  <ng-container
+                    *ngIf="team.inviteStatus !== UserStatus.DEACTIVATED && team.inviteStatus !== UserStatus.PENDING && team?.role === Role.MEMBER">
+                    <div
+                      class="item"
+                      *ngIf="canAssignAdmin"
+                      (click)="assignAdministrator(team.id)"
+                      ripple>
+                      <span class="icon no-border">
+                        <trudi-icon icon="userOutlined"></trudi-icon>
+                      </span>
+                      <span>Assign administrator</span>
+                    </div>
+                  </ng-container>
+                  <ng-container
+                    *ngIf="team.inviteStatus !== UserStatus.DEACTIVATED && team.inviteStatus !== UserStatus.PENDING && team?.role === Role.ADMIN">
+                    <div
+                      *ngIf="canUnassignAdmin"
+                      class="item"
+                      (click)="unAssignAdministrator(team.id)"
+                      ripple>
+                      <span class="icon no-border">
+                        <trudi-icon icon="userBorderClose"></trudi-icon>
+                      </span>
+                      <span>Unassign administrator</span>
+                    </div>
+                  </ng-container>
+                  <ng-container
+                    *ngIf="team.inviteStatus === UserStatus.PENDING">
+                    <div
+                      *ngIf="canInvite"
+                      class="item"
+                      (click)="sendInvite(team.id, team.inviteStatus)"
+                      ripple>
+                      <span class="icon">
+                        <trudi-icon icon="plusBlack"></trudi-icon>
+                      </span>
+                      <span>Send invite</span>
+                    </div>
+                  </ng-container>
+                </div>
+              </dropdown-menu>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+  <div class="pagination-wrapper">
+    <div class="item-per-row">
+      <div class="d-flex align-items-center gap-24">
+        <div
+          *trudiPermission="'COMPANY_DETAIL.PROFILE.EDIT'"
+          class="d-flex align-items-center">
+          <button
+            trudi-btn
+            [class]="'trudi-btn trudi-btn-primary'"
+            (click)="handleOpenInviteModal()"
+            [disabled]="loadingService.isLoading$ | async"
+            [size]="sizeBtn">
+            Invite
+          </button>
+        </div>
+        <span class="show-text">Show rows</span>
+        <ng-select
+          class="filter-row share-ng-select pagination-ng-select"
+          data-console="show-rows-dropdown"
+          [items]="itemPerRowOptions"
+          bindLabel="text"
+          bindValue="id"
+          [searchable]="false"
+          [clearable]="false"
+          (change)="itemPerRowChanged($event)"
+          [(ngModel)]="selectedRowOption">
+          <ng-template ng-option-tmp let-item="item" let-index="index">
+            <span [attr.data-console]="'show-' + item.text">{{item.text}}</span>
+          </ng-template>
+        </ng-select>
+      </div>
+      <div class="page-index">
+        <span>
+          {{(dataTable?.totalItems) > 0 ? pageIndex * pageSize + 1 : 0}} -
+          {{(pageIndex + 1) * pageSize > dataTable?.totalItems ?
+          dataTable?.totalItems : (pageIndex + 1) * pageSize}} of
+          {{dataTable?.totalItems}}
+        </span>
+      </div>
+      <div class="arrow-wrapper align-items-center">
+        <trudi-icon
+          svgClass="size-20"
+          class="pd-6"
+          icon="arrowToFirstPage1"
+          alt="go first"
+          [ngClass]="pageIndex === 0 ? 'pagination-disable' : ''"
+          (click)="onGoToFirstPage(pageSize)"
+          [tabIndex]="pageIndex === 0 ? '-1' : '0'"
+          (keydown.enter)="onGoToFirstPage(pageSize)"
+          data-console="first-page"></trudi-icon>
+        <trudi-icon
+          class="pd-6"
+          svgClass="size-20"
+          icon="arrowToPrevPage1"
+          alt="go prev"
+          [ngClass]="pageIndex === 0 ? 'pagination-disable' : ''"
+          (click)="onGoToPrevPage(pageSize)"
+          [tabIndex]="pageIndex === 0 ? '-1' : '0'"
+          (keydown.enter)="onGoToPrevPage(pageSize)"
+          data-console="previous-page"></trudi-icon>
+        <trudi-icon
+          class="pd-6"
+          svgClass="size-20"
+          icon="arrowToNextPage1"
+          alt="go next"
+          [ngClass]="(dataTable?.totalPages === 0 || pageIndex === dataTable?.totalPages - 1) ? 'pagination-disable' : ''"
+          (click)="onGoToNextPage(pageSize)"
+          [tabIndex]="(dataTable?.totalPages === 0 || pageIndex === dataTable?.totalPages - 1) ? '-1' : '0'"
+          (keydown.enter)="onGoToNextPage(pageSize)"
+          data-console="next-page"
+          >></trudi-icon
+        >
+        <trudi-icon
+          class="pd-6"
+          svgClass="size-20"
+          icon="arrowToLastPage1"
+          alt="go last"
+          [ngClass]="(dataTable?.totalPages === 0 || pageIndex === dataTable?.totalPages - 1) ? 'pagination-disable' : ''"
+          (click)="onGoToLastPage(pageSize)"
+          [tabIndex]="(dataTable?.totalPages === 0 || pageIndex === dataTable?.totalPages - 1) ? '-1' : '0'"
+          (keydown.enter)="onGoToLastPage(pageSize)"
+          data-console="last-page"
+          >></trudi-icon
+        >
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,223 @@
+<ng-container
+  *rxLet="
+    taskGroupData$;
+    let taskGroupData;">
+  <ul
+    nz-menu
+    nzMode="inline"
+    class="task-group"
+    [ngStyle]="{ color: taskGroupData?.taskGroup?.color }">
+    <ng-container [ngTemplateOutlet]="taskGroupTitle"></ng-container>
+    <ng-container *ngIf="isLoading; else loadingContent">
+      <div class="flex-1 task-row-skeleton">
+        <ng-container
+          *ngTemplateOutlet="skeletonLoadingItem; context: {rowNumber: 4}">
+        </ng-container>
+      </div>
+    </ng-container>
+    <ng-template #loadingContent>
+      <li nz-submenu [nzOpen]="isOpenTaskGroup">
+        <ng-container *rxIf="shouldRenderTaskRow$">
+          <div
+            class="task-list-container h-100 border-rad-8"
+            [ngStyle]="{ color: taskGroupData?.taskGroup?.color }">
+            <div
+              #infiniteScrollView
+              cdkScrollable
+              class="completed-task-list-container-scroll">
+              <ng-container *ngTemplateOutlet="normalTemplate"></ng-container>
+
+              <ng-template #normalTemplate>
+                <div
+                  cdkDrag
+                  dragCursor
+                  class="task-row-wrapper draggable-task-row"
+                  [cdkDragData]="isSelectedMove ? selectedTasks : taskItem"
+                  [cdkDragDisabled]="disableDragging || (isSelectedMove && !isTaskSelected[taskItem.id])"
+                  (cdkDragMoved)="dragMoved($event)"
+                  (cdkDragDropped)="dragDropped($event)"
+                  (scroll)="handleScroll()"
+                  *rxFor="let taskItem of taskGroupData?.data; let i = index; trackBy: trackTaskItem">
+                  <task-row
+                    [activeTaskList]="activeTaskList"
+                    [taskItem]="taskItem"
+                    [search]="currentQueryParams?.search"
+                    [index]="i"
+                    [taskViewSettings]="taskViewSettings"
+                    [innerWidth]="innerWidth"
+                    (pressShiftClick)="handleSelectedTasks($event)"
+                    (removeActiveTask)="handleRemoveActiveTask($event)"
+                    (addSelectedTask)="handleAddSelectedTask($event)"
+                    (menuChange)="handleMenuChange($event)"
+                    (navigateToNextTask)="handleNavigateNextTask()"
+                    (handleChangeTitleTask)="triggerChangeTitleTask($event)"
+                    (navigateToPreviousTask)="handleNavigatePreTask()"
+                    (openDrawer)="openDrawer.emit($event)">
+                  </task-row>
+                  <ng-container *ngIf="!isSelectedMove">
+                    <div *cdkDragPlaceholder class="drag-placeholder"></div>
+                  </ng-container>
+                  <ng-container *ngIf="isSelectedMove">
+                    <div *cdkDragPlaceholder class="drag-placeholder">
+                      <task-row
+                        [activeTaskList]="activeTaskList"
+                        [taskItem]="taskItem"
+                        [search]="queryParams?.search"
+                        [index]="i"></task-row>
+                    </div>
+                    <div *cdkDragPreview class="drag_preview">
+                      <p
+                        *ngIf="currentDraggingToFolderName"
+                        class="tooltip-for-drag">
+                        <span class="tooltip-content"
+                          >{{currentDraggingToFolderName}}</span
+                        >
+                        <span class="tooltip-arrow"></span>
+                      </p>
+                      <span class="task-count"
+                        >{{ selectedTasks.length | pluralize: 'task' }}</span
+                      >
+                    </div>
+                  </ng-container>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </ng-container>
+      </li>
+      <p
+        *ngIf="!taskGroupData?.data?.length && isOpenTaskGroup"
+        class="no-completed-task text-center">
+        No task to display
+      </p>
+    </ng-template>
+  </ul>
+</ng-container>
+
+<ng-template #taskGroupTitle>
+  <div
+    class="task-group-title d-flex gap-8 align-items-center"
+    [class]="{
+    'border-left-color': !isOpenTaskGroup,
+    'w-100': editTaskGroupName && isOpenTaskGroup,
+    'expanded': isOpenTaskGroup
+  }">
+    <div class="d-flex align-items-center gap-8">
+      <div
+        class="task-group-title__icon"
+        (click)="handleToggleExpandTaskGroup()">
+        <div
+          class="arrow-icon cursor-pointer"
+          [ngClass]="{'expand-group': isOpenTaskGroup}"
+          [appE2E]="'task-group-completed-group'">
+          <trudi-icon
+            class="cursor-pointer no-pointer-event"
+            trudi-tooltip
+            nzTooltipPlacement="top"
+            [nzTooltipTitle]="isOpenTaskGroup ? 'Collapse group' : 'Expand group' "
+            icon="chevronDown"></trudi-icon>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-8 group-name-wrapper">
+        <div (click)="handleEditTaskName()" class="group-name">
+          {{ taskGroupData?.taskGroup?.name }}
+        </div>
+      </div>
+    </div>
+    <div *ngIf="!!taskGroupData?.taskGroup?.id" class="group-description">
+      {{ (taskGroupData?.meta?.itemCount && taskGroupData?.meta?.itemCount) >= 0
+      ? taskGroupData?.meta?.itemCount : taskGroupData?.data?.length }}
+      {{(taskGroupData?.data?.length > 1 || taskGroupData?.data?.length === 0) ?
+      'tasks' : 'task' }}
+    </div>
+    <span class="item-unRead ml-4 border-rad-16" *ngIf="unreadTaskGroup">
+      {{ unreadTaskGroup | totalCountPipe }}
+    </span>
+    <ng-container [ngTemplateOutlet]="contentTemplate"></ng-container>
+  </div>
+</ng-template>
+
+<ng-template #loadingSpinner>
+  <div class="loading-spinner">
+    <img src="assets/images/loading-spinner.gif" />
+  </div>
+</ng-template>
+
+<ng-template #skeletonLoadingItem let-row="rowNumber">
+  <div
+    *ngFor="let _ of [].constructor(row)"
+    class="task-row-wrapper d-flex flex-dir-column">
+    <div class="d-flex align-items-center gap-16">
+      <div class="d-flex gap-8 flex-1 align-items-center">
+        <nz-skeleton
+          class="ant-skeleton-checkbox"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"
+          class="size-16"></nz-skeleton>
+        <div class="d-flex flex-1 align-items-center justify-content-between">
+          <div class="d-flex align-items-center gap-12">
+            <div class="message-name">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"
+                class="w-50"></nz-skeleton>
+            </div>
+            <div class="message-role">
+              <span class="task-item-time-text text-ellipsis">
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"
+                  class="ant-skeleton-message-role"></nz-skeleton>
+              </span>
+            </div>
+            <div class="property-address">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"
+                class="w-50"></nz-skeleton>
+            </div>
+          </div>
+          <nz-skeleton
+            class="ant-skeleton-circle"
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </div>
+    </div>
+    <div class="quote-wrapper">
+      <nz-skeleton
+        class="ant-skeleton-custom"
+        [nzParagraph]="paragraph"
+        [nzActive]="true"></nz-skeleton>
+    </div>
+  </div>
+</ng-template>
+
+<trudi-modal
+  *ngIf="isShowModalWarning"
+  [visible]="isShowModalWarning"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  className="trudi-modal-custom">
+  <warning-note-popup
+    [warningMessage]="errorMessage"
+    [timeToCloseModal]="3000"
+    (isCloseModal)="isShowModalWarning = $event">
+  </warning-note-popup>
+</trudi-modal>
+
+<ng-template #permanentlyDeleteConfirmModalContent>
+  <div class="d-flex justify-content-end">
+    <ul class="content pd-0">
+      <li>
+        <span>Any data or task history will be permanently deleted</span>
+      </li>
+      <li>
+        <span>
+          Any messages within this task will be automatically marked as
+          deleted</span
+        >
+      </li>
+    </ul>
+  </div>
+</ng-template>

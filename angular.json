@@ -1,0 +1,281 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": "e19fbffe-01d5-49a6-98cb-5cbd372a21dd",
+    "schematicCollections": [
+      "@angular-eslint/schematics"
+    ]
+  },
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "console-webapp": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        },
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "optimization": true,
+            "aot": true,
+            "verbose": false,
+            "outputPath": "dist/console-webapp",
+            "index": "src/index.html",
+            "browser": "src/main.ts",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              "src/firebase-messaging-sw.js",
+              "src/manifest.json",
+              "src/manifest.webmanifest",
+              {
+                "glob": "**/*",
+                "input": "node_modules/ng2-pdfjs-viewer/pdfjs",
+                "output": "/assets/pdfjs"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/tinymce",
+                "output": "/tinymce/"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/styles/static",
+                "output": "/assets/styles"
+              }
+            ],
+            "styles": [
+              "./node_modules/@angular/cdk/overlay-prebuilt.css",
+              "./node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
+              "./node_modules/ngx-toastr/toastr.css",
+              "./node_modules/@ng-select/ng-select/themes/default.theme.css",
+              "./node_modules/swiper/swiper-bundle.min.css",
+              "src/theme.less",
+              "src/app.scss"
+            ],
+            "scripts": [
+              "src/assets/js/modernizr.min.js",
+              "src/assets/js/loader.js",
+              "node_modules/tinymce/tinymce.min.js"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/styles/scss"
+              ]
+            },
+            "webWorkerTsConfig": "tsconfig.worker.json",
+            "sourceMap": {
+              "scripts": true,
+              "hidden": true
+            },
+            "budgets": [
+              {
+                "type": "initial",
+                "maximumWarning": "5mb",
+                "maximumError": "15mb"
+              },
+              {
+                "type": "anyComponentStyle",
+                "maximumWarning": "190kb",
+                "maximumError": "200kb"
+              }
+            ],
+            "allowedCommonJsDependencies": [
+              "dayjs",
+              "uuid4",
+              "lottie-web",
+              "croppie",
+              "pdfjs-dist",
+              "node-html-parser",
+              "auth0-lock",
+              "twilio-video",
+              "@twilio/voice-sdk",
+              "tinymce"
+            ],
+            "serviceWorker": "ngsw-config.json"
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "preproduction": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.preprod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "produs": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.produs.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "attic": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.attic.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "cellar": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.cellar.ts"
+                }
+              ]
+            },
+            "stage": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.stage.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "serviceWorker": false
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "console-webapp:build:production"
+            },
+            "development": {
+              "buildTarget": "console-webapp:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "console-webapp:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-builders/jest:run",
+          "options": {
+            "tsConfig": "tsconfig.spec.json",
+            "assets": [
+              "src/favicon.ico",
+              "src/assets"
+            ],
+            "styles": [
+              "src/_styles.css"
+            ],
+            "scripts": []
+          }
+        },
+        "storybook": {
+          "builder": "@storybook/angular:start-storybook",
+          "options": {
+            "styles": [
+              "src/app.scss"
+            ],
+            "compodoc": false,
+            "port": 4400
+          }
+        },
+        "build-storybook": {
+          "builder": "@storybook/angular:build-storybook",
+          "options": {
+            "browserTarget": "console-webapp:build",
+            "styles": [
+              "src/app.scss"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
+          }
+        }
+      }
+    },
+    "trudi-ui": {
+      "projectType": "library",
+      "root": "projects/trudi-ui",
+      "sourceRoot": "projects/trudi-ui/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "project": "projects/trudi-ui/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/trudi-ui/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/trudi-ui/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "tsConfig": "projects/trudi-ui/tsconfig.spec.json",
+            "polyfills": [
+              "zone.js",
+              "zone.js/testing"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/trudi-ui/**/*.ts",
+              "projects/trudi-ui/**/*.html"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

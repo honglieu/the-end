@@ -1,0 +1,34 @@
+<div [formGroup]="form">
+  <trudi-single-select
+    formControlName="conversation"
+    [bindLabel]="'categoryName'"
+    [bindValue]="'id'"
+    [notFoundText]="'No conversations found'"
+    [placeholder]="'Select conversation'"
+    [iconName]="'aiSummaryStar'"
+    [disabled]="disabled"
+    [items]="conversations"
+    [clearable]="false">
+    <ng-template
+      trudi-option-tmp
+      let-conversation="item"
+      let-searchTerm="searchTerm"
+      let-valueSelected="valueSelected">
+      <div
+        class="conversation-option"
+        (click)="handleSelectConversation(conversation)">
+        <div class="conversation-option-left d-flex gap-4">
+          <div class="conversation-option-text">
+            {{ conversation.categoryName }}
+          </div>
+        </div>
+        <ng-container
+          *ngIf="valueSelected && (valueSelected === conversation?.id)">
+          <div class="d-flex align-items-center">
+            <trudi-icon icon="checkSuccess"></trudi-icon>
+          </div>
+        </ng-container>
+      </div>
+    </ng-template>
+  </trudi-single-select>
+</div>

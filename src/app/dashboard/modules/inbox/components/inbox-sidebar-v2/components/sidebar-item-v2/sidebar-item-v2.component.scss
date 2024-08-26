@@ -1,0 +1,27 @@
+@import 'function';
+
+:host ::ng-deep {
+  .inbox-sidebar-container {
+    .wrapper-skeleton-msg {
+      .message-block {
+        .ant-skeleton-custom {
+        }
+
+        span.ant-skeleton-avatar.ant-skeleton-avatar-circle {
+          width: 30px;
+          height: 30px;
+        }
+      }
+    }
+  }
+}
+
+.pd-top-12 {
+  padding-top: 12px !important;
+}
+
+.folder-wrapper {
+  .voice-mail-block {
+    margin-top: 4px;
+  }
+}

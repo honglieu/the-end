@@ -1,0 +1,74 @@
+@import 'function';
+
+:host {
+  --reminder-toggle-width: 100px;
+  --send-reminder-width: 425px;
+}
+.reminder-page {
+  .reminder-wrapper {
+    width: 635px;
+    margin-top: 24px;
+    padding-left: 15px;
+    .reminder-header {
+      margin-bottom: 20px;
+      .reminder-header-title {
+        width: var(--send-reminder-width);
+        .send-reminder {
+          margin-right: 10px;
+          @include fontSetup(var(--gray-700), 20px, 32px, normal, 600);
+        }
+      }
+      .notiTitle {
+        text-align: center;
+        @include fontSetup(var(--gray-500), 12px, 32px, normal, 500);
+      }
+    }
+    .wrap-group {
+      margin-bottom: 24px;
+    }
+    .reminder-title {
+      margin-bottom: 4px;
+      @include fontSetup(var(--gray-600), 14px, 20px, normal, 600);
+    }
+    .wrap-reminder {
+      .wrap-date-select {
+        width: var(--send-reminder-width);
+        .date-select-label {
+          width: 240px;
+          @include fontSetup(var(--gray-700), 14px, 20px, normal, 400);
+        }
+      }
+    }
+    .wrap-toggle {
+      .reminder-toggle {
+        width: var(--reminder-toggle-width);
+      }
+    }
+  }
+  ::ng-deep ng-select {
+    width: 100px !important;
+    margin-top: 0px !important;
+
+    .ng-dropdown-panel .ng-dropdown-panel-items {
+      background-color: var(--white) !important;
+    }
+
+    .ng-select-container {
+      min-height: 28px !important;
+      padding: 4px 8px;
+
+      .ng-input {
+        padding: 4px 30px 4px 8px !important;
+      }
+    }
+  }
+
+  ::ng-deep.ng-select.ng-select-single .ng-select-container {
+    height: 28px !important;
+  }
+
+  ::ng-deep .notification-checkbox-label {
+    padding-left: 0;
+    min-width: 420px !important;
+  }
+}

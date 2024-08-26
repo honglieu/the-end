@@ -1,0 +1,18 @@
+@import 'function';
+
+.confirm-wrapper {
+  padding: 6px 14px 10px 16px;
+  .confirm-text {
+    .text-sure {
+      @include fontSetup(var(--gray-950), 2rem, 2.8rem, normal, 600);
+    }
+    .cannot-text {
+      @include fontSetup(var(--gray-500), 1.4rem, 2rem, normal, 500);
+      margin: 0;
+    }
+  }
+}
+
+.btn-wrapper {
+  margin-top: 20px;
+}

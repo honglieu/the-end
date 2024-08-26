@@ -1,0 +1,15 @@
+@import 'function';
+
+:host {
+  .select-field-label {
+    margin-bottom: 6px;
+    @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 500);
+  }
+
+  ::ng-deep
+    trudi-single-select.ng-touched.ng-invalid
+    .ng-select
+    > .ng-select-container {
+    box-shadow: var(--shadow-danger) !important;
+  }
+}

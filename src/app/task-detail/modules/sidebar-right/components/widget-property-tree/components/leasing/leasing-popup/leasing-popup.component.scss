@@ -1,0 +1,48 @@
+@import 'function';
+
+.divider-light {
+  margin: 24px 0px;
+  border-top: 2px solid var(--gray-200);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.title-popup {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 28px;
+  color: var(--gray-700);
+}
+
+.leasing-container {
+  width: 100%;
+  height: calc(100vh - 178px * 2);
+  overflow-y: auto;
+  padding: 20px 24px;
+}
+
+.leasing-wrapper {
+  // padding-right: 24px;
+  // padding-left: 3px;
+}
+
+.footer-new-tenancy-popup {
+  padding: 16px 24px;
+  border-top: 1px solid var(--gray-100);
+}
+
+::ng-deep .leasing-popup .resizable-modal-header .title {
+  flex: initial;
+  display: flex;
+  justify-content: center;
+  span {
+    flex: initial;
+  }
+}
+
+::ng-deep .leasing-popup .resizable-modal-header__title--default {
+  column-gap: unset !important;
+}

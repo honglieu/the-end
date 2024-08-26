@@ -1,0 +1,274 @@
+<app-modal-popup
+  [isFullScreenModal]="isFullScreenModal"
+  [show]="popupState.sendMessage"
+  [appendBody]="appendBody"
+  [position]="ModalPopupPosition.center"
+  widthInPercent="50">
+  <ng-container
+    *ngTemplateOutlet="headerTemplate; context: { header: configs.header }">
+  </ng-container>
+
+  <div class="trudi-send-msg-body-wrapper">
+    <trudi-send-msg-body
+      [configs]="configs"
+      [rawMsg]="rawMsg"
+      [openFrom]="openFrom"
+      [listOfFiles]="listOfFiles"
+      [listContactCard]="listContactCard"
+      [prefillVariables]="prefillVariables"
+      [reiformData]="reiformData"
+      (template)="setTemplate($event)"
+      [listDynamicParams]="listDynamicParams"
+      [selectedTaskIds]="selectedTaskIds"
+      [prefillData]="prefillData"
+      [listUser]="listUser">
+      <ng-container *ngIf="!isSyncedAttachment" attachment-loading>
+        <msg-attachment-load
+          class="attachment-load"
+          [(key)]="attachmentSync.attachmentLoadKey"
+          [threadIds]="threadId ? [threadId] : []"
+          [(attachmentSynced)]="isSyncedAttachment"></msg-attachment-load>
+      </ng-container>
+    </trudi-send-msg-body>
+  </div>
+
+  <ng-container
+    *ngTemplateOutlet="footerTemplate; context: { footer: configs.footer }">
+  </ng-container>
+</app-modal-popup>
+
+<trudi-modal
+  [visible]="popupState.closeConfirm"
+  [autoFocus]="null"
+  className="trudi-modal-custom">
+  <app-document-request-quit-confirm
+    (isCloseModal)="onConfirmQuit($event)"
+    [attr.data-e2e]="'cancel-confirmation-modal'">
+  </app-document-request-quit-confirm>
+</trudi-modal>
+
+<trudi-add-contact-card
+  *ngIf="contactCardPopupState.addContactCard"
+  [visible]="contactCardPopupState.addContactCard"
+  [openFrom]="openFrom"
+  [configs]="attachmentTextEditorConfigs"
+  [listContactCard]="listContactCard"
+  [form]="sendMsgForm"
+  [selectedContactCard]="selectedContactCard"
+  (onTrigger)="onTriggerAddContactCard()"
+  (onClose)="onCloseAddContactCard()"></trudi-add-contact-card>
+
+<upload-from-crm
+  [configs]="attachmentTextEditorConfigs"
+  (onTrigger)="onTriggerAddFilesFromCrm()"
+  (onClose)="onCloseUploadFromCRM()"
+  *ngIf="uploadFileFromCRMPopupState.uploadFileFromCRM"></upload-from-crm>
+
+<schedule-message-popup
+  *ngIf="popupState.selectTimeSchedule"
+  [visible]="popupState.selectTimeSchedule"
+  (isCloseModal)="onBackSendMsg($event)"
+  (dateTime)="onDateTimeSelected($event)"
+  [scheduleDate]="scheduleDate"
+  [defaultValue]="selectTimeSchedule"
+  [additionalInfo]="additionalInfo"
+  [isDateUnknown]="isDateUnknown"
+  [dueDateTooltipText]="dueDateTooltipText"
+  [selectedEvent]="configs?.body?.otherConfigs?.calendarEvent"
+  [action]="configs.trudiButton?.action"></schedule-message-popup>
+
+<div
+  *ngIf="popupState.addReiForm"
+  [show]="popupState.addReiForm"
+  [position]="ModalPopupPosition.center">
+  <trudi-rei-form-card></trudi-rei-form-card>
+</div>
+
+<!-- Header section -->
+<ng-template #headerTemplate let-header="header">
+  <div class="trudi-send-msg-header">
+    <div class="trudi-send-msg-header__title--default">
+      <div class="trudi-send-msg-header-body">
+        <div class="w-100 flex-1">
+          <span class="flex-1 trudi-send-msg-header-body-title"
+            >{{header.title | titleCasePipe}}</span
+          >
+        </div>
+        <div class="position-relative">
+          <div
+            #dropdown
+            *ngIf="listMailBoxs && listMailBoxs.length && configs.header.showDropdown"
+            class="lable-dropdown"
+            (click)="togglePopover()">
+            <div
+              nz-popover
+              [nzPopoverContent]="contentTemplate"
+              [nzPopoverPlacement]="'bottomLeft'"
+              nzPopoverOverlayClassName="list-mailboxs-popover"
+              [nzPopoverVisible]="showPopover"
+              nzPopoverTrigger="click"
+              class="lable-dropdown">
+              <span
+                #activeMailboxName
+                class="lable-dropdown-text"
+                nz-tooltip
+                nzTooltipPlacement="bottom"
+                [nzTooltipTitle]="currentMailBox?.name"
+                [nzTooltipTrigger]="activeMailboxName?.offsetWidth < activeMailboxName?.scrollWidth ? 'hover' : null"
+                [nzTooltipOverlayClassName]="'tooltipStyle'"
+                [nzTooltipOverlayStyle]="{ 'padding-top': '5px', 'max-width': '500px'}">
+                In {{currentMailBox?.name}}&nbsp;
+              </span>
+              <trudi-icon
+                class="icon-dropdown cursor-pointer"
+                [ngClass]="{'selected': showPopover}"
+                [icon]="'grayChevronDown'"
+                [style]="{ 'width.px': 12, 'height.px': 12 }">
+              </trudi-icon>
+            </div>
+          </div>
+        </div>
+        <trudi-send-option-menu
+          [hasAppUser]="isAppUser"
+          [formControl]="sendOption"></trudi-send-option-menu>
+      </div>
+    </div>
+    <trudi-icon
+      *ngIf="expandable"
+      class="trudi-send-msg-header-icon-expand-or-collapse expand-or-collapse-modal-btn"
+      [icon]="isFullScreenModal ? 'modalCollapse' : 'modalExpand'"
+      [style]="{ 'width.px': 14, 'height.px': 14, color: '#646464' }"
+      (click)="triggerExpandOrResizeModal(!isFullScreenModal)"></trudi-icon>
+    <trudi-icon
+      *ngIf="header.closeIcon"
+      class="trudi-send-msg-header-icon-close close-modal-btn"
+      [icon]="header.closeIcon"
+      [style]="{ 'width.px': 14, 'height.px': 14, color: '#646464' }"
+      [style.margin-left]="!expandable ? 'auto' : 'unset'"
+      (click)="onCloseSendMsg()"></trudi-icon>
+  </div>
+</ng-template>
+
+<!-- Footer section -->
+<ng-template #footerTemplate let-footer="footer">
+  <div class="trudi-send-msg-footer">
+    <ng-container
+      *ngTemplateOutlet="btnWrapperTemplate; context: { btn: footer.buttons }"></ng-container>
+  </div>
+</ng-template>
+
+<ng-template #btnWrapperTemplate let-btn="btn">
+  <div class="trudi-send-msg-footer-btn-wrapper">
+    <ng-container *ngIf="btn.showBackBtn">
+      <button
+        trudi-btn
+        variant="tonal"
+        btnType="neutral"
+        (click)="triggerNormalEvent(ETrudiSendMsgBtn.BACK)">
+        {{ btn.backTitle }}
+      </button>
+    </ng-container>
+
+    <ng-container
+      *ngIf="btn.nextButtonType === EFooterButtonType.NORMAL; else dropdownBtn">
+      <button
+        trudi-btn
+        data-e2e="send-btn"
+        [disabled]="isDisableSendBtn"
+        (click)="triggerNormalEvent(ETrudiSendMsgBtn.NEXT)">
+        {{ btn.nextTitle }}
+      </button>
+    </ng-container>
+
+    <ng-template #dropdownBtn>
+      <button-with-dropdown-actions
+        [dropdownList]="btn.dropdownList"
+        (onClickBtn)="triggerDropDownEvent($event)"
+        (onChangeBtn)="onChangeTypeSendMessage($event)"
+        [disabled]="isDisableNextBtn
+          || isConsole
+          || !hasAddAccount
+          || (syncMailBoxStatus === EMailBoxStatus.ARCHIVE && !configs.header.showDropdown)
+          || (syncMailBoxStatus === EMailBoxStatus.DISCONNECT && !configs.header.showDropdown)
+          || !listMailBoxs?.length
+          || isDisableSendBtn"
+        [defaultSelect]="defaultOptionDropdown">
+      </button-with-dropdown-actions>
+    </ng-template>
+  </div>
+</ng-template>
+
+<ng-template #contentTemplate>
+  <div class="popover-container">
+    <div class="popover-content">
+      <div
+        class="popover-content-mail-wrapper"
+        *ngFor="let item of listMailBoxs; let i = index"
+        (click)="setMailBoxId(item)">
+        <div class="popover-content-mail-wrapper-info gap-4 align-items-center">
+          <div class="text-ellipsis title-mailbox">
+            <span>{{item?.name}}</span>
+          </div>
+          <div class="size-16" *ngIf="item?.type === mailBoxType.COMPANY">
+            <trudi-icon svgClass="size-16" icon="buildings"></trudi-icon>
+          </div>
+        </div>
+        <trudi-icon
+          *ngIf="item?.id === currentMailBoxId"
+          icon="checkSuccess"
+          [style]="{ 'width.px': 20, 'height.px': 20}"></trudi-icon>
+      </div>
+    </div>
+  </div>
+</ng-template>
+<trudi-modal
+  [className]="'modal-missing'"
+  [visible]="isShowModalMissingDynamicParamValue"
+  title="We’ve noticed an issue with your email"
+  classContainer="modal-missing_container"
+  [closable]="false">
+  <div class="content-modal">
+    <div class="warning d-flex flex-dir-row gap-12">
+      <trudi-icon
+        icon="iconWarningRed"
+        [style]="{ 'width.px': 24, 'height.px': 24 }"></trudi-icon>
+      <div class="warning-content gap-4">
+        <p class="warning-title">
+          Dynamic fields will be left empty for some recipients, as the data
+          does not exist. Please review before sending.
+        </p>
+      </div>
+    </div>
+    <div *ngFor="let paramInfo of listParamMissingData" class="param-info">
+      <div class="param-info__name">{{paramInfo.paramName}}</div>
+      <div class="param-info__description">
+        Missing data for following {{paramInfo?.users?.length > 1 ?
+        'recipients': 'recipient'}}:
+      </div>
+      <div class="param-info__user-name" *ngFor="let user of paramInfo.users">
+        <ng-container
+          *ngIf="user.type === EUserPropertyType.EXTERNAL; else normalUserName">
+          {{user.email}}
+        </ng-container>
+        <ng-template #normalUserName>
+          {{user | formatDisplayFullName}}
+        </ng-template>
+      </div>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div class="button-footer d-flex gap-12">
+      <button
+        trudi-btn
+        btnType="neutral"
+        variant="outlined"
+        class="trudi-btn trudi-btn-tertiary btn-cancel button-size"
+        (click)="handleKeepSending()">
+        Send anyway
+      </button>
+      <button trudi-btn (click)="handleCloseWarningMissingDataModal()">
+        Edit message
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

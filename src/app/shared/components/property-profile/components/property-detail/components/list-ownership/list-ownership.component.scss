@@ -1,0 +1,133 @@
+@import 'function';
+
+:host::ng-deep {
+  trudi-badge {
+    white-space: nowrap;
+
+    &.trudi-badge-success {
+      background: var(--success-100);
+      .badge-text {
+        color: var(--success-600);
+      }
+    }
+  }
+
+  .trudi-badge-archive {
+    background: var(--gray-200) !important;
+    .badge-text {
+      color: var(--gray-600) !important;
+    }
+  }
+
+  trudi-checkbox {
+    .trudi-checkbox {
+      gap: 8px;
+
+      span:first-child {
+        width: 16px !important;
+        height: 16px !important;
+
+        svg {
+          width: 18px !important;
+          height: 18px !important;
+        }
+      }
+
+      .label-text {
+        @include fontSetup(var(--gray-600), 12px, 16px, normal, 500);
+      }
+    }
+  }
+}
+
+:host::ng-deep trudi-badge {
+  .property-status-badge .badge-text {
+    color: var(--success-600);
+  }
+
+  .tab-label trudi-badge {
+    .badge-text {
+      color: var(--gray-600);
+    }
+  }
+}
+
+.ownership-wrapper {
+  margin-bottom: 12px;
+  padding: 12px 0;
+  background: var(--white);
+
+  .title {
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 600);
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    padding: 0 16px;
+
+    span {
+      padding-top: 2px;
+    }
+  }
+
+  .list-wrapper {
+    padding-top: 12px;
+
+    .no-content {
+      @include fontSetup(var(--gray-500), 14px, 20px, normal, 400);
+      font-style: italic;
+      padding: 16px;
+    }
+  }
+
+  .item-tab-wrapper {
+    &:hover {
+      background: var(--bg-neutral-tonal-normal);
+    }
+
+    &:active {
+      background: var(--bg-neutral-tonal-strongest) !important;
+    }
+
+    &:focus-visible {
+      background: var(--bg-neutral-tonal-normal);
+    }
+
+    .item-tab {
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      gap: 8px;
+
+      .tenant-label {
+        @include fontSetup(var(--gray-500), 14px, 24px, normal, 500);
+      }
+
+      .action-icon {
+        color: var(--gray-500);
+      }
+
+      .label-wrapper {
+        max-width: calc(100% - 44px);
+      }
+
+      .tab-label {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--gray-600);
+      }
+    }
+  }
+
+  .border-bottom {
+    border-bottom: solid 1px var(--gray-200);
+    margin: 0 16px;
+  }
+
+  .skeleton {
+    padding: 0 16px;
+  }
+}

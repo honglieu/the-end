@@ -1,0 +1,35 @@
+.email-view-container {
+  display: flex;
+  height: calc(100vh - 52px);
+
+  &__index {
+    display: flex;
+    flex: none;
+    justify-content: center;
+    width: 400px;
+    border-right: 1px solid var(--border-neutral-dark, #D8DCDF);
+    overflow: hidden;
+
+    email-view-index {
+      width: 100%;
+    }
+  }
+
+  &__detail {
+    overflow-x: hidden;
+    width: 100%;
+    min-width: 660px;
+  }
+}
+
+@media (max-width: 1440px) {
+  .email-view-container__index {
+    width: 300px !important;
+  }
+}
+
+@media (max-width: 1200px) {
+  .email-view-container__detail {
+    min-width: 100% !important;
+  }
+}

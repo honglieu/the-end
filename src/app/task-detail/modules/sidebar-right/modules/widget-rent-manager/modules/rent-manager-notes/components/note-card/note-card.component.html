@@ -1,0 +1,24 @@
+<widget-common
+  [type]="cardData.syncStatus"
+  [firstTimeSyncSuccess]="isShowBackgroundSucess"
+  [isDislayBtnCancel]="cardData?.externalId"
+  (showModal)="handleOpenModal()"
+  (retry)="handleClickRetry()"
+  (remove)="handleClickRemove()">
+  <div class="card-widget-wrapper">
+    <div class="card-wrapper">
+      <div class="card-wrapper-content">
+        <div class="item-category">{{cardData | formatNoteInfo}}</div>
+        <div class="item-description">{{cardData.description}}</div>
+        <div class="item-file" *ngIf="cardData.file.length > 0">
+          <trudi-icon icon="attach"></trudi-icon>
+          <span class="mx-4">{{cardData.file.length}}</span>
+          <ng-container *ngIf="cardData.file.length > 1;else oneAttachment"
+            >attachments</ng-container
+          >
+          <ng-template #oneAttachment>attachment</ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</widget-common>

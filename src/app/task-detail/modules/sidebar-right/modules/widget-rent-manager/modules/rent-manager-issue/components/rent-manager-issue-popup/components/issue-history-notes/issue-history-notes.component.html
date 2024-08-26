@@ -1,0 +1,102 @@
+<div [ngClass]="{'scrollWrapper': isScrollAdded }" class="trudi-table-wrapper">
+  <nz-table
+    [nzFooter]="footer"
+    [nzFrontPagination]="false"
+    #editRowTable
+    nzTemplateMode
+    [nzScroll]="scrollControl"
+    [nzData]="historyNotesFormControls.controls"
+    nzBordered>
+    <thead>
+      <tr>
+        <th nzWidth="200px">Category</th>
+        <th nzWidth="auto">Note</th>
+        <th nzWidth="240px">File attachments</th>
+        <th nzWidth="64px"></th>
+      </tr>
+    </thead>
+    <tbody class="trudi-table-body">
+      <ng-container>
+        <tr
+          class="issue-history-notes"
+          *ngFor="let control of historyNotesFormControls.controls, let i = index">
+          <ng-container [formGroup]="control">
+            <td>
+              <div>
+                <trudi-single-select
+                  (isOpened)="isOpened()"
+                  [appendTo]="appendTo"
+                  [dropdownPosition]="dropdownPosition[i]"
+                  [placeholder]="'Select category'"
+                  formControlName="categoryId"
+                  [items]="listHistoryNoteCategories"
+                  [isDisabled]="isDisabled"
+                  bindLabel="name"
+                  bindValue="id"></trudi-single-select>
+              </div>
+            </td>
+            <td>
+              <trudi-form-control>
+                <trudi-textarea
+                  [checkSubmit]="!isSubmittedRentIssueForm"
+                  trudiTextFieldResize
+                  maxHeightResize="189"
+                  minHeightResize="36"
+                  [maxCharacter]="2000"
+                  [showCounting]="false"
+                  formControlName="note"
+                  placeholder="Add note..."
+                  [disabled]="isDisabled"
+                  class="editable-cell">
+                  ></trudi-textarea
+                >
+              </trudi-form-control>
+            </td>
+            <td>
+              <div class="file-container">
+                <upload-file-button
+                  [listFileData]="control.value?.files"
+                  icon="iconUploadV2"
+                  [ngClass]="{'cursor-not-allowed' : isDisabled}"
+                  (getListFile)="getListFile($event, control)"
+                  buttonTheme="neutral"
+                  [showLoading]="true"
+                  [multipleFile]="true"
+                  [enableToast]="true"
+                  [disableRemoveButton]="isDisabled"
+                  [disable]="isDisabled"
+                  [disableTooltipText]="'Item can only be deleted directly from Rent Manager'"
+                  [acceptTypeFile]="historyNotesValidType"
+                  formArrayName="files"></upload-file-button>
+              </div>
+            </td>
+            <td>
+              <div>
+                <trudi-icon
+                  nz-tooltip
+                  [nzTooltipTitle]="isDisabled || isDisabledDeleteRow(i) ? 'Item can only be deleted directly from Rent Manager' : ''"
+                  nzTooltipPlacement="top"
+                  [ngClass]="{'cursor-not-allowed disabled' : isDisabled || isDisabledDeleteRow(i)}"
+                  (click)="deleteRow(i)"
+                  [style]="{ 'width.px': 20, 'height.px': 20 }"
+                  [icon]="'trashBin2'"></trudi-icon>
+              </div>
+            </td>
+          </ng-container>
+        </tr>
+      </ng-container>
+    </tbody>
+  </nz-table>
+</div>
+<ng-template #footer>
+  <button
+    trudi-btn
+    [ngClass]="{'cursor-not-allowed' : isDisabled}"
+    [disabled]="isDisabled"
+    btnType="neutral"
+    variant="outlined"
+    (click)="addRow()">
+    <trudi-icon svgClass="size-20" viewBox="auto" icon="iconPlus"></trudi-icon
+    >Add
+  </button>
+</ng-template>

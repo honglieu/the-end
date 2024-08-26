@@ -1,0 +1,102 @@
+<div [formGroup]="formGroup">
+  <div
+    class="wrapper-item-block d-inline-block align-items-center"
+    [ngClass]="{'active-sub-option': option.isSubOption, 'is-textarea': isTextarea, 'is-safari': isBrowserSafari}">
+    <ng-container *ngIf="isTheLastOptionInThisGroup; else notLastOption">
+      <trudi-checkbox
+        class="mr-8 d-inline-block"
+        [disabled]="disabled"
+        [formControl]="controlLastOption"
+        (change)="handleOptionLast($event)">
+      </trudi-checkbox>
+    </ng-container>
+    <ng-template #notLastOption>
+      <trudi-checkbox
+        class="mr-8 d-inline-block"
+        [formControlName]="option?.id"
+        [disabled]="disabled">
+      </trudi-checkbox>
+    </ng-template>
+    <ng-container *ngFor="let item of templateComponent">
+      <ng-container [ngSwitch]="item.type">
+        <ng-container *ngSwitchCase="typeInput.INPUT_TEXT">
+          <trudi-form-control
+            [control]="formGroup.get(item.controlName)"
+            class="d-inline-block">
+            <trudi-text-field
+              [ngStyle]="item.css"
+              [disabled]="!(formGroup.get(option?.id).value) || disabled"
+              size="small"
+              class="ml-8 mr-8"
+              [maxCharacter]="item.maxLength"
+              [showCounting]="false"
+              (triggerEventBlur)="onTriggerBlurEvent(item.controlName)"
+              [formControlName]="item.controlName">
+            </trudi-text-field>
+          </trudi-form-control>
+        </ng-container>
+
+        <ng-container *ngSwitchCase="typeInput.INPUT_NUMBER">
+          <trudi-form-control [control]="formGroup.get(item.controlName)">
+            <trudi-number-field
+              class="ml-8 mr-8"
+              (triggerEventBlur)="onTriggerBlurEvent(item.controlName)"
+              [ngStyle]="item.css"
+              prefixText="$"
+              [disabled]="!(formGroup.get(option?.id).value) || disabled"
+              [formControlName]="item.controlName"
+              [maxCharacter]="11"
+              size="small">
+            </trudi-number-field>
+          </trudi-form-control>
+        </ng-container>
+        <ng-container *ngSwitchCase="typeInput.INPUT_SELECTED">
+          <trudi-form-control
+            [control]="formGroup.get(item.controlName)"
+            class="d-inline-block">
+            <trudi-single-select
+              class="ml-8 mr-8 ng-select-policies"
+              [ngStyle]="item.css"
+              [isDisabled]="!(formGroup.get(option?.id).value) || disabled"
+              [items]="item.items"
+              [clearable]="!['inspections', 'Owners'].includes(item.controlName)"
+              [enableSearch]="false"
+              (triggerEventChange)="onTriggerBlurEvent(item.controlName)"
+              [bindValue]="item.bindValue"
+              [bindLabel]="item.bindLabel"
+              [formControlName]="item.controlName"
+              [virtualScroll]="true">
+            </trudi-single-select>
+          </trudi-form-control>
+        </ng-container>
+
+        <ng-container
+          *ngSwitchCase="typeInput.INPUT_TEXTAREA"
+          class="d-inline-block">
+          <div class="custom-textarea w-100">
+            <trudi-form-control [control]="item.controlName">
+              <trudi-textarea
+                autosize
+                (triggerEventBlur)="onTriggerBlurEvent(item.controlName)"
+                [disabled]="!(formGroup.get(option?.id).value) || disabled"
+                [formControl]="formGroup.get(item.controlName)"
+                [showCounting]="false"
+                [rows]="3"
+                [cols]="3"
+                [resizable]="false">
+              </trudi-textarea>
+            </trudi-form-control>
+          </div>
+        </ng-container>
+
+        <ng-container *ngSwitchDefault>
+          <span
+            class="description"
+            [ngClass]="{'font-active' : formGroup.get(option?.id).value}">
+            {{ item.text }}
+          </span>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>

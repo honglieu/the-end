@@ -1,0 +1,178 @@
+@import 'function';
+
+:host ::ng-deep {
+  .facebook-message-default {
+    .message-content-text {
+      p {
+        margin: 0;
+      }
+    }
+  }
+  .facebook-message-default-user .message-wrapper .message-content-text {
+    white-space: pre-line;
+  }
+}
+.facebook-message-default {
+  width: 100%;
+  display: flex;
+
+  &:has(.message-translation-label) {
+    ::ng-deep .msg-reply .reply-text {
+      padding-bottom: 16px !important;
+    }
+  }
+
+  .message-wrapper {
+    max-width: 60%;
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+
+    .message-reply {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-self: flex-end;
+      margin-bottom: -8px;
+      &-header {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        align-self: flex-end;
+        &-text {
+          @include fontSetup(
+            var(--fg-neutral-normal, #61646c),
+            12px,
+            16px,
+            normal,
+            400
+          );
+        }
+      }
+    }
+
+    .message-content {
+      background: var(--bg-neutral-solid-normal, #85888e);
+      box-shadow: 0px 1px 2px 0px #1018280d;
+      position: relative;
+      @include fontSetup(var(--fg-base, #ffffff), 14px, 20px, normal, 400);
+      padding: 8px 12px 8px 20px;
+      border-radius: 6px;
+      position: relative;
+      align-self: flex-end;
+
+      .message-translation-label {
+        position: absolute;
+        top: 0;
+        transform: translateY(-50%);
+      }
+
+      .message-avatar {
+        position: absolute;
+        left: -12px;
+        top: 50%;
+        transform: translateY(-50%);
+        &--clickable {
+          app-circle-avatar {
+            cursor: pointer;
+          }
+        }
+      }
+      .message-emotions{
+        cursor: pointer;
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--fg-neutral-weaker, #85888e);;
+        left: 5px;
+        bottom: -15px;
+        border: 1px solid var(--border-neutral-dark, #ececed);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif;
+        &-user {
+          right: 5px;
+          left: unset;
+          background: var(--fg-base, #ffffff);
+        }
+
+        ::ng-deep .emoji-wrapper {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+
+      &-text {
+        word-break: break-word;
+        ::ng-deep a {
+          color: var(--fg-hyperlink, #0D42FF);
+          cursor: pointer;
+          &:hover, &:active {
+            color: var(--fg-hyperlink, #0D42FF);
+          }
+        }
+      }
+
+      &-reply {
+        background: var(--bg-opacity-stronger, #99999933);
+        color: var(--fg-neutral-normal, #61646c);
+        padding: 4px 8px 16px 8px;
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 0;
+        @include fontSetup(
+          var(--fg-neutral-normal, #61646c),
+          12px,
+          16px,
+          normal,
+          400
+        );
+        &-text {
+          max-height: 40px;
+        }
+      }
+    }
+
+    ::ng-deep.message-reply-button {
+      display: none;
+      position: absolute;
+      bottom: 50%;
+      transform: translateY(50%);
+      left: -42px;
+    }
+  }
+
+  &-user {
+    .message-wrapper {
+      margin-right: auto;
+      margin-left: unset;
+
+      .message-content,
+      .message-reply,
+      .message-reply-header {
+        align-self: flex-start;
+      }
+
+      .message-content-reply {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 6px;
+      }
+
+      .message-content:not(.message-content-reply) {
+        background: var(--bg-base, #ffffff);
+        color: var(--fg-neutral-stronger, #333741);
+      }
+
+      ::ng-deep.message-reply-button {
+        right: -32px;
+        left: unset;
+      }
+    }
+  }
+
+  &-sending, &-error {
+    opacity: 0.6;
+  }
+}

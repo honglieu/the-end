@@ -1,0 +1,82 @@
+<select-receiver
+  #selectReceiver
+  [bindLabel]="bindLabel"
+  [bindValue]="bindValue"
+  [formControl]="control"
+  [items]="items"
+  [isAddItem]="true"
+  [addTag]="addEmail"
+  [appendTo]="appendTo"
+  (triggerAddTag)="handleAddTag($event)"
+  [isAddingTag]="isAddingTag"
+  [virtualScroll]="false"
+  [isSelectContactType]="true"
+  [clearSearchOnAdd]="true"
+  [placeholder]="placeholder"
+  [disabled]="configs.otherConfigs.disabledReceivers"
+  (search)="handleSearch($event)"
+  [multiLabelTemplate]="multiLabelTemplate"
+  [optionTemplate]="optionTemplate"
+  [headerTemplate]="headerTemplate"
+  [prefixTemplate]="prefixTemplate"
+  [suffixTemplate]="suffixTemplate"
+  [suffixPaddingLeft]="suffixPaddingLeft"
+  (focusChange)="handleFocus($event)"
+  (triggerEventChange)="handleEventChange()">
+</select-receiver>
+
+<ng-template #headerTemplate>
+  <div
+    class="d-flex trudi-multi-select-header align-items-center justify-content-between pd-12">
+    <div>
+      <span class="count-text">
+        {{ selectedContactTypeIds.length }}/{{listContactTypes.length}}
+      </span>
+    </div>
+    <button
+      class="clear-btn clear-selection-btn"
+      [disabled]="!selectedContactTypeIds.length"
+      (click)="$event.stopPropagation(); handleClearSelection()">
+      Clear selection
+    </button>
+  </div>
+</ng-template>
+<ng-template #multiLabelTemplate let-items="items" let-clear="clear">
+  <div
+    class="select-item-label d-flex align-items-center"
+    *ngFor="let item of items; let last = last">
+    <div
+      class="select-item__info select-item d-flex align-items-center gap-4"
+      [ngClass]="{'select-item-label-invalid': !!item.isInvalid}">
+      <span class="overflow-text"> {{item.label}} </span>
+      <trudi-icon
+        *ngIf="!item?.disabled && !control?.disabled && isFocused"
+        class="cursor-pointer select-item-remove size-16"
+        icon="closeGray64"
+        (click)="$event.stopPropagation(); clear(item); handleRemoveItem(item)"></trudi-icon>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template
+  #optionTemplate
+  let-item="item"
+  let-item$="item$"
+  let-searchTerm="searchTerm">
+  <div
+    class="bulk-send-to-option d-flex justify-content-between align-items-center w-100"
+    [ngClass]="{'external-email-option' : item.type === EUserPropertyType.UNIDENTIFIED}">
+    <div class="d-flex flex-dir-column gap-4">
+      <span class="sendTo-label"> {{item.label}} </span>
+      <span *ngIf="item?.subLabel" class="sendTo-subLabel">
+        {{item.subLabel}}
+      </span>
+    </div>
+    <div class="d-flex align-items-center">
+      <trudi-checkbox
+        [disabled]="item?.disabled"
+        [ngModel]="item$.selected"
+        [ngModelOptions]="{standalone: true}"></trudi-checkbox>
+    </div>
+  </div>
+</ng-template>

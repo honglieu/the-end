@@ -1,0 +1,49 @@
+<div class="file mt-6">
+  <div class="file-box" *ngFor="let item of listFileAttached; let i = index">
+    <div class="file-container">
+      <div class="file-logo">
+        <img
+          *ngIf="item?.mediaLink && item?.fileType?.includes('image')"
+          [src]="(item.mediaLink | safe: 'resourceUrl')" />
+        <img
+          *ngIf="!(item?.mediaLink && item?.fileType?.includes('image'))"
+          [src]="(((item?.name || item?.fileName) | getFileIconType))" />
+      </div>
+      <div class="file-content">
+        <div class="file-name text-ellipsis">
+          {{ item?.name || item?.fileName }}
+        </div>
+        <div *ngIf="showFileSize" class="file-size">
+          {{(item?.size || item?.fileSize) | convertFileSize}}
+        </div>
+      </div>
+    </div>
+    <button
+      type="button"
+      class="cursor-pointer remove-button"
+      [disabled]="!!item.isDisabled || disableRemoveButton"
+      (click)="removeFile(i)">
+      <trudi-icon
+        nz-tooltip
+        [nzTooltipTitle]="!!item.isDisabled ? disableTooltipText: ''"
+        [ngClass]="{'cursor-not-allowed': !!item.isDisabled || disableRemoveButton }"
+        [style]="{ 'width.px': 16, 'height.px': 16, color: '#646464' }"
+        icon="closeIcon"></trudi-icon>
+    </button>
+  </div>
+</div>
+
+<button
+  trudi-btn
+  size="extra-small"
+  variant="tonal"
+  [disabled]="disableRemoveButton"
+  btnType="neutral"
+  type="button"
+  class="add-file-btn-upload border-rad-6 mt-6"
+  (click)="handleAttachFile()">
+  <trudi-icon
+    [style]="{'width.px': 16, 'height.px': 16}"
+    icon="iconUploadV2"></trudi-icon>
+  <span class="btn-text">Attach file</span>
+</button>

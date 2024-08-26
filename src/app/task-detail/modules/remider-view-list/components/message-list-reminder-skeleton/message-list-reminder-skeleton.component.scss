@@ -1,0 +1,142 @@
+:host ::ng-deep {
+  .reminder-skeleton {
+    border-bottom: 1px solid var(--border-neutral-dark);
+    border-radius: 0;
+
+    > div {
+      margin-right: 0px !important;
+    }
+  }
+
+  .reminder-wrapper {
+    border-bottom: 1px solid var(--border-neutral-dark);
+  }
+
+  .bg-red {
+    background-color: red;
+  }
+
+  .reminder-row.cdk-drag-disabled .reminder-row-wrapper {
+    cursor: pointer;
+  }
+
+  .scroll {
+    width: calc(100% - 28px) !important;
+  }
+  .reminder-list-wrapper:has(.loading-spinner-top) {
+    .reminder-row:nth-child(2) {
+      .reminder-row-wrapper {
+        border-top: 0 !important;
+      }
+    }
+  }
+
+  .reminder-list-wrapper {
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: auto;
+    background-color: var(--bg-neutral-tonal-stronger, #e7eaed);
+    height: calc(100vh - 40px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .ant-skeleton-title {
+      border-radius: 10px;
+    }
+    > div {
+      overflow: visible;
+      box-sizing: border-box;
+      background-color: white;
+    }
+
+    .reminder-row:last-child {
+      border-bottom: 1px solid var(--border-neutral-dark);
+    }
+
+    .reminder-row:last-child:not(.loading-spinner) {
+      border-top-right-radius: 8px;
+      border-bottom: 1px solid var(--border-neutral-dark);
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &.selected {
+      transition: all ease-in 0.3ms;
+      background: var(--bg-brand-tonal-strongest);
+    }
+  }
+
+  .reminder-row-wrapper {
+    padding: 8px 12px;
+    .ant-skeleton-custom {
+      h3.ant-skeleton-title {
+        height: 16px;
+        border-radius: 18px;
+      }
+    }
+
+    .ant-skeleton-circle {
+      width: 50px;
+
+      h3.ant-skeleton-title {
+        border-radius: 20px;
+      }
+    }
+
+    .ant-skeleton-message-role {
+      width: 100px;
+      height: 20px;
+      margin-left: -12px;
+    }
+
+    .skeleton-circle {
+      span.ant-skeleton-avatar.ant-skeleton-avatar-circle {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    .w-300 {
+      width: 300px;
+    }
+    .w-250 {
+      width: 250px;
+    }
+    .w-70 {
+      width: 70px;
+    }
+    .w-40 {
+      width: 40px;
+    }
+
+    .reminder-quote-wrapper {
+      padding-top: 4px;
+      &:last-child {
+        padding-top: 0;
+      }
+    }
+  }
+
+  .reminder-row.loading-spinner {
+    height: 104px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    border-left: 0px;
+    border-bottom: 1px solid var(--border-neutral-dark);
+    border-top-right-radius: 0%;
+    img {
+      height: 64px;
+      width: 64px;
+    }
+  }
+
+  .reminder-row.loading-spinner-top {
+    border-top: 1px solid var(--border-neutral-dark);
+    border-bottom: 0 !important;
+  }
+}

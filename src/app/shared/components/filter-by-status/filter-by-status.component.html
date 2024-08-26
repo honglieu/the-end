@@ -1,0 +1,58 @@
+<button
+  tabindex="0"
+  size="small"
+  variant="neutral"
+  class="status-container"
+  data-console="status-button"
+  nz-popover
+  [disabled]="false"
+  [nzPopoverTrigger]="'hover'"
+  [(nzPopoverPlacement)]="placement"
+  [nzPopoverContent]="menu"
+  nzPopoverOverlayClassName="filter-by-status-popover"
+  [(nzPopoverVisible)]="visibleDropdown"
+  (nzPopoverVisibleChange)="onDropdownMenuVisibleChange($event)"
+  menuKeyboard
+  [visibleMenu]="visibleDropdown"
+  [menuType]="EMenuDropdownType.Popover"
+  (nzVisibleChange)="onDropdownMenuVisibleChange($event)">
+  <ng-container>
+    <div
+      class="cursor-pointer d-flex align-items-center target-status-detail target-status"
+      [ngClass]="{'btn-focus': visibleDropdown}"
+      nz-tooltip
+      nzTooltipPlacement="bottom">
+      <ng-container>
+        <div class="td-icon-circle-btn d-flex w-100 justify-content-between">
+          <div class="text-status-detail gap-4 d-flex align-items-center">
+            <span class="info">Status</span>
+            <span
+              class="text-status"
+              *ngIf="(inboxFilterService.selectedStatus$ | async).length"
+              >{{(inboxFilterService.selectedStatus$ | async).length}}</span
+            >
+            <trudi-icon
+              class="icon-down"
+              svgClass="size-20"
+              viewBox="auto"
+              icon="chevronDown"></trudi-icon>
+          </div>
+          <trudi-icon
+            class="icon-left"
+            svgClass="size-20"
+            viewBox="auto"
+            icon="chevronRight"></trudi-icon>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</button>
+
+<ng-template #menu>
+  <div nz-menu>
+    <filter-status-box
+      tabindex="-1"
+      #assignAttachBox
+      *ngIf="visibleDropdown"></filter-status-box>
+  </div>
+</ng-template>

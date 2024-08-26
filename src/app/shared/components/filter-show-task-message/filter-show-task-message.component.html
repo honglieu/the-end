@@ -1,0 +1,9 @@
+<div class="d-flex align-items-center filter-container">
+  <div class="title">Show task {{titleToggle}}</div>
+  <switch-checkbox
+    [index]="isShowTaskMessage"
+    [isChecked]="isShowTaskMessage"
+    [reverse]="true"
+    [disabled]="isDisabled"
+    (tdCheckboxChanged)="onShowTaskEmailsChange($event)"></switch-checkbox>
+</div>

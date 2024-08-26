@@ -1,0 +1,41 @@
+<ng-container
+  *ngFor="let row of rowData.events; trackBy: trackByListEvent;
+            let firstRowOfDateGroup = first;
+            let length = count;
+            let lastRowOfDateGroup = last">
+  <div class="event-wrapper">
+    <div class="row-wrapper">
+      <div class="event-item align-items-center cursor-pointer">
+        <div class="item item-date">
+          <ng-container *ngIf="firstRowOfDateGroup">
+            {{ row?.eventDate | formatDate | push }}
+          </ng-container>
+        </div>
+        <div
+          *ngIf="![EEventType.ISSUE, EEventType.CUSTOM_EVENT,
+          EEventType.ENTRY_NOTICE].includes(row.eventType); else eventTime"
+          class="item item-time-range">
+          {{ row?.startTime | dateTimeRange:row?.endTime | push }}
+        </div>
+        <ng-template #eventTime>
+          <div class="item item-time-range">
+            {{ row?.eventDate | formatTime: true | push | lowercase }}
+          </div>
+        </ng-template>
+        <div class="item">
+          <event-name [name]="row?.eventName"></event-name>
+        </div>
+        <div class="item-checkbox">
+          <trudi-checkbox
+            type="circle"
+            class="checkbox-frame"
+            [ngModel]="row.isLinked"
+            (ngModelChange)="handleChangeSelected($event, row)"></trudi-checkbox>
+        </div>
+      </div>
+      <div
+        class="separator-event"
+        [ngClass]="{'last-event-date-group': lastRowOfDateGroup && !lastRowData}"></div>
+    </div>
+  </div>
+</ng-container>

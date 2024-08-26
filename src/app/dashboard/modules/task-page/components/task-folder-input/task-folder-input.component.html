@@ -1,0 +1,47 @@
+<trudi-text-field
+  #folderNameRef
+  class="folder-input"
+  [placeholder]="placeholder"
+  [prefixTemplate]="prefixTemplate"
+  [showCounting]="false"
+  [(ngModel)]="value"
+  size="small"
+  (triggerEventBlur)="handleBlurFolderName()"
+  [autoFocus]="true"
+  [maxCharacter]="60" />
+
+<ng-template #prefixTemplate>
+  <div
+    class="name-icon-wrapper"
+    nz-dropdown
+    [nzVisible]="showColorPicker"
+    (nzVisibleChange)="handleFolderDropdown()"
+    [nzTrigger]="'click'"
+    [nzClickHide]="false"
+    [nzPlacement]="'bottomCenter'"
+    [nzOverlayClassName]="'dropdown-pt'"
+    [nzDropdownMenu]="menu">
+    <img [src]="selectedIcon?.src" alt="icon" />
+  </div>
+
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <div class="options-wrapper" nz-menu nzSelectable>
+      <trudi-text-field
+        iconLeft="iconSearch"
+        placeholder="Search icon"
+        [clearable]="true"
+        size="small"
+        [formControl]="iconControl"></trudi-text-field>
+      <div class="option-icon--list auto-hide-scroll">
+        <div
+          *ngFor="let item of listSearchIcon"
+          class="option-icon--item"
+          nz-menu-item
+          [class.selected-icon]="item.icon === selectedIcon.icon"
+          (click)="onChangeIcon(item)">
+          <img class="folder-img" [src]="item.src" alt="image" />
+        </div>
+      </div>
+    </div>
+  </nz-dropdown-menu>
+</ng-template>

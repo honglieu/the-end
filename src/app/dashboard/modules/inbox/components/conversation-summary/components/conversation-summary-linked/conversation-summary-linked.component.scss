@@ -1,0 +1,24 @@
+@import 'function';
+
+.app-message-session-summary {
+	@include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 400);
+}
+
+.app-message-request-view-email {
+	@include fontSetup(var(--bg-brand-solid-normal, #28AD99), 12px, 16px, normal, 500);
+	cursor: pointer;
+  white-space: nowrap;
+
+  &:hover{
+    color: var(--brand-600);
+    text-decoration: underline;
+  }
+  &:active{
+    color: var(--brand-700);
+    text-decoration: underline;
+  }
+}
+
+.mg-8 {
+	margin-bottom: 8px;
+}

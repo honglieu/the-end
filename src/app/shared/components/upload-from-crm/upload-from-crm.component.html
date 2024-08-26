@@ -1,0 +1,18 @@
+<select-property-popup
+  *ngIf="popupState.visibleSelect"
+  [visible]="popupState.visibleSelect"
+  [configs]="configs"
+  [activeProperty]="activeProperty"
+  [currentAgencyId]="currentAgencyId"
+  [form]="form"
+  (onTrigger)="onTriggerSelectProperty()"
+  (onClose)="onCloseSelectProperty()"></select-property-popup>
+
+<attach-file-from-crm
+  *ngIf="popupState.visibleAttachFile"
+  [configs]="configs"
+  [isShowBackBtn]="isShowBackButtonAttachFile"
+  [backFromCheckList]="backFromCheckList"
+  [visible]="popupState.visibleAttachFile"
+  (outSelectedFiles)="onSelectedFiles($event)"
+  (onClose)="onCloseAttachFiles()"></attach-file-from-crm>

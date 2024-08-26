@@ -1,0 +1,14 @@
+<div class="d-flex align-items-center gap-16">
+  <div class="search-wrapper">
+    <trudi-form-control>
+      <trudi-text-field
+        #inputSearch
+        size="large"
+        iconLeft="iconSearch"
+        placeholder="Search"
+        [clearable]="true"
+        [ngModel]="searchText"
+        (ngModelChange)="handleChangeSearchText($event)"></trudi-text-field>
+    </trudi-form-control>
+  </div>
+</div>

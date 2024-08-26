@@ -1,0 +1,51 @@
+<div
+  #datePickerOrigin
+  class="wrapper-btn d-flex justify-content-center align-items-center">
+  <trudi-select-dropdown-v2
+    bindValue="value"
+    [prefixIcon]="'calendar2'"
+    [clearable]="false"
+    [prioritizeSelectingItems]="false"
+    [items]="EventDatetimePicker"
+    [customTitle]="customTitle"
+    [(ngModel)]="_picker.type"
+    (ngModelChange)="onChangePicker($event)">
+  </trudi-select-dropdown-v2>
+</div>
+
+<trudi-single-range-picker
+  #datePicker
+  *ngIf="onCustomRange"
+  nzInline
+  [nzAutoFocus]="true"
+  [customOrigin]="datePickerOrigin"
+  [nzDropdownClassName]="'trudi-picker-dropdown'"
+  [nzOpen]="true"
+  [nzFormat]=" datePickerFormatPipe$ | async"
+  [nzRenderExtraFooter]="singleRangeExtraFooter"
+  [class.d-none]="true"
+  [class.show-range-picker]="true"
+  [(ngModel)]="_picker.value"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleRangeChange($event)">
+</trudi-single-range-picker>
+
+<ng-template #singleRangeExtraFooter>
+  <div
+    class="d-flex justify-content-end pb-12 extra-footer event-date__picker-custom">
+    <div class="d-flex half-width justify-content-start">
+      <button trudi-btn variant="ghost" size="medium" (click)="handleCancel()">
+        Cancel
+      </button>
+    </div>
+    <div class="d-flex half-width justify-content-end">
+      <button
+        trudi-btn
+        variant="ghost"
+        size="medium"
+        (click)="datePicker.handleApply()">
+        Apply
+      </button>
+    </div>
+  </div>
+</ng-template>

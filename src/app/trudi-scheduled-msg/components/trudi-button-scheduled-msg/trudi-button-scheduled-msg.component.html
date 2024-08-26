@@ -1,0 +1,14 @@
+<div
+  class="message-scheduled"
+  *ngIf="numberOfScheduledMsg !== 0"
+  [style.marginBottom]="position + 'px'">
+  <button
+    class="message-scheduled-button d-flex align-items-center gap-4"
+    (click)="onOpenScheduledMsgModal()">
+    <trudi-icon icon="leadingIcon"></trudi-icon>
+    <p class="no-margin-bottom">
+      {{numberOfScheduledMsg}} {{numberOfScheduledMsg === 1 ? 'message' :
+      'messages'}} scheduled for send
+    </p>
+  </button>
+</div>

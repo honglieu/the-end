@@ -1,0 +1,42 @@
+@import 'function';
+
+.header-wrapper {
+  padding: 16px;
+  border-bottom: 1px solid var(--border-neutral-light);
+
+  .left-btn-wrapper {
+    gap: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .btn {
+      &-unread {
+        min-width: unset;
+        width: 74px !important;
+      }
+
+      &-viewall {
+        min-width: 81px !important;
+      }
+    }
+  }
+
+  .switch-title {
+    @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 400);
+    text-align: center;
+  }
+
+  .right-btn-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  button {
+    border: none;
+    background-color: transparent;
+  }
+}

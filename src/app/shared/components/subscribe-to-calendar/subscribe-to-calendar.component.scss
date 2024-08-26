@@ -1,0 +1,157 @@
+@import 'function';
+
+.mt-0 {
+  margin-top: 0 !important;
+}
+
+.integration-calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 454px;
+  height: 100%;
+  margin-top: 40px;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    &--title {
+      @include fontSetup(var(--gray-600), 18px, 28px, normal, 600);
+    }
+
+    &--description {
+      @include fontSetup(var(--gray-600), 14px, 20px, normal, 400);
+    }
+  }
+
+  &__title-step {
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 400);
+  }
+
+  p {
+    margin: 0 !important;
+  }
+
+  &__step {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    > p {
+      display: flex;
+      gap: 8px;
+
+      @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+    }
+
+    span {
+      display: flex;
+      width: 24px;
+      height: 24px;
+      padding: 8px;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      border-radius: 24px;
+      color: var(--brand-500);
+      background: var(--brand-100);
+    }
+  }
+
+  &__action {
+    display: flex;
+    gap: 10px;
+  }
+}
+
+.banner-calendar {
+  display: flex;
+  padding: 12px;
+  align-items: center;
+  gap: 12px;
+  align-self: stretch;
+  border-radius: 8px;
+  border: 1px solid var(--warning-500);
+  background: var(--warning-100);
+
+  &__content {
+    &--title {
+      @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 600);
+    }
+
+    &--subTitle {
+      @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 400);
+    }
+  }
+
+  &__action {
+    margin-left: auto;
+    display: flex;
+    gap: 12px;
+
+    &--close {
+      border: 0;
+      background: transparent;
+    }
+  }
+}
+
+.banner-menu {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  overflow: hidden;
+
+  p {
+    margin: 0;
+  }
+
+  > button {
+    min-width: 161px;
+    display: flex;
+    align-items: center;
+    border: 0;
+    padding: 12px;
+    gap: 8px;
+    background-color: var(--white);
+
+    p {
+      @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+    }
+
+    trudi-icon {
+      display: flex;
+      align-items: center;
+      width: 28px;
+      height: 28px;
+    }
+  }
+}
+
+::ng-deep .ant-popover.filter-to-calendars-popover {
+  &.ant-popover-placement-bottomRight {
+    padding-top: 4px;
+  }
+
+  &.ant-popover-placement-bottomLeft {
+    padding-top: 4px;
+  }
+
+  &.ant-popover-placement-leftTop {
+    padding-right: 4px;
+  }
+
+  .ant-popover-inner-content {
+    padding: 0;
+  }
+
+  .ant-popover-arrow {
+    display: none;
+  }
+
+  .ant-menu {
+    border-radius: 8px;
+  }
+}

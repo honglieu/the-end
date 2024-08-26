@@ -1,0 +1,64 @@
+@import 'function';
+.header_select {
+  display: flex;
+  padding: 12px;
+  gap: 0 24px;
+  @include fontSetup(
+    var(--fg-neutral-stronger, #3d3d3d),
+    14px,
+    20px,
+    normal,
+    500
+  );
+}
+.option_select {
+  display: flex;
+  width: 100%;
+  gap: 2px 0;
+  padding: 8px 12px;
+  &--title {
+    display: flex;
+    align-items: center;
+    gap: 0 4px;
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      14,
+      20px,
+      normal,
+      500
+    );
+  }
+
+  &--property span {
+    color: var(--fg-neutral-weaker, #999) !important;
+    white-space: break-spaces;
+    font-size: 12px !important;
+    font-weight: 400 !important;
+  }
+}
+
+.label-select {
+  &__title {
+    @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+  }
+  &__address {
+    @include fontSetup(var(--gray-400), 12px, 16px, normal, 500);
+  }
+}
+
+:host ::ng-deep .group_select {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fg-neutral-weaker, #85888E);
+}
+
+.skeleton-container {
+  flex-direction: column;
+  padding: 0 0 5px 5px;
+  .ant-skeleton-title {
+    margin-top: 0px !important;
+  }
+  .skeleton-title {
+    height: 20px;
+  }
+}

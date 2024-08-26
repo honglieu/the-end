@@ -1,0 +1,63 @@
+@import 'function';
+.container-create-task-editor {
+  padding: 20px 0px;
+  flex-wrap: wrap;
+  .btn-create-task-editor {
+    display: flex;
+    padding: 20px 30px;
+    width: 180px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--gray-200, #d8dcdf);
+    background: var(--white, #fff);
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      16px,
+      24px,
+      normal,
+      600
+    );
+    &:hover {
+      border: 1px solid var(--bg-brand-solid-normal, #00aa9f);
+      background: var(--brand-100, #e1f8f5);
+      color: var(--bg-brand-solid-normal, #00aa9f);
+    }
+    &:active {
+      border: 1px solid var(--bg-brand-solid-normal, #00aa9f);
+      background: var(--brand-200, #d1f0ed);
+      color: var(--bg-brand-solid-normal, #00aa9f);
+    }
+    &:disabled {
+      border: 1px solid var(--border-neutral-dark, #d8dcdf);
+      color: var(--fg-neutral-weakest, #b9bec0);
+      cursor: not-allowed;
+      background: none;
+    }
+    .logo-crm {
+      height: 24px;
+    }
+  }
+  .active {
+    border: 1px solid var(--bg-brand-solid-normal, #00aa9f);
+    background: var(--brand-100, #e1f8f5);
+    color: var(--bg-brand-solid-normal, #00aa9f);
+  }
+}
+.btn-next-task {
+  width: 100px;
+  height: 40px;
+  padding: 0px 16px;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--bg-brand-solid-normal, #00aa9f);
+  border: none;
+  @include fontSetup(var(--fg-neutral-base, #fff), 14px, 20px, normal, 600);
+  &:hover {
+    background: var(--bg-brand-solid-stronger, #33bbb2);
+  }
+  &:active {
+    background: var(--bg-brand-solid-strongest, #0aa095);
+  }
+}

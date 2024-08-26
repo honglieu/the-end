@@ -1,0 +1,41 @@
+<div class="count-container">
+  <div class="d-flex count-wrapper align-items-center">
+    <div class="count-text">{{selectedList.length}}/{{listStatus.length}}</div>
+    <button
+      *ngIf="selectedList.length"
+      tabindex="0"
+      focusable
+      class="clear-btn clear-selection-btn"
+      (click)="onClearFilter()">
+      Clear selection
+    </button>
+  </div>
+</div>
+<div class="assign-list-items auto-hide-scroll" (click)="onClickPopup($event)">
+  <div class="assign-list-items-info">
+    <ng-container *ngIf="listStatus.length > 0">
+      <div
+        tabindex="0"
+        focusable
+        (keydown.enter)="handleCheckbox(i)"
+        *ngFor="let item of listStatus; index as i"
+        class="assign-item cursor-pointer"
+        [ngClass]="{'disable': item.isLastItem, 'active': item.selected}"
+        (click)="handleCheckbox(i)">
+        <div class="assign-item-content">
+          <div class="assign-item-info">
+            <div class="assign-name" [ngClass]="{'active': item.selected}">
+              {{item?.label}}
+            </div>
+            <td-checkbox
+              [size]="24"
+              [isChecked]="item.selected"
+              (tdCheckboxChanged)="handleCheckbox(i)"
+              [currentUser]="item">
+            </td-checkbox>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

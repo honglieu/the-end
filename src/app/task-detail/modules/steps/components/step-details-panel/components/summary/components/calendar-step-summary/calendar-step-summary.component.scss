@@ -1,0 +1,23 @@
+:host {
+  .card-icon-wrapper {
+    width: 52px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-info-tonal-stronger);
+  }
+  .card-infor {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px;
+    background-color: var(--bg-base);
+    .color-danger {
+      color: var(--fg-danger);
+    }
+  }
+
+  .bg-white {
+    background-color: white;
+  }
+}

@@ -1,0 +1,48 @@
+<ng-container
+  *rxLet="participantContext$; let context; strategy: renderStrategy">
+  <div
+    class="participants-container text-ellipsis"
+    [class.seen]="context.isReadMessage">
+    <div class="participants-list text-ellipsis">
+      @if(context.participants?.length) {
+      <div class="d-flex align-items-center fit-content">
+        <div
+          class="participants-item-wrapper"
+          trudi-tooltip
+          [hideWhenClick]="true"
+          [nzTooltipTitle]="tooltipTemplate"
+          [nzTooltipArrowPointAtCenter]="true"
+          [nzTooltipMouseEnterDelay]="1"
+          nzTooltipTrigger="hover"
+          [class.has-checkbox]="context.isSelectingMode">
+          <ng-container
+            *rxFor="
+                  let participant of context.displayParticipants; trackBy: 'email';
+                  let last = last;
+                 ">
+            @if(!context.isCreatedFromVoiceMail ||
+            (context.isCreatedFromVoiceMail && context.participant?.email)) {
+            <div
+              class="participants-name text-ellipsis"
+              [innerHTML]="participant.title | highlight: (search$ | async)"></div>
+            } @if(context.isCreatedFromVoiceMail && !context.participant?.email)
+            {
+            <div
+              class="participants-name text-ellipsis"
+              [innerHTML]="participant.title | phoneNumberFormat | highlight: (search$ | async)"></div>
+            } @if(!last) {
+            <div class="participants-name">,&nbsp;</div>
+            }
+          </ng-container>
+        </div>
+        @if(!!context.hiddenParticipants?.length) {
+        <div class="count">+{{context.hiddenParticipants.length}}</div>
+        }
+      </div>
+      }
+    </div>
+  </div>
+  <ng-template #tooltipTemplate>
+    <div [innerHTML]="context.tooltipTitle"></div>
+  </ng-template>
+</ng-container>

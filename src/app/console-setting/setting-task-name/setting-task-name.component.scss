@@ -1,0 +1,220 @@
+@import 'function';
+
+:host ::ng-deep {
+  .taskname-wrapper {
+    height: 100%;
+    background-color: var(--white);
+    border-radius: 12px 0 0 12px;
+    overflow: hidden;
+
+    .table-fix-header {
+      height: 100%;
+      border-top: 1px solid var(--gray-200);
+      .table-taskname {
+        width: 100%;
+        border-collapse: separate;
+        thead {
+          position: sticky;
+          top: 0;
+          z-index: 1;
+          background-color: var(--gray-50);
+          height: 5.4rem;
+          tr th {
+            padding: 13px 20px;
+            text-align: left;
+            border: 0;
+            border-bottom: 1px solid var(--gray-200);
+            @include fontSetup(var(--gray-500), 12px, 18px, normal, 500);
+            &:first-of-type {
+              border-left: 1px solid var(--gray-200);
+            }
+            &:last-of-type {
+              padding-left: 2px;
+              border-right: 1px solid var(--gray-200);
+            }
+          }
+        }
+        .empty-block {
+          height: calc(100vh - 352px);
+          position: relative;
+          .no-result-text {
+            position: absolute;
+            top: 33%;
+            left: 50%;
+            transform: translate(-50%, 50%);
+            width: fit-content;
+            font-weight: 500;
+            text-align: center;
+            vertical-align: middle;
+            .header-text {
+              font-size: 2rem;
+              line-height: 2.4rem;
+              margin-bottom: 2.2rem;
+              color: var(--gray-700);
+            }
+            .content-text {
+              font-size: 1.6rem;
+              line-height: 1.9rem;
+              color: var(--gray-500);
+            }
+          }
+        }
+        tr td {
+          border-bottom: 1px solid var(--gray-200);
+          vertical-align: initial;
+          @include fontSetup(var(--gray-700), 14px, 16px, normal, 500);
+          &:last-of-type {
+            @include fontSetup(var(--gray-600), 14px, 16px, normal, 500);
+          }
+
+          .topic-item {
+            padding: 28px 20px;
+          }
+          .task-item-wrapper {
+            padding: 16px 2px;
+          }
+          .underline-row {
+            border-bottom: 1px solid var(--gray-200);
+          }
+          .task-item {
+            padding: 11px 16px 11px 12px;
+            border: 1px solid var(--gray-200);
+            background: var(--gray-200);
+            @include fontSetup(var(--gray-700), 14px, 16px, normal, 500);
+            width: fit-content;
+            position: relative;
+            .group-btn {
+              display: none;
+
+              img {
+                padding: 7px;
+                border: 0;
+                border-radius: 4px;
+                width: 24px;
+                height: 24px;
+              }
+              .edit-btn {
+                margin-right: 5px;
+                background: var(--brand-500);
+              }
+              .delete-btn {
+                background: var(--danger-500);
+              }
+            }
+
+            &:hover {
+              cursor: pointer;
+
+              .group-btn {
+                padding-top: 20px;
+                display: flex;
+                align-items: center;
+                position: absolute;
+                bottom: -28px;
+                right: 0;
+                z-index: 1;
+              }
+            }
+            &.is-editing {
+              background: var(--white) !important;
+              border: 1px solid var(--brand-500);
+              outline: 2px solid rgba(var(--brand-500-rgb), 0.6) !important;
+            }
+            &.error-duplicate {
+              border: 1px solid var(--danger-500);
+              outline: 2px solid var(--danger-500) !important;
+            }
+
+            input {
+              padding: 0;
+              border: 0;
+              color: var(--gray-700);
+            }
+          }
+
+          .add-task {
+            position: relative;
+            align-items: baseline;
+            padding: 12px 16px;
+            background-color: var(--gray-200);
+            border: 1px solid var(--brand-500);
+            border-radius: 8px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            height: 42px;
+            max-width: 185px;
+
+            &.error-duplicate {
+              border: 1px solid var(--danger-500);
+            }
+            input {
+              padding: 0;
+              border: 0;
+              color: var(--gray-700);
+              background-color: var(--gray-200);
+              width: 100%;
+            }
+          }
+          .duplicate-noti {
+            display: flex;
+            position: absolute;
+            top: -29px;
+            left: -6px;
+            z-index: 1;
+            @include fontSetup(var(--danger-500), 12px, 14px, normal, 400);
+            padding: 7px 6px;
+
+            img {
+              margin-right: 6px;
+            }
+          }
+          .action-btn {
+            display: flex;
+            position: absolute;
+            bottom: -30px;
+            right: 0;
+            z-index: 1;
+
+            img {
+              padding: 8px;
+              border: 0;
+              border-radius: 4px;
+              background-color: var(--white);
+              width: 24px;
+              height: 24px;
+            }
+
+            .icon-save {
+              margin-right: 5px;
+              background-color: var(--brand-500);
+
+              &.disabled-btn {
+                background-color: var(--brand-200);
+              }
+            }
+
+            .icon-cancel {
+              background-color: var(--danger-500);
+            }
+          }
+          .add-task-icon {
+            height: 42px;
+            width: 42px;
+            color: var(--gray-600);
+            border: 1px dashed var(--gray-600);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            align-items: center;
+            justify-content: center;
+          }
+        }
+      }
+    }
+  }
+}
+.border-left {
+  border-left: 1px solid var(--gray-200);
+}
+.border-right {
+  border-right: 1px solid var(--gray-200);
+}

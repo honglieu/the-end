@@ -1,0 +1,50 @@
+<ng-container [ngTemplateOutlet]="isLoading ? loadingTemplate : tenancyDetail">
+</ng-container>
+<ng-template #tenancyDetail>
+  <!--  TENANCY SINCE-->
+  <div class="card-wrapper">
+    <div class="item-owner-title">
+      <button
+        (click)="handleClickBackBtn()"
+        class="assigned-agent-container"
+        data-console="assignee-button"
+        menuKeyboard
+        tabindex="0">
+        <div
+          class="cursor-pointer assigned-agent d-flex align-items-center white-space-nowrap target-person"
+          nz-tooltip
+          nzTooltipPlacement="bottom">
+          <div class="td-icon-circle-btn">
+            <div class="text-agent-detail d-flex align-items-center">
+              <trudi-icon
+                class="icon-down"
+                icon="chevronLeft"
+                svgClass="size-20"
+                viewBox="auto"></trudi-icon>
+            </div>
+          </div>
+        </div>
+      </button>
+      <span class="item-title">{{ userTenancyList?.name }}</span>
+
+      <trudi-badge
+        size="small"
+        *ngIf="!isLoading"
+        [text]="(userTenancyList?.status === TENANCY_STATUS.prospect ? TENANCY_STATUS.prospective : userTenancyList?.status) | titlecase"
+        [variant]="'border'"></trudi-badge>
+    </div>
+    <tenancy-since-detail
+      [crmSystemId]="crmSystemId"
+      [userTenancyList]="userTenancyList">
+    </tenancy-since-detail>
+  </div>
+
+  <!--  TENANTS-->
+  <div class="card-wrapper">
+    <list-tenants [userTenancyList]="userTenancyList"></list-tenants>
+  </div>
+</ng-template>
+
+<ng-template #loadingTemplate>
+  <tenancy-detail-skeleton></tenancy-detail-skeleton>
+</ng-template>

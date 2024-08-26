@@ -1,0 +1,29 @@
+@import 'function';
+
+::ng-deep
+  nz-modal-container
+  .ant-modal
+  .ant-modal-content
+  .ant-modal-footer:has(.modal-footer-contact-card) {
+  display: none;
+}
+
+.trudi-send-msg {
+  &-body {
+    padding: 0px;
+  }
+
+  &-footer {
+    margin-top: 20px;
+    &-btn-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    button {
+      min-width: 100px;
+    }
+  }
+}

@@ -1,0 +1,362 @@
+<div class="content-overlay">
+  <div class="billing-wrapper" *ngIf="loadingService.isLoading$ | async">
+    <div class="body">
+      <div class="body-manage-subscription">
+        <h4 class="title">Subscription</h4>
+        <div class="body-manage-subscription-content">
+          <nz-skeleton
+            [nzParagraph]="{ rows: 2, width: [225, 450] }"
+            [nzTitle]="false"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </div>
+      <div class="body-manage-subscription">
+        <h4 class="title">This month</h4>
+        <div class="body-manage-subscription-content mt-20">
+          <nz-skeleton
+            [nzParagraph]="{ rows: 3, width: [400, 623, 623] }"
+            [nzTitle]="false"
+            [nzActive]="true"></nz-skeleton>
+          <br />
+          <nz-skeleton
+            [nzParagraph]="{ rows: 3, width: [400, 623, 623] }"
+            [nzTitle]="false"
+            [nzActive]="true"></nz-skeleton>
+          <div
+            class="d-flex flex-dir-column align-items-end body-billing mt-20">
+            <div>
+              <div class="d-flex justify-content-end">
+                <div>
+                  <nz-skeleton
+                    [nzParagraph]="{ rows: 1, width: [140] }"
+                    [nzTitle]="false"
+                    [nzActive]="true"></nz-skeleton>
+                </div>
+              </div>
+              <nz-skeleton
+                [nzParagraph]="{ rows: 2, width: [250, 250] }"
+                [nzTitle]="false"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="body-manage-subscription">
+        <h4 class="title">
+          Invoice history
+          <div class="body-manage-subscription-content">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 2,  width: [623, 623] }"
+              [nzTitle]="false"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </h4>
+      </div>
+      <div class="body-manage-subscription">
+        <h4 class="title">
+          Manage your payments
+          <div class="body-manage-subscription-content">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 3,  width: [450, 200, 225] }"
+              [nzTitle]="false"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </h4>
+      </div>
+      <div class="body-update-billing">
+        <h4 class="title">Update billing email address</h4>
+        <div class="body-update-billing-content">
+          <nz-skeleton
+            [nzParagraph]="{ rows: 3 }"
+            [style.width.px]="400"
+            [nzTitle]="false"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="billing-wrapper"
+    *ngIf="(loadingService.isLoading$ | async) === false">
+    <div class="body">
+      <div *ngIf="this.configPlans" class="body-subscription">
+        <div
+          class="subscription-title d-flex align-items-center justify-content-between">
+          <h4 class="title">Subscription</h4>
+          <trudi-badge
+            *ngIf="!!trialBilling?.trial_end"
+            text="Trial - {{trialDays}} {{trialDays > 1 ? 'days' : 'day'}}, ends {{trialBilling?.trial_end | formatCharectorDate | async}}"
+            variant="warning"></trudi-badge>
+        </div>
+        <span
+          *ngIf="this.configPlans.requestPlan"
+          class="subscription-status-information">
+          Your request to move to the
+          {{PLAN_DATA[this.configPlans.requestPlan]?.title }} in progress.
+        </span>
+        <div class="subscription-plan">
+          <div class="plan-content">
+            <div class="plan-title">
+              <div *ngIf="PLAN_DATA[this.configPlans.plan]?.img">
+                <img
+                  [src]="PLAN_DATA[this.configPlans.plan]?.img"
+                  alt="plan icon"
+                  class="icon-plan" />
+              </div>
+              <div class="plan-text">
+                {{ PLAN_DATA[this.configPlans.plan]?.title }}
+              </div>
+            </div>
+            <div>
+              <button
+                (click)="handleShowPacks()"
+                variant="tonal"
+                trudi-btn
+                size="medium">
+                Change my plan
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="body-billing">
+        <h4 class="title">
+          Current period:
+          <span>
+            {{billingData?.period_start | formatCharectorDate | async }} -
+            {{billingData?.period_end | formatCharectorDate | async}}
+          </span>
+        </h4>
+        <div *ngIf="!!trialBilling?.trial_end; else normalBilling">
+          <billing-table
+            [rowLimit]="BILLING_ROW_LIMIT"
+            tableTitle="Trial remains {{remainDays - 1}} {{remainDays - 1 > 1 ? 'days' : 'day'}}"
+            [showMoreBtn]="currentMonthBillingList.length > BILLING_ROW_LIMIT"
+            [hiddenQuantitySymbol]="false"
+            [isTrial]="!!remainDays"
+            [billingTableData]="currentMonthBillingList"
+            (showMoreItem)="BILLING_ROW_LIMIT = currentMonthBillingList?.length"></billing-table>
+        </div>
+        <ng-template #normalBilling>
+          <billing-table
+            [rowLimit]="BILLING_ROW_LIMIT"
+            tableTitle="You started the month having pre-paid for {{currentBillingPropertyCount}} {{ currentBillingPropertyCount > 1 ? 'properties' : 'property' }}"
+            [showMoreBtn]="currentMonthBillingList.length > BILLING_ROW_LIMIT"
+            [billingTableData]="currentMonthBillingList"
+            (showMoreItem)="BILLING_ROW_LIMIT = currentMonthBillingList?.length"></billing-table>
+        </ng-template>
+
+        <billing-table
+          *ngIf="dataSetupFee?.length > 0"
+          rowLimit="999"
+          [isCoupon]="true"
+          tableTitle="Charges and fees"
+          [hiddenQuantitySymbol]="true"
+          [showMoreBtn]="false"
+          [billingTableData]="dataSetupFee">
+        </billing-table>
+
+        <billing-table
+          rowLimit="1"
+          tableTitle="We estimate you will pre-pay for {{nextMonthBillingPropertyCount}} {{ nextMonthBillingPropertyCount > 1 ? 'properties' : 'property' }} on {{billingData?.period_end | formatCustomDate: 'MMM D, YYYY' | async}}"
+          [showMoreBtn]="false"
+          [hiddenQuantitySymbol]="true"
+          [billingTableData]="nextMonthBillingList"></billing-table>
+
+        <div class="billing-footer">
+          <div class="d-flex align-items-center gap-40">
+            <div class="billing-gst d-flex align-items-center">
+              <span> {{billingData?.taxSettings?.displayName}}</span>
+              <span
+                class="ml-4"
+                *ngIf="billingData?.taxSettings?.taxType === TAX_TYPE.SALES_TAX">
+                - {{billingData?.taxSettings?.jurisdiction}}</span
+              >
+            </div>
+            <span class="billing-cost">
+              {{billingData?.tax | currency:'USD':true:'1.2-2'}}
+            </span>
+          </div>
+          <div
+            class="d-flex align-items-center gap-40"
+            *ngIf="!!billingData?.coupon">
+            <div class="billing-gst d-flex align-items-center">
+              <span class="coupon-name"
+                >{{billingData?.coupon?.name}} ({{ billingData?.coupon?.unit ===
+                '$' ? (billingData?.coupon?.value | currency: 'USD' : true :
+                '1.2-2') : billingData?.coupon?.percent + '%' }} off)</span
+              >
+            </div>
+            <span
+              class="billing-cost"
+              *ngIf="+billingData.fee.total > 0 && !!billingData.coupon; else noneValue">
+              -{{billingData?.coupon?.value | currency:'USD':true:'1.2-2'}}
+            </span>
+          </div>
+          <!--          <div class="d-flex align-items-center gap-40">-->
+          <!--            <div class="billing-fee">TRANSACTION FEES</div>-->
+          <!--            <span class="billing-cost"-->
+          <!--              >{{billingData?.fee?.fee | currency:'USD':true:'1.2-2'}}</span-->
+          <!--            >-->
+          <!--          </div>-->
+          <div class="d-flex align-items-center gap-40">
+            <div class="billing-total">ESTIMATE TOTAL</div>
+            <div class="billing-cost billing-total text-ellipsis">
+              <span *ngIf="billingData?.total; else noneData"
+                >{{billingData?.total | currency:'USD':true:'1.2-2'}}</span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="body-invoice">
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <h4 class="title">Invoice history</h4>
+          <div
+            *ngIf="invoiceHistoryList.length > 6"
+            (click)="showInvoiceHistory = true"
+            class="show-more-history cursor-pointer">
+            <span>Show all history</span>
+          </div>
+        </div>
+        <invoice-history
+          *ngFor="let item of invoiceHistoryList.slice(0, 5); index as i"
+          [invoiceHistoryData]="item"
+          [isFirstMonth]="isFirstMonth(item, i)"
+          [previousInvoice]="invoiceHistoryList[i + 1] || invoiceHistoryList[i]"
+          (toggleDropdown)="handleInvoiceDropdown(i)">
+        </invoice-history>
+      </div>
+      <div class="body-manage-subscription">
+        <h4 class="title">Manage your payments</h4>
+        <div class="body-manage-subscription-content">
+          <p class="lable">
+            Please log into our customer portal to update your payment
+            <br />
+            method or billing details
+          </p>
+          <div class="button-wrapper">
+            <button
+              trudi-btn
+              [disabled]="isDisabledLogin"
+              btnType="primary"
+              variant="tonal"
+              (click)="openStripeLogin()">
+              Login to customer portal
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="body-update-billing">
+        <h4 class="title">Update billing email address</h4>
+        <div class="body-update-billing-content">
+          <p class="lable">
+            This is where we will send all billing communications. Only the
+            <br />
+            account owner can update the billing contact.
+          </p>
+          <div [formGroup]="emailForm">
+            <ng-container>
+              <div class="input-wrapper">
+                <trudi-form-control
+                  [errors]="[{errorName: 'email', errorMessage: 'Invalid email format'}]">
+                  <trudi-text-field
+                    size="medium"
+                    [disabled]="isDisabledEmail"
+                    formControlName="email"
+                    (triggerEventBlur)="onSubmit()"></trudi-text-field>
+                </trudi-form-control>
+              </div>
+            </ng-container>
+          </div>
+          <div class="button-wrapper">
+            <button
+              trudi-btn
+              [disabled]="isDisabledCancel"
+              btnType="danger"
+              variant="tonal"
+              (click)="popupState = EPopupState.CONFIRM_POPUP">
+              Cancel account
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noneData>
+  <span>$0</span>
+</ng-template>
+<ng-template #noneValue>
+  <span class="billing-cost"> {{ '0' | currency:'USD':true:'1.2-2' }} </span>
+</ng-template>
+<app-modal-popup
+  *ngIf="popupState === EPopupState.CONFIRM_POPUP"
+  [show]="popupState === EPopupState.CONFIRM_POPUP"
+  [position]="popupModalPosition.center"
+  [specificWidth]="510">
+  <confirm-popup
+    [iconUrl]="'/assets/icon/icon-warning-red.svg'"
+    [backgroundRightBtn]="'var(--danger-500)'"
+    [titleText]="'Are you sure you want to cancel this account?'"
+    [buttonLeft]="'No, keep it'"
+    [buttonRight]="'Yes, cancel'"
+    btnType="danger"
+    (onButtonLeftClick)="resetPopupState()"
+    (onButtonRightClick)="onCancelAccount()">
+  </confirm-popup>
+</app-modal-popup>
+
+<trudi-modal
+  *ngIf="popupState === EPopupState.REQUEST_POPUP"
+  [visible]="popupState === EPopupState.REQUEST_POPUP"
+  [modelWidth]="512"
+  (onCancel)="resetPopupState()"
+  [autoFocus]="null"
+  className="task-editor-popup"
+  title="Your cancellation request sent"
+  subTitle="">
+  <ng-template #footerModal>
+    <div class="d-flex align-items-center gap-12">
+      <button
+        (click)="handlePopupRequest()"
+        class="btn-got-it d-flex align-items-center gap-8">
+        Ok, got it
+      </button>
+    </div>
+  </ng-template>
+  <div class="content">
+    We have received your account cancellation request. One of our Customer
+    Support team will be in touch to assist you with the off-boarding process.
+  </div>
+</trudi-modal>
+
+<invoice-history-pop-up
+  *ngIf="showInvoiceHistory"
+  [invoiceHistoryData]="invoiceHistoryList"
+  [visible]="showInvoiceHistory"
+  (closePopup)="resetInvoiceHistoryList(); showInvoiceHistory = false"></invoice-history-pop-up>
+
+<plans-summary-pop-up
+  [isShowModal]="popupState === EPopupState.SUMMARY_PLAN_POPUP"
+  [currentPlan]="this.configPlans?.plan"
+  (onQuit)="resetPopupState()"
+  (changePlan)="handleChangePlan($event)"></plans-summary-pop-up>
+
+<trudi-modal
+  [visible]="popupState === EPopupState.CONFIRM_PLAN_POPUP"
+  [autoFocus]="null"
+  okText="Ok, got it"
+  title="We’re on it"
+  [closable]="false"
+  (onOk)="resetPopupState()"
+  [hiddenCancelBtn]="true">
+  <div class="confirm-request-body">
+    <p>
+      We’ve received your request to {{planModifyingText}} your subscription.
+    </p>
+    <p>One of our Sales team will be in contact shortly.</p>
+  </div>
+</trudi-modal>

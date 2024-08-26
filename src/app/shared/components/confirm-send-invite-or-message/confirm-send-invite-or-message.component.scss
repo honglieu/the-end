@@ -1,0 +1,50 @@
+@import 'function';
+.invite-wrapper {
+  padding: 20px 0;
+  .detail-invite {
+    padding: 0 24px;
+    .send-invite-text {
+      flex: 1;
+      .text-sure {
+        @include fontSetup(var(--gray-950), 2rem, 2.8rem, normal, 600);
+      }
+      .cannot-text {
+        @include fontSetup(var(--gray-500), 1.4rem, 2rem, normal, 500);
+      }
+    }
+  }
+  .invalid-users {
+    margin: 20px 0 40px;
+    overflow-y: auto;
+    max-height: 500px;
+    .invalid-user {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      .invalid-user__name {
+        font-weight: 600;
+      }
+      .small-circle {
+        width: 6px;
+        height: 6px;
+        display: inline-block;
+        border-radius: 100%;
+        margin: 0 8px;
+        background-color: var(--gray-200);
+      }
+      .invalid-user__email {
+        font-weight: 500;
+        color: var(--gray-400);
+      }
+    }
+  }
+  .btn-wrapper {
+    margin-top: 20px;
+    padding: 0 24px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .hr-top {
+    margin: 20px -10px;
+  }
+}

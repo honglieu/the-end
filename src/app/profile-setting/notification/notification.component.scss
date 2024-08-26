@@ -1,0 +1,47 @@
+@import 'function';
+:host ::ng-deep {
+  .profile-wrapper {
+    border-radius: 8px;
+    height: 100vh;
+    padding-inline: 32px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    overflow: auto;
+    align-items: flex-start;
+    background-color: var(--white);
+
+    .wrapper {
+      width: 635px;
+      .form-wrapper {
+        width: 100%;
+        gap: 16px;
+
+        .notification-settings {
+          gap: 52px;
+          .wrap-email-notifycations {
+            .notification-email-title {
+              @include fontSetup(var(--gray-500), 12px, 20px, normal, 500);
+              margin: 0;
+            }
+          }
+          .wrap-desktop-notifycations {
+            margin-top: 52px;
+            .notification-desktop-title {
+              @include fontSetup(var(--gray-500), 12px, 20px, normal, 500);
+              margin: 0;
+            }
+          }
+        }
+      }
+    }
+
+    .notification-settings-checkbox {
+      .switch-item {
+        display: block;
+        .checkbox-label {
+          @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+        }
+      }
+    }
+  }
+}

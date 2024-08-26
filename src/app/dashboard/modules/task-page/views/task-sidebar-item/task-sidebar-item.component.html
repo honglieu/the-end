@@ -1,0 +1,95 @@
+@if(isEditFolder) {
+<ng-container [ngTemplateOutlet]="taskFolderInput"></ng-container>
+} @else {
+<div nz-menu>
+  <div
+    nz-menu-item
+    nzMatchRouter
+    class="border-rad-4 single-item my-0 drop_task--folder"
+    [ngClass]="(taskFolder | taskFolderSelected: currentQueryParam) ? 'item-selected' : 'non-selected'"
+    [attr.folder-uid]="taskFolder.id"
+    [attr.folder-type]="EFolderType.TASKS">
+    <a
+      trudi-tooltip
+      nzTooltipPlacement="right"
+      [nzTooltipTitle]="taskFolder?.name.length > 20 ? taskFolder?.name : null"
+      class="d-flex align-items-center w-100 relative single-item--link"
+      [routerLink]="taskFolder.routerLink"
+      [queryParams]="getMergedQueryParams(taskFolder.queryParams)"
+      [queryParamsHandling]="'merge'">
+      <div
+        class="d-flex align-items-center item w-100"
+        [class.can-edit]="taskFolder?.canEditFolder">
+        <div class="icon-wrapper task-icon">
+          <trudi-icon
+            class="item-icon"
+            [icon]="(currentTaskFolderId === taskFolder.id) ? 'verticalCustom' : taskFolder.icon"
+            [style]="{'width.px': 16, 'height.px': 16}"></trudi-icon>
+        </div>
+        <ng-container
+          *ngTemplateOutlet="iconMoreTemplate; context: { taskFolder: taskFolder }"></ng-container>
+        <span class="item-name text-ellipsis ml-8 no-pointer-event">
+          {{ taskFolder?.name}}
+        </span>
+        <span
+          class="item-unRead ml-4 border-rad-16"
+          *ngIf="taskFolder?.unReadTaskCount || taskFolder?.unreadInternalNoteCount">
+          {{ ((taskFolder?.unReadTaskCount || 0) +
+          (taskFolder?.unreadInternalNoteCount || 0)) | totalCountPipe }}
+        </span>
+      </div>
+      <span class="item-total ml-auto no-pointer-event">
+        {{ taskFolder?.taskCount | totalCountPipe: 999: true }}
+      </span>
+    </a>
+  </div>
+</div>
+}
+
+<ng-template #iconMoreTemplate let-taskFolder="taskFolder">
+  <div
+    *ngIf="taskFolder?.canEditFolder"
+    class="icon-more-wrapper"
+    (click)="$event.preventDefault(); $event.stopPropagation(); currentTaskFolderId = taskFolder.id"
+    nz-dropdown
+    nzTrigger="click"
+    (nzVisibleChange)="folderMenu($event, taskFolder.id)"
+    [nzDropdownMenu]="menu">
+    <trudi-icon
+      class="icon-more"
+      icon="verticalCustom"
+      [style]="{'width.px': 16, 'height.px': 16}"></trudi-icon>
+  </div>
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <div nz-menu class="task-folder-dropdown">
+      <div
+        (click)="handleFolderAction(taskFolder, EFolderAction.EDIT)"
+        nz-menu-item
+        class="dropdown-item">
+        <trudi-icon icon="editIconOutline"></trudi-icon>
+        Edit task folder
+      </div>
+      <div
+        *ngIf="!taskFolder?.allTaskCount"
+        nz-menu-item
+        (click)="handleFolderAction(taskFolder, EFolderAction.DELETE)"
+        class="dropdown-item delete">
+        <trudi-icon class="delete-icon" icon="deleteIconOutline"></trudi-icon>
+        Delete
+      </div>
+    </div>
+  </nz-dropdown-menu>
+</ng-template>
+
+<ng-template #taskFolderInput>
+  <task-folder-input
+    #folderNameRef
+    placeholder="Enter folder name"
+    [formControl]="folderNameControl"
+    [defaultFolderIcon]="taskFolder?.icon"
+    [showColorPicker]="showDropdown"
+    (keyup.enter)="onEnter()"
+    (changeSelectedIcon)="selectedIcon = $event"
+    (triggerEventBlur)="handleBlurFolderName()"
+    (triggerDropdown)="handleFolderDropdown()" />
+</ng-template>

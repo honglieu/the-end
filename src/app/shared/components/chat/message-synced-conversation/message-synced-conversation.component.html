@@ -1,0 +1,13 @@
+<p
+  class="mark-sync-conversation wrap-conversation-status d-flex gap-4 align-items-start text-ellipsis">
+  <trudi-icon class="size-16" icon="syncSuccessCloudGrey"></trudi-icon>
+  <span>{{messageForMarker}}</span>
+
+  <span
+    class="highlighted"
+    [class.name-clickable]="isClickable"
+    (click)="handleOpenProfileDrawer($event)">
+    {{ message | formatDisplayFullName : false}}
+  </span>
+  <span> {{ message.createdAt | trudiDateTime : EPage.DETAILS | async}}</span>
+</p>

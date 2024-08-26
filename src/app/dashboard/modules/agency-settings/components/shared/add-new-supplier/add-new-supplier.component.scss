@@ -1,0 +1,31 @@
+@import 'function';
+
+.add-trade-type-option {
+  @include fontSetup(var(--brand-500), 14px, 20px, normal, 500);
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-gap: 16px 20px;
+  align-items: center;
+  & > * {
+    grid-column: span 2;
+    &:nth-child(2),
+    &:nth-child(3) {
+      grid-column: span 1;
+    }
+  }
+}
+
+::ng-deep {
+  .phone-number-wrapper trudi-number-field .trudi-number-field-wrapper {
+    padding: 12px !important;
+  }
+}
+
+::ng-deep .trudi-modal-footer__button--default {
+  .trudi-ui-btn {
+    min-width: 100px;
+  }
+}

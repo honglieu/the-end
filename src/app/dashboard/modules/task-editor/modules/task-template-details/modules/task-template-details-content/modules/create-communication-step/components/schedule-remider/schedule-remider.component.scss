@@ -1,0 +1,11 @@
+@import 'function';
+
+:host {
+  @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+  .reminder-label {
+    @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 600);
+  }
+  .remider-time {
+    padding: 7px 0 12px 0;
+  }
+}

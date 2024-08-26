@@ -1,0 +1,107 @@
+<resizable-modal-popup
+  *ngIf="showAttachEntryNotePopup"
+  [modalId]="modalId"
+  [show]="showAttachEntryNotePopup"
+  [showTitle]="true"
+  [title]="headerName"
+  [footerTemplate]="footerModal"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  (onCancel)="handleCloseModal(false)"
+  [isCustomMoveable]="true">
+  <div class="entry-note-body">
+    <div
+      class="body-title-wrapper d-flex align-items-center justify-content-between">
+      <div class="body-title">{{bodyTitle}}</div>
+      <trudi-icon
+        class="cursor-pointer"
+        nz-tooltip
+        nzTooltipTitle="Document will be attached to your outgoing message"
+        nzTooltipPlacement="topRight"
+        nzTooltipOverlayClassName="attach-entry-tooltip"
+        icon="infoFill"></trudi-icon>
+    </div>
+    <div class="content-wrapper d-flex align-items-center">
+      <div
+        #reiForm
+        [tabIndex]="0"
+        *ngIf="isShowSelectReiForm"
+        class="select-form-wrapper cursor-pointer"
+        (keyup.enter)="reiForm.click()"
+        (click)="handleCreateOrSelectForm()">
+        <div class="select-zone">
+          <trudi-icon
+            class="entry-img d-flex justify-content-center"
+            icon="uploadDocumentIcon"></trudi-icon>
+          <p class="entry-text">Create or select from</p>
+          <p class="entry-text-live">REI Forms Live</p>
+        </div>
+      </div>
+      <div
+        [tabIndex]="0"
+        class="drop-file-wrapper cursor-pointer flex-1"
+        appDnd
+        (keyup.enter)="fileDropRef.click()"
+        (filesDropped)="onFilesDropped($event)">
+        <div class="dropzone">
+          <input
+            [tabIndex]="-1"
+            class="cursor-pointer"
+            type="file"
+            [accept]="acceptType"
+            onfocus="this.value=''"
+            multiple
+            #fileDropRef
+            id="fileDropRef"
+            (click)="$event.stopPropagation();"
+            (change)="fileBrowseHandler($event)" />
+          <trudi-icon
+            class="entry-img d-flex justify-content-center"
+            icon="uploadCloundIcon"></trudi-icon>
+          <p class="entry-text">Drop here or</p>
+          <label for="fileDropRef">Browse files</label>
+        </div>
+      </div>
+    </div>
+
+    <div
+      *ngIf="reiFormError?.message[0].text"
+      class="rei-form-error d-flex align-items-start">
+      <trudi-icon
+        svgClass="size-12"
+        class="icon-warning"
+        icon="iconWarningRed"></trudi-icon>
+      <div class="flex align-items-center">
+        <span
+          class="text-warning"
+          [ngClass]="{'font-semi-bold text-decoration-underline cursor-pointer': message?.href}"
+          (click)="handleClickMsg(message?.href)"
+          *ngFor="let message of reiFormError?.message"
+          >{{message?.text}}</span
+        >
+      </div>
+    </div>
+  </div>
+</resizable-modal-popup>
+<ng-template #footerModal>
+  <div class="entry-note-footer">
+    <div
+      class="footer-btn-wrapper d-flex align-items-center justify-content-end">
+      <button
+        *ngIf="hasBackButton"
+        (click)="handleBackModal()"
+        trudi-btn
+        variant="outlined"
+        btnType="neutral">
+        Back
+      </button>
+      <button (click)="handleNextModal()" trudi-btn [disabled]="isLoading">
+        Next
+      </button>
+    </div>
+  </div>
+</ng-template>

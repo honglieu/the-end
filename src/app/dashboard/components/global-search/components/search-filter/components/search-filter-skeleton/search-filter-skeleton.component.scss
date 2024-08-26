@@ -1,0 +1,53 @@
+:host .search-filter-skeleton-wrapper {
+  padding: 0 16px;
+
+  .search-filter-skeleton-container {
+    gap: 15px;
+
+    .mailbox-filter-skeleton {
+      padding: 10px;
+      background-color: var(--gray-200);
+      border-radius: 4px;
+
+      ::ng-deep nz-skeleton.left {
+        width: 20%;
+
+        .ant-skeleton-content {
+          .ant-skeleton-title {
+            margin-top: 0 !important;
+            height: 43.51px;
+          }
+        }
+      }
+
+      .right {
+        width: 70%;
+
+        ::ng-deep nz-skeleton:nth-child(1) {
+          .ant-skeleton-content {
+            .ant-skeleton-title {
+              margin-top: 0 !important;
+            }
+          }
+        }
+      }
+    }
+
+    .assignee-filter-skeleton,
+    .portfolio-filter-skeleton {
+      nz-skeleton.right {
+        width: 6%;
+      }
+    }
+
+    .message-filter-skeleton {
+      nz-skeleton.left {
+        width: 50%;
+      }
+
+      nz-skeleton.right {
+        width: 15%;
+      }
+    }
+  }
+}

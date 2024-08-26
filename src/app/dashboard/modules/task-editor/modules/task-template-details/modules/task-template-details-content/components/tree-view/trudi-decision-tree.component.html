@@ -1,0 +1,16 @@
+<div
+  class="d-flex flex-dir-column decision-tree"
+  cdkDropList
+  cdkDropListSortingDisabled
+  [cdkDropListData]="dataSource"
+  (cdkDropListDropped)="drop($event)">
+  <ng-container
+    *ngFor="let node of dataSource | treeViewData; let index = index; let last = last; let first = first">
+    <trudi-tree-node
+      [node]="node"
+      [currentCrmLogo]="currentCrmLogo"
+      [hasSibling]="dataSource.length > 1 && index !== dataSource.length - 1"
+      [disabled]="disabled">
+    </trudi-tree-node>
+  </ng-container>
+</div>

@@ -1,0 +1,36 @@
+<div
+  #commentThreadsElement
+  infiniteScroll
+  [scrollWindow]="false"
+  [infiniteScrollDistance]="0.7"
+  [infiniteScrollThrottle]="200"
+  [immediateCheck]="true"
+  [fromRoot]="true"
+  (scrolledUp)="onScrollToUp()"
+  (scrolled)="onScrollDown()"
+  (scroll)="onScroll()"
+  class="scroll-container-wrapper mt-20">
+  <!-- comment detail -->
+  <ng-container *ngIf="vm$ | async as vm">
+    <!-- skeleton -->
+    @if (vm.isLoading) {
+    <app-comment-skeleton
+      *ngFor="let item of skeletonArray"></app-comment-skeleton>
+    } @else {
+    <!-- show fetching when scroll up-->
+    @if (vm.isFetching && scrollDirection === EScrollDirection.UP) {
+    <comments-fetching></comments-fetching>
+    }
+    <!-- comment threads -->
+    @for (comment of vm.commentThreads; track comment.id) {
+    <comments-thread
+      [comment]="comment"
+      [lastReadFriendlyId]="contextData.lastReadFriendlyId"
+      [commentInNotificationId]="commentInNotificationId"></comments-thread>
+    }
+    <!-- show fetching when scroll down -->
+    @if (vm.isFetching && scrollDirection === EScrollDirection.DOWN) {
+    <comments-fetching></comments-fetching>
+    } }
+  </ng-container>
+</div>

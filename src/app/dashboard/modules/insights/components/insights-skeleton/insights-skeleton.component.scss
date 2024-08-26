@@ -1,0 +1,151 @@
+@import 'function';
+.skeleton-wrapper {
+  .text-title {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 28px;
+    color: var(--gray-600);
+  }
+
+  .accomplistment-wrapper {
+    width: 704px;
+    margin-top: 16px;
+
+    .data-box {
+      width: 340px;
+      height: 220px;
+      padding: 24px;
+      background-color: var(--white);
+      box-shadow: 0px 4px 12px 0px #0000001a, 0px 8px 28px 0px #0000000d;
+    }
+
+    ::ng-deep {
+      .skeleton-box-content .ant-skeleton h3.ant-skeleton-title {
+        margin-top: 0px;
+
+        &:nth-child(1) {
+          width: 70px !important;
+        }
+      }
+    }
+
+    ::ng-deep {
+      .skeleton-box-content .ant-skeleton-content .ant-skeleton-paragraph > li {
+        &:nth-child(1) {
+          width: 100px !important;
+        }
+
+        &:nth-child(3) {
+          width: 90px !important;
+        }
+      }
+    }
+  }
+
+  .team_members {
+    margin-top: 16px;
+  }
+
+  .data-rank {
+    width: 540px;
+    height: 264px;
+    padding: 20px;
+    background-color: var(--white);
+    box-shadow: 0px 4px 12px 0px #0000001a, 0px 8px 28px 0px #0000000d;
+    border-radius: 8px;
+
+    .data-rank-title {
+      padding: 6px, 0px, 6px, 0px;
+      align-items: center;
+
+      .title {
+        @include fontSetup(var(--gray-400), 14px, 20px, normal, 600);
+        letter-spacing: 0em;
+        text-align: left;
+      }
+
+      .rank {
+        text-align: center;
+        width: 80px;
+      }
+
+      .name {
+        width: 240px;
+      }
+
+      .hours {
+        text-align: center;
+        width: 115px;
+      }
+
+      ::ng-deep {
+        .skeleton-box-content .ant-skeleton h3.ant-skeleton-title {
+          margin-top: 0px;
+        }
+      }
+
+      .skeleton-box-content-rank {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    ::ng-deep .skeleton-element-name .ant-skeleton-input {
+      height: 16px;
+      border-radius: 4px;
+    }
+
+    ::ng-deep .skeleton-element-name-w-35 .ant-skeleton-input {
+      width: 35px;
+      min-width: unset;
+    }
+  }
+  .efficiency-section,
+  .time-savings-section {
+    width: 100%;
+    padding: 24px;
+    background-color: var(--bg-base);
+    border: 1px solid var(--border-neutral-dark, #d8dcdf);
+    border-radius: 8px;
+    margin-top: 20px;
+
+    ::ng-deep .skeleton-box-content {
+      h3.ant-skeleton-title {
+        margin-top: 0px;
+        width: 300px !important;
+        height: 24px;
+      }
+      .ant-skeleton-content .ant-skeleton-paragraph > li {
+        &:nth-child(1) {
+          width: 150px !important;
+          height: 24px;
+        }
+        &:nth-child(2) {
+          margin-top: 24px;
+          width: 100% !important;
+          height: 300px;
+        }
+      }
+      .ant-skeleton-content ul {
+        margin-bottom: 0px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 1440px) {
+  :host {
+    .skeleton-wrapper {
+      flex-direction: column;
+      gap: 60px 0 !important;
+    }
+  }
+}
+
+@media only screen and (max-width: 1500px) {
+  :host {
+    .skeleton-wrapper {
+      gap: 0 30px;
+    }
+  }
+}

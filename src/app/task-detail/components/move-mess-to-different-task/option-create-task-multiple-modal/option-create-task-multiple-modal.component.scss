@@ -1,0 +1,89 @@
+@import 'function';
+.select_option--task {
+  .btn-create-task-option {
+    display: flex;
+    align-items: center;
+    padding: 24px;
+    height: 92px;
+    border-radius: 8px;
+    border: 1px solid var(--border-neutral-dark, #d8dcdf);
+    background: var(--bg-base, #fff);
+    &:hover {
+      border: 1px solid var(--bg-brand-solid-normal, #00aa9f);
+      background: var(--brand-100, #e1f8f5);
+      color: var(--bg-brand-solid-normal, #00aa9f);
+    }
+    &:active {
+      border: 1px solid var(--bg-brand-solid-normal, #00aa9f);
+      background: var(--brand-200, #d1f0ed);
+      color: var(--bg-brand-solid-normal, #00aa9f);
+    }
+    &:disabled {
+      border: 1px solid var(--border-neutral-dark, #d8dcdf);
+      color: var(--fg-neutral-weakest, #b9bec0);
+      cursor: not-allowed;
+      background: none;
+    }
+  }
+  .active {
+    border: 1px solid var(--bg-brand-solid-normal, #00aa9f);
+    background: var(--brand-200, #d1f0ed);
+    color: var(--bg-brand-solid-normal, #00aa9f);
+  }
+}
+.btn-next-task {
+  width: 100px;
+  height: 40px;
+  padding: 0px 16px;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--bg-brand-solid-normal, #00aa9f);
+  border: none;
+  @include fontSetup(var(--fg-neutral-base, #fff), 14px, 20px, normal, 600);
+  &:hover {
+    background: var(--bg-brand-solid-stronger, #33bbb2);
+  }
+  &:active {
+    background: var(--bg-brand-solid-strongest, #0aa095);
+  }
+  &:disabled {
+    background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+  }
+}
+:ng-deep button:not(.btn-create-task-option):focus-visible {
+  box-shadow: inset 0px 0px 0px 1px var(--brand-500),
+    0px 0px 0px 2px rgba(var(--brand-500-rgb), 0.6) !important;
+}
+
+.select_option--task {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.select_option--task button:disabled {
+  cursor: not-allowed !important;
+  pointer-events: all !important;
+}
+
+.btn-create-task-option p {
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  color: var(--fg-neutral-stronger, #3d3d3d);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.btn-create-task-option span {
+  color: var(--fg-neutral-weaker, #999999);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.content_btn_task {
+  display: flex;
+  gap: 20px;
+}

@@ -1,0 +1,14 @@
+<div
+  [class]="item.data?.isFirstGroup ? 'line-radius': 'childGroup'"
+  class="header header-text ml-32">
+  <div
+    class="line"
+    [class.line-owner]="item.data?.type === userPropertyType.OWNERSHIP"
+    [class.line-tenant]="item.data?.type === userPropertyType.TENANCY"
+    [class.deleted]="item.data?.status === ERentPropertyStatus.DELETED || item.data?.status === ERentPropertyStatus.ARCHIVED"></div>
+  <span
+    class="prop-status"
+    [class.deleted]="item.data?.status === ERentPropertyStatus.DELETED || item.data?.status === ERentPropertyStatus.ARCHIVED"
+    [innerHTML]="item.data?.displayTitle | highlight: searchValue">
+  </span>
+</div>

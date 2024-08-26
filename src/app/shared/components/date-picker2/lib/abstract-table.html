@@ -1,0 +1,80 @@
+<table class="trudi-picker-content" cellspacing="0" role="grid">
+  <thead *ngIf="headRow && headRow.length > 0">
+    <tr role="row">
+      <th *ngIf="showWeek" role="columnheader"></th>
+      <th
+        *ngFor="let cell of headRow"
+        [class.weekend]="showDayOff && (cell.title === 'Sat' || cell.title === 'Sun')"
+        role="columnheader"
+        title="{{ cell.title }}">
+        {{ cell.content }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="let row of bodyRows; trackBy: trackByBodyRow"
+      [ngClass]="row.classMap!"
+      role="row">
+      <td *ngIf="row.weekNum" role="gridcell" class="{{ prefixCls }}-cell-week">
+        {{ row.weekNum }}
+      </td>
+      <td
+        *ngFor="let cell of row.dateCells; trackBy: trackByBodyColumn"
+        title="{{ cell.isDueDate ? '' : cell.title }}"
+        role="gridcell"
+        [ngClass]="cell.classMap | dayOffClassMapper: showDayOff"
+        (click)="cell.isDisabled ? null : cell.onClick()"
+        (mouseenter)="cell.onMouseEnter()"
+        nz-tooltip
+        [nzTooltipTitle]="cell.isDueDate && cell.dueDateTooltipText?.length > 0 ? cell.dueDateTooltipText : ''"
+        nzTooltipPlacement="bottom">
+        <ng-container [ngSwitch]="prefixCls">
+          <ng-container *ngSwitchCase="'trudi-picker'">
+            <ng-container [ngSwitch]="true">
+              <ng-container *ngSwitchCase="isTemplateRef(cell.cellRender)">
+                <!--  *ngSwitchCase not has type assertion support, the cellRender type here is TemplateRef -->
+                <ng-container
+                  *ngTemplateOutlet="$any(cell.cellRender); context: { $implicit: cell.value }"></ng-container>
+              </ng-container>
+              <ng-container *ngSwitchCase="isNonEmptyString(cell.cellRender)">
+                <span [innerHTML]="cell.cellRender"></span>
+              </ng-container>
+              <ng-container *ngSwitchDefault>
+                <div
+                  class="{{ prefixCls }}-cell-inner"
+                  [class.weekend]="cell.isWeekend && showDayOff"
+                  [attr.aria-selected]="cell.isSelected"
+                  [attr.aria-disabled]="cell.isDisabled">
+                  <span> {{ cell.content }} </span>
+                  <div *ngIf="cell.isOff && !cell.isDueDate" class="off">
+                    OFF
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+          </ng-container>
+          <ng-container *ngSwitchCase="'trudi-picker-calendar'">
+            <div
+              class="{{ prefixCls }}-date trudi-picker-cell-inner"
+              [class.trudi-picker-calendar-date-today]="cell.isToday">
+              <ng-container *ngIf="cell.fullCellRender; else defaultCell">
+                <ng-container
+                  *ngTemplateOutlet="$any(cell.fullCellRender); context: { $implicit: cell.value }">
+                </ng-container>
+              </ng-container>
+              <ng-template #defaultCell>
+                <div class="{{ prefixCls }}-date-value">{{ cell.content }}</div>
+                <div class="{{ prefixCls }}-date-content">
+                  <ng-container
+                    *ngTemplateOutlet="$any(cell.cellRender); context: { $implicit: cell.value }">
+                  </ng-container>
+                </div>
+              </ng-template>
+            </div>
+          </ng-container>
+        </ng-container>
+      </td>
+    </tr>
+  </tbody>
+</table>

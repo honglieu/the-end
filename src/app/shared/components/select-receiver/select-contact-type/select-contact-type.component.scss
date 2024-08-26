@@ -1,0 +1,53 @@
+@import 'function';
+
+::ng-deep .ng-dropdown-panel .ng-dropdown-header {
+  border-bottom: 1px solid var(--border-neutral-light);
+  padding: 0;
+}
+
+:host ::ng-deep {
+  .trudi-multi-select-header {
+    padding: 8px 12px;
+  }
+
+  .select-item-label {
+    padding: 2px 8px !important;
+    border-radius: 6px !important;
+    &-invalid {
+      color: var(--fg-danger) !important;
+    }
+  }
+
+  .select-field-label {
+    margin-bottom: 6px;
+    @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 600);
+  }
+  
+  ::ng-deep contact-type-and-receiver-wrapper ng-select .ng-select-container {
+    background-color: var(--bg-neutral-tonal-normal);
+    height: 40px !important;
+    padding: 10px 4px !important;
+    border-radius: 8px !important;
+    overflow-y: auto;
+    border: unset;
+    align-items: flex-start;
+  }
+}
+
+::ng-deep .ng-dropdown-panel-items {
+  .ng-option:has(.bulk-send-to-option) {
+    padding: 12px !important;
+    
+    &:has(.external-email-option) {
+      display: none !important;
+    }
+  
+    .sendTo-label {
+      color: var(--fg-neutral-strongest) !important;
+    }
+
+    trudi-checkbox {
+      pointer-events: none;
+    }
+  }
+}

@@ -1,0 +1,173 @@
+@import 'function';
+
+::ng-deep .ant-dropdown .mailbox-menu {
+  max-height: 250px;
+  overflow: auto;
+  .mailbox-item {
+    padding: 12px;
+    justify-content: space-between;
+    span {
+      @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+    }
+  }
+}
+.sub-title {
+  white-space: nowrap;
+  ::ng-deep trudi-icon:hover svg-icon svg {
+    background-color: var(--bg-neutral-tonal-strongest);
+    border-radius: 50%;
+  }
+}
+
+.destination-title {
+  max-width: 652px;
+}
+.mailbox-text {
+  max-width: calc(652px - 300px);
+}
+
+.drop-file-wrapper {
+  border-radius: 12px;
+  border: 1px dashed var(--gray-600);
+  background-color: var(--white);
+  width: 100%;
+
+  &:focus-visible {
+    box-shadow: inset 0px 0px 0px 2px var(--brand-500),
+      0px 0px 0px 0px rgba(var(--brand-500-rgb), 0.6) !important;
+    border: none;
+  }
+  .select-zone,
+  .dropzone {
+    width: auto;
+    padding: 60px;
+    min-height: 13.6rem;
+    text-align: center;
+    position: relative;
+  }
+  .dropzone {
+    input {
+      opacity: 0;
+      position: absolute;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+    }
+    ::-webkit-file-upload-button {
+      cursor: pointer;
+    }
+    .entry-text {
+      margin: 0;
+      @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 400);
+    }
+    label {
+      margin-bottom: 0 !important;
+      cursor: pointer;
+      @include fontSetup(var(--brand-500), 14px, 20px, normal, 600);
+    }
+    .file-support {
+      @include fontSetup(var(--fg-neutral-weakest), 12px, 16px, normal, 600);
+    }
+  }
+}
+.rei-form-error {
+  margin-top: 8px;
+  @include fontSetup(var(--fg-danger), 14px, 16px, normal, 400);
+  .text-warning {
+    min-width: 110px;
+    @include fontSetup(var(--fg-danger), 12px, 16px, normal, 400);
+  }
+}
+.scanning {
+  min-height: calc(204px - 20px);
+  margin: 10px 0 40px 0;
+  p {
+    margin: -20px 0 0 0;
+    @include fontSetup(var(--fg-neutral-weaker), 14px, 20px, italic, 400);
+  }
+}
+
+.popover {
+  &-container {
+    max-width: 450px;
+    display: flex;
+    flex-direction: column;
+  }
+  &-content {
+    flex: 1;
+    background: var(--bg-base, #fff);
+    box-shadow: 0px 4px 12px 0px var(--bg-overlay-light),
+      0px 8px 28px 0px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 0px;
+    display: flex;
+    max-height: 400px;
+    overflow-y: auto;
+    flex-direction: column;
+    &-mail-wrapper {
+      @include fontSetup(
+        var(--fg-neutral-stronger, #3d3d3d),
+        14px,
+        20px,
+        normal,
+        500
+      );
+      cursor: pointer;
+      display: flex;
+      width: 100%;
+      height: 44px;
+      padding: 12px;
+      align-items: center;
+      gap: 8px;
+      justify-content: space-between;
+      align-self: stretch;
+      border-bottom: 1px solid var(--border-neutral-light, #f2f5f7);
+      &:hover {
+        background-color: var(--brand-50);
+      }
+      &-info {
+        width: fit-content;
+        max-width: 450px;
+        overflow: hidden;
+        display: flex;
+        .title-mailbox {
+          max-width: calc(450px - 66px);
+        }
+      }
+    }
+    &-mail-wrapper:last-child {
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+    &-mail-wrapper:first-child {
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+  }
+}
+
+.title {
+  max-width: 484px;
+}
+
+::ng-deep .list-mailboxs-popover {
+  left: -2px;
+  .ant-popover-inner {
+    margin-left: 10px;
+  }
+  .ant-popover-inner-content {
+    margin-top: -12px;
+    padding: 0;
+  }
+
+  .ant-popover-arrow {
+    display: none;
+  }
+}
+
+::ng-deep .tooltipStyle .ant-tooltip-content .ant-tooltip-inner {
+  text-align: left;
+}

@@ -1,0 +1,86 @@
+@import 'function';
+
+::ng-deep {
+  .switch-agency-menu {
+    max-height: 65vh;
+    overflow-y: auto;
+  }
+  .right-header .search-wrapper {
+    trudi-text-field {
+      .trudi-text-field-wrapper {
+        background: var(--white, #ffffff) !important;
+        &:hover:not(.disabled) {
+          background: var(--white, #ffffff);
+          box-shadow: inset 0px 0px 1px var(--border-neutral-dark);
+        }
+      }
+    }
+  }
+  .avatar-popup {
+    margin-left: 4px;
+    margin-top: 10px;
+    .ant-dropdown-menu-item {
+      padding: 0;
+      header-item {
+        overflow: hidden;
+        width: 100%;
+      }
+      &:first-child {
+        header-item {
+          border-radius: 8px 8px 0 0;
+        }
+      }
+      &:last-child {
+        header-item {
+          border-radius: 0 0 8px 8px;
+        }
+      }
+    }
+  }
+
+  .cdk-overlay-pane:has(.switch-agency-menu) {
+    top: -54px !important;
+    right: 170px !important;
+    position: absolute !important;
+  }
+
+  .my-profile .ant-tooltip-arrow {
+    right: 5px;
+  }
+}
+
+.right-header {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  height: 100%;
+  .right-header-item {
+    display: flex;
+    gap: 24px;
+  }
+}
+
+.notification {
+  position: relative;
+  &-unreadCount {
+    position: absolute;
+    padding: 0px 4px;
+    background: var(--bg-danger-tonal-normal);
+    @include fontSetup(var(--fg-danger), 12px, 16px, normal, 600);
+    z-index: 1;
+    left: 10px;
+    top: 0px;
+    border-radius: 16px;
+  }
+}
+
+.skeleton-user {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  padding: 16px 0;
+  & span {
+    border-radius: 4px;
+  }
+}

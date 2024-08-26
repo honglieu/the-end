@@ -1,0 +1,18 @@
+@import 'function';
+
+.portfolios-row {
+  width: 552px;
+  padding: 8px 0px;
+  gap: 16px;
+  height: 60px;
+  align-items: center;
+  &:first-child {
+    border-top: 1px solid var(--gray-200);
+  }
+  &:last-child {
+    border-bottom: 1px solid var(--gray-200);
+  }
+}
+.portfolios-name {
+  @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+}

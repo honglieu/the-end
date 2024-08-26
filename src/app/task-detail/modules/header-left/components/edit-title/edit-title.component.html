@@ -1,0 +1,13 @@
+<trudi-text-field
+  #trudiTextField
+  class="title relative"
+  [size]="'small'"
+  [isBlockEvent]="isBlockEvent"
+  (keyup.enter)="trudiTextField.inputElem.nativeElement.blur()"
+  (triggerEventBlur)="triggerEvent($event)"
+  [formControl]="title"
+  [showCounting]="false"
+  [maxCharacter]="75"
+  [dynamicWidth]="true"
+  [required]="true">
+</trudi-text-field>

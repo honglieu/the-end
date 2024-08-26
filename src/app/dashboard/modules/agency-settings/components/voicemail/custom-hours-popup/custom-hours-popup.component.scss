@@ -1,0 +1,44 @@
+@import 'function';
+
+.custom-hours {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &-label {
+    @include fontSetup(
+      var(--fg-neutral-strongest, #202020),
+      14px,
+      20px,
+      normal,
+      500
+    );
+  }
+}
+
+.error-margin {
+  margin-top: 20px;
+}
+
+.custom-hours::ng-deep {
+  .date-time-picker .input-error,
+  .date-time-picker .input-error:focus {
+    box-shadow: none !important;
+  }
+}
+
+::ng-deep .ant-modal.trudi-modal.custom-hours-voicemail {
+  .ant-modal-body {
+    padding: 20px 32px 24px 32px;
+  }
+
+  .ant-modal-content {
+    .ant-modal-title .title .sub-title {
+      color: var(--fg-neutral-weaker, #999);
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 20px;
+    }
+  }
+}

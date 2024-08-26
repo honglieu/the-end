@@ -1,0 +1,360 @@
+<app-modal-popup
+  *ngIf="isShowCarousel"
+  [transparent]="true"
+  [show]="isShowCarousel"
+  [position]="popupModalPosition.full_screen">
+  <app-images-carousel
+    *ngIf="isShowCarousel"
+    [open]="isShowCarousel"
+    [isSyncing]="isSyncing"
+    [imageUrlList]="viewSyncFile ? arrayImageCarousel2 : arrayImageCarousel"
+    [initialIndex]="initialIndex"
+    (showCarousel)="manageCarouselState($event)"></app-images-carousel>
+</app-modal-popup>
+
+<div
+  class="modal-container"
+  @openClose
+  *ngIf="isShowViewConversation"
+  appOutsideClickListener
+  (@openClose.done)="handleAnimationEnd()">
+  <div class="modal-window">
+    <div class="modal-popup-header" #popupHeader>
+      <trudi-icon
+        class="size-48"
+        icon="trudiAvt"
+        [style]="{ 'width.px': 48, 'height.px': 48 }"></trudi-icon>
+      <div class="title w-100 flex-1">
+        <span class="flex-1 text-title"
+          >Captured in app by virtual assistant</span
+        >
+      </div>
+    </div>
+    <div
+      class="modal-popup-content"
+      #popupContent
+      [style.height]="calculateElementHeight(popupHeader?.offsetHeight)">
+      <div
+        class="container-wrapper"
+        [style.height]="currentConversation?.status === conversationType.resolved ||
+        currentConversation?.status === 'SOLVED' ?
+        'calc(100% - '+ ((footerContainer?.offsetHeight) + 'px)') :
+        'calc(100% - '+ ((textareaContainer?.offsetHeight) + 'px)')"
+        *ngIf="listofmessages.length">
+        <div
+          class="chat-container"
+          data-e2e="message-thread"
+          infiniteScroll
+          [scrollWindow]="false"
+          [infiniteScrollDistance]="2"
+          [infiniteScrollThrottle]="300"
+          [immediateCheck]="true"
+          (scrolledUp)="loadHistory(currentConversation.id, true)"
+          #scrollDown>
+          <div class="message-wrapper">
+            <div
+              class="message"
+              *ngFor="let message of listofmessages; let idx = index; trackBy: messageTrackBy"
+              [class.message-ticket]="message.messageType.toUpperCase() === messagesType.ticket"
+              [class]="message.senderType | lowercase">
+              <ng-container *ngIf="message.messageType">
+                <ng-container [ngSwitch]="message.messageType.toUpperCase()">
+                  <ng-container *ngSwitchCase="messagesType.actionLink">
+                    <div class="message-body">
+                      <div class="al-border">
+                        <app-message-action-link
+                          [reBorderAtChatApp]="true"
+                          [messageActionLink]="message.actionLink"
+                          [propertyId]="currentProperty.id"
+                          [linkBackground]="message.color"
+                          [imgLink]="message.svg">
+                        </app-message-action-link>
+                      </div>
+                      <ng-container *ngIf="!currentConversation.isFrozen">
+                        <app-message-footer
+                          [senderType]="message.senderType"
+                          [createdAt]="message.createdAt"
+                          [isRead]="message.isRead"></app-message-footer>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="messagesType.file">
+                    <div class="message-body">
+                      <ng-container
+                        *ngIf="!currentConversation.isFrozen && !message.isSendFromEmail && !message.isSendFromVoiceMail">
+                        <app-message-header
+                          [firstName]="message.firstName"
+                          [lastName]="message.lastName"
+                          class="header-message-file"></app-message-header>
+                      </ng-container>
+                      <app-message-file
+                        *ngIf="!message.isSendFromVoiceMail"
+                        [message]="message"
+                        [messageFile]="message.isShowFile ? message.file : null"
+                        [isShowActionButton]="isShowActionButton"
+                        [isShowFile]="message.isShowFile"
+                        (isVideoLoaded)="scrollToBottom()"
+                        (fileOnClicked)="manageCarouselState($event)"
+                        (showSelectPeople)="showSelectPeople($event); onForwardBtn('Select People')"
+                        (fileEmit)="handleFileEmit($event)"
+                        class="message-file"></app-message-file>
+                      <ng-container *ngIf="!currentConversation.isFrozen">
+                        <app-message-footer
+                          *ngIf="!message.isSendFromVoiceMail"
+                          [senderType]="message.senderType"
+                          [createdAt]="message.createdAt"
+                          [isRead]="message.isRead"></app-message-footer>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="messagesType.call">
+                    <div class="message-body call" style="max-width: 90%">
+                      <app-message-call
+                        [userId]="currentConversation.userId"
+                        [message]="message"
+                        [currentConversationId]="currentConversation.id"></app-message-call>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="messagesType.solved">
+                    <div class="message-body full-width no-padding">
+                      <app-message-resolved
+                        [message]="message.options ? message.options.summary : ''"
+                        [attr.data-e2e]="'message-resolved'"></app-message-resolved>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="messagesType.deleted">
+                    <div
+                      class="deleted-mark d-flex align-items-center justify-content-center gap-4"
+                      data-e2e="marker-resolved-text">
+                      <trudi-icon
+                        icon="deleteIconOutline"
+                        [style]="{ 'width.px': 16, 'height.px': 16}"></trudi-icon>
+                      <span>Deleted</span>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="messagesType.reopened">
+                    <div class="message-body full-width no-padding">
+                      <app-message-reopened></app-message-reopened>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="messagesType.agentExpectation">
+                    <div class="message-body full-width no-padding">
+                      <app-message-agent-expectation></app-message-agent-expectation>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="messagesType.agentJoin">
+                    <div class="message-body full-width no-padding">
+                      <app-message-agent-join
+                        [message]="message"
+                        [title]="message.userTitle"></app-message-agent-join>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="messagesType.agentStart">
+                    <div class="message-body full-width no-padding">
+                      <app-message-agent-join
+                        *ngIf="!isConversationStartByVoicemail"
+                        [message]="message"
+                        [title]="message.userTitle"></app-message-agent-join>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="messagesType.moveToTask">
+                    <div class="message-body full-width no-padding">
+                      <app-message-conversation-moved
+                        [message]="message"></app-message-conversation-moved>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="messagesType.ticket">
+                    <ng-container [ngSwitch]="message.options?.response?.type">
+                      <div class="message-body">
+                        <div class="message-container">
+                          <div class="message-box">
+                            <app-message-header
+                              [firstName]="message.firstName"
+                              [lastName]="message.lastName"></app-message-header>
+                            <app-message-default
+                              class="message-text-box"
+                              [message]="message"></app-message-default>
+                            <app-message-footer
+                              [senderType]="message.senderType"
+                              [createdAt]="message.createdAt"
+                              [isRead]="message.isRead"></app-message-footer>
+                          </div>
+                        </div>
+                        <ng-container
+                          *ngSwitchCase="EOptionType.VACATE_REQUEST">
+                          <div
+                            class="flex-dir-column message-body"
+                            style="margin-top: 12px">
+                            <vacate-request-ticket
+                              [isReadonly]="true"
+                              [createdFrom]="createdFrom"
+                              [data]="message.options">
+                            </vacate-request-ticket>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngSwitchDefault>
+                          <ng-container
+                            *ngIf="message.options?.type === 'RESCHEDULE_REQUEST' || message.options?.response?.type === 'reschedule_inspection_request'; else NOT_RESCHEDULE_REQUEST">
+                            <div
+                              class="flex-dir-column message-body"
+                              style="margin-top: 12px">
+                              <app-message-rescheduled-request
+                                [listRoutineInspection]="listRoutineInspection"
+                                [isReadonly]="true"
+                                [createdFrom]="createdFrom"
+                                [message]="message"
+                                [isHideCancelledButton]="true"></app-message-rescheduled-request>
+                            </div>
+                          </ng-container>
+                          <ng-template #NOT_RESCHEDULE_REQUEST>
+                            <!-- <div
+                            *ngIf="!message.isSendFromEmail && !message.isSendFromVoiceMail"> -->
+                            <div
+                              class="ticket-wrapper"
+                              *ngIf="message?.options?.response?.payload?.ticket as ticket">
+                              <app-chat-ticket
+                                class="with-message"
+                                [isReadonly]="true"
+                                [createdFrom]="createdFrom"
+                                [subtitle]="ticket.maintenance_object || ticket.general_inquiry"
+                                [status]="ticket.status"
+                                [ticketCategoryInfo]="ticket"
+                                [timeCreated]="ticket.createdAt || message.createdAt"
+                                [fileList]="message?.ticketFile"
+                                [isUrgent]="ticket.isUrgent"
+                                (fileOnClicked)="manageCarouselState($event)">
+                              </app-chat-ticket>
+                            </div>
+                            <div
+                              class="ticket-wrapper"
+                              *ngIf="message.ticketCategoryInfo">
+                              <app-chat-ticket
+                                class="with-message"
+                                [isReadonly]="true"
+                                [createdFrom]="createdFrom"
+                                [ticketCreator]="message?.options?.firstName ? message?.options : currentConversation"
+                                [subtitle]="message.options.text"
+                                [status]="message.options.status"
+                                [ticketCategoryInfo]="message.ticketCategoryInfo"
+                                [timeCreated]="message?.options?.createdAt ? message?.options?.createdAt : message.createdAt"
+                                [fileList]="message.ticketFile"
+                                (fileOnClicked)="manageCarouselState($event)"
+                                [isUrgent]="message?.isUrgent">
+                              </app-chat-ticket>
+                            </div>
+                          </ng-template>
+                        </ng-container>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="messagesType.buttons">
+                    <div class="message-body-wrapper d-flex">
+                      <div class="message-body">
+                        <ng-container *ngIf="message.message">
+                          <app-message-header
+                            [firstName]="message.firstName"
+                            [lastName]="message.lastName"></app-message-header>
+                          <app-message-default
+                            [message]="message"></app-message-default>
+                          <app-message-footer
+                            [senderType]="message.senderType"
+                            [createdAt]="message.createdAt"
+                            [isRead]="message.isRead"></app-message-footer>
+                        </ng-container>
+                      </div>
+                      <div class="message-options">
+                        <ng-container *ngFor="let item of message.options">
+                          <app-trudi-default-actions
+                            [userMessage]="item"></app-trudi-default-actions>
+                        </ng-container>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="messagesType.navigationUrl">
+                    <div class="message-body__nav">
+                      <div class="message-body">
+                        <app-message-default
+                          [message]="message"></app-message-default>
+                      </div>
+                      <div
+                        *ngFor="let link of message.options"
+                        class="message-body message-body_nav-link">
+                        <app-trudi-nav-links
+                          [linkType]="link"></app-trudi-nav-links>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="messagesType.url">
+                    <div
+                      class="message-body"
+                      [ngClass]="{'not-message': !message?.message}">
+                      <ng-container *ngIf="!!message?.message?.trim()">
+                        <ng-container *ngIf="!currentConversation.isFrozen">
+                          <app-message-header
+                            [firstName]="message.firstName"
+                            [lastName]="message.lastName"></app-message-header>
+                        </ng-container>
+                        <app-message-default
+                          [message]="message"></app-message-default>
+                        <ng-container *ngIf="!currentConversation.isFrozen">
+                          <app-message-footer
+                            [senderType]="message.senderType"
+                            [createdAt]="message.createdAt"
+                            [isRead]="message.isRead"></app-message-footer>
+                        </ng-container>
+                      </ng-container>
+                      <ng-container *ngFor="let url of message.options">
+                        <app-trudi-url
+                          class="trudi-url"
+                          [url]="url"></app-trudi-url>
+                      </ng-container>
+                    </div>
+                  </ng-container>
+                  <ng-container *ngSwitchCase="messagesType.defaultText">
+                    <ng-container
+                      *ngIf="message.options?.type !== 'RESCHEDULE_REQUEST'; else RESCHEDULE_REQUEST">
+                      <div
+                        *ngIf="!message.isSendFromEmail && !message.isSendFromVoiceMail"
+                        class="message-body">
+                        <app-message-header
+                          [firstName]="message.firstName"
+                          [lastName]="message.lastName"></app-message-header>
+                        <app-message-default
+                          [message]="message"></app-message-default>
+                        <div
+                          *ngIf="!currentConversation.isFrozen && !message.isSendFromEmail && !message.isSendFromVoiceMail"
+                          class="time-stamp-wrapper"
+                          [ngClass]="message.senderType">
+                          <app-message-footer
+                            [senderType]="message.senderType"
+                            [createdAt]="message.createdAt"
+                            [isRead]="message.senderType === 'user' ? null : message.isRead">
+                          </app-message-footer>
+                        </div>
+                      </div>
+                      <div
+                        *ngIf="message.isSendFromEmail || message.isSendFromVoiceMail"
+                        class="message-body full-width no-transform">
+                        <app-message-via-email
+                          [message]="message"
+                          (fileOnClicked)="manageCarouselState($event)"
+                          (onSendQuoteLandlordClicked)="handleSendQuoteLandlordClicked()"
+                          (showSelectPeople)="handleShowTrudiSendMsgFromViaEmail($event)"
+                          (listQuoteSelected)="getLisQuoteSelected($event)"
+                          (onSendInvoicePTClicked)="handleSendInvoicePTClicked()"
+                          (fileEmit)="handleFileEmit($event)"></app-message-via-email>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </div>
+            <div class="typing-block">
+              <app-typing-animation></app-typing-animation>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

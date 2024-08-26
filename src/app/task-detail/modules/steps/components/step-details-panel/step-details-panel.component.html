@@ -1,0 +1,125 @@
+<div class="step-details-panel-container relative">
+  <div class="step-details-panel-content d-flex flex-dir-column gap-16">
+    <div class="step-details-panel-header d-flex flex-dir-column gap-4">
+      <span
+        class="step-details-panel-name"
+        [style.width.%]="currentStep?.status === TrudiButtonEnumStatus.COMPLETED ? 75 : 85"
+        >{{currentStep?.name}}</span
+      >
+      @if ((currentStep?.status === TrudiButtonEnumStatus.PENDING ||
+      currentStep?.status === TrudiButtonEnumStatus.COMPLETED ||
+      !currentStep?.status) && !currentStep?.disabled) {
+      <cta-buttons
+        [disabled]="isConsole"
+        [currentStep]="currentStep"
+        [buttonKey]="buttonKey"
+        (triggerClickCtaOption)="triggerClickCtaOption.emit($event)"></cta-buttons>
+      } @else if (currentStep?.disabled) {
+      <ng-container
+        *ngTemplateOutlet="currentStep?.showNoPropertyWarning ? disableStepNoProperty : disabledStepMsg"></ng-container>
+      }
+    </div>
+    <div class="step-details-panel-body d-flex flex-dir-column gap-16">
+      <div class="summary d-flex flex-dir-column gap-8">
+        <ng-container
+          *ngTemplateOutlet="sectionTitle; context: {$implicit:EPanelSection.SUMMARY, expandState:isOpenSummarySection}"></ng-container>
+        <ul nz-menu nzMode="inline">
+          <li nz-submenu [nzOpen]="isOpenSummarySection">
+            <summary
+              [currentStep]="currentStep"
+              [buttonKey]="buttonKey"></summary>
+          </li>
+        </ul>
+      </div>
+      <div class="comments d-flex flex-dir-column gap-8">
+        <ng-container
+          *ngTemplateOutlet="sectionTitle; context: {$implicit:EPanelSection.COMMENTS, expandState:isOpenCommentsSection}"></ng-container>
+        <ul nz-menu nzMode="inline">
+          <li nz-submenu [nzOpen]="isOpenCommentsSection">
+            <comments [stepId]="currentStep?.id"></comments>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="step-details-panel-header-btn d-flex gap-8 align-items-center absolute">
+    @if (currentStep?.status === TrudiButtonEnumStatus.EXECUTED) {
+    <button
+      *ngIf="!isConsole"
+      trudi-btn
+      variant="outlined"
+      btnType="neutral"
+      shape="circle"
+      size="medium"
+      nz-dropdown
+      nzTrigger="click"
+      [nzClickHide]="false"
+      [nzPlacement]="'bottomRight'"
+      [nzDropdownMenu]="threeDotsMenu">
+      <trudi-icon
+        viewBox="auto"
+        svgClass="size-16"
+        icon="verticalMore"></trudi-icon>
+    </button>
+    }
+
+    <button
+      trudi-btn
+      variant="outlined"
+      btnType="neutral"
+      shape="circle"
+      size="medium"
+      (click)="closePanel()">
+      <trudi-icon viewBox="auto" svgClass="size-16" icon="closeV2"></trudi-icon>
+    </button>
+  </div>
+</div>
+
+<nz-dropdown-menu #threeDotsMenu>
+  <div nz-menu>
+    <div class="step-details-panel-menu-wrapper border-rad-8">
+      <div
+        (click)="onClickOption(currentStep?.isIgnored ? ECtaOption.UN_IGNORE : ECtaOption.IGNORE)"
+        class="item cursor-pointer">
+        <span class="text"
+          >{{currentStep?.isIgnored ? ECtaOption.UN_IGNORE :
+          ECtaOption.IGNORE}}</span
+        >
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<ng-template #sectionTitle let-text let-expandState="expandState">
+  <div
+    class="section-title arrow-icon d-flex align-items-center gap-4 cursor-pointer"
+    (click)="handleToggleExpandSection(text)">
+    <trudi-icon
+      viewBox="auto"
+      svgClass="size-16"
+      [ngClass]="{'expand-section': expandState}"
+      class="cursor-pointer no-pointer-event"
+      icon="chevronDown"></trudi-icon>
+    <span class="section-text">{{text}}</span>
+    <!-- todo: handle check show/hidden -->
+    <trudi-icon
+      *ngIf="currentStep?.unreadComment && text === EPanelSection.COMMENTS"
+      class="check-unread"
+      icon="redDotUnreadMessage"></trudi-icon>
+  </div>
+</ng-template>
+
+<ng-template #disabledStepMsg>
+  <span class="disabled-step-msg"
+    >This step is disabled. {{currentStep?.propertyId ? 'Please execute the
+    required step first' : 'Please assign a property to this task'}}.</span
+  >
+</ng-template>
+
+<ng-template #disableStepNoProperty>
+  <span class="disabled-step-msg">
+    This step is disabled. Please assign a property to this task.
+  </span>
+</ng-template>

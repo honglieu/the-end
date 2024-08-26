@@ -1,0 +1,245 @@
+<ng-container *rxLet="item$; let item; strategy: 'immediate'">
+  <div
+    class="facebook"
+    [ngClass]="{
+        'facebook__un-seen': !isReadMsg,
+        'facebook__checked': isChecked && listMsgActive.length <= 1,
+        'facebook__urgent': isUrgent,
+        'facebook__selected': !isSelectedMove  && isSelected,
+        'facebook__menu--displayed': isRightClick
+      }
+      "
+    trudi-item
+    tabindex="0"
+    (contextmenu)="onRightClick($event, menu)"
+    (shiftClickPressed)="onShiftClick($event)"
+    (ctrClickPressed)="onCtrClick()"
+    (downKeyPressed)="onDowKeyClick()"
+    (upKeyPressed)="onUpKeyClick()"
+    (deleteKeyPressed)="onDelKeyClick()"
+    (itemClick)="$event.stopPropagation(); onOpenTaskDetail()">
+    <div class="facebook__row">
+      <div
+        class="facebook__row--details"
+        [ngClass]="{
+            'facebook__row--first': first,
+            'facebook__row--last' : last
+          }">
+        <div class="d-flex">
+          @if (!isConsole && (sharedMessageViewService.isSelectingMode$ |
+          async)) {
+          <trudi-checkbox
+            class="checkbox-frame"
+            [(ngModel)]="isChecked"
+            (ngModelChange)="handleChangeSelection($event)"></trudi-checkbox>
+          }
+        </div>
+        <div class="d-flex flex-dir-column gap-4 w-100 overflow-hidden">
+          <div
+            class="facebook__row--details__property d-flex align-items-center">
+            <div class="facebook__row--details__property__address">
+              <trudi-icon [icon]="'iconAddress'"></trudi-icon>
+              <div
+                class="text-ellipsis"
+                [class.font-italic]="!item.property?.shortenStreetline && !item.property?.streetline"
+                [innerHTML]="item.property?.shortenStreetline || item.property?.streetline || 'No property' | highlight: search"></div>
+            </div>
+            <in-task-tag
+              [inTask]="item.taskType === TaskType.TASK"></in-task-tag>
+          </div>
+
+          <div class="facebook__row--details__participants">
+            <div
+              [style.width]="'calc(100% - '+ ((messageDate?.offsetWidth) + 'px - 8px)')"
+              class="participants-wrapper">
+              <facebook-participants
+                [participants]="item.conversations[0].participants"
+                [emailVerified]="item.conversations[0].emailVerified"
+                [search]="search"
+                [message]="item"></facebook-participants>
+            </div>
+            <div
+              #messageDate
+              class="facebook__row--details__participants--date">
+              {{ previewConversations?.[0]?.messageDate | trudiDateTime | async
+              }}
+            </div>
+          </div>
+          <div class="facebook__row--details__title">
+            @if(previewConversations?.[0]?.isLastMessageDraft &&
+            previewConversations?.[0]?.isPmJoined) {
+            <span class="tag-draft">Draft</span>
+            } @if(isUrgent && ![TaskStatusType.completed,
+            TaskStatusType.resolved].includes(item.status)) {
+            <div class="facebook__row--details__title--urgent-badge">
+              <trudi-badge
+                text="Urgent"
+                size="extra-small"
+                variant="error"
+                badgeType="filled"
+                [rounded]="true">
+              </trudi-badge>
+            </div>
+            } @if(!previewConversations?.[0]?.isPmJoined) {
+            <div
+              class="facebook__row--details__title--ai-control text-ellipsis">
+              {{previewConversations?.[0]?.totalSubmittedMessage ? 'Your AI
+              Assistant needs a human to join this conversation' : 'Your AI
+              Assistant is in control of this conversation' }}
+            </div>
+            } @else {
+            <div
+              class="facebook__row--details__title--ask text-ellipsis"
+              [innerHTML]="previewConversations?.[0]?.summaryMessage ? (previewConversations?.[0]?.summaryMessage | twemoji | highlight: search) : 'No preview is available'"></div>
+            }
+            <div class="facebook__row--details__title--right">
+              @if(previewConversations?.[0]?.attachmentCount) {
+              <div
+                class="facebook__row--details__title--attachments icon-attachments"
+                [ngClass]="{'msg': isConversationOfMsg}"
+                nz-tooltip
+                [nzTooltipTitle]="previewConversations?.[0].attachmentTooltipText">
+                <trudi-icon
+                  icon="attachments"
+                  class="d-flex align-items-center mr-4"></trudi-icon>
+                <span>
+                  {{ previewConversations?.[0].attachmentCount | totalCountPipe:
+                  99 }}
+                </span>
+              </div>
+              } @if(previewConversations?.[0]?.countUnreadTicket > 0) {
+              <div class="facebook__row--details__title--count">
+                <trudi-badge
+                  [text]="previewConversations?.[0]?.countUnreadTicket |
+                totalCountPipe: 99: true : '+'"
+                  size="small"
+                  variant="error"
+                  badgeType="tonal">
+                </trudi-badge>
+              </div>
+              } @if(iconSync) {
+              <div [ngClass]="{'spin-syncing': iconSync === IconsSync.SYNCING}">
+                <trudi-icon
+                  [icon]="iconSync"
+                  class="size-20 d-block"
+                  [viewBox]="iconSync === IconsSync.SYNCING ? 'auto' : ''"
+                  alt="syncing"></trudi-icon>
+                <div class="quote-fail-icon" *ngIf="isDeliveryFail">
+                  <trudi-icon
+                    icon="syncFail"
+                    nz-tooltip
+                    [nzTooltipTitle]="'Delivery failed'"
+                    class="d-flex align-items-center"></trudi-icon>
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div nz-menu class="shared-dropdown-menu">
+    <div
+      class="shared-dropdown-menu-item"
+      (click)="handleMenu(menuDropDown.unread ? MenuOption.UNREAD : MenuOption.READ, 'isSeen', $event)"
+      [ngClass]="{'shared-dropdown-menu-item-disabled' : isConsole}">
+      <trudi-icon
+        svgClass="size-20"
+        [icon]="menuDropDown.unread ? 'markAsUnread' : 'markAsRead'"></trudi-icon>
+      <div>{{menuDropDown.unread ? 'Mark as unread' : 'Mark as read'}}</div>
+    </div>
+    @if(menuDropDown.resolve) {
+    <div
+      class="shared-dropdown-menu-item"
+      (click)="handleMenu(MenuOption.RESOLVE, '', $event)"
+      [ngClass]="{'shared-dropdown-menu-item-disabled' : isConsole}">
+      <trudi-icon svgClass="size-20" icon="iconCheckCircleV2"></trudi-icon>
+      <div>Mark as resolved</div>
+    </div>
+    } @if(menuDropDown.reOpen) {
+    <div
+      (click)="handleMenu(MenuOption.REOPEN, '', $event)"
+      class="shared-dropdown-menu-item"
+      [ngClass]="{'shared-dropdown-menu-item-disabled' : isConsole}">
+      <trudi-icon svgClass="size-20" icon="reopenIconOutline"></trudi-icon>
+      <div>Reopen message</div>
+    </div>
+    } @if(menuDropDown.urgent) {
+    <div
+      class="shared-dropdown-menu-item"
+      [appE2E]="isUrgent ? EDataE2EConversation.CLICK_UNFLAG : EDataE2EConversation.CLICK_FLAG"
+      (click)="handleMenu(menuDropDown.unread ? MenuOption.UN_FLAG : MenuOption.FLAG, 'isUrgent', $event)"
+      [ngClass]="{'shared-dropdown-menu-item-disabled' : isConsole}">
+      <trudi-icon
+        svgClass="size-20"
+        [icon]="isUrgent ? 'unFlag' : 'flag'"></trudi-icon>
+      <div>{{ isUrgent ? 'Unflag' : 'Flag as urgent'}}</div>
+    </div>
+    } @if (menuDropDown.saveToPropertyTree) { @if(isUserVerified) {
+    <ng-container *ngTemplateOutlet="exportTemplate"></ng-container>
+    } @else {
+    <div
+      nz-submenu
+      nzMenuClassName="sub-menu-nongap"
+      [nzTitle]="subMenuTitle"
+      class="export-conversation shared-dropdown-menu-item"
+      [nzDisabled]="isConsole"
+      [ngClass]="{'shared-dropdown-menu-item-disabled' : isConsole}">
+      <div
+        nz-menu-item
+        class="shared-dropdown-menu-item"
+        appE2E="conversation-right-click-save-to-pt"
+        [ngClass]="{'shared-dropdown-menu-item-disabled': isConsole || [SyncMaintenanceType.INPROGRESS, SyncMaintenanceType.PENDING].includes(previewConversations?.[0]?.syncStatus || previewConversations?.[0]?.conversationSyncDocumentStatus)}"
+        (click)="handleMenu(MenuOption.SAVE_TO_PROPERTY_TREE, 'syncStatus', $event)">
+        <trudi-icon svgClass="size-20" icon="archive"></trudi-icon>
+        <div>Save to Property Tree</div>
+      </div>
+      <div
+        nz-menu-item
+        class="shared-dropdown-menu-item"
+        [ngClass]="{'shared-dropdown-menu-item-disabled': disabledDownloadPDF }"
+        (click)="handleMenu(MenuOption.DOWNLOAD_AS_PDF, 'syncStatus', $event)">
+        <trudi-icon svgClass="size-20" icon="iconDownload"></trudi-icon>
+        <div>Download as PDF</div>
+      </div>
+    </div>
+    } }
+  </div>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #exportConversation>
+  <div
+    class="shared-dropdown-menu shared-dropdown-submenu"
+    nz-menu
+    [nzMode]="'horizontal'">
+    <div
+      nz-menu-item
+      class="shared-dropdown-menu-item"
+      appE2E="conversation-right-click-save-to-pt"
+      [ngClass]="{'shared-dropdown-menu-item-disabled': isConsole || [SyncMaintenanceType.INPROGRESS, SyncMaintenanceType.PENDING].includes(previewConversations?.[0]?.syncStatus || previewConversations?.[0]?.conversationSyncDocumentStatus)}"
+      (click)="handleMenu(MenuOption.SAVE_TO_PROPERTY_TREE, 'syncStatus', $event)">
+      <trudi-icon svgClass="size-20" icon="archive"></trudi-icon>
+      <div>Save to Property Tree</div>
+    </div>
+    <div
+      nz-menu-item
+      class="shared-dropdown-menu-item"
+      [ngClass]="{'shared-dropdown-menu-item-disabled': disabledDownloadPDF }"
+      (click)="handleMenu(MenuOption.DOWNLOAD_AS_PDF, 'syncStatus', $event)">
+      <trudi-icon svgClass="size-20" icon="iconDownload"></trudi-icon>
+      <div>Download as PDF</div>
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<ng-template #subMenuTitle>
+  <div class="item-container">
+    <trudi-icon svgClass="size-20" icon="conversationExport"></trudi-icon>
+    <div class="text text-ellipsis">Export conversation history</div>
+    <trudi-icon svgClass="size-20" icon="iconChevronRight"></trudi-icon>
+  </div>
+</ng-template>

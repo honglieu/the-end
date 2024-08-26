@@ -1,0 +1,175 @@
+<ng-container *ngIf="!showHelpPopover; else helperContent">
+  <div class="ai-setting-generate-msg">
+    <ng-template #contentTemplate>
+      <div class="ai-setting" [ngClass]="{'action-limited': actionLimited}">
+        <div [formGroup]="form">
+          <div class="ai-setting-header d-flex">
+            <trudi-icon
+              [icon]="'aiSummaryStar'"
+              [style]="{ 'width.px': 22, 'height.px': 22 }">
+            </trudi-icon>
+            <h4>{{ label }}</h4>
+            <button
+              trudi-btn
+              variant="outlined"
+              btnType="neutral"
+              shape="circle"
+              size="extra-small"
+              class="ml-auto"
+              (click)="isShowSetting = !isShowSetting">
+              <trudi-icon
+                [icon]="'settings'"
+                nz-tooltip
+                [style]="{ 'width.px': 16, 'height.px': 16 }"
+                [nzTooltipTitle]="'AI settings'"
+                [nzPopoverPlacement]="'bottom'">
+              </trudi-icon>
+            </button>
+          </div>
+          <div class="ai-setting-body">
+            <trudi-radio-button
+              *ngIf="isShowGenerateOption"
+              [enableCustomTemplate]="true"
+              formControlName="generateOption"
+              [options]="generateOptions">
+            </trudi-radio-button>
+            <trudi-textarea
+              *ngIf="isShowPMDescription"
+              formControlName="description"
+              [placeholder]="placeHolderDescription"
+              [showCounting]="true"
+              [rows]="4"
+              [maxCharacter]="750"></trudi-textarea>
+          </div>
+          <div class="ai-setting-footer">
+            <button
+              [appE2E]="'wysiwyg-ai-reply-generate-button'"
+              trudi-btn
+              variant="tonal"
+              [disabled]="disableGenerateBtn"
+              (click)="onSubmit()">
+              Generate
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #AISettings>
+      <ai-setting-control (settingTrigger)="handleSettingsTrigger($event)">
+      </ai-setting-control>
+    </ng-template>
+    <ng-container *ngIf="!disabled; else disabledBtn">
+      <div class="position-relative">
+        <ng-template #default>
+          <button
+            *ngIf="showPopover"
+            nz-tooltip
+            [nzTooltipTitle]="tooltipTextControl"
+            class="btn-item size-24 border-rad-4 selected btn-control-editor">
+            <trudi-icon
+              [icon]="'aiSummaryStar'"
+              [style]="{ 'width.px': 19, 'height.px': 19 }"></trudi-icon>
+          </button>
+          <button
+            class="btn-item size-24 border-rad-4"
+            nz-popover
+            [nzPopoverPlacement]="placement === AISETTING_PLACEMENT.INLINE_MESSAGE ? 'top' : 'bottom'"
+            [nzPopoverContent]="isShowSetting ? AISettings : contentTemplate"
+            nzPopoverTrigger="click"
+            #popover="nzPopover"
+            close-dropdown-when-resizable
+            [nzPopoverComponent]="popover"
+            nzPopoverOverlayClassName="ai-setting-gen-msg-overlay"
+            [nzPopoverVisible]="showPopover"
+            (nzPopoverVisibleChange)="visibleChange($event)"
+            nz-tooltip
+            [nzTooltipTitle]="tooltipTextControl"
+            [disabled]="disableGenerateBtn">
+            <trudi-icon
+              [icon]="'aiSummaryStar'"
+              [style]="{ 'width.px': 19, 'height.px': 19 }"></trudi-icon>
+          </button>
+        </ng-template>
+        <ng-container *ngIf="fromMore; else default">
+          <button
+            nz-popover
+            [nzPopoverPlacement]="placement === AISETTING_PLACEMENT.INLINE_MESSAGE ? 'top' : 'bottom'"
+            [nzPopoverContent]="isShowSetting ? AISettings : contentTemplate"
+            nzPopoverTrigger="click"
+            nzPopoverOverlayClassName="ai-setting-gen-msg-overlay"
+            [nzPopoverVisible]="showPopover"
+            (nzPopoverVisibleChange)="visibleChange($event)"
+            nz-tooltip
+            #popover="nzPopover"
+            [nzTooltipTitle]="tooltipTextControl"
+            class="btn-item more size-24 border-rad-4"
+            [ngClass]="{'selected': btn?.selected}">
+            <trudi-icon
+              [icon]="showPopover ? icon.moreSelected : icon.more"
+              class="size-20 justify-content-center y-center"></trudi-icon>
+          </button>
+        </ng-container>
+      </div>
+    </ng-container>
+    <ng-template #disabledBtn>
+      <button
+        class="btn-item size-24 border-rad-4 disabled"
+        nz-tooltip
+        [nzTooltipTitle]="tooltipUpgradePlan"
+        nzTooltipPlacement="bottom">
+        <trudi-icon
+          [icon]="'frameUnactive'"
+          [style]="{ 'width.px': 22, 'height.px': 22 }"></trudi-icon>
+      </button>
+    </ng-template>
+  </div>
+</ng-container>
+<ng-template #helperContent>
+  <ng-template #helperTemplate>
+    <div class="help">
+      <div class="help-body">
+        <trudi-icon
+          [icon]="'aiSummaryStar'"
+          [style]="{ 'width.px': 22, 'height.px': 22 }"></trudi-icon>
+        <p>Have our AI write your message</p>
+      </div>
+      <div class="help-footer">
+        <button (click)="toggleHelp()">Ok, got it</button>
+      </div>
+    </div>
+  </ng-template>
+  <div class="ai-setting-generate-msg-help">
+    <div class="position-relative">
+      <button
+        *ngIf="showBtnTmp"
+        (click)="showBtnTmp = false"
+        [ngClass]="{'selected': showBtnTmp}"
+        class="btn-item size-24 border-rad-4">
+        <trudi-icon
+          [icon]="'aiSummaryStar'"
+          nz-tooltip
+          [nzTooltipTitle]="isEnableSuggestReplySetting ? tooltipTextControl : tooltipUpgradePlan"
+          [style]="{ 'width.px': 19, 'height.px': 19 }"></trudi-icon>
+      </button>
+      <button
+        (click)="showBtnTmp = true"
+        class="btn-item size-24 border-rad-4"
+        nzPopoverOverlayClassName="ai-setting-gen-msg-overlay show-arrow"
+        [nzPopoverVisible]="showHelpPopover"
+        (nzPopoverVisibleChange)="nzPopoverVisibleChange($event)"
+        nz-popover
+        [nzPopoverContent]="helperTemplate"
+        nzPopoverPlacement="bottom"
+        nzPopoverTrigger="click">
+        <trudi-icon
+          [icon]="'aiSummaryStar'"
+          [style]="{ 'width.px': 19, 'height.px': 19 }"></trudi-icon>
+      </button>
+    </div>
+  </div>
+</ng-template>
+<ng-template #tooltipUpgradePlan>
+  <upgrade-message
+    [action]="upgrageMessageAction"
+    [isTooltip]="true"></upgrade-message>
+</ng-template>

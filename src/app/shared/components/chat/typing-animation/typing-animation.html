@@ -1,0 +1,29 @@
+<ng-container *ngIf="isTypingData && isShowTyping">
+  <app-message-header
+    [firstName]="isTypingData?.firstName"
+    [lastName]="isTypingData?.lastName"
+    [currentConversation]="currentConversation"></app-message-header>
+  <div class="message-avatar" [ngClass]="classAvatar">
+    <img
+      *ngIf="isTypingData?.userId === trudiUserId"
+      src="assets/icon/trudi-logo.svg"
+      class="trudi-avatar"
+      alt="" />
+    <img
+      *ngIf="isTypingData?.userId !== trudiUserId && isTypingData?.googleAvatar"
+      src="{{isTypingData?.googleAvatar}}"
+      class="user-avatar"
+      alt="" />
+    <div
+      *ngIf="isTypingData?.userId !== trudiUserId && !isTypingData?.googleAvatar"
+      class="user-avatar"
+      [ngClass]="isTypingData?.userPropertyType | userClass">
+      <label>{{firstLetterFirstName}}{{firstLetterLastName}}</label>
+    </div>
+  </div>
+  <div class="wave">
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+  </div>
+</ng-container>

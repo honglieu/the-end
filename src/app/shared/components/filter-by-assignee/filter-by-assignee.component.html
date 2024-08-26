@@ -1,0 +1,68 @@
+<button
+  tabindex="0"
+  size="small"
+  variant="neutral"
+  class="assigned-agent-container"
+  data-console="assignee-button"
+  (click)="onShowPopupAssign($event)"
+  [disabled]="disabled || (isInbox && teamMembers < 2)"
+  nz-dropdown
+  [nzTrigger]="'hover'"
+  [(nzPlacement)]="placement"
+  [nzDropdownMenu]="menu"
+  nzOverlayClassName="filter-by-assignee-dropdown"
+  [(nzVisible)]="visibleDropdown"
+  (nzVisibleChange)="onDropdownMenuVisibleChange($event)"
+  (nzPopoverVisibleChange)="onDropdownMenuVisibleChange($event)"
+  menuKeyboard
+  [visibleMenu]="visibleDropdown"
+  [menuType]="EMenuDropdownType.Dropdown">
+  <ng-container>
+    <div
+      class="cursor-pointer assigned-agent d-flex align-items-center target-person"
+      [ngClass]=" {'btn-focus' : visibleDropdown}">
+      <ng-container>
+        <div
+          class="td-icon-circle-btn item-avatar d-flex w-100 justify-content-between">
+          <div
+            class="text-agent-detail d-flex align-items-center white-space-nowrap">
+            <span class="info">
+              {{(disabled || (isInbox && teamMembers < 2)) && !isConsole ?
+              'Assignee:' :'Assignee'}}</span
+            >
+            <span
+              class="info pm-name text-ellipsis"
+              *ngIf="(disabled || (isInbox && teamMembers < 2)) && !isConsole">
+              <span class="pm-name">{{pmName}}</span>
+            </span>
+            <span
+              class="text-agent"
+              [ngClass]="{'visible':selectedAssignee?.length > 0 && !disabled}">
+              {{selectedAssignee?.length}}</span
+            >
+            <trudi-icon
+              class="icon-down"
+              svgClass="size-20"
+              viewBox="auto"
+              icon="chevronDown"></trudi-icon>
+          </div>
+          <trudi-icon
+            class="icon-left"
+            svgClass="size-20"
+            viewBox="auto"
+            icon="chevronRight"></trudi-icon>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</button>
+
+<nz-dropdown-menu #menu>
+  <div nz-menu>
+    <filter-assignee-box
+      tabindex="-1"
+      #assignAttachBox
+      *ngIf="visibleDropdown"
+      [assigneeList]="assigneeList"></filter-assignee-box>
+  </div>
+</nz-dropdown-menu>

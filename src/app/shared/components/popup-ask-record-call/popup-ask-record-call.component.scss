@@ -1,0 +1,75 @@
+:host ::ng-deep {
+  .space {
+    height: 10px;
+  }
+  .popup-wrapper {
+    background-color: var(--white);
+    border-radius: 8px;
+
+    .popup-content {
+      margin: 14px;
+      display: flex;
+      justify-content: flex-start;
+
+      &-img {
+        min-width: 48px;
+        height: 48px;
+        background-color: var(--brand-500);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        margin-right: 24px;
+
+        &-record {
+          width: 27px;
+          height: 27px;
+        }
+      }
+
+      &-text {
+        font-weight: 500;
+        &-header {
+          font-size: 20px;
+          line-height: 24px;
+          color: var(--gray-700);
+          margin-bottom: 8px;
+          letter-spacing: 0.71px;
+        }
+
+        &-description {
+          font-size: 14px;
+          line-height: 19px;
+          color: var(--gray-500);
+        }
+      }
+    }
+    .popup-content-text-description {
+      margin-bottom: 0;
+    }
+
+    .popup-group-btn {
+      text-align: right;
+      margin-right: 14px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      line-height: 16px;
+
+      &-cancel {
+        margin-right: 10px;
+        padding: 7px 32px 9px;
+        background-color: var(--white);
+        color: var(--brand-500);
+        border: 0;
+      }
+
+      &-submit {
+        padding: 7px 32px 9px;
+        background-color: var(--brand-500);
+        color: var(--white);
+        border: 0;
+        border-radius: 4px;
+      }
+    }
+  }
+}

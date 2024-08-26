@@ -1,0 +1,167 @@
+<header-wrapper>
+  <ng-container leftContent>
+    <ng-container *ngIf="loadingService.isLoading$ | async; else detailHeader">
+      <div class="wrapper-skeleton-task-editor-header">
+        <div class="d-flex align-items-center py-6">
+          <div class="w-8">
+            <nz-skeleton-element
+              class="skeleton-button-back"
+              [nzParagraph]="paragraph"
+              nzType="avatar"
+              [nzActive]="true"
+              [nzSize]="'small'"></nz-skeleton-element>
+          </div>
+          <div class="skeleton-template-title">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0 }"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+          <div class="skeleton-template-status">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0 }"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #detailHeader>
+      <div class="task-template-details-header-container">
+        <button
+          trudi-btn
+          variant="ghost"
+          btnType="neutral"
+          size="medium"
+          shape="circle"
+          (click)="handleBack()"
+          class="task-template-header__icon-wrapper">
+          <trudi-icon
+            icon="iconArrowBack"
+            [style]="{width: '16px', height: '16px'}">
+          </trudi-icon>
+        </button>
+
+        <div *ngIf="isConsole && taskCrmImg" class="task-template-logo">
+          <img [src]="taskCrmImg" alt="logo" />
+        </div>
+
+        <div class="task-template-title-wrapper">
+          <span class="task-template-title">{{ taskName.value }}</span>
+          <div
+            *ngIf="canEdit"
+            nz-tooltip
+            [nzTooltipTitle]="disabled && editTooltip"
+            nzTooltipPlacement="bottom">
+            <button
+              trudi-btn
+              variant="ghost"
+              btnType="neutral"
+              size="medium"
+              shape="circle"
+              [disabled]="disabled"
+              class="task-template-header__icon-wrapper"
+              (click-validation)="handleEditTaskName()">
+              <trudi-icon class="edit-icon" icon="penGrayIcon"></trudi-icon>
+            </button>
+          </div>
+          <div
+            [ngClass]="{'editing': isEditingTplName}"
+            class="task-title-editing">
+            <trudi-text-field
+              #trudiTextField
+              [maxCharacter]="75"
+              [formControl]="taskName"></trudi-text-field>
+            <div class="task-title-editing-action">
+              <div
+                (click)="handleCancelEditTaskName()"
+                class="base-icon-edit y-center">
+                <trudi-icon
+                  [style]="{ 'width.px': 12, 'height.px': 12}"
+                  icon="closeGray64"></trudi-icon>
+              </div>
+              <div
+                (click)="handleSaveTaskName()"
+                class="base-icon-edit y-center">
+                <trudi-icon
+                  [style]="{ 'width.px': 14, 'height.px': 14}"
+                  icon="checkedSync"></trudi-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <dropdown-template-status
+          [currentAgencyId]="currentAgencyId"
+          [currentStatus]="taskStatus"
+          [canEdit]="canEdit"
+          [disabled]="disabled"></dropdown-template-status>
+      </div>
+    </ng-template>
+  </ng-container>
+  <ng-container rightContent>
+    <ng-container *ngIf="loadingService.isLoading$ | async; else addBtn">
+      <div class="w-100">
+        <nz-skeleton
+          [nzParagraph]="{ rows: 0 }"
+          [nzActive]="true"></nz-skeleton>
+      </div>
+    </ng-container>
+  </ng-container>
+</header-wrapper>
+
+<ng-template #editTooltip>
+  <upgrade-message
+    [action]="EActionShowMessageTooltip.EDIT_TASK_NAME"
+    [isTooltip]="true"></upgrade-message>
+</ng-template>
+<ng-template #addBtn>
+  <div class="button-wrapper">
+    <div
+      *ngIf="canEdit"
+      [disabled]="disabled"
+      nz-tooltip
+      [nzTooltipTitle]="disabled && addStepTooltip"
+      nzTooltipPlacement="right"
+      class="d-flex align-items-center button-add"
+      [ngClass]="{'button-add-disabled': disabled}">
+      <div class="add-step-btn d-flex gap-8" (click)="handleOpenDrawer()">
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          icon="plusWhite"></trudi-icon>
+        <span>Add step</span>
+      </div>
+      <div
+        class="dropdown-icon d-flex"
+        #menu="menu"
+        [menuTrigger]="!disabled && createMenu"
+        [position]="createMenuPosition">
+        <trudi-icon
+          icon="whiteChevronDown"
+          [ngStyle]="{'width.px': 20, 'height.px': 20}"
+          class="size-20 d-flex align-items-center">
+        </trudi-icon>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #createMenu>
+  <div class="create-menu-wrapper" [@menuAnimation]>
+    <div
+      class="menu-item"
+      (click)="menu.close(); addNode(ETypeElement.SECTION)">
+      Add section
+    </div>
+    <div
+      class="menu-item"
+      (click)="menu.close(); addNode(ETypeElement.DECISION)">
+      Add decision tree
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #addStepTooltip>
+  <upgrade-message
+    [action]="EActionShowMessageTooltip.EDIT_WORKFLOWS"
+    [isTooltip]="true"></upgrade-message>
+</ng-template>

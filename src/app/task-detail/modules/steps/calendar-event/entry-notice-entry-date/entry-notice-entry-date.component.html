@@ -1,0 +1,11 @@
+<trudi-step
+  [model]="model"
+  (onProcess)="enableProcess() "
+  [buttonKey]="buttonKey"></trudi-step>
+<schedule-property-entry
+  [modalId]="modalId"
+  [isStep]="true"
+  [entryData]="model"
+  [showModal]="{isShow: popupState.isShowEntryNoticeEntryDate, action: EAction.ADD}"
+  (onUpdateStep)="updateButtonStep($event)"
+  (onQuit)="handleQuit()"></schedule-property-entry>

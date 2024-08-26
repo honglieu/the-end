@@ -1,0 +1,60 @@
+.virtrual-reminder-list {
+  .reminder-viewport {
+    height: calc(100vh - 92px);
+    &.loading {
+      height: calc(100vh - 150px);
+    }
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .loading-append {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .loader {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    position: relative;
+    animation: rotate 1s linear infinite
+  }
+  .loader::before {
+    content: "";
+    box-sizing: border-box;
+    position: absolute;
+    inset: 0px;
+    border-radius: 50%;
+    border: 3px solid var(--brand-500);
+    animation: prixClipFix 2s linear infinite ;
+  }
+
+  @keyframes rotate {
+    100%   {transform: rotate(360deg)}
+  }
+
+  @keyframes prixClipFix {
+      0%   {clip-path:polygon(50% 50%,0 0,0 0,0 0,0 0,0 0)}
+      25%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0)}
+      50%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%)}
+      75%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 100%)}
+      100% {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 0)}
+  }
+}
+
+:host {
+  .reminder-show {
+    padding-top: 5px; 
+    padding-bottom: 5px;
+  
+    &:first-of-type {
+      padding-top: 0;
+    }
+  }
+  .reminder-hidden {
+    display: none;
+  }
+}

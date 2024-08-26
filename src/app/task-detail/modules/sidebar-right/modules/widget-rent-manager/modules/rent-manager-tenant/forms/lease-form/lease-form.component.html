@@ -1,0 +1,179 @@
+<div
+  *ngIf="!isLoading else skeletonBlock"
+  class="d-flex flex-dir-column gap-4 lease-details-form"
+  [formGroup]="leaseDetailsControl">
+  <div class="trudi-form-group">
+    <div class="trudi-form-control">
+      <div class="trudi-input-label">Move in</div>
+      <trudi-form-control
+        [checkSubmit]="!isSubmitted"
+        [control]="moveInDateControl">
+        <trudi-date-picker
+          class="pointer"
+          [breakNochange]="true"
+          [defaultValue]="moveInDateControl?.value"
+          [class.trudi-picker-error]="moveInDateControl.invalid && (moveInDateControl.dirty || moveInDateControl.touched) && isSubmitted"
+          formControlName="moveInDate">
+        </trudi-date-picker>
+      </trudi-form-control>
+    </div>
+
+    <div class="trudi-form-control">
+      <div class="trudi-input-label">Move out</div>
+      <trudi-form-control
+        [checkSubmit]="!isSubmitted"
+        [control]="moveOutDateControl">
+        <trudi-date-picker
+          class="pointer"
+          [breakNochange]="true"
+          [defaultValue]="moveOutDateControl?.value"
+          [class.trudi-picker-error]="moveOutDateControl.invalid && (moveOutDateControl.dirty || moveOutDateControl.touched) && isSubmitted"
+          formControlName="moveOutDate"
+          [trudiPlaceHolder]="">
+        </trudi-date-picker>
+      </trudi-form-control>
+    </div>
+  </div>
+
+  <div class="trudi-form-group">
+    <div class="trudi-form-control">
+      <div class="trudi-input-label">Notice</div>
+      <trudi-form-control
+        [checkSubmit]="!isSubmitted"
+        [control]="noticeDateControl">
+        <trudi-date-picker
+          class="pointer"
+          [breakNochange]="true"
+          formControlName="noticeDate"
+          [defaultValue]="noticeDateControl?.value"
+          [trudiPlaceHolder]="">
+        </trudi-date-picker>
+      </trudi-form-control>
+    </div>
+
+    <div class="trudi-form-control">
+      <div class="trudi-input-label">Expected move out</div>
+      <trudi-form-control
+        [checkSubmit]="!isSubmitted"
+        [control]="expectedMoveOutDateControl">
+        <trudi-date-picker
+          class="pointer"
+          [breakNochange]="true"
+          [defaultValue]="expectedMoveOutDateControl?.value"
+          formControlName="expectedMoveOutDate">
+        </trudi-date-picker>
+      </trudi-form-control>
+    </div>
+  </div>
+
+  <div class="trudi-form-group">
+    <div class="trudi-form-control">
+      <div class="trudi-input-label">Lease start</div>
+      <trudi-form-control
+        [checkSubmit]="!isSubmitted"
+        [control]="startDateControl">
+        <trudi-date-picker
+          class="pointer"
+          [breakNochange]="true"
+          [defaultValue]="startDateControl?.value"
+          [class.trudi-picker-error]="startDateControl.invalid && (startDateControl.dirty || startDateControl.touched) && isSubmitted"
+          formControlName="startDate">
+        </trudi-date-picker>
+      </trudi-form-control>
+    </div>
+
+    <div class="trudi-form-control">
+      <div class="trudi-input-label">Lease end</div>
+      <trudi-form-control
+        [checkSubmit]="!isSubmitted"
+        [control]="endDateControl">
+        <trudi-date-picker
+          class="pointer"
+          [breakNochange]="true"
+          [defaultValue]="endDateControl?.value"
+          [class.trudi-picker-error]="endDateControl.invalid && (endDateControl.dirty || endDateControl.touched) && isSubmitted"
+          formControlName="endDate">
+        </trudi-date-picker>
+      </trudi-form-control>
+    </div>
+  </div>
+
+  <div class="trudi-form-group">
+    <div class="trudi-form-control">
+      <div class="trudi-input-label">Lease sign</div>
+      <trudi-form-control
+        [checkSubmit]="!isSubmitted"
+        [control]="signDateControl">
+        <trudi-date-picker
+          class="pointer"
+          [breakNochange]="true"
+          [defaultValue]="signDateControl?.value"
+          formControlName="signDate">
+        </trudi-date-picker>
+      </trudi-form-control>
+    </div>
+
+    <div class="trudi-form-control">
+      <div class="trudi-input-label">Lease term</div>
+      <trudi-form-control [checkSubmit]="!isSubmitted" [control]="termControl">
+        <trudi-single-select
+          className="lease-term"
+          (isOpened)="handleOnOpenedLeaseTermSelect()"
+          appendTo="body"
+          [items]="leaseTermOptions"
+          bindLabel="label"
+          bindValue="value"
+          [clearable]="true"
+          [virtualScroll]="true"
+          (triggerEventChange)="onLeaseTermChanged($event)"
+          formControlName="term">
+        </trudi-single-select>
+      </trudi-form-control>
+    </div>
+  </div>
+</div>
+
+<ng-template #skeletonBlock>
+  <div class="skeleton-wrapper d-flex flex-dir-column section-wrapper">
+    <div class="skeleton-group">
+      <nz-skeleton
+        class="skeleton-item"
+        [nzParagraph]="paragraph"
+        [nzActive]="true"></nz-skeleton>
+      <nz-skeleton
+        class="skeleton-item"
+        [nzParagraph]="paragraph"
+        [nzActive]="true"></nz-skeleton>
+    </div>
+    <div class="skeleton-group">
+      <nz-skeleton
+        class="skeleton-item"
+        [nzParagraph]="paragraph"
+        [nzActive]="true"></nz-skeleton>
+      <nz-skeleton
+        class="skeleton-item"
+        [nzParagraph]="paragraph"
+        [nzActive]="true"></nz-skeleton>
+    </div>
+    <div class="skeleton-group">
+      <nz-skeleton
+        class="skeleton-item"
+        [nzParagraph]="paragraph"
+        [nzActive]="true"></nz-skeleton>
+      <nz-skeleton
+        class="skeleton-item"
+        [nzParagraph]="paragraph"
+        [nzActive]="true"></nz-skeleton>
+    </div>
+    <div class="skeleton-group">
+      <nz-skeleton
+        class="skeleton-item"
+        [nzParagraph]="paragraph"
+        [nzActive]="true"></nz-skeleton>
+      <nz-skeleton
+        class="skeleton-item"
+        [nzParagraph]="paragraph"
+        [nzActive]="true"></nz-skeleton>
+    </div>
+  </div>
+</ng-template>

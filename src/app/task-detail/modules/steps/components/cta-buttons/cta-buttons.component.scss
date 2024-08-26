@@ -1,0 +1,134 @@
+@import 'function';
+
+::ng-deep .dropdown-list-ctn-btn {
+  .list-item {
+    min-width: 160px;
+    padding: 8px;
+    border-bottom: 1px solid var(--gray-200);
+    @include fontSetup(
+      var(--fg-neutral-stronger) !important,
+      14px,
+      20px,
+      normal,
+      500
+    );
+
+    &:focus-visible {
+      box-shadow: inset var(--shadow-brand) !important;
+    }
+  }
+}
+
+:host {
+  .cta-btn {
+    background-color: var(--bg-brand-solid-normal, #28ad99);
+
+    button {
+      padding: 4px 8px;
+      min-width: fit-content;
+      height: fit-content;
+      border-radius: unset;
+
+      &.execute-btn {
+        border-top-left-radius: 6px;
+        border-bottom-left-radius: 6px;
+        &:only-child {
+          border-top-right-radius: 6px;
+          border-bottom-right-radius: 6px;
+        }
+      }
+
+      &.select-btn {
+        border-top-right-radius: 6px;
+        border-bottom-right-radius: 6px;
+      }
+
+      &:focus-visible {
+        box-shadow: 0px 0px 0px 2px var(--brand-200);
+      }
+
+      &:hover {
+        background-color: var(--bg-brand-solid-stronger, #209386);
+      }
+
+      &:active,
+      &.selecting {
+        background-color: var(--bg-brand-solid-strongest, #107569);
+      }
+
+      &:last-child:not(:first-child) {
+        padding-left: 0;
+        &::before {
+          content: '';
+          height: 12px;
+          width: 1px;
+          background-color: var(--white);
+          left: 0;
+          bottom: 0;
+        }
+      }
+    }
+
+    .cta-text {
+      margin-left: 4px;
+      @include fontSetup(var(--fg-base), 12px, 16px, normal, 600);
+    }
+
+    button:only-child {
+      .cta-text {
+        margin: 0;
+      }
+    }
+
+    &-neutral {
+      background-color: var(--bg-neutral-tonal-normal);
+
+      button {
+        &:hover {
+          background-color: var(--bg-neutral-tonal-stronger) !important;
+        }
+
+        &:active,
+        &.selecting {
+          background-color: var(--bg-neutral-tonal-strongest) !important;
+        }
+
+        &:last-child:not(:first-child) {
+          &::before {
+            background-color: var(--border-neutral-darker);
+          }
+        }
+      }
+
+      .cta-text {
+        color: var(--fg-neutral-normal);
+      }
+
+      ::ng-deep trudi-icon svg-icon svg path {
+        fill: var(--fg-neutral-normal);
+      }
+    }
+
+    &-disabled {
+      pointer-events: none;
+      cursor: default;
+      background-color: var(--bg-neutral-tonal-strongest, #ececed) !important;
+
+      button {
+        &:last-child {
+          &::before {
+            background-color: var(--white);
+          }
+        }
+      }
+
+      .cta-text {
+        color: var(--fg-base);
+      }
+
+      ::ng-deep trudi-icon svg-icon svg path {
+        fill: var(--fg-base);
+      }
+    }
+  }
+}

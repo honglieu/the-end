@@ -1,0 +1,52 @@
+
+.round-gray-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--white);
+  opacity: 0.8;
+  cursor: pointer;
+}
+.pos {
+  position: relative;
+  &__top-right {
+    position: absolute;
+    top: 24px;
+    right: 38px;
+    z-index: 999;
+  }
+  &__bottom-right {
+    position: absolute;
+    top: 24px;
+    right: 90px;
+    z-index: 999;
+  }
+}
+.header{
+  display: inline-flex;
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  flex-direction: row-reverse;
+  gap: 12px;
+  z-index: 999;
+}
+.icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+.disabled {
+  pointer-events: none;
+  cursor: default !important;
+  .icon {
+    opacity: 0.5;
+  }
+}
+
+.slider-img-wrapper img {
+  max-width: 90%;
+  max-height: 80%;
+  top: 50%;
+}

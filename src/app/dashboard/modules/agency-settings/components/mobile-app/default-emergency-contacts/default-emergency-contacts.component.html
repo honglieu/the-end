@@ -1,0 +1,144 @@
+<ng-container *ngIf="!isLoadingDefault; else skeletonTemplate">
+  <sections-container
+    titleInput="Default emergency contacts"
+    subTitle="The following will be displayed as emergency contacts to all customers using the Trudi® App, unless custom contacts are specified.">
+    <nz-table
+      class="emergency-contacts-table default-emergency-contacts-table"
+      [class.emergency-contacts-table-readonly]="readonly"
+      nzOuterBordered
+      [nzFooter]="footer"
+      [nzShowPagination]="false">
+      <thead>
+        <tr>
+          <th nzWidth="240px">Type</th>
+          <th>Emergency contact</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          class="default-item"
+          [class.last-item]="last"
+          *rxFor="let control of defaultEmergencyContacts.controls; let i = index; let last = last">
+          <td>
+            <trudi-form-control [control]="control.get('typeId')">
+              <select-type
+                (newTypeAdded)="addNewTypeHandler($event, control)"
+                (typeDeleted)="deleteTypeHandler($event, control)"
+                [items]="control['typesList']"
+                [isDisabled]="readonly"
+                [formControl]="control.get('typeId')"
+                (triggerEventBlur)="control.get('typeId')?.markAsTouched()"
+                [dropdownPosition]="dropdownPositionForDefaultItem[i]"
+                (openHandler)="adjustDropdownPositionForDefaultItem(i)"
+                [bindValue]="'id'"
+                [bindLabel]="'name'"
+                [searchable]="true"
+                [clearable]="true"
+                [placeholder]="'Select type'">
+              </select-type>
+            </trudi-form-control>
+          </td>
+          <td>
+            <div class="d-flex align-items-start gap-16">
+              <div class="flex-1">
+                <trudi-form-control>
+                  <select-contacts
+                    [items]="control['suppliersList']"
+                    [readonly]="readonly"
+                    [formControl]="control.get('supplierIds')"
+                    (handleOpen)="contactFocusHandler(); adjustDropdownPositionForDefaultItem(i)"
+                    [dropdownPosition]="dropdownPositionForDefaultItem[i]"
+                    (focusOut)="contactActionHandler(control)"
+                    (eventClear)="contactActionHandler(control, true)"
+                    (eventClearAll)="contactActionHandler(control, false, true)"
+                    (eventCallback)="addSupplierToFormHandler($event, control)"
+                    bindValue="id"
+                    placeholder="Select contact"></select-contacts>
+                </trudi-form-control>
+              </div>
+              <button
+                *ngIf="!readonly"
+                (click)="removeEmergencyContactsRowHandler(i, control.get('groupId')?.value)"
+                class="remove-emergency-contacts-row-btn"
+                trudi-btn
+                variant="ghost"
+                btnType="neutral"
+                size="medium"
+                shape="circle"
+                trudi-tooltip
+                [hideWhenClick]="true"
+                nzTooltipTitle="Delete"
+                [nzTooltipArrowPointAtCenter]="true"
+                nzTooltipTrigger="hover">
+                <trudi-icon
+                  svgClass="size-16"
+                  viewBox="auto"
+                  icon="iconDeleteGrey"></trudi-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </sections-container>
+</ng-container>
+
+<ng-template #footer>
+  <button
+    (click)="!readonly && addContact()"
+    trudi-btn
+    btnType="neutral"
+    variant="tonal"
+    size="medium"
+    [fillIcon]="true"
+    [disabled]="readonly">
+    <trudi-icon svgClass="size-16" viewBox="auto" icon="plusGray"></trudi-icon
+    >Add default contact
+  </button>
+</ng-template>
+
+<ng-template #skeletonTemplate>
+  <nz-skeleton
+    class="emergency-contacts-title"
+    [nzParagraph]="{ rows: 1 }"
+    [nzTitle]="false"
+    [nzActive]="true"></nz-skeleton>
+  <nz-skeleton
+    class="emergency-contacts-subtitle"
+    [nzParagraph]="{ rows: 1 }"
+    [nzTitle]="false"
+    [nzActive]="true"></nz-skeleton>
+  <nz-table
+    class="emergency-contacts-table emergency-contacts-table-skeleton"
+    nzOuterBordered
+    [nzShowPagination]="false">
+    <thead>
+      <tr>
+        <th nzWidth="240px">&nbsp;</th>
+        <th>&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        [class.last-item]="last"
+        *rxFor="let _ of [].constructor(2); let last = last">
+        <td>
+          <nz-skeleton
+            [nzParagraph]="{ rows: 1 }"
+            [nzTitle]="false"
+            [nzActive]="true"></nz-skeleton>
+        </td>
+        <td>
+          <div class="d-flex align-items-center">
+            <ng-container *rxFor="let _ of [].constructor(4)">
+              <nz-skeleton
+                [nzParagraph]="{ rows: 1 }"
+                [nzTitle]="false"
+                [nzActive]="true"></nz-skeleton
+            ></ng-container>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+</ng-template>

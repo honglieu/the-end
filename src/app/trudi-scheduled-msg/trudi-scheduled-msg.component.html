@@ -1,0 +1,70 @@
+<trudi-modal
+  *ngIf="popupState.scheduledMessage"
+  [visible]="popupState.scheduledMessage"
+  [title]="scheduledMessageConfigs.header.title"
+  subTitle="{{ listModalScheduleMsg.length | pluralize: 'Message' }}"
+  [autoFocus]="null"
+  (onCancel)="onCloseScheduleMsg()"
+  className="trudi-modal-scheduled-msg">
+  <trudi-scheduled-msg-body
+    [listModalScheduleMsg]="listModalScheduleMsg"></trudi-scheduled-msg-body>
+  <ng-template #footerModal></ng-template>
+</trudi-modal>
+
+<app-modal-popup
+  *ngIf="popupState.sendNowMessage"
+  [show]="popupState.sendNowMessage"
+  [position]="ModalPopupPosition.center">
+  <trudi-send-now-confirm></trudi-send-now-confirm>
+</app-modal-popup>
+
+<app-modal-popup
+  *ngIf="popupState.deleteScheduledMessage"
+  [show]="popupState.deleteScheduledMessage"
+  [position]="ModalPopupPosition.center">
+  <trudi-delete-scheduled-msg
+    [listOfReceivers]=""
+    [hasConversationHistory]="hasConversationHistory"></trudi-delete-scheduled-msg>
+</app-modal-popup>
+
+<trudi-send-msg
+  *ngIf="popupState.editScheduledMessage"
+  [configs]="editScheduledMsgConfig"
+  [rawMsg]="selectedScheduledMsg.data.message"
+  [listOfFiles]="listOfFiles"
+  [listContactCard]="listContactCards"
+  (onQuit)="popupState.editScheduledMessage = false"
+  (onSendMsg)="handleConfirmChangeScheduledMsg($event)"
+  (onBack)="handleBack()"></trudi-send-msg>
+
+<schedule-message-popup
+  *ngIf="popupState.rescheduleMsg"
+  [visible]="popupState.rescheduleMsg"
+  (isCloseModal)="handleOnBackScheduleMessage()"
+  (dateTime)="handleSelectDate($event)"
+  [defaultValue]="selectedScheduledMsg.time"
+  [action]="selectedScheduledMsg?.data.action"
+  [scheduleDate]="scheduleDate"></schedule-message-popup>
+
+<!-- Header section -->
+<ng-template #headerTemplate let-header="header">
+  <div class="trudi-scheduled-msg-header d-flex gap-16">
+    <trudi-icon
+      [icon]="header.icon"
+      [style]="{'width.px': 48, 'height.px': 48}"></trudi-icon>
+    <div class="d-flex flex-dir-column gap-8">
+      <p class="trudi-scheduled-msg-header-title" data-e2e="title">
+        {{ header.title }}
+      </p>
+      <p class="trudi-scheduled-msg-header-message" data-e2e="count message">
+        {{ listModalScheduleMsg.length }} {{listModalScheduleMsg.length === 1 ?
+        'Message' : 'Messages'}}
+      </p>
+    </div>
+    <div
+      class="trudi-scheduled-msg-header-icon-close"
+      (click)="onCloseScheduleMsg()">
+      <trudi-icon [icon]="header.closeIcon"></trudi-icon>
+    </div>
+  </div>
+</ng-template>

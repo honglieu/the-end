@@ -1,0 +1,73 @@
+<div
+  *ngIf="latestSteps?.length; else workflowTemplate"
+  class="workflow"
+  nz-dropdown
+  [nzDropdownMenu]="stepsTemplate"
+  nzPlacement="bottomRight">
+  <div
+    *ngFor="let step of latestSteps"
+    class="workflow-step"
+    [ngClass]="{
+      'first-step': steps[0].id === step.id,
+      'last-step': steps[steps.length-1].id === step.id
+    }">
+    <div class="workflow-step__icon-wrapper">
+      <trudi-icon
+        *ngIf="step.status === TrudiButtonEnumStatus.COMPLETED"
+        [style]="{width: '20px', height: '20px'}"
+        icon="checkMarkFill"></trudi-icon>
+    </div>
+    <div
+      class="workflow-step__name"
+      [class.completed]="step.status === TrudiButtonEnumStatus.COMPLETED"
+      [innerHTML]="step.name | highlight: searchValue"></div>
+  </div>
+</div>
+<ng-template #workflowTemplate>
+  <div
+    nz-dropdown
+    [nzDropdownMenu]="flows?.length ? stepsTemplate : null"
+    nzPlacement="bottomRight"
+    class="workflow__no-items">
+    No completed step
+  </div>
+</ng-template>
+
+<nz-dropdown-menu #stepsTemplate="nzDropdownMenu">
+  <div class="workflows-tooltip">
+    <container-element
+      *ngFor="let flow of flows; let i = index"
+      [ngSwitch]="flow.type">
+      <div *ngSwitchCase="'DECISION'" class="workflows-tooltip__decision">
+        <button trudi-btn size="extra-small" variant="tonal">
+          <div [innerHTML]="flow.name | highlight: searchValue"></div>
+          <ng-template iconSuffix>
+            <trudi-icon icon="chevronDown"></trudi-icon>
+          </ng-template>
+        </button>
+      </div>
+      <div *ngSwitchCase="'SECTION'" class="workflows-tooltip__section">
+        <div class="workflows-tooltip__section--line"></div>
+        <div [innerHTML]="flow.name | highlight: searchValue"></div>
+      </div>
+      <div
+        *ngSwitchCase="'STEP'"
+        class="workflows-tooltip__step"
+        [ngClass]="{
+          'first-step': flows[0].id === flow.id || flows[i-1].type !== 'STEP',
+          'last-step': flows[flows.length-1].id === flow.id || flows[i+1].type !== 'STEP'
+        }">
+        <div class="workflows-tooltip__step--icon-wrapper">
+          <trudi-icon
+            *ngIf="flow.status === TrudiButtonEnumStatus.COMPLETED"
+            [style]="{width: '20px', height: '20px'}"
+            icon="checkMarkFill"></trudi-icon>
+        </div>
+        <div
+          class="workflows-tooltip__step--name"
+          [class.completed]="flow.status === TrudiButtonEnumStatus.COMPLETED"
+          [innerHTML]="flow.name | highlight: searchValue"></div>
+      </div>
+    </container-element>
+  </div>
+</nz-dropdown-menu>

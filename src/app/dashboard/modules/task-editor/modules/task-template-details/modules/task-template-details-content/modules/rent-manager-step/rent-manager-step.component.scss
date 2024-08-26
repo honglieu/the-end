@@ -1,0 +1,59 @@
+@import 'function';
+
+::ng-deep {
+  .ant-drawer-title {
+    .rm-step-header {
+      padding: 16px 16px 8px 16px;
+
+      trudi-text-field {
+        .trudi-text-field-wrapper {
+          background: transparent;
+
+          .trudi-ui-text-field {
+            @include fontSetup(
+              var(--fg-neutral-strongest),
+              20px,
+              32px,
+              normal,
+              600
+            );
+            &::placeholder {
+              @include fontSetup(
+                var(--fg-neutral-weakest),
+                20px,
+                32px,
+                normal,
+                600
+              );
+            }
+          }
+        }
+      }
+
+      .step-name {
+        @include fontSetup(
+          var(--fg-neutral-strongest),
+          20px,
+          32px,
+          normal,
+          600
+        );
+      }
+      .header-badge {
+        display: flex;
+        justify-content: space-between;
+        .crm-logo {
+          img {
+            height: 20px;
+          }
+        }
+      }
+    }
+  }
+
+  .trudi-drawer-footer {
+    button {
+      min-width: 100px;
+    }
+  }
+}

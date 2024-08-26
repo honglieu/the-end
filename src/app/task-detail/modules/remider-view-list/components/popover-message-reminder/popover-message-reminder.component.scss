@@ -1,0 +1,321 @@
+@import 'function';
+
+.msg-sender-items-title {
+  @include fontSetup(
+    var(--fg-neutral-weaker, #999999),
+    12px,
+    16px,
+    normal,
+    400
+  );
+}
+::ng-deep .msg-sender-items-info {
+  @include fontSetup(var(--gray-600), 12px, 16px, normal, 400);
+  span {
+    @include fontSetup(var(--gray-600) !important, 12px, 16px, normal, 400);
+  }
+  span.info-role {
+    @include fontSetup(
+      var(--gray-500) !important,
+      12px,
+      16px,
+      normal,
+      400 !important
+    );
+  }
+}
+.msg-sender-items-time {
+  @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+  white-space: nowrap;
+}
+
+@media (min-height: 1001px) {
+  .msg-content-reminder {
+    max-height: 500px;
+  }
+}
+
+@media (max-height: 1000px) {
+  .msg-content-reminder {
+    max-height: 48vh;
+  }
+}
+
+.msg-content-reminder {
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  overflow: auto;
+  border-radius: 10px;
+  box-shadow: 0px 14px 36px 0px #00000021, 0px 2px 12px 0px #00000014;
+
+  .draft-action {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: var(--gray-50);
+
+    .draft-action-title {
+      display: flex;
+      align-items: center;
+      span {
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--gray-500);
+        margin-left: 3px;
+      }
+    }
+
+    .btn-edit-draft {
+      border: none;
+      background: none;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--gray-600);
+      display: flex;
+      align-items: center;
+    }
+
+    .loader {
+      border: 2px solid var(--gray-50);
+      border-radius: 50%;
+      border-top: 2px solid var(--gray-500);
+      width: 15px;
+      height: 15px;
+      -webkit-animation: spin 2s linear infinite; /* Safari */
+      animation: spin 2s linear infinite;
+      margin-right: 5px;
+      margin-left: 4px;
+    }
+  }
+
+  .content-reminder-body {
+    background-color: white;
+    padding: 16px;
+  }
+}
+:host {
+  ::ng-deep .message-wrapper {
+    margin-top: 8px;
+
+    .message-body {
+      color: var(--gray-600);
+      line-height: normal;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      p {
+        a {
+          pointer-events: none;
+          cursor: default;
+        }
+      }
+
+      .text {
+        position: relative;
+
+        .text-value {
+          ol,
+          ul,
+          p {
+            margin: 0;
+            list-style-type: none;
+            @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+          }
+          .email-hyperlink {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      span {
+        word-break: break-word;
+
+        .card-body{
+          word-break: normal;
+        }
+      }
+
+      .files-list {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        .file-block {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+        }
+        .files-list-action-wrapper {
+          flex-wrap: wrap;
+          gap: 8px;
+          &:hover {
+            .file-block ::ng-deep .attachment-message-action-button {
+              visibility: visible !important;
+            }
+          }
+        }
+
+        .btn-supplier {
+          padding: 6px 9px;
+          border: 1px solid var(--brand-500);
+          border-radius: 4px;
+          background-color: var(--white);
+          @include fontSetup(var(--brand-500), 12px, 14px, normal, 500);
+        }
+
+        app-message-file .attachment-message,
+        app-message-file .attachment-message .message-file {
+          cursor: default;
+        }
+      }
+
+      #source-drag-photo {
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .file-supplier {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .attach-text {
+        font-weight: 600;
+        font-size: 12px;
+      }
+
+      .text-value > table,
+      #email-signature {
+        white-space: normal;
+        margin-top: 12px;
+        a {
+          @include fontSetup(var(--white), inherit, normal, normal, normal);
+        }
+        pointer-events: none;
+      }
+
+      #email-signature tbody tbody tbody tr:nth-last-child(1),
+      #email-signature tbody tbody tbody tr:nth-last-child(2),
+      #email-signature tbody tbody tbody tr:nth-last-child(3) {
+        pointer-events: none !important;
+        cursor: default !important;
+      }
+      img.image-detail {
+        max-width: 40%;
+      }
+    }
+
+    .tooltip-quote::before {
+      content: '';
+      position: absolute;
+      left: 5px;
+      z-index: 9999;
+      width: 0;
+      height: 0;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-top: 6px solid rgba(100, 100, 100, 0.8);
+      bottom: -6px;
+    }
+
+    .btn-toggle-est {
+      position: relative;
+      border-radius: 4px;
+      border: none;
+      background-color: transparent;
+      padding: 0;
+      overflow: visible;
+      margin-bottom: 4px;
+      width: max-content;
+      display: flex;
+      align-items: center;
+      .tooltip-quote {
+        visibility: hidden;
+        width: 138px;
+        background-color: rgba(100, 100, 100, 0.8);
+        color: var(--white);
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 16px;
+        border-radius: 4px;
+        padding: 4px 6px;
+        position: absolute;
+        z-index: 9999;
+        top: -25px;
+        left: 0px;
+      }
+
+      .gmail-quote-tooltip {
+        width: 148px;
+      }
+
+      &:hover .tooltip-quote {
+        visibility: visible;
+        opacity: 1;
+      }
+    }
+    .gmail-quote-button {
+      margin: 20px 0 4px 2px;
+    }
+
+    a {
+      pointer-events: none !important;
+      cursor: none !important;
+    }
+  }
+}
+
+::ng-deep .box-receiver-reminder {
+  display: flex;
+  gap: 16px;
+  width: max-content;
+  width: 100%;
+  .receiver {
+    display: flex;
+    gap: 4px;
+    @include fontSetup(
+      var(--fg-neutral-weaker, #999999),
+      12px,
+      16px,
+      normal,
+      400
+    );
+    span {
+      @include fontSetup(var(--gray-600), 12px, 16px, normal, 400);
+    }
+    .count-sender-email {
+      @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+    }
+  }
+}
+
+.title-message-reminder {
+  @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+  margin-top: 8px;
+}
+
+.overflow-visible {
+  overflow: visible;
+}
+
+.max-width-130 {
+  max-width: 130px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.max-width {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.receiver-to-reminder {
+  max-width: calc(100% - 292px);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}

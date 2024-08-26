@@ -1,0 +1,167 @@
+<resizable-modal-popup
+  [show]="isOpenAddContactPopup"
+  [showTitle]="true"
+  [title]="isEditTenantContact ? 'Edit tenant contact' : 'Add tenant contact'"
+  [subTitle]="isPrimaryContact ? 'Primary tenant' : 'Tenant'"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [footerTemplate]="footer"
+  (onCancel)="closePopup()"
+  [isCustomMoveable]="true"
+  class="add-tenant-contact-container">
+  <div [formGroup]="tenantContactsForm" class="tenancy-name-form-group">
+    <div class="tenancy-name-wrapper">
+      <div class="title">Tenant name</div>
+      <div class="tenancy-name-form">
+        <div class="form-row">
+          <div class="form-field mt-12">
+            <trudi-form-control>
+              <trudi-text-field
+                label="Given name"
+                [clearable]="false"
+                maxlength="100"
+                formControlName="givenName"></trudi-text-field>
+            </trudi-form-control>
+          </div>
+          <div class="form-field mt-12">
+            <trudi-form-control>
+              <trudi-text-field
+                label="Family name (required)"
+                [clearable]="false"
+                maxlength="100"
+                formControlName="familyName"></trudi-text-field>
+            </trudi-form-control>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tenancy-name-wrapper">
+      <div class="title">Address</div>
+      <div class="tenancy-name-form">
+        <div class="form-row">
+          <div class="form-field mt-12">
+            <trudi-form-control>
+              <trudi-text-field
+                label="Unit No."
+                [clearable]="false"
+                maxlength="15"
+                formControlName="unit"></trudi-text-field>
+            </trudi-form-control>
+          </div>
+          <div class="form-field mt-12">
+            <trudi-form-control>
+              <trudi-text-field
+                label="Street No."
+                [clearable]="false"
+                maxlength="15"
+                formControlName="streetNumber"></trudi-text-field>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field mt-12">
+            <trudi-form-control>
+              <trudi-text-field
+                label="Street (required)"
+                [clearable]="false"
+                maxlength="100"
+                formControlName="addressLine1"></trudi-text-field>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field mt-12">
+            <trudi-form-control>
+              <trudi-text-field
+                label="Suburb"
+                [clearable]="false"
+                maxlength="100"
+                formControlName="suburb"></trudi-text-field>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field mt-12">
+            <trudi-form-control>
+              <trudi-text-field
+                label="State"
+                [clearable]="false"
+                maxlength="30"
+                formControlName="state"></trudi-text-field>
+            </trudi-form-control>
+          </div>
+          <div class="form-field mt-12">
+            <trudi-form-control>
+              <trudi-text-field
+                label="Postcode"
+                [clearable]="false"
+                maxlength="15"
+                formControlName="postcode"></trudi-text-field>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field mt-12">
+            <trudi-form-control>
+              <trudi-text-field
+                label="Country"
+                [clearable]="false"
+                maxlength="50"
+                formControlName="country"></trudi-text-field>
+            </trudi-form-control>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tenancy-name-wrapper">
+      <div class="title">Contact method</div>
+      <div class="tenancy-name-form">
+        <div class="form-row">
+          <div class="form-field mt-12">
+            <trudi-form-control>
+              <trudi-text-field
+                label="Email (required)"
+                [clearable]="false"
+                maxlength="100"
+                formControlName="email"></trudi-text-field>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field mt-12">
+            <trudi-form-control>
+              <trudi-text-field
+                label="Phone number"
+                [clearable]="false"
+                maxlength="100"
+                (input)="onPhoneNumberChange($event)"
+                formControlName="phoneNumber"></trudi-text-field>
+            </trudi-form-control>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #footer>
+      <div class="d-flex gap-12 add-tenant-contact-footer">
+        <button
+          data-e2e="back-btn"
+          trudi-btn
+          variant="outlined"
+          btnType="neutral"
+          (click)="closePopup()">
+          Back
+        </button>
+        <button
+          data-e2e="button-next"
+          trudi-btn
+          (click)="onSaveTenantContact(isEditTenantContact)">
+          Save
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</resizable-modal-popup>

@@ -1,0 +1,38 @@
+<div class="charges-form">
+  <recurring-charges-rm-table
+    [recurringChargeList]="recurringChargeList"
+    [disabled]="recurringChargeDisabled"
+    [loading]="isLoading"
+    [hiddenBtn]="hiddenBtn"
+    (handleClickAdd)="handleAddCharges($event)"
+    (handleClickDelete)="handleDeleteCharges($event)"
+    [isSyncing]="isSyncing"
+    (handleClickCheckbox)="handleClickCheckBox($event)"></recurring-charges-rm-table>
+  <one-time-charges-rm-table
+    [oneTimeChargeList]="oneTimeChargeList"
+    [disabled]="oneTimeChargeDisabled"
+    [loading]="isLoading"
+    (handleClickAdd)="handleAddCharges($event)"
+    (handleClickDelete)="handleDeleteCharges($event)"></one-time-charges-rm-table>
+</div>
+
+<div *ngIf="chargeTypes">
+  <ng-container
+    *ngIf="chargeTypes === EChargeTypes.RECURRING_CHARGES; else oneTimeCharges">
+    <charges-detail-pop-up
+      [chargeTypeOptions]="chargeTypeOptions"
+      [chargeTypes]="chargeTypes"
+      (handleBackModal)="handleBack()"
+      (handleSave)="handleSave($event)"
+      [form]="currentRecurringForm"></charges-detail-pop-up>
+  </ng-container>
+
+  <ng-template #oneTimeCharges>
+    <charges-detail-pop-up
+      [chargeTypeOptions]="chargeTypeOptions"
+      [chargeTypes]="chargeTypes"
+      (handleBackModal)="handleBack()"
+      (handleSave)="handleSave($event)"
+      [form]="currentOnetimeForm"></charges-detail-pop-up>
+  </ng-template>
+</div>

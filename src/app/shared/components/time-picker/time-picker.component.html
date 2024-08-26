@@ -1,0 +1,75 @@
+<div class="date-time-picker">
+  <div class="date-time-group option-type">
+    <div class="d-flex">
+      <div class="input-wrapper">
+        <div
+          class="btn-group"
+          [dropdownTriggerFor]="!disableTimeChange && dropdown"
+          [disabledTrigger]="disableTimeChange"
+          (visibleChange)="visibleChange($event)"
+          [position]="[position]"
+          [disabledTrigger]="disabledTrigger"
+          #dropdownBtn>
+          <div class="d-flex align-items-center">
+            <trudi-icon
+              *ngIf="isShowIconSchedule"
+              class="time-picker-v2 cursor-pointer"
+              icon="iconTimePickerV2"
+              [ngClass]="{'input-error': getError, 'disabled' : disabled, 'input-error-hour': error}"></trudi-icon>
+            <input
+              class="dropdown-button d-flex justify-content-between border-rad-8"
+              [ngClass]="{'input-error': getError, 'disabled' : disabled, 'input-error-hour': error}"
+              type="text"
+              #input
+              [disabled]="disableTimeChange"
+              [placeholder]="label"
+              [(value)]="_label"
+              (click)="onClick()"
+              [readonly]="readonly || !isOpenDropdown"
+              (input)="this.triggerEventInput.emit($event)"
+              (blur)="onBlur()" />
+          </div>
+          <trudi-icon
+            *ngIf="!disableTimeChange"
+            (click)="onClick()"
+            icon="chevronDown"></trudi-icon>
+        </div>
+        <dropdown-menu #dropdown>
+          <div
+            *ngIf="isOpenDropdown"
+            #dropdownListElement
+            class="dropdown-list time-picker-options"
+            [ngClass]="customClass">
+            <div *ngIf="isShowTimezoneAbbrev">
+              <div class="d-flex tz-hint">
+                <span
+                  *ngIf="'' | formatDateTimeAbbrev | async"
+                  class="label-hint">
+                  Times displayed in {{ '' | formatDateTimeAbbrev: false : true
+                  | async}}
+                </span>
+              </div>
+            </div>
+            <ul style="padding: 0; height: 200px; overflow: auto">
+              <li
+                class="item d-flex justify-content-between time-picker-options-item"
+                *ngFor="let hour of hours"
+                [ngClass]="{'item-disabled': hour.disabled, 'background-active': hour.label === _originalLabel}"
+                (click)="onChangeTime(hour)"
+                [attr.data-time]="hour.label">
+                <span
+                  [ngClass]="{'item-active': hour.label === _originalLabel}">
+                  {{hour.label}}
+                </span>
+                <trudi-icon
+                  class="check-success"
+                  *ngIf="hour.label === _originalLabel"
+                  icon="checkSuccess"></trudi-icon>
+              </li>
+            </ul>
+          </div>
+        </dropdown-menu>
+      </div>
+    </div>
+  </div>
+</div>

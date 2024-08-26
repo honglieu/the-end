@@ -1,0 +1,124 @@
+<div
+  [routerLink]="notification?.options?.type !== 'NO_ASSIGNED_TASK' ? ['/dashboard',  'detail', notification.taskId] :  []"
+  [queryParams]="{conversationId}"
+  (click)="onNavigateToAnotherPlace()"
+  class="notification-item-wrapper cursor-pointer"
+  [ngClass]="{'read': notification.status == NotificationStatusEnum.SEEN}">
+  <div class="d-flex justify-content-between">
+    <div class="content-wrapper d-flex">
+      <div
+        *ngIf="notification.status == NotificationStatusEnum.UN_SEEN"
+        class="unread-dot"></div>
+      <div class="flex-1 d-flex justify-content-between">
+        <p class="content" [innerHTML]="titleNotification"></p>
+        <p class="time">{{notification.createdAt | date : TIME_FORMAT}}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-wrapper" *ngIf="notification?.taskType === taskType.MESSAGE">
+    <div *ngIf="notification?.userMessage" class="d-flex">
+      <div class="title" style="white-space: pre-line" [innerHTML]="taskName">
+        {{taskName}}
+      </div>
+    </div>
+
+    <div
+      *ngIf="notification?.options?.userConversation && userName"
+      class="d-flex mb-6">
+      <img src="assets/icon/user2.svg" alt="user" class="icon" />
+      <p class="user">
+        <span title="userName" class="text-elipsis">{{userName}}</span
+        >&nbsp;{{showMessageUserType && userType ? '('+(userType| titlecase)+')'
+        : ''}}
+      </p>
+    </div>
+    <div
+      *ngIf="notification?.propertyAddress?.length &&
+            notification?.notiType !== NotificationType.NEW_TASK_NO_PORTFOLIO &&
+            notification?.notiType !== NotificationType.NEW_TASK_UNIDENTIFIED &&
+            notification?.notiType !== NotificationType.CALL_TRANSCRIPTION &&
+            userType !== 'Property Manager'"
+      class="d-flex">
+      <img src="assets/icon/map-pin.svg" alt="user" class="icon" />
+      <div class="address">{{notification.propertyAddress}}</div>
+    </div>
+  </div>
+
+  <div
+    class="task-wrapper"
+    *ngIf="notification?.taskType === taskType.TASK && notification?.notiType !== NotificationType.EVENT_CHANGE_DATA">
+    <div *ngIf="notification?.userMessage" class="d-flex">
+      <div class="title" style="white-space: pre-line" [innerHTML]="taskName">
+        {{taskName}}
+      </div>
+    </div>
+    <div
+      *ngIf="notification?.userMessage && (notification?.userMessage?.firstName || notification?.userMessage?.lastName)"
+      class="d-flex mb-6 align-items-center">
+      <img src="assets/icon/user2.svg" alt="user" class="icon" />
+      <p class="user">
+        {{notification?.userMessage?.firstName}}
+        {{notification?.userMessage?.lastName}} {{userType ? '('+(userType |
+        titlecase) +')' :''}}
+      </p>
+    </div>
+
+    <div
+      *ngIf="
+                notification?.propertyAddress?.length &&
+                (
+                    !notification?.options?.isNoPortfolio ||
+                    (
+                        notification?.options?.isNoPortfolio &&
+                        (
+                            notification?.notiType !== NotificationType.CALL_TRANSCRIPTION &&
+                            notification?.notiType !== NotificationType.NEW_TASK_NO_PORTFOLIO &&
+                            notification?.notiType !== NotificationType.NEW_TASK_UNIDENTIFIED &&
+                            (userType === EUserPropertyType.TENANT || userType === EUserPropertyType.LANDLORD)
+                        )
+                    )
+                )
+            "
+      class="d-flex">
+      <img src="assets/icon/map-pin.svg" alt="user" class="icon" />
+      <div class="address">{{notification.propertyAddress}}</div>
+    </div>
+  </div>
+
+  <div
+    class="task-wrapper"
+    *ngIf="notification?.notiType === NotificationType.EVENT_CHANGE_DATA">
+    <div class="d-flex">
+      <div class="title" style="white-space: pre-line" [innerHTML]="taskName">
+        {{taskName}}
+      </div>
+    </div>
+
+    <div *ngIf="notification?.options?.propertyAddress?.length" class="d-flex">
+      <img src="assets/icon/map-pin.svg" alt="user" class="icon" />
+      <div class="address">{{notification?.options?.propertyAddress}}</div>
+    </div>
+  </div>
+
+  <div
+    class="task-wrapper"
+    *ngIf="notification?.notiType === NotificationType.REMINDER">
+    <div class="d-flex">
+      <div class="title" style="white-space: pre-line" [innerHTML]="taskName">
+        {{taskName}}
+      </div>
+    </div>
+    <div
+      *ngIf="notification?.options?.propertyAddress?.length && userType !== 'Property Manager'"
+      class="d-flex">
+      <img src="assets/icon/map-pin.svg" alt="user" class="icon" />
+      <div class="address">{{notification?.options?.propertyAddress}}</div>
+    </div>
+    <div
+      class="button-create__createTask"
+      *ngIf="notification.options?.['type'] === 'NO_ASSIGNED_TASK'">
+      <button type="button" (click)="createTask($event)">Create task</button>
+    </div>
+  </div>
+</div>

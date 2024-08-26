@@ -1,0 +1,63 @@
+<resizable-modal-popup
+  *ngIf="isShowLandlordApplicationShortList"
+  [show]="isShowLandlordApplicationShortList"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [title]="titleModal"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [footerTemplate]="footerModal"
+  (onCancel)="handleClose()"
+  [isCustomMoveable]="true"
+  class="trudi-modal-landlord-application">
+  <div class="popup-body-content">
+    <div *ngFor="let formGroup of controls; index as i; let first = first">
+      <div class="title" [ngClass]="{'mt-24': !first}">
+        {{'Application ' + (i + 1) + (first && isRequiredApplicationField1 ? '
+        (required)' : '')}}
+      </div>
+      <div [formGroup]="formGroup">
+        <trudi-form-control
+          [control]="formGroup.get('name')"
+          [checkSubmit]="!isClickOnSubmitButton">
+          <div class="form-row mt-16">
+            <trudi-text-field
+              [checkSubmit]="!isClickOnSubmitButton"
+              [label]="'Name'"
+              size="extra-large"
+              [formControl]="formGroup.get('name')"
+              [maxCharacter]="50"></trudi-text-field>
+          </div>
+        </trudi-form-control>
+        <div class="form-row mt-16">
+          <trudi-form-control
+            [control]="formGroup.get('summary')"
+            [checkSubmit]="!isClickOnSubmitButton">
+            <trudi-textarea
+              [checkSubmit]="!isClickOnSubmitButton"
+              [label]="'Summary'"
+              [formControl]="formGroup.get('summary')"
+              [maxCharacter]="255"></trudi-textarea>
+          </trudi-form-control>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div class="d-flex gap-12 leasing-landlord-application-shortlist-footer">
+      <button
+        *ngIf="hasBackButton"
+        trudi-btn
+        variant="outlined"
+        btnType="neutral"
+        (click)="handleBack()">
+        Back
+      </button>
+      <button trudi-btn (click)="handleConfirm()">Next</button>
+    </div>
+  </ng-template>
+</resizable-modal-popup>

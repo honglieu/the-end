@@ -1,0 +1,13 @@
+<div class="trudi-bulk-msg-left-body-wrapper d-flex flex-dir-column gap-16">
+  <ng-container *ngTemplateOutlet="confirmRecipient"> </ng-container>
+</div>
+
+<ng-template #confirmRecipient>
+  <confirm-recipient
+    [configs]="configs"
+    [isSubmitted]="isSubmitted"
+    [selectedTaskIds]="selectedTaskIds"
+    [selectedTasks]="selectedTasks"
+    [isRmEnvironment]="isRmEnvironment"
+    (editConfirmRecipient)="handleEdit()"></confirm-recipient>
+</ng-template>

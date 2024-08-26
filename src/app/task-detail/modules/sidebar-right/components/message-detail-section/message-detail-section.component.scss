@@ -1,0 +1,88 @@
+@import 'function';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 340px;
+  transition: 0.2s;
+  background-color: var(--white);
+  .main-section {
+    &-detail {
+      padding: 20px;
+      border-top: 2px solid var(--gray-200);
+
+      &-title {
+        @include fontSetup(var(--gray-500), 14px, 20px, normal, 600);
+      }
+    }
+
+    &-file {
+      height: 100%;
+      border-top: 2px solid var(--gray-200);
+      overflow: hidden;
+
+      &-title {
+        @include fontSetup(var(--gray-500), 14px, 20px, normal, 600);
+        padding: 20px 20px 0 20px;
+      }
+    }
+  }
+
+  .files-section {
+    margin: 0 -10px;
+    padding: 0 10px 12px 10px;
+    height: calc(100% - 4rem);
+
+    &.has-maintenance {
+      height: calc(100% - 12rem);
+    }
+
+    &.maintenance-active {
+      height: calc(100% - 14rem);
+    }
+
+    transition: all 0.5s ease-in-out;
+  }
+}
+
+::ng-deep {
+  .files-list-wrapper-animation {
+    .sleleton-item {
+      height: 0;
+
+      span.ant-skeleton-avatar.ant-skeleton-avatar-circle {
+        width: 20px;
+        height: 20px;
+        margin-top: -6px;
+      }
+    }
+
+    .skeleton-container {
+      height: 25px;
+      margin-left: -30px;
+    }
+
+    .sleleton-title {
+      margin-left: -47px;
+    }
+
+    .skeleton-circle {
+      span.ant-skeleton-avatar.ant-skeleton-avatar-circle {
+        margin-top: 26px;
+      }
+    }
+
+    .skeleton-square {
+      height: 50px;
+
+      .ant-skeleton-content {
+        width: 41px;
+
+        h3.ant-skeleton-title {
+          height: 41px;
+        }
+      }
+    }
+  }
+}

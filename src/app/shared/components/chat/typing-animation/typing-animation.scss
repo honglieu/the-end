@@ -1,0 +1,85 @@
+:host ::ng-deep {
+  .message-avatar {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    position: absolute;
+    left: -4px;
+    top: 65%;
+    transform: translate(0, -50%);
+    border-radius: 100%;
+    color: var(--white);
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 100%;
+    }
+    .trudi-avatar {
+      background: var(--white);
+      padding: 2px;
+    }
+  }
+  .user-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 100%;
+    color: var(--white);
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    label {
+      margin: 0;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+  }
+  .landlord {
+    background-color: var(--brand-500);
+  }
+  .tenant {
+    background-color: var(--tenant-500);
+  }
+  .agent {
+    background-color: var(--info-500);
+  }
+  .wave {
+    width: 72px;
+    height: 32px;
+    background: var(--white);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      margin-left: 6px;
+      background: var(--fg-neutral-weakest);
+      animation: wave 1.3s linear infinite;
+
+      &:nth-child(2) {
+        background: var(--fg-neutral-weaker);
+        animation-delay: -1.1s;
+      }
+
+      &:nth-child(3) {
+        animation-delay: -0.9s;
+      }
+    }
+  }
+
+  @keyframes wave {
+    0%, 60%, 100% {
+      transform: initial;
+    }
+
+    30% {
+      transform: translateY(-6px);
+    }
+  }
+}

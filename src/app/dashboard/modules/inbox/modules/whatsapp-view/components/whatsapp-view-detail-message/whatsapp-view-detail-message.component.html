@@ -1,0 +1,137 @@
+<div
+  class="whatsapp-view-detail-message"
+  [ngClass]="{'has-error': message.isError}"
+  (click)="message.isError && onResendTheMessage($event, message.id)">
+  <ng-container *ngTemplateOutlet="messageTypeTemplate"></ng-container>
+</div>
+
+<ng-template #messageTypeTemplate
+  >@if(message.messageType) { @switch (message.messageType | uppercase) { @case
+  (EMessageType.file) {
+  <div class="message-body">
+    @if(message.messageReply) {
+    <whatsapp-reply-header [message]="message"></whatsapp-reply-header>
+    <message-reply
+      [isSending]="message?.isSending"
+      [message]="message.messageReply"
+      [position]="message.senderType === 'user' ? 'left' : 'right'">
+    </message-reply>
+    }
+
+    <app-message-file
+      [canReply]="isUserVerified"
+      [message]="message"
+      [isSending]="message?.isSending || message?.isError"
+      [messageFile]="message.isShowFile ? message.file : null"
+      [isShowActionButton]="true"
+      [isShowFile]="message.isShowFile"
+      (isVideoLoaded)="scrollToBottom()"
+      [isAppMessage]="true"
+      [isLoadingFile]="!message.file.mediaLink"
+      (fileOnClicked)="manageCarouselState($event)"
+      (showSelectPeople)="openForwardMessageModal($event)"
+      (fileEmit)="handleFileEmit($event)"
+      class="message-file"></app-message-file>
+    <whatsapp-message-footer
+      [message]="message"
+      [isSending]="message.isSending"
+      [isError]="message.isError"
+      [currentConversation]="currentConversation"
+      (reSendEmitter)="onResendTheMessage($event, message.id)"></whatsapp-message-footer>
+  </div>
+  } @case (EMessageType.call) { @if(isHiddenMessageTypeCallFile) {
+  <div class="message-body call" style="width: fit-content">
+    <app-message-call
+      [userId]="currentConversation.userId"
+      [message]="message"
+      [currentConversationId]="currentConversation.id"></app-message-call>
+  </div>
+  } } @case (EMessageType.solved) {
+  <div
+    class="message-body full-width no-padding"
+    [ngClass]="message.classForMarker">
+    <app-message-resolved
+      [message]="message"
+      [conversationType]="currentConversation.conversationType"
+      [attr.data-e2e]="'message-resolved'">
+    </app-message-resolved>
+  </div>
+  } @case (EMessageType.agentJoin) {
+  <div
+    class="message-body full-width no-padding"
+    [ngClass]="message.classForMarker">
+    <app-message-agent-join
+      [message]="message"
+      [title]="message.userTitle"
+      [conversationType]="currentConversation.conversationType">
+    </app-message-agent-join>
+  </div>
+  } @case (EMessageType.reopened) {
+  <div
+    class="message-body no-transform full-width no-padding"
+    [ngClass]="message.classForMarker">
+    <app-message-reopened
+      [message]="message"
+      [conversationType]="currentConversation?.conversationType"
+      [phoneNumber]="currentConversation?.phoneNumber">
+    </app-message-reopened>
+  </div>
+  } @case (EMessageType.changeProperty) {
+  <div
+    class="message-body full-width no-padding"
+    [ngClass]="message.classForMarker">
+    <message-change-property
+      [message]="message"
+      [conversationType]="currentConversation.conversationType"
+      [listProperty]="propertiesService.listPropertyAllStatus | async"></message-change-property>
+  </div>
+  } @case (EMessageType.syncConversation) {
+  <div class="message-body full-width no-padding">
+    <message-synced-conversation
+      [conversationType]="currentConversation.conversationType"
+      [message]="message"></message-synced-conversation>
+  </div>
+  } @case (EMessageType.defaultText) {
+  <div class="message-body">
+    @if(fileMessage) {
+    <whatsapp-message-attachment
+      [message]="message"
+      [isUserVerified]="isUserVerified"
+      [fileMessage]="fileMessage"
+      (emitEventFile)="handleFileEvent($event)"
+      [isSending]="message.isSending"
+      [currentConversation]="currentConversation"></whatsapp-message-attachment>
+    } @else {
+    <whatsapp-message-default
+      [message]="message"
+      [isUserVerified]="isUserVerified"
+      [isSending]="message.isSending"
+      [currentConversation]="currentConversation"></whatsapp-message-default>
+    }
+    <whatsapp-message-footer
+      [message]="message"
+      [isSending]="message.isSending"
+      [isError]="message.isError"
+      [currentConversation]="currentConversation"
+      (reSendEmitter)="onResendTheMessage($event, message.id)"></whatsapp-message-footer>
+  </div>
+  } } }</ng-template
+>
+
+@if(isShowCarousel) {
+<app-modal-popup
+  [transparent]="true"
+  [show]="isShowCarousel"
+  [zIndex]="999999"
+  [appendBody]="true"
+  [position]="popupModalPosition.full_screen">
+  <app-images-carousel
+    [open]="isShowCarousel"
+    [isSyncing]="isSyncing"
+    [imageUrlList]="arrayImageCarousel"
+    [initialIndex]="initialIndex"
+    (showCarousel)="manageCarouselState($event)"
+    (showSelectPeoplePopup)="handleShowTrudiSendMsg($event)"
+    (fileEmit)="handleFileEmit($event)"></app-images-carousel>
+</app-modal-popup>
+}

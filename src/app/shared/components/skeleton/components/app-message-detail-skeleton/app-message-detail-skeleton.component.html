@@ -1,0 +1,85 @@
+<div class="wrapper-relative">
+  <div class="wrapper-loading-message">
+    <div class="app-message-header-skeleton">
+      <div class="header-section gap-12">
+        <div class="info-row info-row-first">
+          <div class="mr-8">
+            <nz-skeleton
+              [nzTitle]="true"
+              [nzParagraph]="false"
+              [style.width.px]="300"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+          <nz-skeleton
+            [nzTitle]="true"
+            [nzParagraph]="false"
+            [style.width.px]="50"
+            [nzActive]="true"></nz-skeleton>
+          <div class="d-flex align-items-center gap-4 ml-auto">
+            <ng-container *ngFor="let _ of [].constructor(2)">
+              <nz-skeleton
+                [nzTitle]="true"
+                [nzParagraph]="false"
+                [style.width.px]="32"
+                [nzActive]="true"></nz-skeleton
+            ></ng-container>
+            <ng-container *ngFor="let _ of [].constructor(2)">
+              <nz-skeleton
+                [nzTitle]="true"
+                [nzParagraph]="false"
+                [style.width.px]=" 16"
+                [nzActive]="true"></nz-skeleton
+            ></ng-container>
+          </div>
+        </div>
+        <div class="info-row info-row-second">
+          <nz-skeleton
+            [nzTitle]="true"
+            [nzParagraph]="false"
+            [style.width.px]="376"
+            [nzActive]="true"></nz-skeleton>
+          <div class="d-flex align-items-center gap-4 ml-auto">
+            <nz-skeleton
+              [nzTitle]="false"
+              [nzParagraph]="false"
+              [nzAvatar]="true"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="message-section message-section-skeleton d-flex flex-dir-column">
+      <div class="mb-12" style="align-self: end">
+        <div class="text-skeleton">
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"></nz-skeleton-element>
+          <div class="avatar-skeleton"></div>
+        </div>
+      </div>
+      <div class="mb-12">
+        <div class="text-skeleton ml-12">
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"></nz-skeleton-element>
+          <div class="avatar-skeleton"></div>
+        </div>
+      </div>
+      <div class="mb-12" style="align-self: end">
+        <div class="text-skeleton">
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"></nz-skeleton-element>
+          <div class="avatar-skeleton"></div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-section">
+      <nz-skeleton-element
+        class="button-skeleton"
+        nzType="button"
+        [nzActive]="true"></nz-skeleton-element>
+    </div>
+  </div>
+</div>

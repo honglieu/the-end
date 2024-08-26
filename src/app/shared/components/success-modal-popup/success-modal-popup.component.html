@@ -1,0 +1,24 @@
+<div
+  class="content-wrapper"
+  appOutsideClickListener
+  (clickOutside)="clickout($event)">
+  <div class="success-content d-flex gap-16">
+    <div class="success-icon size-48">
+      <trudi-icon svgClass="size-48" icon="trudiAvt"></trudi-icon>
+    </div>
+    <div class="success-text d-flex flex-dir-column gap-8">
+      <div class="text-sure">{{title ? title : 'Success'}}</div>
+      <div *ngIf="!!message" class="cannot-text">{{message}}</div>
+      <div *ngIf="!!message2">{{message2}}</div>
+    </div>
+  </div>
+  <div *ngIf="showOk" class="btn-wrapper">
+    <button
+      data-e2e="button-Ok"
+      type="button"
+      class="trudi-btn trudi-btn-large trudi-btn-primary"
+      (click)="$event.stopPropagation(); handleOk()">
+      <span class="btn-text"> OK </span>
+    </button>
+  </div>
+</div>

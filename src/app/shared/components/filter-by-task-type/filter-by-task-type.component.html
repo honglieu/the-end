@@ -1,0 +1,31 @@
+<trudi-select-dropdown-v2
+  [disabled]="disabled"
+  [overlayClassName]="'task_type_filter-event'"
+  (valueChange)="handleValueChange($event)"
+  placeholder="Search"
+  [searchable]="true"
+  [noAnimation]="false"
+  [(ngModel)]="selectedTaskEditorId"
+  [items]="listTaskEditor"
+  bindValue="id"
+  bindLabel="name"
+  [virtualScroll]="true"
+  [clearable]="false"
+  [trudiTrigger]="'hover'"
+  [placement]="popoverPlacement"
+  [prioritizeSelectingItems]="true"
+  [multi]="true">
+  <ng-template trudi-select-dropdown-title-tmp>
+    <div class="task_type--title w-100 justify-content-between">
+      Task type
+      <div *ngIf="selectedTaskEditorId?.length > 0" class="task_type--count">
+        <span>{{selectedTaskEditorId?.length}}</span>
+      </div>
+      <trudi-icon
+        class="icon-left"
+        svgClass="size-20"
+        viewBox="auto"
+        icon="chevronRight"></trudi-icon>
+    </div>
+  </ng-template>
+</trudi-select-dropdown-v2>

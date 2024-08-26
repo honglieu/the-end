@@ -1,0 +1,125 @@
+<resizable-modal-popup
+  *ngIf="visible"
+  [modalId]="modalId"
+  [show]="visible"
+  [showTitle]="true"
+  [title]="title"
+  [footerTemplate]="footerModal"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{backgroundColor: '#FFFFFF', border: 0}"
+  (onCancel)="closeModal.emit()"
+  [isCustomMoveable]="true"
+  class="lease-term-wrapper">
+  <ng-template #footerModal>
+    <div class="d-flex gap-12 lease-term-footer">
+      <button
+        *ngIf="hasBackButton"
+        trudi-btn
+        variant="outlined"
+        btnType="neutral"
+        (click)="handleBack()">
+        Back
+      </button>
+      <button trudi-btn (click)="handleNextModal()">Next</button>
+    </div>
+  </ng-template>
+  <ng-container [ngTemplateOutlet]="body"></ng-container>
+</resizable-modal-popup>
+<ng-template #body
+  ><div class="lease-term-body" [formGroup]="leaseTermsForm">
+    <div class="duration-wrapper">
+      <div class="label">Lease duration</div>
+      <div class="d-flex gap-16">
+        <trudi-number-field
+          size="large"
+          formControlName="leasePeriod"></trudi-number-field>
+        <trudi-single-select
+          class="selectPeriod"
+          bindLabel="label"
+          bindValue="value"
+          [clearable]="false"
+          placeholder="Period type"
+          formControlName="leasePeriodType"
+          [items]="leasePeriodTypeData"></trudi-single-select>
+      </div>
+      <div
+        *ngIf="this.leasePeriodControl.invalid && this.leasePeriodControl.touched || this.leasePeriodTypeControl.invalid &&
+        this.leasePeriodTypeControl.touched"
+        class="error-wrapper d-flex align-items-center">
+        <trudi-icon
+          icon="iconWarningRed"
+          class="icon-warning"
+          [style]="{'width.px': 12, 'height.px': 12}"></trudi-icon>
+        <span class="text-warning">Required fields</span>
+      </div>
+    </div>
+    <div class="amount-wrapper">
+      <div class="label">Rental amount</div>
+      <div class="d-flex gap-16">
+        <trudi-single-select
+          bindLabel="label"
+          bindValue="value"
+          formControlName="rentedAt"
+          [items]="rentedAtData"></trudi-single-select>
+        <trudi-form-control>
+          <trudi-number-field
+            [maskLeadZero]="true"
+            [maskPattern]="maskPattern"
+            thousandSeparatorType=","
+            size="large"
+            formControlName="rentAmount"
+            prefixText="$"></trudi-number-field
+        ></trudi-form-control>
+
+        <trudi-single-select
+          bindLabel="label"
+          bindValue="value"
+          [items]="frequencyData"
+          placeholder="Payment period"
+          formControlName="frequency"></trudi-single-select>
+      </div>
+    </div>
+    <div class="bond-wrapper">
+      <div class="label">Bond</div>
+      <div class="d-flex gap-16">
+        <trudi-single-select
+          bindLabel="label"
+          bindValue="value"
+          formControlName="bondAt"
+          [items]="bondAtData"></trudi-single-select>
+        <trudi-form-control>
+          <trudi-number-field
+            [maskLeadZero]="true"
+            [maskPattern]="maskPattern"
+            thousandSeparatorType=","
+            size="large"
+            formControlName="bondAmount"
+            prefixText="$"></trudi-number-field>
+        </trudi-form-control>
+      </div>
+    </div>
+    <div class="increase-wrapper">
+      <div class="label">Bond increase amount to be paid</div>
+      <div class="d-flex gap-16">
+        <trudi-form-control>
+          <trudi-number-field
+            [maskLeadZero]="true"
+            [maskPattern]="maskPattern"
+            thousandSeparatorType=","
+            size="large"
+            prefixText="$"
+            formControlName="bondIncreaseAmount"></trudi-number-field>
+        </trudi-form-control>
+        <trudi-form-control>
+          <trudi-checkbox
+            label="Not applicable"
+            formControlName="isNotApplicable"></trudi-checkbox>
+        </trudi-form-control>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,65 @@
+<trudi-modal
+  [autoFocus]="null"
+  [modelWidth]="660"
+  [closable]="true"
+  [type]="'default'"
+  [allowCheckbox]="false"
+  [okText]="'Add'"
+  [title]="'Add new supplier'"
+  [hiddenCancelBtn]="true"
+  [subTitle]="''"
+  [(visible)]="isShowPopup"
+  (onOk)="handleAddSupplier()"
+  (onCancel)="handleClose.emit($event)">
+  <div
+    [formGroup]="addNewSupplierForm"
+    class="add-new-supplier-wrapper grid-container">
+    <trudi-form-control
+      [errors]="[{errorName: 'existCompanyName', errorMessage: 'Company name already exists'}]">
+      <trudi-text-field
+        maxCharacter="100"
+        [showCounting]="false"
+        formControlName="companyName"
+        label="Company name"></trudi-text-field>
+    </trudi-form-control>
+
+    <trudi-form-control>
+      <trudi-text-field
+        maxCharacter="100"
+        [showCounting]="false"
+        formControlName="contactName"
+        label="Contact name (optional)"></trudi-text-field>
+    </trudi-form-control>
+
+    <trudi-form-control
+      [errors]="[{errorName: 'invalidPhoneNumber', errorMessage: 'Invalid phone number'}]"
+      class="phone-number-wrapper">
+      <trudi-number-field
+        [disableDotKey]="isRmEnvironment"
+        [prefixText]="'(' + areaCode + ')' || ''"
+        [maskPattern]="phoneNumberPattern"
+        (onChangeData)="triggerCompanyPhoneNumber($event)"
+        maxCharacter="11"
+        formControlName="companyPhoneNumber"
+        label="Company phone number"></trudi-number-field>
+    </trudi-form-control>
+
+    <trudi-form-control
+      [errors]="[{errorName: 'invalidEmail', errorMessage: 'Invalid email format'}]">
+      <trudi-text-field
+        maxCharacter="100"
+        [showCounting]="false"
+        formControlName="email"
+        label="Email"></trudi-text-field>
+    </trudi-form-control>
+
+    <trudi-form-control
+      [errors]="[{errorName: 'invalidUrl', errorMessage: 'Invalid URL'}]">
+      <trudi-text-field
+        maxCharacter="100"
+        [showCounting]="false"
+        formControlName="website"
+        label="Website (optional)"></trudi-text-field>
+    </trudi-form-control>
+  </div>
+</trudi-modal>

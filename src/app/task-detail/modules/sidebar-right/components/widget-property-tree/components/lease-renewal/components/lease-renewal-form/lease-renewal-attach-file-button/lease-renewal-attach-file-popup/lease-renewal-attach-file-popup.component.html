@@ -1,0 +1,164 @@
+<trudi-modal
+  *ngIf="popupState.selectFiles"
+  [(visible)]="popupState.selectFiles"
+  [modelWidth]="624"
+  [subTitle]="''"
+  [autoFocus]="null"
+  (onCancel)="handleOnCLose()"
+  className="trudi-modal-check-box">
+  <ng-template #headerModal>
+    <div class="lease-header-wrap d-flex align-items-center">
+      <trudi-icon [icon]="'propertyTree'" class="flex-1 size-icon"></trudi-icon>
+      <div class="title w-100 lease-header-wrap-title">
+        <span>Attach file</span>
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="send-quote-landlord">
+    <div class="body">
+      <ng-container *ngIf="checkBoxList?.length !== 0; else notFound">
+        <div [formGroup]="checkBoxForm" class="popup__body__list">
+          <div
+            class="popup__body__item d-flex align-items-center"
+            *ngFor="let checkBoxItem of checkBoxList; index as i">
+            <div class="popup__body__item__text text-ellipsis">
+              <div class="d-flex align-items-center">
+                <ng-container [ngSwitch]="optionType">
+                  <ng-template [ngSwitchCase]="EOptionType.File">
+                    <div
+                      *ngIf="checkBoxItem?.icon"
+                      class="link-img"
+                      [class.dim-brightness]="(checkBoxItem?.localThumb || checkBoxItem?.thumbnail) && (checkBoxItem?.isSupportedVideo || checkBoxItem?.thumbMediaLink)">
+                      <img
+                        class="size-36"
+                        *ngIf="checkBoxItem?.localThumb || checkBoxItem?.thumbnail"
+                        [src]="((checkBoxItem.localThumb || checkBoxItem?.thumbnail || checkBoxItem.mediaLink) | safe: 'resourceUrl')" />
+                      <img
+                        class="size-36"
+                        *ngIf="!(checkBoxItem?.localThumb || checkBoxItem?.thumbnail || checkBoxItem.mediaLink)"
+                        [src]="((checkBoxItem?.name | getFileIconType))" />
+                      <div
+                        *ngIf="(checkBoxItem?.localThumb || checkBoxItem?.thumbnail) && (checkBoxItem?.isSupportedVideo || checkBoxItem?.thumbMediaLink)"
+                        class="play-icon">
+                        <trudi-icon icon="playSolid"></trudi-icon>
+                      </div>
+                    </div>
+                    <div class="text-ellipsis d-flex flex-dir-column gap-4">
+                      <span class="file-name d-block text-ellipsis">
+                        {{ checkBoxItem?.name || checkBoxItem?.pdfName ||
+                        checkBoxItem?.fileName }}
+                      </span>
+                      <span class="sub-title d-block">
+                        <span
+                          *ngIf="checkBoxItem?.fullName || localFileInfo.pmName">
+                          {{ checkBoxItem?.fullName ||
+                          localFileInfo.pmName}}</span
+                        >
+                        <span
+                          *ngIf="checkBoxItem.created || localFileInfo.currentDate">
+                          &#x2022; {{ checkBoxItem.created ||
+                          localFileInfo.currentDate | formatDate | push }}
+                        </span>
+                      </span>
+                    </div>
+                  </ng-template>
+                  <ng-template [ngSwitchCase]="EOptionType.Option">
+                    <div class="supplier-name">{{checkBoxItem?.lastName}}</div>
+                  </ng-template>
+                </ng-container>
+              </div>
+            </div>
+            <div
+              class="popup__body__item__checkbox ml-auto"
+              [ngClass]="{'small-icon': checkBoxImgType === ECheckBoxType.Radio}">
+              <label class="popup__body__item__label cursor-pointer">
+                <ng-container *ngIf="mode === ECheckboxMode.Single; else multi">
+                  <input
+                    type="radio"
+                    id="radio-{{i}}"
+                    class="popup__body__item__input d-none"
+                    formControlName="singleValue"
+                    (change)="onChangeSingleCheckBox($event, checkBoxItem)"
+                    [value]="i" />
+                  <img
+                    class="size-20"
+                    [src]="checkBoxItem?.checked ? checkBoxImg[checkBoxImgType].checked : checkBoxImg[checkBoxImgType].uncheck" />
+                </ng-container>
+                <ng-template #multi>
+                  <input
+                    type="checkbox"
+                    class="popup__body__item__input d-none"
+                    [formControlName]="i"
+                    (change)="onChangeCheckBox($event, checkBoxItem)" />
+                  <img
+                    class="size-20"
+                    [src]="checkBoxItem?.checked ? checkBoxImg[checkBoxImgType].checked : checkBoxImg[checkBoxImgType].uncheck" />
+                </ng-template>
+              </label>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #notFound>
+        <div data-e2e="no-attach-text" class="header-text">
+          {{ text.notFound }}
+        </div>
+      </ng-template>
+
+      <div
+        class="addition"
+        *ngIf="additionalButton"
+        [ngClass]="{'mt-16': checkBoxList?.length === 1}">
+        <ng-container [ngSwitch]="additionalButton">
+          <ng-template [ngSwitchCase]="(EOptionalButton.UploadFile)">
+            <div class="btn-wrapper" style="padding: 0">
+              <button
+                data-e2e="add-file-btn"
+                type="button"
+                class="add-file-btn-upload">
+                <span class="btn-text">{{ text.upload }}</span>
+                <input
+                  id="upload-btn"
+                  [multiple]="isMultiple"
+                  [accept]="acceptTypeFile"
+                  class="input-file"
+                  onclick="this.value=''"
+                  type="file"
+                  (change)="handleUploadFileLocal($event)" />
+                <label
+                  for="upload-btn"
+                  class="w-100 h-100 cursor-pointer input-file-lable"></label>
+              </button>
+            </div>
+            <div
+              *ngIf="isOverFileSize || isUnSupportFile"
+              class="over-size-err d-flex gap-4">
+              <img src="/assets/icon/icon_warning.svg" class="icon-warning" />
+              <span
+                >{{ isOverFileSize ? text.overSize : text.unSupported }}</span
+              >
+            </div>
+            <div class="over-size-err d-flex gap-4" *ngIf="isShowSelectAtLeast">
+              <img src="/assets/icon/icon_warning.svg" class="icon-warning" />
+              Select at least an option to continue
+            </div>
+          </ng-template>
+        </ng-container>
+      </div>
+    </div>
+    <ng-template #footerModal>
+      <div class="gap-16 d-flex">
+        <button
+          [disabled]="isDisabledNextBtn"
+          type="button"
+          data-e2e="next-btn"
+          class="trudi-btn trudi-btn-large trudi-btn-primary d-flex align-items-center"
+          (click)="handleOnNext()">
+          {{ text.next }}
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</trudi-modal>

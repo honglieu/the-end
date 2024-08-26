@@ -1,0 +1,145 @@
+@import 'function';
+
+.user-email-container {
+  background-color: var(--gray-50);
+
+  &__internal-contact,
+  &__external-contact {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__no-contact-matching {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #333741),
+      14px,
+      20px,
+      normal,
+      400
+    );
+    padding: 9px 12px 0 12px;
+  }
+
+  &__item--not-assignee {
+    padding: 0 6px !important;
+    background-color: var(--white);
+  }
+
+  &__item--assignee {
+    padding: 0px;
+  }
+
+  &__assignee-box {
+    background-color: var(--success-500);
+    padding: 0 4px 4px;
+  }
+
+  &__assignee-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 0;
+
+    @include fontSetup(var(--white), 12px, 16px, normal, 500);
+  }
+
+  &__box {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background-color: var(--white);
+    padding: 12px;
+
+    user-header-toolbar,
+    card-user-info,
+    lease-user-info,
+    > div {
+      width: 100%;
+    }
+
+    &--action {
+      border-top: 1px solid var(--gray-100);
+      padding: 8px 0 0 0;
+
+      span {
+        @include fontSetup(var(--brand-500), 12px, 16px, normal, 500);
+
+        &:hover {
+          text-decoration: underline;
+          color: var(--brand-400);
+        }
+
+        &:active {
+          text-decoration: underline;
+          color: var(--brand-600);
+        }
+      }
+
+      .disabled {
+        cursor: not-allowed;
+        text-decoration: none !important;
+        color: var(--gray-300) !important;
+      }
+
+      .action-button {
+        padding: 6px;
+        border-radius: 50%;
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--gray-100);
+        }
+
+        &:active {
+          background-color: var(--gray-200);
+        }
+
+        &.disabled {
+          cursor: default;
+          &:hover,
+          &:active {
+            background-color: unset;
+          }
+        }
+      }
+    }
+  }
+
+  &__title-other {
+    padding: 24px 12px 4px 12px;
+    @include fontSetup(
+      var(--fg-neutral-stronger, #26272b),
+      14px,
+      20px,
+      normal,
+      600
+    );
+    &.no-property {
+      padding: 4px 12px 4px 12px;
+    }
+  }
+
+  .ml-auto {
+    margin-left: auto;
+  }
+}
+
+::ng-deep {
+  .ant-tooltip.tooltip-action-button {
+    &.ant-tooltip-placement-topRight {
+      padding-bottom: 8px;
+    }
+    .ant-tooltip-arrow {
+      right: 4px;
+    }
+  }
+}
+
+.export-button {
+  border: none;
+  outline: none;
+  background: none;
+}

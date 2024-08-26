@@ -1,0 +1,18 @@
+<div class="move-to-task-container d-flex gap-12 w-100">
+  <dropdown-group
+    [items]="taskList"
+    [show]="true"
+    [isMoveTaskConfirmed]="true"
+    [isShowAddress]="true"
+    [isMissingRequiredField]="isMissingRequiredField"
+    (onChange)="selectTask($event)"
+    (onNewPage)="getNextPage()"
+    (onChangeSearchTask)="handleChangeSearchTask($event)"></dropdown-group>
+
+  <button
+    class="trudi-btn trudi-btn-large trudi-btn-detail w-100"
+    [disabled]="isDisabledButton || isConsole || isDisconnected"
+    (click)="moveMessage()">
+    Move
+  </button>
+</div>

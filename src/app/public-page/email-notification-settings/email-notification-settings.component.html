@@ -1,0 +1,172 @@
+<div class="email-notification-settings">
+  <div class="notification-settings">
+    <div class="wrapper-email-left">
+      <ng-container *ngIf="loadingService.isLoading$ | async; else logoTrudi">
+        <nz-skeleton-element
+          nzType="avatar"
+          [nzActive]="true"
+          [nzSize]="64"
+          [nzShape]="'circle'">
+        </nz-skeleton-element>
+      </ng-container>
+      <ng-template #logoTrudi>
+        <img
+          src="/assets/icon/icon_trudi.svg"
+          alt="logo-trudi"
+          class="logo-trudi" />
+      </ng-template>
+
+      <ng-container
+        *ngIf="loadingService.isLoading$ | async; else groupElements">
+        <div class="content-text-email-notification-settings">
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"
+            class="skeleton-title-email"></nz-skeleton>
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"
+            class="skeleton-description-email"></nz-skeleton>
+        </div>
+        <div [formGroup]="emailNotificationSettingForm">
+          <div class="block-checkbox-button">
+            <div class="group-block-checkbox">
+              <div *ngFor="let _ of [].constructor(2)">
+                <div class="group-checkbox">
+                  <span class="text-header-group-checkbox">
+                    <nz-skeleton
+                      [nzParagraph]="paragraph"
+                      [nzActive]="true"
+                      class="skeleton-title-group-item"></nz-skeleton>
+                  </span>
+                  <div *ngFor="let _ of [].constructor(4); let i = index">
+                    <div class="checkbox-item">
+                      <nz-skeleton
+                        [nzParagraph]="paragraph"
+                        [nzActive]="true"
+                        class="skeleton-icon-checkbox"></nz-skeleton>
+                      <div class="item-text-email-notification-settings">
+                        <span class="item-header-email-notification-settings">
+                          <nz-skeleton
+                            [nzParagraph]="paragraph"
+                            [nzActive]="true"
+                            class="skeleton-description-email"></nz-skeleton>
+                        </span>
+                        <span
+                          class="item-sub-header-email-notification-settings">
+                          <nz-skeleton
+                            [nzParagraph]="paragraph"
+                            [nzActive]="true"
+                            class="skeleton-item-email"></nz-skeleton>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="group-only-checkbox"
+                *ngIf="loadingService.isLoading$ | async; else checkboxOnly">
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"
+                  class="skeleton-icon-checkbox"></nz-skeleton>
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"
+                  class="skeleton-title-email"></nz-skeleton>
+              </div>
+            </div>
+            <div class="button-save-notification-email">
+              <nz-skeleton-element
+                nzType="button"
+                [nzActive]="true"
+                class="button-skeleton">
+              </nz-skeleton-element>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <ng-template #groupElements>
+        <div class="content-text-email-notification-settings">
+          <span class="text-header"> Email Notification Settings </span>
+          <span class="text-sub-header">
+            Let's take a moment to update your email communication preferences.
+          </span>
+        </div>
+        <div [formGroup]="emailNotificationSettingForm">
+          <div class="block-checkbox-button">
+            <div class="group-block-checkbox">
+              <div
+                *ngFor="
+                  let emailNotificationSetting of listEmailNotificationSettings
+                ">
+                <div class="group-checkbox">
+                  <span class="text-header-group-checkbox">
+                    {{ emailNotificationSetting.groupName }}
+                  </span>
+                  <div
+                    *ngFor="let notification of emailNotificationSetting.values">
+                    <div class="checkbox-item">
+                      <trudi-checkbox
+                        [formControlName]="notification.type"
+                        (change)="onChangeNotificationEmail($event)"></trudi-checkbox>
+                      <div class="item-text-email-notification-settings">
+                        <span class="item-header-email-notification-settings">
+                          {{ notification.name }}
+                        </span>
+                        <span
+                          class="item-sub-header-email-notification-settings">
+                          {{ notification.description }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="group-only-checkbox" #checkboxOnly>
+                <trudi-checkbox
+                  formControlName="unsubscribeAll"
+                  (change)="onCheckboxUnsubscribeAll($event)"></trudi-checkbox>
+                <span class="item-text-first-checkbox"
+                  >Unsubscribe from all email notifications.</span
+                >
+              </div>
+            </div>
+            <div class="button-save-notification-email">
+              <button
+                type="button"
+                class="button-inner"
+                (click)="savePreferences()">
+                <span class="text">Save my preferences</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+
+    <ng-container
+      *ngIf="loadingService.isLoading$ | async; else imageEmailSetting">
+      <div class="image-email-settings">
+        <div class="img-notification-email-setting">
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"
+            class="skeleton-image">
+          </nz-skeleton-element>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #imageEmailSetting>
+      <div class="image-email-settings">
+        <div class="img-notification-email-setting">
+          <img
+            src="/assets/images/email-notifications-settings.svg"
+            alt="email-notification-settings" />
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,234 @@
+@import 'function';
+
+.modal-container {
+  position: fixed;
+  width: 0px;
+  height: 0px;
+  left: 0;
+  top: 0;
+  animation: open-modal 0.4s linear;
+  .modal-popup-bk {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: var(--gray-950);
+    opacity: 0.6;
+  }
+  .modal-window {
+    width: auto;
+    height: auto;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+
+    &.modal-fullscreen {
+      margin: 0;
+      height: 100%;
+    }
+    resize: both;
+    .modal-popup-header {
+      background-color: var(--gray-200);
+      border-radius: 8px 8px 0 0;
+      width: 100%;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      .close-button {
+        background-color: white;
+        padding: 5px;
+        margin: 8px;
+        border: 0;
+      }
+    }
+    .modal-popup-content {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      height: 100%;
+      width: 100%;
+      overflow-y: auto;
+      border-top: 1px solid var(--gray-200);
+    }
+  }
+}
+.modal-position-full-screen {
+  .modal-window {
+    // position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+}
+.modal-position-center {
+  .modal-window {
+    cursor: default;
+    // margin: 8vh auto 0;
+    width: 624px;
+    border-radius: 8px;
+    // position: relative;
+    height: fit-content;
+    // width: 35%;
+  }
+}
+.modal-position-right {
+  .modal-window {
+    right: 0;
+    top: 0;
+    margin: 0;
+    height: 100%;
+    min-width: 375px;
+    .modal-popup-header {
+      width: 100%;
+      height: 34px;
+    }
+  }
+}
+
+.box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #eee;
+  border: 1px solid var(--gray-100);
+  box-shadow: 0px 14px 36px 0px #00000021, 0px 2px 12px 0px #00000014;
+}
+
+.modal-popup-footer {
+  width: 100%;
+}
+
+@keyframes open-modal {
+  from {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-window {
+  // position: relative;
+}
+
+.modal-window.nz-resizable-resizing::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 999999;
+}
+
+:host {
+  .cdk-drag-handle {
+    cursor: move;
+  }
+}
+
+.shake-animation {
+  animation: shake 0.2s ease-in-out;
+}
+
+@keyframes shake {
+  0% {
+    margin-left: 0rem;
+  }
+  25% {
+    margin-left: 0.5rem;
+  }
+  75% {
+    margin-left: -0.5rem;
+  }
+  100% {
+    margin-left: 0rem;
+  }
+}
+.resizable-modal-header {
+  width: 100%;
+  display: flex;
+  column-gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+
+  trudi-icon {
+    .close-icon,
+    .resize-icon {
+      padding: 8px;
+    }
+  }
+
+  button {
+    height: 40px;
+    width: 40px;
+    background: transparent;
+    border: unset;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &:hover {
+      border: 1px solid var(--gray-200) !important;
+      background: var(--gray-100, #e7eaed) !important;
+    }
+    &:active {
+      border: 1px solid var(--gray-200);
+      background: var(--gray-200) !important;
+    }
+  }
+
+  &__title {
+    flex: 1;
+
+    &--default {
+      display: flex;
+      column-gap: 16px;
+      align-items: center;
+    }
+  }
+
+  .wrapper-title {
+    .title {
+      cursor: move !important;
+      @include fontSetup(var(--gray-700), 18px, 2.4rem, normal, 600);
+
+      .trudi-icon {
+        margin-top: 6px;
+        color: var(--gray-500);
+      }
+    }
+
+    .sub-title {
+      @include fontSetup(var(--gray-500), 1.4rem, 2rem, normal, 500);
+    }
+  }
+}
+
+.modal-popup-footer-custom {
+  padding: 20px 24px;
+  display: flex;
+  gap: 12px;
+  text-align: right;
+  background: transparent;
+  border-top: 1px solid var(--gray-100);
+  border-radius: 0 0 8px 8px;
+}
+
+.resizable-modal-footer {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 16px;
+
+  &__button--default {
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
+  }
+}

@@ -1,0 +1,64 @@
+<resizable-modal-popup
+  *ngIf="!isOpenAddContactPopup && !isOpenConfirmTenantContactPopup"
+  [show]="!isOpenAddContactPopup && !isOpenConfirmTenantContactPopup"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [title]="'New Tenancy'"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [iconName]="'ptLogo'"
+  [styleIcon]="null"
+  [classIconTitle]="null"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [footerTemplate]="footerModal"
+  (onCancel)="handleCloseModal()"
+  [isCustomMoveable]="true"
+  class="leasing-popup">
+  <div class="leasing-container">
+    <div class="leasing-wrapper">
+      <tenancy-detail
+        #tenancyDetail
+        [syncStatus]="syncStatus"
+        [disable]="syncEntryInspection"></tenancy-detail>
+      <hr class="divider-light" />
+      <lease-details
+        #leaseDetails
+        [disable]="syncEntryInspection"></lease-details>
+      <rent-schedule
+        #rentSchedule
+        [disable]="syncEntryInspection"></rent-schedule>
+      <bond #bond [disable]="syncEntryInspection"></bond>
+      <preferred-contact-method [disable]="syncEntryInspection" />
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div
+      class="d-flex align-items-center justify-content-between w-100 footer-new-tenancy-popup">
+      <pt-widget-sync-status
+        [syncStatus]="syncStatus"
+        [lastTimeSynced]="lastTimeSync"></pt-widget-sync-status>
+      <button
+        class="trudi-btn trudi-btn-semi-large trudi-btn-primary"
+        [disabled]="isConsole || (syncStatus === TYPE_SYNC_STATUS.INPROGRESS) || (syncStatus === TYPE_SYNC_STATUS.CANCELLED) || (syncStatus === TYPE_SYNC_STATUS.COMPLETED) || syncEntryInspection || isArchiveMailbox"
+        (click)="syncLeaseStartToPT()"
+        [appE2E]="'pt-widget-new-tenancy'">
+        Sync to Property Tree
+      </button>
+    </div>
+  </ng-template>
+</resizable-modal-popup>
+
+<add-tenant-contact-pop-up
+  *ngIf="isOpenAddContactPopup"
+  [isOpenAddContactPopup]="isOpenAddContactPopup"
+  [isEditTenantContact]="leasingWidgetService.isEditTenantContact$ | push"
+  [tenantContactIndex]="leasingWidgetService.tenantContactIndex$ | push"
+  (onClose)="closeAddTenantContactPopup()"></add-tenant-contact-pop-up>
+
+<confirm-tenant-contact-pop-up
+  *ngIf="leasingWidgetService.isShowConfirmTenantContactPopup$ | push"
+  (onClose)="onCloseConfirmTenantContact()"
+  (confirm)="onConfirmTenantContact($event)"></confirm-tenant-contact-pop-up>

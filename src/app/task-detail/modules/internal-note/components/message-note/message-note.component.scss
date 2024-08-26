@@ -1,0 +1,78 @@
+@import 'function';
+:host:has(div.message-note-editing) {
+  min-width: calc(60% - 36px);
+}
+.message-note-wrapper {
+  .message-note {
+    border-radius: 12px;
+    border: 1px solid var(--tenant-500, #ffbf41);
+    background: var(--bg-tenant-tonal-normal, #fff9eb);
+    .message-header {
+      padding: 8px;
+      align-items: center;
+      gap: 8px;
+      &_title {
+        @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+      }
+    }
+    .divider {
+      height: 1px;
+      background-color: var(--bg-overlay-light);
+      margin: 0 8px;
+    }
+    .message-content {
+      padding: 8px 12px 12px 12px;
+      @include fontSetup(var(--gray-700), 14px, 20px, normal, 400);
+      .mention {
+        @include fontSetup(var(--gray-700), 14px, 20px, normal, 600);
+      }
+      .time-edit {
+        @include fontSetup(var(--gray-400), 12px, 16px, normal, 400);
+      }
+      .btn-group {
+        padding-top: 10px;
+        gap: 8px;
+        button {
+          min-width: 64px;
+        }
+      }
+    }
+  }
+  .time-stamp {
+    @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 400);
+    &_left {
+      margin-left: 8px;
+    }
+  }
+}
+
+.message-note-admin {
+  .message-note {
+    border: 1px solid var(--border-neutral-dark, #d8dcdf);
+    background: var(--bg-base, #fff);
+    .divider {
+      background-color: var(--border-neutral-dark);
+    }
+  }
+  .message-note-wrapper-edit {
+    margin-right: 10px;
+  }
+}
+::ng-deep .text .image-detail {
+  cursor: pointer !important;
+}
+
+:host ::ng-deep .message-note-admin .chat-note-container .note-container {
+  &.focus {
+    @include box-shadow-input-select(var(--shadow-brand));
+  }
+  &.edit-note {
+    margin: 4px;
+    min-height: 84px !important;
+    .editor-container .editor .tox-tinymce {
+      min-height: 84px !important;
+      border: 0;
+      border-radius: 8px !important;
+    }
+  }
+}

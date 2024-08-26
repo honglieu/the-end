@@ -1,0 +1,250 @@
+@import 'function';
+
+:host {
+  .trudi-send-msg-header {
+    display: flex;
+    align-items: center;
+    padding: 4px 6px;
+
+    &-body {
+      flex: 1;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      overflow: hidden;
+
+      .max-width-100 {
+        max-width: 100%;
+        overflow: hidden;
+
+        ::ng-deep {
+          trudi-send-msg-property {
+            width: 100%;
+
+            .trudi-ui-btn-outlined-neutral {
+              background-color: var(--gray-200);
+            }
+          }
+        }
+      }
+
+      .lable-dropdown,
+      .lable-dropdown-showpopover {
+        cursor: pointer;
+        color: var(--fg-neutral-normal, #646464);
+        font-family: Work Sans;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 20px;
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+      }
+
+      .lable-dropdown-text {
+        max-width: calc(50vw - 170px);
+        width: fit-content;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .lable-dropdown-showpopover {
+        position: absolute;
+        top: 0;
+      }
+
+      .icon-dropdown {
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+        min-height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &.selected {
+          background-color: var(--gray-200);
+        }
+
+        &:hover {
+          background-color: var(--gray-200);
+        }
+      }
+
+      &-title {
+        @include fontSetup(
+          var(--fg-neutral-strongest, #202020),
+          14px,
+          20px,
+          normal,
+          500
+        );
+      }
+    }
+
+    .property-wrapper {
+      ::ng-deep {
+        .ng-dropdown-panel {
+          max-width: calc(50vw - 170px);
+        }
+      }
+    }
+
+    ::ng-deep .popover-content:has(.trudi-send-msg) {
+      padding: 12px 12px 0px 12px;
+    }
+
+    ::ng-deep .popover-container {
+      width: 450px;
+      height: 377px;
+    }
+
+    ::ng-deep .ant-popover-inner-content {
+      width: 450px;
+      height: 377px;
+    }
+
+    ::ng-deep .reminder-sendbutton {
+      .reminder {
+        &-text {
+          @include fontSetup(var(--gray-500), 12px, 20px, normal, 500);
+        }
+      }
+
+      .send-btn {
+        background-color: var(--bg-brand-solid-normal, #28ad99);
+
+        &-disable {
+          pointer-events: none;
+          cursor: default;
+          background-color: var(
+            --bg-neutral-tonal-strongest,
+            #ececed
+          ) !important;
+        }
+
+        button {
+          padding: 7px 8px;
+          min-width: fit-content;
+          height: fit-content;
+          border-radius: 6px;
+
+          &:focus-visible {
+            box-shadow: 0px 0px 0px 2px var(--brand-200);
+          }
+
+          &:hover,
+          &.selected {
+            background-color: var(--bg-brand-solid-stronger, #209386);
+          }
+
+          &:active {
+            background-color: var(--bg-brand-solid-strongest, #107569);
+          }
+
+          &:last-child {
+            padding-left: 0;
+
+            &::before {
+              content: '';
+              height: 12px;
+              width: 1px;
+              background-color: var(--white);
+              left: 0;
+              bottom: 0;
+            }
+          }
+        }
+
+        .send-text {
+          margin-left: 4px;
+          @include fontSetup(var(--white), 12px, 18px, normal, 600);
+        }
+
+        .divider {
+          height: 12px;
+          margin: 0 8px;
+          border-color: var(--white);
+        }
+
+        &-container {
+          .dropdown-list {
+            right: 0;
+          }
+        }
+      }
+      .back-btn {
+        min-width: unset;
+      }
+
+      .divider {
+        height: 16px;
+        margin: 0 16px;
+        border-right: 1px solid var(--gray-300);
+      }
+
+      .dropdown-list-bottom {
+        top: calc(100% + 8px);
+      }
+
+      .dropdown-list {
+        min-width: 180px;
+        z-index: 10;
+        background: var(--white);
+        top: calc(100% + 8px);
+        filter: drop-shadow(8px 0px 21px rgba(0, 0, 0, 0.02))
+          drop-shadow(0px -2px 16px rgba(0, 0, 0, 0.08))
+          drop-shadow(0px 26px 24px rgba(0, 0, 0, 0.05));
+
+        &.small-dropdown {
+          right: -80%;
+        }
+
+        .dropdown-list {
+          top: 0;
+          left: 85%;
+        }
+
+        .list-item {
+          cursor: pointer;
+          width: 218px;
+          padding: 12px;
+          border-bottom: 1px solid var(--gray-200);
+          background: inherit;
+
+          &:focus-visible {
+            box-shadow: inset var(--shadow-brand) !important;
+          }
+
+          @include fontSetup(
+            var(--fg-neutral-stronger),
+            14px,
+            20px,
+            normal,
+            500
+          );
+
+          &.disabled {
+            color: var(--gray-300);
+            pointer-events: none;
+          }
+
+          &:hover {
+            color: var(--fg-neutral-stronger);
+          }
+
+          &:first-child {
+            border-radius: 8px 8px 0 0;
+          }
+
+          &:last-child {
+            border: 0;
+            border-radius: 0 0 8px 8px;
+          }
+        }
+      }
+    }
+  }
+}

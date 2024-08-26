@@ -1,0 +1,25 @@
+<div
+  class="d-flex align-items-center gap-4 badge-attachment"
+  PreventButton
+  [attr.data-button-key]="EButtonTask.VIEW_FILE"
+  [attr.data-button-type]="EButtonType.TASK"
+  (leftClick)="$event.stopPropagation(); loadFile(file, file.id)">
+  <ng-container [ngSwitch]="file.fileType">
+    <img
+      *ngSwitchCase="'photo'"
+      src="{{
+              file?.mediaLink ? file?.mediaLink : ('assets/images/icons/' + file.fileType)
+            }}" />
+    <img
+      *ngSwitchCase="'video'"
+      [src]="file?.thumbMediaLink || '/assets/images/icons/video.svg'" />
+    <img *ngSwitchCase="'file'" src="assets/images/icons/{{ file.fileIcon }}" />
+    <img
+      *ngSwitchCase="'audio'"
+      src="assets/images/icons/{{ file.fileIcon }}" />
+  </ng-container>
+  <div class="name-attachment d-flex align-items-center">
+    <span class="text-before">{{ getBeforeDot(file?.name) }}</span>.
+    <span class="text-after">{{ getAfterDot(file?.name) }}</span>
+  </div>
+</div>

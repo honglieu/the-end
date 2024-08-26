@@ -1,0 +1,52 @@
+<div [formGroup]="ptStepForm" class="pt-form-wrapper" #container>
+  <upgrade-message
+    *ngIf="isShowUpgradeMessage"
+    [action]="EActionShowMessageTooltip.EDIT_WORKFLOWS"
+    [isTooltip]="false"></upgrade-message>
+
+  <div>
+    <span class="field-label"> Action </span>
+    <trudi-radio-button
+      class="pt-step-action"
+      formControlName="actionType"
+      [options]="actions"
+      [disabled]="disabled"
+      classType="ROW"></trudi-radio-button>
+  </div>
+  <div>
+    <div
+      class="d-flex align-items-center justify-content-between mb-6"
+      [class.cursor-not-allowed]="disabled">
+      <span class="field-label"> Component type </span>
+      <button
+        trudi-btn
+        variant="link"
+        size="medium"
+        (click)="openHelpDocument()">
+        Help
+      </button>
+    </div>
+    <trudi-form-control formControlName="componentType">
+      <trudi-single-select
+        [items]="items"
+        groupBy="type"
+        bindValue="id"
+        bindLabel="label"
+        [disabled]="disabled"
+        formControlName="componentType"
+        placeholder="Select component type">
+      </trudi-single-select>
+    </trudi-form-control>
+  </div>
+  <div class="y-center gap-4">
+    <trudi-checkbox
+      formControlName="isRequired"
+      [disabled]="disabled"
+      label="Required step"></trudi-checkbox>
+    <trudi-icon
+      icon="infoFill"
+      nzTooltipTitle="Required steps must be completed before the remaining steps in the workflow can be actioned."
+      nzTooltipPlacement="bottom"
+      nz-tooltip></trudi-icon>
+  </div>
+</div>

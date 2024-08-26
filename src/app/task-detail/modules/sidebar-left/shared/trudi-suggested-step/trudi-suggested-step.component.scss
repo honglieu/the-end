@@ -1,0 +1,152 @@
+@import 'function';
+
+:host {
+  & {
+    .trudi-suggested-step-container {
+      position: relative;
+      display: flex;
+      cursor: pointer;
+      padding: 0px 2px;
+
+      ::ng-deep trudi-checkbox {
+        position: relative;
+        cursor: default;
+        label.trudi-checkbox {
+          padding: 2px 0 0;
+        }
+        // prevent click checkbox
+        &::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 1;
+          width: 100%;
+          height: 100%;
+        }
+      }
+
+      .trudi-suggested-step-content {
+        width: 100%;
+        padding: 0 0 20px 4px;
+
+        &:hover {
+          color: var(--gray-500);
+        }
+
+        .trudi-suggested-step-title {
+          &.required {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px;
+          }
+          p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            @include fontSetup(var(--gray-600), 1.4rem, 2rem, normal, 400);
+            ::ng-deep trudi-icon {
+              display: inline-block;
+            }
+            span {
+              &:focus-visible {
+                box-shadow: inset 0px 0px 0px 1px var(--brand-500),
+                  0px 0px 0px 2px rgba(var(--brand-500-rgb), 0.6) !important;
+                border-radius: 4px;
+              }
+            }
+          }
+        }
+
+        .trudi-suggested-step-description {
+          .image-property-tree {
+            margin-top: 4px;
+          }
+          ::ng-deep trudi-badge {
+            margin-top: 4px;
+            height: fit-content;
+          }
+        }
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        background-color: var(--gray-200);
+        width: 1px;
+        height: calc(100% - 18px);
+        top: 19px;
+        left: 10px;
+      }
+    }
+  }
+
+  &.trudi-suggested-step-finished {
+    .trudi-suggested-step-container {
+      .trudi-suggested-step-content {
+        opacity: 0.5;
+      }
+    }
+  }
+
+  &:hover {
+    &:not(.trudi-suggested-step-disabled) {
+      .trudi-suggested-step-container {
+        .trudi-suggested-step-content {
+          opacity: 1;
+
+          .trudi-suggested-step-title {
+            p {
+              @include fontSetup(var(--gray-500), 1.4rem, 2rem, normal, 400);
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &:active {
+    &:not(.trudi-suggested-step-disabled) {
+      .trudi-suggested-step-container {
+        .trudi-suggested-step-content {
+          opacity: 1;
+
+          .trudi-suggested-step-title {
+            p {
+              @include fontSetup(var(--gray-700), 1.4rem, 2rem, normal, 400);
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &.trudi-suggested-step-disabled {
+    .trudi-suggested-step-container {
+      cursor: default;
+      user-select: none;
+      .trudi-suggested-step-content {
+        opacity: 0.5 !important;
+        .trudi-suggested-step-title {
+          text-decoration: unset !important;
+        }
+      }
+    }
+  }
+
+  &.hide-process-line {
+    .trudi-suggested-step-container {
+      &::after {
+        display: none;
+      }
+
+      .trudi-suggested-step-content {
+        padding-bottom: 0;
+      }
+    }
+  }
+}

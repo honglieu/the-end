@@ -1,0 +1,23 @@
+@import 'function';
+
+.sync-status {
+  .sync-icon {
+    height: 1.6rem;
+    width: 1.6rem;
+  }
+  .spin {
+    -webkit-animation: spin 4s linear infinite;
+    -moz-animation: spin 4s linear infinite;
+    animation: spin 4s linear infinite;
+  }
+  .sync-text,
+  .sync-date {
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      1.2rem,
+      1.6rem,
+      normal,
+      400
+    );
+  }
+}

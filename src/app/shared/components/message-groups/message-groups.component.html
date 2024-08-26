@@ -1,0 +1,27 @@
+<ng-container *rxLet="groupData$; let groupData; strategy: 'immediate'">
+  <div class="wrapper-group">
+    <ng-container
+      *rxFor="let group of groupData.groups; let i = index; trackBy: trackByMessageGroup; renderCallback: rendered">
+      <div
+        class="group-list-message"
+        [ngClass]="{ 'not-allowed-cursor': !group.allowCollapse }">
+        <button
+          class="header-collapse"
+          tabindex="0"
+          [disabled]="!group.allowCollapse"
+          (click)="toggleIsExpandedGroup(i, group.allowCollapse)">
+          <trudi-icon
+            icon="collapseBottomPrimary"
+            svgClass="size-12"
+            [style.transform]="collapseGroupIds[i] ? 'rotate(180deg)' : 'none'"></trudi-icon>
+          <span class="header-collapse-name">{{group.groupName}}</span>
+        </button>
+        <div [style.display]="collapseGroupIds[i] ? 'none' : 'block'">
+          <ng-container
+            *ngTemplateOutlet="listItemsTemplate; context: {itemsInGroup: group.items}">
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-container>

@@ -1,0 +1,8 @@
+<div class="crud-agency">
+  <div class="crud-agency-list">
+    <app-agency-list (indexAgency)="changeAgency($event)"></app-agency-list>
+  </div>
+  <div class="crud-agency-detail">
+    <app-agency-detail [agency]="agencies[indexAgency]"></app-agency-detail>
+  </div>
+</div>

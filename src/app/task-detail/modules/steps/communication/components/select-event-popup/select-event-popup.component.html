@@ -1,0 +1,30 @@
+<ng-container *ngIf="listEvents.length; else noItems">
+  <div
+    class="calendar-wrapper"
+    [ngStyle]="listEvents.length && {'height': (lengthOfList) +'px' }">
+    <cdk-virtual-scroll-viewport
+      #scrollContainer
+      class="d-flex flex-dir-column w-100 h-100"
+      [ngClass]="{'auto-scroll' : autoScroll}"
+      [itemSize]="64">
+      <event-row
+        *cdkVirtualFor="let calendar of listEvents;let lastRowData = last"
+        [rowData]="calendar"
+        [lastRowData]="lastRowData"
+        (onOptionChange)="handleOptionChange($event)"></event-row>
+    </cdk-virtual-scroll-viewport>
+  </div>
+</ng-container>
+<ng-template #noItems>
+  <div class="body">
+    <div class="header-text">No events found for this property</div>
+  </div>
+</ng-template>
+<ng-container *ngIf="isRequired">
+  <div class="error-container d-flex gap-4">
+    <trudi-icon
+      [style]="{ 'width.px': 16, 'height.px': 16}"
+      icon="iconWarning"></trudi-icon>
+    <div class="error-text">Select at least an option to continue</div>
+  </div>
+</ng-container>

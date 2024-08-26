@@ -1,0 +1,22 @@
+<ng-container *ngIf="specialStringDue; else noSpecialStringDueButton">
+  <div>
+    <span>{{numberOfDate}}</span> {{ numberOfDate | pluralize: 'day' : true }}
+    <span>
+      {{ timePrefix }} {{specialStringDue ? specialStringDue : null}}
+    </span>
+    {{ specialStringDue ? 'due' : ''}} {{formatDate | formatDate | async}}
+  </div>
+</ng-container>
+<ng-template #noSpecialStringDueButton>
+  <div *ngIf="!isDateUnknown">
+    <span>{{numberOfDate}}</span> {{ numberOfDate | pluralize: 'day' : true }}
+    <span>{{ timePrefix }}</span>
+    <span *ngIf="additionalInfo"> {{additionalInfo | titleCasePipe}} </span>
+    {{formatDate | formatDate | async}}
+  </div>
+  <div *ngIf="isDateUnknown">
+    <span>0</span> days
+    <span>after Breach Remedy</span>
+    unknown date
+  </div>
+</ng-template>

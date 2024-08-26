@@ -1,0 +1,23 @@
+<div class="d-flex flex-dir-column gap-16">
+  <trudi-single-select
+    groupBy="decision"
+    id="task-template-list"
+    appendTo=".ant-modal-content"
+    data-e2e="select-task-dropdown"
+    bindValue="id"
+    bindLabel="name"
+    [placeholder]="'Select task step'"
+    [items]="listTaskStep"
+    [formControl]="currentStepControl"
+    [clearable]="true"
+    [virtualScroll]="true"
+    [labelTpl]="labelTpl"
+    notFoundText="No results found"
+    (triggerEventChange)="onTaskSelectChanged($event)">
+  </trudi-single-select>
+</div>
+<ng-template #labelTpl>
+  <div class="select-field-label">
+    <span>Select step</span>
+  </div>
+</ng-template>

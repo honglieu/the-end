@@ -1,0 +1,61 @@
+<ng-container>
+  <div
+    *ngIf="currentConversation; else loadingSection"
+    class="main-section-detail d-flex gap-18 flex-dir-column">
+    <div class="main-section-detail-title">DETAILS</div>
+    <details-section
+      [task]="taskMsgDetail"
+      [conversation]="currentConversation"
+      [email]="currentConversation?.propertyType === userPropertyType.UNIDENTIFIED ? currentConversation?.email : currentConversation?.streetline"
+      [senderName]="fullName"
+      (onUserProfilePageChild)="onUserProfilePage($event)"
+      (requestToCallWithType)="requestToCall($event)"
+      (onInfoUserChild)="onInfoUser($event)"
+      [requestDataCall]="requestDataCall"
+      [taskMsgDetail]="taskMsgDetail">
+    </details-section>
+  </div>
+  <ng-template #loadingSection>
+    <div class="detail-section">
+      <div class="files-list-wrapper-animation pd-12 mb-16">
+        <div
+          class="justify-content-between align-center files-item sleleton-item">
+          <div class="item-detail files-item-detail">
+            <div class="file-name">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"
+                class="w-50"></nz-skeleton>
+            </div>
+          </div>
+        </div>
+        <div
+          class="justify-content-between align-center files-item"
+          *ngFor="let _ of [].constructor(2); let i = index">
+          <div class="skeleton-square">
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+          <div class="item-detail files-item-detail">
+            <div class="skeleton-container">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"
+                class="w-75"></nz-skeleton>
+            </div>
+            <div class="skeleton-container">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"
+                class="w-50"></nz-skeleton>
+            </div>
+          </div>
+        </div>
+      </div>
+      <file-panel
+        [hidden]="!currentConversation"
+        (isLoading)="onLoadingFilePanel($event)"></file-panel>
+    </div>
+  </ng-template>
+</ng-container>

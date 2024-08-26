@@ -1,0 +1,74 @@
+@import 'function';
+
+:host {
+  ul {
+    background-color: var(--bg-neutral-tonal-normal, #f2f5f7);
+  }
+  .single-item {
+    padding: 14px 12px !important;
+    height: 32px;
+
+    &.ml-18 {
+      width: 260px;
+    }
+
+    &::after {
+      opacity: 0;
+    }
+
+    &:hover {
+      background-color: var(--bg-brand-tonal-normal);
+    }
+
+    .item-icon {
+      color: var(--fg-neutral-normal);
+    }
+
+    .item-name {
+      @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 500);
+    }
+
+    .item-total {
+      @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 500);
+    }
+
+    &:has(a:focus-visible) {
+      border: 1px solid var(--brand-500) !important;
+    }
+  }
+
+  ::ng-deep .ant-menu-inline {
+    & > .ant-menu-submenu > .ant-menu-submenu-title {
+      height: 32px;
+    }
+
+    & .ant-menu-item-selected {
+      background-color: var(--brand-200) !important;
+
+      .item-name {
+        @include fontSetup(
+          var(--fg-neutral-strongest) !important,
+          14px,
+          20px,
+          normal,
+          600 !important
+        );
+      }
+
+      .item-icon {
+        color: var(--fg-neutral-strongest) !important;
+      }
+    }
+  }
+
+  ::ng-deep .ant-menu-submenu-title {
+    padding-left: 30px !important;
+    @include fontSetup(
+      var(--fg-neutral-normal),
+      14px,
+      20px !important,
+      normal,
+      600
+    );
+  }
+}

@@ -1,0 +1,243 @@
+@import 'function';
+
+.send-pet-request-landlord {
+  .body {
+    padding: 20px 24px;
+    .header-text {
+      margin: 1.2rem 0;
+      @include fontSetup(var(--gray-500), 14px, 24px, normal, 400);
+    }
+    .item {
+      @include fontSetup(var(--gray-700), 16px, 24px, normal, 600);
+      padding: 16px 0;
+      box-shadow: inset 0px -0.8px 0px rgba(0, 0, 0, 0.08);
+      position: relative;
+      .cls-badge-success {
+        background-color: rgba(var(--brand-500-rgb), 0.12);
+        width: fit-content;
+        padding: 0 8px;
+        border: none;
+        border-radius: 8px;
+        margin-left: 8px;
+        @include fontSetup(var(--brand-500), 12px, 24px, normal, 600);
+      }
+
+      .sub-checkbox {
+        position: absolute;
+        top: 18px;
+        right: 0;
+      }
+    }
+  }
+
+  .addition {
+    margin-top: 8px;
+    padding: 0 8px;
+    .btn-wrapper {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-start;
+      .add-file-btn {
+        display: flex;
+        padding: 9px 24px;
+        font-size: 1.4rem;
+        background-color: var(--white);
+        border-radius: 0.7rem;
+        border: 1px solid var(--brand-500);
+        color: var(--brand-500);
+        align-items: center;
+        .btn-text {
+          font-weight: 500;
+          font-size: 14px;
+        }
+        margin-right: 1.6rem;
+      }
+      .action-link-btn {
+        display: flex;
+        padding: 0.8rem 1.2rem;
+        font-size: 1.4rem;
+        margin-right: 2rem;
+        background-color: var(--white);
+        border-radius: 0.7rem;
+        border: 1px solid var(--brand-500);
+        color: var(--brand-500);
+        align-items: center;
+
+        .btn-text {
+          font-weight: 500;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+  .attachment {
+    .send-file {
+      position: relative;
+      margin: 2.5px;
+      display: flex;
+      background-color: var(--white);
+      width: 48%;
+      height: 60px;
+      border: 0.5px solid rgba(100, 100, 100, 0.2);
+      border-radius: 8px;
+      padding: 8px 12px 8px 15px;
+      &.message-send-file {
+        width: unset;
+        min-width: 48%;
+        height: 56px;
+        padding: 8px 20px;
+      }
+      .file {
+        display: block;
+        margin: 2px 10px;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 24px;
+        color: var(--gray-700);
+        width: calc(100% - 60px);
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        align-self: center;
+        &.send-file {
+          width: unset;
+          margin: 2px 10px 2px 18px;
+        }
+        .file-name {
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
+        .file-info {
+          line-height: 18px;
+          display: flex;
+          justify-content: center;
+          .file-date-created,
+          .file-person-created {
+            color: var(--gray-600);
+            font-size: 12px;
+            line-height: 16px;
+          }
+          .small-circle {
+            width: 3px;
+            height: 3px;
+            display: inline-block;
+            border-radius: 100%;
+            margin: 0 5px;
+            background-color: var(--gray-600);
+          }
+        }
+      }
+      .remove-btn {
+        right: 0px;
+        top: 22%;
+        left: 0px;
+        transform: unset;
+      }
+    }
+
+    .files {
+      max-height: 45vh;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 12px;
+      .message-file {
+        position: relative;
+        margin: 2.5px;
+        display: flex;
+        background-color: var(--white);
+        width: 48%;
+        height: 60px;
+        border: 0.5px solid rgba(100, 100, 100, 0.2);
+        border-radius: 8px;
+        padding: 8px 12px 8px 15px;
+        &.message-send-file {
+          width: unset;
+          min-width: 48%;
+          height: 56px;
+          padding: 8px 20px;
+        }
+        .file {
+          display: block;
+          margin: 2px 10px;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 24px;
+          color: var(--gray-700);
+          width: calc(100% - 60px);
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          align-self: center;
+          &.send-file {
+            width: unset;
+            margin: 2px 10px 2px 18px;
+          }
+          .file-name {
+            text-overflow: ellipsis;
+            overflow: hidden;
+          }
+          .file-info {
+            line-height: 18px;
+            display: flex;
+            justify-content: center;
+            .file-date-created,
+            .file-person-created {
+              color: var(--gray-600);
+              font-size: 12px;
+              line-height: 16px;
+            }
+            .small-circle {
+              width: 3px;
+              height: 3px;
+              display: inline-block;
+              border-radius: 100%;
+              margin: 0 5px;
+              background-color: var(--gray-600);
+            }
+          }
+        }
+        .remove-btn {
+          right: 0px;
+          top: 22%;
+          left: 0px;
+          transform: unset;
+        }
+      }
+    }
+  }
+
+  .btn-wrapper {
+    margin: 0;
+    padding: 40px 14px 10px 14px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+
+  .validate-file {
+    margin-top: 6px;
+    background-color: var(--danger-50);
+    padding: 16px;
+    gap: 10px;
+    border: 1px solid var(--danger-500);
+    border-radius: 12px;
+
+    .validate-title {
+      @include fontSetup(var(--danger-500), 12px, 16px, normal, 400);
+      margin: 0 auto;
+    }
+  }
+
+  .btn-size {
+    min-width: 100px;
+  }
+}
+
+.upload-attachment-footer {
+  padding: 20px 24px;
+  justify-content: flex-end;
+  background: transparent;
+  border-top: 1px solid var(--gray-100);
+  border-radius: 0 0 8px 8px;
+}

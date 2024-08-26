@@ -1,0 +1,45 @@
+<trudi-modal
+  [visible]="isShowModal"
+  [autoFocus]="null"
+  [title]="addEmailTitle"
+  [modelWidth]="624"
+  (onCancel)="handleCancel()"
+  subTitle="">
+  <div class="addEmailPopup" data-e2e="add-email-modal">
+    <div data-e2e="email-field" class="body">
+      <div data-e2e="textfield-label" class="title">Email</div>
+      <div class="input">
+        <input
+          [class.error]="!isEmail || isEmailEmpty || APIerr"
+          type="text"
+          placeholder="example@gmail.com"
+          [value]="emailInput"
+          (keyup)="handleSetInputValue($event)"
+          data-e2e="textfield-input" />
+      </div>
+      <div
+        data-e2e="textfield-error"
+        class="error-wrapper d-flex align-items-center"
+        *ngIf="!isEmail || APIerr">
+        <trudi-icon
+          svgClass="size-12"
+          class="icon-warning"
+          icon="iconWarningRedFit"></trudi-icon>
+        <span class="text-warning"
+          >{{APIerr || "Please enter correct email format"}}</span
+        >
+      </div>
+    </div>
+    <ng-template #footerModal>
+      <div class="add-link-footer">
+        <button
+          trudi-btn
+          [disabled]="!emailInput || isAddingEmail"
+          (click)="handleConfirm()"
+          data-e2e="button-confirm">
+          <span class="btn-text"> Confirm </span>
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</trudi-modal>

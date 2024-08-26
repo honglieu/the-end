@@ -1,0 +1,66 @@
+@import 'function';
+:host {
+  .account-type {
+    width: 128px;
+    ::ng-deep .ng-select:not(.ng-select-disabled) > .ng-select-container {
+      background-color: var(--bg-base);
+      border: 1px solid var(--border-neutral-dark);
+    }
+  }
+  .list-account {
+    width: 468px;
+  }
+  ::ng-deep trudi-date-picker.trudi-picker {
+    max-width: unset;
+  }
+  ::ng-deep {
+    .trudi-date-picker-label {
+      @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 400);
+      padding: 0 2px;
+      margin-bottom: 6px;
+    }
+    .icon-circle {
+      width: 16px;
+      height: 16px;
+    }
+    .task-tooltip {
+      width: 180px;
+      padding: 5px 6px;
+      text-align: left;
+      @include fontSetup(var(--white), 12px, 16px, normal, 400);
+    }
+  }
+  ::ng-deep
+    ng-select.trudi-single-select
+    .ng-dropdown-panel
+    .ng-option
+    .highlighted {
+    background-color: var(--bg-tenant-solid-normal) !important;
+    @include fontSetup(inherit !important, 14px, 20px, normal, 500);
+  }
+
+  ::ng-deep .ng-dropdown-panel {
+    .ng-dropdown-header {
+      border-bottom: 1px solid var(--bg-neutral-tonal-stronger);
+      padding: 10px 12px;
+    }
+    .ng-dropdown-panel-items {
+      .ng-option:first-child {
+        border-radius: unset;
+      }
+      .ng-option .highlighted {
+        background-color: var(--bg-tenant-solid-normal);
+      }
+      .ng-option:not(:last-child) .trudi-select-label {
+        border-bottom: 1px solid var(--bg-neutral-tonal-stronger) !important;
+      }
+    }
+  }
+  ::ng-deep
+    .ng-dropdown-panel
+    .ng-dropdown-panel-items
+    .ng-option
+    span.select-item__title {
+    @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 500);
+  }
+}

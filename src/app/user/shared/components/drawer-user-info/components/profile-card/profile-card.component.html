@@ -1,0 +1,99 @@
+<div *ngIf="profileData" class="profile-card">
+  <div class="profile-header">
+    <div class="profile-avatar">
+      <app-user-avatar
+        [style]="'width: 32px; height: 32px'"
+        [avatar]="profileData.googleAvatar"
+        [user]="profileData"></app-user-avatar>
+    </div>
+    <div class="profile-info">
+      <div *ngIf="profileData.fullName" class="profile-name">
+        {{profileData.fullName}}
+      </div>
+      <div *ngIf="profileData.title" class="profile-title">
+        {{profileData.title}}
+      </div>
+    </div>
+  </div>
+  <div class="profile-body">
+    <ng-container *ngIf="profileData.role">
+      <div class="profile-icon">
+        <trudi-icon icon="userIcon" svgClass="size-16"></trudi-icon>
+      </div>
+      <div class="profile-detail">{{profileData.role}}</div>
+    </ng-container>
+    <ng-container>
+      <div class="profile-icon">
+        <trudi-icon icon="iconPhoneGray" svgClass="size-16"></trudi-icon>
+      </div>
+      <div
+        class="profile-detail"
+        [class.font-italic]="!profileData.phoneNumber">
+        {{ profileData.phoneNumber ? (profileData.phoneNumber |
+        phoneNumberFormat) : 'no phone number' }}
+      </div>
+    </ng-container>
+    <ng-container *ngIf="profileData.email">
+      <div class="profile-icon">
+        <trudi-icon icon="mailThin" svgClass="size-16"></trudi-icon>
+      </div>
+      <div class="profile-detail">{{profileData.email}}</div>
+    </ng-container>
+    <div>
+      <trudi-icon svgClass="size-16" icon="trudiLogoBorder"></trudi-icon>
+    </div>
+    <ng-container *ngIf="profileData.inviteStatus || profileData.iviteSent">
+      <div class="profile-detail">
+        <span
+          class="cursor-pointer"
+          nz-tooltip
+          nzTooltipPlacement="top"
+          [nzTooltipTitle]="'Trudi® App invite status'">
+          <ng-container [ngSwitch]="profileData.inviteStatus">
+            <span *ngSwitchCase="EInviteStatus.ACTIVE"
+              >Last active {{profileData.lastActivity | formatDate |
+              async}}</span
+            >
+            <span *ngSwitchCase="EInviteStatus.INVITED"
+              >Invited {{profileData.iviteSent | formatDate | async}}</span
+            >
+            <span *ngSwitchCase="EInviteStatus.UNINVITED">Uninvited</span>
+            <span *ngSwitchCase="EInviteStatus.OFFBOARDED">Offboarded</span>
+            <span *ngSwitchDefault
+              >Invited {{profileData.iviteSent | formatDate | async}}</span
+            >
+          </ng-container>
+        </span>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="profileData?.userMessengers?.length">
+      <ng-container
+        *ngTemplateOutlet="contactListChannels; context: { contacts: profileData.userMessengers, icon: 'messengerLogo', label: 'name' }">
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="profileData?.userWhatsApps?.length">
+      <ng-container
+        *ngTemplateOutlet="contactListChannels; context: { contacts: profileData.userWhatsApps, icon: 'whatsappLogo', label: 'externalId' }">
+      </ng-container>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template
+  #contactListChannels
+  let-contacts="contacts"
+  let-icon="icon"
+  let-label="label">
+  <div class="list-info gap-6 profile-detail">
+    <div>
+      <trudi-icon svgClass="size-16" [icon]="icon"></trudi-icon>
+    </div>
+    <div class="align-content flex-dir-column align-items-start gap-4">
+      <ng-container *ngFor="let contact of contacts">
+        <div *ngIf="contact?.[label]">
+          <span>{{ contact?.[label] }}</span>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>

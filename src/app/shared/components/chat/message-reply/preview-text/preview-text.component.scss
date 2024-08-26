@@ -1,0 +1,16 @@
+@import 'function';
+
+.reply-message {
+  background: var(--bg-opacity-normal, #9999991a);
+  padding: 4px 8px;
+  margin: 0;
+  border-radius: 6px;
+  @include fontSetup(#85888e, 14px, 20px, normal, 400);
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+}

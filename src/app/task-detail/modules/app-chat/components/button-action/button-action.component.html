@@ -1,0 +1,25 @@
+<div class="footer-btn-action" [ngClass]="{'full-width': isFullWidth}">
+  <ng-container *ngFor="let item of listButtonAction">
+    <button
+      *ngIf="!item.hidden"
+      disableOpenSendMsgModal
+      trudi-btn
+      [size]="trudiApp ? 'extra-small' : 'medium'"
+      variant="outlined"
+      btnType="neutral"
+      [disabled]="item?.disabled"
+      (click)="$event.stopPropagation();item.action(item?.disabled)"
+      class="btn-action"
+      [appE2E]="item?.dataE2e || ''"
+      nz-tooltip
+      [nzTooltipTitle]="item?.tooltipText"
+      [ngClass]="{'full-width': isFullWidth }">
+      <trudi-icon
+        class="no-pointer-event"
+        [svgClass]="trudiApp && 'size-16'"
+        [icon]="item.icon">
+      </trudi-icon>
+      {{item.text}}
+    </button>
+  </ng-container>
+</div>

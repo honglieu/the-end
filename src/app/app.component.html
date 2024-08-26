@@ -1,0 +1,62 @@
+<ng-container *ngIf="(!networkStatus && isElectronApp) else notInternet">
+  <ng-container *ngIf="!isElectronApp else notElectronApp"> </ng-container>
+  <ng-template #notElectronApp>
+    <ng-container *ngIf="isShowNotifyInternet">
+      <internet-disconnect
+        (showNotifyInternet)="handleCloseNotify($event)"></internet-disconnect>
+    </ng-container>
+    <no-internet></no-internet>
+  </ng-template>
+</ng-container>
+
+<ng-template #notInternet>
+  <div id="wrapper">
+    <app-popup
+      *ngIf="openModal"
+      [popupTitleText]="'Please Refresh Your Browser'"
+      [popupBodyText]="
+        'We have made changes that require you to refresh you browser. Please refresh your browser before continuing.'
+      "
+      [popupButtonText]="'Ok'">
+    </app-popup>
+
+    <div class="main-container d-flex">
+      <div class="flex-1">
+        <header *ngIf="hideHeader" data-console="header-bar"></header>
+        <div class="content-wrapper" [ngClass]="{'w-100-vw' : isOpenSidebar}">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-loader-global></app-loader-global>
+  <app-modal-popup
+    [show]="popupStatusUser"
+    [position]="popupModalPosition.center">
+    <app-success-modal-popup
+      [title]="titleStatusUser"
+      [message]="messageStatusUser"
+      [message2]="subMessageStatusUser"
+      [closeOverflowAble]="true"
+      (onClose)="handleClosePopupStatusUser()"></app-success-modal-popup>
+  </app-modal-popup>
+</ng-template>
+
+<div class="d-none">
+  <!-- cache  -->
+  <img lazy="true" src="/assets/icon/no-internet.svg" />
+  <img lazy="true" src="/assets/icon/sync_black_24dp.svg" />
+  <img lazy="true" src="/assets/icon/arrow-line-64.svg" />
+  <img lazy="true" src="/assets/icon/ownership-check.svg" />
+  <img lazy="true" src="/assets/icon/no-tasks.svg" />
+  <img lazy="true" src="/assets/icon/icon-arrow-back.svg" />
+  <img lazy="true" src="/assets/icon/profile-icon.svg" />
+  <img lazy="true" src="/assets/icon/bell-icon.svg" />
+  <img lazy="true" src="/assets/icon/calendar-icon.svg" />
+  <img lazy="true" src="/assets/icon/appointment-availability.svg" />
+  <img lazy="true" src="/assets/icon/radio-check.svg" />
+  <img lazy="true" src="/assets/icon/radio-uncheck.svg" />
+  <img lazy="true" src="/assets/icon/trudi-gray-selected.svg" />
+  <img lazy="true" src="/assets/icon/trudi-gray.svg" />
+  <img lazy="true" src="/assets/images/icons/icon-toast-warning.svg" />
+</div>

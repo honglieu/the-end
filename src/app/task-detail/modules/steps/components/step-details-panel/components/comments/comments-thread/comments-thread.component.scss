@@ -1,0 +1,124 @@
+@import 'function';
+
+::ng-deep {
+  .ant-dropdown:has(.comment-actions-menu-wrapper) {
+    .comment-actions-menu-wrapper {
+      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+
+      .item {
+        padding: 12px;
+        @include fontSetup(
+          var(--fg-neutral-stronger) !important,
+          14px,
+          20px,
+          normal,
+          500
+        );
+        min-width: 160px;
+
+        &:hover {
+          background-color: var(--bg-neutral-tonal-stronger, #f0f1f1);
+
+          &:first-child {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+          }
+
+          &:last-child {
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.comment {
+  margin-bottom: 4px;
+  &-header {
+    display: flex;
+    align-items: center;
+
+    .deleted-text {
+      @include fontSetup(var(--fg-neutral-weaker), 14px, 20px, italic, 400);
+      padding: 8px;
+      border: 1px solid var(--border-neutral-dark);
+      border-radius: 8px;
+      margin-left: 8px;
+      width: 100%;
+    }
+
+    .username {
+      @include fontSetup(var(--fg-neutral-stronger0), 14px, 20px, normal, 600);
+      margin-left: 8px;
+      margin-right: 4px;
+      max-width: 150px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .created-at {
+      @include fontSetup(var(--fg-neutral-weaker), 12px, 16px, normal, 400);
+    }
+
+    .edited-tag {
+      @include fontSetup(var(--fg-neutral-weaker), 12px, 16px, normal, 400);
+    }
+
+    .comment-actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      .comment-actions-btn {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+  &-body {
+    display: flex;
+    gap: 8px;
+    .comment-placeholder {
+      width: 24px;
+      height: 24px;
+    }
+
+    .comment-content {
+      flex: 1;
+
+      .comment-text {
+        @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 400);
+        word-break: break-word;
+      }
+    }
+  }
+}
+
+.highlight {
+  background-color: var(--bg-info-tonal-normal);
+  animation: highlightFade 3s forwards;
+}
+
+@keyframes highlightFade {
+  0% {
+    background-color: var(--bg-info-tonal-normal);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.cancel-button {
+  @include fontSetup(var(--fg-neutral-normal), 10px, 12px, normal, 500);
+  background: none;
+  border: none;
+  outline: none;
+  display: block;
+  margin-top: -4px;
+  margin-bottom: 12px;
+  padding-left: 0px;
+}

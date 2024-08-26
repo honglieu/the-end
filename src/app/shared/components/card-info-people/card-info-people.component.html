@@ -1,0 +1,115 @@
+<ng-container *ngIf="!isLoading; else loadingSkeleton">
+  <ng-container *ngFor="let ownership of listOfUser?.ownerships">
+    <div class="item-people-owner">
+      <div class="owner-name x-between relative">
+        <div class="owner-name-title mr-12">
+          <span class="text-capitalize"
+            >{{((ownership.type === EUserPropertyType.OWNERSHIP && isRMSystem) ?
+            'Owner' : ownership.type) | lowercase}}: </span
+          >{{ownership.name}}
+        </div>
+        <text-badge
+          [text]="ownership.status"
+          [type]="ownership.type"
+          [badgeForPropertyUser]="'true'"></text-badge>
+      </div>
+      <div class="owner-content relative justify-content-between">
+        <ng-container *ngFor="let userProperty of ownership.userProperties">
+          <div class="x-between">
+            <div class="owner-content-title">
+              <div class="owner-content-title-name gap-4">
+                <span> {{userProperty.user.fullName | titlecase}} </span>
+                <span class="owner-content-title-icon">
+                  <trudi-icon
+                    *ngIf="userProperty.isPrimary"
+                    icon="iconPrimaryOwnership"></trudi-icon>
+                </span>
+              </div>
+            </div>
+            <div class="owner-content-status">
+              <ng-container
+                *ngIf="userProperty.user.lastActivity; else invited">
+                <span class="white-space-nowrap"
+                  >Last Active {{ userProperty.user.lastActivity | formatDate |
+                  async }}</span
+                >
+              </ng-container>
+              <ng-template #invited
+                >{{userProperty.user.inviteStatus | titlecase}}
+                {{userProperty.user.iviteSent | formatDate |
+                async}}</ng-template
+              >
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngFor="let tenancy of listOfUser?.tenancies">
+    <div class="item-people-tenancy">
+      <div class="owner-name x-between relative">
+        <div class="owner-name-title mr-12">
+          <span class="text-capitalize"
+            >{{((tenancy.type === EUserPropertyType.TENANCY && isRMSystem) ?
+            'Tenant' : tenancy.type) | lowercase}}: </span
+          >{{tenancy.name}}
+        </div>
+        <text-badge
+          [text]="tenancy.status"
+          [type]="tenancy.type"
+          [badgeForPropertyUser]="'true'"></text-badge>
+      </div>
+      <div class="owner-content justify-content-between relative">
+        <ng-container *ngFor="let userProperty of tenancy.userProperties">
+          <div class="x-between">
+            <div class="owner-content-title">
+              <div class="owner-content-title-name gap-4">
+                <span> {{userProperty.user.fullName | titlecase}} </span>
+                <span class="owner-content-title-icon">
+                  <trudi-icon
+                    *ngIf="userProperty.isPrimary"
+                    icon="iconPrimaryTenancy"></trudi-icon>
+                </span>
+              </div>
+            </div>
+            <div class="owner-content-status">
+              <ng-container
+                *ngIf="userProperty.user.lastActivity; else invited">
+                <span class="white-space-nowrap"
+                  >Last active {{ userProperty.user.lastActivity |formatDate |
+                  async}}</span
+                >
+              </ng-container>
+              <ng-template #invited
+                >{{userProperty.user.inviteStatus | titlecase}}
+                {{userProperty.user.iviteSent | formatDate |
+                async}}</ng-template
+              >
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <app-lease-share
+        style="margin-top: 14px"
+        *ngFor="let lease of tenancy.userPropertyGroupLeases"
+        [startDate]="lease.startDate"
+        [paidDate]="lease.paidTo"
+        [endDate]="lease.endDate"
+        [dayRemaining]="lease.dayRemaining"
+        [rentAmount]="lease.rentAmount"
+        [crmSystemId]="crmSystemId"
+        [frequency]="lease.frequency"></app-lease-share>
+    </div>
+  </ng-container>
+</ng-container>
+
+<ng-template #loadingSkeleton>
+  <div class="list-people-skeleton">
+    <div
+      *ngFor="let item of [].constructor(skeletonListCount)"
+      class="item-people-skeleton">
+      <nz-skeleton [nzParagraph]="{ rows: 2 }" [nzActive]="true"></nz-skeleton>
+    </div>
+  </div>
+</ng-template>

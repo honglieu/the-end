@@ -1,0 +1,40 @@
+<div
+  (click)="handleMoveToTask()"
+  class="d-flex gap-8 align-items-center header-linked w-100 cursor-pointer">
+  <div class="d-flex flex-dir-column header-linked-left">
+    <div class="d-flex gap-8 align-items-center">
+      <span class="header-linked-left-title text-ellipsis">
+        {{linkedTaskItem ? linkedTaskItem.title : taskItem?.title}}
+      </span>
+      <div
+        class="title-conversation__status"
+        *ngIf="((linkedTaskItem ? linkedTaskItem.status : taskItem?.status) | conversationStatus)?.text">
+        <trudi-badge
+          [text]="((linkedTaskItem ? linkedTaskItem.status : taskItem?.status) | lowercase) | titleStatus: 'TASK'"
+          [variant]="((linkedTaskItem ? linkedTaskItem.status : taskItem?.status) | conversationStatus)?.variant"></trudi-badge>
+      </div>
+      @if(linkedTaskItem?.assignToAgents || taskItem?.assignToAgents) {
+      <assign-to-agents
+        [isShowTooltip]="false"
+        [isReadOnly]="true"
+        titleMode="avatar"
+        [isCustom]="true"
+        [maxDisplayAssignees]="3"
+        [avatarSize]="24"
+        [agents]="linkedTaskItem ? linkedTaskItem.assignToAgents : taskItem.assignToAgents"
+        [task]="taskItem">
+      </assign-to-agents>
+      }
+    </div>
+    <div class="header-linked-left-address">
+      {{(linkedTaskItem ? linkedTaskItem?.property?.streetline :
+      taskItem?.property?.streetline) || 'No property'}}
+    </div>
+  </div>
+  <button trudi-btn btnType="info" size="small" (click)="handleMoveToTask()">
+    <div class="d-flex align-item-center justify-content-center gap-8">
+      <trudi-icon svgClass="size-20" icon="navigation"></trudi-icon>
+      <span class="btn-move-to-task-text">Go to task</span>
+    </div>
+  </button>
+</div>

@@ -1,0 +1,364 @@
+<div class="view-mode message-view-list-wrapper">
+  <ng-container
+    *rxLet="
+    listMessage$;
+    let listMessage;
+    strategy: 'immediate';
+  ">
+    <ng-container *ngIf="listMessage?.fetching">
+      <ng-container *ngTemplateOutlet="loadingSkeleton;"> </ng-container>
+    </ng-container>
+    <ng-container *ngIf="listMessage?.error || !listMessage?.message.length">
+      <ng-container *ngTemplateOutlet="noItem;"> </ng-container>
+    </ng-container>
+    <ng-container *ngIf="listMessage.message">
+      <ng-container
+        *ngTemplateOutlet="successTemp; context: {listMessage: listMessage.message, totalMessage: listMessage.totalMessage, isDraft: listMessage.isDraft};">
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</div>
+
+<ng-template #loadingSkeleton>
+  <div class="message-list-wrapper message-skeleton">
+    <ng-container
+      *ngTemplateOutlet="skeletonLoadingItem; context: {rowNumber: 20}">
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template
+  #successTemp
+  let-listMessage="listMessage"
+  let-totalMessage="totalMessage"
+  let-isDraft="isDraft">
+  <div
+    cdkDropList
+    cdkDropListSortingDisabled
+    [cdkDropListData]="listMessage"
+    (cdkDropListDropped)="!isConsole && handleDropMessageToFolder($event)">
+    <div
+      infiniteScroll
+      [scrollWindow]="false"
+      [infiniteScrollUp]="true"
+      [infiniteScrollUpDistance]="0.5"
+      [infiniteScrollDistance]="0.5"
+      [infiniteScrollThrottle]="300"
+      [immediateCheck]="true"
+      [alwaysCallback]="true"
+      (scrolledUp)="onScrollToTop()"
+      (scrolled)="onScrollToBottom()"
+      #infiniteScrollIndex
+      class="message-list-wrapper">
+      <div #infiniteScrollView>
+        <div
+          *ngIf="showSpinnerTop && !isError"
+          class="message-row loading-spinner loading-spinner-top">
+          <div>
+            <img lazy="true" src="assets/images/loading-spinner.gif" />
+          </div>
+        </div>
+        <app-message-groups
+          [items]="listMessage"
+          [listItemsTemplate]="messageOutlet"
+          [totalItems]="totalMessage"
+          [groupField]="isDraft ? 'conversations[0].messageDate' : 'messageDate'"
+          [groupType]="currentMailboxId">
+        </app-message-groups>
+        <ng-template #messageOutlet let-itemsInGroup="itemsInGroup">
+          <ng-container
+            *rxFor="let message of itemsInGroup; trackBy: trackByMessage;">
+            <div
+              [attr.data-conversation-id]="message.conversations?.[0]?.id ?? message.conversationId"
+              [attr.data-task-id]="message.id"
+              id="auto-scroll-item"
+              dragCursor
+              appE2EDragDrop
+              [appE2E]="'message-index-row'"
+              cdkDrag
+              (cdkDragMoved)="dragMovedHandler($event)"
+              [cdkDragData]="isSelectedMove ? inboxList : message"
+              [cdkDragDisabled]="this.isDraftFolder || disableDragging || message?.isMessageInTask"
+              class="message-row">
+              <message-view-row
+                [currentUserId]="currentUser.id"
+                [isRmEnvironment]="isRmEnvironment"
+                [participants]="message.conversations[0].participants"
+                [message]="message"
+                [search]="searchText"
+                [queryTaskId]="queryTaskId"
+                [conversationId]="queryConversationId"
+                [index]="message.originIndex"
+                [activeMsgList]="activeMsgList"
+                [isDraftFolder]="isDraftFolder"
+                (removeItem)="handleRemove($event)"
+                [dataFormat]="dataFormat"
+                [(checked)]="message.isSelected"
+                [isDraft]="message.conversations[0].isDraft && message.conversations[0].isScratchDraft"
+                [isLastMessageDraft]="message.conversations[0].isLastMessageDraft"
+                (setItem)="setItem(message?.id, message.conversationId)"
+                (pressShiftClick)="handleSelectedMsg($event)"
+                (removeActiveMsg)="handleRemoveActiveMsg($event)"
+                (addSelectedMsg)="handleAddSelectedMsg($event)"
+                (activeMessage)="handleActiveMessage($event)"
+                (menuChange)="handleMenuChange($event)"
+                (navigateToNextMessage)="handleNavigateNextMessage()"
+                (navigateToPreviousMessage)="handleNavigatePreMessage()"></message-view-row>
+              <div class="message-row drag_placeholder" *cdkDragPlaceholder>
+                <message-view-row
+                  [currentUserId]="currentUser.id"
+                  [isRmEnvironment]="isRmEnvironment"
+                  [message]="message"
+                  [participants]="message.conversations[0].participants"
+                  [search]="searchText"
+                  [queryTaskId]="queryTaskId"
+                  [conversationId]="queryConversationId"
+                  [activeMsgList]="activeMsgList"
+                  [index]="messageIndex"
+                  (removeItem)="handleRemove($event)"
+                  [isDraft]="message.conversations[0].isDraft && message.conversations[0].isScratchDraft"
+                  [isLastMessageDraft]="message.conversations[0].isLastMessageDraft"
+                  (setItem)="setItem(message?.id, message.conversationId)"
+                  [(checked)]="message.isSelected"
+                  [dataFormat]="dataFormat"
+                  (menuChange)="handleMenuChange($event)"></message-view-row>
+              </div>
+              <div *cdkDragPreview class="drag_preview">
+                <p *ngIf="currentDraggingToFolderName" class="tooltip-for-drag">
+                  <span class="tooltip-content"
+                    >{{currentDraggingToFolderName}}</span
+                  >
+                  <span class="tooltip-arrow"></span>
+                </p>
+                <span class="message-count"
+                  >{{ (isSelectedMove ? inboxList.length : 1) | pluralize:
+                  'message' }}</span
+                >
+              </div>
+            </div>
+          </ng-container>
+        </ng-template>
+        <div
+          *ngIf="showSpinnerBottom && !isError"
+          class="message-row loading-spinner">
+          <div>
+            <img lazy="true" src="assets/images/loading-spinner.gif" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #skeletonLoadingItem let-row="rowNumber">
+  <div
+    *ngFor="let _ of [].constructor(row); let i = index"
+    class="message-wrapper">
+    <div class="message-row-wrapper">
+      <div class="message-row-item d-flex flex-dir-column gap-4">
+        <div class="d-flex align-items-center gap-16">
+          <div class="d-flex gap-8 flex-1 align-items-center">
+            <div class="d-flex flex-1 align-items-center">
+              <div class="d-flex align-items-center">
+                <div class="message-name">
+                  <nz-skeleton
+                    [nzParagraph]="paragraph"
+                    [nzActive]="true"
+                    class="w-50"></nz-skeleton>
+                </div>
+                <div class="property-address">
+                  <nz-skeleton
+                    [nzParagraph]="paragraph"
+                    [nzActive]="true"
+                    class="w-50"></nz-skeleton>
+                </div>
+              </div>
+              <nz-skeleton
+                class="ant-skeleton-circle"
+                [nzParagraph]="paragraph"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+          </div>
+        </div>
+        <div class="quote-wrapper">
+          <nz-skeleton
+            class="ant-skeleton-custom"
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+        <div class="quote-wrapper">
+          <nz-skeleton
+            class="ant-skeleton-custom"
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+        <div class="quote-wrapper">
+          <nz-skeleton
+            class="ant-skeleton-custom"
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #noItem>
+  <div class="list-wrapper">
+    <ng-container
+      [ngTemplateOutlet]="((isFocusView || isDraftFolder) && (teamMembersInMailBox > 1 || isDraftFolder) && !hasFilter)
+      ? noMyMessageTemplate
+      : noTeamMessageTemplate"></ng-container>
+    <ng-template #noTeamMessageTemplate>
+      <div class="no-message">
+        <trudi-icon icon="noConversationsV2"></trudi-icon>
+        <div class="no-message__text">None to display</div>
+      </div>
+    </ng-template>
+
+    <ng-template #noMyMessageTemplate>
+      <container-element
+        [ngSwitch]="queryParams[EMessageQueryType.MESSAGE_STATUS]">
+        <empty-focused-view-page
+          *ngSwitchDefault
+          message="Nice work! You’ve cleared all emails assigned to you"
+          subMessage="To view emails assigned to other team members, please"></empty-focused-view-page>
+        <empty-focused-view-page
+          *ngSwitchCase="messagesStatusType.completed"
+          message="There are no resolved enquiries assigned to you"
+          subMessage="To view all resolved enquiries, please "></empty-focused-view-page>
+        <empty-focused-view-page
+          *ngSwitchCase="messagesStatusType.deleted"
+          message="There are no deleted enquiries assigned to you"
+          subMessage="To view all deleted enquiries, please "></empty-focused-view-page>
+        <empty-focused-view-page
+          *ngSwitchCase="messagesStatusType.draft"
+          message="No draft messages"
+          [noFocusView]="true"></empty-focused-view-page>
+      </container-element>
+    </ng-template>
+  </div>
+</ng-template>
+
+<trudi-modal
+  *ngIf="isShowModalWarning"
+  [visible]="isShowModalWarning"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  className="trudi-modal-custom">
+  <warning-note-popup
+    [warningMessage]="errorMessage"
+    [timeToCloseModal]="3000"
+    (isCloseModal)="isShowModalWarning = $event">
+  </warning-note-popup>
+</trudi-modal>
+
+<ng-container *ngIf="popupState.isShowForwardConversation">
+  <forward-conversation
+    [isSyncedAttachment]="isSyncedAttachment"
+    [threadId]="threadId"
+    [taskId]="taskId"
+    [taskDetailViewMode]="viewDetailMode.MESSAGE"
+    [popupState]="popupState"></forward-conversation>
+</ng-container>
+
+<trudi-modal
+  *ngIf="moveConversationState"
+  [visible]="moveConversationState"
+  [autoFocus]="null"
+  className="trudi-modal-custom">
+  <app-move-mess-to-different-task-v2
+    [taskDetailViewMode]="viewDetailMode.MESSAGE"
+    [propertyIds]="[currentMessage?.property?.id || '']"
+    [taskIds]="[currentMessage?.id || '']"
+    [show]="moveConversationState"
+    [isUnHappyPath]="isUnHappyPath"
+    [conversationId]="targetConversationId"
+    [isShowAddress]="isUnHappyPath"
+    (isQuitModal)="stopMoveToTask()"></app-move-mess-to-different-task-v2>
+</trudi-modal>
+
+<trudi-modal
+  *ngIf="!isSelectedMove && currentPopupConversionTask === popupTypeConversionTask.MOVE_TASK"
+  [visible]="!isSelectedMove && currentPopupConversionTask === popupTypeConversionTask.MOVE_TASK"
+  [autoFocus]="null"
+  className="trudi-modal-custom">
+  <app-move-mess-to-different-task-v2
+    [taskDetailViewMode]="viewDetailMode.MESSAGE"
+    [isBackButtonVisible]="isBackButtonMoveTask"
+    (onBack)="handleBackPopupMoveTask()"
+    [show]="moveConversationState"
+    [isBackButtonVisible]="true"
+    [propertyIds]="[currentPropertyId]"
+    [taskFolderId]="folderUid"
+    [isUnHappyPath]="isUnHappyPath"
+    [conversationId]="targetConversationId"
+    [isShowAddress]="isUnHappyPath"
+    (isQuitModal)="stopMoveToTaskFolder()"></app-move-mess-to-different-task-v2>
+</trudi-modal>
+
+<trudi-modal
+  [classContainer]="'modal_select--task'"
+  (onCancel)="handleCancelPopup()"
+  [isHideFooter]="true"
+  [visible]="currentPopupConversionTask === popupTypeConversionTask.SELECT_OPTION"
+  [autoFocus]="null"
+  title="Select an option to continue">
+  <div class="select_option--task">
+    <button
+      (click)="handleOpenConvertToTask()"
+      [disabled]="(this.inboxService.currentMailBox$ | async)?.status === mailBoxStatus.ARCHIVE || statusMessages ===  messagesStatusType.completed || statusMessages ===  messagesStatusType.deleted"
+      class="convert_task">
+      <div class="content_btn_task">
+        <trudi-icon class="item-icon" icon="createNewTask"></trudi-icon>
+        <div>
+          <p>Create new task</p>
+          <span>Create a new task and add messages to this task</span>
+        </div>
+      </div>
+    </button>
+    <button
+      [disabled]="(this.inboxService.currentMailBox$ | async)?.status === mailBoxStatus.ARCHIVE || statusMessages ===  messagesStatusType.completed || statusMessages ===  messagesStatusType.deleted"
+      (click)="handleOpenMoveToTask()"
+      class="move_task">
+      <div class="content_btn_task">
+        <trudi-icon class="item-icon" icon="existingTask"></trudi-icon>
+        <div>
+          <p>Add to existing task</p>
+          <span>Add messages to an existing task</span>
+        </div>
+      </div>
+    </button>
+    <button
+      *ngIf="inboxList.length > 1"
+      [disabled]="(this.inboxService.currentMailBox$ | async)?.status === mailBoxStatus.ARCHIVE || statusMessages ===  messagesStatusType.completed || statusMessages ===  messagesStatusType.deleted"
+      (click)="handleBulkCreateTasks()"
+      class="bulk_create_task">
+      <div class="content_btn_task">
+        <trudi-icon class="item-icon" icon="bulkMessage"></trudi-icon>
+        <div>
+          <p>Bulk create tasks</p>
+          <span
+            >Create multiple tasks at once - one task for each message
+            selected</span
+          >
+        </div>
+      </div>
+    </button>
+  </div>
+</trudi-modal>
+
+<create-new-task-pop-up
+  *ngIf="currentPopupConversionTask === popupTypeConversionTask.CREATE_TASK"
+  [taskNameList]="taskNameList"
+  [openFrom]="openFrom"
+  [dataConvert]="dataConvert"
+  [propertyId]="currentMessage?.property?.id"
+  [categoryID]="categoryID"
+  [selectedFolderId]="folderUid"
+  [showBackBtn]="showBackBtn"
+  (onBack)="handleBackPopupCreateTask()"
+  (onQuit)="showBackBtn = false"
+  (stopProcessCreateNewTask)="stopProcessCreateNewTask()"
+  (onSendBulkMsg)="handleConvertToTaskSuccess($event)">
+</create-new-task-pop-up>

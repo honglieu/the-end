@@ -1,0 +1,49 @@
+@import 'function';
+
+:host ::ng-deep {
+  .trudi-pagination-wrapper {
+    .page-size-option {
+      margin-right: 40px;
+      &-label {
+        margin-right: 16px;
+        @include fontSetup(var(--fg-neutral-weaker), 12px, 18px, normal, 400);
+      }
+    }
+
+    .page-size-item {
+      margin-right: 16px;
+      @include fontSetup(var(--fg-neutral-weaker), 12px, 18px, normal, 400);
+    }
+
+    .arrow-wrapper {
+      gap: 4px;
+      .icon-item {
+        background-color: transparent;
+        border: none;
+        padding: 6px;
+        cursor: pointer;
+        color: var(--fg-neutral-normal);
+
+        &:hover {
+          border-radius: 4px;
+          background: var(--bg-neutral-tonal-stronger);
+        }
+      }
+      .pagination-disable {
+        pointer-events: none;
+        color: var(--gray-500);
+      }
+    }
+    button {
+      padding: 0;
+      border: none;
+      background-color: transparent;
+    }
+
+    .ng-select.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
+      background: var(--bg-base);
+      box-shadow: var(--shadow-brand) !important;
+      border-radius: 8px;
+    }
+  }
+}

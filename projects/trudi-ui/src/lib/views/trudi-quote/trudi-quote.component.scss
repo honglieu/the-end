@@ -1,0 +1,189 @@
+@import 'function';
+
+:host {
+  .quote-wrapper {
+    position: relative;
+    padding: 6px 8px;
+    border-radius: 4px;
+    background-color: var(--gray-200);
+    height: 32px;
+
+    &:nth-child(odd) {
+      margin-top: 4px;
+    }
+
+    &:hover {
+      background-color: var(--gray-100);
+      .quote-end {
+        .more-icon {
+          cursor: pointer !important;
+          color: var(--fg-base);
+          opacity: 1;
+          &:hover {
+            color: var(--bg-neutral-tonal-stronger);
+          }
+          &:active {
+            color: var(--bg-neutral-tonal-strongest);
+          }
+        }
+      }
+    }
+
+    .quote-content {
+      gap: 4px;
+      @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+
+      .icon-attachments {
+        background: none !important;
+      }
+
+      .wrapper-content {
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      .ticket-count-wrapper {
+        &--box--count {
+          min-width: 18px !important;
+        }
+      }
+      .min-width-large-count {
+        min-width: 33px;
+      }
+
+      .sender-name {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        flex-shrink: 1;
+      }
+
+      .latest-message {
+        flex-shrink: 1;
+        flex-grow: 1;
+        flex-basis: 0;
+        height: 20px;
+        @include fontSetup(
+          var(--fg-neutral-normal, #61646c),
+          14px,
+          20px,
+          normal,
+          400
+        );
+      }
+      .un-seen-sms {
+        @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 400);
+      }
+
+      .seen-context {
+        @include fontSetup(var(--gray-400), 14px, 20px, normal, 600);
+      }
+      .tag-draft {
+        text-transform: uppercase;
+        color: var(--gray-400);
+        padding: 2px;
+        border-radius: 2px;
+        font-weight: 600;
+        font-size: 10px;
+        background-color: var(--gray-100);
+        line-height: 12px;
+      }
+      .tag-auto-reply {
+        text-transform: uppercase;
+        padding: 2px;
+        border-radius: 2px;
+        background-color: var(--gray-100);
+        min-width: 100px;
+        text-wrap: nowrap;
+        @include fontSetup(var(--gray-400), 10px, 12px, normal, 600);
+      }
+      .empty-content {
+        font-style: italic;
+        color: var(--fg-neutral-weaker);
+      }
+    }
+
+    .role-color {
+      position: absolute;
+      width: 3px;
+      height: 20px;
+      left: 0px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: block;
+      content: '';
+      border-radius: 0 16px 16px 0;
+    }
+
+    .quote-end {
+      .more-icon {
+        user-select: none;
+        border-radius: 50%;
+        display: block;
+        opacity: 0;
+        &:hover {
+          background-color: var(--gray-50);
+        }
+      }
+
+      .time {
+        margin-left: 2px;
+        @include fontSetup(var(--gray-400), 12px, 16px, normal, 400);
+      }
+    }
+
+    .ticket-count-unread {
+      ::ng-deep trudi-badge {
+        white-space: nowrap;
+      }
+    }
+  }
+  .quote-wrapper-conversation {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    height: 24px;
+    .role-color {
+      display: none;
+    }
+    &:hover {
+      background: none;
+    }
+  }
+
+  .opacity-50 {
+    opacity: 0.5;
+  }
+}
+
+::ng-deep .ant-dropdown-menu {
+  margin: 0;
+  padding: 0;
+}
+
+::ng-deep {
+  .spin-syncing {
+    -webkit-animation: spinSyncing 4s linear infinite;
+    -moz-animation: spinSyncing 4s linear infinite;
+    animation: spinSyncing 4s linear infinite;
+  }
+
+  @-moz-keyframes spinSyncing {
+    100% {
+      -moz-transform: rotate(360deg);
+    }
+  }
+
+  @-webkit-keyframes spinSyncing {
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spinSyncing {
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(-360deg);
+    }
+  }
+}

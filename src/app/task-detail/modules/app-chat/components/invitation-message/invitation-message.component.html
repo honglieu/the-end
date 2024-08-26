@@ -1,0 +1,30 @@
+<div
+  class="container"
+  *ngIf="isInvited"
+  [style.transform]="isShow ? 'translateY(0px)' : 'translateY(-100px)'">
+  <div class="message d-flex justify-content-between align-items-center">
+    <div class="content d-flex justify-content-center align-items-center">
+      <div class="icon">
+        <trudi-icon icon="iconAlertWarning"></trudi-icon>
+      </div>
+      <div class="text">
+        This contact does not use the tenant app
+        <a class="cursor-pointer" (click)="handleSendInvite()">Send invite</a>
+      </div>
+    </div>
+    <div class="close-invite-message-btn">
+      <button
+        (click)="handleCloseInviteApi(userId)"
+        class="d-flex justify-content-center align-items-center">
+        <trudi-icon icon="closeTransparentBg"></trudi-icon>
+      </button>
+    </div>
+  </div>
+</div>
+
+<app-modal-popup
+  *ngIf="isShowSendInviteSuccessModal"
+  [show]="isShowSendInviteSuccessModal"
+  [position]="popupModalPosition.center">
+  <app-invite-success numberSent="1"></app-invite-success>
+</app-modal-popup>

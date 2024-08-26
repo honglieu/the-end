@@ -1,0 +1,77 @@
+@import 'function';
+
+.facebook-view-detail-message {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px 0 28px;
+
+  &.has-error{
+    cursor: pointer;
+  }
+
+  & .message-body {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .message-file {
+      display: flex;
+      flex-direction: row-reverse;
+      align-items: center;
+      gap: 8px;
+    }
+
+    &:has(.facebook-message-footer-user) .message-file {
+      flex-direction: row !important;
+    }
+
+    &:has(.facebook-message-footer-user) .message-reply-header{
+      justify-content: flex-start !important;
+    }
+
+    .row-reverse {
+      flex-direction: row-reverse;
+    }
+
+    .message-container {
+      display: flex;
+
+      .message-box {
+        display: flex;
+        flex-direction: column;
+        width: fit-content;
+        margin: 0 4px;
+      }
+    }
+
+    .attachment-message-action-button {
+      display: flex;
+    }
+
+    &.full-width {
+      max-width: 100% !important;
+      width: 100%;
+    }
+
+    & .header {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    img.image-detail {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  & .message-emotion-body{
+    gap: 10px;
+  }
+
+  .highlighted {
+    color: var(--fg-neutral-strongest, #202020);
+    font-weight: 600;
+  }
+}

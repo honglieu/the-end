@@ -1,0 +1,51 @@
+<trudi-modal
+  *ngIf="stateModal === stateModalAddToTask.addItemToTask "
+  [visible]="stateModal === stateModalAddToTask.addItemToTask "
+  [modelWidth]="624"
+  (onCancel)="handleCloseModal()"
+  className="modal-select-option"
+  title="Add item to task">
+  <div class="select_option--task">
+    <button
+      class="create_task"
+      (click)="selectedOption = stateModalAddToTask.createTask"
+      [class.selected_option--task]="stateModalAddToTask.createTask === selectedOption">
+      <trudi-icon
+        svgClass="size-40"
+        class="item-icon"
+        icon="createNewTask"></trudi-icon>
+      <p>Create new task</p>
+    </button>
+
+    <button
+      class="move_task"
+      (click)="selectedOption = stateModalAddToTask.addToExistingTask"
+      [class.selected_option--task]="stateModalAddToTask.addToExistingTask === selectedOption">
+      <trudi-icon
+        svgClass="size-40"
+        class="item-icon"
+        icon="existingTask"></trudi-icon>
+      <p>Move to existing task</p>
+    </button>
+  </div>
+  @if(selectedOption === stateModalAddToTask.addToExistingTask) {
+  <div class="list_task--group">
+    <dropdown-list-task-group
+      [propertyIds]="[propertyId]"
+      (taskItem)="handleGetValueDropdown($event)"
+      [taskId]="[taskId]"></dropdown-list-task-group>
+  </div>
+  }
+  <ng-template #footerModal>
+    <button
+      [disabled]="(isConsole || isArchiveMailbox 
+      || isDisconnectMailbox || !selectedOption || 
+      (!selectedTask?.id && selectedOption === stateModalAddToTask.addToExistingTask))"
+      trudi-btn
+      size="large"
+      (click)="handleConfirm()">
+      {{ selectedOption === stateModalAddToTask.addToExistingTask ? 'Add to
+      task' : 'Confirm' }}
+    </button>
+  </ng-template>
+</trudi-modal>

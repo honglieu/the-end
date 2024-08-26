@@ -1,0 +1,8 @@
+@import 'function';
+.range-time-picker {
+  margin: 8px 0;
+  .to {
+    @include fontSetup(var(--gray-500), 1.4rem, 20px, normal, 400);
+    margin: 0 12px;
+  }
+}

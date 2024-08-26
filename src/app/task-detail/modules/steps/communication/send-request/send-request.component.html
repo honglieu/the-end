@@ -1,0 +1,17 @@
+<trudi-step
+  [model]="model"
+  [showIconTitle]="false"
+  [hideProcessLine]="false"
+  [propertyTreeStep]="false"
+  [buttonKey]="buttonKey"
+  (onProcess)="enableProcess()">
+</trudi-step>
+
+<!-- <trudi-send-msg-v2
+  *ngIf="popupState.isTrudiSendMessage"
+  [rawMsg]="model?.fields.msgBody"
+  [configs]="sendMessageConfigs"
+  (onQuit)="handleCloseSendMsgPopup()"
+  [listOfFiles]="model?.fields?.files || []"
+  (onSendMsg)="onSendMsg($event)"
+  (onBack)="onBack()"></trudi-send-msg-v2> -->

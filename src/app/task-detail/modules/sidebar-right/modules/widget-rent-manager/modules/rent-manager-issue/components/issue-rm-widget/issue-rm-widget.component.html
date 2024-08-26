@@ -1,0 +1,14 @@
+<trudi-suggested-step-group
+  *ngIf="rmIssues?.length"
+  groupTitle="ISSUE"
+  class="mb-0">
+  <rent-manager-card
+    *ngFor="let cardData of rmIssues"
+    [syncStatus]="cardData.syncStatus"
+    (clickCard)="handleClickRmIssue(cardData)"
+    (retry)="handleRetrySyncRmIssue(cardData)"
+    (cancel)="handleCancelRmIssue(cardData)"
+    (remove)="handleRemoveRmIssue(cardData)"
+    [cardData]="cardData">
+  </rent-manager-card>
+</trudi-suggested-step-group>

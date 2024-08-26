@@ -1,0 +1,80 @@
+<trudi-modal
+  className="modal-checking-duplicates-bulk-create-task"
+  [visible]="visible"
+  title="Checking for duplicates"
+  [subTitle]="subTitle"
+  [autoFocus]="null"
+  (onCancel)="handleCancel()">
+  <div class="body-modal-checking-duplicates">
+    <div class="warning">
+      <trudi-icon icon="iconWarning" svgClass="size-24"></trudi-icon>
+      <div class="warning-content">
+        <div class="warning-info">{{warningInfo}}</div>
+        <div class="warning-remind">{{warningRemind}}</div>
+      </div>
+    </div>
+    <div class="list-events-linked-task">
+      <ng-container *ngFor="let event of listEventHasLinkedTask">
+        <div class="detail-event-linked-task">
+          <div class="content-event-linked-task">
+            <div class="calendar-event">
+              {{event?.eventName | titleCasePipe}} &#32;&#45;&#32;
+              {{event?.eventDate | formatDate | async}}
+            </div>
+            <div class="property-address">
+              <trudi-icon icon="iconAddress" svgClass="size-16"></trudi-icon>
+              <span>{{event?.streetline}}</span>
+            </div>
+            <div class="linked-task">
+              <trudi-icon icon="linkedTask" svgClass="size-16"></trudi-icon>
+              <span>
+                <ng-container
+                  *ngFor="let title of event.linkedTaskTitles; let i = index">
+                  {{title + (i < event.linkedTaskTitles.length -1 ? ', ':'')}}
+                </ng-container>
+              </span>
+            </div>
+          </div>
+          <input
+            [id]="event.id"
+            type="checkbox"
+            [checked]="event.isDuplicateCreateTask"
+            (change)="refreshDisplayData()"
+            [(ngModel)]="event.isDuplicateCreateTask" />
+          <label [for]="event.id">
+            <trudi-icon
+              *ngIf="!event.isDuplicateCreateTask"
+              icon="blankUncheck"
+              svgClass="size-20"></trudi-icon>
+            <trudi-icon
+              *ngIf="event.isDuplicateCreateTask"
+              icon="checkMarkSuccess"
+              svgClass="size-20"></trudi-icon>
+          </label>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div class="footer-modal-checking-duplicates">
+      <button
+        *ngIf="displayBackButton"
+        trudi-btn
+        size="large"
+        btnType="neutral"
+        variant="outlined"
+        (click)="handleBack()">
+        Back
+      </button>
+      <button
+        trudi-btn
+        [disabled]="totalEvents === 0"
+        class="margin-left-12"
+        size="large"
+        variant="filled"
+        (click)="handleNext()">
+        Next
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

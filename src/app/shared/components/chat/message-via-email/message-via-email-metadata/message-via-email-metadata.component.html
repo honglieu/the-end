@@ -1,0 +1,52 @@
+<div
+  [ngClass]="{'flex-dir-column wrap-text': showAddContactButton}"
+  class="d-flex text-ellipsis wrap-email-metadata">
+  <span
+    *ngFor="let item of emailMetadataFiled || [];let last = last"
+    class="flex-1 d-flex"
+    [ngStyle]="{'flex': hasStyleName ? 'auto' : 1, width: 'fit-content'}"
+    [ngClass]="{'overflow-hidden': last && hasStyleName, 'text-ellipsis': !hasStyleName}">
+    <div class="text-ellipsis">
+      <span
+        [class.user-title-underline]="canViewUserProfile && !(isSender && userId === trudiUserId)"
+        (click)="canViewUserProfile && !(isSender && userId === trudiUserId) && handleClickEmail(item, $event)">
+        <ng-container *ngIf="item?.userLabelObject?.userLabel">
+          <span
+            class="info-name"
+            [class.info-name-email]="item?.name.length > 24 && hasStyleName"
+            appE2E
+            e2eId="details-message-info-popup-to-user-name"
+            >{{senderPmName || item?.pmName ||
+            item?.userLabelObject?.userLabel}}</span
+          >
+        </ng-container>
+        <span
+          class="info-email"
+          *ngIf="showEmailTag && item?.email !== '' && !item.hideEmail">
+          <span>&nbsp;</span>
+          <span
+            [class.wrap-text]="showAddContactButton"
+            (click)="canViewUserProfile && handleClickEmail(item, $event)"
+            [ngClass]="{'user-title-underline': canViewUserProfile}"
+            >&lt;{{item?.email}}&gt;</span
+          >
+        </span>
+      </span>
+      <ng-container>
+        <span *ngIf="showRole" class="info-role">
+          {{item?.userLabelObject?.userRole ? '(' +
+          item?.userLabelObject?.userRole + ')' : ''}}</span
+        >
+      </ng-container>
+      <ng-container
+        *ngIf="!last && (item?.name !== '' || item?.email !== '') && !showAddContactButton"
+        >,&nbsp;</ng-container
+      >
+    </div>
+    <span
+      *ngIf="showAddContactButton && (item?.userLabelObject?.userRole | uppercase) === EUserPropertyType.UNRECOGNIZED"
+      class="add-contact">
+      <add-contact-popup [participantInfo]="item"></add-contact-popup>
+    </span>
+  </span>
+</div>

@@ -1,0 +1,35 @@
+.bar_chart {
+  width: 100%;
+}
+
+.default_tooltip {
+  border-radius: 8px;
+  display: inline-block;
+  padding: 8px;
+  box-shadow: 0px 13.86849px 35.66184px 0px rgba(0, 0, 0, 0.13),
+    0px 1.98121px 11.88728px 0px rgba(0, 0, 0, 0.08);
+  background-color: var(--white);
+  &--year {
+    color: rgba(100, 100, 100, 1);
+    margin: 0;
+    padding: 0;
+    margin-top: 2px;
+  }
+  &--hours {
+    font-weight: 600;
+    color: rgba(32, 32, 32, 1);
+    margin: 0;
+    padding: 0;
+    margin-top: 2px;
+  }
+  &--trend {
+    font-weight: 600;
+    color: rgba(64, 193, 116, 1);
+    margin: 0;
+    padding: 0;
+    margin-top: 2px;
+  }
+}
+.bar_chart {
+  overflow-x: auto;
+}

@@ -1,0 +1,56 @@
+@import 'function';
+.footer-timestamp {
+  @include fontSetup(var(--fg-neutral-normal, #61646C), 10px, 12px, normal, 400);
+}
+img {
+  margin-right: 4px;
+}
+.error-text {
+  color: var(--fg-danger);
+  cursor: pointer;
+  position: absolute;
+  width: 170px;
+  bottom: -27px;
+  right: 0;
+}
+.sending-text{
+  color: var(--fg-neutral-weaker)
+}
+
+.text-warning {
+  padding-left: 32px;
+}
+
+.resend-disable {
+  cursor: default;
+}
+
+.warning-call-name {
+  @include fontSetup(var(--bg-neutral-solid-normal), 1rem, 2rem, normal, 400);
+}
+
+:host {
+  position: relative;
+  .dot {
+    animation: blink 1.4s infinite both;
+  }
+
+  .dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes blink {
+    0%,
+    80%,
+    100% {
+      opacity: 0;
+    }
+    40% {
+      opacity: 1;
+    }
+  }
+}

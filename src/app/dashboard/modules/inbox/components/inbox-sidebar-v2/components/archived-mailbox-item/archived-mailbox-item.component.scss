@@ -1,0 +1,253 @@
+@import 'function';
+
+:host {
+  ::ng-deep .ant-menu-inline {
+    background-color: #ffffff;
+    & > .ant-menu-submenu > .ant-menu-submenu-title {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    & > ul .ant-menu-item-selected,
+    .item-selected {
+      & > .ant-menu-submenu-title {
+        margin-bottom: 0px;
+      }
+
+      .icon-wrapper {
+        .item-icon {
+          color: var(--fg-neutral-high-emphasis) !important;
+        }
+      }
+
+      .item-total {
+        @include fontSetup(
+          var(--fg-neutral-high-emphasis) !important,
+          12px,
+          16px,
+          normal,
+          500
+        );
+      }
+
+      .item-name {
+        @include fontSetup(
+          var(--fg-neutral-high-emphasis) !important,
+          14px,
+          20px,
+          normal,
+          500 !important
+        );
+      }
+
+      background: var(--bg-neutral-tonal-focus) !important;
+    }
+
+    & > ul .non-selected {
+      background-color: transparent !important;
+
+      .item-total {
+        @include fontSetup(
+          var(--fg-neutral-normal) !important,
+          12px,
+          16px,
+          normal,
+          500 !important
+        );
+      }
+
+      .item-name {
+        @include fontSetup(
+          var(--fg-neutral-normal) !important,
+          14px,
+          20px,
+          normal,
+          500 !important
+        );
+      }
+    }
+  }
+
+  ::ng-deep .ant-menu-item a:hover {
+    color: var(--fg-neutral-high-emphasis) !important;
+  }
+
+  ::ng-deep .ant-menu-submenu-title {
+    padding: 0 40px 0 0 !important;
+  }
+
+  ::ng-deep
+    .ant-menu-submenu:hover
+    > .ant-menu-submenu-title
+    > .ant-menu-submenu-arrow {
+    color: var(--fg-neutral-normal);
+  }
+
+  ::ng-deep
+    .ant-menu-submenu-open.ant-menu-submenu-inline
+    > .ant-menu-submenu-title
+    > .ant-menu-submenu-arrow::before {
+    top: -8px;
+    rotate: 270deg;
+    transform: unset;
+  }
+
+  ::ng-deep .ant-menu-submenu-arrow {
+    left: 12px;
+    display: block;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      right: -225px;
+      width: 20px;
+      height: 20px;
+      transform: unset;
+      rotate: 90deg;
+      background-repeat: no-repeat;
+      background-color: transparent;
+      background-image: url('/assets/images/chevron-right.png');
+    }
+
+    &::after {
+      content: none;
+    }
+  }
+
+  ::ng-deep .ant-menu-inline {
+    // overflow: hidden !important;
+    & > .ant-menu-submenu > .ant-menu-submenu-title {
+      &:hover,
+      &:active {
+        background-color: var(--neutral-bg-tonal-default, #f2f5f7);
+        color: var(--fg-neutral-subtle, #999);
+        .mailbox-setting {
+          z-index: 999;
+          background-color: rgba(0, 0, 0, 0.4);
+        }
+      }
+    }
+  }
+}
+
+.multiple-user {
+  &__item {
+    &.archived {
+      img {
+        opacity: 0.5;
+      }
+      .multiple-user__name,
+      .multiple-user__email {
+        color: var(--fg-neutral-subtle, #999);
+      }
+    }
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+
+    // &:hover {
+    //   background-color: var(--brand-200);
+    // }
+    // &:focus-visible {
+    //   border: 2px solid var(--primary-color);
+    // }
+    & img {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      max-width: none;
+    }
+  }
+
+  &__name {
+    max-width: 120px;
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      16px,
+      24px,
+      normal,
+      600
+    );
+  }
+
+  &__name-syncing {
+    max-width: 120px;
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      16px,
+      24px,
+      normal,
+      600
+    );
+  }
+
+  &__email {
+    max-width: 140px;
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      12px,
+      16px,
+      normal,
+      400
+    );
+  }
+
+  &__email-syncing {
+    max-width: 130px;
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      12px,
+      16px,
+      normal,
+      400
+    );
+  }
+}
+
+.avatar {
+  position: relative;
+  width: 36px;
+  display: flex;
+  trudi-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    transform: translateX(50%);
+    border-radius: 50%;
+    overflow: hidden;
+  }
+}
+
+.custom-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--bg-neutral-tonal-focus, #d8dcdf);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--fg-neutral-subtle, #999);
+}
+
+.box-content {
+  padding: 4px 12px;
+}
+
+.box-avatar {
+  width: 36px;
+  height: 36px;
+  .mailbox-setting {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+  }
+}

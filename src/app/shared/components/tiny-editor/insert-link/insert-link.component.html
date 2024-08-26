@@ -1,0 +1,86 @@
+<div class="ai-setting-generate-msg">
+  <div class="position-relative" (click)="$event.stopPropagation()">
+    <ng-template #default>
+      <button
+        *ngIf="showPopover"
+        nz-tooltip
+        nzTooltipTitle="Add link"
+        class="btn-item size-24 border-rad-4 selected btn-control-editor">
+        <trudi-icon
+          [icon]="showPopover ? 'linkSelected' : 'linkV2'"
+          [style]="{ 'width.px': 24, 'height.px': 24 }"></trudi-icon>
+      </button>
+      <button
+        class="btn-item size-24 border-rad-4"
+        nz-popover
+        #popover="nzPopover"
+        close-dropdown-when-resizable
+        [nzPopoverComponent]="popover"
+        [nzPopoverPlacement]="from === ETinyEditorOpenFrom.AppChat ? 'top' : 'bottom'"
+        [nzPopoverContent]="contentTemplate"
+        nzPopoverTrigger="click"
+        nzPopoverOverlayClassName="ai-setting-gen-msg-overlay insert-link-overlay"
+        [nzPopoverVisible]="showPopover"
+        (nzPopoverVisibleChange)="visibleChange($event);"
+        nz-tooltip
+        nzTooltipTitle="Add link">
+        <trudi-icon
+          icon="linkV2"
+          [style]="{ 'width.px': 24, 'height.px': 24 }"></trudi-icon>
+      </button>
+    </ng-template>
+    <ng-container *ngIf="fromMore; else default">
+      <button
+        nz-popover
+        nzPopoverTrigger="click"
+        [nzPopoverPlacement]="from === ETinyEditorOpenFrom.AppChat ? 'top' : 'bottom'"
+        [nzPopoverContent]="contentTemplate"
+        nzPopoverOverlayClassName="ai-setting-gen-msg-overlay insert-link-overlay"
+        [nzPopoverVisible]="showPopover"
+        (nzPopoverVisibleChange)="visibleChange($event)"
+        nz-tooltip
+        [nzTooltipTitle]="'Add link'"
+        class="btn-item more size-24 border-rad-4"
+        [ngClass]="{'selected': btn?.selected}">
+        <trudi-icon
+          [icon]="showPopover ? icon.moreSelected : icon.more"
+          class="size-20 justify-content-center y-center"></trudi-icon>
+      </button>
+    </ng-container>
+  </div>
+  <ng-template #contentTemplate>
+    <div class="container-form" (click)="$event.stopPropagation()">
+      <div class="link-wrapper" [formGroup]="linkForm">
+        <trudi-form-control
+          [errors]="[{errorName: 'invalidUrl', errorMessage: 'Invalid URL'}]">
+          <trudi-text-field
+            label="Link"
+            size="large"
+            formControlName="url"></trudi-text-field>
+        </trudi-form-control>
+        <div class="mt-8">
+          <trudi-form-control>
+            <trudi-text-field
+              label="Display text (optional)"
+              size="large"
+              formControlName="title"></trudi-text-field>
+          </trudi-form-control>
+        </div>
+      </div>
+      <div class="d-flex gap-8 mt-16">
+        <button
+          trudi-btn
+          size="large"
+          btnType="neutral"
+          variant="outlined"
+          class="trudi-btn trudi-btn-large ml-auto"
+          (click)="closeModal()">
+          Cancel
+        </button>
+        <button trudi-btn (click)="save()" [disabled]="linkForm.invalid">
+          Save
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,31 @@
+<div class="select-receiver-container d-flex flex-dir-column">
+  <div class="toWrapper" [hidden]="!isShowPreview">
+    <div class="to-preview pd-12" (click)="onClickToField()">
+      <message-receiver-preview
+        *ngIf="isShowPreview"
+        [toRawUser]="selectedReceivers?.value?.[0]"></message-receiver-preview>
+    </div>
+  </div>
+  <div
+    form="sendMsgForm"
+    [hidden]="isShowPreview"
+    [whiteList]="whiteListClickOutsideSelectReceiver"
+    appOutsideClickListener
+    (clickOutside)="handleClickOutSide()">
+    <trudi-form-control
+      [errors]="[{errorName: 'emailInvalid', errorMessage: 'Please remove invalid email'}]">
+      <message-receiver
+        #toField
+        class="receiver-wrapper"
+        [formControl]="selectedReceivers"
+        prefixTemplate="To"
+        [configs]="configs"
+        [extraCls]="{'input-error-select': selectedReceivers.invalid && selectedReceivers.touched}"
+        [compareWith]="compareWith"
+        (changeValue)="changeReceivers.emit(); handleClickOutSide()"
+        (setPreviewLabel)="setPreviewLabel($event)"
+        [isRmEnvironment]="isRmEnvironment">
+      </message-receiver>
+    </trudi-form-control>
+  </div>
+</div>

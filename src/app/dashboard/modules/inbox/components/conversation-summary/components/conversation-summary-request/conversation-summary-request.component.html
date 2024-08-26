@@ -1,0 +1,294 @@
+<div
+  [id]="'item_' + requestItem?.messageId"
+  class="request-conversation-summary">
+  <div class="d-flex flex-dir-column gap-8">
+    <div class="d-flex align-items-start gap-24">
+      @switch (requestItemToDisplay.type) { @case
+      (EOptionType.RESCHEDULE_INSPECTION_REQUEST) {
+      <div class="d-flex flex-dir-column gap-4">
+        <div class="ticket-request-card-header-info">
+          <div class="ticket-request-card-header-info-title">
+            Reschedule inspection
+          </div>
+          <div class="ticket-request-card-header-info-status">
+            {{requestItemToDisplay.status}} at {{requestItemToDisplay.timestamp
+            | formatTime: true | async}}, {{requestItemToDisplay.timestamp |
+            formatDate | async}}
+          </div>
+        </div>
+        <div class="content-detail">
+          @if(requestItemToDisplay.rescheduleInfo.suggestedDate) {
+          <div>
+            <span class="title-type-request">Suggested date:&nbsp;</span>
+            <span class="content-type-request"
+              >{{ requestItemToDisplay.rescheduleInfo.suggestedDate }}</span
+            >
+          </div>
+          } @if(requestItemToDisplay.rescheduleInfo.suggestedTime) {
+          <div>
+            <span class="title-type-request">Suggested time:&nbsp;</span>
+            <span class="content-type-request"
+              >{{ requestItemToDisplay.rescheduleInfo.suggestedTime }}</span
+            >
+          </div>
+          } @if(requestItemToDisplay.translatedContent ||
+          requestItemToDisplay.rescheduleInfo.reason ||
+          requestItemToDisplay.originalContent) {
+          <div>
+            <span class="title-type-request">Reason:&nbsp;</span>
+            <span class="content-type-request"
+              >{{ requestItemToDisplay.translatedContent ||
+              requestItemToDisplay.rescheduleInfo.reason ||
+              requestItemToDisplay.originalContent }}</span
+            >
+          </div>
+          }
+        </div>
+      </div>
+      } @case (EOptionType.VACATE_REQUEST) {
+      <div class="d-flex flex-dir-column gap-4">
+        <div class="ticket-request-card-header-info">
+          <div class="ticket-request-card-header-info-title">
+            Vacate request
+          </div>
+          <div class="ticket-request-card-header-info-status">
+            {{requestItemToDisplay.status}} at {{requestItemToDisplay.timestamp
+            | formatTime: true | async}}, {{requestItemToDisplay.timestamp |
+            formatDate | async}}
+          </div>
+        </div>
+        <div class="content-detail">
+          @if(requestItemToDisplay.vacateInfo.type) {
+          <div>
+            <span class="title-type-request">Type:&nbsp;</span>
+            <span class="content-type-request"
+              >{{ requestItemToDisplay.vacateInfo.type }}</span
+            >
+          </div>
+          } @if(requestItemToDisplay.vacateInfo.intendedDate) {
+          <div>
+            <span class="title-type-request"
+              >Intended move out date:&nbsp;</span
+            >
+            <span class="content-type-request"
+              >{{ requestItemToDisplay.vacateInfo.intendedDate }}</span
+            >
+          </div>
+          } @if(requestItemToDisplay.translatedContent ||
+          requestItemToDisplay.vacateInfo.note ||
+          requestItemToDisplay.originalContent) {
+          <div>
+            <span class="content-type-request"
+              ><span class="title-type-request">Note:&nbsp;</span>&nbsp;{{
+              requestItemToDisplay.translatedContent ||
+              requestItemToDisplay.vacateInfo.note ||
+              requestItemToDisplay.originalContent }}</span
+            >
+          </div>
+          }
+        </div>
+      </div>
+      }@case (EOptionType.FINAL_INSPECTION) {
+      <div class="d-flex flex-dir-column gap-4">
+        <div class="ticket-request-card-header-info">
+          <div class="ticket-request-card-header-info-title">
+            {{ requestItemToDisplay?.title }}
+          </div>
+          <div class="ticket-request-card-header-info-status">
+            {{requestItemToDisplay.status}} at {{requestItemToDisplay.timestamp
+            | formatTime: true | async}}, {{requestItemToDisplay.timestamp |
+            formatDate | async}}
+          </div>
+        </div>
+        <div class="content-detail">
+          @if(requestItemToDisplay.translatedContent ||
+          requestItemToDisplay.finalInspectionRequest.availableTime) {
+          <div>
+            <span class="title-type-request">Available date:&nbsp;</span>
+            <span class="content-type-request"
+              >{{ requestItemToDisplay.translatedContent ||
+              requestItemToDisplay.finalInspectionRequest.availableTime }}</span
+            >
+          </div>
+          }
+        </div>
+      </div>
+      } @default {
+      <div class="body-maintenance-request">
+        <div class="general-request-info-details">
+          <div class="ticket-request-card-header-info">
+            <div class="ticket-request-card-header-info-title">
+              {{requestItemToDisplay.title}} @if(requestItemToDisplay.isUrgent)
+              {
+              <trudi-badge
+                text="Urgent"
+                size="extra-small"
+                variant="error"
+                badgeType="filled"
+                [rounded]="true">
+              </trudi-badge>
+              }
+            </div>
+            <div class="ticket-request-card-header-info-status">
+              {{requestItemToDisplay.status}} at
+              {{requestItemToDisplay.timestamp | formatTime: true | async}},
+              {{requestItemToDisplay.timestamp | formatDate | async}}
+            </div>
+          </div>
+          @if(requestItemToDisplay.translatedContent ||
+          requestItemToDisplay.originalContent) {
+          <span class="content-maintenance-request">
+            {{ requestItemToDisplay.translatedContent ||
+            requestItemToDisplay.originalContent }}
+          </span>
+          }
+        </div>
+      </div>
+      } }
+      <ng-container *ngTemplateOutlet="requestImagesTemplate"></ng-container>
+    </div>
+    @if(requestItemToDisplay?.showTranslation){
+    <div class="translation-label">
+      <language-translation-label
+        [messagesTranslate]="requestItemToDisplay?.ticketTrans"
+        [inputLanguage]="requestItemToDisplay?.ticketLanguageCode"></language-translation-label>
+    </div>
+    } @if(requestItemToDisplay?.translatedContent &&
+    requestItemToDisplay?.showTranslation){
+    <div class="language-original-content">
+      <language-original-content
+        #languageOriginalContent
+        [isOpenDescription]="isOpenDescription"
+        [content]="languageOriginContent"></language-original-content>
+    </div>
+    }
+  </div>
+
+  <div>
+    <div class="conversation-summary-request-actions">
+      @if(requestItem?.taskLinked) {
+      <button
+        variant="outlined"
+        (click)="handleNavigateLinkedTask(requestItem?.taskLinked?.taskId)"
+        trudi-btn
+        size="small">
+        <trudi-icon icon="navigateLinkedTask"></trudi-icon>View task
+      </button>
+      } @else {
+      <button (click)="handleAddToTask()" trudi-btn size="small">
+        <trudi-icon icon="plusWhite" svgClass="size-12"></trudi-icon>Add to task
+      </button>
+      }
+      <button
+        trudi-btn
+        variant="outlined"
+        size="small"
+        btnType="neutral"
+        shape="square"
+        [selected]="isOpenMenuAction"
+        nzPlacement="topLeft"
+        [nzDropdownMenu]="threeDotsMenu"
+        (nzVisibleChange)="isOpenMenuAction = $event"
+        nz-dropdown
+        [nzTrigger]="'click'">
+        <trudi-icon
+          icon="verticalCustom"
+          [style]="{'transform': 'rotate(90deg)'}"></trudi-icon>
+      </button>
+    </div>
+
+    <nz-dropdown-menu #threeDotsMenu>
+      <div nz-menu>
+        <button
+          nz-menu-item
+          class="action-item"
+          *ngIf="!replied"
+          [disabled]="isConsole"
+          (click)="handleReply()">
+          <trudi-icon
+            [style]="{'width.px': 20, 'height.px': 20}"
+            icon="cornerUpLeft"></trudi-icon>
+          <p>Reply via email</p>
+        </button>
+
+        <button
+          nz-menu-item
+          class="action-item"
+          (click)="handleForward()"
+          [disabled]="isConsole">
+          <trudi-icon
+            [style]="{'width.px': 20, 'height.px': 20, 'transform': 'scaleX(-1)'}"
+            icon="cornerUpLeft"></trudi-icon>
+          <p>Forward</p>
+        </button>
+      </div>
+    </nz-dropdown-menu>
+  </div>
+
+  @if(!!requestItemToDisplay.linkedConversations?.length){
+  <div class="activity-line-wrapper">
+    <nz-timeline class="activity-line">
+      <ng-container
+        *rxFor="let linkedEmail of requestItemToDisplay?.linkedConversations; trackBy: 'id'; strategy: 'immediate'">
+        @if(linkedEmail?.taskType === TaskType.TASK && linkedEmail?.typeLink) {
+        <nz-timeline-item>
+          <item-request-linked-task
+            [linkedData]="linkedEmail"></item-request-linked-task>
+        </nz-timeline-item>
+        } @else {
+        <nz-timeline-item>
+          <conversation-summary-linked
+            [linkedEmail]="linkedEmail"
+            [currentConversation]="currentUserOfConversation"></conversation-summary-linked>
+        </nz-timeline-item>
+        }
+      </ng-container>
+    </nz-timeline>
+  </div>
+  }
+</div>
+
+@if(stateModalAddToTask) {
+<add-item-to-task
+  [propertyId]="currentUserOfConversation?.propertyId"
+  [taskId]="currentUserOfConversation.taskId"
+  [actionRequestId]="requestItem?.messageId"
+  [actionName]="requestItem?.options?.response?.payload?.ticket?.conversationTopic"
+  [stateModal]="stateModalAddToTask"
+  (closeModal)="handleCloseModal()">
+</add-item-to-task>
+}
+
+<ng-template #requestImagesTemplate>
+  @if(requestItemToDisplay?.ticketFiles) {
+  <div class="request-row-image ml-auto">
+    <ng-container
+      *rxFor="let file of requestItemToDisplay.ticketFiles | slice:0:MAX_FILE_DISPLAY;
+           trackBy: 'id'; 
+           strategy: 'immediate'; 
+           let index = index;
+           let last = last">
+      <div class="request-row-image-item">
+        <app-message-file
+          (click)="loadFile(file)"
+          [showBoxShadow]="false"
+          [grayBorder]="false"
+          [widthInPercent]="40"
+          [messageFile]="file"
+          [size]="44"
+          [isTicketRequest]="true"></app-message-file>
+      </div>
+      @if (!!last && requestItemToDisplay.ticketFiles.length > MAX_FILE_DISPLAY)
+      {
+      <div
+        class="request-row-image-dark-overlay"
+        (click)="loadFile(requestItemToDisplay.ticketFiles[MAX_FILE_DISPLAY - 1])">
+        <div class="request-row-image-dark-overlay-text">
+          +{{requestItemToDisplay.ticketFiles.length - MAX_FILE_DISPLAY + 1}}
+        </div>
+      </div>
+      }
+    </ng-container>
+  </div>
+  }
+</ng-template>

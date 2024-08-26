@@ -1,0 +1,59 @@
+<button
+  tabindex="0"
+  size="small"
+  variant="neutral"
+  class="assigned-agent-container"
+  data-console="assignee-button"
+  nz-dropdown
+  [nzTrigger]="'hover'"
+  [(nzPlacement)]="placement"
+  [nzDropdownMenu]="menu"
+  nzOverlayClassName="filter-by-portfolio-dropdown"
+  [(nzVisible)]="visibleDropdown"
+  (nzVisibleChange)="onDropdownMenuVisibleChange($event)"
+  (nzPopoverVisibleChange)="onDropdownMenuVisibleChange($event)"
+  menuKeyboard
+  [visibleMenu]="visibleDropdown"
+  [menuType]="EMenuDropdownType.Dropdown">
+  <ng-container>
+    <div
+      class="cursor-pointer assigned-agent d-flex align-items-center white-space-nowrap target-person"
+      [ngClass]=" {'btn-focus' : visibleDropdown}"
+      nz-tooltip
+      nzTooltipPlacement="bottom">
+      <ng-container>
+        <div class="td-icon-circle-btn d-flex w-100 justify-content-between">
+          <div class="text-agent-detail d-flex align-items-center">
+            <span class="info">Portfolio</span>
+            <span
+              [ngClass]="{'visible':selectedPortfolio?.length}"
+              class="text-agent">
+              {{selectedPortfolio?.length}}</span
+            >
+            <trudi-icon
+              class="icon-down"
+              svgClass="size-20"
+              viewBox="auto"
+              icon="chevronDown"></trudi-icon>
+          </div>
+          <trudi-icon
+            class="icon-left"
+            svgClass="size-20"
+            viewBox="auto"
+            icon="chevronRight"></trudi-icon>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</button>
+
+<nz-dropdown-menu #menu>
+  <div nz-menu>
+    <filter-portfolio-box
+      tabindex="-1"
+      #assignAttachBox
+      *ngIf="visibleDropdown"
+      [countSelected]="selectedPortfolio?.length"
+      [isDisable]="disabled"></filter-portfolio-box>
+  </div>
+</nz-dropdown-menu>

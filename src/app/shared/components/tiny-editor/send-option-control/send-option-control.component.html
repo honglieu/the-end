@@ -1,0 +1,61 @@
+<ng-container *ngIf="hasAppUser; else nonAppUser">
+  <ng-template #contentTemplate>
+    <div class="menu-content">
+      <div
+        *ngFor="let item of dataList"
+        class="option-item"
+        (click)="handleOnChange($event, item)"
+        [ngClass]="{'selected': model?.id === item.id, 'disable': !item.active }">
+        <span>{{ item.name }}</span>
+        <trudi-icon
+          *ngIf="model?.id === item.id"
+          class="checkmark-down"
+          svgClass="size-16"
+          viewBox="auto"
+          [icon]="'check'"></trudi-icon>
+        <trudi-icon
+          *ngIf="item.id === 0"
+          svgClass="size-16"
+          viewBox="auto"
+          [icon]="'infoFill'"
+          nz-tooltip
+          [nzTooltipTitle]="'Prioritize in-app messaging for app users and email for non-app users'"></trudi-icon>
+      </div>
+    </div>
+  </ng-template>
+
+  <div
+    class="send-option-btn-group"
+    [ngStyle]="{width: hasAppUser ? (model.value === 'EMAIL' ? '170px' : '122px') : '90px'}">
+    <button *ngIf="isDropdownMenuOpen" class="send-option-btn selected">
+      <span>{{model.name}}</span>
+      <trudi-icon
+        svgClass="size-16"
+        viewBox="auto"
+        [icon]="'arrowGray99'"></trudi-icon>
+    </button>
+    <button
+      class="send-option-btn"
+      nz-popover
+      [nzPopoverPlacement]=" inlineMessage ? 'topLeft' : 'bottom'"
+      [nzPopoverContent]="contentTemplate"
+      nzPopoverTrigger="click"
+      nzPopoverOverlayClassName="trudi-dropdown-list-overlay"
+      [nzPopoverVisible]="isDropdownMenuOpen"
+      (nzPopoverVisibleChange)="isDropdownMenuOpen = $event"
+      #popover="nzPopover">
+      <span>{{model.name}}</span>
+      <trudi-icon
+        svgClass="size-16"
+        viewBox="auto"
+        [icon]="'arrowGray99'"></trudi-icon>
+    </button>
+  </div>
+</ng-container>
+<ng-template #nonAppUser>
+  <div class="send-option-btn-group" [ngStyle]="{width:'71px'}">
+    <button class="send-option-btn">
+      <span>{{model.name}}</span>
+    </button>
+  </div>
+</ng-template>

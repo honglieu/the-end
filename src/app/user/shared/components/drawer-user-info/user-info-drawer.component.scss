@@ -1,0 +1,212 @@
+@import 'function';
+
+.modal-container {
+  position: fixed;
+  display: block;
+  width: 340px;
+  right: 0px;
+  z-index: 100;
+  background: var(--bg-neutral-tonal-normal, #f4f4f5);
+  box-shadow: -14px 0px 36px 0px #00000021, -2px 0px 12px 0px #ffffff14;
+  cursor: default;
+
+  &-white {
+    background: var(--white);
+  }
+
+  .description-text {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #26272b),
+      14px,
+      20px,
+      normal,
+      600
+    );
+    padding: 8px 12px;
+  }
+}
+
+.export-conversation {
+  &__history {
+    @include fontSetup(var(--gray-600), 12px, 16px, normal, 500);
+  }
+}
+
+.drawer-header {
+  padding: 8px 0;
+  gap: 4px;
+  background: var(--white);
+
+  &__title,
+  &__mailbox-name,
+  &__email {
+    padding: 0 16px;
+    word-break: break-all;
+  }
+
+  &__title {
+    @include fontSetup(var(--gray-600), 18px, 28px, normal, 600);
+
+    &--facebook {
+      .drawer-header__title__email {
+        @include fontSetup(
+          var(--fg-neutral-stronger, #333741),
+          14px,
+          20px,
+          normal,
+          400
+        );
+        display: flex;
+        column-gap: 4px;
+        align-items: center;
+      }
+    }
+  }
+
+  &__email {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    .email-text {
+      @include fontSetup(var(--gray-700), 14px, 20px, normal, 400);
+    }
+  }
+
+  &__mailbox-name {
+    @include fontSetup(
+      var(--fg-neutral-weaker, #999999),
+      12px,
+      16px,
+      normal,
+      500
+    );
+  }
+
+  &__action {
+    margin-top: 4px;
+    padding: 0 16px;
+    @include fontSetup(var(--brand-500), 14px, 20px, normal, 500);
+
+    span {
+      &:hover {
+        text-decoration: underline;
+        color: var(--brand-400);
+      }
+
+      &:active {
+        text-decoration: underline;
+        color: var(--brand-600);
+      }
+
+      .disabled {
+        cursor: not-allowed;
+        text-decoration: none;
+        color: var(--gray-300) !important;
+      }
+    }
+  }
+}
+
+.list-user-email-container {
+  & {
+    flex: 1;
+    overflow: auto;
+    background: var(--gray-50);
+  }
+}
+
+.user-info-not-found-container {
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  padding: 24px;
+  padding-top: 120px;
+  text-align: center;
+  background: var(--bg-neutral-tonal-normal, #F5F5F6);
+
+  &__title {
+    @include fontSetup(var(--gray-600), 18px, 22px, normal, 600);
+  }
+
+  &__action {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+
+    > button {
+      width: fit-content;
+    }
+  }
+
+  &__text {
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+  }
+}
+
+::ng-deep {
+  .ant-drawer.ant-drawer-right:has(.user-info-skeleton),
+  .ant-drawer.ant-drawer-right:has(.list-user-property-container),
+  .ant-drawer.ant-drawer-right:has(.user-info-not-found-container) {
+    top: 52px;
+  }
+  .ant-drawer-wrapper-body:has(.list-user-email-container) {
+    background-color: var(--gray-50);
+  }
+}
+
+.user-info-skeleton {
+  padding: 12px 16px;
+
+  .avatar-wrapper {
+    position: relative;
+    .avatar {
+      ::ng-deep {
+        .ant-skeleton h3.ant-skeleton-title {
+          margin-top: 0 !important;
+        }
+
+        .ant-skeleton-content {
+          display: none;
+        }
+
+        .ant-skeleton-content .ant-skeleton-title {
+          margin-top: 0 !important;
+        }
+      }
+    }
+
+    .sync-cloud {
+      position: absolute;
+      bottom: -4px;
+      right: 10px;
+      background: var(--white);
+      padding: 4px;
+      border-radius: 50px;
+    }
+  }
+
+  ::ng-deep {
+    .ant-skeleton h3.ant-skeleton-title {
+      margin-top: 0 !important;
+      border-radius: 50px;
+    }
+
+    .ant-skeleton.skeleton-icon h3.ant-skeleton-title {
+      width: 16px !important;
+      height: 14px !important;
+      border-radius: 50%;
+    }
+
+    .ant-skeleton-paragraph {
+      display: none;
+    }
+
+    .ant-skeleton-content .ant-skeleton-title {
+      margin-top: 0 !important;
+    }
+  }
+}

@@ -1,0 +1,35 @@
+.btn-list {
+    display: flex;
+    gap: 8px;
+    justify-content: space-between;
+    width: 100%;
+    flex-direction: row;
+
+    .btn-group {
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+
+    .btn-scroll-toolbar {
+        display: flex;
+        flex-direction: row;
+        gap: 4px;
+        align-items: center;
+
+        .btn-scroll-action {
+            background-color: transparent;
+            border-radius: 100px;
+            border: none;
+            padding: 0px !important;
+
+            &:hover {
+                background-color: var(--gray-100);
+            }
+
+            &:focus-visible {
+                box-shadow: 0 0 0 2px var(--brand-500);
+            }
+        }
+    }
+}

@@ -1,0 +1,23 @@
+:host ::ng-deep {
+    .switch-item {
+        span {
+            width: 32px !important;
+            height: 18px !important;
+            max-width: none !important;
+        }
+    }
+
+    .title-wrapper  li.ng-star-inserted {
+        height: 28px;
+        border-radius: 8px;
+    }
+}
+
+:host {
+    margin-left: 15px;
+    padding-bottom: 28px;
+    .title-wrapper {
+        padding: 0;
+        margin-bottom: 20px;
+    }
+}

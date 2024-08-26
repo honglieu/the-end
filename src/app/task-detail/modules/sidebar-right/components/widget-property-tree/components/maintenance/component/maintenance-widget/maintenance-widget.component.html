@@ -1,0 +1,17 @@
+<trudi-suggested-step-group
+  *ngIf="requestCard"
+  [groupTitle]="maintenanceSyncData?.maintenanceRequest?.groupTitle"
+  class="mb-0">
+  <ng-container *ngIf="requestCard">
+    <maintenance-request-card></maintenance-request-card>
+  </ng-container>
+</trudi-suggested-step-group>
+<trudi-suggested-step-group
+  *ngIf="invoiceCard"
+  [groupTitle]="maintenanceSyncData?.maintenanceInvoice?.groupTitle"
+  class="mb-0">
+  <ng-container *ngIf="maintenanceInvoice">
+    <maintenance-invoice-card [invoiceCard]="invoiceCard">
+    </maintenance-invoice-card>
+  </ng-container>
+</trudi-suggested-step-group>

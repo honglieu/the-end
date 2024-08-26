@@ -1,0 +1,67 @@
+:host {
+    width: 100%;
+}
+
+.document-item {
+    cursor: pointer;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 12px;
+    position: relative;
+    padding: 8px;
+    border-radius: 8px;
+
+    &:hover {
+        background-color: var(--gray-100);
+    }
+
+    &.-focused {
+        background-color: var(--gray-200);
+    }
+
+    .title {
+        color: var(--gray-600);
+        font-weight: 500;
+    }
+
+    .subtitle {
+        color: var(--gray-600);
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+    }
+
+    .document-item-file-icon {
+        position: relative;
+        border-radius: 4px;
+
+        .icon-file-type {
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
+            min-height: 36px;
+            border-radius: 4px;
+        }
+
+        .icon-sync-success {
+            height: 16px;
+            position: absolute;
+            right: 0;
+            bottom: 2px;
+        }
+    }
+
+    .icon-more-action {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+}
+
+
+.menu-item-text {
+    font-weight: 500;
+    font-size: 1.4rem;
+    line-height: 2rem;
+    color: var(--gray-500);
+}

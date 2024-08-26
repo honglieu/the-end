@@ -1,0 +1,266 @@
+@import 'function';
+
+.tab-side-bar {
+  background: var(--white);
+  height: 100%;
+  border-top: 2px solid var(--gray-200);
+  // border-radius: 0 8px 8px 0;
+  // max-width: 360px;
+  position: relative;
+
+  .content-maintenance {
+    position: absolute;
+    overflow: hidden;
+    bottom: 0;
+    width: 100%;
+    max-height: 10.4rem;
+    z-index: 1;
+    background: var(--white);
+    box-shadow: 0px -2px 6px rgba(0, 0, 0, 0.12);
+    border-radius: 8px 8px 0px 0px;
+    transition: all 0.5s ease-in-out;
+  }
+
+  .active-height {
+    max-height: 10rem;
+  }
+
+  .move-top {
+    max-height: 32.5em;
+  }
+
+  .cls-button {
+    position: absolute;
+    opacity: 0;
+    transition: all 0.2s;
+    left: 0;
+    top: 60px;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  .overlay-default {
+    z-index: 98;
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+  }
+
+  .header {
+    display: flex;
+    height: 9.6rem;
+    align-items: center;
+
+    .property-info {
+      margin-left: 3.2rem;
+
+      span {
+        margin: 0 0 1.2rem 0;
+        font-size: 12px;
+        line-height: 14px;
+      }
+
+      h1 {
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 20px;
+      }
+
+      h2 {
+        font-size: 16px;
+        line-height: 19px;
+      }
+    }
+  }
+
+  hr {
+    margin: 0;
+    margin-bottom: 24px;
+  }
+
+  .side-bar-content {
+    height: 100%;
+    position: relative;
+
+    .active-scroll-petrequest {
+      height: calc(100% - 130px) !important;
+      overflow-y: auto;
+    }
+
+    .tab-content {
+      height: calc(100% - 4rem);
+
+      &.has-maintenance {
+        height: calc(100% - 12rem);
+      }
+
+      &.maintenance-active {
+        height: calc(100% - 14rem);
+      }
+
+      transition: all 0.5s ease-in-out;
+    }
+
+    .padding-file {
+    }
+
+    & .delete-conversation-tab {
+      width: 100%;
+
+      & .button-delete {
+        margin-top: 20px;
+        padding: 12px 16px;
+        gap: 10px;
+        width: 100%;
+        height: 40px;
+        background: var(--brand-500);
+        border-radius: 8px;
+        border: none;
+        @include fontSetup(var(--white), 12px, 16px, normal, 600);
+      }
+    }
+  }
+
+  ::ng-deep .ng-dropdown-panel.select-move {
+    width: 400px !important;
+    min-width: 400px !important;
+    margin: 10px 0px 10px -120px;
+    height: auto;
+
+    .ng-dropdown-panel-items {
+      max-height: 336px;
+      height: auto;
+
+      .ng-optgroup {
+        background-color: var(--gray-50);
+        box-shadow: none;
+        height: 28px;
+        display: flex;
+        align-items: center;
+        @include fontSetup(var(--gray-800), 16px, 20px, normal, 600);
+      }
+
+      .ng-option-disabled {
+        .ng-option-label {
+          @include fontSetup(
+            var(--gray-400),
+            14px !important,
+            20px,
+            normal,
+            600
+          );
+        }
+      }
+
+      .ng-option {
+        .task-create-open {
+          @include fontSetup(var(--gray-500), 12px, 20px, normal, 400);
+        }
+
+        .property-streetline {
+          @include fontSetup(var(--gray-700), 12px, 18px, normal, 400);
+
+          .highlighted {
+            font-size: 12px !important;
+          }
+        }
+
+        .selected-task {
+          @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+        }
+
+        .icon-check {
+          margin-left: auto;
+        }
+
+        .task-property-streetline {
+          height: 20px;
+        }
+      }
+
+      &:hover {
+        background-color: var(--brand-50);
+      }
+
+      .ng-option-marked {
+        background-color: transparent !important;
+      }
+    }
+
+    .ng-dropdown-header {
+      padding: 16px;
+      border-bottom: none;
+
+      .checkbox-container {
+        margin-bottom: 0px;
+
+        .checkbox-label {
+          color: var(--gray-700);
+        }
+      }
+    }
+  }
+
+  ::ng-deep .ng-dropdown-panel.select-move-task {
+    .ng-dropdown-header {
+      border-bottom: 1px solid var(--gray-50);
+    }
+
+    .ng-optgroup {
+      height: 36px !important;
+    }
+  }
+}
+
+.archived-text {
+  color: var(--gray-500);
+}
+
+.black-text {
+  color: var(--gray-700);
+}
+
+.hide {
+  display: none;
+}
+
+::ng-deep .tab-list {
+  padding-bottom: 12px !important;
+}
+
+::ng-deep {
+  .tab-side-bar {
+    .files-list-wrapper-animation {
+      .sleleton-item {
+        height: 0;
+
+        span.ant-skeleton-avatar.ant-skeleton-avatar-circle {
+          width: 20px;
+          height: 20px;
+          margin-top: -6px;
+        }
+      }
+
+      .skeleton-container {
+        height: 25px;
+        margin-left: -30px;
+      }
+
+      .sleleton-title {
+        margin-left: -47px;
+      }
+
+      .skeleton-circle {
+        span.ant-skeleton-avatar.ant-skeleton-avatar-circle {
+          margin-top: 26px;
+        }
+      }
+    }
+  }
+}

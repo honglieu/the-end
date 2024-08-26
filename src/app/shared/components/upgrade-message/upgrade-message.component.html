@@ -1,0 +1,23 @@
+<ng-container>
+  <div *ngIf="isTooltip" class="tooltip-container">
+    <span class="text-tooltip">{{message[action] || ''}}</span>
+    <span class="d-flex align-items-center text-tooltip">
+      <span [ngClass]="classStylesUpSellMessageText" (click)="upgradePlan()"
+        >{{upgradeText}}
+      </span>
+      <span>.</span>
+    </span>
+  </div>
+  <div *ngIf="!isTooltip" class="d-flex">
+    <trudi-icon *ngIf="isIcon" [icon]="'frame'" class="frame-icon"></trudi-icon>
+    <span class="text-message" [ngClass]="{'font-size-12': isIcon}">
+      {{message[action] || ''}}
+      <span
+        class="text-message"
+        [ngClass]="classStylesUpSellMessageText"
+        (click)="upgradePlan()"
+        >{{upgradeText}}</span
+      >.</span
+    >
+  </div>
+</ng-container>

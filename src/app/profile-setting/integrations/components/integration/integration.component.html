@@ -1,0 +1,80 @@
+<div class="integration-wrapper">
+  <div class="header d-flex justify-content-between">
+    <div class="header-left d-flex align-items-center">
+      <trudi-icon
+        *ngIf="item?.icon"
+        [svgClass]="item?.data ? 'size-24' : ''"
+        [icon]="item?.icon"></trudi-icon>
+      <ng-container *ngIf="item?.data">
+        <div
+          #emailAddress
+          class="email-address"
+          [ngClass]="{'box-width': !checkTrudiBadge() }"
+          nz-tooltip
+          nzTooltipPlacement="top"
+          [nzTooltipTitle]="item?.data?.emailAddress"
+          [nzTooltipTrigger]="emailAddress?.offsetWidth < emailAddress?.scrollWidth ? 'hover' : null"
+          [nzTooltipOverlayClassName]="'tooltipStyle'"
+          [nzTooltipOverlayStyle]="{'max-width': '300px'}">
+          {{item?.data?.emailAddress}}
+        </div>
+      </ng-container>
+      <button
+        *ngIf="item.status || item?.data"
+        nz-tooltip
+        nzTooltipPlacement="top"
+        [nzTooltipTitle]="'Events syncing'"
+        [nzTooltipTrigger]="checkDisabledBtn() ? 'hover' : null"
+        [nzTooltipOverlayClassName]="checkDisabledBtn() ? 'tooltipStyle' : 'hide-tooltip-setting'"
+        [nzTooltipOverlayStyle]="{'max-width': '300px'}"
+        trudi-btn
+        btnType="neutral"
+        size="extra-small"
+        variant="outlined"
+        [disabled]="checkDisabledBtn()"
+        (click)="handleClickConnect()"
+        class="btn-setting">
+        <trudi-icon
+          [svgClass]="'icon-setting'"
+          [icon]="'settings'"></trudi-icon>
+      </button>
+    </div>
+    <trudi-badge
+      *ngIf="item.status"
+      [icon]="checkTrudiBadge() ? 'checkFillSuccess' : 'checkFillError'"
+      [customIconSize]="14"
+      [text]="checkTrudiBadge() ? 'Connected' : 'Authentication failed'"
+      [variant]="checkTrudiBadge() ? 'success' : 'error'"></trudi-badge>
+  </div>
+  <div class="content">{{item.description}}</div>
+  <div class="d-flex gap-8">
+    <button
+      trudi-btn
+      size="extra-small"
+      class="btn-connect"
+      *ngIf="!item.status && label === EIntegrationLabel.FORM"
+      (click)="handleClickConnect()">
+      <p>Connect</p>
+    </button>
+    <button
+      *ngIf="checkBtnConnect()"
+      class="connect"
+      (click)="handleConnect();">
+      Connect calendar
+    </button>
+    <button
+      *ngIf="checkBtnReConnect()"
+      [disabled]="checkDisabledBtn()"
+      class="re-connect"
+      (click)="handleReConnect();">
+      Re-connect
+    </button>
+    <button
+      *ngIf="checkBtnDisconnect()"
+      [disabled]="checkDisabledBtn()"
+      class="disconnect"
+      (click)="handleDisconnect();">
+      Disconnect
+    </button>
+  </div>
+</div>

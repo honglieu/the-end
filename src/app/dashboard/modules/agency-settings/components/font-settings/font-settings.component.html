@@ -1,0 +1,259 @@
+<div class="font-settings-page">
+  <div class="settings-wrap">
+    <div *ngIf="!isPermissionEdit" class="d-flex gap-4 align-items-center mb-8">
+      <trudi-icon icon="infoFill" svgClass="size-16"> </trudi-icon>
+      <span class="warning-notice-text"
+        >You need to be an account administrator to edit this page.</span
+      >
+    </div>
+    <div class="hint-content">
+      The following preferences will be used by all team members.
+    </div>
+    <ng-container
+      [ngTemplateOutlet]="isLoading ? loadingFormTemplate : formTemplate">
+    </ng-container>
+
+    <div class="outgoing-emails">
+      <div *ngIf="isForwardingMailbox" class="mb-32">
+        <h4 class="title">Outgoing emails</h4>
+        <div class="body">
+          <ng-container *ngIf="(loadingService.isLoading$ | async) === false">
+            <p class="description">
+              Send outgoing emails from
+              <strong class="email-name">{{emailAddress}}</strong>
+            </p>
+            <span
+              *trudiPermission="'OUTGOING_EMAIL.CONTACT.CREATE'"
+              class="text-link-sp"
+              >To change your outgoing email address, please
+              <button class="link-sp" (click)="handleOpenPopup()">
+                Contact Support
+              </button>
+            </span>
+          </ng-container>
+          <nz-skeleton
+            *ngIf="loadingService.isLoading$ | async"
+            [nzParagraph]="{ rows: 2 }"
+            [style.width.px]="400"
+            [nzTitle]="false"
+            [nzActive]="true">
+          </nz-skeleton>
+        </div>
+      </div>
+      @if (this.isLoadingSignature) {
+      <div class="card-signature">
+        <div class="title-card-signature">Email signature</div>
+        <div class="form-input-signature">
+          <div class="card-info mt-12">
+            <nz-skeleton
+              class="email-signature-skeleton w-100"
+              [nzParagraph]="{rows: 0}"
+              [nzActive]="true">
+            </nz-skeleton>
+          </div>
+        </div>
+      </div>
+      } @else {
+      <company-email-signature> </company-email-signature>
+      }
+    </div>
+  </div>
+  <ng-container
+    [ngTemplateOutlet]="isLoading ? loadingPreviewTemplate : previewTemplate">
+  </ng-container>
+</div>
+
+<ng-template #formTemplate>
+  <div class="d-flex flex-dir-column gap-8">
+    <span class="title-font-style">Email body</span>
+    <div
+      class="font-settings d-flex flex-dir-row gap-16"
+      [formGroup]="fontSettingsForm">
+      <div class="input-row">
+        <div class="input-label mb-8">Font style</div>
+        <trudi-form-control>
+          <trudi-single-select
+            [virtualScroll]="true"
+            [items]="fontFamilies"
+            bindLabel="title"
+            bindValue="format"
+            [placeholder]="'Select font style'"
+            [clearable]="false"
+            [isDisabled]="!isPermissionEdit"
+            formControlName="fontStyle"
+            [ngClass]="'select-font-family input-selected'"
+            [ngStyle]="{'--selected-font':(currentFontSetting.fontStyle.indexOf('dings') === -1 ? currentFontSetting.fontStyle : 'Inter, sans-serif')}">
+            <ng-template
+              trudi-option-tmp
+              let-item="item"
+              let-item$="item$"
+              let-searchTerm="searchTerm">
+              <div class="customize-font-item">
+                <div class="d-flex">
+                  <span
+                    class="text-name"
+                    [style.font-family]="item.format.indexOf('dings') === -1 ? item.format : ''"
+                    >{{item.title}}</span
+                  >
+                </div>
+                <div *ngIf="item$.selected" class="d-flex align-items-center">
+                  <trudi-icon icon="checkSuccess"></trudi-icon>
+                </div>
+              </div>
+            </ng-template>
+          </trudi-single-select>
+        </trudi-form-control>
+      </div>
+      <div class="input-row font-size">
+        <div class="input-label mb-8">Font size</div>
+        <trudi-form-control>
+          <trudi-single-select
+            [virtualScroll]="true"
+            [items]="fontSizes"
+            bindLabel="title"
+            bindValue="format"
+            [placeholder]="'Select font size'"
+            [clearable]="false"
+            [isDisabled]="!isPermissionEdit"
+            formControlName="fontSize"
+            class="input-selected">
+          </trudi-single-select>
+        </trudi-form-control>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #loadingFormTemplate>
+  <div
+    class="font-settings d-flex flex-dir-row gap-16"
+    [formGroup]="fontSettingsForm">
+    <div class="input-row">
+      <div class="input-label">
+        <nz-skeleton-element
+          class="label-skeleton"
+          nzType="button"
+          [nzActive]="false"></nz-skeleton-element>
+      </div>
+      <nz-skeleton-element
+        class="input-skeleton"
+        nzType="button"
+        [nzActive]="true"></nz-skeleton-element>
+    </div>
+    <div class="input-row">
+      <div class="input-label">
+        <nz-skeleton-element
+          class="label-skeleton"
+          nzType="button"
+          [nzActive]="false"></nz-skeleton-element>
+      </div>
+      <nz-skeleton-element
+        class="input-skeleton font-size"
+        nzType="button"
+        [nzActive]="true"></nz-skeleton-element>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #previewTemplate>
+  <div class="preview-wrap">
+    <div class="preview-header">Preview</div>
+    <div
+      class="preview-content"
+      [style]="{'font-family': currentFontSetting.fontStyle, 'font-size':currentFontSetting.fontSize}">
+      <p>Hi,</p>
+      <p>
+        This is an email example. You can easily set the default email font
+        style for all team members to use.
+      </p>
+      <div class="mailbox-sign-off">
+        <div
+          nz-tooltip
+          [nzTooltipTitle]="'This is example of a mailbox sign off'"
+          class="fit-content">
+          <p>Regards,</p>
+          <p>Property Manager</p>
+        </div>
+      </div>
+      <div class="company-signature">
+        <div [innerHTML]="emailSignature | safe" class="fit-content"></div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #loadingPreviewTemplate>
+  <div class="d-flex flex-dir-column preview-wrap skeleton">
+    <div class="preview-header">
+      <nz-skeleton
+        class="preview-header-skeleton"
+        [nzRound]="true"
+        [nzActive]="true"
+        [nzParagraph]="{ rows: 0}"></nz-skeleton>
+    </div>
+
+    <div class="preview-content">
+      <nz-skeleton
+        [nzTitle]="false"
+        class="content-paragraph-skeleton"
+        [nzRound]="true"
+        [nzActive]="true"
+        [nzParagraph]="{ rows: 3, width: [148, 281, 241] }"></nz-skeleton>
+      <div class="mailbox-sign-off">
+        <nz-skeleton
+          class="content-paragraph-skeleton"
+          [nzTitle]="false"
+          [nzRound]="true"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 3, width: [57, 108, 93] }"></nz-skeleton>
+      </div>
+      <div class="company-signature">
+        <div class="d-flex">
+          <nz-skeleton-element
+            nzType="avatar"
+            class="signature-avatar-skeleton mr-4"
+            [nzActive]="true"
+            [nzSize]="48"
+            [nzShape]="square"></nz-skeleton-element>
+          <div>
+            <nz-skeleton
+              class="content-paragraph-skeleton"
+              [nzTitle]="false"
+              [nzActive]="true"
+              [nzRound]="true"
+              [nzParagraph]="{ rows: 3, width: [148, 148, 148] }"></nz-skeleton>
+            <div>
+              <nz-skeleton-element
+                nzType="avatar"
+                class="small-avatar-skeleton mr-4"
+                [nzActive]="true"
+                [nzSize]="16"
+                [nzShape]="square"></nz-skeleton-element>
+              <nz-skeleton-element
+                nzType="avatar"
+                class="small-avatar-skeleton mr-4"
+                [nzActive]="true"
+                [nzSize]="16"
+                [nzShape]="square"></nz-skeleton-element>
+              <nz-skeleton-element
+                nzType="avatar"
+                class="small-avatar-skeleton mr-4"
+                [nzActive]="true"
+                [nzSize]="16"
+                [nzShape]="square"></nz-skeleton-element>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-container *ngIf="isVisibleModal">
+  <trudi-send-msg
+    [configs]="configs"
+    [rawMsg]="smgContent"
+    (onQuit)="closeActivePopup()"
+    (onSendMsg)="onSendMsg($event)">
+  </trudi-send-msg>
+</ng-container>

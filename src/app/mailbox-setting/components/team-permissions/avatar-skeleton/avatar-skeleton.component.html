@@ -1,0 +1,13 @@
+<div *ngIf="isLoading; else avatar">
+  <span>
+    <nz-skeleton-element
+      nzType="avatar"
+      [nzActive]="true"></nz-skeleton-element>
+  </span>
+</div>
+
+<ng-template #avatar>
+  <div class="team-permisson-avatar-skeleton">
+    <img nz-image [nzSrc]="src" />
+  </div>
+</ng-template>

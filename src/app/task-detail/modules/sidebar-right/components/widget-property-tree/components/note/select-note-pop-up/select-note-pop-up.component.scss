@@ -1,0 +1,199 @@
+@import 'function';
+
+.select-note-wrapper {
+  .header {
+    .detail-invite {
+      .send-invite-icon {
+        .background-icon {
+          background-color: var(--white);
+        }
+      }
+
+      .send-invite-text {
+        p {
+          @include fontSetup(var(--gray-950), 18px, 24px, normal, 600);
+          margin: 0;
+        }
+
+        div {
+          display: flex;
+          margin-top: 8px;
+          @include fontSetup(var(--gray-500), 14px, 16px, normal, 500);
+        }
+      }
+
+      .close-btn {
+        min-width: 28px;
+      }
+    }
+  }
+  hr {
+    margin-bottom: 0;
+    border-top: 1px solid var(--bg-overlay-light);
+    margin-left: -10px;
+    margin-right: -10px;
+    margin-top: unset;
+
+    &.hr-bottom {
+      margin-top: 16px;
+    }
+  }
+}
+
+.select-note-body {
+  max-height: 60vh;
+  padding: 20px 24px;
+  ::ng-deep nz-radio-group.radio-group .radio-label span {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      14px,
+      20px,
+      normal,
+      400
+    );
+  }
+}
+
+.select-form-wrapper {
+  ::ng-deep ng-select {
+    .ng-arrow-wrapper .ng-arrow {
+      width: 12px;
+      height: 8px;
+      border: none;
+      background: url('/assets/images/arow.png');
+    }
+    &.ng-select-opened {
+      .ng-arrow-wrapper .ng-arrow {
+        width: 100%;
+        height: 13px;
+        border: none;
+        background-size: cover;
+        background: url('/assets/images/chevron-up.png');
+      }
+    }
+
+    .ng-select-container {
+      border-radius: 8px !important;
+      background: var(--bg-neutral-tonal-normal, #f2f5f7);
+      padding: 10px 5px 10px 12px;
+    }
+
+    .ng-dropdown-panel .ng-dropdown-panel-items {
+      max-height: 312px;
+    }
+
+    .ng-dropdown-panel .ng-dropdown-panel-items .ng-option .highlighted {
+      font-weight: 500 !important;
+    }
+    .ng-dropdown-panel
+      .ng-dropdown-panel-items
+      .ng-option
+      .item-text-description
+      .highlighted {
+      font-weight: 500 !important;
+      font-size: 12px !important;
+    }
+  }
+}
+
+.red-border {
+  @include box-shadow-input-select(var(--shadow-danger) !important);
+  border-radius: 8px !important;
+  &.ng-select-opened {
+    @include box-shadow-input-select(var(--shadow-brand) !important);
+    .ng-select-container {
+      background-color: var(--white) !important;
+    }
+  }
+}
+
+.content-require {
+  line-height: 0px;
+  margin-top: 10px;
+  height: 14px;
+  opacity: 1;
+  .require-text {
+    margin-left: 4px;
+    @include fontSetup(var(--danger-500), 12px, 16px, normal, 400);
+  }
+
+  .icon-warning {
+    height: 1.6rem;
+    width: 1.6rem;
+  }
+}
+
+.item-text-selected {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+}
+
+.item-text-description {
+  color: var(--fg-neutral-normal, #646464);
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+  width: 500px;
+}
+
+.item-text {
+  @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+}
+
+.form-distance {
+  padding-left: 28px;
+  padding-top: 12px;
+  ::ng-deep
+    .ng-select.ng-select-single
+    .ng-select-container
+    .ng-value-container
+    .ng-input {
+    padding-left: 12px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+  }
+}
+
+::ng-deep
+  nz-modal-container
+  .ant-modal
+  .ant-modal-content
+  .ant-modal-footer:has(.wrapper-footer-notes) {
+  padding: 16px 24px !important;
+}
+
+// ::ng-deep.ng-select .ng-select-container .ng-value-container .ng-input>input {
+//   white-space: nowrap;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+// }
+
+.wrapper-footer-notes {
+  border-top: 1px solid var(--gray-100);
+  padding: 16px 24px;
+}
+
+:host ::ng-deep.select-note-popup .modal-popup-content {
+  overflow-y: unset !important;
+}
+
+::ng-deep .select-note-popup .resizable-modal-header .title {
+  flex: initial;
+  display: flex;
+  justify-content: center;
+  span {
+    flex: initial;
+  }
+}
+
+::ng-deep .select-note-popup .resizable-modal-header__title--default {
+  column-gap: unset !important;
+}

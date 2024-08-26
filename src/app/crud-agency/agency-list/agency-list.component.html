@@ -1,0 +1,34 @@
+<app-modal-popup
+  *ngIf="isShowAgencyForm"
+  [show]="isShowAgencyForm"
+  [position]="popupModalPosition.center">
+  <app-create-edit-agency (isCloseModal)="isHideAgencyForm($event)">
+  </app-create-edit-agency>
+</app-modal-popup>
+<div class="agency-list">
+  <div class="filter-wrapper">
+    <div class="search-wrapper">
+      <i class="fa fa-search" aria-hidden="true"></i>
+      <input
+        type="text"
+        class="form-control search-property-input"
+        placeholder="Search"
+        onfocus="this.placeholder = ''"
+        onblur="this.placeholder = 'Search'" />
+    </div>
+    <div class="btn-create" (click)="createAgency()">
+      <img class="position-center-w" src="/assets/icon/add-icon.svg" />
+    </div>
+  </div>
+  <div
+    [class]="i===agencyIndex? 'agencies active':'agencies'"
+    *ngFor="let agency of agencies; index as i"
+    (click)="changeAgency(i)">
+    <div class="logo-agency">
+      <img loading="lazy" src="{{agency.agencyLogo}}" />
+    </div>
+    <div>
+      <span>{{agency.agencyName}}</span>
+    </div>
+  </div>
+</div>

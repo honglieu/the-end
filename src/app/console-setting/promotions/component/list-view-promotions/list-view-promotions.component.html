@@ -1,0 +1,192 @@
+<div class="promotion-container">
+  <ng-container *ngIf="needToRefresh">
+    <div class="message-refresh-container">
+      <div class="toast-message-refresh d-flex align-items-center">
+        <trudi-icon
+          class="toolbar-icon"
+          [icon]="'iconWarningOrange'"
+          [style]="{ 'width.px': 24, 'height.px': 24 }"></trudi-icon>
+        <div class="message d-flex align-items-center">
+          <div class="text-message">
+            Changes have been made on this page, please
+          </div>
+          <div class="refresh-list cursor-pointer" (click)="refreshList()">
+            refresh
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <div
+    #table
+    (scroll)="onScrollDown()"
+    [ngClass]="{'table-container-empty' : listPromotions.length === 0,
+    'table-container scroll-bar-margin-top-10': listPromotions.length !== 0}">
+    <nz-table
+      #sortTable
+      class="custom-hover-row"
+      [nzData]="listPromotions"
+      nzTableLayout="fixed"
+      [nzFrontPagination]="false"
+      [nzShowPagination]="false">
+      <thead>
+        <tr>
+          <th
+            *ngFor="let column of listOfColumn"
+            [nzWidth]="column.width"
+            [nzSortFn]="column.compare"
+            [nzSortDirections]="column.sortDirections"
+            [nzSortOrder]="column.nzSortOrder">
+            {{ column.title }}
+          </th>
+        </tr>
+      </thead>
+      <tbody [class]="sortTable.data.length === 0 ?  'empty-block' : ''">
+        <ng-container *ngIf="!isLoading; else skeletonLoadingItem">
+          <ng-container *ngIf="sortTable.data.length">
+            <tr
+              *ngFor="let data of sortTable.data;"
+              (click)="handleClickRow($event, data)"
+              [class.active-row]="data.id === selectedRowId"
+              class="cursor-pointer">
+              <td>{{ data.title }}</td>
+              <td>{{ data.promotionCarousels.length }}</td>
+              <td>
+                {{ data.publishedAt | date: (dateFormatPipe$ | async) }}
+                {{houses.amHouse}}
+              </td>
+              <td>
+                {{ data.unpublishedAt | date: (dateFormatPipe$ | async) }}
+                {{houses.pmHouse}}
+              </td>
+              <td>
+                <trudi-badge
+                  [variant]="data.variant"
+                  [text]="data.status | uppercaseFirstLetter"
+                  size="small"></trudi-badge>
+              </td>
+              <td class="icon-action">
+                <div class="wrap-action d-flex justify-content-around gap-30">
+                  <div
+                    class="toolbar-icon-preview"
+                    (click)="handelPreviewPromotion($event, data)">
+                    <trudi-icon
+                      class="toolbar-icon"
+                      [icon]="'eyeShow'"
+                      [style]="{ 'width.px': 20, 'height.px': 20 }"
+                      nzTooltipTitle="Preview"
+                      nzTooltipPlacement="top"
+                      nz-tooltip></trudi-icon>
+                  </div>
+                  <div
+                    *ngIf="currentUserType === userType.ADMIN"
+                    class="toolbar-icon-deleted"
+                    (click)="handelDeletePromotion($event, data)">
+                    <trudi-icon
+                      class="toolbar-icon"
+                      [icon]="'deleted'"
+                      [style]="{ 'width.px': 20, 'height.px': 20 }"
+                      nzTooltipTitle="Delete"
+                      nzTooltipPlacement="top"
+                      nz-tooltip></trudi-icon>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+          <ng-container *ngIf="sortTable.data.length === 0">
+            <tr class="no-result-text">
+              <td class="content-text">No promotions to display</td>
+            </tr>
+          </ng-container>
+        </ng-container>
+        <ng-container *ngIf="isLoadingMore">
+          <ng-container *ngFor="let _ of [].constructor(2); let i = index">
+            <tr>
+              <td>
+                <nz-skeleton
+                  [nzParagraph]="{ rows: 0 }"
+                  [nzActive]="true"></nz-skeleton>
+              </td>
+              <td>
+                <nz-skeleton
+                  [nzParagraph]="{ rows: 0 }"
+                  [nzActive]="true"></nz-skeleton>
+              </td>
+              <td>
+                <nz-skeleton
+                  [nzParagraph]="{ rows: 0 }"
+                  [nzActive]="true"></nz-skeleton>
+              </td>
+              <td>
+                <nz-skeleton
+                  [nzParagraph]="{ rows: 0 }"
+                  [nzActive]="true"></nz-skeleton>
+              </td>
+              <td>
+                <nz-skeleton
+                  [nzParagraph]="{ rows: 0 }"
+                  [nzActive]="true"></nz-skeleton>
+              </td>
+              <td>
+                <nz-skeleton
+                  [nzParagraph]="{ rows: 0 }"
+                  [nzActive]="true"></nz-skeleton>
+              </td>
+            </tr>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </nz-table>
+  </div>
+</div>
+
+<ng-template #skeletonLoadingItem let-row="rowNumber">
+  <ng-container *ngFor="let _ of [].constructor(20); let i = index">
+    <tr>
+      <td>
+        <nz-skeleton
+          [nzParagraph]="{ rows: 0 }"
+          [nzActive]="true"></nz-skeleton>
+      </td>
+      <td>
+        <nz-skeleton
+          [nzParagraph]="{ rows: 0 }"
+          [nzActive]="true"></nz-skeleton>
+      </td>
+      <td>
+        <nz-skeleton
+          [nzParagraph]="{ rows: 0 }"
+          [nzActive]="true"></nz-skeleton>
+      </td>
+      <td>
+        <nz-skeleton
+          [nzParagraph]="{ rows: 0 }"
+          [nzActive]="true"></nz-skeleton>
+      </td>
+      <td>
+        <nz-skeleton
+          [nzParagraph]="{ rows: 0 }"
+          [nzActive]="true"></nz-skeleton>
+      </td>
+      <td>
+        <nz-skeleton
+          [nzParagraph]="{ rows: 0 }"
+          [nzActive]="true"></nz-skeleton>
+      </td>
+    </tr>
+  </ng-container>
+</ng-template>
+<trudi-modal
+  *ngIf="isShowPromotionsModal"
+  [visible]="isShowPromotionsModal"
+  [isCustomPopup]="true"
+  [className]="'modal-container'">
+  <promotions-modal
+    *ngIf="isShowPromotionsModal"
+    [promotionsData]="promotionsData"
+    [isShowPromotionsModal]="isShowPromotionsModal"
+    (closePromotionModal)="closePromotionModal()"
+    [position]="{'top': '40px', 'right': '225px'}">
+  </promotions-modal>
+</trudi-modal>

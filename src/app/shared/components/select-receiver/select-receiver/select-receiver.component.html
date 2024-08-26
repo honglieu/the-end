@@ -1,0 +1,99 @@
+<ng-container>
+  <div
+    #ref
+    class="select-wrapper"
+    [class.has-both-icons]="isShowCCBtn && isShowBCCBtn">
+    <ng-select
+      #ngSelectReceiver
+      appOutsideClickListener
+      [items]="items"
+      [bindLabel]="bindLabel"
+      [bindValue]="bindValue"
+      [multiple]="true"
+      [clearable]="false"
+      [searchFn]="onSearchFn"
+      [closeOnSelect]="closeOnSelect"
+      [appendTo]="appendTo"
+      (search)="onSearch($event)"
+      [placeholder]="placeholder"
+      [addTag]="isAddItem && searchTerm.length ? addTag : false"
+      (add)="addTag && this.triggerAddTag.emit($event)"
+      [clearSearchOnAdd]="clearSearchOnAdd"
+      [(ngModel)]="selectedValue"
+      (ngModelChange)="onModelChange($event)"
+      [ngClass]="extraCls"
+      [disabled]="disabled"
+      [virtualScroll]="virtualScroll"
+      (close)="closeOnSelect || !isSelectContactType && onCloseSelect()"
+      [loading]="isLoading"
+      [class.hide-dropdown]="!isSelectContactType && !(selectedProperty?.id && selectedProperty?.['streetLine']) && !searchTerm.length"
+      [class.hide-last-child]="!isSelectContactType && !selectedProperty?.id && isHiddenLastChild"
+      [class.isAddItem]="isAddItem"
+      [compareWith]="compareWith"
+      class="select-receiver"
+      (input)="onInput($event.target.value)"
+      (clickOutside)="handleClickOutsideReceiver()"
+      [whiteList]="whiteList"
+      (keydown)="handleEnterKeyPress($event)"
+      (scrollToEnd)="goToNextPage()"
+      [trackByFn]="trackByFn"
+      (focus)="onFocusAndOpenSelect()"
+      (blur)="handleBlur()"
+      (open)="handleOpenDropdown()">
+      <ng-template ng-optgroup-tmp let-item="item">
+        <ng-container
+          *ngTemplateOutlet="otpGroupTemplate; context: { $implicit: item }"></ng-container>
+      </ng-template>
+      <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+        <ng-container
+          *ngTemplateOutlet="multiLabelTemplate; context: { items: items, clear: clear }">
+        </ng-container>
+      </ng-template>
+      <ng-template
+        ng-option-tmp
+        let-item="item"
+        let-item$="item$"
+        let-search="searchTerm">
+        <ng-container
+          *ngTemplateOutlet="
+          optionTemplate; 
+          context: { 
+            item: item, 
+            item$: item$, 
+            searchTerm: searchTerm 
+            }">
+        </ng-container>
+      </ng-template>
+
+      <ng-template ng-header-tmp>
+        <ng-container
+          *ngTemplateOutlet="
+          headerTemplate; 
+          ">
+        </ng-container>
+      </ng-template>
+    </ng-select>
+    <div
+      #pseudoTemplate
+      *ngIf="!!iconTemplate || !!prefixTemplate"
+      class="pseudo-input"
+      [ngClass]="{'has-value': selectedValue?.length > 0}">
+      <ng-container *ngIf="iconTemplate; else default">
+        <trudi-icon
+          class="cursor-pointer size-20"
+          [icon]="iconTemplate"
+          (click)="$event.stopPropagation(); clear(item); c.hideTooltip()"></trudi-icon>
+      </ng-container>
+      <ng-template #default>
+        <span
+          *ngIf="prefixTemplate"
+          [ngClass]="{'invalid-receiver': isHasUnIdentifiedContact}">
+          {{ prefixTemplate }}:
+        </span>
+      </ng-template>
+    </div>
+    <div #suffixTemp class="suffix-wrapper">
+      <ng-container *ngTemplateOutlet="suffixTemplate"></ng-container>
+    </div>
+  </div>
+</ng-container>

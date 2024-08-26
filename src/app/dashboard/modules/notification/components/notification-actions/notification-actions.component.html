@@ -1,0 +1,20 @@
+<div class="header-wrapper d-flex justify-content-between">
+  <div class="left-btn-wrapper">
+    <switch-checkbox
+      (tdCheckboxChanged)="handleChangeCheckbox($event)"
+      customClass="switch-checkbox-custom"
+      class="switch-item"></switch-checkbox>
+    <div class="switch-title">Show unread only</div>
+  </div>
+  <button
+    trudi-btn
+    variant="link"
+    btnType="neutral"
+    size="medium"
+    *ngIf="notificationService.currentNotiList$?.getValue()?.length"
+    (click)="markAllAsReadClick.emit()"
+    class="right-btn-wrapper">
+    <trudi-icon class="cursor-pointer" icon="iconSeen"></trudi-icon>
+    <div class="mark-read-btn">Mark all as read</div>
+  </button>
+</div>

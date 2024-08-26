@@ -1,0 +1,97 @@
+<div class="ai-setting editor-control" id="ai-setting-control">
+  <div [formGroup]="form">
+    <div class="ai-setting-header d-flex align-items-center">
+      <button
+        (click)="settingTrigger.emit(SETTING_EVENT.BACK)"
+        trudi-btn
+        variant="outlined"
+        size="extra-small"
+        shape="circle"
+        btnType="neutral">
+        <trudi-icon
+          icon="arrowLeft"
+          [style]="{ 'width.px': 12, 'height.px': 12 }">
+          >
+        </trudi-icon>
+      </button>
+      <h4>AI Settings</h4>
+    </div>
+    <div class="ai-setting-body">
+      <div class="setting-item">
+        <label>Tone of voice</label>
+        <div class="setting-control">
+          <div class="setting-option">
+            <label for="toneOfVoiceProfessional">
+              <img
+                [src]="getToneOfVoice === 'Professional' ? check : uncheck"
+                alt="uncheck icon" />
+              <input
+                id="toneOfVoiceProfessional"
+                formControlName="toneOfVoice"
+                type="radio"
+                value="Professional" />
+              <span>Professional</span>
+            </label>
+          </div>
+          <div class="setting-option">
+            <label for="toneOfVoiceFriendly">
+              <img
+                [src]="getToneOfVoice === 'Friendly' ? check :uncheck"
+                alt="uncheck icon" />
+              <input
+                id="toneOfVoiceFriendly"
+                formControlName="toneOfVoice"
+                type="radio"
+                value="Friendly" />
+              <span>Friendly</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="setting-item">
+        <label>Reply as</label>
+        <div class="setting-control">
+          <div class="setting-option">
+            <label for="replyAsMe">
+              <img
+                [src]="getReplyAs === 'Me' ? check :uncheck"
+                alt="uncheck icon" />
+              <input
+                id="replyAsMe"
+                formControlName="replyAs"
+                type="radio"
+                value="Me" />
+              <span>Me</span>
+            </label>
+          </div>
+          <div class="setting-option">
+            <label for="replyAsTrudi">
+              <img
+                [src]="getReplyAs === 'Trudi' ? check :uncheck"
+                alt="uncheck icon" />
+              <input
+                id="replyAsTrudi"
+                formControlName="replyAs"
+                type="radio"
+                value="Trudi"
+                checked />
+              <span>Trudi</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ai-setting-footer">
+      <button
+        trudi-btn
+        btnType="neutral"
+        variant="ghost"
+        (click)="settingTrigger.emit(SETTING_EVENT.CANCEL)">
+        Cancel
+      </button>
+      <button trudi-btn btnType="primary" variant="tonal" (click)="onSubmit()">
+        Save
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,40 @@
+<confirm-event-type
+  *ngIf="onStepBeforeBulkCreateTasks"
+  [listEvents]="listGetEvents"
+  [isAgencyRm]="isAgencyRM"
+  [visible]="statePopup === typePopup.CONFIRM_EVENT_TYPE"
+  (onNext)="onNextConfirmEventType($event)"
+  (onCancel)="handleCancel()"></confirm-event-type>
+<checking-duplicates-bulk-create-task
+  *ngIf="onStepBeforeBulkCreateTasks"
+  [visible]="statePopup === typePopup.CHECKING_FOR_DUPLICATES"
+  [listEvents]="listEventCheckingDuplicate"
+  [typeSelected]="confirmTypeEvent"
+  [displayBackButton]="hasMultiEventType"
+  (onNext)="onNextCheckingDuplicates()"
+  (onCancel)="handleCancel()"></checking-duplicates-bulk-create-task>
+<create-multi-tasks-popup
+  *ngIf="statePopup === typePopup.CREATE_TASKS"
+  [listEvents]="listFinalEventCreateTask"
+  [showBackBtn]="showBackButtonModalCreateTask"
+  (onCancel)="handleCancelModalCreateTasks()"
+  (onBack)="onBackCreateTasks()"
+  (onNext)="onNextCreateTasks($event)"></create-multi-tasks-popup>
+<processing-bulk-create-task
+  *ngIf="onStepBulkCreateTasks"
+  [sessionId]="sessionId"
+  [listEvents]="listFinalEventCreateTask"
+  [dataFormCreateTask]="dataFormCreateTask"
+  [agencyId]="agencyId"
+  (onCancel)="handleCancel()"
+  (onComplete)="handleCompleteCreateTasks($event)"></processing-bulk-create-task>
+<send-message
+  *ngIf="onStepSendMessage"
+  [tasksCreated]="tasksCreated"
+  [agencyId]="agencyId"
+  [confirmTypeEvent]="confirmTypeEvent"
+  [mailBoxId]="dataFormCreateTask?.mailBoxId"
+  [listEvents]="listEventsSuccessBulkCreateTask"
+  [taskTemplate]="taskTemplate"
+  (onComplete)="handleCompleteSendMessages()"
+  (onCancel)="handleCancel()"></send-message>

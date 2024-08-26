@@ -1,0 +1,9 @@
+<breach-notice-remedy-date
+  *ngIf="model?.fields?.eventType === calendarEventType.BREACH_NOTICE_REMEDY_DATE"
+  [model]="model"></breach-notice-remedy-date>
+<entry-notice-entry-date
+  *ngIf="model?.fields?.eventType === calendarEventType.ENTRY_NOTICE_ENTRY_DATE"
+  [model]="model"></entry-notice-entry-date>
+<custom-event
+  *ngIf="model?.fields?.eventType === calendarEventType.CUSTOM_EVENT"
+  [model]="model"></custom-event>

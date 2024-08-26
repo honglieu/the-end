@@ -1,0 +1,25 @@
+<button
+  trudi-btn
+  variant="link"
+  size="small"
+  class="show-original"
+  [btnType]="['admin', 'trudi'].includes(senderType) ? 'weakest' : 'primary'"
+  (click)="showTranslatedContent = true; $event.stopPropagation();"
+  [ngClass]="{'d-none': showTranslatedContent}">
+  Show original
+</button>
+<div class="original-content" [ngClass]="{'d-none': !showTranslatedContent}">
+  <div
+    class="original-content-text"
+    [innerHTML]="content | safe: 'html'"
+    [class.original-content-text-weakest]="['admin', 'trudi'].includes(senderType)"></div>
+  <button
+    trudi-btn
+    variant="link"
+    size="small"
+    [btnType]="['admin', 'trudi'].includes(senderType) ? 'weakest' : 'primary'"
+    class="hide-original"
+    (click)="showTranslatedContent = false; $event.stopPropagation(); onHideOriginalContent()">
+    Hide original
+  </button>
+</div>

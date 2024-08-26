@@ -1,0 +1,60 @@
+<trudi-step
+  [model]="model"
+  [showIconTitle]="false"
+  [hideProcessLine]="false"
+  [propertyTreeStep]="false"
+  (onProcess)="enableProcess()"
+  [buttonKey]="buttonKey"></trudi-step>
+
+<!-- <trudi-send-msg-v2
+  *ngIf="stepPopupState.sendMessage"
+  [configs]="sendMessageConfigs"
+  [rawMsg]="model?.fields.msgBody"
+  [listOfFiles]="model?.fields?.files || []"
+  (onBack)="onBackFromSendMsg()"
+  (onQuit)="closePopup()"
+  (onSendMsg)="onSendMsg($event)">
+</trudi-send-msg-v2> -->
+
+<resizable-modal-popup
+  *ngIf="stepPopupState.prescreen"
+  [show]="stepPopupState.prescreen"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [title]="prescreenTitle"
+  [footerTemplate]="footerModal"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="660"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  (onCancel)="closePopup()"
+  [isCustomMoveable]="true">
+  <div *ngIf="amountControl" class="capture-pet-bond-body">
+    <trudi-form-control>
+      <trudi-number-field
+        [maskLeadZero]="true"
+        [maskPattern]="maskPattern"
+        thousandSeparatorType=","
+        label="Bond amount"
+        prefixText="$"
+        [checkSubmit]="checkSubmit"
+        size="extra-large"
+        [formControl]="amountControl"></trudi-number-field>
+    </trudi-form-control>
+  </div>
+  <ng-template #footerModal>
+    <div class="d-flex gap-12 capture-pet-bond-footer">
+      <button
+        *ngIf="hasConfirmEssential"
+        trudi-btn
+        variant="outlined"
+        btnType="neutral"
+        (click)="onBack()">
+        Back
+      </button>
+      <button trudi-btn (click)="next()">Next</button>
+    </div>
+  </ng-template>
+</resizable-modal-popup>

@@ -1,0 +1,8 @@
+<div class="d-flex align-items-center gap-4 badge-attachment">
+  <div class="name-attachment d-flex align-items-center gap-4">
+    <span class="file-name">{{ file?.name || file?.fileName}}</span>
+    <span class="file-size"
+      >({{ (file?.size || file?.fileSize) | convertFileSize }})</span
+    >
+  </div>
+</div>

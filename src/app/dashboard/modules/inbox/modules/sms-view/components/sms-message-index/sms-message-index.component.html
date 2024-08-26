@@ -1,0 +1,42 @@
+<div class="message-view-index-container">
+  <div
+    class="header-wrapper d-flex align-items-center justify-content-between gap-16"
+    [class.d-block]="(sharedMessageViewService.isSearchBoxFocused$ | async)">
+    <div class="d-flex gap-8 align-items-center">
+      <div class="w-100">
+        <inbox-filter
+          [taskDetailViewMode]="EViewDetailMode.SMS_MESSAGE"></inbox-filter>
+      </div>
+    </div>
+    <div class="select-btn">
+      <button
+        trudi-btn
+        variant="ghost"
+        *ngIf="!isSmsMessageEnabledForUserConsole && ((inboxService.isAllFiltersDisabled$ | async) === false && (sharedMessageViewService.isSearchBoxFocused$ | async) === false
+      && (sharedMessageViewService.isShowSelect$ | async ) === true && !isConsole && params['status'] !== TaskStatusType.draft)"
+        (click)="setIsSelectingMode(!isSelecting)">
+        {{isSelecting ? 'Cancel' : 'Select'}}
+      </button>
+    </div>
+  </div>
+  <div class="tabs-wrapper trudi-tab">
+    <div class="trudi-tab-container">
+      <div *rxFor="let tab of messageTabs; trackBy: 'title'" nzMatchRouter>
+        <a
+          class="trudi-tab-item"
+          [ngClass]="{
+            'trudi-tab-active':  params?.status === tab.queryParam?.status
+          }"
+          (click)="onNavigate(tab)">
+          <span>{{ tab.title }}</span>
+          @if (tab.unread) {
+          <trudi-icon [icon]="'redDotUnreadMessage'"> </trudi-icon>
+          }
+        </a>
+      </div>
+    </div>
+  </div>
+  <sms-message-index-list
+    [ngClass]="{'more-folder': params?.['status'] !== 'INPROGRESS'}">
+  </sms-message-index-list>
+</div>

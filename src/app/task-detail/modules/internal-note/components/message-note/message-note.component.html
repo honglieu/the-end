@@ -1,0 +1,69 @@
+<div
+  [ngClass]="{'message-note-admin' : messageNote.isPmNote, 'message-note-editing': isEditMode}"
+  class="message-note-wrapper d-flex align-items-center">
+  <button
+    *ngIf="!isEditMode && messageNote.isPmNote"
+    (click)="editMessage(messageNote)"
+    trudi-btn
+    variant="outlined"
+    btnType="neutral"
+    shape="circle"
+    size="extra-small"
+    class="message-note-wrapper-edit">
+    <trudi-icon svgClass="size-16" icon="editIcon"></trudi-icon>
+  </button>
+  <div class="message-note w-100">
+    <div class="message-header d-flex">
+      <div class="message-header_avatar d-flex">
+        <app-circle-avatar
+          [firstName]="messageNote.createdBy?.firstName"
+          [size]="'28'"
+          [avatar]="messageNote.createdBy?.googleAvatar"
+          [lastName]="messageNote.createdBy?.lastName"></app-circle-avatar>
+      </div>
+      <div class="message-header_title">
+        {{messageNote.createdBy.displayName}}
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="message-content gap-12">
+      <ng-container *ngIf="!isEditMode; else editMessageContent">
+        <span
+          #messageContent
+          class="text"
+          #textContain
+          [innerHTML]="messageNote.text"></span>
+        <p class="time-edit" *ngIf="messageNote?.editAt">
+          Last edited at {{ messageNote.editAt | formatDateTime | push |
+          lowercase }}
+        </p>
+      </ng-container>
+      <ng-template #editMessageContent>
+        <chat-note
+          #chatNote
+          [formControl]="noteForm"
+          [configEditNote]="editNoteConfig"
+          [styleEditNote]="'edit-note'"></chat-note>
+        <div class="btn-group d-flex justify-content-end">
+          <button
+            trudi-btn
+            class="btn-cancel"
+            size="extra-small"
+            btnType="neutral"
+            variant="outlined"
+            (click)="onCancel()">
+            Cancel
+          </button>
+          <button
+            [disabled]="!noteForm?.value"
+            trudi-btn
+            class="btn-save"
+            size="extra-small"
+            (click)="onSave()">
+            Save
+          </button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

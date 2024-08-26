@@ -1,0 +1,26 @@
+@import 'function';
+
+.mark-sync-conversation {
+  width: fit-content;
+  margin: 16px auto;
+  padding: 4px 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  @include fontSetup(
+    var(--fg-neutral-normal, #646464),
+    12px,
+    16px,
+    normal,
+    400
+  );
+
+  & span {
+    text-align: center;
+    text-wrap: nowrap;
+  }
+
+  .name-clickable:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}

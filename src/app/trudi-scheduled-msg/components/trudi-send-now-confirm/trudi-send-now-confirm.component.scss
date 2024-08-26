@@ -1,0 +1,23 @@
+@import 'function';
+
+.trudi-send-now-confirm {
+  &-header {
+    display: flex;
+    align-items: center;
+    padding: 6px 14px 16px 14px;
+    &-title {
+      @include fontSetup(var(--gray-700), 18px, 28px, normal, 600);
+      margin: 0;
+    }
+  }
+
+  &-footer {
+    padding: 20px 14px 14px 10px;
+    &-btn-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+  }
+}

@@ -1,0 +1,82 @@
+<widget-common
+  title="Routine Inspection"
+  [buttonKey]="EButtonStepKey.ROUTINE_INSPECTION"
+  [type]="routineInspection.syncStatus"
+  [errorTitle]="routineInspection.errorMessSync"
+  [firstTimeSyncSuccess]="routineInspection?.firstTimeSyncSuccess"
+  (showModal)="handleEdit(routineInspection)"
+  (retry)="handleRetry(routineInspection)"
+  (remove)="handleRemove(routineInspection)"
+  [isDislayBtnCancel]="routineInspection.isSuccessful">
+  <div class="d-flex flex-dir-column gap-4">
+    <div class="d-flex w-100">
+      <span class="title">Tenancy</span>
+      <span class="tenancy">{{routineInspection.userPropertyGroup.name}}</span>
+    </div>
+    <ng-container *ngIf="routineInspection?.ptId && routineInspection?.status">
+      <div class="d-flex align-items-center">
+        <span class="title">Status</span>
+        <trudi-badge
+          size="small"
+          [variant]="(routineInspection.status === statusPropertyTree.CANCELLED || routineInspection.status === statusPropertyTree.CLOSED) ? 'error' : 'primary'"
+          badgeType="tonal"
+          [text]="routineInspection.status | titlecase"></trudi-badge>
+      </div>
+      @if (routineInspection.status === statusPropertyTree.CLOSED) {
+      <div class="d-flex align-items-center">
+        <span class="title no-pointer-event">
+          <switch-checkbox
+            [disabled]="true"
+            [isChecked]="routineInspection.defaultChargeFee"></switch-checkbox>
+        </span>
+        <span class="tenancy">Charge default fee</span>
+      </div>
+      }
+    </ng-container>
+    <property-tree-widget-notes
+      *ngIf="routineInspection?.notes?.general"
+      [type]="eTypeNote.INSPECTION"
+      [notes]="routineInspection?.notes?.general"></property-tree-widget-notes>
+    <div>
+      <div
+        class="inspection-note"
+        *ngIf="routineInspection?.notes?.tenant_notes || routineInspection?.notes?.tenant_actions || routineInspection?.notes?.owner_notes || routineInspection?.notes?.owner_followup_items">
+        <div class="inspection-output">Inspection outputs</div>
+        <div class="inspection-content" [ngSwitch]="true">
+          <div
+            class=""
+            *ngSwitchCase="!!routineInspection?.notes?.tenant_notes">
+            <div class="text-truncate">
+              Tenant notes:
+              <span>{{routineInspection?.notes?.tenant_notes}}</span>
+            </div>
+          </div>
+          <div
+            class=""
+            *ngSwitchCase="!!routineInspection?.notes?.tenant_actions && !routineInspection?.notes?.tenant_notes">
+            <div class="text-truncate">
+              Actions: <span>{{routineInspection?.notes?.tenant_actions}}</span>
+            </div>
+          </div>
+          <div
+            class=""
+            *ngSwitchCase="!!routineInspection?.notes?.owner_notes && !routineInspection?.notes?.tenant_actions && !routineInspection?.notes?.tenant_notes">
+            <div class="text-truncate">
+              Owner notes:
+              <span>{{routineInspection?.notes?.owner_notes}}</span>
+            </div>
+          </div>
+          <div
+            class=""
+            *ngSwitchCase="!!routineInspection?.notes?.owner_followup_items && !routineInspection?.notes?.owner_notes
+                    && !routineInspection?.notes?.tenant_actions && !routineInspection?.notes?.tenant_notes">
+            <div class="text-truncate">
+              Follow-up Items:
+              <span>{{routineInspection?.notes?.owner_followup_items}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</widget-common>

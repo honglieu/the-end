@@ -1,0 +1,50 @@
+<div class="head-wrapper d-flex flex-wrap gap-16 align-items-center">
+  <dropdown-menu-contacts
+    [listItem]="crmStatus"
+    [defaultListValues]="prevListCrm"
+    [defaultStatus]="true"
+    [noResetListItem]="true"
+    [label]="'CRM status'"
+    [type]="filterType.CRM"
+    (itemsSelected)="handleItemsSelected($event)"></dropdown-menu-contacts>
+
+  <dropdown-menu-contacts
+    [defaultListValues]="prevListPortfolio"
+    [listItem]="portfolioList"
+    [label]="'Portfolio'"
+    [noResetListItem]="true"
+    [type]="filterType.PORTFOLIO"
+    (itemsSelected)="handleItemsSelected($event)"></dropdown-menu-contacts>
+
+  <dropdown-menu-contacts
+    [defaultListValues]="prevListRoles"
+    [listItem]="listRoleFilter"
+    [label]="'Roles'"
+    [noResetListItem]="true"
+    [type]="filterType.ROLES"
+    (itemsSelected)="handleItemsSelected($event)"></dropdown-menu-contacts>
+
+  <dropdown-menu-contacts
+    [defaultListValues]="prevListPropertyStatus"
+    [listItem]="propertyStatus"
+    [noResetListItem]="true"
+    [label]="'Property status'"
+    [type]="filterType.PROPERTY_STATUS"
+    (itemsSelected)="handleItemsSelected($event)"></dropdown-menu-contacts>
+
+  <dropdown-menu-contacts
+    [defaultListValues]="prevListListInviteStatus"
+    [noResetListItem]="true"
+    [listItem]="listInviteFilter"
+    [label]="'Tenant app'"
+    [type]="filterType.STATUS"
+    (itemsSelected)="handleItemsSelected($event)"></dropdown-menu-contacts>
+
+  <dropdown-menu-contacts
+    [defaultListValues]="prevListLastTime"
+    [listItem]="listDateFilter"
+    [label]="'Last imported'"
+    [type]="filterType.LAST_IMPORT"
+    (itemsSelected)="handleItemsSelected($event)"
+    [formDropdown]="'single selection'"></dropdown-menu-contacts>
+</div>

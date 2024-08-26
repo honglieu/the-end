@@ -1,0 +1,31 @@
+<div class="confirm-wrapper assign-admin-popup">
+  <div class="d-flex gap-16">
+    <img class="size-48" src="/assets/icon/trudi_avt.svg" alt="logo" />
+    <div class="confirm-text">
+      <p class="bold-text">
+        You are about to reassign the administrator permission from yourself to
+        {{nameOfUser?.trim()}}.
+      </p>
+      <div class="grey-text">
+        <p>This person will be responsible for:</p>
+        <ul>
+          <li>Inviting / deactivating team members</li>
+          <li>Receiving invoices and accessing payment information</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="btn-wrapper gap-12">
+    <button
+      data-e2e="button-cancel"
+      trudi-btn
+      variant="outlined"
+      btnType="neutral"
+      (click)="isOpenModal(false)">
+      <span class="btn-text"> Cancel </span>
+    </button>
+    <button data-e2e="button-confirm" trudi-btn (click)="isConfirm()">
+      <span class="btn-text"> Confirm </span>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,144 @@
+@import 'function';
+
+:host ::ng-deep {
+  .wrapper-skeleton-task-editor-content {
+    margin: 0 10px;
+    padding: 0;
+    .skeleton-tree-node-button {
+      width: 47px;
+      height: 0px;
+      margin-top: 10px;
+      h3.ant-skeleton-title {
+        margin-top: -7px;
+        border-radius: 17px;
+        height: 13px;
+      }
+    }
+    .skeleton-tree {
+      & ul {
+        margin: 0 0 0 10px;
+        padding: 0 !important;
+        list-style: none;
+        position: relative;
+        .children-node {
+          &:nth-child(1) {
+            width: 160px;
+          }
+
+          &:nth-child(3) {
+            width: 180px;
+          }
+        }
+      }
+      &:before,
+      ul:before {
+        content: '';
+        display: block;
+        width: 0px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        border-left: 1px solid var(--gray-200);
+        background: var(--bg-base, #fff);
+        z-index: -1;
+      }
+      & .first-node {
+        & {
+          list-style: none;
+          margin: 0;
+          position: relative;
+          z-index: -1;
+          .skeleton-container {
+            padding: 22px;
+            margin-right: 28px;
+            &.second-node {
+              min-width: 377px;
+            }
+            .skeleton-step-section {
+              width: 80%;
+              height: 0px;
+              h3.ant-skeleton-title {
+                margin-top: -7px;
+                border-radius: 17px;
+                height: 13px;
+                margin-left: -8px;
+              }
+            }
+          }
+        }
+        li {
+          list-style: none;
+          margin: 0;
+          padding: 4px 0 0 12px;
+          position: relative;
+          z-index: -1;
+          &:before {
+            border-top: 1px solid var(--gray-200);
+            content: '';
+            display: block;
+            height: 100%;
+            left: 0;
+            margin-top: 16px;
+            position: absolute;
+            top: 1.25em;
+            width: 12px;
+          }
+          &:last-child:before {
+            background: var(--bg-base, #fff);
+            bottom: 0;
+            height: auto;
+            top: 1.25em;
+          }
+          &.custom-first-tree-node {
+            padding-top: 20px;
+            &:first-child::before {
+              margin-top: 32px;
+            }
+          }
+        }
+        li.children-node {
+          .skeleton-children-node {
+            width: 200px;
+            height: 40px;
+            margin-top: 8px;
+            h3.ant-skeleton-title {
+              border-radius: 17px;
+              height: 13px;
+            }
+          }
+        }
+      }
+      & > li:before {
+        border-top: none !important;
+      }
+    }
+
+    ul.skeleton-tree {
+      margin-left: 0px;
+      padding: 0;
+      &:before {
+        border-left: none;
+      }
+    }
+
+    .skeleton-add-button {
+      width: 100px;
+      height: 0px;
+      h3.ant-skeleton-title {
+        height: 36px;
+        border-radius: 8px;
+        background: var(--bg-neutral-tonal-normal, #f2f5f7);
+      }
+    }
+  }
+}
+
+.min-w-400 {
+  min-width: 400px;
+}
+
+.py-6 {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}

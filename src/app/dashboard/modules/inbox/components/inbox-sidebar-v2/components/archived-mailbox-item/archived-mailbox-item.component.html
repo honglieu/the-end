@@ -1,0 +1,94 @@
+<ul nz-menu nzMode="inline" class="border-r-none background--white">
+  <li
+    appE2E
+    e2eId="inbox-email-folder-dropdown"
+    nz-submenu
+    [nzTitle]="sidebarTitle"
+    class="submenu"
+    nzOpen="true"
+    [(nzOpen)]="item.isOpen"
+    [ngClass]="['relative']"
+    tabindex="0"
+    (click)="handleExpand(); $event.stopPropagation()"
+    (keydown.enter)="handleExpand()">
+    <div class="box-content">
+      <sidebar-item-v2
+        [item]="item"
+        (selectMailbox)="handleSelectMailbox($event)"></sidebar-item-v2>
+    </div>
+    <ng-template #sidebarTitle>
+      <div class="multiple-user__item archived">
+        <ng-container
+          *ngTemplateOutlet="avatarTemplate; context: {$implicit:item}"></ng-container>
+        <div class="d-flex flex-dir-column">
+          <div class="d-flex gap-4 align-items-center">
+            <span
+              nz-tooltip
+              nzTooltipPlacement="bottom"
+              [nzTooltipTitle]="item?.name"
+              [nzTooltipOverlayStyle]="{ 'max-width': '266px', 'padding-top': '5px' }"
+              class="multiple-user__name text-ellipsis"
+              >{{item?.name}}</span
+            >
+            <trudi-icon *ngIf="unreadList[item.id]" icon="redDotUnreadMessage">
+            </trudi-icon>
+            <trudi-icon
+              *ngIf="item?.status === EMailBoxStatus.DISCONNECT || item?.status === EMailBoxStatus.FAIL"
+              nz-tooltip
+              [tooltipMaxWidth]="196"
+              [nzTooltipTitle]="item?.status ===  EMailBoxStatus.FAIL ? titleTemplate  : textTooltip"
+              nzTooltipPlacement="bottom"
+              [icon]="item?.status === EMailBoxStatus.FAIL ? 'alertWarningIcon' : 'alertOctagonIcon'"
+              svgClass="size-20">
+            </trudi-icon>
+            <ng-template #titleTemplate>
+              <div class="d-flex flex-dir-column text-left">
+                <span>Fail to connect</span>
+                <span>{{item?.lastTimeSync | formatDateTime | async}}</span>
+              </div>
+            </ng-template>
+          </div>
+          <span
+            *ngIf="item?.isOpen"
+            nz-tooltip
+            nzTooltipPlacement="bottom"
+            [nzTooltipTitle]="item?.emailAddress"
+            [nzTooltipOverlayStyle]="{ 'max-width': '266px', 'padding-top': '5px' }"
+            [ngClass]="{'error-text': item?.status === EMailBoxStatus.DISCONNECT || item?.status ===  EMailBoxStatus.FAIL}"
+            class="multiple-user__email text-ellipsis"
+            >{{item?.emailAddress}}</span
+          >
+        </div>
+      </div>
+      <ng-template #avatarTemplate let-item>
+        <div class="box-avatar position-relative">
+          <a
+            *ngIf="isAccountAdded"
+            (click)="navigateToMailboxSetting(); $event.stopPropagation()"
+            class="cursor-pointer mailbox-setting"
+            nz-tooltip
+            nzTooltipPlacement="bottom"
+            [nzTooltipTitle]="'Mailbox settings'"
+            tabindex="0"
+            (keydown.enter)="navigateToMailboxSetting(); $event.stopPropagation()">
+            <trudi-icon [icon]="'settingV2'" svgClass="size-14"> </trudi-icon>
+          </a>
+          <div class="avatar">
+            <img
+              *ngIf="item.picture; else noneAvt"
+              [src]="item.picture"
+              alt="avatar" />
+            <ng-template #noneAvt>
+              <div class="custom-avatar">{{item?.name | shortenName}}</div>
+            </ng-template>
+            <trudi-icon
+              *ngIf="item.type === mailBoxType.COMPANY"
+              [icon]="'mailboxTypeCompany'"
+              [style]="{ 'width.px': 18, 'height.px': 18 }">
+            </trudi-icon>
+          </div>
+        </div>
+      </ng-template>
+    </ng-template>
+  </li>
+</ul>

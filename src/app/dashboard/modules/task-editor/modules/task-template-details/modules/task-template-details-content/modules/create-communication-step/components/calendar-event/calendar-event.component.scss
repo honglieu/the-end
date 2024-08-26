@@ -1,0 +1,19 @@
+@import 'function';
+.row-label__container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+
+  .calendar-select__label {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      14px,
+      20px,
+      normal,
+      600
+    );
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+}
+

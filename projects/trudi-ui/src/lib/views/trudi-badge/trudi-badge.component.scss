@@ -1,0 +1,365 @@
+@import 'function';
+
+@mixin badge-size($height, $padding, $font-size, $line-height, $spacing) {
+  height: $height;
+  padding: $padding;
+  font-size: $font-size;
+  line-height: $line-height;
+  gap: $spacing;
+}
+
+@mixin badge-type($bg, $color, $border: null) {
+  background: $bg;
+  color: $color;
+
+  &.trudi-badge-icon-filled {
+    ::ng-deep trudi-icon svg path {
+      fill: $color;
+    }
+  }
+
+  @if $border {
+    border: 1px solid $border;
+  }
+}
+
+@mixin badge-gradient() {
+  background: linear-gradient(
+    145.35deg,
+    rgba(255, 202, 98, 0.2) 3.66%,
+    rgba(56, 219, 208, 0.2) 55.74%,
+    rgba(66, 133, 244, 0.2) 102.24%
+  );
+  color: var(--fg-neutral-normal, #61646c);
+
+  &-outlined {
+    position: relative;
+    z-index: 1;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      right: -1px;
+      bottom: -1px;
+      left: -1px;
+      border-radius: inherit;
+      background: linear-gradient(
+        145.35deg,
+        #ffca62 3.66%,
+        #38dbd0 55.74%,
+        #4285f4 102.24%
+      );
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      border-radius: inherit;
+      background: linear-gradient(
+        145.35deg,
+        rgba(255, 202, 98, 0.2) 3.66%,
+        rgba(56, 219, 208, 0.2) 55.74%,
+        rgba(66, 133, 244, 0.2) 102.24%
+      );
+      background-color: var(--white);
+      z-index: -1;
+      pointer-events: none;
+    }
+  }
+
+  &-filled {
+    background: linear-gradient(
+      145.35deg,
+      #ffca62 3.66%,
+      #38dbd0 55.74%,
+      #4285f4 102.24%
+    );
+    color: var(--fg-base, #ffffff);
+  }
+}
+
+@mixin badge-base() {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 24px;
+  word-break: break-word;
+  max-width: fit-content;
+  @include fontSetup(var(--gray-400), 12px, 16px, normal, 500 !important);
+
+  &-rounded {
+    &.trudi-badge {
+      &-extra-small {
+        border-radius: 2px;
+      }
+
+      &-small {
+        border-radius: 4px;
+      }
+
+      &-medium {
+        border-radius: 4px;
+      }
+
+      &-large {
+        border-radius: 6px;
+      }
+    }
+  }
+
+  &.trudi-badge-truncated {
+    max-width: inherit;
+    width: fit-content;
+
+    .truncate {
+      width: inherit;
+      max-width: inherit;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  &.trudi-badge-line-through {
+    text-decoration: line-through;
+  }
+}
+
+:host.trudi-badge {
+  @include badge-base();
+
+  &-extra-small {
+    @include badge-size(16px, 2px 4px, 10px, 12px, 2px);
+  }
+
+  &-small {
+    @include badge-size(20px, 2px 6px, 12px, 16px, 2px);
+  }
+
+  &-medium {
+    @include badge-size(24px, 2px 6px, 14px, 20px, 4px);
+  }
+
+  &-large {
+    @include badge-size(28px, 4px 8px, 14px, 20px, 6px);
+  }
+
+  &-small-min-height {
+    min-height: 20px;
+    padding: 2px 8px;
+  }
+
+  &-primary {
+    @include badge-type(
+      var(--bg-brand-tonal-stronger, #def8f5),
+      var(--fg-brand, #28ad99)
+    );
+
+    &-outlined {
+      @include badge-type(
+        var(--fg-base, #ffffff),
+        var(--fg-brand, #28ad99),
+        var(--border-brand, #28ad99)
+      );
+    }
+
+    &-filled {
+      @include badge-type(
+        var(--bg-brand-solid-normal, #28ad99),
+        var(--fg-base, #ffffff)
+      );
+    }
+  }
+
+  &-warning {
+    @include badge-type(
+      var(--bg-warning-tonal-stronger, #ffe7cf),
+      var(--fg-warning)
+    );
+
+    &-outlined {
+      @include badge-type(
+        var(--fg-base, #ffffff),
+        var(--fg-warning, #ef6820),
+        var(--border-warning, #ef6820)
+      );
+    }
+
+    &-filled {
+      @include badge-type(
+        var(--bg-warning-solid-normal, #ef6820),
+        var(--fg-base, #ffffff)
+      );
+    }
+  }
+
+  &-error {
+    @include badge-type(
+      var(--bg-danger-tonal-stronger, #ffe0e0),
+      var(--fg-danger, #e81a1a)
+    );
+
+    &-outlined {
+      @include badge-type(
+        var(--fg-base, #ffffff),
+        var(--fg-danger, #fa3939),
+        var(--border-danger, #fa3939)
+      );
+    }
+
+    &-filled {
+      @include badge-type(
+        var(--bg-danger-solid-normal, #fa3939),
+        var(--fg-base, #ffffff)
+      );
+    }
+  }
+
+  &-role {
+    @include badge-type(
+      var(--bg-neutral-tonal-stronger, #f0f1f1),
+      var(--fg-neutral-normal, #61646c)
+    );
+
+    &-outlined {
+      @include badge-type(
+        var(--fg-base, #ffffff),
+        var(--fg-neutral-dark, #ececed),
+        var(--border-neutral-dark, #ececed)
+      );
+    }
+
+    &-filled {
+      @include badge-type(
+        var(--bg-neutral-solid-normal, #85888e),
+        var(--fg-base, #ffffff)
+      );
+    }
+  }
+
+  &-success {
+    @include badge-type(
+      var(--bg-success-tonal-stronger, #d3f8df),
+      var(--fg-success)
+    );
+
+    &-outlined {
+      @include badge-type(
+        var(--fg-base, #ffffff),
+        var(--fg-success, #16b364),
+        var(--border-success, #16b364)
+      );
+    }
+
+    &-filled {
+      @include badge-type(
+        var(--bg-success-solid-normal, #16b364),
+        var(--fg-base, #ffffff)
+      );
+    }
+  }
+
+  &-inProgress {
+    @include badge-type(
+      var(--bg-info-tonal-stronger, #d8edff),
+      var(--fg-info, #1570ef)
+    );
+
+    &-outlined {
+      @include badge-type(
+        var(--fg-base, #ffffff),
+        var(--fg-info, #2e90fa),
+        var(--border-info, #2e90fa)
+      );
+    }
+
+    &-filled {
+      @include badge-type(
+        var(--bg-info-solid-normal, #2e90fa),
+        var(--fg-base, #ffffff)
+      );
+    }
+  }
+
+  &-unassigned,
+  &-rm-tenant {
+    @include badge-type(
+      var(--bg-tenant-tonal-stronger, #fefad7),
+      var(--fg-tenant)
+    );
+
+    &-outlined {
+      @include badge-type(
+        var(--fg-base, #ffffff),
+        var(--fg-tenant, #f1c012),
+        var(--border-tenant, #f1c012)
+      );
+    }
+
+    &-filled {
+      @include badge-type(
+        var(--bg-tenant-solid-normal, #f1c012),
+        var(--fg-base, #ffffff)
+      );
+    }
+  }
+
+  &-supplier {
+    @include badge-type(
+      var(--bg-supplier-tonal-stronger, #f0e3ff),
+      var(--fg-supplier)
+    );
+
+    &-outlined {
+      @include badge-type(
+        var(--fg-base, #ffffff),
+        var(--fg-supplier, #9c72f1),
+        var(--border-supplier, #9c72f1)
+      );
+    }
+
+    &-filled {
+      @include badge-type(
+        var(--bg-supplier-solid-normal, #9c72f1),
+        var(--fg-base, #ffffff)
+      );
+    }
+  }
+
+  &-gradient {
+    @include badge-gradient();
+  }
+
+  &-archive {
+    @include badge-type(var(--gray-200), var(--gray-400));
+  }
+
+  &-sidebar {
+    max-width: none !important;
+    @include badge-type(
+      var(--bg-neutral-tonal-stronger),
+      var(--fg-neutral-normal)
+    );
+  }
+
+  &-border {
+    border: 1px solid var(--gray-100);
+    color: var(--fg-neutral-normal);
+  }
+
+  &-unset {
+    max-width: unset;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    padding: 6px 8px;
+  }
+}

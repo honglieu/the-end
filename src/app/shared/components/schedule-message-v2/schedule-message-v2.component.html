@@ -1,0 +1,64 @@
+<div
+  [formGroup]="formGroup"
+  class="modal-form-schedule-message d-flex flex-dir-column">
+  <div class="d-flex gap-8 flex-1 align-items-center">
+    <div class="title">Schedule for:</div>
+
+    <div class="d-flex flex-1 gap-20 align-items-center">
+      <trudi-form-control
+        [checkSubmit]="!isConfirmed"
+        class="d-flex gap-2 align-items-center">
+        <trudi-ui-date-picker
+          formControlName="date"
+          [nzDisabledDate]="disabledDate"
+          [nzFormat]=" datePickerFormatPipe$ | async"
+          [nzShowToday]="false"
+          [nzIsSchedule]="true"
+          [calendarEvent]="selectedEvent"
+          [errorMsg]="dateError"
+          [nzPopupStyle]="nzPopupStyle">
+        </trudi-ui-date-picker>
+      </trudi-form-control>
+      <div class="d-flex align-items-center">
+        <time-picker
+          [label]="'--:--'"
+          [rangeFrom]="rangeFrom"
+          [rangeTo]="86400"
+          [isTo]="true"
+          formControlName="time"
+          [readonly]="false"
+          [minuteControl]="minuteControl"
+          (onChangeHour)="handleSelectTime($event)"
+          (onError)="handleError($event)"
+          (isFocus)="handleFocus($event)"
+          [hasError]="errorMsg"
+          [isDefault]="true"
+          [customClass]="customClassTimePicker"
+          [isShowIconSchedule]="true">
+        </time-picker>
+        <div
+          *ngIf="errorMsg"
+          class="d-flex gap-4 align-items-center warning-text">
+          <trudi-icon svgClass="size-16" icon="iconWarningRedFit"></trudi-icon>
+          Invalid time
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="gap-4 d-flex align-items-center"
+    [ngClass]="{'app-time': (formGroup.get('date').value && scheduleDate && !isDateUnknown) || (formGroup.get('date').value && isDateUnknown) }">
+    <app-time-detail-routine
+      *ngIf="formGroup.get('date').value && scheduleDate && !isDateUnknown"
+      [reminderTime]="formGroup.get('date').value"
+      [scheduleDate]="scheduleDate"
+      [specialStringDue]="specialStringDue"
+      [additionalInfo]="additionalInfo">
+    </app-time-detail-routine>
+    <app-time-detail-routine
+      *ngIf="formGroup.get('date').value && isDateUnknown"
+      [reminderTime]="formGroup.get('date').value"
+      [isDateUnknown]="isDateUnknown">
+    </app-time-detail-routine>
+  </div>
+</div>

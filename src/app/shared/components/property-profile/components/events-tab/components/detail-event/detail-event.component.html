@@ -1,0 +1,222 @@
+<div class="modal-window">
+  <div class="modal-popup-header" #popupHeader>
+    <div class="d-flex align-items-start gap-8">
+      <button class="event-back-button" (click)="handleClickBack()">
+        <trudi-icon
+          icon="chevronLeft"
+          [style]="{ 'width.px': 20, 'height.px': 20 }"></trudi-icon>
+      </button>
+      <div class="event-information">
+        {{ (eventsTabService.eventNameDetail$ | async) | titleCasePipe }}
+      </div>
+    </div>
+    <ng-container *ngIf="!isLoading else skeletonHeader">
+      <div class="d-flex flex-dir-column gap-8">
+        <div class="d-flex">
+          <span class="event-label">Status</span>
+          <span
+            class="event-status"
+            [ngStyle]="{
+              color:
+                eventLinkedTaskList?.eventStatus === EEventStatus.CLOSED ||
+                eventLinkedTaskList?.eventStatus === EEventStatus.CANCELLED
+                  ? 'var(--fg-danger)'
+                  : 'var(--primary-solid-default, #00AA9F)'
+            }">
+            {{ eventLinkedTaskList?.eventStatus | uppercaseFirstLetter }}
+          </span>
+        </div>
+        <div class="d-flex">
+          <span class="event-label">Date/time</span>
+          <span
+            class="event-date"
+            [ngStyle]="{
+              'text-decoration-line':
+                eventLinkedTaskList?.eventStatus === EEventStatus.CLOSED ||
+                eventLinkedTaskList?.eventStatus === EEventStatus.CANCELLED
+                  ? 'line-through'
+                  : 'none'
+            }">
+            {{ eventLinkedTaskList?.eventDate | formatDate | async }} {{
+            eventLinkedTaskList?.defaultTime ? (eventLinkedTaskList?.defaultTime
+            | formatTime: true | async) : (eventLinkedTaskList?.startTime |
+            dateTimeRange: eventLinkedTaskList?.endTime : true | async) }}</span
+          >
+        </div>
+        <div class="d-flex">
+          <span class="event-label">Address</span>
+          <span
+            (click)="handleClickAddress()"
+            class="event-address text-ellipsis"
+            [ngClass]="{
+              'event-address-underline': ![EPropertyStatus.deleted].includes(eventLinkedTaskList?.propertyStatus),
+              'no-pointer-event': [EPropertyStatus.deleted].includes(eventLinkedTaskList?.propertyStatus),
+            }"
+            [ngStyle]="{
+              'text-decoration-line': [EPropertyStatus.archived, EPropertyStatus.deleted, EPropertyStatus.inactive].includes(eventLinkedTaskList?.propertyStatus)
+                  ? 'line-through'
+                  : 'none'
+            }"
+            >{{ eventLinkedTaskList?.streetline }}</span
+          >
+        </div>
+      </div>
+      <div class="button-wrapper">
+        <button
+          *ngIf="!isEventCancelled && !isEventClosed"
+          trudi-btn
+          variant="tonal"
+          class="flex-1"
+          appE2E="events-event-create-task"
+          (click)="onAddToTask()">
+          <trudi-icon
+            class="item-icon no-pointer-event"
+            icon="iconPlus"></trudi-icon>
+          Add to task
+        </button>
+      </div>
+    </ng-container>
+  </div>
+  <div class="modal-popup-content" #popupContent>
+    <div class="taskbar mb-20" #taskBar>
+      <button
+        [class.taskbar-active]="currentTab === ECurrentTab.LINKED_TASKS"
+        #linkedTasks
+        class="taskbar-tab"
+        appE2E="events-event-linked-tasks"
+        (click)="setCurrentTab(ECurrentTab.LINKED_TASKS)">
+        Linked tasks
+      </button>
+      <button
+        [class.taskbar-active]="currentTab === ECurrentTab.HISTORICAL_EVENTS"
+        #historicalEvents
+        class="taskbar-tab"
+        appE2E="events-event-historical-events"
+        (click)="setCurrentTab(ECurrentTab.HISTORICAL_EVENTS)">
+        Historical events
+      </button>
+      <div
+        class="taskbar-inkbar"
+        [style.width]="currentTab === ECurrentTab.HISTORICAL_EVENTS ? historicalEvents?.offsetWidth + 'px' : linkedTasks?.offsetWidth + 'px'"
+        [style.left]="currentTab === ECurrentTab.HISTORICAL_EVENTS ? historicalEvents?.offsetLeft + 'px' : 0"></div>
+    </div>
+    <ng-container *ngIf="!isLoading else skeleton">
+      <div
+        class="no-linked-tasks"
+        *ngIf="currentTab === ECurrentTab.LINKED_TASKS && !eventLinkedTaskList?.inprogressTasks?.length && !eventLinkedTaskList?.completedTasks?.length">
+        No linked tasks
+      </div>
+      <div
+        class="overflow-y-auto"
+        *ngIf="currentTab === ECurrentTab.LINKED_TASKS">
+        <div
+          *ngIf="eventLinkedTaskList?.inprogressTasks?.length > 0"
+          class="task-list mb-32">
+          <div class="task-group">IN PROGRESS TASKS</div>
+          <div class="d-flex flex-dir-column gap-12">
+            <div
+              class="task-information"
+              *ngFor="let item of eventLinkedTaskList?.inprogressTasks">
+              <div>
+                <button
+                  [ngStyle]="{cursor: !hasAddAccount ? 'not-allowed' : 'pointer'}"
+                  class="task-title text-ellipsis"
+                  appE2E="events-event-linked-tasks-task-title"
+                  (click)="onNavigateToTask(item?.taskId)">
+                  {{item.title}}
+                </button>
+                <div class="task-duration">
+                  Opened {{item.createdAt | dateCase | async}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          *ngIf="eventLinkedTaskList?.completedTasks?.length > 0"
+          class="task-list">
+          <div class="task-group">COMPLETED TASKS</div>
+          <div class="d-flex flex-dir-column gap-12">
+            <div
+              class="task-information"
+              *ngFor="let item of eventLinkedTaskList?.completedTasks">
+              <div>
+                <button
+                  [ngStyle]="{cursor: !hasAddAccount ? 'not-allowed' : 'pointer'}"
+                  class="task-title"
+                  (click)="onNavigateToTask(item?.taskId)">
+                  {{item.title}}
+                </button>
+                <div class="task-duration">
+                  Completed {{item.updatedAt | dateCase | async}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="overflow-y-auto"
+        *ngIf="currentTab === ECurrentTab.HISTORICAL_EVENTS && listOfHistoricalEvents?.length > 0"
+        [style.height]="(popupContent?.offsetHeight - taskBar?.offsetHeight)">
+        <ng-container
+          *ngFor="let event of listOfHistoricalEvents; let last = last">
+          <historical-event
+            [eventName]="eventLinkedTaskList.eventName"
+            [event]="event"
+            [isEventLatest]="last"></historical-event>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #skeleton>
+  <div class="d-flex flex-dir-column">
+    <div class="skeleton-container">
+      <div class="wrapper-skeleton-event">
+        <nz-skeleton
+          class="skeleton-event"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+        <nz-skeleton
+          class="skeleton-event"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+        <nz-skeleton
+          class="skeleton-event"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #skeletonHeader>
+  <div class="d-flex flex-dir-column">
+    <div class="skeleton-container-header">
+      <div
+        *ngFor="let _ of [].constructor(3)"
+        class="wrapper-skeleton-event-header gap-16">
+        <nz-skeleton
+          class="skeleton-event"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+        <nz-skeleton
+          class="skeleton-event"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+      </div>
+      <nz-skeleton-element
+        class="skeleton-event-button"
+        nzType="button"
+        [nzActive]="true">
+      </nz-skeleton-element>
+    </div>
+  </div>
+</ng-template>
+
+<link-task
+  *ngIf="selectedEvent"
+  [taskNameList]="taskNames"
+  (stopProcess)="handleCloseModal()"></link-task>

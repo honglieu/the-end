@@ -1,0 +1,16 @@
+.letting-recommendations-footer {
+    padding: 20px 24px;
+    justify-content: flex-end;
+    background: transparent;
+    border-top: 1px solid var(--gray-100);
+    border-radius: 0 0 8px 8px;
+}
+
+.letting-wrapper {
+    padding: 20px 24px;
+}
+
+:host ::ng-deep .task-editor-popup .modal-popup-content {
+    overflow-y: visible !important;
+}
+  

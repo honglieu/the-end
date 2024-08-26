@@ -1,0 +1,556 @@
+@import 'function';
+
+.creditor-header-wrapper {
+  display: flex;
+  text-align: center;
+  align-items: center;
+
+  .creditor-logo {
+    height: 20.29px;
+    width: 84px;
+  }
+
+  .creditor-title-wrapper {
+    flex: 1;
+
+    .creditor-title {
+      color: var(--fg-neutral-strongest, #202020);
+      font-size: 18px;
+      font-weight: 600;
+    }
+  }
+}
+
+::ng-deep {
+  .group-email-copy {
+    margin-bottom: 8px !important;
+    .trudi-checkbox {
+      .label-text {
+        @include fontSetup(
+          var(--fg-neutral-normale, #646464) !important,
+          12px !important,
+          16px !important,
+          normal !important,
+          400 !important
+        );
+      }
+    }
+  }
+
+  .wrapper-email-copy {
+    margin-bottom: 10px;
+  }
+}
+
+.pdf-viewer {
+  width: 100%;
+  height: 100%;
+}
+
+.creditor-content {
+  display: flex;
+  max-height: calc(100vh - 370px);
+
+  .creditor-form-wrapper {
+    width: 50%;
+    padding: 20px 24px;
+    overflow-y: auto;
+    min-width: 50%;
+    border-right: 1px solid var(--gray-200, #d8dcdf);
+
+    .property-address {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-start;
+      padding-bottom: 24px;
+
+      .property-address-info {
+        @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 400);
+
+        span {
+          font-weight: 500;
+        }
+      }
+    }
+
+    .wrap-invoice-name {
+      .title {
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--fg-neutral-stronger, #3d3d3d);
+        margin-bottom: 8px;
+      }
+
+      .title-tenancy {
+        margin-top: 12px;
+      }
+    }
+
+    .check-upload-invoice {
+      margin-top: -4px;
+      margin-bottom: 12px;
+    }
+
+    ::ng-deep .label-text {
+      @include fontSetup(
+        var(--fg-neutral-strongest, #202020),
+        14px,
+        20px,
+        normal,
+        400
+      );
+    }
+
+    ::ng-deep .trudi-form-control {
+      .trudi-input,
+      .trudi-picker {
+        max-width: 100%;
+        font-weight: 500;
+        &:hover:not(:focus) {
+          background: var(--gray-100);
+        }
+      }
+      .trudi-picker-focused .trudi-picker-clear {
+        background: none;
+      }
+
+      .payment-method {
+        @include fontSetup(var(--fg-neutral-weaker), 12px, 16px, normal, 400);
+        margin-top: 6px;
+
+        span {
+          font-weight: 600;
+        }
+      }
+    }
+
+    .min-with {
+      min-width: 48%;
+    }
+    .upload-title {
+      @include fontSetup(var(--bg-brand-solid-normal), 14px, 20px, normal, 500);
+    }
+
+    ::ng-deep .trudi-picker.trudi-picker-disabled {
+      background-color: var(--bg-neutral-tonal-strongest, #d8dcdf) !important;
+      .trudi-picker-suffix {
+        cursor: default;
+      }
+    }
+    ::ng-deep .trudi-picker-suffix {
+      cursor: pointer;
+      pointer-events: auto;
+    }
+    .select-item-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .trudi-form-group {
+      gap: 20px;
+      .width-date {
+        max-width: 50%;
+        padding-right: 5px;
+      }
+
+      .creditor-selection {
+        position: relative;
+      }
+    }
+    .trudi-input:hover {
+      border-color: var(--fg-base);
+    }
+
+    .trudi-input {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .trudi-input[disabled] {
+      border: none;
+      outline: none;
+      background-color: var(--bg-neutral-tonal-strongest, #d8dcdf) !important;
+    }
+
+    ::ng-deep ng-select.creditor-ng-select {
+      &:hover {
+        border-color: var(--fg-base);
+      }
+      .ng-arrow-wrapper {
+        padding-right: 0px;
+        padding-left: 5px;
+        .ng-arrow {
+          width: 12px;
+          height: 8px;
+          border: none;
+          background: url(/assets/images/arow.png);
+        }
+      }
+      &.ng-select-opened {
+        .ng-arrow-wrapper {
+          padding-right: 0px;
+          .ng-arrow {
+            width: 100%;
+            height: 13px;
+            border: none;
+            background-size: cover;
+            padding-right: 0px;
+            background: url('/assets/images/chevron-up.png');
+          }
+        }
+      }
+      .ng-dropdown-panel .ng-dropdown-panel-items {
+        max-height: calc(46px * 4);
+
+        .ng-option.ng-option-selected {
+          &:after {
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            background: url('/assets/icon/ownership-check.svg') no-repeat center;
+            border-radius: 50%;
+          }
+          span {
+            font-weight: 500;
+          }
+        }
+        .ng-option-disabled,
+        .ng-option {
+          padding: 12px !important;
+        }
+      }
+    }
+
+    ::ng-deep .ng-select.ng-select-pdf {
+      .ng-select-container .ng-value-container .ng-input {
+        padding-right: 76px;
+      }
+
+      .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+        height: auto !important;
+        padding: 8px 12px !important;
+        border-radius: 0;
+      }
+    }
+
+    ::ng-deep .trudi-form-control.tenancy-dropdown {
+      .supplier-dropdown.ng-select .ng-dropdown-panel {
+        margin-top: 0;
+      }
+      .supplier-dropdown.ng-select .ng-select-container:before {
+        margin-top: 5px !important;
+      }
+    }
+    ::ng-deep
+      ng-select.creditor-ng-select
+      .ng-dropdown-panel:not(.ng-select-top) {
+      top: calc(100% + 7px) !important;
+    }
+
+    ::ng-deep mark.highlight {
+      background: var(--bg-tenant-solid-normal);
+      color: var(--fg-neutral-stronger, #3d3d3d);
+    }
+
+    .invoice-document {
+      gap: 8px;
+      .invoice-document-name {
+        max-width: 390px;
+        .pdfname {
+          color: var(--fg-neutral-stronger, #3d3d3d);
+          font-size: 14px;
+          font-style: normal;
+          font-weight: 500;
+          line-height: 20px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .username {
+          color: var(--fg-neutral-normal, #646464);
+          font-size: 12px;
+          font-style: normal;
+          font-weight: 400;
+          line-height: 16px;
+        }
+      }
+      .icon-wrapper {
+        border-radius: 50%;
+        overflow: hidden;
+        img {
+          width: 28px;
+        }
+      }
+      &-icon {
+        height: 28px;
+        width: 28px;
+        border-radius: 50%;
+      }
+
+      &-name {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    ::ng-deep ng-select.creditor-ng-select {
+      &.input-error-select {
+        .ng-select-container {
+          border-radius: 8px !important;
+          @include box-shadow-input-select(var(--shadow-danger) !important);
+          &:hover,
+          &:active {
+            @include box-shadow-input-select(var(--shadow-danger) !important);
+          }
+        }
+      }
+
+      .ng-clear-wrapper {
+        padding: 0;
+        width: 20px;
+        height: 20px;
+        border: 1px solid var(--gray-200, #d8dcdf);
+        border-radius: 50%;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        margin-right: 3px;
+      }
+
+      &.ng-select-opened .ng-clear-wrapper {
+        display: flex !important;
+      }
+    }
+
+    ::ng-deep ng-select.creditor-ng-select .ng-select-container {
+      height: 44px !important;
+      border-radius: 8px;
+      background-color: var(--gray-200);
+      border: none;
+      padding: 10px 12px;
+      &:before {
+        content: '';
+        background: none !important;
+      }
+
+      .disabled-field {
+        color: var(--bg-overlay-light);
+      }
+
+      .ng-value-container .ng-value {
+        font-weight: 500;
+      }
+
+      .ng-input > input {
+        padding-left: 12px;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    ::ng-deep .disabled-select {
+      .ng-select-container {
+        cursor: not-allowed;
+        background-color: var(--bg-neutral-tonal-strongest, #d8dcdf) !important;
+        border: none;
+        outline: none;
+
+        .ng-value-container {
+          color: var(--bg-overlay-light);
+        }
+      }
+    }
+    .cancel-creditor {
+      margin-bottom: 12px;
+    }
+  }
+
+  .btn-disable-cancel {
+    button {
+      background: var(--danger-50) !important;
+      span {
+        @include fontSetup(var(--danger-500), 14px, 20px, normal, 600);
+      }
+    }
+  }
+
+  .creditor-pdf-wrapper {
+    width: 50%;
+    margin-right: 20px;
+
+    .creditor-no-pdf {
+      color: var(--fg-neutral-weaker);
+      font-style: italic;
+      font-size: 14px;
+    }
+  }
+
+  .isImage {
+    overflow-y: auto;
+  }
+}
+
+.container-footer {
+  padding: 16px 24px;
+  border-top: 1px solid var(--gray-100);
+  .text-sync-status {
+    font-size: 12px;
+    color: var(--fg-neutral-normal, #646464);
+  }
+  .btn-cancel {
+    min-width: 100px;
+    height: 40px;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: var(--bg-danger-tonal-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 20px;
+    color: var(--fg-danger);
+    &:disabled {
+      background: var(--danger-50) !important;
+      color: var(--danger-500) !important;
+    }
+  }
+
+  .button-back {
+    border-radius: 8px;
+    border: 1px solid var(--border-neutral-dark, #d8dcdf);
+    background: var(--bg-base, #fff);
+    min-width: 100px;
+    min-height: 40px;
+    padding: 0px 16px;
+    &:hover {
+      background: var(--bg-neutral-tonal-stronger, #e7eaed);
+    }
+    &:focus {
+      background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+    }
+  }
+
+  .text-btn-back {
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      14px,
+      20px,
+      normal,
+      600
+    );
+  }
+}
+
+:host ::ng-deep .creditor-ng-select {
+  .ng-select.trudi-single-select .ng-select-container {
+    height: 44px !important;
+    border-radius: 8px;
+    background-color: var(--gray-200);
+    border: none;
+    padding: 10px 12px;
+    &:before {
+      content: '';
+      background: none !important;
+    }
+  }
+}
+
+::ng-deep {
+  .ng-dropdown-panel {
+    &.trudi-single-select,
+    &.tenancy-list {
+      z-index: 99999 !important;
+      margin-top: 5px !important;
+      position: fixed;
+
+      .ng-dropdown-panel-items {
+        max-height: calc(44px * 4);
+
+        .ng-option {
+          padding: 12px !important;
+        }
+
+        .ng-option.ng-option-selected {
+          &:after {
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            background: url('/assets/icon/ownership-check.svg') no-repeat center;
+            border-radius: 50%;
+          }
+
+          span {
+            color: var(--gray-700);
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+}
+
+.content-button {
+  padding: 5px 3px;
+}
+
+.input-wrapper {
+  display: block;
+  position: relative;
+
+  &::before {
+    content: '$';
+    position: absolute;
+    display: block;
+    z-index: 100;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    @include fontSetup(var(--gray-400, #999), 14px, 20px, normal, 400);
+  }
+
+  > input {
+    padding-left: 26px;
+  }
+}
+
+.unpaid {
+  background-color: var(--bg-warning-tonal-normal, #ffedd5);
+  @include fontSetup(var(--warning-500), 1.2rem, 1.6rem, normal, 500);
+}
+
+.partpaid {
+  background-color: var(--bg-in-progress-tonal-default, #dfeafa);
+  @include fontSetup(var(--fg-info, #4a7ce0), 1.2rem, 1.6rem, normal, 500);
+}
+
+.paid {
+  background-color: var(--success-50);
+  @include fontSetup(var(--success-500), 1.2rem, 1.6rem, normal, 500);
+}
+
+.cancelled {
+  background-color: var(--warning-50);
+  @include fontSetup(var(--danger-500), 1.2rem, 1.6rem, normal, 500);
+}
+
+::ng-deep .creditor-invoice-popup .resizable-modal-header .title {
+  flex: initial;
+  display: flex;
+  justify-content: center;
+  span {
+    flex: initial;
+  }
+}
+
+::ng-deep .creditor-invoice-popup .resizable-modal-header__title--default {
+  column-gap: unset !important;
+}

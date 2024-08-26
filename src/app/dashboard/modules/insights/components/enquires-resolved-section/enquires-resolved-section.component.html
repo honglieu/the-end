@@ -1,0 +1,74 @@
+<div class="enquiry">
+  <h4 class="enquiry_title">Enquiry resolution</h4>
+  <div class="enquiry_container" id="chart-section">
+    <chart-wrapper>
+      <div *ngIf="isLoading; else stackBarChart" class="skeleton_stack--bar">
+        <nz-skeleton-element
+          class="skeleton-header"
+          nzType="button"
+          nzShape="default"
+          [nzActive]="true"></nz-skeleton-element>
+        <nz-skeleton-element
+          class="skeleton-dropdown"
+          nzType="button"
+          nzShape="default"
+          [nzActive]="true"></nz-skeleton-element>
+
+        <nz-skeleton-element
+          class="skeleton-bar"
+          nzType="button"
+          nzShape="default"
+          [nzActive]="true"></nz-skeleton-element>
+      </div>
+      <ng-template #stackBarChart>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="enquiry_filter">
+            Percentage of
+            <trudi-select-dropdown
+              [clearable]="false"
+              (ngModelChange)="handleChangeEnquiries($event)"
+              [(ngModel)]="conversationTypeValue"
+              [items]="conversationTypeFilter"
+              bindLabel="label"
+              bindValue="value"></trudi-select-dropdown>
+            enquiries resolved
+          </div>
+          <trudi-checkbox
+            [class.selected]="isSelectedUrgent"
+            [(ngModel)]="isSelectedUrgent"
+            (triggerEventChange)="handleChangeCheckBox()"
+            [label]="'Only show urgent enquiries'"></trudi-checkbox>
+        </div>
+        <div class="enquiry_filter--time">
+          <trudi-select-dropdown
+            [clearable]="false"
+            (ngModelChange)="handleChangePeriod($event)"
+            [(ngModel)]="periodValue"
+            [items]="period"
+            bindLabel="label"
+            bindValue="value"></trudi-select-dropdown>
+          <div class="enquiry__note">* Hold Ctrl and scroll to zoom in/out</div>
+        </div>
+        <div
+          *ngIf="dataStackBarChart | shouldShowStackBarChart;else noChartFoundTemplate">
+          <stack-bar-chart
+            [tooltipTemplate]="tooltipTemplate"
+            [config]="configStackBarChart">
+            <ng-template #tooltipTemplate>
+              <div class="default-tooltip">
+                <div class="default-tooltip__header">tooltip_header</div>
+                <div class="default-tooltip__body">tooltip_body</div>
+                <div class="d-flex gap-4">
+                  tooltip_icon_footer tooltip_footer
+                </div>
+              </div>
+            </ng-template>
+          </stack-bar-chart>
+        </div>
+        <ng-template #noChartFoundTemplate>
+          <div class="no-data-found">No data available</div>
+        </ng-template>
+      </ng-template>
+    </chart-wrapper>
+  </div>
+</div>

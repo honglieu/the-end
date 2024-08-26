@@ -1,0 +1,13 @@
+@import 'function';
+.drawer-content {
+  padding: 0 24px;
+  .step-content-wrapper {
+    margin-top: 24px;
+    padding: 16px;
+    border: 1px solid var(--gray-200);
+    border-radius: 16px;
+    .step-content-title {
+      @include fontSetup(var(--fg-neutral-stronger), 18px, 28px, normal, 600);
+    }
+  }
+}

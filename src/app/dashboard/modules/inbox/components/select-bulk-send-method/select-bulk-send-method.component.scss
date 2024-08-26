@@ -1,0 +1,16 @@
+@import 'function';
+::ng-deep .select-bulk-send-method-container {
+  .body {
+    & > div {
+      cursor: pointer;
+      flex: 1;
+      padding: 24px 32px 24px 32px;
+      gap: 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border-neutral-dark, rgba(236, 236, 237, 1));
+      .text {
+        @include fontSetup(var(--fg-neutral-stronger), 16px, 24px, normal, 600);
+      }
+    }
+  }
+}

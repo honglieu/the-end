@@ -1,0 +1,32 @@
+<div
+  [class]="(disableCheckbox) ? 'not-allowed content' : 'content'"
+  #content
+  [style.flexDirection]="reverse ? 'row-reverse' : 'row'"
+  [style.justify-content]="spaceBetween && 'space-between'"
+  [style.justify-content]="(!spaceBetween && reverse) && 'flex-end'">
+  <ng-container *ngIf="labelTemplate; else labelDefault">
+    <ng-container *ngTemplateOutlet="labelTemplate"></ng-container>
+  </ng-container>
+  <ng-template #labelDefault>
+    <div
+      [ngClass]="{'checkbox-label': true, 'cpn-label': true, 'change-color': isSMS}"
+      [innerHTML]="label"
+      [attr.data-e2e]="dataE2e ? dataE2e.inputLabel : 'upload-invoice-text'"></div>
+  </ng-template>
+  <input
+    id="cb-second"
+    class="def-checkbox"
+    type="checkbox"
+    [(ngModel)]="isChecked"
+    (ngModelChange)="onCheckboxChange($event)" />
+  <trudi-icon
+    tabindex="0"
+    (keydown.enter)="onCheckboxChange(!isChecked)"
+    [attr.data-e2e]="dataE2e ? dataE2e.inputCheck : 'checkbox'"
+    [style]="{'width.px': size, 'height.px': size}"
+    [style.min-height.px]="size"
+    [style.min-width.px]="size"
+    class="user-checkbox checkbox-head"
+    [icon]="disableCheckbox ? customCheckbox.disable : (isChecked  ? customCheckbox.checked : (inviteStatus === listInviteStatus.DEACTIVATED ? customCheckbox.deactived :  customCheckbox.uncheck))"></trudi-icon>
+</div>
+<hr *ngIf="divider" class="divider" />

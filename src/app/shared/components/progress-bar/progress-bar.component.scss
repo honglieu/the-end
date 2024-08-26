@@ -1,0 +1,28 @@
+.progress {
+  border-radius: 8px;
+  background-color: var(--gray-50);
+  margin: 0;
+  height: 4px;
+  .progress-bar {
+    border-radius: 8px;
+    height: 100%;
+    background-color: var(--tenant-500);
+    margin: 0;
+  }
+
+  .progress-bar-sync {
+    background-color: var(--brand-500);
+  }
+
+  .done {
+    background-color: var(--danger-500) !important;
+  }
+
+  .doneSync {
+    background-color: var(--brand-500) !important;
+  }
+
+  .failSync {
+    background-color: var(--danger-500) !important;
+  }
+}

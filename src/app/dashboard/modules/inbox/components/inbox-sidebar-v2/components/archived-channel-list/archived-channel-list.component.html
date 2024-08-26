@@ -1,0 +1,12 @@
+<ng-container
+  *rxLet="archiveChannelContext$; let context; strategy: renderStrategy">
+  <div (click)="$event.stopPropagation()" class="list-archive-messenger">
+    @for (item of context.archiveChannels; track item?.id) {
+    <message-sidebar-item
+      [item]="item?.channelInboxRoutedata"
+      [mailbox]="item?.mailboxData"
+      (onClick)="handleSelectChannelArchiveMenu(item?.mailboxData,item?.type === EFolderType.MESSENGER ? item.channelInboxRoutedata.statisticsfacebookMessage : item.channelInboxRoutedata.statisticsWhatsappMessage, item?.type)">
+    </message-sidebar-item>
+    }
+  </div>
+</ng-container>

@@ -1,0 +1,333 @@
+@import 'function';
+.date-input {
+  display: flex;
+  padding: 8px 12px;
+  align-items: flex-start;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: 8px;
+  background: var(--bg-neutral-tonal-normal, #f2f5f7);
+  max-width: 110px;
+  border: none;
+  @include fontSetup(
+    var(--fg-neutral-stronger, #3d3d3d),
+    14px,
+    20px,
+    normal,
+    500
+  );
+  &.invalid {
+    outline: none !important;
+    box-shadow: inset 0px 0px 0px 1px var(--danger-500),
+      0px 0px 0px 2px rgba(var(--danger-500-rgb), 0.6) !important;
+  }
+}
+
+.ant-picker-header {
+  padding: 12px;
+  gap: 11px;
+}
+
+.ant-picker-dropdown {
+  padding: 0;
+}
+
+single-date-range-popup.single-panel-range-picker .ant-picker-panel-container {
+  .ant-picker-panel {
+    border: none;
+    date-header,
+    year-header,
+    decade-header,
+    month-header {
+      .ant-picker-header {
+        border: none;
+        padding: 9px 12px;
+        .ant-picker-header-view {
+          display: flex;
+          flex: 1;
+          flex-direction: row-reverse;
+          column-gap: 8px;
+          justify-content: center;
+          line-height: unset;
+          button {
+            margin: 0;
+            @include fontSetup(
+              var(--fg-neutral-normal),
+              14px,
+              20px,
+              normal,
+              600
+            );
+            &:hover {
+              color: var(--fg-brand);
+            }
+          }
+        }
+        button {
+          line-height: unset;
+          &:has(span) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+        }
+      }
+    }
+    date-header {
+      .ant-picker-header .ant-picker-header-super-next-btn,
+      .ant-picker-header .ant-picker-header-super-prev-btn {
+        display: none;
+      }
+    }
+
+    date-header,
+    year-header,
+    month-header,
+    decade-header {
+      .ant-picker-header {
+        .ant-picker-header-next-btn,
+        .ant-picker-header-prev-btn,
+        .ant-picker-header-super-next-btn,
+        .ant-picker-header-super-prev-btn {
+          visibility: visible !important;
+          span {
+            & {
+              display: inline-block;
+              width: 14px;
+              height: 14px;
+              position: relative;
+              transform: unset;
+            }
+
+            &::after,
+            &::before {
+              content: '';
+              position: absolute;
+            }
+
+            &::after {
+              width: 100%;
+              height: 1.4px;
+              top: 6.5px;
+              left: 0px;
+              background-color: var(--gray-500);
+            }
+
+            &::before {
+              top: 2.5px;
+              left: 3.5px;
+              width: 9px;
+              height: 9px;
+              transform: rotate(135deg);
+              border-color: var(--gray-500);
+              border-width: 1.4px 0 0 1.4px;
+            }
+          }
+        }
+        .ant-picker-header-prev-btn,
+        .ant-picker-header-super-prev-btn {
+          span {
+            &::before {
+              transform: rotate(315deg);
+              left: 0px;
+            }
+          }
+        }
+      }
+    }
+    year-header,
+    decade-header,
+    month-header {
+      .ant-picker-header .ant-picker-header-next-btn {
+        visibility: hidden !important;
+      }
+      .ant-picker-header .ant-picker-header-prev-btn {
+        visibility: hidden !important;
+      }
+    }
+  }
+
+  /*
+    Hover state
+  */
+  .ant-picker-panel
+    > :not(.ant-picker-date-panel)
+    .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-start::before,
+  .ant-picker-panel
+    > :not(.ant-picker-date-panel)
+    .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-end::before {
+    background: var(--bg-brand-tonal-normal);
+  }
+
+  .ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover::before,
+  .ant-picker-cell-in-view.ant-picker-cell-range-start.ant-picker-cell-range-hover::before,
+  .ant-picker-cell-in-view.ant-picker-cell-range-end.ant-picker-cell-range-hover::before,
+  .ant-picker-cell-in-view.ant-picker-cell-range-start:not(
+      .ant-picker-cell-range-start-single
+    ).ant-picker-cell-range-hover-start::before,
+  .ant-picker-cell-in-view.ant-picker-cell-range-end:not(
+      .ant-picker-cell-range-end-single
+    ).ant-picker-cell-range-hover-end::before {
+    background: var(--bg-brand-tonal-normal);
+  }
+
+  .ant-picker-body {
+    padding-top: 0px;
+    date-table table {
+      thead tr th {
+        border: none !important;
+        @include fontSetup(var(--fg-neutral-normal), 12px, 24px, normal, 600);
+      }
+      tbody tr td {
+        font-size: 12px;
+        line-height: 24px;
+        font-weight: 400;
+        pointer-events: none;
+        &.ant-picker-cell-in-view.ant-picker-cell-today
+          .ant-picker-cell-inner::before {
+          border-radius: 50%;
+          color: var(--fg-brand);
+        }
+        &.ant-picker-cell .ant-picker-cell-inner {
+          border-radius: 16px;
+        }
+        &.ant-picker-cell .ant-picker-cell-inner {
+          min-width: 32px;
+          height: 32px;
+          line-height: 32px;
+        }
+        &.ant-picker-cell-in-view {
+          color: var(--fg-neutral-stronger);
+          pointer-events: unset;
+        }
+        &.ant-picker-cell-in-view.ant-picker-cell-in-range::before {
+          background: var(--bg-brand-tonal-normal);
+        }
+        &.ant-picker-cell::before {
+          height: 32px;
+          transition: none !important;
+        }
+        &.ant-picker-cell::after {
+          transition: none !important;
+        }
+        &.ant-picker-cell-in-view.ant-picker-cell-range-end:not(
+            .ant-picker-cell-range-end-single
+          )::before,
+        &.ant-picker-cell-in-view.ant-picker-cell-range-start:not(
+            .ant-picker-cell-range-start-single
+          )::before {
+          background: var(--bg-brand-tonal-normal);
+        }
+        &.ant-picker-cell-in-view.ant-picker-cell-range-start:not(
+            .ant-picker-cell-range-start-single
+          ):not(.ant-picker-cell-range-end)
+          .ant-picker-cell-inner {
+          border-radius: 16px;
+        }
+        &.ant-picker-cell-in-view.ant-picker-cell-range-end:not(
+            .ant-picker-cell-range-end-single
+          ):not(.ant-picker-cell-range-start)
+          .ant-picker-cell-inner {
+          border-radius: 16px;
+        }
+        &.ant-picker-cell-in-view.ant-picker-cell-range-hover-end:not(
+            .ant-picker-cell-in-range
+          ):not(.ant-picker-cell-range-start):not(
+            .ant-picker-cell-range-end
+          )::after,
+        &.ant-picker-cell-in-view.ant-picker-cell-range-hover:not(
+            .ant-picker-cell-in-range
+          )::after {
+          height: 32px;
+          width: 32px;
+        }
+        &.ant-picker-cell-in-view.ant-picker-cell-range-hover-start:last-child::after,
+        &.ant-picker-cell-in-view.ant-picker-cell-end.ant-picker-cell-range-hover-edge-end.ant-picker-cell-range-hover-edge-end-near-range::after,
+        &.ant-picker-cell-in-view.ant-picker-cell-range-hover-edge-end:not(
+            .ant-picker-cell-range-hover-edge-end-near-range
+          )::after,
+        &.ant-picker-cell-in-view.ant-picker-cell-range-hover-end::after {
+          border-top-right-radius: 16px;
+          border-bottom-right-radius: 16px;
+        }
+        &.ant-picker-cell-in-view.ant-picker-cell-range-hover-start:not(
+            .ant-picker-cell-in-range
+          ):not(.ant-picker-cell-range-start):not(
+            .ant-picker-cell-range-end
+          )::after,
+        &.ant-picker-cell-in-view.ant-picker-cell-range-hover-end:not(
+            .ant-picker-cell-in-range
+          ):not(.ant-picker-cell-range-start):not(
+            .ant-picker-cell-range-end
+          )::after,
+        &.ant-picker-cell-in-view.ant-picker-cell-range-hover-start.ant-picker-cell-range-start-single::after,
+        &.ant-picker-cell-in-view.ant-picker-cell-range-hover-start.ant-picker-cell-range-start.ant-picker-cell-range-end.ant-picker-cell-range-end-near-hover::after,
+        &.ant-picker-cell-in-view.ant-picker-cell-range-hover-end.ant-picker-cell-range-start.ant-picker-cell-range-end.ant-picker-cell-range-start-near-hover::after,
+        &.ant-picker-cell-in-view.ant-picker-cell-range-hover-end.ant-picker-cell-range-end-single::after,
+        &.ant-picker-cell-in-view.ant-picker-cell-range-hover:not(
+            .ant-picker-cell-in-range
+          )::after {
+          height: 32px;
+        }
+        &.ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-start
+          .ant-picker-cell-inner::after {
+          width: 100%;
+          background-color: var(--bg-brand-tonal-stronger);
+        }
+        &.ant-picker-cell-in-view.ant-picker-cell-in-range.ant-picker-cell-range-hover-end
+          .ant-picker-cell-inner::after {
+          left: 0;
+          width: 100%;
+          background-color: var(--bg-brand-tonal-stronger);
+        }
+      }
+    }
+  }
+}
+
+.ant-picker-not-inline {
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  .date-input-wrapper {
+    display: flex;
+    align-items: center;
+    column-gap: 6px;
+    .date-input:focus {
+      box-shadow: inset 0px 0px 0px 1px var(--brand-500),
+        0px 0px 0px 2px rgba(var(--brand-500-rgb), 0.6);
+    }
+  }
+}
+
+.extra-footer {
+  padding-bottom: 12px;
+
+  .footer-button {
+    display: flex;
+    height: 32px;
+    padding: 0px 10px;
+    align-items: center;
+    gap: 8px;
+    @include fontSetup(var(--fg-brand), 14px, 20px, normal, 600);
+    border: none;
+    background: transparent;
+    text-align: center;
+    font-variant-numeric: lining-nums tabular-nums;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    &:hover {
+      background: var(--bg-brand-tonal-stronger, #d1f0ed);
+    }
+    &:focus {
+      border-radius: 10px;
+      border: 1px solid var(--border-brand, #00aa9f);
+      background: var(--bg-base, #fff);
+      box-shadow: 0px 0px 0px 2px var(--brand-300);
+    }
+    &:active {
+      border-radius: 8px;
+      background: var(--bg-brand-tonal-strongest, #b9e8e4);
+    }
+  }
+}

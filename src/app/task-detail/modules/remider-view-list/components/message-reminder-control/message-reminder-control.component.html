@@ -1,0 +1,77 @@
+<!-- HEADER REMIDER INBOX -->
+<div class="remider-header d-flex gap-8 align-items-center">
+  <div class="d-flex gap-8 align-items-center">
+    <trudi-icon [svgClass]="'size-20'" icon="aiSummaryStar"></trudi-icon>
+    <div>{{textHeader}}</div>
+  </div>
+  <div class="d-flex gap-8 align-items-center">
+    <div
+      class="cursor-pointer"
+      [nzTooltipTitle]="textToolTip"
+      nz-tooltip
+      nzTooltipPlacement="bottomRight"
+      nzTooltipOverlayClassName="move-to-icon"
+      [nzTooltipOverlayStyle]="{'padding-top': '10px' }"
+      class="cursor-pointer">
+      <trudi-icon icon="toolTip2" [svgClass]="'size-20'"></trudi-icon>
+    </div>
+    <button
+      (click)="isDropdownVisible = !isDropdownVisible"
+      type="button"
+      cdkOverlayOrigin
+      #trigger="cdkOverlayOrigin"
+      nz-tooltip
+      [nzTooltipTitle]="'Settings'"
+      nzTooltipPlacement="bottomRight"
+      nzTooltipOverlayClassName="move-to-icon"
+      [nzTooltipOverlayStyle]="{'padding-right': '5px', 'padding-top': '5px' }"
+      [ngClass]="{'active': isDropdownVisible}"
+      class="trudi-btn trudi-btn-medium-circle cursor-pointer icon-setting-remider"
+      [class.active]="isDropdownVisible">
+      <trudi-icon
+        icon="iconSettingOutlineGray"
+        [svgClass]="'size-20'"></trudi-icon>
+    </button>
+  </div>
+</div>
+<!--  END HEADER REMIDER INBOX -->
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="isDropdownVisible"
+  (overlayOutsideClick)="overlayOutsideClick($event)">
+  <div class="menu-wrapper-message-reminder border-rad-8">
+    <div class="d-flex gap-12 align-items-center item">
+      <div>{{textReminderPopup}}</div>
+      <ng-select
+        class="share-ng-select"
+        bindValue="value"
+        bindLabel="value"
+        [items]="listReminderDay"
+        [ngModel]="queryParam[EReminderFilterParam.REMINDER_TYPE] === ReminderMessageType.UNANSWERED ? selectedDays.unanswered : selectedDays.followUp"
+        (ngModelChange)="queryParam[EReminderFilterParam.REMINDER_TYPE] === ReminderMessageType.UNANSWERED ? selectedDays.unanswered : selectedDays.followUp = $event"
+        [searchable]="true"
+        [clearable]="false"
+        [editableSearchTerm]="true"
+        (change)="changeReminderTime($event)">
+        <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+          <div class="y-center justify-content-between">
+            <span>{{item.value}}</span>
+            <trudi-icon
+              *ngIf="(queryParam[EReminderFilterParam.REMINDER_TYPE] === ReminderMessageType.UNANSWERED ? selectedDays.unanswered : selectedDays.followUp) === item.value"
+              icon="checkSuccess"></trudi-icon>
+          </div>
+        </ng-template>
+      </ng-select>
+    </div>
+    <div class="d-flex gap-12 align-items-center justify-content-between item">
+      <div>Show ignored messages</div>
+      <switch-checkbox
+        [isChecked]="(queryParam[EReminderFilterParam.REMINDER_TYPE] === ReminderMessageType.UNANSWERED) ? isIgnore.unanswered : isIgnore.followUp"
+        (tdCheckboxChanged)="toggleIgnoreMessage()"
+        customClass="switch-checkbox-custom"
+        class="switch-item"></switch-checkbox>
+    </div>
+  </div>
+</ng-template>

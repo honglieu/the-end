@@ -1,0 +1,65 @@
+<trudi-modal
+  *ngIf="isShow"
+  [(visible)]="isShow"
+  [modelWidth]="624"
+  [subTitle]="''"
+  [title]="'Add note'"
+  [autoFocus]="null"
+  (onCancel)="closeModal()"
+  [showIconName]="false"
+  iconName="trudiAvt">
+  <div class="invite-wrapper auto-height flex-dir-column x-between">
+    <div [formGroup]="addNoteForm">
+      <div class="wrapper" #wrapper>
+        <div class="body">
+          <div class="sender">
+            <div class="up-left-text">Category</div>
+            <trudi-form-control [control]="category">
+              <trudi-single-select
+                class="category-select"
+                [ngClass]="{'no-value': !isSearching && !getCategory?.value}"
+                [items]="listCategory"
+                bindLabel="name"
+                bindValue="id"
+                (search)="handleSearch($event)"
+                formControlName="category"
+                [placeholder]="'Select category for note'">
+              </trudi-single-select>
+            </trudi-form-control>
+          </div>
+          <div class="content relative">
+            <div class="content-label">Description</div>
+            <trudi-form-control [control]="textDescription">
+              <trudi-textarea
+                formControlName="textDescription"
+                [maxCharacter]="MAX_TEXT_MESS_LENGTH"
+                [rows]="2"
+                placeholder="Enter description"
+                [required]="true">
+              </trudi-textarea>
+            </trudi-form-control>
+          </div>
+        </div>
+      </div>
+      <ng-template #footerModal>
+        <div class="gap-16 d-flex">
+          <div class="group-btn d-flex gap-12">
+            <button
+              type="button"
+              class="trudi-btn trudi-btn-tertiary trudi-btn-large"
+              (click)="handleBack()">
+              <span class="btn-text">Back</span>
+            </button>
+            <button
+              type="button"
+              class="trudi-btn trudi-btn-large trudi-btn-primary"
+              [disabled]="isDisabled || isArchiveMailbox"
+              (click)="addNote()">
+              <span class="btn-text">Add</span>
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</trudi-modal>

@@ -1,0 +1,89 @@
+<div
+  trudi-item
+  tabindex="0"
+  (shiftClickPressed)="isConsoleUser ? showMessageDetail() : onShiftClick($event)"
+  (ctrClickPressed)="isConsoleUser ? showMessageDetail() : onCtrClick()"
+  (itemClick)="showMessageDetail()"
+  (deleteKeyPressed)="!isConsoleUser && handlePressDelete()"
+  (downKeyPressed)="handleDownKeyPressed()"
+  (upKeyPressed)="handleUpKeyPressed()"
+  appE2E
+  e2eId="email-folder-message"
+  class="email-row-wrapper d-flex flex-dir-column w-100 cursor-pointer"
+  [ngClass]="{
+    'seen': !isUnRead,
+    'email-menu-displayed': isMenuDisplayed,
+    'email-selected': (isChecked || isFocused) && activeGmailList.length <= 1
+    }">
+  <div>
+    <div class="d-flex align-items-center gap-16">
+      <div class="d-flex gap-8 flex-1 align-items-start overflow-hidden">
+        <trudi-checkbox
+          *hideWithConsole
+          e2ePrefix="email-message"
+          class="checkbox-frame"
+          [(ngModel)]="isSelected"
+          (ngModelChange)="handleChangeSelected($event)"></trudi-checkbox>
+        <div
+          #infoWrapper
+          class="participants-wrapper d-flex flex-dir-column flex-1">
+          <div class="d-flex align-items-center info-wrapper">
+            <div class="text-ellipsis sender-info flex-1" #participantContainer>
+              <div
+                class="d-flex align-items-center"
+                appE2E
+                e2eId="email-message-user-name"
+                nz-tooltip
+                [nzTooltipTitle]="tooltipTemplate"
+                nzTooltipOverlayClassName="participants-tooltip-position participants-tooltip"
+                [nzTooltipMouseEnterDelay]="tooltipEnterMouseDelay"
+                [nzTooltipPlacement]="tooltipPlacement">
+                <span
+                  class="participants-name text-ellipsis"
+                  [style.max-width.px]="maxWidthParticipantName"
+                  [innerHTML]="displayParticipants.join(', ') | highlight: search"></span>
+                <span *ngIf="!!remainingParticipants.length" class="count"
+                  >,&nbsp;+{{remainingParticipants.length}}</span
+                >
+              </div>
+            </div>
+            <time #timeText class="ml-auto timestamp">
+              {{ gmail?.timestamp | trudiDateTime | async }}
+            </time>
+          </div>
+          <div class="d-flex align-items-center gap-8 mt-4">
+            <div
+              class="email-subject text-ellipsis"
+              data-e2e="email-subject"
+              [innerHTML]="gmail?.subject || '(no subject)' | highlight: search"></div>
+            <div class="total-messages ml-auto">{{gmail?.totalMessages}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="quote-wrapper" [class.ml-32]="!isConsoleUser">
+      <trudi-quote
+        e2ePrefix="email-message"
+        [taskDetailViewMode]="EDetailViewMode.EMAIL"
+        [iconName]="'mailThin'"
+        [isConversationOfMsg]="true"
+        [searchText]="search"
+        [isRead]="!isUnRead"
+        [content]="{
+            senderName: gmail?.subject ? gmail?.subject : '(no subject)',
+            message: message,
+            dateTime: gmail?.timestamp,
+            attachmentCount: gmail?.attachmentCount
+            }">
+      </trudi-quote>
+    </div>
+  </div>
+</div>
+
+<ng-template #tooltipTemplate>
+  <div class="d-flex flex-dir-column">
+    <div style="text-align: start" *ngFor="let participant of listParticipants">
+      {{ participant}}
+    </div>
+  </div>
+</ng-template>

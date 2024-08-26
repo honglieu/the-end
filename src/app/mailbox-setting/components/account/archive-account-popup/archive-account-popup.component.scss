@@ -1,0 +1,36 @@
+@import 'function';
+
+::ng-deep .ant-modal.trudi-modal.modal-delete-account {
+  top: 63px;
+
+  .ant-modal-body {
+    padding: 16px 24px 20px 24px;
+  }
+
+  .ant-modal-header {
+    display: none !important;
+  }
+
+  .ant-modal-footer {
+    display: none !important;
+  }
+
+  .confirm-container {
+    .confirm-text {
+      .text-sure {
+        @include fontSetup(var(--gray-950), 18px, 28px, normal, 600);
+        margin: 0;
+      }
+
+      .cannot-text {
+        @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+        margin: 0;
+        padding-right: 20px;
+      }
+    }
+
+    .btn-wrapper {
+      margin-top: 20px;
+    }
+  }
+}

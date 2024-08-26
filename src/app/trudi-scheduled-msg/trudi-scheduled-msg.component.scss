@@ -1,0 +1,10 @@
+@import 'function';
+
+::ng-deep .ant-modal.trudi-modal.trudi-modal-scheduled-msg {
+  .ant-modal-body {
+    padding: 0px !important;
+  }
+  .ant-modal-footer {
+    display: none;
+  }
+}

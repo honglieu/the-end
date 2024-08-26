@@ -1,0 +1,75 @@
+<!-- isTypeTrudi will return unhappy_path so we use isTypeUnhappyTrudi to check trudi type is unhappy_path or happy_path -->
+<div
+  class="content-forward"
+  *ngIf="isTypeUnhappyTrudi ? (isTypeUnhappyTrudi === TYPE_TRUDI.q_a && isTypeTrudi === TYPE_TRUDI.super_happy_path) : isTypeTrudi === TYPE_TRUDI.q_a ">
+  <button
+    [disabled]="(!btnInfo.isProPlan) && btnInfo.status === MAINTENANCE_BUTTON_ENUM.COMPLETED"
+    class="forward-btn"
+    [style.background-color]="btnInfo.color + '14'"
+    [style.color]="btnInfo.color"
+    [style.border]="'1px solid' + btnInfo.color"
+    (click)="openForwardRequestBox(btnInfo)"
+    [attr.data-e2e]="btnInfo.text === 'Close task' ? 'button-close' : 'button-forward'">
+    <span class="forward-text"> {{btnInfo.text}} </span>
+    <ng-container
+      *ngIf="(!btnInfo.isProPlan) && btnInfo.status === MAINTENANCE_BUTTON_ENUM.COMPLETED">
+      <img
+        class="checkmark-forward"
+        src="/assets/images/icons/check_mark_trudi.svg"
+        alt="check-mark" />
+    </ng-container>
+  </button>
+  <ng-container *ngIf="activeTag">
+    <div class="tag-forward">PRO</div>
+  </ng-container>
+</div>
+
+<!-- isTypeTrudi will return unhappy_path so we use isTypeUnhappyTrudi to check trudi type is unhappy_path or happy_path -->
+<div
+  class="forward-request"
+  *ngIf="isTypeUnhappyTrudi ? (isTypeUnhappyTrudi === TYPE_TRUDI.ticket && isTypeTrudi === TYPE_TRUDI.super_happy_path) : isTypeTrudi === TYPE_TRUDI.ticket ">
+  <button class="forward-btn" [ngClass]="{'disable-button': btnInfo.disable}">
+    <div
+      class="forward-content d-flex justify-content-center align-items-center"
+      [ngClass]="{'un-highlight' : status === MAINTENANCE_BUTTON_ENUM.COMPLETED || isComplete}">
+      <span
+        (click)="openForwardRequestBox(btnInfo)"
+        class="forward-text"
+        [attr.data-e2e]="'maintenance-trudi-step-' + changeText()">
+        {{btnInfo.text}}
+      </span>
+      <img
+        *ngIf="status === MAINTENANCE_BUTTON_ENUM.COMPLETED || isComplete"
+        class="cursor-pointer"
+        data-e2e="button-reload"
+        src="/assets/icon/sync_black_24dp.svg"
+        (click)="changeTicketButtonStatus(btnInfo.action, 0, MAINTENANCE_BUTTON_ENUM.PENDING)" />
+      <span
+        *ngIf="status === MAINTENANCE_BUTTON_ENUM.PENDING"
+        src="assets/icon/complete-ticket.png"
+        class="forward-text--secondary"
+        (click)="changeTicketButtonStatus(btnInfo.action, 0, MAINTENANCE_BUTTON_ENUM.SKIP)">
+        Skip
+      </span>
+    </div>
+    <ng-container *ngIf="isStatusSync?.length">
+      <div class="sync-maintenance">
+        <ng-container *ngIf="isStatusSync === TYPE_SYNC_MAINTENANCE.INPROGRESS">
+          <img
+            src="/assets/images/icons/refresh.svg"
+            class="sync-icon spin"
+            alt="stop-sync" />
+          <span>Syncing to Property Tree</span>
+        </ng-container>
+        <ng-container *ngIf="isStatusSync === TYPE_SYNC_MAINTENANCE.FAILED">
+          <img src="/assets/icon/warningSync.svg" alt="checked-sync" />
+          <span>Fail to sync to Property Tree</span>
+        </ng-container>
+        <ng-container *ngIf="isStatusSync === TYPE_SYNC_MAINTENANCE.COMPLETED">
+          <img src="/assets/icon/checked-sync.svg" alt="checked-sync" />
+          <span>Synced to Property Tree</span>
+        </ng-container>
+      </div>
+    </ng-container>
+  </button>
+</div>

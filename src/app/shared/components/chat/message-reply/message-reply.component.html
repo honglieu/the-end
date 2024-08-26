@@ -1,0 +1,21 @@
+<div
+  class="msg-reply"
+  [ngClass]="{'sending-from-user': true, 
+  'm-l-auto': position === 'right',
+  'm-r-auto': position === 'left' }"
+  [style.opacity]="isSending ? 0.6 : 1"
+  (click)="handleClick()">
+  @if(message.messageType === messagesType.defaultText) {
+  <div class="reply-text">
+    <preview-text
+      [message]="(message.textContent || message.message?.[0]?.value || message.message) | twemoji"
+      [classes]="{'message-reply': true}"></preview-text>
+  </div>
+  } @else if(message.messageType === messagesType.file) {
+  <div class="reply-attachment">
+    <preview-file
+      [classes]="{'message-reply': true}"
+      [file]="message.file || message.propertyDocument"></preview-file>
+  </div>
+  }
+</div>

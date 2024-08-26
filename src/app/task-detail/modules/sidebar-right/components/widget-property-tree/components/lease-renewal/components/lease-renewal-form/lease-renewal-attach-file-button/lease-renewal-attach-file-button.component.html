@@ -1,0 +1,117 @@
+<h4 *ngIf="title" class="title-upload">{{title}}</h4>
+<div
+  *ngIf="listFile.length && !hideAllVisualization && showListFile"
+  class="file mt-6">
+  <div class="file-box" *ngFor="let item of listFile; let i = index">
+    <div
+      class="file-logo"
+      [class.dim-brightness]="item?.localThumb && item?.isSupportedVideo">
+      <img
+        *ngIf="item?.localThumb"
+        [src]="(item.localThumb | safe: 'resourceUrl')" />
+      <img
+        *ngIf="!item?.localThumb"
+        [src]="(((item?.fileName || item?.name) | getFileIconType))" />
+      <div *ngIf="item?.localThumb && item?.isSupportedVideo" class="play-icon">
+        <trudi-icon icon="playSolid"></trudi-icon>
+      </div>
+    </div>
+    <div class="file-content">
+      <div
+        #uploadFileName
+        nz-tooltip
+        nzTooltipPlacement="top"
+        [nzTooltipTitle]="item?.name || item?.fileName"
+        [nzTooltipOverlayStyle]="{'max-width': '240px', 'word-break': 'break-all'}"
+        [nzTooltipTrigger]="uploadFileName?.offsetWidth < uploadFileName?.scrollWidth ? 'hover' : null"
+        class="file-name text-ellipsis">
+        {{ item?.name || item?.fileName }}
+      </div>
+      <div *ngIf="showFileSize" class="file-size">
+        {{(item?.size || item?.fileSize) | convertFileSize}}
+      </div>
+    </div>
+    <ng-container
+      *ngIf="(!item?.uploaded && item?.canUpload) || (
+      !item?.[0]?.uploaded && item?.[0]?.canUpload
+    ); else closeButton">
+      <div class="image-rotation rotate-image">
+        <img src="/assets/icon/loading.png" alt="loading-icon" />
+      </div>
+    </ng-container>
+    <ng-template #closeButton>
+      <button
+        type="button"
+        class="cursor-pointer remove-button"
+        [disabled]="!!item?.isDisabled || disableRemoveButton"
+        (click)="removeFile(item, i)">
+        <trudi-icon
+          nz-tooltip
+          [nzTooltipTitle]="!!item?.isDisabled ? disableTooltipText: ''"
+          [ngClass]="{'cursor-not-allowed': !!item?.isDisabled || disableRemoveButton }"
+          [style]="{ 'width.px': 16, 'height.px': 16, color: '#646464' }"
+          icon="closeIcon"></trudi-icon>
+      </button>
+    </ng-template>
+  </div>
+</div>
+
+<button
+  (click)="onClickAttachFile()"
+  trudi-btn
+  size="extra-small"
+  variant="text"
+  [btnType]="buttonTheme"
+  type="button"
+  class="add-file-btn-upload border-rad-6 mt-6"
+  [ngClass]="{'d-flex gap-4': !!icon, 'loading': loading, 'show-loading': showLoading, 'background-primary': !showListFile, 'change-image': showCustomizedLabel }">
+  <trudi-icon *ngIf="icon" svgClass="size-16" [icon]="icon"></trudi-icon>
+  <span class="btn-text" [ngClass]="{'edit-button': !showListFile}">
+    {{showLoading && loading ? 'Uploading ...' : label}}
+  </span>
+
+  <lease-renewal-attach-file-popup
+    *ngIf="popupState.isSelectFiles"
+    [checkBoxList]="checkBoxList"
+    [text]="attachFileText"
+    [hasBack]="hasBack"
+    (onClose)="onClose()"
+    [isRequired]="true"
+    (getCheckedList)="handleUploadFileLocal($event)"
+    [isMultiple]="true"
+    (onBack)="onBack()"></lease-renewal-attach-file-popup>
+  <label [for]="id" class="cursor-pointer input-file-lable"></label>
+</button>
+
+<div
+  *ngIf="areSomeFilesTooLarge && showFileTooLarge && !hideAllVisualization"
+  class="y-center mt-6 gap-4 warning-wrapper">
+  <div class="block-icon">
+    <trudi-icon [icon]="'iconWarning'" class="size-16"></trudi-icon>
+  </div>
+  <span class="warning-content">
+    Your file is larger than 25MB. Please upload a smaller file.
+  </span>
+</div>
+
+<trudi-modal
+  [visible]="isShowWarning && showPopupWarning"
+  iconName="iconWarningRed"
+  [closable]="false"
+  [modelWidth]="510"
+  type="confirm"
+  colorBtn="danger"
+  okText="Ok, got it"
+  title="Cannot upload file"
+  [subTitleTemplate]="subTitle"
+  [hiddenCancelBtn]="true"
+  [autoFocus]="null"
+  (onOk)="isShowWarning = false">
+</trudi-modal>
+
+<ng-template #subTitle>
+  <ul class="sub-title">
+    <li>You cannot upload with files larger than 25 MB.</li>
+    <li>{{warningContent}}</li>
+  </ul>
+</ng-template>

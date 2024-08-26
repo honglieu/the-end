@@ -1,0 +1,454 @@
+@import 'function';
+
+:host {
+  .task-row-wrapper {
+    background-color: var(--bg-base);
+    padding: 12px;
+    max-height: 102px;
+
+    &.task-deleting {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    &:hover {
+      background: var(--bg-neutral-tonal-stronger) !important;
+    }
+
+    &:active {
+      background: var(--bg-neutral-tonal-strongest) !important;
+    }
+
+    .checkbox-frame {
+      height: 24px;
+      width: 48px;
+    }
+
+    .task-row-info-container {
+      .task-name-wrapper {
+        display: table;
+        table-layout: fixed;
+        width: 100%;
+
+        .task-name {
+          @include fontSetup(
+            var(--fg-neutral-stronger),
+            14px,
+            20px,
+            normal,
+            600
+          );
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+
+          &:hover {
+            cursor: pointer;
+            text-decoration: underline;
+          }
+
+          &:focus-visible {
+            text-decoration: underline;
+            outline: none;
+            box-shadow: inset 0px 0px 0px 1px var(--brand-500),
+              0px 0px 0px 2px rgba(var(--brand-500-rgb), 0.6) !important;
+          }
+        }
+      }
+
+      .task-name-editing {
+        position: absolute;
+        top: 0;
+        background-color: transparent;
+        opacity: 0;
+        z-index: -1;
+        width: 100%;
+
+        &.editing {
+          opacity: 1;
+          z-index: unset;
+        }
+
+        ::ng-deep trudi-text-field {
+          .trudi-text-field-wrapper {
+            padding: 4px;
+            border-radius: 4px;
+            height: 24px;
+            background: var(--bg-base) !important;
+            input.trudi-ui-text-field {
+              @include fontSetup(var(--gray-700), 14px, 20px, normal, 400);
+            }
+
+            &:has(.trudi-ui-text-field:focus:not(.ng-invalid)) {
+              background: var(--bg-base) !important;
+              border: 1px solid var(--brand-500) !important;
+              box-shadow: unset !important;
+              &::-webkit-input-placeholder {
+                opacity: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .open-time,
+    .task-deleting-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      @include fontSetup(var(--fg-neutral-weaker), 12px, 16px, normal, 400);
+    }
+
+    .btn-move-to-task-detail {
+      padding: 4px 8px;
+      ::ng-deep trudi-icon svg-icon svg path {
+        fill: var(--fg-brand, #28ad99);
+      }
+    }
+
+    .steps-progress-wrapper,
+    .calendar-events-wrapper {
+      ::ng-deep {
+        progress-preview {
+          .progress-wrapper {
+            .progress-content {
+              .workflow {
+                padding: 0;
+                .workflow-step {
+                  &__name {
+                    @include fontSetup(
+                      var(--fg-neutral-normal),
+                      14px,
+                      20px,
+                      normal,
+                      400
+                    );
+                    overflow: hidden;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 1;
+                    -webkit-box-orient: vertical;
+
+                    &.completed {
+                      color: var(--fg-neutral-weaker);
+                    }
+                  }
+
+                  &__icon-wrapper {
+                    trudi-icon svg-icon svg {
+                      color: var(--bg-overlay-light);
+                    }
+
+                    &::before {
+                      border-color: var(--border-neutral-dark);
+                      background-color: var(--bg-base);
+                    }
+                  }
+
+                  &::before,
+                  &::after {
+                    background-color: #c0c1c1;
+                  }
+
+                  &:nth-child(2) {
+                    margin-top: 8px;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        calendar-preview {
+          .calendar-event {
+            .calendar-container {
+              .calendar-content {
+                .item-calendar {
+                  gap: 6px !important;
+
+                  .event-name-date {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                    overflow: hidden;
+
+                    .event-name {
+                      font-weight: 500 !important;
+                      color: var(--fg-neutral-normal) !important;
+                    }
+
+                    .event-date {
+                      .appointment-card-date__content {
+                        span {
+                          color: var(--fg-neutral-weaker);
+                        }
+
+                        & > div:has(.event-upcoming) {
+                          .dot {
+                            color: var(--fg-neutral-weaker) !important;
+                          }
+                        }
+
+                        & > div:has(.event-expired) {
+                          .event-expired {
+                            span:last-child {
+                              color: inherit;
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        .progress-wrapper,
+        .calendar-preview {
+          margin-top: 0;
+        }
+      }
+    }
+
+    .calendar-events-wrapper:not:has(.calendar__no-items) {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .icon-task-title-edit {
+      cursor: pointer;
+    }
+
+    .seen {
+      @include fontSetup(var(--fg-neutral-weaker), 16px, 24px, normal, 600);
+    }
+
+    .task-status {
+      @include fontSetup(var(--fg-neutral-weaker), 14px, 20px, normal, 400);
+    }
+
+    .task-decision {
+      color: var(--fg-neutral-normal);
+    }
+
+    .task-current-nav {
+      color: var(--fg-neutral-normal);
+    }
+
+    .seen-status {
+      opacity: 0.5;
+    }
+
+    .property-address {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 400);
+    }
+
+    .detail-unidentified {
+      .unidentified-property {
+        @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+      }
+
+      .task-item-location-text {
+        @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 500);
+
+        ::ng-deep mark.highlight {
+          color: unset !important;
+          background-color: var(--bg-tenant-solid-normal) !important;
+        }
+      }
+    }
+
+    .time-open {
+      @include fontSetup(var(--fg-neutral-weaker), 12px, 20px, normal, 400);
+    }
+
+    .quote-wrapper {
+      margin-left: 40px;
+    }
+
+    ::ng-deep {
+      mark.highlight {
+        background-color: var(--bg-tenant-solid-normal);
+        color: unset;
+        border-radius: 2px;
+      }
+
+      .trudi-badge.unread-badge {
+        flex-direction: row-reverse;
+        trudi-icon svg {
+          color: currentColor;
+          path {
+            fill: currentColor !important;
+          }
+        }
+      }
+
+      .assign-agents-wrapper
+        .assigned-agent-container.avatar-mode.avatar-mode-custom
+        .target-person-detail
+        .item-avatar
+        .avatar-button,
+      .assign-agents-wrapper
+        .assigned-agent-container.avatar-mode.avatar-mode-custom
+        .target-person-detail:has(.item-avatar:nth-child(2))
+        .item-avatar:nth-child(1)
+        .avatar-button,
+      .assigned-agent-container.avatar-mode.avatar-mode-custom
+        .target-person-detail:has(.item-avatar:nth-child(2))
+        .item-avatar.remaining-item {
+        width: 24px !important;
+        height: 24px !important;
+      }
+    }
+
+    .address-wrapper {
+      display: table;
+      table-layout: fixed;
+      width: 100%;
+      &.un-highlight {
+        text-decoration-line: line-through;
+        color: var(--gray-700);
+        cursor: default;
+      }
+    }
+
+    .address-icon {
+      color: var(--fg-neutral-weaker);
+    }
+
+    .task-row-info-wrapper {
+      .task-row-info-wrapper__item {
+        max-width: 100%;
+        .task-row-name-wrapper {
+          .wrapper-icon-edit {
+            .icon-task-title-edit {
+              display: none;
+            }
+            &:focus-visible {
+              box-shadow: 0 0 0 2px var(--brand-500);
+              border-radius: 100px;
+              margin-left: 8px;
+              .icon-task-title-edit {
+                display: block !important;
+              }
+            }
+          }
+          &:hover .icon-task-title-edit {
+            display: block !important;
+            margin-left: 8px;
+          }
+
+          .item-unRead {
+            margin-left: 0;
+          }
+
+          .ml-8 {
+            margin-left: 8px;
+          }
+        }
+      }
+    }
+
+    .calendar-event-item {
+      &__no-event {
+        @include fontSetup(var(--fg-neutral-weaker), 14px, 20px, italic, 400);
+      }
+      &__date {
+        @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 400);
+      }
+      &__name {
+        @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 500);
+      }
+      &:has(.calendar-event-item__name) {
+        display: flex;
+        column-gap: 4px;
+      }
+    }
+
+    .task-deleting-text {
+      font-style: italic;
+      text-align: end;
+    }
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: inset 0px 0px 0px 1px var(--brand-500),
+        0px 0px 0px 2px rgba(var(--brand-500-rgb), 0.6) !important;
+    }
+  }
+
+  .task-select {
+    background: var(--bg-neutral-tonal-stronger) !important;
+  }
+
+  .task-menu-displayed {
+    box-shadow: inset 0 0 0 2px var(--brand-200);
+  }
+
+  .task-row-info-wrapper {
+    width: 38%;
+
+    &.progress-or-calendar-is-hidden {
+      width: 55%;
+    }
+
+    &.progress-and-calendar-is-hidden {
+      width: 100%;
+    }
+  }
+
+  .steps-progress-wrapper {
+    width: 35%;
+
+    &.calendar-is-hidden {
+      width: 45%;
+    }
+  }
+
+  .calendar-events-wrapper {
+    width: 27%;
+
+    &.progress-is-hidden {
+      width: 45%;
+    }
+  }
+
+  .assign-agents-wrapper {
+    width: 120px;
+  }
+
+  @media screen and (max-width: 1439px) {
+    .task-row-info-wrapper,
+    .calendar-events-wrapper {
+      width: 32%;
+    }
+
+    .steps-progress-wrapper {
+      width: 36%;
+    }
+
+    .assign-agents-wrapper {
+      width: 88px;
+    }
+  }
+}
+
+::ng-deep .tooltip-task-title {
+  max-width: 500px !important;
+}
+
+::ng-deep .task-row-wrapper {
+  .trudi-checkbox {
+    span {
+      background-color: var(--bg-base, #fff);
+    }
+  }
+  &:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--brand-500);
+  }
+}

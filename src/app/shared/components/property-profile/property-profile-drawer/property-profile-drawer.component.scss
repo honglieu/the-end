@@ -1,0 +1,27 @@
+.property-profile-drawer{
+  .property-profile-drawer-mask{
+    background-color: transparent;
+    position: fixed;
+    top: 52px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 52px);
+    z-index: 900;
+  }
+
+  .property-profile-container {
+    position: fixed;
+    display: block;
+    height: calc(100vh - 52px);
+    width: 400px;
+    right: 0px;
+    top: 52px;
+    z-index: 1000;
+    box-shadow: 0px 14px 36px 0px rgba(0, 0, 0, 0.13), 0px 2px 12px 0px rgba(0, 0, 0, 0.08);
+    cursor: default;
+
+    .property-profile-inside-drawer{
+      height: 100%;
+    }
+  }
+}

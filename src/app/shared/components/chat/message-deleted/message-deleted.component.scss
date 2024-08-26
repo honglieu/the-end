@@ -1,0 +1,13 @@
+@import 'function';
+.deleted-mark {
+  width: fit-content;
+  @include fontSetup(
+    var(--fg-neutral-normal, #646464),
+    12px,
+    20px,
+    normal,
+    500
+  );
+  white-space: nowrap;
+  margin: 12px auto 0;
+}

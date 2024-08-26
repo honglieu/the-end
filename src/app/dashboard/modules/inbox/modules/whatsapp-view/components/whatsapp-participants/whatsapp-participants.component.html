@@ -1,0 +1,37 @@
+<ng-container
+  *rxLet="participantContext$; let context; strategy: renderStrategy">
+  <div
+    class="participants-container text-ellipsis"
+    [class.seen]="context.isReadMessage">
+    <div class="participants-list text-ellipsis">
+      @if(context.participants?.length) {
+      <div class="d-flex align-items-center">
+        @if(!context?.userInfo?.isTemporary) {
+        <div
+          class="participants-item-wrapper"
+          trudi-tooltip
+          [hideWhenClick]="true"
+          [nzTooltipTitle]="context?.userInfo | contactTitleByConversationProperty: contactTitleVariable || (context.participants[0].externalId || context.participants[0]?.phoneNumber) | phoneNumberFormat"
+          [nzTooltipArrowPointAtCenter]="true"
+          [nzTooltipMouseEnterDelay]="1"
+          nzTooltipOverlayClassName="participants-tooltip-position participants-tooltip">
+          <span
+            class="text-ellipsis"
+            [innerHTML]="context?.userInfo | contactTitleByConversationProperty: contactTitleVariable | highlight: search">
+          </span>
+        </div>
+        } @else {
+        <div class="participants-item-wrapper">
+          <div
+            class="participants-name text-ellipsis"
+            [innerHTML]="(((context.participants[0].externalId || context.participants[0]?.phoneNumber) | phoneNumberFormat) + (context?.userInfo?.isBelongToOtherProperties ? BelongToOtherPropertiesText : '')) | highlight: context.search"></div>
+        </div>
+        }
+      </div>
+      }
+    </div>
+  </div>
+  <ng-template #tooltipTemplate>
+    <div [innerHTML]="context.tooltipTitle"></div>
+  </ng-template>
+</ng-container>

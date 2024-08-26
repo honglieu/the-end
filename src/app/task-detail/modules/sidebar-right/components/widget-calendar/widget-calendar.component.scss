@@ -1,0 +1,92 @@
+@import 'function';
+
+:host ::ng-deep {
+  .ant-collapse-content:has(.breach-calendar) > .ant-collapse-content-box {
+    padding-inline: 0 !important;
+  }
+
+  .widget-calendar .widget-calendar-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    .no-data {
+      @include fontSetup(var(--gray-400), 14px, 20px, italic, 400);
+    }
+  }
+
+  .wrapper-skeleton {
+    margin: 0 10px;
+    .skeleton-rectangle {
+      width: 50%;
+      height: 0px;
+      margin-right: 7px;
+      h3.ant-skeleton-title {
+        margin-top: -8px;
+      }
+    }
+    .skeleton-circle {
+      span.ant-skeleton-avatar.ant-skeleton-avatar-circle {
+        margin-top: 0px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+  .icon-plus {
+    min-width: fit-content !important;
+    height: fit-content !important;
+    border-radius: 50% !important;
+    padding: 3px !important;
+    border: 1px solid var(--border-neutral-dark) !important;
+    background: var(--fg-base) !important;
+    &:hover {
+      background: var(--bg-neutral-tonal-stronger) !important;
+    }
+    &:active {
+      background: var(--bg-neutral-tonal-strongest) !important;
+    }
+    &:focus-visible {
+      border: none !important;
+    }
+    &:disabled {
+      cursor: not-allowed;
+      pointer-events: unset;
+      &:hover,
+      &:active {
+        background: var(--white, #fff) !important;
+      }
+    }
+  }
+}
+
+.button-wrapper {
+  height: 40px;
+  min-width: 100px;
+  padding: 0px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.btn-confirm {
+  background-color: var(--bg-brand-solid-normal);
+  color: var(--fg-base);
+  border-radius: 8px;
+  border: none;
+  &:hover {
+    background-color: var(--brand-400);
+  }
+  &:active {
+    background: var(--bg-brand-solid-strongest, #0aa095);
+  }
+}
+
+.custom-event-modal-confirm-button-footer {
+  padding: 16px 24px;
+  justify-content: end;
+  border-top: 1px solid var(--gray-200);
+}

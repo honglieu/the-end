@@ -1,0 +1,144 @@
+@import 'function';
+
+.sub-item {
+  padding: 8px 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100%;
+  border-bottom: 1px solid var(--border-neutral-light, #f2f5f7);
+}
+.disabled {
+  cursor: not-allowed !important;
+}
+.text-name {
+  @include fontSetup(
+    var(--fg-neutral-strongest) !important,
+    14px,
+    20px,
+    normal,
+    500
+  );
+}
+
+::ng-deep {
+  .account-table {
+    padding-bottom: 70px;
+    .ant-table-container {
+      width: 958px !important;
+      .ant-table-tbody > tr {
+        &.ant-table-row {
+          &:hover {
+            td {
+              background-color: transparent !important;
+              cursor: default;
+            }
+          }
+          .ant-table-cell {
+            border-right: none !important;
+            @include fontSetup(
+              var(--fg-neutral-normal, #61646c) !important,
+              14px,
+              20px,
+              normal,
+              500
+            );
+          }
+        }
+        td {
+          padding: 12px !important;
+        }
+        &.account-row {
+          .invalid {
+            padding: 20px 12px 30px 12px !important;
+          }
+          .border-left-radius {
+            border-left: 1px solid var(--gray-100);
+            border-bottom-left-radius: 10px;
+          }
+          .border-right-radius {
+            border-right: 1px solid var(--gray-100) !important;
+            border-bottom-right-radius: 10px !important;
+          }
+          .border-left {
+            border-left: 1px solid var(--gray-100);
+          }
+          .border-right {
+            border-right: 1px solid var(--gray-100) !important;
+          }
+          trudi-form-control {
+            ng-select.trudi-single-select .ng-select-containe {
+              padding: 8px 12px;
+            }
+            .trudi-number-field-wrapper {
+              padding: 8px 12px;
+            }
+            .trudi-text-field-wrapper {
+              padding: 8px 12px;
+            }
+            .error-container {
+              position: absolute;
+            }
+          }
+        }
+      }
+      .ant-table-thead {
+        tr {
+          th {
+            cursor: default;
+            background-color: var(--gray-50) !important;
+            border: unset !important;
+            padding: 12px !important;
+            @include fontSetup(
+              var(--fg-neutral-normal, #61646c) !important,
+              14px,
+              20px,
+              normal,
+              600
+            );
+            &::before {
+              display: none !important;
+            }
+          }
+        }
+      }
+    }
+    nz-table-title-footer.ant-table-footer {
+      width: 958px !important;
+      padding: 12px !important;
+      height: 52px;
+      background-color: var(--bg-base);
+      .footer-btn {
+        max-width: 135px !important;
+
+        &.disabled {
+          ::ng-deep trudi-icon svg path {
+            fill: var(--white);
+          }
+        }
+      }
+    }
+  }
+}
+
+.edit-icon {
+  width: 20px !important;
+}
+
+::ng-deep {
+  .ant-tooltip.tooltip-add {
+    .ant-tooltip-inner {
+      min-width: 305px !important;
+    }
+  }
+}
+
+.no-account {
+  @include fontSetup(
+    var(--fg-neutral-weaker, #85888e) !important,
+    14px,
+    20px,
+    italic,
+    400
+  );
+}

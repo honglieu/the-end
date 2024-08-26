@@ -1,0 +1,41 @@
+<trudi-modal
+  [visible]="true"
+  [title]="'Summary attachments'"
+  [subTitle]="'Select up to 5 to attach'"
+  [className]="'popup-summary-media'"
+  [hiddenCancelBtn]="true"
+  [disableOkBtn]="!files?.length"
+  (triggerAfterClose)="handleClose()"
+  (onOk)="handleConfirm()">
+  <div class="content-title cursor-default">
+    File attachments from this conversation
+  </div>
+  <div class="content-media">
+    <ng-container *ngIf="files?.length; else noDataTemplate">
+      <ng-container *ngFor="let file of files; trackBy: trackById">
+        <div
+          class="content-media-card"
+          [ngClass]="{'--disabled': !selectedFileIdLookup[file.id] && isDisableSelect}"
+          (click)="handleSelectFile(file)">
+          <img
+            [src]="file?.mediaType === 'video' ? file.thumbMediaLink : file.mediaLink" />
+          <div class="button-check">
+            <ng-container
+              *ngIf="selectedFileIdLookup[file.id]; else iconCheckEmptyTemplate">
+              <trudi-icon icon="ticked"></trudi-icon>
+            </ng-container>
+            <ng-template #iconCheckEmptyTemplate>
+              <div class="button-check-empty"></div>
+            </ng-template>
+          </div>
+          <ng-container *ngIf="file?.mediaType === 'video'">
+            <trudi-icon class="card-icon-play" icon="play"></trudi-icon>
+          </ng-container>
+        </div>
+      </ng-container>
+    </ng-container>
+    <ng-template #noDataTemplate>
+      <div class="no-data-text cursor-default">No files found</div>
+    </ng-template>
+  </div>
+</trudi-modal>

@@ -1,0 +1,66 @@
+<ng-container *ngFor="let user of listItemUsers; let i = index">
+  <div class="user-row justify-content-between align-items-center">
+    <div class="user d-flex">
+      <div class="user-avatar">
+        <div class="default-stat-icon" [ngClass]="user.type">
+          <img
+            data-e2e="user-avatar"
+            loading="lazy"
+            src="{{ srcImg }}"
+            [alt]="user.type" />
+        </div>
+      </div>
+      <div class="user-info">
+        <ng-container>
+          <div class="primary-user">
+            <span data-e2e="permission" class="permission"
+              >{{ user.type | titlecase }}:
+            </span>
+            <span class="name">{{ user.name }}</span>
+            <text-badge
+              style="margin-left: 5px"
+              [type]="user.type.toUpperCase()"
+              [text]="user.status"></text-badge>
+          </div>
+          <div class="user-list">
+            <ng-container
+              *ngFor="let sub of user.userProperties; let j = index">
+              <div class="sub-users-container">
+                <div class="sub-users text-ellipsis">
+                  <span class="name">
+                    {{ sub.user.firstName }} {{ sub.user.lastName }}
+                  </span>
+                  <img
+                    *ngIf="sub.isPrimary"
+                    src="/assets/icon/verify.svg"
+                    nz-tooltip
+                    [nzTooltipTitle]="'Primary Tenant ' + sub?.user?.firstName + ' ' + sub?.user?.lastName + ' ' + (sub?.user?.phoneNumber | phoneNumberFormat)"
+                    alt="" />
+                  <div
+                    class="phone-number"
+                    [ngClass]="{'in-progress': sub.user.isInCalling}">
+                    <span>{{ sub.user.phoneNumber | phoneNumberFormat }}</span>
+                    <ng-container *ngIf="sub.user.isInCalling">
+                      <span class="separator">&#124;</span>
+                      <span>Call inprogress</span>
+                    </ng-container>
+                  </div>
+                </div>
+                <div
+                  class="user-checkbox phone-radio d-flex align-items-center">
+                  <input
+                    type="radio"
+                    id="html"
+                    [value]="sub.user"
+                    (click)="onChange(sub.user)"
+                    name="checked_phone"
+                    [disabled]="sub.user.isInCalling" />
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</ng-container>

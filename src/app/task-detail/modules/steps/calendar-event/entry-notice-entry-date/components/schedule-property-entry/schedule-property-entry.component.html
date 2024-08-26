@@ -1,0 +1,127 @@
+<resizable-modal-popup
+  *ngIf="showModal?.isShow && isStep"
+  [show]="showModal?.isShow"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [title]="titleHeader"
+  [footerTemplate]="footerTemplate"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [stopPropagation]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  (onCancel)="handleClose()"
+  [isCustomMoveable]="true">
+  <ng-container [ngTemplateOutlet]="schedulePropertEntry"></ng-container>
+</resizable-modal-popup>
+
+<trudi-modal
+  [visible]="showModal?.isShow && !isStep"
+  [autoFocus]="false"
+  (onCancel)="handleClose()">
+  <ng-template #headerModal>
+    <div class="header-modal">
+      <trudi-icon icon="trudiLogo" class="cursor-pointer"></trudi-icon>
+      <span class="header-title">{{titleHeader}}</span>
+    </div>
+  </ng-template>
+  <ng-container [ngTemplateOutlet]="schedulePropertEntry"> </ng-container>
+  <ng-template #footerModal>
+    <ng-container [ngTemplateOutlet]="footerTemplate"></ng-container>
+  </ng-template>
+</trudi-modal>
+
+<ng-template #schedulePropertEntry>
+  <div
+    class="content-modal"
+    *ngIf="showModal?.isShow"
+    [ngStyle]="{ 'padding': isStep ? '20px 24px' : 0 }">
+    <div>
+      <div class="select-form-wrapper" [formGroup]="propertyEntryForm">
+        <p class="option-title">Reason for entry</p>
+        <div>
+          <trudi-form-control
+            [control]="reasonSelected"
+            [errors]="[{errorName: 'required', errorMessage: 'Please select an option'}]">
+            <trudi-radio-button
+              class="entry-options"
+              [disabled]="isDisable"
+              [options]="radioListContactCardType"
+              (ngModelChange)="onValueChange($event)"
+              formControlName="reasonSelected"></trudi-radio-button>
+          </trudi-form-control>
+          <div class="mt-16" *ngIf="isShowTypeReason">
+            <trudi-form-control [control]="typeReason">
+              <trudi-textarea
+                autosize
+                formControlName="typeReason"
+                maxCharacter="50"
+                type="text"
+                [disabled]="isDisable"
+                rows="1"
+                placeholder="Type reason">
+              </trudi-textarea>
+            </trudi-form-control>
+          </div>
+          <div class="mt-24">
+            <div class="d-flex align-items-stretch gap-20 flex-1">
+              <div class="d-flex gap-8 flex-dir-column flex-1">
+                <div class="title-text">Date of entry</div>
+                <trudi-form-control [control]="dateOfEntry">
+                  <trudi-date-picker
+                    class="w-100"
+                    [ngClass]="{'trudi-picker-error':dateOfEntry?.hasError('required')&&dateOfEntry?.touched}"
+                    [trudiDisabledDate]="disabledDate"
+                    formControlName="dateOfEntry"
+                    [trudiDisabled]="isDisable">
+                  </trudi-date-picker>
+                </trudi-form-control>
+              </div>
+              <div
+                class="d-flex gap-8 flex-dir-column flex-1 entry-time-container">
+                <div class="title-text">Time of entry</div>
+                <trudi-form-control
+                  [control]="timeOfEntry"
+                  [errors]="[
+                      {
+                        errorMessage: 'Invalid time',
+                        errorName: 'invalidRangeTime'
+                      }
+                    ]">
+                  <time-picker
+                    [label]="'--:--'"
+                    class="entry-time"
+                    [hasError]="timeOfEntry?.invalid && timeOfEntry?.touched && timeOfEntry?.errors"
+                    [ngClass]="{'trudi-time-picker-error': isSubmitForm && timeOfEntry?.invalid && timeOfEntry?.touched &&
+                    timeOfEntry?.errors, 'fieldDisable': isDisable}"
+                    (onChangeHour)="handleChangeEndHour($event)"
+                    [rangeFrom]="fromCurrent"
+                    [rangeTo]="86400"
+                    [isTo]="true"
+                    [disableTimeChange]="isDisable"
+                    formControlName="timeOfEntry"
+                    [customClass]="'sizeDropdown'"
+                    [valueChangeDependentOnResetRangeTime]="resetTimePicker">
+                  </time-picker>
+                </trudi-form-control>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footerTemplate>
+  <div [ngClass]="{'footer-modal': isStep}">
+    <button
+      class="trudi-btn trudi-btn-large trudi-btn-primary"
+      [disabled]="isDisable"
+      (click)="handleSaveOrEdit()">
+      <div class="text-btn">Confirm</div>
+    </button>
+  </div>
+</ng-template>

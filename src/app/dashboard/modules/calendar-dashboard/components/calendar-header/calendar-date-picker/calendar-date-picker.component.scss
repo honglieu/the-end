@@ -1,0 +1,77 @@
+@import 'function';
+
+.wrapper-month-picker {
+  @include breakpoint-range(small, medium) {
+    min-width: 210px !important;
+  }
+  position: relative;
+  .wrapper-btn {
+    .btn-month-picker {
+      background: none;
+      border-radius: 8px;
+      @include fontSetup(var(--fg-neutral-normal), 18px, 28px, normal, 600);
+      border: none;
+      padding: 6px 16px;
+      margin: 0 4px;
+      &:hover {
+        background: var(--gray-200);
+      }
+      &.active,
+      &:active {
+        background: var(--bg-neutral-tonal-strongest);
+      }
+      &.btn-icon {
+        min-height: 32px;
+        min-width: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 100%;
+        padding: 0;
+      }
+    }
+  }
+  .trudi-month-picker {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    z-index: 10;
+  }
+}
+
+.month-picker-footer {
+  padding-bottom: 15px;
+  color: var(--fg-neutral-stronger);
+  font-weight: 600;
+
+  .footer-button {
+    border-radius: 8px;
+    border: none;
+    background-color: var(--bg-neutral-tonal-normal);
+  }
+  .footer-button:hover {
+    background-color: var(--bg-neutral-tonal-stronger);
+  }
+  .footer-button:focus {
+    background-color: var(--bg-neutral-tonal-strongest);
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+.half-width {
+  width: 50%;
+}
+
+.calendar-date-picker-custom {
+  .footer-button.neutral-button {
+    color: var(--fg-neutral-normal) !important;
+    border: none !important;
+  }
+
+  .footer-button.neutral-button:hover {
+    background-color: var(--bg-neutral-tonal-stronger) !important;
+  }
+}

@@ -1,0 +1,24 @@
+<div class="wrapper d-flex flex-dir-column gap-12">
+  <div class="dropdown-title d-flex flex-dir-column">{{title}}</div>
+  <div class="dropdown-input-button d-flex gap-12 w-100">
+    <div class="dropdown-input w-100">
+      <dropdown-group
+        [items]="listTask"
+        [show]="true"
+        [isMoveTaskConfirmed]="true"
+        (onChange)="onItemChange($event)"
+        [isMissingRequiredField]="isMissingRequiredField"
+        [userType]="userType"
+        (onNewPage)="getNextPage()"
+        (onChangeSearchTask)="handleChangeSearchTask($event)"
+        class="select-move-task">
+      </dropdown-group>
+    </div>
+    <button
+      [disabled]="isConsole || disabledMoveToTaskBtn || isArchiveMailbox || isDisconnected || taskStatus === TaskStatusType.deleted"
+      class="trudi-btn trudi-btn-large trudi-btn-move-detail w-100"
+      (click)="onSubmit()">
+      Move
+    </button>
+  </div>
+</div>

@@ -1,0 +1,5 @@
+@import 'function';
+
+.filter-message {
+  @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+}

@@ -1,0 +1,219 @@
+<div class="h-100 position-relative">
+  <div
+    [ngClass]="{'overflow-hidden': loadingService.isLoading$}"
+    class="inbox-body d-flex">
+    <div class="inbox-sidebar">
+      <!-- <inbox-sidebar></inbox-sidebar> -->
+      <inbox-sidebar-v2></inbox-sidebar-v2>
+    </div>
+    <div
+      *ngIf="visiblePageContent && [EMailBoxStatus.UNSYNC, EMailBoxStatus.ACTIVE, EMailBoxStatus.SYNCING, EMailBoxStatus.ARCHIVE, EMailBoxStatus.FAIL, EMailBoxStatus.DISCONNECT].includes(inboxService.syncMailBoxStatus$ | async); else emptyPage"
+      class="inbox-content"
+      [ngClass]="{'overflow-hidden': loadingService.isLoading$ | async, 'mb-32': hasInboxContentMargin, 'overflow-y-hidden': !isVisibleInboxFilter}">
+      <div id="focus-out-mailbox">
+        <div class="message-view-container__detail-no-select">
+          <img src="/assets/images/no-item.png" alt="no data" />
+          <p>Select a mailbox to read</p>
+        </div>
+      </div>
+      <div id="inbox-messages" class="h-100">
+        <inbox-filter *ngIf="isVisibleInboxFilter"></inbox-filter>
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+    <ng-template #emptyPage>
+      <empty-page></empty-page>
+    </ng-template>
+  </div>
+</div>
+
+<trudi-modal
+  *ngIf="isShowModalWarning"
+  [visible]="isShowModalWarning"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  className="trudi-modal-custom">
+  <warning-note-popup
+    [warningMessage]="errorMessage"
+    [timeToCloseModal]="3000"
+    (isCloseModal)="isShowModalWarning = $event">
+  </warning-note-popup>
+</trudi-modal>
+
+<create-new-task-pop-up
+  *ngIf="isCreatePopupState"
+  [configs]="createdTaskConfigs"
+  [dataConvert]="dataConvert"
+  [openFrom]="openFrom"
+  [isFromVoiceMail]="isFromVoiceMail"
+  [disableSelectProperty]="isFromVoiceMail"
+  [selectedFolderId]="selectedFolderId"
+  (stopProcessCreateNewTask)="isCreatePopupState = false"
+  [showBackBtn]="showBackBtn"
+  [openByModalExistingTask]="openByModalExistingTask"
+  (onBack)="handleBack()"
+  (onQuit)="handleCancel()"
+  (onSendBulkMsg)="handleOnSendBulkMsg($event)">
+</create-new-task-pop-up>
+
+<confirm-properties-popup
+  *ngIf="isShowModalConfirmProperties"
+  [showModal]="isShowModalConfirmProperties"
+  [isActionSyncConversationToRM]="isActionSyncConversationToRM"
+  [listConversation]="listConversationConfirmProperties"
+  (quitModal)="handleCancelConfirmProperties($event)"
+  (onConfirm)="handleConfirmProperties()"></confirm-properties-popup>
+
+<select-bulk-send-method
+  [visible]="isShowBulkSendMethod"
+  (onClose)="isShowBulkSendMethod = false"
+  (onNext)="handleSelectBulkSendMethod($event)">
+</select-bulk-send-method>
+
+<select-option-send-bulk-msg
+  *ngIf="isShowPopupSendBulkMsg"
+  [isShowPopupSendBulkMsg]="isShowPopupSendBulkMsg"
+  (onCloseModal)="handleCloseModal($event)"
+  (onNext)="onTriggerBulkSendMsg($event)"
+  (viewTasks)="handleViewTasks()">
+</select-option-send-bulk-msg>
+
+<view-tasks-modal
+  [items]="createdTasksData"
+  [selectedItems]="selectedCreatedTasksData"
+  [isVisible]="(modalManagementService.openModalId$ | async) === EModalID.ViewTasks"
+  (confirm)="handleConfirmViewTasks($event)"
+  (cancel)="handleCancelViewTasks()"
+  *ngIf="(modalManagementService.modalState$ | async)?.includes(EModalID.ViewTasks)"></view-tasks-modal>
+
+<move-message-to-task
+  *ngIf="popupState === EPopupState.MOVE_MESSAGE_TO_TASK"
+  [visible]="popupState === EPopupState.MOVE_MESSAGE_TO_TASK"
+  [taskFolderId]="moveToFolderId"
+  [subTitleMoveToTask]="subTitleMoveToTask"
+  (onOpenCreateTaskOption)="handleOpenCreateTaskOptionModal()"
+  (onCancel)="handleResetPopup()"></move-message-to-task>
+
+<option-create-task-multiple-modal
+  [openModal]="popupState === EPopupState.OPTION_MOVE_MESSAGE_TO_TASK"
+  [option]="optionCreateTaskMultiple"
+  (onBack)="handleBackCreateTaskOptionModal()"
+  (onQuitModal)="handleResetPopup()"
+  (onNext)="handleSelectedOption($event)"
+  (onChangeOption)="handleChangeOption($event)"></option-create-task-multiple-modal>
+
+<ng-template #groupList>
+  <div
+    id="move-to-option"
+    class="toolbar-item"
+    menuTrigger
+    #menu="menu"
+    [position]="menuPosition"
+    (click)="menu"
+    (menuStateChanged)="visible = event"
+    [ngClass]="{'menu-button-active': visible}"
+    [appE2E]="'inbox-task-float-popup-move-to-button'"
+    (click)="openMenu($event)">
+    <trudi-icon
+      class="toolbar-icon no-pointer-event"
+      [ngClass]="{ 'mb-4': item?.label }"
+      [icon]="'iconMoveV3'"
+      [style]="{ 'width.px': 20, 'height.px': 20 }"></trudi-icon>
+    <div class="d-flex text-center no-pointer-event">Move to</div>
+  </div>
+</ng-template>
+
+<nz-dropdown-menu #moveOptionMenu="nzDropdownMenu">
+  <ul class="menu-wrapper" nz-menu>
+    <li nz-menu-item class="menu-item" (click)="openMenu($event)">
+      <div class="menu-item__name">Existing task</div>
+    </li>
+    <li nz-menu-item class="menu-item" (click)="openMenu($event)">
+      <div class="menu-item__name">Email Folder</div>
+    </li>
+  </ul>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #folderMenu="nzDropdownMenu">
+  <ul class="menu-wrapper" nz-menu>
+    <ng-container *ngIf="taskFolders?.length; else noFolder">
+      <div class="menu-header">
+        <div class="menu-header__title">CHOOSE FOLDER</div>
+        <div
+          *ngIf="activePath !== inboxQueryParams.TASKS"
+          class="menu-header__action"
+          (click)="openMenu($event, moveOptionMenu.templateRef)">
+          Back
+        </div>
+      </div>
+      <div class="list-wrapper list-wrapper-folder">
+        <li
+          class="menu-item gap-8"
+          *ngFor="let taskFolder of taskFolders | orderBy: 'order'"
+          nz-submenu
+          nz-button
+          nz-dropdown
+          [nzDropdownMenu]="groupMenu"
+          [nzPlacement]="'topLeft'"
+          [nzTitle]="folderTemplate"
+          [nzTrigger]="'click'">
+          <ul class="menu-wrapper" nz-menu>
+            <div class="menu-header">
+              <div class="menu-title">CHOOSE GROUP</div>
+            </div>
+            <div class="list-wrapper list-wrapper-group">
+              <ng-container
+                *ngFor="let taskGroup of taskFolder?.taskGroups | orderBy: sortGroupByOrder">
+                <li
+                  class="menu-item pd-12 gap-8"
+                  nz-menu-item
+                  (click)="handleMoveTasksToGroup(taskFolder, taskGroup, $event)">
+                  <div
+                    [ngStyle]="{backgroundColor: taskGroup?.color}"
+                    class="group-color"></div>
+                  <span class="menu-item__name"> {{taskGroup.name}} </span>
+                </li>
+              </ng-container>
+            </div>
+          </ul>
+          <ng-template #folderTemplate>
+            <trudi-icon
+              class="folder-icon"
+              [style]="{ 'width.px': 14, 'height.px': 14 }"
+              [icon]="taskFolder.icon">
+            </trudi-icon>
+            <span class="menu-item__name"> {{taskFolder.name}} </span>
+          </ng-template>
+        </li>
+      </div>
+    </ng-container>
+  </ul>
+</nz-dropdown-menu>
+
+<move-message-to-email-folder
+  *ngIf="popupState === EPopupState.MOVE_MESSAGE_TO_EMAIL_FOLDER"
+  [visible]="popupState === EPopupState.MOVE_MESSAGE_TO_EMAIL_FOLDER"
+  [subTitleMoveToTask]="subTitleMoveToTask"
+  (onCancel)="handleResetPopup()"></move-message-to-email-folder>
+<ng-template #noFolder
+  ><div nz-menu class="menu-header no-folder">
+    <i>No folder to display</i>
+  </div></ng-template
+>
+
+<ng-template #permanentlyDeleteConfirmModalContent>
+  <div class="d-flex justify-content-end">
+    <ul class="content pd-0">
+      <li>
+        <span>Any data or task history will be permanently deleted</span>
+      </li>
+      <li>
+        <span>
+          {{inboxItems?.length > 1 ? 'Any messages within these tasks will be
+          automatically marked as deleted' : 'Any messages within this task will
+          be automatically marked as deleted' }}
+        </span>
+      </li>
+    </ul>
+  </div>
+</ng-template>

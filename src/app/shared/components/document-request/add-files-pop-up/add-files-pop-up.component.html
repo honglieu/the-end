@@ -1,0 +1,114 @@
+<div class="invite-wrapper">
+  <div class="header">
+    <div class="detail-invite">
+      <div class="send-invite-icon">
+        <div class="background-icon">
+          <img src="/assets/icon/icon-attach-file.svg" />
+        </div>
+      </div>
+      <div class="send-invite-text">
+        <p>Add Files</p>
+        <div class="number-sent">Select Files to add to message</div>
+      </div>
+    </div>
+    <trudi-icon
+      [attr.data-e2e]="'exit-btn'"
+      icon="closeBtn"
+      (click)="openQuitConfirmModal(true)"
+      class="close-modal-btn"></trudi-icon>
+  </div>
+  <hr />
+  <div class="body" [formGroup]="fg">
+    <div
+      class="dropzone"
+      *ngIf="!selectedFile"
+      appDnd
+      (filesDropped)="onFilesDropped($event)">
+      <input
+        type="file"
+        accept="{{fileTypeSelect}}"
+        onfocus="this.value=''"
+        #fileDropRef
+        id="fileDropRef"
+        (change)="fileBrowseHandler($event)" />
+      <img src="/assets/icon/icon_upload.svg" alt="" />
+      <p>
+        Drag and Drop here <br />
+        or
+      </p>
+      <label for="fileDropRef">Browse files</label>
+      <div class="text-file-over">Drop here</div>
+    </div>
+    <div class="warning" *ngIf="overFileSize">
+      Your file is larger than 25MB. Please upload a smaller file.
+    </div>
+    <div class="warning" *ngIf="!isValidFileUploadType">
+      Unsupported file type
+    </div>
+    <div class="files-list" *ngIf="selectedFile">
+      <div class="file-item" *ngFor="let item of selectedFile">
+        <div class="file-logo">
+          <img
+            class="position-center-w"
+            src="assets/images/icons/{{ item.icon }}" />
+        </div>
+        <div class="file">
+          <div class="name-extension">
+            <div class="file-name">{{item.fileName}}</div>
+            <div class="file-extension">{{item.extension}}</div>
+          </div>
+          <div class="date-upload">{{timeUpload | formatDate | async}}</div>
+        </div>
+        <div class="remove-btn" (click)="removeFile()">
+          <img
+            class="position-center-w"
+            src="/assets/icon/small-close-black.svg"
+            alt="" />
+        </div>
+      </div>
+    </div>
+    <div class="document-input">
+      <div class="up-left-text">
+        Document Type <span *ngIf="topic.invalid">*</span>
+      </div>
+      <ng-select
+        [items]="selectTopicItems"
+        class="underline-box height-topic"
+        bindLabel="text"
+        bindValue="id"
+        [searchable]="false"
+        [clearable]="false"
+        formControlName="topic"></ng-select>
+    </div>
+    <div class="document-input">
+      <div class="up-left-text">Title <span *ngIf="title.invalid">*</span></div>
+      <input
+        type="text"
+        class="input title-text"
+        formControlName="title"
+        maxlength="30" />
+      <div class="down-right-text">
+        <app-remaining-character
+          [maxlength]="30"
+          [currentTextLength]="title.value?.length"></app-remaining-character>
+      </div>
+    </div>
+  </div>
+  <div class="btn-wrapper">
+    <button
+      data-e2e="button-back"
+      type="button"
+      class="cancel-btn"
+      (click)="backtoSendMessageModal(true)">
+      <span class="btn-text"> Back </span>
+    </button>
+    <button
+      data-e2e="dr-add-file-btn"
+      type="button"
+      class="add-btn"
+      [ngClass]="{'unclick': !clickable()}"
+      (click)="openAddFile(true)">
+      <span class="btn-text"> Add </span>
+    </button>
+  </div>
+</div>

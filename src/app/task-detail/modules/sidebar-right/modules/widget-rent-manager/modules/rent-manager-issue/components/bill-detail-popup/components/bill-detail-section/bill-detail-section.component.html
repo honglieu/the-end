@@ -1,0 +1,119 @@
+<div [formGroup]="detailForm" *ngIf="detailForm">
+  <div class="d-flex flex-dir-column gap-16">
+    <div class="d-flex gap-20">
+      <div class="d-flex gap-16 flex-dir-column flex-1">
+        <div class="d-flex gap-20 align-items-center">
+          <div class="account-type w-25">
+            <trudi-single-select
+              label="Account type"
+              bindLabel="label"
+              bindValue="value"
+              formControlName="accountType"
+              [items]="accountTypes"
+              (ngModelChange)="handleChangeAccountType()">
+            </trudi-single-select>
+          </div>
+          <div class="list-account flex-1">
+            <trudi-single-select
+              bindLabel="bindLabel"
+              formControlName="account"
+              [items]="accounts"
+              [label]="accountType?.value === EUserType.VENDOR?'Vendor':'Owner'"
+              [searchFn]="customSearchFn">
+              <ng-template
+                trudi-option-tmp
+                let-item="item"
+                let-searchTerm="searchTerm"
+                let-item$="item$"
+                let-valueSelected="valueSelected">
+                <div
+                  class="d-flex justify-content-between align-items-center w-100 pd-12">
+                  <div class="d-flex flex-dir-column gap-4 w-75">
+                    <span
+                      class="item-label"
+                      [ngOptionHighlight]="searchTerm ? searchTerm : ''">
+                      {{item?.firstName || '' + '' + item?.lastName ||
+                      ''}}</span
+                    >
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <div
+                      *ngIf="valueSelected && (valueSelected === item['id'])"
+                      class="d-flex align-items-center option-selected">
+                      <trudi-icon icon="checkSuccess"></trudi-icon>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+            </trudi-single-select>
+          </div>
+        </div>
+        <div class="d-flex gap-20 align-items-center">
+          <div class="w-50">
+            <label class="trudi-date-picker-label">Bills date</label>
+            <trudi-date-picker
+              formControlName="billDate"
+              label="Bills date"
+              [class.trudi-picker-error]="isSubmittedBill && billDate?.invalid && (billDate?.dirty || billDate?.touched) && billDate?.errors['required']">
+            </trudi-date-picker>
+          </div>
+          <div class="w-50">
+            <trudi-text-field
+              class="flex-1"
+              label="Invoice #"
+              formControlName="invoice"
+              [maxCharacter]="25"></trudi-text-field>
+          </div>
+        </div>
+      </div>
+      <div class="d-flex gap-16 flex-dir-column flex-1">
+        <div class="d-flex gap-20 align-items-center">
+          <div class="w-50">
+            <trudi-number-field
+              [maskLeadZero]="true"
+              [maskPattern]="maskPattern"
+              thousandSeparatorType=","
+              label="Amount"
+              bindLabel="label"
+              bindValue="value"
+              placeholder="0.00"
+              prefixText="$"
+              formControlName="amount">
+            </trudi-number-field>
+          </div>
+          <div class="w-50">
+            <trudi-single-select
+              label="Terms"
+              bindLabel="name"
+              formControlName="term"
+              [items]="terms">
+            </trudi-single-select>
+          </div>
+        </div>
+        <div class="d-flex gap-20 align-items-center">
+          <div class="w-50">
+            <label class="trudi-date-picker-label">Post date</label>
+            <trudi-date-picker
+              formControlName="postDate"
+              label="Post date"
+              [class.trudi-picker-error]="isSubmittedBill && postDate?.invalid && (postDate?.dirty || postDate?.touched) && postDate?.errors['required']">
+            </trudi-date-picker>
+          </div>
+          <div class="w-50">
+            <label class="trudi-date-picker-label">Due date</label>
+            <trudi-date-picker
+              formControlName="dueDate"
+              label="Due date"
+              [class.trudi-picker-error]="isSubmittedBill && dueDate?.invalid && (dueDate?.dirty || dueDate?.touched) && dueDate?.errors['required']"></trudi-date-picker>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex-1">
+      <trudi-text-field
+        label="Memo"
+        formControlName="memo"
+        [maxCharacter]="255"></trudi-text-field>
+    </div>
+  </div>
+</div>

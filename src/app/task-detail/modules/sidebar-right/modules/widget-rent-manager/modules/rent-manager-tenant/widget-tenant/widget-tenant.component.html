@@ -1,0 +1,41 @@
+<ng-container *ngIf="newTenant?.length">
+  <trudi-suggested-step-group [groupTitle]="groupTitle">
+    <widget-common
+      *ngFor="let cardData of newTenant"
+      (showModal)="openNewTenantForm(cardData)"
+      (remove)="removeWidget(cardData)"
+      (retry)="retrySync(cardData)"
+      [type]="cardData?.syncStatus"
+      [firstTimeSyncSuccess]="cardData?.firstTimeSyncSuccess"
+      [isDislayBtnCancel]="cardData?.isSuccessful">
+      <ng-container *ngIf="cardData">
+        <div class="card-widget-wrapper">
+          <div class="card-widget-items d-flex flex-dir-column gap-4">
+            <div class="card-widget-items d-flex">
+              <div class="widget-title w-80">Tenant</div>
+              <div class="widget-info-w">
+                {{cardData.data.firstName || ''}} {{cardData.data.lastName||
+                ''}}
+              </div>
+            </div>
+            <div class="card-widget-items d-flex">
+              <div class="widget-title w-80">Rent period</div>
+              <div class="widget-info">
+                {{cardData.data?.settings?.rentPeriod | titlecase}}
+              </div>
+            </div>
+            <div
+              class="card-widget-items d-flex"
+              *ngIf="cardData.data?.settings?.rentDueDay">
+              <div class="widget-title w-80">Due day</div>
+              <div class="widget-info">
+                {{cardData.data?.settings?.rentDueDay | dueDay:
+                cardData.data?.settings?.rentPeriod }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </widget-common>
+  </trudi-suggested-step-group>
+</ng-container>

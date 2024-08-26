@@ -1,0 +1,316 @@
+<ng-container *ngIf="!isLoadingCustom; else skeletonTemplate">
+  <sections-container
+    [titleInput]="headerTitle"
+    [subTitle]="isRMEnvironment ? headerSubtitle.RM : headerSubtitle.PT">
+    <nz-table
+      class="emergency-contacts-table custom-emergency-contacts-table"
+      [class.emergency-contacts-table-readonly]="readonly"
+      nzOuterBordered
+      [nzFooter]="footer"
+      [nzShowPagination]="false">
+      <thead>
+        <tr>
+          <th [nzWidth]="columnWidth">
+            {{isRMEnvironment ? 'Property' : 'Property tag'}}
+          </th>
+          <th>
+            <div class="d-flex">
+              <div class="type-th">Type</div>
+              <div class="emergency-contact-th">Emergency contact</div>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *rxFor="let control of customEmergencyContacts?.controls; let
+        customEmergencyContactIndex = index; let last = last"
+          class="custom-item"
+          [class.last-item]="last">
+          <td nzWidth="240px" class="property-td">
+            <div class="select-property-wrapper">
+              <trudi-form-control [control]="control?.get('propertyIds')">
+                <trudi-multi-select
+                  [items]="control['propertiesList']"
+                  [totalOptions]="control['propertiesList']?.length"
+                  [virtualScroll]="true"
+                  bindValue="value"
+                  bindLabel="label"
+                  [readonly]="readonly"
+                  [disabledOnlyCheckbox]="true"
+                  [formControl]="control?.get('propertyIds')"
+                  [groupBy]="!isRMEnvironment ? 'tagGroupName' : ''"
+                  [dropdownPosition]="this.dropdownPositionForCustomItem[customEmergencyContactIndex]"
+                  [placeholder]="'Select ' + (isRMEnvironment ? 'property' : 'property tag')"
+                  (handleOpen)="propertyFocusHandler(control); adjustDropdownPositionForCustomItem(customEmergencyContactIndex)"
+                  (focusOut)="propertyActionHandler(control)">
+                  <ng-template trudi-header-tmp>
+                    <div
+                      *ngIf="control['propertiesList']?.length"
+                      class="d-flex trudi-multi-select-header align-items-center justify-content-between pd-12">
+                      <div>
+                        <span class="count-text"
+                          >{{control?.get('propertyIds')?.value?.length}}/{{control['propertiesList']?.length}}</span
+                        >
+                      </div>
+                      <button
+                        trudi-btn
+                        size="small"
+                        variant="link"
+                        btnType="neutral"
+                        *ngIf="control?.get('propertyIds')?.value?.length"
+                        (click)="$event.stopPropagation(); propertyActionHandler(control, false, true)">
+                        Clear selection
+                      </button>
+                    </div>
+                  </ng-template>
+                  <ng-template
+                    trudi-label-tmp
+                    let-items="items"
+                    let-clear="clear">
+                    <div
+                      class="ng-value"
+                      *rxFor="let item of items; trackBy: 'id'">
+                      <div
+                        (mousedown)="$event.stopPropagation()"
+                        nz-tooltip
+                        triggerLongContentTooltip
+                        [elementRef]="propertyLabel"
+                        [keepHover]="item.status === EPropertyStatus.inactive"
+                        (exceedWidth)="item.exceedWidth = $event"
+                        nzTooltipPlacement="top"
+                        [nzTooltipOverlayClassName]="'tooltip-label'"
+                        [nzTooltipTitle]="item.status === EPropertyStatus.inactive ? item.exceedWidth ? item.label + ' (Inactive)' : 'Inactive' : item.label"
+                        class="d-flex gap-4 align-items-center trudi-label-wrapper label-wrapper border-rad-8"
+                        [ngClass]="{'disabled': item.status === EPropertyStatus.inactive, 'label-wrapper-readonly': readonly}">
+                        <trudi-icon
+                          *ngIf="!isRMEnvironment"
+                          icon="iconTag"
+                          [style]="{ 'width.px': 18, 'height.px': 18 }"></trudi-icon>
+                        <div #propertyLabel class="tag-label text-ellipsis">
+                          {{item?.label}}
+                        </div>
+                        <div
+                          *ngIf="!readonly"
+                          class="close-wrapper"
+                          (mousedown)="$event.stopPropagation(); clear(item); propertyActionHandler(control, true);">
+                          <trudi-icon
+                            class="cursor-pointer"
+                            icon="closeIcon"
+                            svgClass="size-16"></trudi-icon>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-template>
+                  <ng-template
+                    trudi-option-tmp
+                    let-item="item"
+                    let-searchTerm="searchTerm"
+                    let-item$="item$">
+                    <div
+                      class="option-item d-flex align-items-center gap-4 w-100"
+                      [ngClass]="{'disable': item?.disabled, 'disable-field': item?.disabled && (!isRMEnvironment || (item.status === EPropertyStatus.inactive && !item$.selected)) }">
+                      <span
+                        #propertyItemLabel
+                        triggerLongContentTooltip
+                        [elementRef]="propertyItemLabel"
+                        nz-tooltip
+                        nzTooltipPlacement="top"
+                        [nzTooltipTitle]="item?.label"
+                        [nzTooltipOverlayClassName]="'tooltip-label'"
+                        class="item-label mw-label"
+                        [ngOptionHighlight]="searchTerm ? searchTerm : ''">
+                        {{(item.label)}}</span
+                      >
+                      <trudi-badge
+                        *ngIf="item.status === EPropertyStatus.inactive"
+                        text="Inactive"
+                        size="small"
+                        variant="role"
+                        [allowTruncated]="true">
+                      </trudi-badge>
+                      <div
+                        class="d-flex align-items-center ml-auto"
+                        trudi-tooltip
+                        [nzTooltipTitle]="item.tooltip"
+                        [nzTooltipOverlayStyle]="{ 'max-width': '187px' }"
+                        nzTooltipOverlayClassName="tooltip-policy"
+                        nzTooltipPlacement="top">
+                        <trudi-checkbox
+                          [ngModel]="item$.selected || (item?.disabled && (!isRMEnvironment || item.status === EPropertyStatus.active))"
+                          [disabled]="item?.disabled && (!isRMEnvironment || (item.status !== EPropertyStatus.inactive || !item$.selected))"
+                          [ngModelOptions]="{standalone: true}"></trudi-checkbox>
+                      </div>
+                    </div>
+                  </ng-template>
+                  <ng-template trudi-header-tmp> </ng-template>
+                </trudi-multi-select>
+              </trudi-form-control>
+            </div>
+          </td>
+          <td>
+            <div
+              *rxFor="let group of control?.get('emergencyContacts')?.controls; let emergencyContactIndex = index"
+              class="d-flex w-100 emergency-contact-wrap">
+              <div class="type-form">
+                <trudi-form-control [control]="group?.get('typeId')">
+                  <select-type
+                    (newTypeAdded)="addNewTypeHandler($event, group)"
+                    (typeDeleted)="deleteTypeHandler($event, group)"
+                    [items]="group['typesList']"
+                    [formControl]="group?.get('typeId')"
+                    (triggerEventBlur)="group?.get('typeId')?.markAsTouched()"
+                    [isDisabled]="readonly"
+                    (openHandler)="adjustDropdownPositionForCustomItem(customEmergencyContactIndex)"
+                    [dropdownPosition]="dropdownPositionForCustomItem[customEmergencyContactIndex]"
+                    [bindValue]="'id'"
+                    [bindLabel]="'name'"
+                    [searchable]="true"
+                    [clearable]="true"
+                    [placeholder]="'Select type'">
+                  </select-type>
+                </trudi-form-control>
+              </div>
+
+              <div
+                class="d-flex flex-1 align-items-start gap-16 emergency-contact-form">
+                <div class="flex-1">
+                  <trudi-form-control [control]="group?.get('supplierIds')">
+                    <select-contacts
+                      [items]="group['suppliersList']"
+                      [readonly]="readonly"
+                      [formControl]="group?.get('supplierIds')"
+                      (handleOpen)="contactFocusHandler(group); adjustDropdownPositionForCustomItem(customEmergencyContactIndex)"
+                      [dropdownPosition]="dropdownPositionForCustomItem[customEmergencyContactIndex]"
+                      (focusOut)="contactActionHandler(group, control)"
+                      (eventClear)="contactActionHandler(group, control, true)"
+                      (eventClearAll)="contactActionHandler(group, control, false, true)"
+                      (eventCallback)="addSupplierToFormHandler($event, group, control)"
+                      bindValue="id"
+                      placeholder="Select contact"></select-contacts>
+                  </trudi-form-control>
+                </div>
+                <button
+                  *ngIf="!readonly"
+                  class="remove-emergency-contacts-row-btn"
+                  trudi-btn
+                  variant="ghost"
+                  btnType="neutral"
+                  size="medium"
+                  shape="square"
+                  [selected]="focusStateMap.deleteButton.get(group?.get('groupTypeId').value)"
+                  nz-dropdown
+                  nzPlacement="bottomLeft"
+                  nzTrigger="click"
+                  [nzDropdownMenu]="menu"
+                  [nzVisible]="focusStateMap.deleteButton.get(group?.get('groupTypeId').value)"
+                  (nzVisibleChange)="focusStateMap.deleteButton.set(group?.get('groupTypeId').value, $event)"
+                  trudi-tooltip
+                  nzTooltipTitle="Delete"
+                  [nzTooltipArrowPointAtCenter]="true"
+                  nzTooltipTrigger="hover">
+                  <trudi-icon
+                    svgClass="size-16"
+                    viewBox="auto"
+                    icon="iconDeleteGrey"></trudi-icon>
+                  <nz-dropdown-menu #menu="nzDropdownMenu">
+                    <div nz-menu class="menu-wrapper delete-emergency-wrapper">
+                      <div
+                        *ngIf="control?.get('emergencyContacts')?.controls?.length > 1"
+                        (click)="deleteGroupTypeHandler(group, control, emergencyContactIndex)"
+                        class="item item-delete item-delete-type">
+                        Delete type
+                      </div>
+                      <div
+                        (click)="deleteGroupHandler(control, customEmergencyContactIndex)"
+                        class="item item-delete item-delete-custom">
+                        Delete custom contact
+                      </div>
+                    </div>
+                  </nz-dropdown-menu>
+                </button>
+              </div>
+            </div>
+            <button
+              trudi-btn
+              btnType="neutral"
+              variant="outlined"
+              size="medium"
+              [fillIcon]="true"
+              class="add-contact-button"
+              [disabled]="readonly"
+              (click)="addNewSectionEmergencyContacts(customEmergencyContactIndex)">
+              <trudi-icon
+                svgClass="size-16"
+                viewBox="auto"
+                icon="plusGray"></trudi-icon
+              >Add
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </sections-container>
+</ng-container>
+
+<ng-template #footer>
+  <button
+    (click)="addNewSectionCustomEmergencyContacts()"
+    trudi-btn
+    btnType="neutral"
+    variant="tonal"
+    size="medium"
+    [fillIcon]="true"
+    [disabled]="readonly">
+    <trudi-icon svgClass="size-16" viewBox="auto" icon="plusGray"></trudi-icon
+    >Add custom contact
+  </button>
+</ng-template>
+
+<ng-template #skeletonTemplate>
+  <div class="mt-40">
+    <nz-skeleton
+      class="emergency-contacts-title"
+      [nzParagraph]="{ rows: 1 }"
+      [nzTitle]="false"
+      [nzActive]="true"></nz-skeleton>
+    <nz-skeleton
+      class="emergency-contacts-subtitle"
+      [nzParagraph]="{ rows: 1 }"
+      [nzTitle]="false"
+      [nzActive]="true"></nz-skeleton>
+    <nz-table
+      class="emergency-contacts-table emergency-contacts-table-skeleton"
+      nzOuterBordered
+      [nzShowPagination]="false">
+      <thead>
+        <tr>
+          <th nzWidth="240px">&nbsp;</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          [class.last-item]="last"
+          *rxFor="let _ of [].constructor(2); let last = last">
+          <td>
+            <nz-skeleton
+              [nzParagraph]="{ rows: 1 }"
+              [nzTitle]="false"
+              [nzActive]="true"></nz-skeleton>
+          </td>
+          <td>
+            <div class="d-flex align-items-center">
+              <ng-container *rxFor="let _ of [].constructor(4)">
+                <nz-skeleton
+                  [nzParagraph]="{ rows: 1 }"
+                  [nzTitle]="false"
+                  [nzActive]="true"></nz-skeleton
+              ></ng-container>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</ng-template>

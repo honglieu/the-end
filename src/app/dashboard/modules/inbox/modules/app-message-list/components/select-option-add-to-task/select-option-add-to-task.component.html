@@ -1,0 +1,42 @@
+<trudi-modal
+  *ngIf="isVisible"
+  [visible]="isVisible"
+  [autoFocus]="null"
+  [modelWidth]="546"
+  (onCancel)="closePopup.emit()"
+  [isHideFooter]="true"
+  className="modal-select-option"
+  title="Select an option to continue">
+  <div class="select_option--task">
+    <button
+      (click)="createNewTask.emit()"
+      class="convert_task"
+      [disabled]="disabled">
+      <div class="content_btn_task">
+        <trudi-icon
+          svgClass="size-40"
+          class="item-icon"
+          icon="createNewTask"></trudi-icon>
+        <div>
+          <p>Create new task</p>
+          <span>Create a new task and add messages to this task</span>
+        </div>
+      </div>
+    </button>
+    <button
+      class="move_task"
+      (click)="addToExistingTask.emit()"
+      [disabled]="disabled">
+      <div class="content_btn_task">
+        <trudi-icon
+          svgClass="size-40"
+          class="item-icon"
+          icon="existingTask"></trudi-icon>
+        <div>
+          <p>Add to existing task</p>
+          <span>Add messages to an existing task</span>
+        </div>
+      </div>
+    </button>
+  </div>
+</trudi-modal>

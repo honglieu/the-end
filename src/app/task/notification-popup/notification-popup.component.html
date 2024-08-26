@@ -1,0 +1,68 @@
+<div class="wrapper">
+  <div class="d-flex">
+    <div class="size-48" [style.margin-right.px]="16">
+      <ng-container *ngIf="!isSendInvoiceFail; else isSendInvoiceActive">
+        <img
+          [src]="!haveSentInvoice ? '/assets/icon/warning.svg' : '/assets/icon/trudi-logo.svg'"
+          alt="Trudi" />
+      </ng-container>
+
+      <ng-template #isSendInvoiceActive>
+        <img [src]="'/assets/icon/trudi-logo.svg'" alt="Trudi" />
+      </ng-template>
+    </div>
+    <ng-container *ngIf="!isSendInvoiceFail">
+      <div class="content d-flex flex-dir-column">
+        <ng-container *ngFor="let content of contents">
+          <p>{{content}}</p>
+        </ng-container>
+        <div *ngIf="!haveSentInvoice" class="small-text">
+          You have to send invoice to Property Tree before this step, unless
+          your maintenance request will be cancelled.
+        </div>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="isSendInvoiceFail">
+      <div class="content white-space-brakes d-flex flex-dir-column">
+        <p>Unable to create invoice</p>
+        <div class="small-text white-space-brakes">
+          I can't seem to communicate with Property Tree right now. Please try
+          again shortly.
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <ng-container *ngIf="!isSendInvoiceFail">
+    <div
+      class="btn-wrapper d-flex justify-content-end align-items-center gap-12">
+      <div class="checkbox-wrapper d-flex align-items-center hide">
+        <div>
+          <input
+            type="checkbox"
+            id="not-show-again"
+            class="parent-checkbox d-none" />
+          <label
+            for="not-show-again"
+            class="checkbox-label border-rad-2 size-20">
+            <img
+              data-console="check-not-show-again"
+              [src]="getCheckboxDisplay()" />
+          </label>
+        </div>
+        Don’t show me these types of message again
+      </div>
+      <button
+        type="button"
+        class="border-rad-12 btn-confirm btn-confirm--{{leftButtonBackground}}"
+        (click)="close()">
+        {{haveSentInvoice ? 'Cancel' : 'Go back'}}
+      </button>
+      <button
+        type="button"
+        class="border-rad-12 btn-confirm btn-confirm--{{rightButtonBackground}}"
+        (click)="submit()">
+        {{rightButtonText}}
+      </button>
+    </div>
+  </ng-container>
+</div>

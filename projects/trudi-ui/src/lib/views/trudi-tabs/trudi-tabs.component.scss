@@ -1,0 +1,116 @@
+@import 'function';
+
+.trudi-tabs-wrapper ::ng-deep {
+  &:has(.ant-tabs-tab-disabled) {
+    .ant-tabs-tab {
+      pointer-events: unset !important;
+    }
+  }
+  .ant-tabs-card {
+    .ant-tabs-tab {
+      &-active {
+        background-color: var(--bg-brand-tonal-normal);
+      }
+
+      background-color: var(--bg-base);
+      padding: 8px 12px;
+      margin: 0px !important;
+      border-radius: unset;
+    }
+
+    .ant-tabs-nav-wrap {
+      border: 1px solid var(--border-neutral-dark);
+      border-radius: 8px;
+    }
+  }
+  .ant-tabs-tab {
+    padding: 8px 0;
+    cursor: pointer;
+    &-disabled {
+      cursor: not-allowed;
+      a {
+        cursor: not-allowed;
+        pointer-events: auto;
+        color: var(--gray-300) !important;
+      }
+
+      a:active {
+        pointer-events: none;
+      }
+    }
+    & a {
+      @include fontSetup(var(--gray-400), 14px, 20px, normal, 600);
+      &:focus-visible {
+        box-shadow: inset 0px 0px 0px 1px var(--brand-500),
+          0px 0px 0px 2px rgba(var(--brand-500-rgb), 0.6) !important;
+      }
+      &:hover {
+        color: var(--gray-500);
+        border: none !important;
+      }
+      &.active {
+        @include fontSetup(var(--brand-500), 14px, 20px, normal, 600);
+      }
+    }
+  }
+
+  .ant-tabs-tab + .ant-tabs-tab {
+    margin: unset;
+  }
+
+  .ant-tabs-top > .ant-tabs-nav,
+  .ant-tabs-bottom > .ant-tabs-nav,
+  .ant-tabs-top > div > .ant-tabs-nav,
+  .ant-tabs-bottom > div > .ant-tabs-nav {
+    margin: unset;
+  }
+
+  .ant-tabs-top
+    > .ant-tabs-nav
+    .ant-tabs-nav-wrap.ant-tabs-nav-wrap-ping-left::before,
+  .ant-tabs-bottom
+    > .ant-tabs-nav
+    .ant-tabs-nav-wrap.ant-tabs-nav-wrap-ping-left::before,
+  .ant-tabs-top
+    > div
+    > .ant-tabs-nav
+    .ant-tabs-nav-wrap.ant-tabs-nav-wrap-ping-left::before,
+  .ant-tabs-bottom
+    > div
+    > .ant-tabs-nav
+    .ant-tabs-nav-wrap.ant-tabs-nav-wrap-ping-left::before {
+    all: unset;
+  }
+
+  .ant-tabs-top > .ant-tabs-nav::before,
+  .ant-tabs-bottom > .ant-tabs-nav::before,
+  .ant-tabs-top > div > .ant-tabs-nav::before,
+  .ant-tabs-bottom > div > .ant-tabs-nav::before {
+    all: unset;
+  }
+
+  .ant-tabs-nav-operations {
+    display: none;
+  }
+
+  .ant-tabs-ink-bar {
+    background: var(--brand-500);
+    height: 3px;
+  }
+
+  .ant-tabs-nav-list {
+    .ant-tabs-tab {
+      margin-left: 20px;
+
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+
+  .trudi-tab-link-text {
+    display: flex;
+    align-items: center;
+    column-gap: 4px;
+  }
+}

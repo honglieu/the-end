@@ -1,0 +1,116 @@
+@import 'function';
+
+::ng-deep nz-modal-container {
+  .trudi-modal:has(.email-signature-body) {
+    .email-signature-body {
+      .croppie-wrapper {
+        height: 400px;
+        border-radius: 8px;
+        border: 1px solid var(--border-neutral-dark, #d8dcdf);
+        padding: 16px 24px;
+        overflow: hidden;
+        &:hover {
+          overflow-y: auto;
+        }
+
+        .image-signature {
+          visibility: visible;
+          transform-origin: top left;
+          max-height: unset;
+          max-width: unset;
+          border: 1px solid var(--border-brand, #28ad99);
+          background: var(--bg-base);
+        }
+
+        .signature {
+          display: flex;
+          align-items: flex-start;
+        }
+      }
+      .slider-wrapper {
+        gap: 14px;
+        margin-top: 18px;
+        padding: 0 90px;
+        .minus-button,
+        .plus-button {
+          cursor: pointer;
+          background-color: initial !important;
+          border: none;
+        }
+
+        input {
+          visibility: hidden;
+        }
+
+        nz-slider {
+          .ant-slider-handle {
+            border: none !important;
+            width: 16px !important;
+            height: 16px !important;
+            background-color: var(--bg-brand-solid-normal);
+
+            &:focus {
+              box-shadow: unset !important;
+            }
+          }
+
+          .ant-slider-track {
+            background-color: var(--bg-brand-solid-normal);
+          }
+        }
+      }
+
+      .button-wrapper {
+        .button-save {
+          border: none;
+          cursor: pointer;
+          width: 388px;
+          height: 48px;
+          border-radius: 12px;
+          padding: 8px 71px;
+          background-color: var(--brand-500);
+          @include fontSetup(var(--white), 14px, 20px, normal, 600);
+        }
+      }
+    }
+  }
+}
+
+image-cropper::ng-deep {
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  .ngx-ic-overlay,
+  .ngx-ic-cropper {
+    pointer-events: none;
+    top: 30px !important;
+    left: 60px !important;
+    margin-left: 0 !important;
+    &::after {
+      border: none !important;
+    }
+  }
+  .ngx-ic-source-image {
+    object-fit: inherit;
+    visibility: visible !important;
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+#croppie {
+  width: 100%;
+  height: 260px;
+  margin: 0 auto;
+}
+
+#profileAvatar {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1/1;
+}
+
+.visibility-0 {
+  visibility: hidden;
+}

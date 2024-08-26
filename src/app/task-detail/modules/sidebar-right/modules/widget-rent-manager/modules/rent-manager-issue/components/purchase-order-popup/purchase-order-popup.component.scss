@@ -1,0 +1,41 @@
+@import 'function';
+
+::ng-deep {
+  nz-modal-container {
+    .trudi-modal:has(purchase-order-detail) {
+      top: 0;
+      max-width: unset;
+      width: 100vw !important;
+      padding-bottom: 0;
+    }
+  }
+
+  .btn-cancel {
+    width: 100px;
+  }
+
+  .rent-manager-purchase-order-popup-header {
+    position: relative;
+    justify-content: center;
+
+    .size-icon {
+      position: absolute;
+      left: 0;
+    }
+
+    .title {
+      margin-left: 48px;
+    }
+  }
+
+  .rent-manager-issue-popup-footer {
+    .info-status {
+      white-space: nowrap;
+
+      span {
+        @include fontSetup(var(--bg-overlay-dark), 12px, 20px, normal, 500);
+        margin-left: 4px;
+      }
+    }
+  }
+}

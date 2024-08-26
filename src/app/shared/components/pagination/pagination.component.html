@@ -1,0 +1,65 @@
+<div class="pagination-wrapper">
+  <div class="item-per-row">
+    <span class="show-text">Show rows</span>
+    <ng-select
+      class="share-ng-select pagination-ng-select"
+      data-console="show-rows-dropdown"
+      [items]="itemPerRowOptions"
+      bindLabel="text"
+      bindValue="id"
+      [searchable]="false"
+      [clearable]="false"
+      (change)="hanleRowOfPage($event)"
+      [(ngModel)]="selectedRowOption"
+      [attr.data-e2e]="'row-dropdown'">
+      <ng-template ng-option-tmp let-item="item" let-index="index">
+        <span
+          class="d-flex justify-content-between"
+          [attr.data-e2e]="'row-option-'+index"
+          [attr.data-console]="'show-' + item.text"
+          >{{item.text}}<trudi-icon
+            [icon]="'checkSuccess'"
+            *ngIf="item.id === selectedRowOption"></trudi-icon
+        ></span>
+      </ng-template>
+    </ng-select>
+  </div>
+  <div class="page-index">
+    <span>
+      {{pageIndex * pageSize + 1}} - {{ totalItems < (pageIndex + 1) * pageSize
+      ? totalItems : (pageIndex + 1) * pageSize }} of {{totalItems}}
+    </span>
+  </div>
+  <div class="arrow-wrapper">
+    <button
+      class="arrow-wrapper-icon pd-6"
+      [ngClass]="pageIndex === 0 ? 'pagination-disable' : ''"
+      [disabled]="pageIndex === 0"
+      (click)="handleGoToFirstPage(pageSize)">
+      <trudi-icon icon="arrowToFirstPage1" svgClass="size-20"></trudi-icon>
+    </button>
+
+    <button
+      class="arrow-wrapper-icon pd-6"
+      [ngClass]="pageIndex === 0 ? 'pagination-disable' : ''"
+      [disabled]="pageIndex === 0"
+      (click)="handleGoToPrevPage(pageSize)">
+      <trudi-icon icon="arrowToPrevPage1" svgClass="size-20"></trudi-icon>
+    </button>
+
+    <button
+      class="arrow-wrapper-icon pd-6"
+      [ngClass]="(totalPages === 0 || pageIndex === totalPages - 1) ? 'pagination-disable' : ''"
+      [disabled]="totalPages === 0 || pageIndex === totalPages - 1"
+      (click)="handleGoToNextPage(pageSize)">
+      <trudi-icon icon="arrowToNextPage1" svgClass="size-20"></trudi-icon>
+    </button>
+    <button
+      class="arrow-wrapper-icon pd-6"
+      [ngClass]="(totalPages === 0 || pageIndex === totalPages - 1) ? 'pagination-disable' : ''"
+      [disabled]="totalPages === 0 || pageIndex === totalPages - 1"
+      (click)="handleGoToLastPage(pageSize)">
+      <trudi-icon icon="arrowToLastPage1" svgClass="size-20"></trudi-icon>
+    </button>
+  </div>
+</div>

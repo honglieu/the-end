@@ -1,0 +1,70 @@
+<div
+  class="container"
+  tabindex="0"
+  (click)="handleCheckBoxChange($event)"
+  (keyup.enter)="handleCheckBoxChange($event)"
+  nz-tooltip
+  [nzTooltipTitle]="(!isChecked ? tooltipTemplateFocusView :'')"
+  [nzTooltipOverlayClassName]="'tool-tip-inbox-filter'"
+  nz-popover
+  nzPopoverOverlayClassName="show-arrow tooltip-focus-view-overlay"
+  [nzPopoverContent]="tooltipFocusViewTemplate"
+  [(nzPopoverVisible)]="showPopover"
+  nzPopoverPlacement="bottom"
+  nzPopoverTrigger="click"
+  [ngClass]="{
+      'pointer-none': isDisabled
+    }"
+  nzTooltipPlacement="bottom">
+  <ng-container>
+    <div class="wrapper-focus-view" [ngClass]="{'custom-color': !isChecked}">
+      <div
+        class="cursor-pointer container-item d-flex align-items-center target-item-detail justify-content-between"
+        [ngClass]="{'unactive': !isChecked, 'pointer-none': isDisabled}">
+        <div class="d-flex gap-4">
+          <ng-container>
+            <trudi-icon
+              class="focus-icon"
+              [icon]="isChecked ? 'frame' : 'frameUnactive'"></trudi-icon>
+          </ng-container>
+          <div
+            *ngIf="taskDetailViewMode !== EViewDetailMode.MESSAGE"
+            class="title">
+            Focused view
+          </div>
+        </div>
+        <switch-checkbox
+          class="focus-checkbox"
+          [index]="isChecked"
+          [isChecked]="isChecked"
+          [reverse]="true"
+          [disabled]="isDisabled"
+          (tdCheckboxChanged)="onCheckboxChange($event)"></switch-checkbox>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<ng-template #tooltipFocusViewTemplate>
+  <div class="tooltip-focus-view">
+    <div class="tooltip-focus-view-body">
+      <div class="d-flex gap-8">
+        <trudi-icon
+          [icon]="'aiSummaryStar'"
+          [style]="{ 'width.px': 22, 'height.px': 22 }"></trudi-icon>
+        <p class="tooltip-focus-view-body-title">Your focused view is ON</p>
+      </div>
+      <p class="tooltip-focus-view-body-text">
+        This means you'll only see messages assigned to you.
+      </p>
+      <p class="tooltip-focus-view-body-text">
+        To see messages assigned to other team members, turn focused view OFF.
+      </p>
+    </div>
+    <div class="tooltip-focus-view-footer">
+      <button class="tooltip-focus-view-footer-btn" (click)="toggleClose()">
+        Got it
+      </button>
+    </div>
+  </div>
+</ng-template>

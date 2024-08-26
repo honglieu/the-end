@@ -1,0 +1,69 @@
+<trudi-step
+  [model]="model"
+  [showIconTitle]="false"
+  [hideProcessLine]="false"
+  [propertyTreeStep]="false"
+  [reiFormDetail]="reiFormBadge"
+  (onProcess)="enableProcess()"
+  [buttonKey]="buttonKey"></trudi-step>
+<attach-entry-note
+  [modalId]="modalId"
+  [showAttachEntryNotePopup]="popupState.attachEntryNote"
+  [isShowSelectReiForm]="isShowUploadReiFormBox"
+  [headerName]="titleAttachNote"
+  [acceptType]="ACCEPT_ONLY_SUPPORTED_FILE"
+  (onNextModal)="onNextAttachEntryNote()"
+  (onCloseModal)="onQuit()"
+  (listSelectedFile)="getSelectedFile($event)"
+  (onCreateOrSelectForm)="onNextToSelectREIForm()"
+  [hasBackButton]="hasConfirmEssential"
+  [canSkip]="!isRequired"
+  (onBackModal)="onBack()"></attach-entry-note>
+
+<app-select-document
+  *ngIf="popupState.selectREIDocument"
+  [modalId]="modalId"
+  [isStep]="true"
+  [showSelectDocumentPopup]="popupState.selectREIDocument"
+  [title]="titleAttachNote"
+  [isResizableModal]="true"
+  (onBackAttachModal)="handlePopupState({ attachEntryNote: true, selectREIDocument: false })"
+  (onCloseDocumentModal)="onQuit()"
+  (onNext)="getSelectedREIDocument($event)"></app-select-document>
+
+<review-attachment-popup
+  [modalId]="modalId"
+  [isStep]="true"
+  [showReviewAttachPopup]="popupState.reviewREIDocument"
+  [showAttachDaftFormPopup]="popupState.attachDraftForm"
+  [reiFormLink]="reiFormLink"
+  [isHideBottomWrapper]="isHideReviewAttachmentBottomWrapper"
+  [isResizableModal]="true"
+  (onHandleClose)="onQuit()"
+  (onHandleBack)="handlePopupState({ reviewREIDocument: false, selectREIDocument: true })"
+  (onHandleBackDraftForm)="handlePopupState({ reviewREIDocument: true, attachDraftForm: false })"
+  (onHandleContinue)="onConfirmFromReviewAttachment($event)"
+  (onHandleContinueDraftForm)="handlePopupState({ reviewREIDocument: false, attachDraftForm: true })"></review-attachment-popup>
+
+<upload-attachments
+  [modalId]="modalId"
+  [fileRequired]="false"
+  [acceptType]="ACCEPT_ONLY_SUPPORTED_FILE"
+  [showAddFilesModal]="popupState.uploadAttachments"
+  [titleHeader]="titleAttachNote"
+  [listFileUpload]="selectedFiles"
+  (onRemoveFile)="handleBackUploadAttachments()"
+  (onStopProcess)="onQuit()"
+  [hasBack]="true"
+  (backStep)="handleBackUploadAttachments()"
+  (onSubmit)="handleSubmitFile()"></upload-attachments>
+
+<!-- <trudi-send-msg-v2
+  *ngIf="popupState.isTrudiSendMessage"
+  [rawMsg]="textForwardMessg"
+  [configs]="sendMessageConfigs"
+  [listOfFiles]="listOfFiles"
+  [reiformData]="reiFormData"
+  (onQuit)="onQuit()"
+  (onBack)="onBackSendMsg()"
+  (onSendMsg)="onSendMsg($event)"></trudi-send-msg-v2> -->

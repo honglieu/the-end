@@ -1,0 +1,223 @@
+@import 'function';
+
+$type-width: 240px;
+$margin-top-bottom: 12px;
+
+%padding-left-16 {
+  padding-left: 16px;
+}
+
+%margin-top-12 {
+  margin-top: 12px;
+}
+
+.custom-emergency-contacts-table {
+  ::ng-deep select-contacts.ng-invalid.ng-touched .ng-select {
+    &:not(.ng-select-opened) {
+      .ng-select-container {
+        box-shadow: var(--shadow-danger);
+        background-color: var(--white);
+      }
+    }
+  }
+
+  .type-th {
+    width: 320px;
+  }
+
+  .emergency-contact-th {
+    @extend %padding-left-16;
+  }
+
+  .property-td {
+    border-right: 1px solid var(--border-neutral-dark);
+  }
+
+  ::ng-deep .select-property-wrapper {
+    trudi-form-control {
+      .trudi-form-control-wrapper {
+        trudi-multi-select {
+          width: 100%;
+
+          ng-select {
+            .tag-error {
+              border: 1px solid var(--danger-500);
+            }
+
+            .ng-placeholder {
+              margin-top: 1px;
+              @include fontSetup(
+                var(--fg-neutral-weaker) !important,
+                14px,
+                20px,
+                normal,
+                400
+              );
+            }
+
+            .ng-value-container {
+              .tag-label {
+                @include fontSetup(
+                  var(--fg-neutral-normal, #61646C) !important,
+                  14px,
+                  20px,
+                  normal,
+                  500
+                );
+              }
+
+              .label-wrapper {
+                height: 28px;
+                max-width: 147px;
+                cursor: pointer;
+
+                &:not(.label-wrapper-readonly):hover {
+                  background-color: var(--bg-neutral-tonal-stronger, #f0f1f1);
+                }
+
+                &:not(.label-wrapper-readonly):active {
+                  background-color: var(--bg-neutral-tonal-strongest, #ececed);
+                }
+
+                &.label-wrapper-readonly {
+                  cursor: default !important;
+                }
+              }
+
+              .disabled {
+                opacity: 0.5;
+              }
+            }
+
+            ng-dropdown-panel {
+              .ng-dropdown-panel-items {
+                max-height: 220px !important;
+              }
+
+              .ng-option {
+                .option-item {
+                  padding: 0 12px;
+
+                  .item-label {
+                    padding: 10px 0;
+                  }
+
+                  &.disable {
+                    .item-label {
+                      @include fontSetup(
+                        var(—gray-300),
+                        14px,
+                        20px,
+                        normal,
+                        500
+                      );
+
+                      &:hover {
+                        @include fontSetup(
+                          var(—gray-300),
+                          14px,
+                          20px,
+                          normal,
+                          500
+                        );
+                      }
+                    }
+
+                    trudi-checkbox {
+                      pointer-events: none;
+                    }
+                  }
+
+                  &.disable-field {
+                    .item-label {
+                      color: var(--gray-700) !important;
+                    }
+                  }
+
+                  .mw-label {
+                    max-width: 90%;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      .ng-optgroup {
+        text-transform: capitalize !important;
+        max-width: 100%;
+
+        .ng-option-label {
+          display: block !important;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+  .emergency-contact-wrap {
+    margin-bottom: $margin-top-bottom;
+
+    & .type-form {
+      width: 320px;
+    }
+
+    & .emergency-contact-form {
+      @extend %padding-left-16;
+    }
+
+    & .add-contact-button {
+      @extend %margin-top-12;
+    }
+  }
+
+  .remove-emergency-contacts-row-btn {
+    transform: translateY(6px);
+  }
+
+  .trudi-multi-select-header {
+    padding: 6px 12px !important;
+  }
+}
+
+.menu-wrapper.delete-emergency-wrapper {
+  cursor: pointer;
+  .item-delete {
+    padding: 12px;
+    @include fontSetup(
+      var(--fg-neutral-stronger, #333741),
+      14px,
+      20px,
+      normal,
+      500
+    );
+    &-custom {
+      color: var(--fg-danger, #fa3939) !important;
+    }
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1440px) {
+  ::ng-deep .custom-emergency-contacts-table {
+    .type-th {
+      width: 150px !important;
+    }
+    .emergency-contact-wrap {
+      & .type-form {
+        width: 150px !important;
+      }
+    }
+    .select-property-wrapper .trudi-label-wrapper {
+      max-width: 136px !important;
+    }
+    select-contacts .trudi-label-wrapper {
+      max-width: 220px !important;
+    }
+  }
+}

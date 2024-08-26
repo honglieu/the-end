@@ -1,0 +1,158 @@
+@import 'function';
+
+::ng-deep nz-modal-container {
+  .trudi-modal:has(general-information) {
+    top: 0;
+    max-width: unset;
+    width: 100vw !important;
+    padding-bottom: 0;
+
+    .rent-manager-issue-popup-body {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      height: 724px;
+      &
+        .trudi-tabs
+        .ant-tabs-nav
+        .ant-tabs-nav-wrap
+        .ant-tabs-nav-list
+        .ant-tabs-tab
+        .ant-tabs-tab-btn {
+        display: flex;
+        align-items: center;
+        gap: 0 6px;
+      }
+      // 100vh - modalHeader - modalFooter - paddingModalBody
+      height: calc(100vh - 190px);
+    }
+
+    .rent-manager-issue-popup-header {
+      .size-icon {
+        width: 106px;
+        height: 20px;
+      }
+    }
+
+    .rent-manager-issue-popup-footer {
+      .info-status {
+        white-space: nowrap;
+
+        span {
+          @include fontSetup(var(--bg-overlay-dark), 12px, 20px, normal, 500);
+          margin-left: 4px;
+        }
+      }
+
+      img {
+        margin-right: 0.5rem;
+      }
+
+      .sync-icon {
+        height: 1.6rem;
+        width: 1.6rem;
+      }
+
+      .spin {
+        -webkit-animation: spin 4s linear infinite;
+        -moz-animation: spin 4s linear infinite;
+        animation: spin 4s linear infinite;
+      }
+
+      .footer-wrapper {
+        .button-back {
+          border-radius: 8px;
+          border: 1px solid var(--border-neutral-dark, #d8dcdf);
+          background: var(--bg-base, #fff);
+          min-width: 100px;
+          min-height: 40px;
+          padding: 0px 16px;
+          @include fontSetup(
+            var(--fg-neutral-stronger),
+            12px,
+            20px,
+            normal,
+            600
+          );
+          &:hover {
+            background: var(--bg-neutral-tonal-stronger, #e7eaed);
+          }
+          &:focus {
+            background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+          }
+        }
+      }
+    }
+
+    &:has(
+        general-information
+          .general-information-form-row-1
+          .general-information-form-item
+          trudi-form-control
+          .error-container
+      ),
+    &:has(
+        general-information
+          .general-information-form-row-2
+          .general-information-form-item
+          trudi-form-control
+          .error-container
+      ) {
+      work-order .work-order-wrapper nz-table.scrollable .ant-table-container {
+        max-height: calc(100vh - 492px);
+      }
+      issue-check-list
+        .trudi-table-wrapper
+        nz-table
+        nz-table-inner-scroll
+        .ant-table-body,
+      issue-history-notes
+        .trudi-table-wrapper
+        nz-table
+        nz-table-inner-scroll
+        .ant-table-body {
+        max-height: calc(100vh - 527px) !important;
+      }
+    }
+
+    &:has(
+        general-information
+          .general-information-form-row-1
+          .general-information-form-item
+          trudi-form-control
+          .error-container
+      ) {
+      &:has(
+          general-information
+            .general-information-form-row-2
+            .general-information-form-item
+            trudi-form-control
+            .error-container
+        ) {
+        work-order
+          .work-order-wrapper
+          nz-table.scrollable
+          .ant-table-container {
+          max-height: calc(100vh - 514px);
+        }
+        issue-check-list
+          .trudi-table-wrapper
+          nz-table
+          nz-table-inner-scroll.ant-table-container
+          .ant-table-body,
+        issue-history-notes
+          .trudi-table-wrapper
+          nz-table
+          nz-table-inner-scroll.ant-table-container
+          .ant-table-body {
+          max-height: calc(100vh - 549px) !important;
+        }
+      }
+    }
+  }
+}
+
+.trudi-btn-primary:disabled {
+  pointer-events: auto;
+  cursor: not-allowed;
+}

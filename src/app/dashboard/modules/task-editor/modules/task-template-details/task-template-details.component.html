@@ -1,0 +1,25 @@
+<div class="h-100">
+  <task-template-details-header
+    [disabled]="isDisable"
+    [canEdit]="canEdit"></task-template-details-header>
+  <task-template-details-content
+    [disabled]="isDisable"
+    [canEdit]="canEdit"></task-template-details-content>
+</div>
+
+<ng-container *ngIf="isShowPopupHelpDocument === PopUpEnum.PopupHelpDocument">
+  <help-document-popup
+    [currentHelpDocumentStepType]="selectedHelpDocumentStepType"
+    [visible]="isShowPopupHelpDocument === PopUpEnum.PopupHelpDocument"
+    [helpDocument]="helpDocument"
+    [helpDocumentTitle]="helpDocumentTitle"
+    (popupClosed)="handleClosePopup()">
+  </help-document-popup>
+</ng-container>
+
+<save-change-button
+  [isLoading]="isLoading"
+  [isError]="isError"
+  [isInvalidDynamicParam]="isInvalidDynamicParam"
+  [isErrorShaking]="isErrorShaking">
+</save-change-button>

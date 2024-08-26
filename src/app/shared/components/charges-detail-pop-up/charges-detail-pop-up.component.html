@@ -1,0 +1,288 @@
+<ng-container [ngSwitch]="chargeTypes">
+  <ng-container *ngSwitchCase="EChargeTypes.ONE_TIME_CHARGES">
+    <trudi-modal
+      [className]="'oneTimeChargePopup'"
+      [visible]="true"
+      type="default"
+      [closable]="true"
+      [modelWidth]="760"
+      [autoFocus]="false"
+      [okText]="'Save'"
+      (onCancel)="cancel()"
+      (onOk)="onSave()"
+      [cancelText]="'Back'">
+      <ng-template #headerModal>
+        <div class="header-wrap d-flex align-items-center">
+          <trudi-icon
+            [style]="{ 'width.px': 106, 'height.px': 20 }"
+            [icon]="'rentManager'"></trudi-icon>
+          <div class="title w-100 header-wrap-title">
+            <span>One-time charge details</span>
+          </div>
+        </div>
+      </ng-template>
+      <div class="recurring-charge-form" [formGroup]="chargeForm">
+        <div class="trudi-form-group mb-12">
+          <div class="trudi-form-control">
+            <div class="trudi-input-label">Charge type (required)</div>
+            <trudi-form-control
+              [checkSubmit]="!submitted"
+              [control]="chargeTypeControl">
+              <trudi-single-select
+                [virtualScroll]="true"
+                [items]="chargeTypeOptions"
+                bindLabel="name"
+                bindValue="id"
+                [clearable]="true"
+                [formControlName]="'type'"
+                [enableSearch]="true"
+                [searchFn]="customListSearchFn">
+                <ng-template
+                  trudi-option-tmp
+                  let-item="item"
+                  let-item$="item$"
+                  let-searchTerm="searchTerm">
+                  <div
+                    class="label-data d-flex align-items-center justify-content-between">
+                    <div class="d-flex flex-dir-column">
+                      <span class="flex-1 option-name">{{item.name}}</span>
+                      <span class="flex-1 option-description"
+                        >{{item.description}}</span
+                      >
+                    </div>
+                    <trudi-icon
+                      icon="checkSuccess"
+                      *ngIf="item.id === chargeTypeControl.value"
+                      [style]="{'width.px': 16, 'height.px': 20}"></trudi-icon>
+                  </div>
+                </ng-template>
+              </trudi-single-select>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div class="trudi-form-group mb-12">
+          <div class="trudi-form-control">
+            <div class="trudi-input-label">Date (required)</div>
+            <trudi-form-control
+              [checkSubmit]="!submitted"
+              [control]="dateControl">
+              <trudi-date-picker
+                [class.trudi-picker-error]="dateControl?.invalid && (dateControl?.dirty || dateControl?.touched) && submitted"
+                [defaultValue]="dateControl.value"
+                formControlName="date"
+                class="pointer">
+              </trudi-date-picker>
+            </trudi-form-control>
+          </div>
+          <div class="trudi-form-control">
+            <div class="trudi-input-label">Amount</div>
+            <trudi-form-control
+              [checkSubmit]="!submitted"
+              [control]="amountControl">
+              <trudi-number-field
+                [separatorLimit]="separatorLimitAmount"
+                [maskLeadZero]="true"
+                [maskPattern]="maskPattern"
+                [formControl]="amountControl"
+                thousandSeparatorType=","
+                prefixText="$"
+                size="large">
+              </trudi-number-field>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div class="trudi-form-group mb-12">
+          <div class="trudi-form-control">
+            <div class="trudi-input-label">Comment</div>
+            <trudi-form-control
+              [checkSubmit]="!submitted"
+              [control]="commentControl">
+              <trudi-textarea
+                [formControl]="commentControl"
+                [rows]="2"
+                [maxCharacter]="255"
+                [showCounting]="false"></trudi-textarea>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div class="trudi-form-group mb-12">
+          <div class="trudi-form-control">
+            <div class="trudi-input-label">Reference #</div>
+            <trudi-form-control
+              [checkSubmit]="!submitted"
+              [control]="referenceControl">
+              <trudi-textarea
+                [formControl]="referenceControl"
+                [rows]="1"
+                [maxCharacter]="25"
+                [showCounting]="false"></trudi-textarea>
+            </trudi-form-control>
+          </div>
+        </div>
+      </div>
+    </trudi-modal>
+  </ng-container>
+  <ng-container *ngSwitchDefault>
+    <trudi-modal
+      [className]="'recurringChargePopup'"
+      [visible]="true"
+      type="default"
+      [closable]="true"
+      [modelWidth]="760"
+      (onCancel)="cancel()"
+      (onOk)="onSave()"
+      [autoFocus]="false"
+      [okText]="'Save'"
+      [hiddenOkBtn]="chargeForm?.get('charge')?.value === EEntityType.PROPERTY || chargeForm?.get('charge')?.value === EEntityType.UNIT"
+      [cancelText]="'Back'">
+      <ng-template #headerModal>
+        <div class="header-wrap d-flex align-items-center">
+          <trudi-icon
+            [style]="{ 'width.px': 106, 'height.px': 20 }"
+            [icon]="'rentManager'"></trudi-icon>
+          <div class="title w-100 header-wrap-title">
+            <span>Recurring charge details</span>
+          </div>
+        </div>
+      </ng-template>
+      <div class="recurring-charge-form" [formGroup]="chargeForm">
+        <div class="trudi-form-group mb-12">
+          <div class="trudi-form-control">
+            <div class="trudi-input-label">Charge type (required)</div>
+            <trudi-form-control
+              [checkSubmit]="!submitted"
+              [control]="chargeTypeControl">
+              <trudi-single-select
+                [virtualScroll]="true"
+                [items]="chargeTypeOptions"
+                bindLabel="name"
+                bindValue="id"
+                [clearable]="true"
+                [formControlName]="'type'"
+                [enableSearch]="true"
+                [searchFn]="customListSearchFn">
+                <ng-template
+                  trudi-option-tmp
+                  let-item="item"
+                  let-item$="item$"
+                  let-searchTerm="searchTerm">
+                  <div
+                    class="label-data d-flex align-items-center justify-content-between">
+                    <div class="d-flex flex-dir-column">
+                      <span class="flex-1 option-name">{{item.name}}</span>
+                      <span class="flex-1 option-description"
+                        >{{item.description}}</span
+                      >
+                    </div>
+                    <trudi-icon
+                      icon="checkSuccess"
+                      *ngIf="item.id === chargeTypeControl.value"
+                      [style]="{'width.px': 16, 'height.px': 20}"></trudi-icon>
+                  </div>
+                </ng-template>
+              </trudi-single-select>
+            </trudi-form-control>
+          </div>
+          <div class="trudi-form-control">
+            <div class="trudi-input-label">Amount</div>
+            <trudi-form-control
+              nz-tooltip
+              [nzTooltipTitle]="amountControl?.disabled ? messageTooltip: ''"
+              [nzTooltipOverlayStyle]="{'max-width': '208px'}"
+              [nzTooltipVisible]="isShowAmountTooltip"
+              [checkSubmit]="!submitted"
+              [control]="amountControl">
+              <trudi-number-field
+                (mouseenter)="isShowAmountTooltip=true"
+                (mouseleave)="isShowAmountTooltip=false"
+                [checkSubmit]="!submitted"
+                [maskLeadZero]="true"
+                [separatorLimit]="separatorLimitAmount"
+                [maskPattern]="maskPattern"
+                thousandSeparatorType=","
+                [formControl]="amountControl"
+                prefixText="$"
+                size="large">
+              </trudi-number-field>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div class="trudi-form-group mb-12">
+          <div class="trudi-form-control">
+            <div class="trudi-input-label">Calculation</div>
+            <trudi-form-control
+              nz-tooltip
+              [nzTooltipTitle]="calculationControl?.disabled ? messageTooltip: ''"
+              [nzTooltipOverlayStyle]="{'max-width': '208px'}"
+              [nzTooltipVisible]="isShowCalculationTooltip"
+              [checkSubmit]="!submitted"
+              [control]="calculationControl">
+              <trudi-textarea
+                (mouseenter)="isShowCalculationTooltip=true"
+                (mouseleave)="isShowCalculationTooltip=false"
+                [formControl]="calculationControl"
+                [rows]="2"
+                [maxCharacter]="2000"
+                [showCounting]="false"></trudi-textarea>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div class="trudi-form-group mb-12">
+          <div class="trudi-form-control">
+            <div class="trudi-input-label">Frequency</div>
+            <trudi-form-control
+              [checkSubmit]="!submitted"
+              [control]="frequencyControl">
+              <trudi-number-field
+                [maxCharacter]="4"
+                [maskPattern]="maskPatternFrequency"
+                [formControl]="frequencyControl"
+                size="large">
+              </trudi-number-field>
+            </trudi-form-control>
+          </div>
+          <div class="trudi-form-control">
+            <div class="trudi-input-label">From</div>
+            <trudi-form-control
+              [checkSubmit]="!submitted"
+              [control]="fromControl">
+              <trudi-date-picker
+                [class.trudi-picker-error]="fromControl.invalid && (fromControl.dirty || fromControl.touched) && submitted"
+                formControlName="fromDate"
+                [defaultValue]="fromControl.value"
+                class="pointer">
+              </trudi-date-picker>
+            </trudi-form-control>
+          </div>
+          <div class="trudi-form-control">
+            <div class="trudi-input-label">To</div>
+            <trudi-form-control
+              [checkSubmit]="!submitted"
+              [control]="toControl">
+              <trudi-date-picker
+                [class.trudi-picker-error]="toControl.invalid && (toControl.dirty || toControl.touched) && submitted"
+                [defaultValue]="toControl.value"
+                formControlName="toDate"
+                class="pointer">
+              </trudi-date-picker>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div class="trudi-form-group mb-12">
+          <div class="trudi-form-control">
+            <div class="trudi-input-label">Comment</div>
+            <trudi-form-control
+              [checkSubmit]="!submitted"
+              [control]="commentControl">
+              <trudi-textarea
+                [formControl]="commentControl"
+                [rows]="2"
+                [maxCharacter]="2000"
+                [showCounting]="false"></trudi-textarea>
+            </trudi-form-control>
+          </div>
+        </div>
+      </div>
+    </trudi-modal>
+  </ng-container>
+</ng-container>

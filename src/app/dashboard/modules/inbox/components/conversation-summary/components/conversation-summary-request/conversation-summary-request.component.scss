@@ -1,0 +1,234 @@
+@import 'function';
+
+.request-conversation-summary {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-neutral-dark, #ececed);
+    background-color: #FFFFFF;
+
+    .content-detail {
+      display: flex;
+      flex-direction: column;
+
+      .title-type-request {
+        @include fontSetup(
+          var(--fg-neutral-weaker, #85888e),
+          12px,
+          16px,
+          normal,
+          400
+        );
+        white-space: nowrap;
+      }
+
+      .content-type-request {
+        @include fontSetup(
+          var(--fg-neutral-stronger, #333741),
+          12px,
+          16px,
+          normal,
+          400
+        );
+        word-break: break-word;
+      }
+    }
+
+    .request-row-image {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      ::ng-deep app-message-file {
+        .attachment-message, .message-file, img {
+          border-radius: 4px;
+        }
+      }
+      &-item {
+        width: 44px;
+        height: 44px;
+        border-radius: 4px;
+        overflow: hidden;
+        position: relative;
+      }
+      &-dark-overlay {
+        width: 44px;
+        height: 44px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        right: 0;
+        background-color: rgba(51, 55, 65, 0.7);
+        cursor: pointer;
+        &-text {
+          @include fontSetup(
+            var(--fg-base, #FFFFFF),
+            16px,
+            24px,
+            normal,
+            500
+          );
+        }
+      }
+    }
+
+    .body-maintenance-request {
+      display: flex;
+      gap: 24px;
+      justify-content: space-between;
+
+      .content-maintenance-request{
+        @include fontSetup(
+          var(--fg-neutral-normal, #61646c),
+          12px,
+          16px,
+          normal,
+          400
+        );
+      }
+
+      .general-request-info-details{
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .image-general-request {
+        cursor: pointer;
+        border-radius: 4px;
+        width: 44px;
+        min-width: 44px;
+        height: 44px;
+        min-height: 44px;
+        overflow: hidden;
+        position: relative;
+      }
+    }
+
+    ::ng-deep button-action .footer-btn-action button {
+      padding: 4px 8px;
+      font-size: 12px;
+      line-height: 16px;
+      font-weight: 600;
+      height: 24px;
+    }
+
+    ::ng-deep nz-timeline.activity-line {
+      .ant-timeline {
+        .ant-timeline-item {
+          padding-bottom: 8px;
+          .ant-timeline-item-content {
+            margin-left: 15px;
+            top: -6px;
+          }
+          .ant-timeline-item-head {
+            background-color: var(--border-neutral-darker, #CECFD2);
+            width: 6px;
+            height: 6px;
+          }
+  
+          .ant-timeline-item-tail {
+            left: 2px;
+            top: 6px;
+            height: calc(100% - 6px);
+          }
+        }
+        &::ng-deep .linked_task{
+          &--button {
+            &:hover{
+              color: var(--brand-600);
+              text-decoration: underline;
+            }
+            &:active{
+              color: var(--brand-700);
+              text-decoration: underline;
+            }
+          }
+        }
+
+        &:not(:last-child) {
+          &::ng-deep .linked_task {
+            margin-bottom: 8px;
+          }
+        }
+        &::ng-deep .linked_task {
+          line-height: 16px;
+        }
+      }
+    }
+
+    .conversation-summary-request-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding-top: 8px;
+    }
+
+    .activity-line-wrapper {
+      padding-top: 8px;
+    }
+
+    &::ng-deep .language-original-content language-original-content {
+      .original-content {
+        border-left: 2px solid var(--border-neutral-dark, #d8dcdf) !important;
+        margin-top: 0px !important;
+      }
+  
+      .original-content-text {
+        @include fontSetup(
+          var(--fg-neutral-normal, #61646c) !important,
+          12px,
+          16px,
+          italic,
+          400
+        );
+      }
+  
+      button {
+        color: var(--fg-brand, #28ad99);
+        margin-top: 0;
+      }
+    }
+
+    .ticket-request-card-header-info {
+      display: flex;
+      flex-direction: column;
+      &-title {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        @include fontSetup(var(--fg-neutral-stronger, #333741), 14px, 20px, normal, 600);
+        white-space: nowrap;
+      }
+      &-status {
+        @include fontSetup(var(--fg-neutral-weaker, #85888E), 12px, 16px, normal, 500);
+      }
+    }
+  }
+
+.ant-dropdown-menu-item:not(:first-child) {
+    border-top: 1px solid var(--border-neutral-dark, #ECECED);
+  }
+  
+  .action-item {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+    border: none;
+
+    &:disabled {
+      pointer-events: unset !important;
+    }
+
+    & p {
+      font-size: 14px;
+      font-weight: 500;
+      text-align: left;
+      color: var(--fg-neutral-stronger, #333741);
+      margin: 0;
+      padding: 0;
+    }
+  }

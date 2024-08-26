@@ -1,0 +1,36 @@
+<trudi-modal
+  *ngIf="visible"
+  [(visible)]="visible"
+  [modelWidth]="483"
+  [autoFocus]="null"
+  (onCancel)="onCancel()"
+  (onOk)="onOk()"
+  title="Custom hours to switch on Voicemail"
+  [subTitle]="subTitle"
+  [closable]="false"
+  [disableOkBtn]="isUpdatingVoicemailSetting"
+  className="custom-hours-voicemail">
+  <div [formGroup]="voicemailForm">
+    <div formArrayName="days">
+      <div *ngFor="let day of dayForms; let i = index">
+        <div class="custom-hours">
+          <label class="custom-hours-label"
+            >{{ daysOfWeek[i] | titlecase }}</label
+          >
+          <range-time-picker
+            customLabel="--:--"
+            (onChange)="setTime(i,$event)"
+            [startHourd]="day.get('startTime')?.value"
+            [endHourd]="day.get('endTime')?.value">
+          </range-time-picker>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    *ngIf="hasError && checkSubmit"
+    class="error-margin error-container d-flex align-items-center gap-4">
+    <trudi-icon icon="iconWarning"></trudi-icon>
+    <div class="error-text">Set time before saving</div>
+  </div>
+</trudi-modal>

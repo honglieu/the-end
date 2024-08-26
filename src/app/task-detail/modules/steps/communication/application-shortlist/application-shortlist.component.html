@@ -1,0 +1,24 @@
+<trudi-step
+  [model]="model"
+  [showIconTitle]="false"
+  [hideProcessLine]="false"
+  [propertyTreeStep]="false"
+  [buttonKey]="buttonKey"
+  (onProcess)="enableProcess()"></trudi-step>
+<leasing-landlord-applications-shortlist-popup
+  [modalId]="modalId"
+  [titleModal]="titleModal"
+  [isShowLandlordApplicationShortList]="popupState.isShowApplicationShortList"
+  (closePopup)="handleCloseApplicationShortListPopup($event);"
+  [isRequiredApplicationField1]="isRequiredApplicationField1"
+  [hasBackButton]="hasConfirmEssential"
+  (onBack)="onBack()">
+</leasing-landlord-applications-shortlist-popup>
+<!-- <trudi-send-msg-v2
+  *ngIf="popupState.isTrudiSendMessage"
+  [rawMsg]="textForwardMessg"
+  [configs]="sendMessageConfigs"
+  (onQuit)="onQuit()"
+  [listOfFiles]="model?.fields?.files || []"
+  (onBack)="handlePopupState({ isShowApplicationShortList: true, isTrudiSendMessage: false })"
+  (onSendMsg)="onSendMsg($event)"></trudi-send-msg-v2> -->

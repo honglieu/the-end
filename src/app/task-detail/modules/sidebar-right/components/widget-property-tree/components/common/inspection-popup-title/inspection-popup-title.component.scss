@@ -1,0 +1,47 @@
+@import 'function';
+
+:host {
+  width: 100%;
+
+  .inspection-action-btn {
+    height: 24px;
+    @include fontSetup(
+      var(--fg-neutral-normal, #61646c),
+      12px,
+      16px,
+      normal,
+      600
+    );
+  }
+
+  .charge-default-fee {
+    padding: 8px 12px;
+  }
+}
+
+.charge-default-fee-container {
+  background: var(--bg-base);
+  border-radius: 8px;
+  width: 300px;
+  box-shadow: 0px 14px 36px 0px rgba(0, 0, 0, 0.1294117647),
+    0px 2px 12px 0px rgba(0, 0, 0, 0.0784313725);
+
+  .charge-default-fee__form {
+    padding: 8px 12px;
+
+    ::ng-deep .checkbox-label {
+      @include fontSetup(
+        var(--fg-neutral-normal, #61646c),
+        14px,
+        20px,
+        normal,
+        500
+      );
+    }
+  }
+
+  .charge-default-fee__actions {
+    border-top: 1px solid var(--border-neutral-dark);
+    padding: 12px;
+  }
+}

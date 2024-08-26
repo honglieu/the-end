@@ -1,0 +1,33 @@
+@import 'function';
+
+:host::ng-deep {
+  .conversation-label {
+    @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 600);
+  }
+
+  .label-wrapper {
+    .required-checkbox {
+      .trudi-checkbox label.trudi-checkbox .label-text {
+        @include fontSetup(
+          var(--fg-neutral-strongest, #202020),
+          14px,
+          20px,
+          normal,
+          400
+        );
+      }
+    }
+  }
+  .conversation-form {
+    display: flex;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border-neutral-dark, #d8dcdf);
+
+    .trudi-ui-text-field-label {
+      color: var(--gray-500) !important;
+      font-size: 12px !important;
+      font-weight: 400 !important;
+    }
+  }
+}

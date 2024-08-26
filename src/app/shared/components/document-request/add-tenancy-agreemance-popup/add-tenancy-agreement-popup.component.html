@@ -1,0 +1,74 @@
+<trudi-modal
+  *ngIf="show"
+  [(visible)]="show"
+  [modelWidth]="624"
+  [subTitle]="''"
+  [title]="'Would you like to attach files?'"
+  [autoFocus]="null"
+  (onCancel)="onCloseModal()"
+  iconName="trudiAvt"
+  [showIconName]="false">
+  <div class="tenancy-agreement-wrapper">
+    <div class="body">
+      <div
+        class="dropzone d-flex flex-dir-column align-items-center"
+        appDnd
+        (filesDropped)="onFilesDropped($event)">
+        <input
+          data-e2e="dr-upload-area"
+          type="file"
+          onfocus="this.value=''"
+          #fileDropAddTenancyAgreementRef
+          id="fileDropAddTenancyAgreementRef"
+          class="no-opacity cursor-pointer"
+          (change)="fileBrowseHandler($event)" />
+        <img src="assets/icon/upload-cloud.svg" alt="" />
+        <div class="text-center">
+          Drag and Drop here <br />
+          or
+        </div>
+        <label
+          for="fileDropRef"
+          class="text-browse no-margin-bottom cursor-pointer"
+          >Browse files</label
+        >
+        <div class="text-file-only-pdf">(max. 25MB)</div>
+      </div>
+      <div class="warning text-center" *ngIf="overFileSize">
+        Your file is larger than 25MB.
+        <br />
+        Please upload a smaller file.
+      </div>
+      <div class="warning text-center" *ngIf="!isValidFileUploadType">
+        Unsupported file type
+      </div>
+      <div *ngIf="filesSelected && filesSelected.length" class="files">
+        <ng-container *ngFor="let file of filesSelected; let idx = index">
+          <div class="file-item d-flex align-items-center">
+            <img
+              class="file-type-icon"
+              src="assets/images/icons/{{ file.icon }}" />
+            <div class="file-item-body">
+              <div class="file-name text-ellipsis">{{file.name}}</div>
+              <div class="file-size">{{file.size | convertFileSize}}</div>
+            </div>
+            <div class="delete-btn cursor-pointer" (click)="removeFile(idx)">
+              <img src="/assets/icon/small-close-black.svg" alt="remove-file" />
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <ng-template #footerModal>
+      <div class="d-flex justify-content-end">
+        <button
+          data-e2e="dr-upload-next-btn"
+          type="button"
+          class="trudi-btn trudi-btn-large trudi-btn-primary d-flex align-items-center"
+          (click)="onNext()">
+          Next
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</trudi-modal>

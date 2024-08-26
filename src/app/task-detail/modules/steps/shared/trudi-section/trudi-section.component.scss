@@ -1,0 +1,38 @@
+@import 'function';
+
+:host {
+  & {
+    ::ng-deep {
+      display: block;
+      margin-bottom: 4px;
+      .trudi-suggested-step-group-container {
+        margin-top: 4px;
+      }
+      .trudi-suggested-step-group-title {
+        display: flex;
+        align-items: center;
+        column-gap: 4px;
+        padding-bottom: 4px;
+
+        .group-title-icon {
+          width: 12px;
+          height: 2px;
+          background-color: var(--gray-600);
+        }
+
+        .group-title {
+          text-transform: uppercase;
+          @include fontSetup(var(--gray-600), 1.2rem, 1.6rem, normal, 600);
+        }
+      }
+      .section-chevron {
+        display: flex;
+        align-items: center;
+        transition: 200ms ease-in-out;
+        &.collapse {
+          transform: rotate(-90deg);
+        }
+      }
+    }
+  }
+}

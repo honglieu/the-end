@@ -1,0 +1,53 @@
+<div class="efficiency-section-wrapper">
+  <div class="section-title">Efficiency</div>
+  <div class="chart-wrapper" id="chart-section">
+    <chart-wrapper
+      chartTitle="Average number of {{propertyTextByCountry}} per team member"
+      chartNote="* Hold Ctrl and scroll to zoom in/out">
+      <div class="d-flex gap-12">
+        <trudi-select-dropdown
+          [clearable]="false"
+          [(ngModel)]="currentChartType"
+          [items]="LIST_CHART_TYPE"
+          bindLabel="label"
+          bindValue="value"
+          (valueChange)="onHandleChangeChartType($event)"></trudi-select-dropdown>
+        <trudi-select-dropdown
+          [clearable]="false"
+          [(ngModel)]="currentPeriodType"
+          bindLabel="label"
+          bindValue="value"
+          [items]="LIST_PERIOD_TYPE"
+          (valueChange)="onHandleChangePeriodType($event)"></trudi-select-dropdown>
+      </div>
+      <div
+        *ngIf="listEfficiencies | shouldShowChartPipe : 'propertyActive';else noChartFoundTemplate">
+        <div [ngSwitch]="currentChartType">
+          <div *ngSwitchCase="EChartType.LINE" class="chart-line-wrapper">
+            <trudi-line-chart
+              [config]="lineChartConfig"
+              [tooltipTemplate]="tooltipTemplate"></trudi-line-chart>
+          </div>
+          <div *ngSwitchCase="EChartType.BAR">
+            <bar-chart
+              [config]="barChartConfig"
+              [tooltipTemplate]="tooltipTemplate"></bar-chart>
+          </div>
+        </div>
+      </div>
+      <ng-template #noChartFoundTemplate>
+        <div class="no-data-available">
+          <div>No data available</div>
+        </div>
+      </ng-template>
+    </chart-wrapper>
+  </div>
+</div>
+<ng-template #tooltipTemplate>
+  <div class="default-tooltip tooltip-wrapper">
+    <div class="default-tooltip--date">tooltip_date</div>
+    <div class="default-tooltip--property">tooltip_property</div>
+    <div class="default-tooltip--data">tooltip_data</div>
+    <div class="default-tooltip--trend">tooltip_data_percent</div>
+  </div>
+</ng-template>

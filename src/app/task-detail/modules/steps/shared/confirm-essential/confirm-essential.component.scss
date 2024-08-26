@@ -1,0 +1,48 @@
+@import 'function';
+
+::ng-deep {
+  nz-modal-container
+    .modal-confirm-essential.confirm-essential
+    .ant-modal-body {
+    overflow-y: auto;
+    max-height: calc(100vh - 446px);
+  }
+
+  .modal-position-center .modal-window {
+    height: auto !important;
+  }
+
+  .wrapper-footer-confirm-essential {
+    padding: 20px 24px;
+    gap: 12px;
+    display: flex;
+    background: transparent;
+    border-top: 1px solid var(--gray-100);
+    border-radius: 0 0 8px 8px;
+  }
+
+  .modal-confirm-essential .modal-popup-content {
+    overflow-y: unset !important;
+  }
+
+  .confirm-essential {
+    padding: 20px 24px;
+    .title-confirm-essential p {
+      margin: 0;
+      @include fontSetup(
+        var(--fg-neutral-normal, #646464),
+        14px,
+        20px,
+        normal,
+        400
+      );
+    }
+
+    .add-new-supplier-wrapper
+      .essential-control
+      .no-value-selected
+      .ng-clear-wrapper {
+      display: none;
+    }
+  }
+}

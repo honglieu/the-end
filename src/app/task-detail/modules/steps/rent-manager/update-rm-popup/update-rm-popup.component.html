@@ -1,0 +1,55 @@
+<trudi-modal
+  [type]="type"
+  [(visible)]="visible"
+  [autoFocus]="null"
+  (onCancel)="handleCloseModal()">
+  <ng-template #headerModal>
+    <div class="select-update-rm-wrapper">
+      <div class="header">
+        <div
+          class="detail-invite d-flex justify-content-between align-items-center">
+          <div class="send-invite-icon">
+            <div
+              class="background-icon d-flex align-items-center justify-content-around">
+              <trudi-icon
+                [style]="{ 'width.px': 106, 'height.px': 20 }"
+                [icon]="'rentManager'"></trudi-icon>
+            </div>
+          </div>
+          <div class="send-invite-text d-flex align-items-center">
+            <p>Update {{titleRM}}</p>
+          </div>
+          <div class="close-btn"></div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <div class="select-note-body">
+    <div class="select-form-wrapper" [formGroup]="selectRMRequest">
+      <div class="form-select-wrapper form-distance">
+        <trudi-form-control>
+          <trudi-single-select
+            [label]="'Select ' + titleRM"
+            [loading]="loadingState.listExistTask"
+            bindValue="id"
+            bindLabel="label"
+            formControlName="selectExistUpdateRM"
+            [items]="listSelect"
+            [enableSearch]="true"
+            [notFoundText]="notFoundItemText"
+            [clearable]="false"></trudi-single-select>
+        </trudi-form-control>
+      </div>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div
+      class="wrapper-footer-notes-update d-flex align-items-center justify-content-end">
+      <button
+        (click)="handleNext()"
+        class="trudi-btn trudi-btn-large trudi-btn-primary">
+        Next
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

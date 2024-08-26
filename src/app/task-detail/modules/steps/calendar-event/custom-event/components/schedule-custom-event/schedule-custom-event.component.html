@@ -1,0 +1,96 @@
+<resizable-modal-popup
+  *ngIf="showModal?.isShow && isStep"
+  [show]="showModal?.isShow"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [title]="'Schedule calendar event'"
+  [footerTemplate]="footerModal"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  (onCancel)="handleClose()"
+  [isCustomMoveable]="true">
+  <ng-container [ngTemplateOutlet]="scheduleCustomEvent"></ng-container>
+</resizable-modal-popup>
+
+<trudi-modal
+  [title]="'Schedule calendar event'"
+  [visible]="showModal?.isShow && !isStep"
+  [autoFocus]="false"
+  [hiddenCancelBtn]="true"
+  (onCancel)="handleClose()"
+  (onOk)="handleSaveOrEdit()"
+  [disableOkBtn]="isDisabled">
+  <ng-container [ngTemplateOutlet]="scheduleCustomEvent"> </ng-container>
+</trudi-modal>
+
+<ng-template #scheduleCustomEvent>
+  <div
+    class="content-modal"
+    [ngStyle]="{ 'padding': isStep ? '20px 24px' : 0 }">
+    <div [formGroup]="customEventForm">
+      <trudi-form-control
+        [control]="eventNameControl"
+        [checkSubmit]="!isSubmitForm">
+        <trudi-text-field
+          [checkSubmit]="!isSubmitForm"
+          label="Event name"
+          [formControl]="eventNameControl"
+          maxCharacter="75"
+          [disabled]="isDisabled">
+        </trudi-text-field>
+      </trudi-form-control>
+      <div class="d-flex justify-content-between mt-24 gap-12">
+        <div class="d-flex flex-dir-column flex-1">
+          <label class="trudi-input-label">Date</label>
+          <trudi-form-control [control]="eventDateControl">
+            <trudi-date-picker
+              class="w-100"
+              [trudiPlaceHolder]="(dateFormatPipe$ | push)"
+              formControlName="date"
+              [trudiDisabledDate]="disabledPastDate"
+              [trudiDisabled]="isDisabled"
+              [class.trudi-picker-error]="eventDateControl?.invalid && eventDateControl?.touched && eventDateControl?.errors">
+            </trudi-date-picker>
+          </trudi-form-control>
+        </div>
+        <div class="d-flex flex-dir-column flex-1">
+          <label class="trudi-input-label">Time</label>
+          <trudi-form-control
+            [control]="eventTimeControl"
+            [errors]="[
+            {
+              errorMessage: 'Invalid time',
+              errorName: 'invalidRangeTime'
+            }
+          ]">
+            <time-picker
+              formControlName="time"
+              (onChangeHour)="handleChangeEndHour($event)"
+              label="--:--"
+              class="entry-time"
+              [rangeFrom]="timeFrom"
+              [rangeTo]="86400"
+              [isTo]="true"
+              [customClass]="'sizeDropdown'"
+              [hasError]="eventTimeControl?.invalid && eventTimeControl?.touched && eventTimeControl?.errors"
+              [class.trudi-time-picker-error]="isSubmitForm && eventTimeControl?.invalid && eventTimeControl?.touched && eventTimeControl?.errors"
+              [disableTimeChange]="isDisabled"
+              [ngClass]="{'fieldDisable': isDisabled, 'field-had-submitted': isSubmitForm}">
+            </time-picker>
+          </trudi-form-control>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footerModal>
+  <div class="d-flex gap-12 modal-footer">
+    <button [disabled]="isDisabled" trudi-btn (click)="handleSaveOrEdit()">
+      Confirm
+    </button>
+  </div>
+</ng-template>

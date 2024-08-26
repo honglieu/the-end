@@ -1,0 +1,356 @@
+@import 'function';
+:host ::ng-deep trudi-badge {
+  max-width: max-content !important;
+}
+
+:host ::ng-deep .trudi-checkbox span {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+@mixin base-step-state(
+  $color,
+  $bgDefault,
+  $bgHover,
+  $bgActive,
+  $bgSelect,
+  $defaultOpacity: 0.5,
+  $hoverOpacity: 1
+) {
+  background-color: $bgDefault;
+  color: $color;
+  opacity: $defaultOpacity;
+  &:hover {
+    background-color: $bgHover;
+    --line-color: var(--border-neutral-darker, #cecfd2);
+    opacity: $hoverOpacity;
+  }
+
+  &:active {
+    background-color: $bgActive;
+    --line-color: var(--border-neutral-darker, #cecfd2);
+    opacity: $hoverOpacity;
+  }
+
+  &.selected {
+    background-color: $bgSelect;
+    opacity: $hoverOpacity;
+  }
+
+  &.ignored:not(:hover) {
+    color: var(--fg-neutral-stronger);
+    .trudi-step-title,
+    .reminder-times,
+    ::ng-deep trudi-icon path {
+      opacity: 0.35;
+    }
+    .trudi-step-title {
+      color: var(--fg-neutral-stronger);
+    }
+  }
+}
+
+:host {
+  & {
+    .trudi-step-container {
+      position: relative;
+      display: flex;
+      cursor: pointer;
+      padding: 0px 8px;
+      align-items: center;
+      --line-color: var(--border-neutral-dark, #ececed);
+      border-radius: 4px;
+      .console-user {
+        pointer-events: none;
+      }
+
+      .cta-dock {
+        position: absolute;
+        display: none;
+        right: 8px;
+        height: 100%;
+        align-items: center;
+      }
+
+      &:hover,
+      &:has(cta-buttons.active) {
+        .cta-dock {
+          display: flex;
+        }
+      }
+
+      ::ng-deep trudi-checkbox {
+        position: relative;
+        cursor: pointer;
+        &.pending {
+          opacity: 0.6;
+        }
+        label.trudi-checkbox {
+          padding: 2px 0 0;
+        }
+
+        label.trudi-checkbox span:first-child {
+          &:hover {
+            background: var(--bg-neutral-tonal-stronger, #e7eaed);
+          }
+          &:focus-visible {
+            background: var(--bg-neutral-focus-hover, #e7eaed);
+          }
+        }
+      }
+
+      .trudi-step-content {
+        width: 100%;
+        padding: 8px 0 8px 4px;
+        position: relative;
+
+        &:hover {
+          color: var(-light-gray-color);
+        }
+
+        .required-badge {
+          ::ng-deep trudi-badge {
+            word-break: unset;
+          }
+        }
+
+        .trudi-step-title {
+          width: fit-content;
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 4px;
+          p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            @include fontSetup(
+              inherit,
+              1.4rem !important,
+              2rem !important,
+              normal,
+              400 !important
+            );
+            ::ng-deep trudi-icon {
+              display: inline-block;
+            }
+
+            span {
+              position: relative;
+            }
+          }
+
+          span {
+            &:focus-visible {
+              border: 2px solid var(--brand-500);
+              // box-shadow: inset 0px 0px 0px 1px var(--brand-500), 0px 0px 0px 2px rgba(var(--brand-500-rgb), 0.6) !important;
+              border-radius: 4px;
+            }
+          }
+        }
+
+        .trudi-step-description {
+          .image-property-tree {
+            margin-top: 4px;
+          }
+          ::ng-deep trudi-badge {
+            margin-top: 4px;
+            height: fit-content;
+          }
+          .attachment-file {
+            display: flex;
+            .attachment {
+              margin-top: 4px;
+              gap: 4px;
+              border-radius: 24px;
+              padding: 4px 8px 4px 6px;
+              background-color: var(--gray-200);
+              display: flex;
+              align-items: center;
+              .attachment-count {
+                @include fontSetup(var(--gray-500), 12px, 16px, normal, 600);
+              }
+            }
+          }
+        }
+      }
+      .icon-wrapper {
+        height: 40px;
+        display: flex;
+        align-items: center;
+        background-color: inherit;
+        position: relative;
+        .next-step-marker {
+          position: absolute;
+          left: -6px;
+          top: 0;
+          transform: translateY(calc(-50% + 20px));
+        }
+      }
+      trudi-icon {
+        background-color: inherit;
+        position: relative;
+        z-index: 1;
+      }
+
+      @include base-step-state(
+        var(--fg-neutral-weaker, #85888e),
+        var(--bg-base),
+        var(--bg-neutral-tonal-stronger, #f0f1f1),
+        var(--bg-neutral-tonal-strongest, #ececed),
+        var(--bg-neutral-tonal-stronger, #f0f1f1),
+        1
+      );
+
+      &.not-completed {
+        @include base-step-state(
+          var(--fg-neutral-stronger, #3d3d3d),
+          var(--bg-base),
+          var(--bg-neutral-tonal-stronger, #f0f1f1),
+          var(--bg-neutral-tonal-strongest, #ececed),
+          var(--bg-neutral-tonal-stronger, #f0f1f1),
+          1
+        );
+      }
+
+      &.disabled {
+        @include base-step-state(
+          var(--fg-neutral-stronger, #3d3d3d),
+          var(--bg-base),
+          var(--bg-neutral-tonal-stronger, #f0f1f1),
+          var(--bg-neutral-tonal-strongest, #ececed),
+          var(--bg-neutral-tonal-stronger, #f0f1f1),
+          0.5,
+          1
+        );
+        --line-color: var(--border-neutral-darker, #cecfd2);
+      }
+
+      &.ignored {
+      }
+
+      &:hover .reddot-container {
+        background-color: var(--bg-neutral-tonal-stronger);
+      }
+    }
+  }
+
+  &:hover {
+    &:not(.trudi-step-disabled) {
+      .trudi-step-container {
+        .trudi-step-content {
+          opacity: 1;
+
+          .trudi-step-title {
+            p {
+              @include fontSetup(
+                var(-light-gray-color),
+                1.4rem,
+                2rem,
+                normal,
+                400
+              );
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &:active {
+    &:not(.trudi-step-disabled) {
+      .trudi-step-container {
+        .trudi-step-content {
+          opacity: 1;
+
+          .trudi-step-title {
+            p {
+              @include fontSetup(
+                var(-header-dark-gray),
+                1.4rem,
+                2rem,
+                normal,
+                400
+              );
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &.trudi-step-disabled {
+    .trudi-step-container {
+      user-select: none;
+      .trudi-step-content {
+        .trudi-step-title {
+          text-decoration: unset !important;
+          .required-badge {
+            opacity: 0.5 !important;
+          }
+        }
+        .trudi-step-description {
+          opacity: 0.5 !important;
+        }
+      }
+    }
+  }
+
+  &.hide-process-line {
+    .trudi-step-container {
+      &::after {
+        display: none;
+      }
+
+      .trudi-step-content {
+        padding-bottom: 0;
+      }
+    }
+  }
+}
+
+.icon-success {
+  color: var(--bg-success-solid-default, #40c174);
+
+  &-disabled {
+    color: var(--fg-neutral-weakest);
+  }
+}
+
+.reddot-container {
+  width: 10px;
+  height: 10px;
+  background-color: var(--border-base);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 2;
+  top: 7px;
+  right: 0px;
+
+  .reddot-icon {
+    width: 6px;
+    height: 6px;
+    background-color: var(--fg-danger);
+    border-radius: 50%;
+  }
+}
+
+.section-accordion {
+  margin-top: 12px;
+}
+
+::ng-deep .selected .trudi-step-container {
+  @include base-step-state(
+    var(--fg-neutral-stronger, #3d3d3d) !important,
+    var(--bg-neutral-tonal-strongest, #ececed) !important,
+    var(--bg-neutral-tonal-stronger, #f0f1f1) !important,
+    var(--bg-neutral-tonal-strongest, #ececed) !important,
+    var(--bg-neutral-tonal-stronger, #f0f1f1) !important,
+    1
+  );
+  --line-color: var(--border-neutral-darker, #cecfd2) !important;
+}

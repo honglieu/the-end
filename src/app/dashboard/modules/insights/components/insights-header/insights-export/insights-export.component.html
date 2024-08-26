@@ -1,0 +1,47 @@
+<div class="insight-export-wrapper">
+  <nz-skeleton-element
+    *ngIf="isLoading; else exportBtn"
+    class="skeleton-element"
+    nzType="button"
+    [nzActive]="true"></nz-skeleton-element>
+  <ng-template #exportBtn>
+    <button
+      trudi-btn
+      size="medium"
+      btnType="neutral"
+      variant="outlined"
+      class=""
+      nz-dropdown
+      nzTrigger="click"
+      [nzDropdownMenu]="menu"
+      [class.dropdown-open]="visibleDropdown"
+      (nzVisibleChange)="handleVisibleChange($event)">
+      Export
+      <ng-template iconSuffix>
+        <trudi-icon
+          icon="grayChevronDown"
+          [style]="{width: '20px', height: '20px'}"></trudi-icon>
+      </ng-template>
+    </button>
+  </ng-template>
+
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <ul
+      nz-menu
+      class="email-export-menu"
+      focusElement
+      [isFocus]="visibleDropdown"
+      tabindex="0">
+      <ng-container *ngFor="let item of LIST_FILE_EXPORTS">
+        <li
+          nz-menu-item
+          tabindex="0"
+          class="email-export-item"
+          (click)="handleExport(item.type)"
+          (keydown.enter)="handleExport(item.type)">
+          {{item.label}}
+        </li>
+      </ng-container>
+    </ul>
+  </nz-dropdown-menu>
+</div>

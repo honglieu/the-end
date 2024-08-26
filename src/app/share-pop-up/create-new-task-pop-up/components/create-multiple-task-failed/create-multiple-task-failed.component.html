@@ -1,0 +1,53 @@
+<trudi-modal
+  [(visible)]="isShowTaskFailed"
+  [closable]="false"
+  [autoFocus]="null"
+  title="Failed to create task"
+  className="create-task-failed">
+  <ng-template #footerModal>
+    <div class="d-flex align-items-center gap-12">
+      <ng-container>
+        <button
+          trudi-btn
+          btnType="neutral"
+          variant="outlined"
+          [disabled]="isDisabled"
+          (click)="handleSkip()"
+          class="btn-skip-assign d-flex align-items-center gap-8">
+          Skip
+        </button>
+      </ng-container>
+      <button
+        trudi-btn
+        [disabled]="isDisabled"
+        (click)="handleTryAgain()"
+        class="btn-try-again d-flex align-items-center gap-8">
+        Try again
+      </button>
+    </div>
+  </ng-template>
+
+  <div class="d-flex flex-dir-column gap-12">
+    <div class="banner">
+      <trudi-icon [icon]="'errorInputIcon'" svgClass="size-24"></trudi-icon>
+      <div class="text-failed">These messages are failed to create task</div>
+    </div>
+    <div
+      class="list-task d-flex flex-dir-column gap-12"
+      *ngFor="let item of conversationFaileds; trackBy: trackByItems">
+      <div class="task-name">{{item.title}}</div>
+      <div class="d-flex gap-8 align-items-center w-100">
+        <div class="task-urgent" *ngIf="item?.isUrgent">Urgent</div>
+        <div class="property-name text-ellipsis w-100">
+          {{item?.streetline}}
+        </div>
+      </div>
+      <div class="d-flex gap-4 align-items-center w-100">
+        <trudi-icon
+          [icon]="item.messageComeFrom | inboxIcon"
+          svgClass="size-20"></trudi-icon>
+        <div class="message text-ellipsis w-100">{{item.textContent}}</div>
+      </div>
+    </div>
+  </div>
+</trudi-modal>

@@ -1,0 +1,97 @@
+<div class="ticket-request" [class.hide]="!item" #ticketRequest>
+  <div class="box" [formGroup]="ticketEditForm">
+    <div class="heading y-center">
+      <app-circle-avatar
+        [avatar]="item?.userCreateTicketAvatar"
+        userType="{{item?.type}}"
+        [size]="32"
+        style="margin-right: 6px"
+        [firstName]="item?.userCreateTicketFirstName"
+        [lastName]="item?.userCreateTicketLastName"
+        [userId]="item?.userId"
+        [attr.data-e2e]="(openFrom === 'trudi-area') ? 'avatar' : null"></app-circle-avatar>
+      <div>
+        <div
+          class="name"
+          [attr.data-e2e]="(openFrom === 'trudi-area') ? 'receiver-name' : null">
+          {{item?.userCreateTicketFirstName}} {{item?.userCreateTicketLastName}}
+        </div>
+        <div class="roles">{{item?.userCreateTicketTitle}}</div>
+      </div>
+    </div>
+    <ng-container
+      *ngIf="isEditing && openFrom === 'trudi-area'; else notEditDescription">
+      <textarea
+        formControlName="description"
+        class="description-input resize-none"
+        [ngClass]="{'error': getDescription.invalid}"
+        rows="5">
+      </textarea>
+    </ng-container>
+    <ng-template #notEditDescription>
+      <div
+        class="detail break-word"
+        [innerHTML]="description"
+        [attr.data-e2e]="(openFrom === 'trudi-area') ? 'message' : null"></div>
+    </ng-template>
+    <div
+      class="ticket-file"
+      *ngIf="item?.ticketFiles && item?.ticketFiles.length">
+      <div class="image-item" *ngFor="let image of item?.ticketFiles">
+        <app-message-file
+          [showBoxShadow]="false"
+          [grayBorder]="true"
+          [widthInPercent]="40"
+          [messageFile]="image.propertyDocument"
+          [size]="60"></app-message-file>
+      </div>
+    </div>
+    <div class="timing y-center ml-auto" style="margin-top: 8px">
+      <div
+        class="d-flex align-items-center"
+        [attr.data-e2e]="(openFrom === 'trudi-area') ? 'current-date' : null">
+        {{ item?.createdAt | formatTime: true | async }}
+        <svg><use xlink:href="#calendar" /></svg>
+        {{ item?.createdAt | formatDate | async }}
+      </div>
+      <div *ngIf="openFrom === 'trudi-area'">
+        <ng-container *ngIf="isEditing; else notEdit">
+          <div class="d-flex">
+            <div
+              class="img-circle cursor-pointer"
+              [ngClass]="{'disable-btn': getDescription.invalid}"
+              style="margin-right: 8px"
+              (click)="onSaveEdit()">
+              <img src="/assets/icon/confirm_edit_ticket.png" />
+            </div>
+            <div class="img-circle cursor-pointer" (click)="onCancelEdit()">
+              <img src="/assets/icon/cancel_icon_ticket.png" />
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #notEdit>
+          <div
+            (click)="openEdit()"
+            class="img-circle"
+            nz-tooltip
+            nzTooltipTitle="Add Note"
+            [attr.data-e2e]="(openFrom === 'trudi-area') ? 'ticket-edit-btn' : null">
+            <img src="/assets/icon/edit-ticket.png" class="cursor-pointer" />
+          </div>
+        </ng-template>
+      </div>
+    </div>
+    <outline-rounded-button
+      (click)="showSelectPeople(true, item)"
+      *ngIf="item?.options && openFrom === 'task-area'"
+      class="justify-content-center"
+      text="Forward to"
+      style="margin-top: 8px"
+      textMargin="0 0 0 8px">
+      <img
+        class="rd-icon"
+        src="/assets/icon/forward-small.svg"
+        alt="forward icon" />
+    </outline-rounded-button>
+  </div>
+</div>

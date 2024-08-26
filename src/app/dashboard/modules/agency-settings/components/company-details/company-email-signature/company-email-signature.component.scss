@@ -1,0 +1,153 @@
+@import 'function';
+
+:host {
+  .card-signature {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 16px;
+    .title-card-signature {
+      @include fontSetup(var(--gray-700), 20px, 32px, normal, 500);
+    }
+  }
+
+  .form-input-signature {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 8px;
+    min-height: 212px;
+    width: 100%;
+    height: auto;
+    .tab-card {
+      display: flex;
+      background-color: var(--bg-neutral-tonal-weaker, #FAFAFA);
+      width: 100%;
+      align-items: center;
+      padding: 8px;
+      border-top-right-radius: 8px;
+      border-top-left-radius: 8px;
+      .line {
+        width: 16px;
+        height: 0px;
+        border: 1px solid var(--gray-300);
+        transform: rotate(90deg);
+      }
+    }
+
+    .card-info {
+      ::ng-deep {
+        img {
+          max-width: none !important;
+        }
+      }
+
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 100%;
+      height: auto;
+      padding: 10px 12px 10px;
+      color: var(--gray-700);
+      .title-input {
+        @include fontSetup(
+          var(--fg-neutral-strongest),
+          14px,
+          16px,
+          normal,
+          600
+        );
+      }
+
+      .element-info {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      ::ng-deep editor {
+        overflow: auto;
+        max-height: 296px;
+        max-width: 568px;
+        .tox-tinymce {
+          border: none !important;
+        }
+      }
+    }
+  }
+  .card-info textarea {
+    width: 100%;
+    border: none;
+    min-height: 172px;
+    resize: none;
+  }
+  textarea::placeholder {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--gray-500);
+  }
+  .form-input-signature {
+    border: 1px solid var(--border-neutral-light);
+    background-color: var(--bg-neutral-tonal-weaker, #FAFAFA);
+  }
+  .form-input-signature.highlighted {
+    outline: 2px solid var(--brand-500) !important;
+    border: 1px solid var(--border-brand) !important;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    background-color: var(--white);
+    .card-info.highlighted {
+      background: var(--white);
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+  }
+  .form-input-signature.error {
+    border: 1px solid var(--border-danger) !important;
+    outline: 2px solid rgba(var(--danger-500-rgb), 0.6) !important;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    background-color: var(--white);
+  }
+  .bottom-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .bottom-card button {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    font-feature-settings: 'tnum' on, 'lnum' on;
+  }
+  .button-cancel {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px 12px;
+    gap: 8px;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    height: 32px;
+    color: var(--gray-600);
+  }
+
+  .button-save {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 12px;
+    gap: 8px;
+    height: 32px;
+    background: var(--bg-brand-solid-normal);
+    border-radius: 8px;
+    border: none;
+    color: var(--white);
+  }
+}

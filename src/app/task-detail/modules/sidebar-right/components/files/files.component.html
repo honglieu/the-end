@@ -1,0 +1,442 @@
+<app-modal-popup
+  *ngIf="isShowAddFileModal"
+  [appendBody]="true"
+  [show]="isShowAddFileModal"
+  [position]="popupModalPosition.right">
+  <app-add-document
+    (isCloseModal)="openAddFile($event)"
+    [editingFile]="selectedFileToEdit"
+    [show]="isShowAddFileModal"></app-add-document>
+</app-modal-popup>
+
+<app-modal-popup
+  *ngIf="isShowCarousel"
+  [transparent]="true"
+  [appendBody]="true"
+  [show]="isShowCarousel"
+  [position]="popupModalPosition.full_screen">
+  <app-images-carousel
+    *ngIf="isShowCarousel"
+    [open]="isShowCarousel"
+    [imageUrlList]="arrayImageCarousel"
+    [initialIndex]="initialIndex"
+    (showCarousel)="manageCarouselState($event)"
+    (showSelectPeoplePopup)="handleShowSelecPeoplePopup($event)"
+    (fileEmit)="handleFileEmit($event)"></app-images-carousel>
+</app-modal-popup>
+
+<app-modal-popup
+  *ngIf="isShowModalDeleteFile"
+  [show]="isShowModalDeleteFile"
+  [appendBody]="true"
+  [position]="popupModalPosition.center"
+  [specificWidth]="510">
+  <confirm-popup
+    [iconUrl]="'/assets/icon/icon-warning-red.svg'"
+    [backgroundRightBtn]="'var(--danger-500)'"
+    [titleText]="'Delete this file?'"
+    [subTexts]="['This will remove the file from the app.']"
+    [buttonLeft]="'Cancel'"
+    [buttonRight]="'Delete'"
+    btnType="danger"
+    (onButtonLeftClick)="isShowModalDeleteFile = false"
+    (onButtonRightClick)="onDeleteFile($event)">
+    >
+  </confirm-popup>
+</app-modal-popup>
+
+<app-modal-popup
+  *ngIf="isShowSendMessageModal"
+  [appendBody]="true"
+  [bigSize]="true"
+  [show]="isShowSendMessageModal"
+  [position]="popupModalPosition.center">
+  <app-send-message
+    [openFrom]="'file'"
+    [listOfFiles]="selectedFiles"
+    [listOfUser]="selectedUsersFromPopup"
+    [isReset]="resetSendMessageModal"
+    [noAddFile]="true"
+    (isOpenQuitConfirmModal)="showQuitConfirm($event)"
+    (isOpenSelectPeople)="showSelectPeople($event)"
+    (isOpenSuccessModal)="showSuccessMessageModal($event)"
+    [show]="isShowSendMessageModal"
+    (removeFileItem)="handleRemoveFileItem($event)"
+    [showTextForward]="true"
+    [isFileTab]="true"
+    (isCloseModal)="isShowSendMessageModal = !$event"
+    [title]="currentTaskTitle"
+    [hasTitle]="true"
+    [isForward]="isForward"></app-send-message>
+</app-modal-popup>
+
+<!-- <trudi-send-msg-v2
+  *ngIf="isSendFile"
+  (onQuit)="isSendFile = false"
+  [listOfFiles]="[fileSelected]"
+  [selectedTasks]="selectedTasks"
+  [rawMsg]="contentText"
+  [appendBody]="true"
+  [openFrom]="taskType === TaskType.MESSAGE ? taskType : ''"
+  [configs]="createNewConversationConfigs"
+  (onSendMsg)="onSendMsg($event)">
+</trudi-send-msg-v2> -->
+
+<app-modal-popup
+  *ngIf="isShowSuccessMessageModal"
+  [show]="isShowSuccessMessageModal"
+  [appendBody]="true"
+  [position]="popupModalPosition.center">
+  <app-send-message-success
+    [listReceiver]="selectedUsersFromPopup"></app-send-message-success>
+</app-modal-popup>
+
+<app-modal-popup
+  *ngIf="isShowQuitConfirmModal"
+  [show]="isShowQuitConfirmModal"
+  [appendBody]="true"
+  [position]="popupModalPosition.center">
+  <app-quit-confirm
+    (isCloseModal)="showQuitConfirm($event)"
+    (isOpenSendMessageModal)="showBackAppSend($event)"></app-quit-confirm>
+</app-modal-popup>
+
+<div class="files">
+  <ng-container *ngIf="widgetType === widgetTypeEnum.Call">
+    <ng-container *ngIf="callFiles?.length; else noCallFileTemplate">
+      <div class="content-wrapper auto-hide-scroll">
+        <div
+          class="files-list-wrapper-animation"
+          cdkDropList
+          #doneList="cdkDropList"
+          [cdkDropListData]="callFiles"
+          [cdkDropListConnectedTo]="connectedParent"
+          (cdkDropListDropped)="drop($event)">
+          <button
+            class="item files-item flex-dir-column"
+            *ngFor="let item of callFiles; index as i; trackBy: fileTrackBy"
+            [ngClass]="{
+              'active-three-dot': item.id === fileIdDropdown,
+              'active-audio': item.id === selectedFileId
+            }"
+            cdkDrag
+            cdkDragHandle
+            (click)="manageCarouselState(true, callFiles, item.id)"
+            [cdkDragDisabled]="!item.fileType || (conversationService.changeConversationLock$ | push)"
+            (cdkDragStarted)="onDragging(item)">
+            <div class="relative d-flex w-100">
+              <div
+                class="item-thumbnail"
+                [class.dim-brightness]="item.fileTypeDot === 'video' && item.thumbMediaLink">
+                <img
+                  *ngIf="item.fileTypeDot !== 'file'"
+                  [src]="item.thumbnail" />
+                <img
+                  *ngIf="item.fileTypeDot === 'file'"
+                  [src]="((item.name | getFileIconType))" />
+                <div *ngIf="item.fileTypeDot === 'video'" class="play-button">
+                  <trudi-icon
+                    class="play-icon position-center-w"
+                    icon="playSolid"></trudi-icon>
+                </div>
+                <trudi-icon
+                  *ngIf="item.syncPTStatus === SyncPropertyDocumentStatus.SUCCESS"
+                  class="link-img-icon"
+                  svgClass="size-20"
+                  icon="syncSuccess"></trudi-icon>
+              </div>
+              <div class="item-detail files-item-detail">
+                <div
+                  #fileCallName
+                  class="file-name"
+                  nz-tooltip
+                  [nzTooltipTitle]="item?.name"
+                  [nzTooltipTrigger]="fileCallName?.offsetWidth < fileCallName?.scrollWidth ? 'hover' : null"
+                  [nzTooltipOverlayStyle]="{ 'word-break': 'break-all', 'max-width': '250px'}">
+                  {{item.name}}
+                </div>
+                <div class="date-creator">
+                  <span class="date-text">
+                    {{item.createdAt | formatDate | push}}</span
+                  >
+                  <span class="small-circle"></span>
+                  <span
+                    class="text-ellipsis"
+                    nz-tooltip
+                    [nzTooltipTitle]="item?.user | formatDisplayFullName"
+                    *ngIf="item.fileOrigin !== fileOriginEnum.voice_mail">
+                    {{item.user | formatDisplayFullName}}
+                  </span>
+                  <span
+                    class="text-ellipsis"
+                    *ngIf="item.fileOrigin === fileOriginEnum.voice_mail">
+                    <!-- Because the file sender will always show as "Trudi" if the file is voicemail -->
+                    {{"Trudi" | formatDisplayFullName}}
+                  </span>
+                </div>
+              </div>
+              <ng-container
+                [ngTemplateOutlet]="fileActionTemplate"
+                [ngTemplateOutletContext]="{file: item, files: callFiles, isShow: item.id === selectedFileId}"></ng-container>
+            </div>
+            <audio-control
+              *ngIf="item.fileTypeDot === 'audio'"
+              class="w-100"
+              [isCollapsed]="item.id === selectedFileId"
+              [isStop]="this.messageService.isActiveCallMessage | push"
+              [linkMedia]="item.mediaLink"></audio-control>
+          </button>
+        </div>
+      </div>
+    </ng-container>
+    <ng-template #noCallFileTemplate>
+      <div class="no-data d-flex align-items-center">
+        <span class="text">{{'No call files to display'}}</span>
+      </div>
+    </ng-template>
+  </ng-container>
+
+  <ng-container *ngIf="widgetType === widgetTypeEnum.Attachment">
+    <ng-container
+      *ngIf="taskFilesGroupByConversation.length; else noAttachmentTemplate">
+      <div class="content-wrapper auto-hide-scroll">
+        <ng-container *ngFor="let group of taskFilesGroupByConversation;">
+          <div class="group-conversation">
+            <div *ngIf="group.documents.length" class="group-title-wrapper">
+              <div class="group-title">
+                <div
+                  class="d-flex align-items-center gap-2 group-title-property text-ellipsis">
+                  {{(group.propertyName === 'Landlord' ? 'Owner' :
+                  group.propertyName) | userTypeInPT : isPTEnvironment :
+                  {contactType: group?.userPropertyContactType?.type, type:
+                  group?.propertyType, isPrimary: group?.isPrimary} :
+                  true}}<span *ngIf="group.propertyName">&#x2022;</span>
+                  <div
+                    *ngIf="group.userName"
+                    #groupName
+                    nz-tooltip
+                    [nzTooltipTrigger]="groupName?.offsetWidth < groupName?.scrollWidth ? 'hover' : null"
+                    [nzTooltipOverlayStyle]="{ 'word-break': 'break-all', 'max-width': '200px'}"
+                    [nzTooltipTitle]="group.userName | formatDisplayFullName"
+                    class="text-ellipsis">
+                    {{group.userName | formatDisplayFullName}}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="files-list-wrapper-animation"
+              cdkDropList
+              #doneList="cdkDropList"
+              [cdkDropListData]="group.documents"
+              [cdkDropListConnectedTo]="connectedParent"
+              (cdkDropListDropped)="drop($event)">
+              <ng-container
+                *ngFor="let item of group.documents; index as i; trackBy: fileTrackBy">
+                <button
+                  class="item files-item flex-dir-column"
+                  [ngClass]="{
+                    'active-three-dot': item.id === fileIdDropdown,
+                    'active-audio': item.id === selectedFileId,
+                    'file-error': item.overFileSize || item.invalidFile
+                  }"
+                  cdkDrag
+                  cdkDragHandle
+                  [cdkDragDisabled]="!item.fileType || (conversationService.changeConversationLock$ | push)"
+                  (click)="manageCarouselState(true, group.documents, item.id)"
+                  (cdkDragStarted)="onDragging(item)">
+                  <div class="relative d-flex w-100 align-items-center">
+                    <div
+                      class="item-thumbnail"
+                      [class.dim-brightness]="item.fileTypeDot === 'video' && item.thumbMediaLink">
+                      <img
+                        *ngIf="item.fileTypeDot !== 'file'"
+                        [src]="item.localThumb || item.thumbnail" />
+                      <img
+                        *ngIf="item.fileTypeDot === 'file'"
+                        [src]="((item.name | getFileIconType))" />
+                      <div
+                        *ngIf="item.fileTypeDot === 'video'"
+                        class="play-button">
+                        <trudi-icon
+                          class="play-icon position-center-w"
+                          icon="playSolid"></trudi-icon>
+                      </div>
+                      <trudi-icon
+                        *ngIf="item.syncPTStatus === SyncPropertyDocumentStatus.SUCCESS"
+                        class="link-img-icon"
+                        svgClass="size-20"
+                        icon="syncSuccess"></trudi-icon>
+                    </div>
+                    <div class="item-detail files-item-detail">
+                      <div
+                        #filePanelName
+                        nz-tooltip
+                        [nzTooltipTitle]="item?.name"
+                        [nzTooltipTrigger]="filePanelName?.offsetWidth < filePanelName?.scrollWidth ? 'hover' : null"
+                        [nzTooltipOverlayStyle]="{ 'word-break': 'break-all', 'max-width': '250px'}"
+                        class="file-name">
+                        {{item.name}}
+                      </div>
+                      <div class="date-creator">
+                        <span class="date-text">
+                          {{item.createdAt | formatDate | push}}</span
+                        >
+                        <ng-container *ngIf="item.user">
+                          <span class="small-circle"></span>
+                          <span class="text-ellipsis">
+                            {{item.user | formatDisplayFullName }}
+                          </span>
+                        </ng-container>
+                      </div>
+                    </div>
+                    <ng-container
+                      [ngTemplateOutlet]="!(item.overFileSize || item.invalidFile) && item.uploaded && fileActionTemplate"
+                      [ngTemplateOutletContext]="{file: item, files: group.documents}"></ng-container>
+                    <ng-container
+                      *ngIf="!item?.uploaded && item?.canUpload; else closeButton">
+                      <div class="image-rotation rotate-image">
+                        <img
+                          src="/assets/icon/loading.png"
+                          alt="loading-icon" />
+                      </div>
+                    </ng-container>
+                    <ng-template #closeButton>
+                      <ng-container
+                        *ngIf="item.overFileSize || item.invalidFile">
+                        <div
+                          class="delete-media cursor-pointer delete-file"
+                          (click)="removeFile(item)">
+                          <trudi-icon
+                            class="trudi-icon"
+                            [style]="{ 'width.px': 16, 'height.px': 16, color: '#646464' }"
+                            icon="closeIcon"></trudi-icon>
+                        </div>
+                      </ng-container>
+                    </ng-template>
+                  </div>
+                  <audio-control
+                    *ngIf="item.fileTypeDot === 'audio'"
+                    class="w-100"
+                    [isCollapsed]="item.id === selectedFileId"
+                    [isStop]="this.messageService.isActiveCallMessage | push"
+                    [linkMedia]="item.mediaLink"></audio-control>
+                </button>
+                <div
+                  *ngIf="item.overFileSize"
+                  class="d-flex align-items-start gap-4 text-left">
+                  <img
+                    src="/assets/icon/icon_warning.svg"
+                    class="mt-2"
+                    alt="" />
+                  <div class="error-text">
+                    Your file is larger than 25MB. Please upload a smaller file.
+                  </div>
+                </div>
+                <div
+                  *ngIf="item.invalidFile"
+                  class="d-flex align-items-start gap-4 text-left">
+                  <img
+                    src="/assets/icon/icon_warning.svg"
+                    class="mt-2"
+                    alt="" />
+                  <div class="error-text">Unsupported file type.</div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+
+    <ng-template #noAttachmentTemplate>
+      <div class="no-data d-flex align-items-center">
+        <span class="text">{{'No files to display'}}</span>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>
+
+<ng-template #noProperty></ng-template>
+
+<ng-template
+  #fileActionTemplate
+  let-file="file"
+  let-files="files"
+  let-isShow="isShow">
+  <button
+    nz-dropdown
+    class="button-file-action"
+    [ngClass]="{'button-file-display': isShow, 'button-file-hidden': isArchiveMailbox}"
+    nzTrigger="click"
+    [nzDropdownMenu]="menu"
+    (nzVisibleChange)="handleMenuVisibleChange($event, file)"
+    (click)="handleAction($event)">
+    <trudi-icon class="icon-file-action" icon="greyThreeDot"> </trudi-icon>
+    <nz-dropdown-menu #menu="nzDropdownMenu">
+      <ul id="file-actions" nz-menu>
+        <li
+          disableOpenSendMsgModal
+          class="menu-item"
+          nz-menu-item
+          (click)="onSendFile(file)"
+          [appE2E]="e2eData">
+          <div class="d-flex gap-8 align-items-center no-pointer-event">
+            <trudi-icon
+              icon="icon_send"
+              class="size-16 no-pointer-event"></trudi-icon>
+            <div class="menu-item-text no-pointer-event">Send</div>
+          </div>
+        </li>
+        <li nz-menu-divider></li>
+        <li
+          class="menu-item"
+          nz-menu-item
+          (click)="filesService.downloadResource(file.mediaLink, file.name)">
+          <div class="d-flex gap-8 align-items-center">
+            <trudi-icon icon="iconDownload" class="size-16"></trudi-icon>
+            <div class="menu-item-text">Download</div>
+          </div>
+        </li>
+        <li nz-menu-divider></li>
+        <div
+          *ngIf="(file.syncPTStatus === SyncPropertyDocumentStatus.PENDING); else syncButtonTemplate"
+          class="dropdown-item disabled">
+          <li class="menu-item" nz-menu-item>
+            <div class="d-flex gap-8 align-items-center">
+              <trudi-icon
+                svgClass="size-16"
+                icon="syncSuccessPic"
+                alt=""></trudi-icon>
+              <div class="menu-item-text">Syncing</div>
+            </div>
+          </li>
+        </div>
+        <ng-template #syncButtonTemplate>
+          <li
+            trudi-tooltip
+            nzTooltipPlacement="bottom"
+            [nzTooltipTitle]="!!fileIdDropdown ? 'No property assigned' : null"
+            [nzTooltipTrigger]="file.isTemporaryProperty ? 'hover' : null"
+            class="menu-item"
+            nz-menu-item
+            (click)="!(isConsole || file.isTemporaryProperty || (isConsole && isDisConnectedMailbox) || isArchiveMailbox) && handleSync(files, file.id); fileIdDropdown = null"
+            [class.disabled]="isConsole || file.isTemporaryProperty || (isConsole && isDisConnectedMailbox) || isArchiveMailbox">
+            <div class="d-flex gap-8 align-items-center">
+              <trudi-icon
+                icon="iconSyncBlack"
+                svgClass="size-16"
+                class="menu-item-icon"
+                alt=""></trudi-icon>
+              <div class="menu-item-text">
+                {{ currentAgencyName === CRMSystemName.PROPERTY_TREE ? "Sync to
+                Property Tree" : "Sync to Rent Manager"}}
+              </div>
+            </div>
+          </li>
+        </ng-template>
+      </ul>
+    </nz-dropdown-menu>
+  </button>
+</ng-template>

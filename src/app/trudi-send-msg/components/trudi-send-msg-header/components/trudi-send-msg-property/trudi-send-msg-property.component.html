@@ -1,0 +1,72 @@
+<div class="position-relative property-wrapper">
+  <trudi-select-dropdown-v2
+    [roundClearIcon]="true"
+    [items]="listProperties"
+    [searchable]="true"
+    (searchChange)="handleSearchProperties($event)"
+    placeholder="Search property"
+    bindLabel="streetline"
+    [clearable]="false"
+    (visibleChange)="handleOpenSelectDropdown($event)"
+    [dropdownWidth]="450"
+    [isScrollChangeItems]="true"
+    [isClearSelectedItemWhenClickTwice]="true"
+    [(ngModel)]="currentPropertyId"
+    (ngModelChange)="onModelChange($event)"
+    (valueChange)="trackUserChange()">
+    <ng-template trudi-select-dropdown-title-tmp>
+      <div class="properties-item trudi-select-dropdown-title">
+        {{currentProperty?.streetline ?? 'Select property'}}
+      </div>
+    </ng-template>
+    <ng-template
+      trudi-select-dropdown-option-tmp
+      let-item="item"
+      let-search="searchTerm">
+      <nz-skeleton
+        *ngIf="isLoading; else elseBlock"
+        [nzTitle]="false"
+        [nzActive]="false"
+        class="skeleton__list--property"
+        [nzParagraph]="{ rows: 4, width: [ '40%','80%','40%','80%'] }"></nz-skeleton>
+      <ng-template #elseBlock>
+        <div
+          class="property-option"
+          [class.selected]="item?.id === currentPropertyId">
+          <div class="property-item">
+            <div
+              class="property-option__info"
+              [ngOptionHighlight]="search ? search : ''">
+              {{ item?.streetline }}
+            </div>
+            <trudi-badge
+              *ngIf="item.isSuggested"
+              [text]="'Suggested'"
+              [variant]="'inProgress'"
+              [size]="'small'"
+              extraClass="property-badge"></trudi-badge>
+          </div>
+          <trudi-icon
+            class="checked-icon"
+            icon="checkCurrentColor"></trudi-icon>
+        </div>
+      </ng-template>
+    </ng-template>
+
+    <ng-template trudi-select-dropdown-no-results-tmp>
+      <div
+        class="no-property-found-wrapper d-flex flex-dir-column align-items-center justify-content-center">
+        <div
+          class="no-property-found d-flex flex-dir-column align-items-center gap-16 text-center">
+          <trudi-icon icon="searchNoResult"> </trudi-icon>
+          <div>
+            <p class="m-0">No results found</p>
+            <p class="m-0">
+              Try adjusting your search terms or filters to see more results.
+            </p>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </trudi-select-dropdown-v2>
+</div>

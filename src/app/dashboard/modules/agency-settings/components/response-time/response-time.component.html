@@ -1,0 +1,76 @@
+<ng-container *ngIf="isLoading; else responseTime">
+  <div class="container">
+    <ng-container *ngFor="let key of orderedMaintenanceComplianceKeys">
+      <div class="container-item">
+        <ng-container *ngIf="newTemplateData[key]">
+          <sections-container
+            [titleInput]="key"
+            [subTitle]="newTemplateData[key]?.subTitle">
+            <ng-container *ngIf="newTemplateData[key]?.section; else noSection">
+              <div
+                class="mb-20"
+                *ngFor="let subSection of newTemplateData[key]?.section; let i = index">
+                <h4 class="container-subTitleChild mb-12">
+                  {{ subSection.subTitleChild }}
+                </h4>
+                <nz-skeleton
+                  class="response-time-skeleton"
+                  [nzParagraph]="{ rows: subSection?.options?.length }"
+                  [nzTitle]="false"
+                  [nzActive]="true"></nz-skeleton>
+              </div>
+            </ng-container>
+            <ng-template #noSection>
+              <div *ngFor="let option of newTemplateData[key]?.options">
+                <nz-skeleton
+                  class="response-time-skeleton"
+                  [nzParagraph]="{ rows: 1 }"
+                  [nzTitle]="false"
+                  [nzActive]="true"></nz-skeleton>
+              </div>
+            </ng-template>
+          </sections-container>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</ng-container>
+
+<ng-template #responseTime>
+  <div class="container">
+    <ng-container *ngFor="let key of orderedMaintenanceComplianceKeys">
+      <div class="container-item">
+        <ng-container *ngIf="newTemplateData[key]">
+          <sections-container
+            [titleInput]="key"
+            [subTitle]="newTemplateData[key]?.subTitle">
+            <ng-container *ngIf="newTemplateData[key]?.section; else noSection">
+              <div
+                class="mb-20"
+                *ngFor="let subSection of newTemplateData[key]?.section; let i = index">
+                <h4 class="container-subTitleChild mb-12">
+                  {{ subSection.subTitleChild }}
+                </h4>
+                <radio-polices
+                  [listOptionSelected]="listOptionSelected"
+                  [disabled]="isReadonly"
+                  class="radio-polices"
+                  [option]="subSection?.options"
+                  [controlName]="subSection.formControlName"></radio-polices>
+              </div>
+            </ng-container>
+            <ng-template #noSection>
+              <div *ngFor="let option of newTemplateData[key]?.options">
+                <app-checkbox-polices-item
+                  [disabled]="isReadonly"
+                  [menu]="'MaintenanceCompliance'"
+                  [section]="key"
+                  [option]="option"></app-checkbox-polices-item>
+              </div>
+            </ng-template>
+          </sections-container>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>

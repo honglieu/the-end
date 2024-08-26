@@ -1,0 +1,31 @@
+<div class="mt-4" *ngIf="syncLeasingData">
+  <widget-common
+    title="NEW TENANCY"
+    [buttonKey]="EButtonStepKey.NEW_TENANCY"
+    [type]="syncPropertyTree"
+    [firstTimeSyncSuccess]="syncLeasingData?.firstTimeSyncSuccess"
+    [isDislayBtnCancel]="isShowCancelBtn"
+    (showModal)="openLeasingModal()"
+    (remove)="handleRemove()"
+    (retry)="handleRetry()">
+    <div class="card-widget-wrapper">
+      <div class="card-widget-items d-flex gap-20">
+        <div class="card-widget-items-title mt-2">
+          <div class="widget-title">Tenancy</div>
+          <div class="widget-title">Duration</div>
+          <div class="widget-title">Rent</div>
+        </div>
+        <div class="card-widget-items-info mt-2">
+          <div class="widget-tenancy">{{syncLeasingData?.tenancyName}}</div>
+          <div class="widget-info">
+            {{syncLeasingData?.leaseStartDate | formatDate | push}} -
+            {{syncLeasingData?.leaseEndDate | formatDate | push}}
+          </div>
+          <div class="widget-info">
+            ${{syncLeasingData?.rentAmount}} / per {{getPaymentPeriodText()}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </widget-common>
+</div>

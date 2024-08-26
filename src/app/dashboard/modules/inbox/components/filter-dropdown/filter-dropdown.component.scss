@@ -1,0 +1,162 @@
+@import 'function';
+:host {
+  .filter-button {
+    background-color: var(--fg-base);
+    outline: none;
+    border: none;
+    width: 44px;
+    height: 32px;
+    border-radius: var(--corner-s, 8px);
+    border: 1px solid var(--border-neutral-dark, #d8dcdf);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: var(--bg-neutral-tonal-stronger, #e7eaed);
+    }
+
+    &:active {
+      background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+    }
+  }
+  ::ng-deep .assigned-agent-container {
+    .target-person-assignEl {
+      height: 32px !important;
+    }
+    .target-person-detail {
+      height: 32px !important;
+    }
+  }
+}
+
+.filter-dropdown-skeleton {
+  margin-left: 40px;
+  &.message-view {
+    width: 150px;
+  }
+  ::ng-deep {
+    .ant-skeleton {
+      width: 120px;
+    }
+    .ant-skeleton.ant-skeleton-active
+      .ant-skeleton-content
+      .ant-skeleton-title {
+      height: 35px;
+      margin-top: 25px;
+    }
+  }
+}
+
+::ng-deep {
+  .ant-tooltip.tool-tip-inbox-filter {
+    text-align: left !important;
+    .ant-tooltip-inner {
+      text-align: left !important;
+      border-radius: 4px;
+      cursor: default;
+    }
+    .ant-tooltip-arrow {
+      .ant-tooltip-arrow-content::before {
+        background: rgba(100, 100, 100, 0.8);
+        width: 21px;
+        height: 21px;
+      }
+    }
+  }
+}
+
+.disabled {
+  cursor: not-allowed;
+}
+.filter-wrapper {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .check-unread {
+    position: absolute;
+    top: 2px;
+    right: 8px;
+  }
+
+  &.btn-active-gray {
+    background-color: var(--bg-neutral-tonal-strongest);
+  }
+
+  &:hover {
+    background-color: var(--bg-neutral-tonal-stronger);
+  }
+  &:active {
+    background-color: var(--bg-neutral-tonal-strongest);
+  }
+}
+
+.filter-options {
+  width: 510px;
+  margin-top: 10px;
+  background-color: var(--bg-base);
+  filter: drop-shadow(0px 8px 28px rgba(0, 0, 0, 0.05))
+    drop-shadow(0px 4px 12px var(--bg-overlay-light));
+
+  &-header {
+    max-height: 60px;
+    width: 100%;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border-neutral-dark);
+    &-title {
+      @include fontSetup(var(--fg-neutral-strongest), 18px, 28px, normal, 600);
+    }
+    &-clear-btn {
+      @include fontSetup(var(--danger-500), 14px, 20px, normal, 500);
+    }
+  }
+
+  &-body {
+    padding: 20px 24px;
+    flex-direction: column;
+  }
+
+  &-footer {
+    padding: 0 24px 32px 24px;
+  }
+}
+
+.menu-wrapper {
+  max-width: min-content;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: var(--white);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+
+  .item {
+    padding: 12px;
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+    cursor: pointer;
+
+    &.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+
+      .size-20 {
+        opacity: 0.3;
+      }
+    }
+
+    &:not(:first-child) {
+      border-top: 1px var(--border-neutral-light) solid;
+    }
+
+    .text {
+      margin: 0;
+      white-space: nowrap;
+    }
+  }
+}
+
+::ng-deep .trudi-toolbar-wrapper {
+  max-width: 100px !important;
+}

@@ -1,0 +1,48 @@
+<trudi-modal
+  [visible]="visible"
+  [title]="configs.header.title"
+  subTitle=""
+  [autoFocus]="null"
+  (onCancel)="onClose()"
+  className="trudi-modal-office-contact">
+  <div class="trudi-send-msg-body">
+    <div [formGroup]="outOfOfficeForm">
+      <div class="trudi-form-group">
+        <div class="trudi-form-control">
+          <trudi-select-receiver
+            [extraCls]="{
+              'input-error-select':
+                selectedContactCard.invalid &&
+                (selectedContactCard.dirty || selectedContactCard.touched)
+            }"
+            [items]="listReceiver"
+            formControlName="selectedContactCard"
+            [iconTemplate]="'iconSearch'"
+            [totalReceiver]="trudiSendMsgUserService.totalUser"></trudi-select-receiver>
+          <div
+            *ngIf="
+              selectedContactCard.invalid &&
+              (selectedContactCard.dirty || selectedContactCard.touched) &&
+              selectedContactCard.errors['required']
+            "
+            class="error-container d-flex align-items-center gap-4">
+            <img src="/assets/icon/icon_warning.svg" alt="msfb-error" />
+            <div class="error-text">Please select a contact to continue</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="trudi-send-msg-footer">
+    <div class="trudi-send-msg-footer-btn-wrapper">
+      <button
+        trudi-btn
+        data-e2e="send-btn"
+        class="trudi-btn trudi-btn-primary trudi-btn-large"
+        (click)="onTriggerClick(true)">
+        Add contact
+      </button>
+    </div>
+  </div>
+  <ng-template #footerModal> </ng-template>
+</trudi-modal>

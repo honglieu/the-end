@@ -1,0 +1,75 @@
+<div
+  *ngIf="trudiTableDataSource.length; else noItem"
+  class="trudi-table-wrapper">
+  <nz-table
+    #trudiTable
+    [nzData]="trudiTableDataSource"
+    [nzSize]="tableSize"
+    [nzPageSize]="trudiTablePageSize"
+    [nzLoading]="isLoading"
+    [nzShowPagination]="false"
+    class="{{trudiPaginationData.totalItems > limitTableRows ? 'large-table' : 'small-table'}}"
+    [ngClass]="">
+    <thead>
+      <tr>
+        <th *ngIf="showCheckbox" nzWidth="40px" nzLeft>
+          <trudi-checkbox
+            nz-tooltip
+            nzTooltipPlacement="topLeft"
+            [nzTooltipTitle]="showTooltipCheckbox ? tooltipTitle : ''"
+            [nzTooltipArrowPointAtCenter]="false"
+            [nzTooltipOverlayClassName]="'trudi-table-tooltip'"
+            [isSelectedAll]="isSelectedAll"
+            [disabled]="disableCheckbox"
+            [(ngModel)]="checkedAll"
+            (ngModelChange)="onAllChecked($event)"
+            (keydown.enter)="onAllChecked(!checkedAll)"></trudi-checkbox>
+        </th>
+        <th [nzWidth]="item.width" *ngFor="let item of trudiTableColumns">
+          {{item?.label}}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        #trudiRow
+        *ngFor="let data of trudiTable.data"
+        tabindex="0"
+        (keydown.enter)="handleClickItems(data)"
+        (click)="handleClickItems(data)">
+        <td *ngIf="showCheckbox">
+          <trudi-checkbox
+            [disabled]="data?.disabled || disableCheckbox"
+            nz-tooltip
+            nzTooltipPlacement="topLeft"
+            [nzTooltipTitle]="showTooltipCheckbox ? tooltipTitle : ''"
+            [nzTooltipOverlayClassName]="'trudi-table-tooltip'"
+            [nzTooltipArrowPointAtCenter]="false"
+            [(ngModel)]="data.checked"
+            (ngModelChange)="onItemChecked(data?.id, $event)"
+            (keydown.enter)="onItemChecked(data?.id, !data.checked)"></trudi-checkbox>
+        </td>
+        <td nzEllipsis *ngFor="let item of trudiTableColumns">
+          <span [innerHTML]="data[item?.key] | highlight: searchText"
+            >{{ data[item?.key] }}
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </nz-table>
+
+  <trudi-pagination
+    *ngIf="showPagination && trudiPaginationData.totalItems > limitTableRows"
+    [paginationData]="trudiPaginationData"
+    [pageSize]="trudiTablePageSize"
+    (changePagination)="onChangePagination($event)"></trudi-pagination>
+</div>
+
+<ng-template #noItem>
+  <div class="list-wrapper">
+    <div class="no-table-data">
+      <trudi-icon icon="noTasks"> </trudi-icon>
+      <div class="no-table-data__text">None to display</div>
+    </div>
+  </div>
+</ng-template>

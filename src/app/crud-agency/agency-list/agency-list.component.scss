@@ -1,0 +1,97 @@
+.agency-list {
+  background-color: var(--white);
+  height: 100vh;
+  padding: 12px;
+  border-radius: 12px 12px 0 0;
+  max-width: 450px;
+
+  .filter-wrapper {
+    display: flex;
+    justify-content: space-between;
+
+    .search-wrapper {
+      width: 350px;
+      position: relative;
+
+      i {
+        position: absolute;
+        top: 50%;
+        left: 1.2rem;
+        transform: translate(50%, calc(-50% - 2px));
+        font-size: 1.7rem;
+
+        &::before {
+          color: var(--gray-500);
+        }
+      }
+
+      .form-control {
+        padding: 1.4rem 7.2rem 1.2rem 4.2rem;
+        font-size: 1.2rem;
+        line-height: 1.5rem;
+        min-height: 4rem;
+        border-radius: 0.8rem;
+        border: var(--gray-200) solid 1px;
+        background-color: var(--white);
+        font-weight: 600;
+        caret-color: var(--brand-500);
+
+        &:focus {
+          background: var(--white);
+          border: var(--brand-500) solid 1px;
+        }
+
+        &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+          color: var(--gray-500);
+          opacity: 1; /* Firefox */
+        }
+
+        &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+          color: var(--gray-500);
+        }
+
+        &::-ms-input-placeholder { /* Microsoft Edge */
+          color: var(--gray-500);
+        }
+      }
+    }
+
+    .btn-create {
+      background-color: var(--brand-500);
+      border: 1px solid var(--brand-500);
+      cursor: pointer;
+      width: 4rem;
+      height: 4rem;
+      border-radius: 8px;
+      position: relative;
+      display: inline-block;
+
+      img {
+        width: 50%;
+        height: 50%;
+        color: var(--white);
+        object-fit: contain;
+      }
+    }
+  }
+
+  .agencies {
+    display: flex;
+    align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
+    span {
+      font-weight: 500;
+    }
+
+    .logo-agency {
+      width: 35px;
+      margin-right: 10px;
+    }
+  }
+}
+
+.active {
+  background-color: var(--brand-50);
+}

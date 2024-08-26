@@ -1,0 +1,63 @@
+<div class="wrapper-month-picker">
+  <div
+    #datePickerOrigin
+    class="wrapper-btn d-flex justify-content-center align-items-center">
+    <trudi-month-picker
+      appOutsideClickListener
+      (clickOutside)="handleClickOuside()"
+      [(ngModel)]="rangeTimeValue[0]"
+      [endDate]="rangeTimeValue[1]"
+      [visible]="showMonth"
+      [dateFormat]="datePickerFormatPipe$ | async"
+      (onButtonClicked)="handleClick()"
+      (onPick)="handlePick($event)"
+      [extraFooter]="extraFooter"></trudi-month-picker>
+  </div>
+</div>
+
+<trudi-single-range-picker
+  *ngIf="showRange"
+  [nzAutoFocus]="true"
+  #datePicker
+  [customOrigin]="datePickerOrigin"
+  [nzDropdownClassName]="'trudi-picker-dropdown'"
+  nzInline
+  [nzOpen]="true"
+  [nzFormat]=" datePickerFormatPipe$ | async"
+  [(ngModel)]="rangeDate"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleRangeChange($event)"
+  [nzRenderExtraFooter]="singleRangeExtraFooter"
+  [class.d-none]="true"
+  [class.show-range-picker]="true">
+</trudi-single-range-picker>
+
+<ng-template #extraFooter>
+  <div class="d-flex justify-content-center month-picker-footer">
+    <button
+      class="footer-button full-width d-flex gap-4 justify-content-center align-items-center"
+      (click)="openRangePickerPanel($event)">
+      <trudi-icon
+        *ngIf="rangeTimeValue[1]"
+        class="checked-icon"
+        icon="checkCurrentColor"></trudi-icon>
+      Custom
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #singleRangeExtraFooter>
+  <div
+    class="d-flex justify-content-center pb-12 extra-footer calendar-date-picker-custom">
+    <div class="d-flex half-width justify-content-start">
+      <button
+        class="footer-button neutral-button"
+        (click)="openMonthPickerPanel($event);">
+        Back
+      </button>
+    </div>
+    <div class="d-flex half-width justify-content-end">
+      <button class="footer-button" (click)="handleApply()">Apply</button>
+    </div>
+  </div>
+</ng-template>

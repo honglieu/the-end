@@ -1,0 +1,42 @@
+<button
+  size="small"
+  variant="neutral"
+  class="add-contact-container"
+  nz-popover
+  [disabled]="disabled"
+  [nzPopoverTrigger]="'click'"
+  [(nzPopoverPlacement)]="placement"
+  [nzPopoverContent]="menu"
+  nzPopoverOverlayClassName="add-contact-popover"
+  [(nzPopoverVisible)]="visibleDropdown"
+  (nzPopoverVisibleChange)="onDropdownMenuVisibleChange($event)">
+  <ng-container>
+    <div
+      class="cursor-pointer d-flex align-items-center add-contact-detail target-status"
+      [ngClass]="{'btn-focus': visibleDropdown}"
+      nz-tooltip
+      nzTooltipPlacement="bottom">
+      <ng-container *ngTemplateOutlet="template || default"></ng-container>
+      <ng-template #default>
+        <div class="text-status-detail gap-4 d-flex align-items-center">
+          <button trudi-btn variant="link" size="small">Add contact</button>
+        </div>
+      </ng-template>
+    </div>
+  </ng-container>
+</button>
+
+<ng-template #menu>
+  <div nz-menu (click)="$event.stopPropagation()">
+    <add-contact-box
+      [participantInfo]="participantInfo"
+      [contactList]="contactList"
+      [isLoadingList]="isLoadingList"
+      [totalPage]="totalPage"
+      [applySecondaryLogic]="applySecondaryLogic"
+      (onSearch)="handleOnSearchUnHappyPath($event)"
+      (onSetEmptyContactList)="setEmptyContactList()"
+      (onOk)="onOk.emit()"
+      (onCloseDropdownAddContact)="onDropdownMenuVisibleChange(false)"></add-contact-box>
+  </div>
+</ng-template>

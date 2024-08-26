@@ -1,0 +1,40 @@
+<div class="wrapper-month-picker">
+  <div class="wrapper-btn d-flex justify-content-center align-items-center">
+    <button
+      *ngIf="!endDate"
+      class="btn-month-picker btn-icon"
+      (click)="handlePrevAndNextVal(true)">
+      <trudi-icon icon="arrowLeft"></trudi-icon>
+    </button>
+    <button
+      trudi-btn
+      size="large"
+      btnType="neutral"
+      class="btn-month-picker d-flex gap-8 justify-content-center align-items-center {{ endDate ? 'date-range-btn' : '' }}"
+      [ngClass]="{'active': visible}"
+      (click)="handleClick()">
+      <trudi-icon
+        class="trudi-month-icon"
+        [icon]="'iconCalendarV2'"></trudi-icon>
+      <ng-container *ngIf="endDate; else noEndDate">
+        {{dateValue | date: dateFormat}} - {{endDate | date: dateFormat}}
+      </ng-container>
+      <ng-template #noEndDate> {{dateValue | date: 'MMM YYYY'}} </ng-template>
+    </button>
+    <button
+      *ngIf="!endDate"
+      class="btn-month-picker btn-icon"
+      (click)="handlePrevAndNextVal(false)">
+      <trudi-icon icon="arrowRight"></trudi-icon>
+    </button>
+  </div>
+  <nz-date-picker
+    #datePicker
+    *ngIf="visible"
+    class="trudi-month-picker"
+    nzInline
+    nzMode="month"
+    [(ngModel)]="endDate ? null : dateValue"
+    (ngModelChange)="onChange($event); onSelect($event)"
+    [nzRenderExtraFooter]="extraFooter"></nz-date-picker>
+</div>

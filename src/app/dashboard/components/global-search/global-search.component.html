@@ -1,0 +1,45 @@
+<div
+  class="global-search-wrapper"
+  appOutsideClickListener
+  [whiteList]="['.global-search-modal','.custom-select-dropdown-mailbox', '.custom-select-dropdown-assignee', '.custom-select-dropdown-portfolio']"
+  [eventType]="'mousedown'"
+  (clickOutside)="handleClickOutside()">
+  <trudi-text-field
+    (triggerEventBlur)="handleInputBlur()"
+    [isBlockEvent]="isModalOpen"
+    [clearIcon]="'closeOutline'"
+    iconLeft="iconSearch"
+    placeholder="Advanced search"
+    [clearable]="true"
+    [ngModel]="searchText"
+    (click)="handleClick()"
+    (clear)="handleClearSearch()"
+    (ngModelChange)="handleSearchChange($event)"
+    (triggerEventFocus)="handleFocus()"></trudi-text-field>
+</div>
+
+<div class="d-flex global-search-modal" [ngClass]="{'d-none': !isSearchFocus}">
+  <div class="type-filter">
+    <button
+      *ngFor="let item of typeButtonList"
+      (click)="handleTypeBtnChange(item.type)"
+      class="btn-type btn-type-rounded"
+      [class.btn-type-filled-selected]="selectedBtnType === item.type">
+      {{item.name}}
+    </button>
+  </div>
+  <div class="d-flex">
+    <div class="search-result-list flex-1">
+      <search-result-list
+        [searchResultList]="searchResultList"
+        [isLoading]="isLoading"
+        [isLoadingMore]="isLoadingMore"
+        [isAllConversationFetched]="isAllConversationFetched"
+        (handleLoadingMore)="handleLoadingMore()">
+      </search-result-list>
+    </div>
+    <div class="search-filter">
+      <search-filter> </search-filter>
+    </div>
+  </div>
+</div>

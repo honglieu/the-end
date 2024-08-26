@@ -1,0 +1,114 @@
+@import 'function';
+
+::ng-deep .toastCustom {
+  pointer-events: all;
+  margin: 4px 0;
+}
+
+.toast-custom-box {
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border-neutral-dark, #d8dcdf);
+  background: var(--bg-base, #fff);
+  box-shadow: 0px 14px 36px 0px rgba(0, 0, 0, 0.13),
+    0px 2px 12px 0px rgba(0, 0, 0, 0.08);
+  width: 400px;
+  max-width: 400px;
+  align-items: center;
+
+  .toast-custom__message {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    &:has(.toast-custom__image--letter),
+    &:has(.toast-custom__image--avatar) {
+      align-items: flex-start;
+    }
+
+    ::ng-deep .toast-custom__image {
+      border-radius: 50%;
+
+      &--letter {
+        font-weight: 600 !important;
+        color: var(--white) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background-color: var(--brand-500) !important;
+        font-style: normal !important;
+      }
+    }
+
+    ::ng-deep .toast-custom__body {
+      &-title {
+        color: var(--fg-neutral-strongest, #202020);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 20px;
+        margin-bottom: 2px;
+        text-overflow: ellipsis;
+        max-width: 234px;
+        .title-toast-success {
+          color: var(--brand-500);
+        }
+        .title-toast-error {
+          color: var(--danger-500);
+        }
+      }
+
+      &-title.w-auto {
+        max-width: fit-content;
+      }
+
+      &-message {
+        color: var(--fg-neutral-normal, #646464);
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 16px;
+        word-wrap: break-all;
+      }
+
+      &-message-ellipsis {
+        color: var(--fg-neutral-normal, #646464);
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 20px;
+        max-width: 244px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .wrap-btn {
+    display: flex;
+    align-items: center;
+    column-gap: 4px;
+
+    .view-btn {
+      @include fontSetup(var(--fg-brand), 14px, 20px, normal, 600);
+      @include FlbMiddleAll;
+      cursor: pointer;
+      height: 28px;
+      padding: 4px 12px;
+      min-width: 60px;
+      border-radius: 6px;
+      white-space: nowrap;
+
+      &:hover {
+        background: var(--bg-brand-tonal-stronger, #d1f0ed);
+      }
+
+      &:active {
+        background: var(--bg-brand-tonal-strongest, #b9e8e4);
+      }
+    }
+  }
+}

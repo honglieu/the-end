@@ -1,0 +1,73 @@
+<div class="trudi-scheduled-msg-body">
+  <ng-container *ngFor="let schedule of listModalScheduleMsg">
+    <div class="mb-20">
+      <div
+        class="trudi-scheduled-msg-body-toolbars d-flex align-items-center justify-content-between">
+        <span class="trudi-scheduled-msg-body-toolbars-time">
+          Scheduled at {{schedule.time | formatDateTime: true : true | async }}
+        </span>
+        <div
+          class="trudi-scheduled-msg-body-toolbars d-flex gap-8"
+          [ngClass]="{'trudi-scheduled-msg-body-toolbars-disable': disableBtn}">
+          <!-- <div
+            class="item-action-button"
+            (click)="handleEditScheduledMsg(schedule)">
+            <trudi-icon
+              nz-tooltip
+              [nzTooltipTitle]="TOOLTIP_SCHEDULED_MSG_TEXT.editMessage"
+              icon="editIcon"
+              [style]="iconStyle"></trudi-icon>
+          </div> -->
+          <div
+            class="item-action-button"
+            (click)="handleRescheduleMsg(schedule)">
+            <trudi-icon
+              nz-tooltip
+              [nzTooltipTitle]="TOOLTIP_SCHEDULED_MSG_TEXT.rescheduleMessage"
+              icon="iconClockOutline"
+              [style]="iconStyle"
+              class="icon-reschedule"></trudi-icon>
+          </div>
+          <div class="item-action-button" (click)="handleSendNowMsg(schedule)">
+            <trudi-icon
+              nz-tooltip
+              [nzTooltipTitle]="TOOLTIP_SCHEDULED_MSG_TEXT.sendNow"
+              icon="sendArrowBlank"
+              [style]="iconStyle"></trudi-icon>
+          </div>
+          <div
+            class="item-action-button delete-btn"
+            (click)="handleDeleteScheduledMsg(schedule)">
+            <trudi-icon
+              nz-tooltip
+              [nzTooltipTitle]="TOOLTIP_SCHEDULED_MSG_TEXT.deleteMessage"
+              [isScheduledMsg]="true"
+              icon="iconDeleteRed"
+              [style]="iconStyle"></trudi-icon>
+          </div>
+        </div>
+      </div>
+      <div class="trudi-scheduled-msg-body-content border-rad-8">
+        <div
+          *ngIf="schedule.data.files?.length && !schedule.data.message"
+          class="icon-attachments">
+          <trudi-icon
+            icon="attachments"
+            alt="attachments"
+            class="icon"></trudi-icon>
+          <span>
+            {{ schedule.data.files.length | pluralize: 'attachment' }}
+          </span>
+        </div>
+        <pre
+          *ngIf="!schedule.data.isFromInline"
+          style="padding: 0; border: none; color: unset; font: unset">
+{{ schedule.data?.recipients?.conversationTitle || schedule.data?.messageTitle || schedule.data?.conversationTitle }}</pre
+        >
+        <span
+          [innerHTML]="schedule.data.message"
+          class="trudi-scheduled-msg-body-content-message no-margin-bottom-p"></span>
+      </div>
+    </div>
+  </ng-container>
+</div>

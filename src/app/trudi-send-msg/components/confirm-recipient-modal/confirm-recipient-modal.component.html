@@ -1,0 +1,134 @@
+<trudi-modal
+  [(visible)]="visible"
+  [title]="title"
+  [autoFocus]="null"
+  [modelWidth]="546"
+  (onCancel)="handleCancel()"
+  className="confirm-recipients-modal">
+  <div
+    class="confirm-recipients-modal__content body d-flex flex-dir-column gap-16"
+    *ngIf="visible">
+    <trudi-form-control
+      *ngIf="hasTaskStep"
+      [control]="currentStepControl"
+      [checkSubmit]="!isFormSubmitted">
+      <select-step
+        [configs]="configs"
+        [currentStepControl]="currentStepControl"
+        (changeStepTemplate)="handleChangeStepTemplate($event)"></select-step>
+    </trudi-form-control>
+    <ng-container *ngIf="hasTaskStep  && currentStepControl?.value">
+      <ng-container *ngIf="typeMethodSendEmail === ETypeSend.BULK_EMAIL">
+        <div class="label-infor">
+          This step is configured to bulk-send multiple emails to the following
+          recipients. You can review email content on the next page.
+        </div>
+      </ng-container>
+      <ng-container *ngIf="typeMethodSendEmail === ETypeSend.SINGLE_EMAIL">
+        <div class="label-infor">
+          This step is configured to send a single email to the following
+          recipients for each task. You can review the email content on the next
+          page.
+        </div>
+      </ng-container>
+    </ng-container>
+    <ng-container
+      *ngIf="!hasTaskStep && configs.otherConfigs.createMessageFrom ===
+      ECreateMessageFrom.TASK_STEP">
+      <div class="label-infor">
+        This step is configured to bulk-send multiple emails to the following
+        recipients.
+      </div>
+    </ng-container>
+    <ng-container
+      *ngIf="(hasTaskStep && currentStepControl?.value) || !hasTaskStep">
+      @if (typeMethodSendEmail === ETypeSend.BULK_EMAIL) {
+      <select-receiver-container-for-bulk
+        #selectContainer
+        [formGrp]="formGroup"
+        [isFormSubmitted]="isFormSubmitted"
+        toFieldLabel="Send separate emails to"
+        [toPlaceholder]="toPlaceholder"
+        ccBccLabel="Cc/bcc the following recipients into each email"
+        [ccBccPlaceholder]="ccBccPlaceholder"
+        suffixPaddingLeft="45px"
+        toFormName="toReceivers"
+        ccFormName="ccReceivers"
+        bccFormName="bccReceivers"
+        [isFormSubmitted]="isFormSubmitted"
+        [isContactType]="isContactType"
+        [selectedProperties]="configs.otherConfigs.createMessageFrom !==
+      ECreateMessageFrom.MULTI_TASKS ? selectedProperties : []"
+        [isOnlySupplierAndOther]="isContactType"
+        appendTo=".ant-modal-content">
+        <select-contact-type
+          #selectContactType
+          [placeholder]="toPlaceholder"
+          prefixTemplate="SP to"
+          suffixPaddingLeft="45px"
+          (removeItem)="handleRemoveItem(item)"
+          [items]="items"
+          [control]="toReceivers"
+          appendTo=".ant-modal-content"></select-contact-type>
+      </select-receiver-container-for-bulk>
+      } @else if (typeMethodSendEmail === ETypeSend.SINGLE_EMAIL) {
+      <select-receiver-container
+        #selectContainer
+        [isFormSubmitted]="isFormSubmitted"
+        [formGrp]="formGroup"
+        toFieldLabel="Send separate emails to"
+        [toPlaceholder]="toPlaceholder"
+        ccBccLabel="Cc/bcc the following recipients into each email"
+        [ccBccPlaceholder]="ccBccPlaceholder"
+        suffixPaddingLeft="30px"
+        toFormName="toReceivers"
+        ccFormName="ccReceivers"
+        bccFormName="bccReceivers"
+        [isContactType]="isContactType"
+        [isFormSubmitted]="isFormSubmitted"
+        [selectedProperty]="selectedProperty?.value"
+        appendTo=".ant-modal-content"
+        [isOnlySupplierAndOther]="isContactType">
+        <select-contact-type
+          #selectContactType
+          [placeholder]="toPlaceholder"
+          prefixTemplate="To"
+          suffixPaddingLeft="30px"
+          (removeItem)="handleRemoveItem(item)"
+          [items]="items"
+          [control]="toReceivers"
+          appendTo=".ant-modal-content"></select-contact-type>
+      </select-receiver-container>
+      }
+    </ng-container>
+    <ng-container
+      *ngIf="!hasTaskStep && configs.otherConfigs.createMessageFrom ===
+    ECreateMessageFrom.MULTI_TASKS">
+      <div class="label-infor">
+        You can compose the email content on the next page.
+      </div>
+    </ng-container>
+  </div>
+  <ng-template #footerModal>
+    <div class="gap-12 d-flex">
+      <button
+        *ngIf="hasBackBtn"
+        trudi-btn
+        type="button"
+        variant="outlined"
+        btnType="neutral"
+        (click)="handleBack()"
+        class="trudi-btn trudi-btn-large cancel-btn">
+        Back
+      </button>
+      <button
+        trudi-btn
+        type="button"
+        (click)="handleNext()"
+        class="trudi-btn trudi-btn-large trudi-btn-primary"
+        data-e2e="next-btn">
+        Next
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

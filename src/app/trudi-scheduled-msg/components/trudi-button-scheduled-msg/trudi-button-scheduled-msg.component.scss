@@ -1,0 +1,17 @@
+@import 'function';
+
+.message-scheduled {
+  min-width: 222px;
+  margin: 10px auto;
+
+  &-button {
+    margin: 0 auto;
+    padding: 4px 8px;
+    background-color: var(--white);
+    border: none;
+    border-radius: 4px;
+    p {
+      @include fontSetup(var(--brand-500), 12px, 20px, normal, 600);
+    }
+  }
+}

@@ -1,0 +1,28 @@
+<div class="mailbox-setting">
+  <sidebar-wrapper>
+    <ng-container leftContent>
+      <div class="left-sidebar">
+        <button
+          trudi-btn
+          variant="outlined"
+          btnType="neutral"
+          size="medium"
+          shape="circle"
+          class="header_icon cursor-pointer"
+          (click)="handleExit()">
+          <trudi-icon
+            class="cursor-pointer d-flex align-items-center justify-content-center flex-dir-column gap-8 p-6 exit-btn"
+            icon="closeV2"
+            [style]="{ 'width.px': 16, 'height.px': 16 }"></trudi-icon>
+        </button>
+        <p class="sidebar-title">Mailbox settings</p>
+        <sidebar-item-shared
+          [listItem]="mailboxTabs"
+          [mailBoxId]="mailBoxId"></sidebar-item-shared>
+      </div>
+    </ng-container>
+    <ng-container rightContent>
+      <router-outlet></router-outlet>
+    </ng-container>
+  </sidebar-wrapper>
+</div>

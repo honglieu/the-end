@@ -1,0 +1,56 @@
+<trudi-modal
+  *ngIf="showPopup"
+  [(visible)]="showPopup"
+  [modelWidth]="624"
+  [subTitle]="''"
+  [title]="title"
+  [autoFocus]="null"
+  (onCancel)="stopProcess()"
+  [showIconName]="false"
+  iconName="trudiAvt">
+  <div class="popup">
+    <div class="popup__container">
+      <div class="popup__body d-flex flex-dir-column">
+        <ng-container *ngFor="let item of options">
+          <div
+            class="popup__body__item d-flex justify-content-between align-items-center">
+            <div class="popup__body__item__text">{{item.text}}</div>
+            <div class="popup__body__item__checkbox">
+              <input
+                type="checkbox"
+                id="cb-{{item.id}}-tenant-intention"
+                class="popup__body__item__input d-none"
+                (change)="onCheckboxChange(item.id)" />
+              <label
+                for="cb-{{item.id}}-tenant-intention"
+                class="popup__body__item__label cursor-pointer"
+                data-e2e="button-uncheckbox">
+                <trudi-icon
+                  [icon]="item.checked ? 'ownershipCheck' : 'selectPeopleUncheck'"></trudi-icon>
+              </label>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <ng-template #footerModal>
+        <div class="d-flex gap-16">
+          <ng-container *ngIf="isShowBackButton">
+            <button
+              type="button"
+              class="trudi-btn trudi-btn-semi-large trudi-btn-tertiary btn-cancel"
+              (click)="handleClickBack()">
+              Back
+            </button>
+          </ng-container>
+          <button
+            data-e2e="button-next"
+            class="trudi-btn trudi-btn-large trudi-btn-primary d-flex align-items-center"
+            [disabled]="!listChecked"
+            (click)="handleClickNext()">
+            Next
+          </button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</trudi-modal>

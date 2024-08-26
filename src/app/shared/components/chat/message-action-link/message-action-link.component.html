@@ -1,0 +1,49 @@
+<div
+  class="action-link-message"
+  [class.custom-radius]="radiusConfig"
+  [style.width.%]="widthInPercent"
+  [ngClass]="{
+    'custom-radius': radiusConfig,
+    '_bs': !reBorderAtChatApp,
+    'gray-border': grayBorder
+  }">
+  <div class="main-title">
+    <div class="elements-container">
+      <div class="link-img" [style.backgroundColor]="linkBackground">
+        <img *ngIf="imgLink" src="assets/icon/{{ imgLink }}" alt="" />
+      </div>
+      <div class="text-elements">
+        <span class="title-text">{{messageActionLink.title}}</span>
+      </div>
+    </div>
+    <div class="main-info">
+      <div class="sub-title-text">{{messageActionLink.subHeading}}</div>
+    </div>
+  </div>
+
+  <div class="d-flex" style="width: 100%">
+    <div
+      (click)="onClickActionLink(messageActionLink.primaryButtonUrl)"
+      class="action-button"
+      [ngClass]="{'second-button': messageActionLink.secondaryButton}">
+      <span>{{messageActionLink.primaryButtonText}}</span>
+    </div>
+    <div
+      class="_divider"
+      *ngIf="(messageActionLink.secondaryButton && messageActionLink.statusEDDR !== 'ACTIVE')"></div>
+    <div
+      (click)="onClickActionLink(messageActionLink.secondaryButtonUrl)"
+      *ngIf="messageActionLink.secondaryButton && messageActionLink.statusEDDR !== 'ACTIVE' && !messageActionLink.statusEDDR"
+      class="action-button second-button">
+      <span>{{messageActionLink.secondaryButtonText}}</span>
+    </div>
+  </div>
+  <div
+    *ngIf="messageActionLink.statusEDDR === 'ACTIVE' || messageActionLink.statusEDDR"
+    class="completed-status">
+    <span class="img-block">
+      <img src="/assets/icon/successful.svg" alt="" />
+    </span>
+    <span>Completed</span>
+  </div>
+</div>

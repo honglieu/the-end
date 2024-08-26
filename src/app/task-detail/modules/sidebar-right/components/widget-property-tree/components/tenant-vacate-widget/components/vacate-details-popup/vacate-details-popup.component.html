@@ -1,0 +1,62 @@
+<resizable-modal-popup
+  *ngIf="popupState.showTenantVacateModal"
+  [show]="popupState.showTenantVacateModal"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [title]="'Vacate details'"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [iconName]="'ptLogo'"
+  [styleIcon]="null"
+  [classIconTitle]="null"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [footerTemplate]="footerModal"
+  (onCancel)="cancel()"
+  [isCustomMoveable]="true"
+  class="vacate-details-popup">
+  <!-- content -->
+  <tenant-vacate-form
+    [isShowTermidate]="isShowTermidate"
+    (changeTerminationDateStatus)="changeTerminationDateStatus($event)"
+    #tenantVacateFormComponent
+    [readonly]="readonly"
+    [readonlyTenancy]="readonlyTenancy"
+    [listTenant]="listTenant"
+    [tenanciesOptions]="tenanciesOptions"
+    [syncPTStatus]="syncPTStatus">
+  </tenant-vacate-form>
+  <ng-template #invalidNumber>
+    <div class="error-text">Invalid number</div>
+  </ng-template>
+  <ng-template #footerModal>
+    <div
+      class="lease-footer-wrap d-flex align-items-center justify-content-between w-100">
+      <div class="info-status d-flex align-items-center gap-4">
+        <trudi-icon
+          [icon]="synData[syncPTStatus]?.icon"
+          [style]="{ 'width.px': 12, 'height.px': 12 }"></trudi-icon>
+        <span> {{synData[syncPTStatus]?.text}}</span>
+        <ng-container
+          *ngIf="lastTimeSynced && ![TYPE_SYNC_STATUS.INPROGRESS, TYPE_SYNC_STATUS.PENDING, ''].includes(syncPTStatus)">
+          <span> • </span>
+          <span class="sync-text"
+            >{{lastTimeSynced | formatDateTime | push}}</span
+          >
+        </ng-container>
+      </div>
+      <div class="footer-wrapper d-flex" [style.gap.px]="12">
+        <button
+          [disabled]="isConsole || isArchiveMailbox"
+          type="button"
+          class="btn-confirm trudi-btn trudi-btn-semi-large trudi-btn-primary"
+          (click)="syncToPT()"
+          [appE2E]="'pt-widget-vacate-details'">
+          <span class="btn-text no-pointer-event">Sync to Property Tree</span>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</resizable-modal-popup>

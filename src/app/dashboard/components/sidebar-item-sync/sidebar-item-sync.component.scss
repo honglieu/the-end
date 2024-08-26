@@ -1,0 +1,67 @@
+.sidebar-item-sync-tooltip {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 4px 6px;
+  width: 231px;
+  height: 40px;
+  background: var(--gray-500);
+  border-radius: 4px;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
+  z-index: 0;
+  &_header {
+    text-align: left;
+    font-weight: 600;
+  }
+  &_content {
+    font-weight: 400;
+    text-align: left;
+  }
+  &_name {
+    font-weight: 400;
+    text-align: left;
+  }
+}
+.sidebar-item-skeleton {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  padding: 16px 0;
+}
+.wrapper-sync{
+  position: relative;
+}
+.list-subscriptions{
+  position: absolute;
+  margin-left: 99px;
+  margin-top: -73px;
+  z-index: 99999;
+  background-color: white;
+  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.102);
+  border-radius: 7px;
+  .subscription-item{
+    border-radius: 7px;
+    border-bottom: 1px solid var(--gray-50);
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    &:hover {
+      background-color: var(--bg-brand-tonal-stronger);
+      transition: 0.2s;
+    }
+  }
+  .subscription-name
+  {
+    font-size: 14px;
+    color: var(--gray-600);
+    font-weight: 600;
+  } .last-sync{
+    font-size: 12px;
+    color: var(--gray-400);
+
+  }
+}

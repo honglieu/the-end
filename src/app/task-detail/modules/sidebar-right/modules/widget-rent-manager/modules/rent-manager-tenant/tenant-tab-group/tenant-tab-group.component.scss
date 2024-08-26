@@ -1,0 +1,44 @@
+.tenant-tab-group {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  &-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px 0 24px;
+    &-label {
+      color: var(--fg-neutral-weaker);
+      font-variant-numeric: lining-nums tabular-nums;
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 20px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 0px;
+
+      &.focused {
+        color: var(--fg-brand);
+        border-bottom-color: var(--border-brand);
+      }
+      &:focus-visible {
+        border: 2px solid var(--brand-500) !important;
+      }
+    }
+    &-content {
+      flex: 1;
+      width: 100%;
+      overflow: auto;
+      padding: 16px 24px;
+    }
+  }
+}
+
+.disabled-scroll {
+  overflow: unset !important;
+}

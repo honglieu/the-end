@@ -1,0 +1,66 @@
+<ng-container *ngFor="let user of listItemUsers; let i = index">
+  <div
+    class="user-row justify-content-between align-items-center"
+    #firstTrElement
+    [ngClass]="(isGroupChecked(user.id) || isChecked(i)) ? 'row-checked' : ''">
+    <div class="user d-flex">
+      <div class="user-avatar">
+        <div class="default-stat-icon" [ngClass]="user.type">
+          <img
+            data-e2e="user-avatar"
+            loading="lazy"
+            src="{{srcImg}}"
+            [alt]="user.type"
+            data-e2e="ownership-icon"
+            [attr.data-e2e]="peopleE2e + '-icon'" />
+        </div>
+      </div>
+      <div class="user-info">
+        <ng-container>
+          <div class="primary-user">
+            <span data-e2e="permission" class="permission"
+              >{{user.type | titlecase}}:
+            </span>
+            <span class="name" [attr.data-e2e]="peopleE2e + '-name'"
+              >{{user.name}}</span
+            >
+            <text-badge
+              class="user-status"
+              [type]="user.type.toUpperCase()"
+              [text]="user.status"
+              [attr.data-e2e]="'crm-status'"></text-badge>
+          </div>
+          <div class="user-list" data-e2e="user-list">
+            <ng-container *ngFor="let sub of user.userProperties">
+              <div
+                class="sub-users text-ellipsis gap-6"
+                [style.maxWidth.px]="userTextWidth">
+                <app-sub-user [subUser]="sub"></app-sub-user>
+                <div
+                  class="sub-checkbox"
+                  [ngClass]="{'hide': headerName === 'Create New Task'}">
+                  <input
+                    type="checkbox"
+                    id="cb-{{sub.id}}-{{isOpenFrom}}"
+                    class="def-checkbox"
+                    (change)="handleChangeCheckbox(sub.id)" />
+                  <label
+                    for="cb-{{sub.id}}-{{isOpenFrom}}"
+                    class="checkbox-label"
+                    data-e2e="button-checkbox">
+                    <ng-container>
+                      <img
+                        [src]="isChecked(sub.user.id) ? srcImgCheck : srcImgUnCheck"
+                        class="user-checkbox checkbox-head"
+                        data-e2e="round-checkbox" />
+                    </ng-container>
+                  </label>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</ng-container>

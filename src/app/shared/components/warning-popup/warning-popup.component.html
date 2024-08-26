@@ -1,0 +1,31 @@
+<app-modal-popup class="warning-modal" [show]="true">
+  <div class="warning-popup confirm-wrapper">
+    <div class="header">
+      <div class="warning-icon">
+        <img src="/assets/icon/warning.svg" />
+      </div>
+      <div class="confirm-text">
+        <p class="bold-text">Are you sure you want to leave page?</p>
+        <p class="text-desc">
+          You have unsaved changes that will be lost if you leave the page.
+        </p>
+      </div>
+    </div>
+    <div class="btn-wrapper">
+      <button
+        data-e2e="button-cancel"
+        type="button"
+        class="go-back-btn"
+        (click)="close()">
+        <span class="btn-text"> Keep editing </span>
+      </button>
+      <button
+        data-e2e="button-submit"
+        type="button"
+        class="confirm-btn"
+        (click)="submit()">
+        <span class="btn-text"> Leave </span>
+      </button>
+    </div>
+  </div>
+</app-modal-popup>

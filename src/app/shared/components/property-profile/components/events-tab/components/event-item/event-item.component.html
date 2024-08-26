@@ -1,0 +1,129 @@
+<div class="content-event-tab" (click)="openLinkEvent()">
+  <div class="wrapper-detail-content-event-tab">
+    <div class="detail-content-event-tab">
+      <div class="title d-flex">
+        <span
+          class="title-detail text-ellipsis"
+          [ngClass]="{
+            'statusCancelled': eventItem?.eventStatus === EEventStatus.CLOSED || eventItem?.eventStatus === EEventStatus.CANCELLED,
+            'statusNotCancelled': eventItem?.eventStatus !== EEventStatus.CLOSED && eventItem?.eventStatus !== EEventStatus.CANCELLED
+          }"
+          >{{ eventItem.eventName | uppercaseFirstLetter }}</span
+        >
+        <div
+          class="tag"
+          *ngIf="[EEventStatus.CANCELLED, EEventStatus.CLOSED].includes(eventItem.eventStatus)">
+          <span>{{eventItem.eventStatus | uppercaseFirstLetter}}</span>
+        </div>
+      </div>
+      <span
+        *ngIf="eventItem.tenancyTenantName"
+        class="desc"
+        [ngClass]="{
+          'statusCancelled': eventItem?.eventStatus === EEventStatus.CLOSED || eventItem?.eventStatus === EEventStatus.CANCELLED,
+          'statusNotCancelled': eventItem?.eventStatus !== EEventStatus.CLOSED && eventItem?.eventStatus !== EEventStatus.CANCELLED
+        }"
+        >{{eventItem.tenancyTenantName}}</span
+      >
+      <div class="date d-flex">
+        <span
+          class="date-detail-left"
+          [ngClass]="{
+          'statusCancelled': eventItem?.eventStatus === EEventStatus.CLOSED || eventItem?.eventStatus === EEventStatus.CANCELLED,
+          'statusNotCancelled': eventItem?.eventStatus !== EEventStatus.CLOSED && eventItem?.eventStatus !== EEventStatus.CANCELLED
+          }">
+          {{ eventItem?.eventDate | formatDate | async }}
+          <span
+            *ngIf="!!(eventItem?.expired | formatExpiredDate: eventItem?.eventType)"
+            class="date-detail-right"
+            [ngStyle]="{
+              'color':
+              eventItem?.eventStatus === EEventStatus.CLOSED ||
+              eventItem?.eventStatus === EEventStatus.CANCELLED
+                ? '#A0A0AB'
+                : ''
+            }"
+            [ngClass]="[eventItem | viewClassNameRemainDays : calenderWidgetExpiredDays]">
+            <span class="dot no-pointer-event"> • </span>
+            <span class="no-pointer-event"
+              >{{ eventItem?.expired | formatExpiredDate:
+              eventItem?.eventType}}</span
+            >
+          </span>
+        </span>
+      </div>
+      <div class="time d-flex">
+        <span
+          class="time-detail-left"
+          [ngClass]="{
+          'statusCancelled': eventItem?.eventStatus === EEventStatus.CLOSED || eventItem?.eventStatus === EEventStatus.CANCELLED,
+          'statusNotCancelled': eventItem?.eventStatus !== EEventStatus.CLOSED && eventItem?.eventStatus !== EEventStatus.CANCELLED
+          }">
+          {{ eventItem?.defaultTime ? (eventItem?.defaultTime | formatTime: true
+          | async | lowercase) : (eventItem?.startTime | dateTimeRange:
+          eventItem?.endTime | async) }}
+          <span
+            *ngIf="(eventItem?.startTime && eventItem?.endTime) || eventItem?.defaultTime"
+            class="time-detail-right"
+            [ngStyle]="{
+            'color':
+            eventItem?.eventStatus === EEventStatus.CLOSED ||
+            eventItem?.eventStatus === EEventStatus.CANCELLED
+              ? '#A0A0AB'
+              : ''
+            }">
+            {{ '' | formatDateTimeAbbrev: true | async }}</span
+          >
+        </span>
+      </div>
+      <div
+        nz-dropdown
+        [nzDropdownMenu]="menu"
+        [nzPlacement]="'bottomCenter'"
+        [nzTrigger]="'hover'"
+        class="link-task d-flex"
+        *ngIf="eventItem.linkedTaskTitles?.length >= 1; else noLinkedTasks">
+        <trudi-icon class="size-14" icon="linkV2"></trudi-icon>
+        <span
+          >{{ eventItem.linkedTaskTitles?.length | pluralize: 'linked task'
+          }}</span
+        >
+      </div>
+      <ng-template #noLinkedTasks>
+        <div class="no-link-task d-flex">
+          <trudi-icon class="size-14" icon="linkV2"></trudi-icon>
+          <span>no linked tasks</span>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div nz-menu class="links-task-menu">
+    <div
+      class="links-task-menu-wrapper-item"
+      *ngFor="let item of eventItem.linkedTasks">
+      <span
+        nz-menu-item
+        (click)="onNavigateToTask(item?.id)"
+        class="links-task-menu__item">
+        <div
+          class="task-title text-ellipsis"
+          appE2E="events-event-linked-tasks-task-title">
+          {{item.title}}
+        </div>
+        <div
+          *ngIf="item.status === ELinkTaskStatus.INPROGRESS"
+          class="task-duration">
+          Created {{item.createdAt | formatDate | async}}
+        </div>
+        <div
+          *ngIf="item.status === ELinkTaskStatus.COMPLETED"
+          class="task-duration">
+          Completed {{item.updatedAt | formatDate | async}}
+        </div>
+      </span>
+    </div>
+  </div>
+</nz-dropdown-menu>

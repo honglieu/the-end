@@ -1,0 +1,36 @@
+@import 'function';
+.pre-screen__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 24px;
+}
+
+.pre-screen__row {
+  display: flex;
+  justify-content: space-between;
+  trudi-form-control {
+    flex: 1;
+  }
+}
+.capture-amount-tenancy {
+  .item-label {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d) !important,
+      14px !important,
+      20px !important,
+      normal !important,
+      500 !important
+    );
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+.capture-amount-footer {
+  padding: 20px 24px;
+  background: transparent;
+  border-top: 1px solid var(--gray-100);
+  border-radius: 0 0 8px 8px;
+  justify-content: flex-end;
+}

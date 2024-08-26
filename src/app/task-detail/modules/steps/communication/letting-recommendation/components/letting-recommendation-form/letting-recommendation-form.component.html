@@ -1,0 +1,63 @@
+<div class="letting-recommendation-form" [formGroup]="lettingForm">
+  <div class="letter-wrapper">
+    <div class="title">Is this a new letting or relet?</div>
+    <div class="reletting-recommendation-type">
+      <trudi-form-control
+        [errors]="[{errorName: 'required', errorMessage: 'Please select an option'}]">
+        <trudi-radio-button
+          formControlName="leasePeriod"
+          [options]="radioListData"
+          classType="ROW">
+        </trudi-radio-button>
+      </trudi-form-control>
+    </div>
+  </div>
+
+  <div class="rental-amount-wrapper">
+    <div class="title">Recommended rental amount for advertising?</div>
+    <div class="rental-amount-detail d-flex align-items-center">
+      <trudi-form-control class="flex-1">
+        <trudi-number-field
+          size="extra-large"
+          iconLeft="dollarIcon"
+          formControlName="rentAmount"
+          [maxCharacter]="12"
+          [maskLeadZero]="true"
+          [maskPattern]="maskPattern"
+          thousandSeparatorType=","></trudi-number-field>
+      </trudi-form-control>
+      <div class="rent-period flex-1">
+        <trudi-form-control>
+          <trudi-single-select
+            [items]="frequencyData"
+            bindValue="value"
+            bindLabel="label"
+            formControlName="frequency"></trudi-single-select>
+        </trudi-form-control>
+      </div>
+    </div>
+  </div>
+
+  <div class="duration-wrapper">
+    <div class="title">Recommended lease duration?</div>
+    <div class="duration-detail d-flex align-items-center">
+      <div
+        class="input-wrapper d-flex flex-dir-column align-items-start flex-1">
+        <trudi-form-control class="w-100">
+          <trudi-number-field
+            size="extra-large"
+            formControlName="leaseDuration"></trudi-number-field>
+        </trudi-form-control>
+      </div>
+      <div class="time-periods flex-1">
+        <trudi-form-control>
+          <trudi-single-select
+            formControlName="leasePeriodType"
+            [items]="leasePeriodTypeData"
+            bindValue="value"
+            bindLabel="label"></trudi-single-select>
+        </trudi-form-control>
+      </div>
+    </div>
+  </div>
+</div>

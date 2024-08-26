@@ -1,0 +1,40 @@
+<div class="chart-body">
+  <div
+    class="chart-content"
+    [ngClass]="{'no-data-chart': !config?.data?.length}">
+    <ng-container *ngIf="!config?.data?.length">
+      <p class="no-data-chart-text">No data available</p>
+    </ng-container>
+  </div>
+  <div class="annotation">
+    <div *ngFor="let item of config.annotation" class="annotation-item">
+      <div class="annotation-item">
+        <div
+          class="annotation-item__color"
+          [style]="{backgroundColor: item.color}"></div>
+        <div class="annotation-item__info">
+          <div class="annotation-item__title">
+            {{item.title}}
+            <trudi-badge
+              *ngIf="item.badge"
+              [variant]="item.badge?.variant"
+              [icon]="item.badge?.icon"
+              extraClass="text-white"
+              [style]="{backgroundColor: item.badge?.bgColor, color: item.color}"
+              [text]="item.badge.text">
+            </trudi-badge>
+          </div>
+          <div class="annotation-item__description">{{item.description}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #defaultTooltipTemplate>
+  <div class="default-tooltip">
+    <div class="default-tooltip__value">tooltip_value</div>
+    <div class="default-tooltip__header">tooltip_header</div>
+    <div class="default-tooltip__footer">tooltip_footer</div>
+  </div>
+</ng-template>

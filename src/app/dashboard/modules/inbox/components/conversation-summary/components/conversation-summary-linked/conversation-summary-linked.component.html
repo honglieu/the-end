@@ -1,0 +1,61 @@
+<div class="d-flex gap-8 mg-8">
+  <div
+    class="d-flex align-items-center app-message-session-summary text-ellipsis">
+    @if(linkedEmailToDisplay?.from) {
+    <div class="d-flex align-items-center">
+      <div class="from d-flex align-items-center">
+        @if(linkedEmailToDisplay?.from?.fromTitle || sender?.pmName) {
+        <div class="text-ellipsis">
+          {{sender?.pmName || linkedEmailToDisplay?.from.fromTitle}}
+        </div>
+        } @if(linkedEmailToDisplay?.from?.fromRole) {
+        <div>({{linkedEmailToDisplay?.from?.fromRole}})</div>
+        }
+      </div>
+      &nbsp;
+    </div>
+    }
+    <div>{{linkedEmailToDisplay?.isReply ? 'replied to' : 'forwarded to'}}</div>
+    &nbsp;
+    <div class="d-flex align-items-center">
+      <div
+        class="to d-flex align-items-center flex-1"
+        trudi-tooltip
+        [hideWhenClick]="true"
+        [nzTooltipTitle]="tooltipTemplate"
+        [nzTooltipArrowPointAtCenter]="true"
+        [nzTooltipMouseEnterDelay]="1"
+        nzTooltipOverlayClassName="participants-tooltip-position participants-tooltip">
+        <ng-container
+          *rxFor="let to of linkedEmailToDisplay?.to; let last = last; trackBy: 'toTitle'">
+          <div class="d-flex align-items-center">
+            @if(to?.toTitle) {
+            <div class="contact-title text-ellipsis">{{to.toTitle}}</div>
+            } @if(to.toRole && to?.isShowRole) {
+            <div>&nbsp;({{to?.toRole}})</div>
+            } @if(!!linkedEmailToDisplay?.more ? true : !last) {
+            <div class="participants-name">,&nbsp;</div>
+            }
+          </div>
+        </ng-container>
+
+        @if(linkedEmailToDisplay?.more) {
+        <div>+{{linkedEmailToDisplay?.more}}</div>
+        }
+        <div>&nbsp;via email</div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="app-message-request-view-email"
+    (leftClick)="navigateToLinkedEmail()"
+    [attr.data-button-key]="EButtonTask.NAVIGATE_TO_LINKED_EMAIL"
+    [attr.data-button-type]="EButtonType.TASK"
+    PreventButton>
+    View email
+  </div>
+</div>
+
+<ng-template #tooltipTemplate>
+  <div [innerHTML]="tooltipTitle"></div>
+</ng-template>

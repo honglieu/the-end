@@ -1,0 +1,160 @@
+<email-signature-popup
+  *ngIf="showEmailSignatureModal"
+  [showEmailSignatureModal]="showEmailSignatureModal"
+  [avatarTemp]="imageSignatureData"
+  [agencySignature]="agencySignature"
+  (closeModal)="handleCloseEmailSignature()"
+  (confirmModal)="handleSaveImageSignature($event)"></email-signature-popup>
+
+<div class="user-profile-wrapper d-flex">
+  <div *ngIf="ld.isLoading$ | async" class="wrapper">
+    <div class="avatar-wapper">
+      <div>
+        <nz-skeleton-element
+          nzType="avatar"
+          [nzSize]="64"
+          [nzShape]="'circle'"
+          [nzActive]="true"></nz-skeleton-element>
+      </div>
+    </div>
+    <div class="form-wrapper d-flex flex-dir-column">
+      <div class="d-flex flex-dir-column gap-16">
+        <div class="profile-form-control d-flex h-20">
+          <label class="userprofile-form-label"> Name </label>
+          <nz-skeleton-element
+            class="form-control userprofile-form-input input-skeleton"
+            nzType="input"
+            [nzActive]="true"></nz-skeleton-element>
+        </div>
+        <div class="profile-form-control d-flex h-20">
+          <label class="userprofile-form-label">Title</label>
+          <nz-skeleton-element
+            class="form-control userprofile-form-input input-skeleton"
+            nzType="input"
+            [nzActive]="true"></nz-skeleton-element>
+        </div>
+        <div class="profile-form-control d-flex h-20">
+          <label class="userprofile-form-label"> Phone </label>
+          <nz-skeleton-element
+            class="form-control userprofile-form-input input-skeleton"
+            nzType="input"
+            [nzActive]="true"></nz-skeleton-element>
+        </div>
+        <div class="profile-btn-wrapper">
+          <nz-skeleton-element
+            class="button-skeleton"
+            nzType="button"
+            [nzActive]="true"></nz-skeleton-element>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="wrapper d-flex flex-dir-column"
+    *ngIf="(ld.isLoading$ | async) === false">
+    <div class="d-flex flex-dir-column">
+      <div
+        class="form-wrapper d-flex flex-dir-column"
+        [formGroup]="profileForm"
+        autocomplete="off">
+        <div class="profile-form-control d-flex gap-6">
+          <div class="userprofile-form-label align-self-center">Name</div>
+          <div class="d-flex flex-dir-column userprofile-form-input">
+            <trudi-form-control>
+              <trudi-text-field
+                placeholder="Enter your name"
+                size="small"
+                maxCharacter="40"
+                (triggerEventBlur)="onInputBlur()"
+                [formControl]="profileForm.controls['name']"></trudi-text-field>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div class="profile-form-control d-flex gap-12">
+          <div class="userprofile-form-label align-self-center">Title</div>
+          <div class="d-flex flex-dir-column userprofile-form-input">
+            <trudi-form-control>
+              <trudi-text-field
+                placeholder="Enter your title"
+                size="small"
+                maxCharacter="40"
+                (triggerEventBlur)="onInputBlur()"
+                [formControl]="profileForm.controls['title']"></trudi-text-field>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div class="profile-form-control d-flex gap-12">
+          <div class="userprofile-form-label align-self-center">Phone</div>
+          <div
+            class="d-flex flex-dir-column userprofile-form-input"
+            *ngIf="currentUser?.phoneNumber || showPhoneField; else noPhone">
+            <trudi-form-control
+              [errors]="[{errorName: 'invalidPhoneNumber', errorMessage: 'Invalid phone number'}]">
+              <trudi-number-field
+                placeholder="Enter your phone"
+                [maxCharacter]="maxCharacter"
+                (onChangeData)="handleChange($event)"
+                size="small"
+                [maskPattern]="isPrefix ? phoneNumberPattern : null"
+                [prefixText]="isPrefix ?'(' + areaCode + ')' : ''"
+                (triggerEventBlur)="onInputBlur()"
+                [formControl]="profileForm.controls['phone']"></trudi-number-field>
+            </trudi-form-control>
+          </div>
+          <ng-template #noPhone>
+            <div (click)="showPhoneField = true" class="noPhone">
+              no phone number
+            </div>
+          </ng-template>
+        </div>
+        <div class="profile-form-control d-flex align-items-center">
+          <div
+            class="userprofile-form-label align-self-center email-signature"
+            [class.mb-20]="_invalidFile">
+            Email signature
+          </div>
+          <div class="d-flex flex-dir-column userprofile-form-input">
+            <div class="d-flex gap-12 align-items-center user__upload--file">
+              <upload-file-button
+                [hiddenButtonUpload]="!!imageSignatureData && imageSignatureData.length"
+                [listFileData]="!!imageSignatureData ? imageSignatureData : []"
+                (getListFile)="getListFile($event)"
+                (changeFile)="showEmailSignatureModal = true"
+                (hasErrorMsg)="onHasErrorMsg($event)"
+                icon="iconUploadV2"
+                [showLoading]="true"
+                [useListFileData]="true"
+                [showFileSize]="false"
+                [showFileThumb]="false"
+                [multipleFile]="false"
+                [enableToast]="true"
+                [ngClass]="{'cursor-not-allowed' : isDisabled}"
+                [disableRemoveButton]="isDisabled"
+                [disable]="isDisabled"
+                [setCustomErrorMsg]="{
+                  fileSizeError: 'The file is larger than 25MB. Please upload a smaller file'
+                }"
+                [acceptTypeFile]="EMAIL_SIGNATURE_IMAGE_VALID_TYPE"
+                label="Upload your image"></upload-file-button>
+              <div class="edit-image">
+                <trudi-icon
+                  *ngIf="!!imageSignatureData && imageSignatureData.length"
+                  (click)="showEmailSignatureModal = true"
+                  icon="editIconOutline"></trudi-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-preview">
+    <email-signature-preview
+      [currentUserInfo]="currentUser"
+      [imageSignature]="currentEmailSignature?.mediaLink || ''"
+      [imageSignatureSize]="currentEmailSignature?.imageSize"
+      (changeAgencySignature)="handelChangeAgencySignature($event)"></email-signature-preview>
+  </div>
+</div>

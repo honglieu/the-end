@@ -1,0 +1,97 @@
+<form [formGroup]="taskTypeAction">
+  <trudi-form-control>
+    <trudi-single-select
+      [serversideSearch]="true"
+      (scrollToEnd)="getNextPage()"
+      class="move_task--select"
+      [items]="isLoading ? skeletonTask : taskList"
+      formControlName="selectedTask"
+      placeholder="Select task"
+      notFoundText="No results found"
+      label="Task"
+      bindValue="id"
+      bindLabel="''"
+      (onClear)="handleClearValue()"
+      (isOpened)="handleOpenSelectListTask()"
+      (triggerEventBlur)="handleBlurSelectListTask()"
+      (triggerEventChange)="onItemChange($event)"
+      [loading]="isLoading"
+      [typeahead]="searchText$"
+      [typeToSearchText]="'No results found'"
+      groupBy="tasks">
+      <ng-template trudi-label-tmp let-item="item" let-clear="clear">
+        <div class="label-select">
+          <div class="label-select__title">{{item?.title}}</div>
+          <div
+            class="label-select__address"
+            [ngClass]="{'font-italic': !item?.streetline}">
+            {{item?.streetline || item?.propertyName || 'No property'}}
+          </div>
+        </div>
+      </ng-template>
+
+      <ng-template trudi-header-tmp>
+        <div class="header_select">
+          <trudi-checkbox
+            formControlName="onlyMyTasks"
+            [label]="'My tasks'"></trudi-checkbox>
+          <trudi-checkbox
+            formControlName="onlyInprogress"
+            [label]="'In progress tasks'"></trudi-checkbox>
+        </div>
+      </ng-template>
+      <ng-template trudi-group-tmp let-item="item">
+        <div class="group_select">{{item?.topicName }}</div>
+      </ng-template>
+
+      <ng-template
+        trudi-option-tmp
+        let-item="item"
+        let-searchTerm="searchTerm?.trim() || ''">
+        <div
+          *ngIf="item && !isLoading; else showSkeleton"
+          class="option_select">
+          <div>
+            <div class="option_select--title">
+              <span class="task-title" [ngOptionHighlight]="searchTerm">
+                {{item.title}}
+              </span>
+
+              <trudi-badge
+                *ngIf="item?.statusBadge"
+                variant="role"
+                [text]="(item.statusBadge | async)"
+                size="small">
+              </trudi-badge>
+            </div>
+            <div class="option_select--property">
+              <span
+                [ngOptionHighlight]="searchTerm"
+                [ngClass]="{'font-italic': !item?.streetline}"
+                >{{item?.streetline || (isRmEnvironment ? item?.propertyName :
+                'No property')}}</span
+              >
+            </div>
+          </div>
+          <img
+            *ngIf="taskGroupDropdownService.taskTypeAction?.get('selectedTask').value === item.id"
+            src="/assets/icon/check-success.svg"
+            alt="selected-icon"
+            class="selected-icon" />
+        </div>
+        <ng-template #showSkeleton>
+          <div class="skeleton-container w-100 mt-10">
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="w-75 mb-4 skeleton-title"></nz-skeleton>
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="w-50"></nz-skeleton>
+          </div>
+        </ng-template>
+      </ng-template>
+    </trudi-single-select>
+  </trudi-form-control>
+</form>

@@ -1,0 +1,61 @@
+<div [formGroup]="form">
+  <div class="form__advance--container">
+    <div class="control__pre-screen">
+      <div class="row-label__container">
+        <span class="control__label">Pre-screen</span>
+        <trudi-checkbox label="Required" formControlName="preScreenIsRequired">
+        </trudi-checkbox>
+      </div>
+      <div class="row-content">
+        <div class="pre-screen__title w-100">
+          <trudi-form-control [checkSubmit]="!isSubmittedCommunicationForm">
+            <trudi-text-field
+              [checkSubmit]="!isSubmittedCommunicationForm"
+              label="Title"
+              formControlName="title"
+              [maxCharacter]="150">
+            </trudi-text-field>
+          </trudi-form-control>
+        </div>
+        <div class="pre-screen__title notice-issue w-100">
+          <trudi-form-control>
+            <trudi-text-field
+              label="Notice to leave issued for?"
+              formControlName="notice"
+              placeholder="Free text field">
+            </trudi-text-field>
+          </trudi-form-control>
+        </div>
+        <div class="pre-screen__select-time w-100">
+          <span class="control__label-content"
+            >Tenant must vacate the property by midnight on</span
+          >
+          <trudi-form-control>
+            <trudi-date-picker formControlName="beforeDate">
+            </trudi-date-picker>
+          </trudi-form-control>
+        </div>
+      </div>
+    </div>
+    <div class="control__pre-screen-attachment">
+      <div class="row-label__container">
+        <span class="control__label">Pre-screen: Select attachment</span>
+        <trudi-checkbox label="Required" formControlName="attachmentIsRequired">
+        </trudi-checkbox>
+      </div>
+      <div class="row-content">
+        <div class="attachment__form w-100">
+          <trudi-form-control [checkSubmit]="!isSubmittedCommunicationForm">
+            <trudi-text-field
+              [checkSubmit]="!isSubmittedCommunicationForm"
+              label="Attachment name"
+              formControlName="attachmentName"
+              placeholder="Enter attachment name"
+              [maxCharacter]="75">
+            </trudi-text-field>
+          </trudi-form-control>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

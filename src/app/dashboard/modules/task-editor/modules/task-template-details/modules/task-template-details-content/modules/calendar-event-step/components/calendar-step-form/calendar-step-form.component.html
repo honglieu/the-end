@@ -1,0 +1,49 @@
+<div [formGroup]="calendarEventForm" class="calendar-event-form">
+  <div class="calendar-wrapper w-100">
+    <div *ngIf="isShowUpgradeMessage" class="mb-16">
+      <upgrade-message
+        [action]="EActionShowMessageTooltip.EDIT_WORKFLOWS"
+        [isTooltip]="false"></upgrade-message>
+    </div>
+
+    <div class="event-type-label d-flex justify-content-between">
+      <div class="event-type-title">
+        <span class="title">Select event type</span>
+        <button
+          trudi-btn
+          variant="link"
+          size="medium"
+          (click)="openHelpDocument()">
+          Help
+        </button>
+      </div>
+      <div class="event-type-required">
+        <div class="y-center gap-4">
+          <trudi-checkbox
+            formControlName="isRequired"
+            [disabled]="isDisableForm"
+            label="Required"></trudi-checkbox>
+          <trudi-icon
+            icon="infoFill"
+            nz-tooltip
+            nzTooltipPlacement="bottomRight"
+            [nzTooltipOverlayClassName]="'tool-tip-calendar'"
+            nzTooltipTitle="Required steps must be completed before the remaining steps in the workflow can be actioned."></trudi-icon>
+        </div>
+      </div>
+    </div>
+    <div class="event-type-select mt-16">
+      <div class="list-contact-type">
+        <trudi-form-control
+          class="error-container d-flex gap-4"
+          [control]="eventType"
+          [errors]="[{errorName: 'required', errorMessage: 'Select an option to continue'}]">
+          <trudi-radio-button
+            formControlName="eventType"
+            [disabled]="isDisableForm"
+            [options]="radioListCalendarType"></trudi-radio-button>
+        </trudi-form-control>
+      </div>
+    </div>
+  </div>
+</div>

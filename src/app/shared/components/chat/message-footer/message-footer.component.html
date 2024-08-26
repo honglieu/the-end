@@ -1,0 +1,35 @@
+<div
+  [ngClass]="{'d-flex justify-content-end': !isShowTextWarning && senderType !== 'user'}">
+  <div class="sending-text" *ngIf="isSending">
+    Sending<span class="dot">.</span><span class="dot">.</span
+    ><span class="dot">.</span>
+  </div>
+  <div
+    class="error-text"
+    *ngIf="isError"
+    [class.resend-disable]="!isShowResendButton">
+    <p (click)="onResend($event)">
+      Delivery failed<span *ngIf="isShowResendButton">, click to resend</span>
+    </p>
+  </div>
+
+  <div class="d-flex align-items-center justify-content-between mt-4">
+    @if (isShowTextWarning) {
+    <div class="d-flex align-items-center gap-2 text-warning">
+      <trudi-icon [icon]="'infoCircle'" svgClass="size-12"></trudi-icon>
+      <span class="warning-call-name">Visible only to team members</span>
+    </div>
+    } @else {
+    <trudi-icon
+      *ngIf="senderType !== 'user' && !isSending && !isError"
+      class="mr-4"
+      svgClass="size-12"
+      [icon]="isRead ? 'iconSeenLogo' : 'iconSentLogo'"></trudi-icon>
+    }
+    <div
+      *ngIf="createdAt && !isSending && !isError"
+      class="text-muted footer-timestamp">
+      {{createdAt | formatTime: true | async }}
+    </div>
+  </div>
+</div>

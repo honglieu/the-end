@@ -1,0 +1,584 @@
+@import 'function';
+
+.modal-container {
+  position: fixed;
+  display: block;
+  height: 100vh;
+  width: 624px;
+  right: 0px;
+  top: 0;
+  z-index: 100;
+  background-color: var(--bg-base);
+  filter: drop-shadow(2px 0px 12px rgba(255, 255, 255, 0.08))
+    drop-shadow(14px 0px 36px rgba(0, 0, 0, 0.13));
+  cursor: default;
+
+  .modal-window {
+    .modal-popup-header {
+      padding: 16px;
+      @include fontSetup(var(--gray-700), 18px, 28px, normal, 600);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 5px;
+
+      .event-information {
+        width: 300px;
+      }
+      .event-add-button {
+        width: 40px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .text-title {
+        font-size: 20px;
+      }
+    }
+    .modal-popup-content {
+      padding-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+
+      .message-avatar {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+        position: absolute;
+        left: -12px;
+        top: 50%;
+        transform: translate(0, -50%);
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+          border-radius: 100%;
+        }
+
+        .trudi-avatar {
+          background: var(--white);
+          padding: 2px;
+        }
+      }
+
+      .height-60 {
+        height: 60px;
+      }
+
+      .height-58 {
+        height: 58px !important;
+      }
+
+      & .empty-message-chat-container {
+        overflow: auto;
+        height: 100%;
+        margin: 12px;
+        border-radius: 8px;
+        background: var(--gray-200);
+      }
+
+      & .empty-task-chat-container {
+        overflow: auto;
+        height: 100%;
+        background: var(--gray-50);
+        border-top: 2px solid var(--gray-50);
+      }
+
+      & .container-wrapper {
+        border: 1px solid transparent;
+        margin: 0 12px;
+        background-color: var(--gray-50);
+        border-radius: 8px;
+        flex: 1;
+        max-height: 100%;
+      }
+
+      & .chat-container {
+        overflow: overlay;
+        visibility: hidden;
+        width: 100%;
+        height: 100%;
+
+        &:focus,
+        &:hover,
+        .message-wrapper {
+          visibility: visible;
+        }
+
+        &::-webkit-scrollbar {
+          height: 5px;
+        }
+
+        .message-wrapper {
+          width: 100%;
+          padding: 12px 12px 0;
+
+          & .view-conversation-text {
+            color: var(--brand-500);
+            font-size: 12px;
+            font-weight: 500;
+            min-height: 16px;
+            padding: 12px;
+            cursor: pointer;
+            text-align: center;
+          }
+
+          & .message {
+            position: relative;
+            display: flex;
+
+            & .avatar {
+              width: 32px;
+              height: 32px;
+              min-width: 32px;
+            }
+
+            & .default_avatar {
+              width: 32px;
+              height: 32px;
+              min-width: 32px;
+              background-color: var(--gray-600);
+              position: relative;
+
+              label {
+                position: absolute;
+                top: 23%;
+                left: 25%;
+                color: var(--white);
+              }
+            }
+
+            & .message-body {
+              // width: 345px;
+              width: fit-content;
+              display: flex;
+              flex-direction: column;
+
+              //padding: 0 8px 0 4px;
+              app-message-header {
+                display: flex;
+                justify-content: flex-start;
+                padding-bottom: 1px;
+                margin-top: 12px;
+              }
+
+              &:hover
+                ::ng-deep
+                .message-file
+                .attachment-message-action-button {
+                visibility: visible !important;
+              }
+
+              app-message-default {
+                width: fit-content;
+                align-self: flex-end;
+              }
+
+              app-message-footer {
+                padding-top: 1px;
+                display: flex;
+                justify-content: flex-end;
+              }
+
+              &_nav-link {
+                width: 100%;
+                max-width: 100%;
+              }
+
+              & .trudi-url {
+                display: flex;
+                justify-content: flex-end;
+                margin-bottom: 8px;
+              }
+
+              &.not-message {
+                ::ng-deep {
+                  .trudi-url {
+                    .link {
+                      margin-top: 0;
+                    }
+                  }
+                }
+              }
+
+              & .with-message {
+                margin-top: 16px;
+              }
+
+              &.full-width {
+                max-width: 100% !important;
+                width: 100%;
+              }
+
+              & .header {
+                display: flex;
+                justify-content: space-between;
+              }
+
+              ::ng-deep app-message-default {
+                & .message-text {
+                  position: relative;
+                  border-radius: 8px;
+                  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+                  padding: 8px 14px 8px 20px;
+                  // min-width: 150px;
+                  word-break: break-word;
+                  white-space: pre-wrap;
+
+                  .text {
+                    color: var(--white);
+                    font-size: 14px;
+                    font-weight: 500;
+                    line-height: 12px;
+                  }
+
+                  .url {
+                    text-decoration: underline;
+                  }
+                }
+              }
+            }
+
+            & .message-body-wrapper {
+              flex-direction: column;
+              align-items: flex-end;
+
+              .message-options {
+                width: fit-content;
+                display: flex;
+                flex-direction: column;
+                padding: 0 8px 0 4px;
+              }
+            }
+
+            &.user {
+              & .message-body {
+                max-width: 60%;
+                transform: translateX(8px);
+              }
+
+              & .message-body {
+                ::ng-deep app-message-footer {
+                  align-self: flex-start !important;
+                }
+
+                ::ng-deep app-message-default {
+                  align-self: flex-start !important;
+
+                  .message-text {
+                    background-color: var(--white);
+
+                    .text {
+                      color: var(--gray-950);
+                    }
+
+                    .url {
+                      color: var(--gray-700);
+                    }
+                  }
+                }
+
+                ::ng-deep app-message-file {
+                  flex-direction: row !important;
+                }
+              }
+
+              & .text-muted {
+                font-size: 12px;
+                line-height: 1.33;
+                text-align: right;
+                color: rgba(0, 0, 0, 0.54);
+                opacity: 0.5;
+              }
+            }
+
+            &.admin {
+              flex-direction: row-reverse;
+
+              & .text-muted {
+                font-size: 12px;
+                line-height: 1.33;
+                text-align: right;
+                color: rgba(0, 0, 0, 0.54);
+                opacity: 0.5;
+
+                &:first-child::after {
+                  content: 'as Trudi';
+                  padding-right: 5px;
+                }
+              }
+
+              & .header-message-file {
+                padding-left: 32px;
+              }
+
+              & .message-body {
+                max-width: 60%;
+
+                @media all and (max-width: 1200px) {
+                  &.call {
+                    max-width: 100%;
+                  }
+                }
+              }
+
+              & .message-body {
+                ::ng-deep app-message-footer {
+                  justify-content: flex-end !important;
+                }
+
+                ::ng-deep app-message-default {
+                  .message-text {
+                    background-color: var(--bg-brand-solid-normal, #28ad99);
+                    color: var(--white);
+
+                    .url {
+                      color: var(--white);
+                    }
+
+                    a[data-action='via_link'] {
+                      color: var(--white);
+                      text-decoration: underline;
+                    }
+                  }
+                }
+              }
+            }
+
+            &.trudi {
+              flex-direction: row-reverse;
+
+              & .text-muted {
+                font-size: 12px;
+                line-height: 1.33;
+                text-align: right;
+                color: rgba(0, 0, 0, 0.54);
+                opacity: 0.5;
+
+                &:first-child::after {
+                  content: 'as Trudi';
+                  padding-right: 5px;
+                }
+              }
+
+              & .message-body {
+                max-width: 60%;
+
+                &__nav {
+                  display: flex;
+                  flex-direction: column;
+                  align-items: flex-end;
+                  width: 100%;
+                }
+
+                &_nav-link {
+                  width: 100%;
+                  max-width: 100%;
+                }
+              }
+
+              & .message-body {
+                ::ng-deep app-message-footer {
+                  justify-content: flex-end !important;
+                }
+
+                ::ng-deep app-message-default {
+                  .message-text {
+                    max-width: 600px;
+                    background-color: var(--bg-neutral-solid-normal, #85888e);
+                    color: var(--white);
+
+                    .url {
+                      color: var(--white);
+                    }
+                  }
+                }
+              }
+            }
+
+            &.trudi.message-ticket .message-body {
+              max-width: 100%;
+              width: 100%;
+
+              & ::ng-deep app-message-default,
+              & ::ng-deep app-message-header {
+                display: flex;
+                width: 60%;
+                max-width: 60%;
+                margin-left: auto;
+              }
+
+              & .ticket-wrapper {
+                max-width: 320px;
+                position: relative;
+                margin-right: auto;
+              }
+
+              & ::ng-deep app-chat-ticket .ticket {
+                min-width: 320px !important;
+              }
+            }
+
+            &.non-app-user {
+              &:nth-last-child(2) {
+                flex-direction: column-reverse;
+
+                .send-via-email-group {
+                  text-align: right;
+                  margin-top: -6px;
+                  margin-right: 16px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: flex-end;
+
+                  .send-via-email-text {
+                    font-size: 14px;
+                    color: var(--gray-500);
+                    margin-left: 6px;
+                  }
+                }
+              }
+            }
+
+            &.send-from-email {
+              padding-bottom: 0;
+            }
+
+            & .time-stamp-wrapper {
+              &.user {
+                left: 12px;
+              }
+
+              &.admin,
+              &.trudi {
+                right: 8px;
+              }
+
+              &.send-from-email {
+                right: 8px;
+                bottom: -4px;
+              }
+            }
+          }
+
+          & .typing-block {
+            margin-left: 4px;
+            margin-bottom: 12px;
+            position: relative;
+            padding-left: 8px;
+          }
+        }
+      }
+
+      .input-message {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        z-index: 12;
+        bottom: 0;
+        background: var(--white);
+        padding: 12px;
+        left: 0;
+        right: 0;
+        border-radius: 0 0 0 8px;
+
+        &__popup {
+          width: 230px;
+          border-radius: 4px;
+          box-shadow: 0 8px 8px 0 rgba(0, 0, 0, 0.24),
+            0 0 8px 0 rgba(0, 0, 0, 0.12);
+          background-color: var(--gray-25);
+          position: absolute;
+          top: -100px;
+          left: -5px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+
+          img {
+            margin: 0 22px;
+          }
+
+          &:after {
+            top: 100%;
+            left: 14%;
+            border: solid transparent;
+            content: ' ';
+            height: 0;
+            width: 0;
+            position: absolute;
+            pointer-events: none;
+            border-color: rgba(255, 255, 255, 0);
+            border-top-color: var(--gray-25);
+            border-width: 15px;
+            margin-left: -15px;
+          }
+        }
+
+        &__button {
+          cursor: pointer;
+          height: 25px;
+          width: 25px;
+          border-radius: 50%;
+          background: var(--brand-500);
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          font-size: 16px;
+          color: var(--gray-950);
+          position: relative;
+          margin-right: 12px;
+
+          .internal {
+            width: 25px;
+            height: 25px;
+          }
+
+          img {
+            width: 75%;
+            height: 75%;
+          }
+        }
+
+        &.active {
+          & .input-control {
+            border: 1px solid var(--brand-500);
+            font-size: 14px;
+            font-weight: 500;
+          }
+        }
+
+        .add-file {
+          margin-left: 12px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          height: 24px;
+          background-size: 24px;
+          margin-top: 0;
+          cursor: pointer;
+        }
+      }
+
+      & .message-responce {
+        position: relative;
+        display: flex;
+
+        & .message-input {
+          height: 64px;
+          padding-top: 15px;
+          resize: none;
+        }
+
+        & .send-butn {
+          height: 64px;
+          width: 100px;
+          text-align: center;
+          line-height: 50px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

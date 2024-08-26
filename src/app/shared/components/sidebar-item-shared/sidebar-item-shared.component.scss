@@ -1,0 +1,108 @@
+@import 'function';
+
+:host ul {
+  background-color: var(--gray-50);
+  li.single-item {
+    padding: 14px 12px !important;
+    background-color: var(--gray-50);
+    height: 32px;
+    @include fontSetup(
+      var(--fg-neutral-normal) !important,
+      14px,
+      20px,
+      normal,
+      500
+    );
+
+    .router-link {
+      color: var(--fg-neutral-normal) !important;
+    }
+
+    .prevent-click {
+      pointer-events: none;
+      cursor: not-allowed;
+      @include fontSetup(
+        var(--fg-neutral-weakest) !important,
+        14px,
+        20px,
+        normal,
+        500
+      );
+    }
+
+    &::after {
+      opacity: 0;
+    }
+
+    &:hover:not(.cursor-not-allowed):not(:has(.ant-menu-item-selected)) {
+      background: var(--bg-brand-tonal-stronger);
+
+      a {
+        color: var(--gray-600) !important;
+        font-weight: 600 !important;
+      }
+    }
+
+    &:active:not(.cursor-not-allowed):not(:has(.ant-menu-item-selected)) {
+      background: var(--bg-brand-tonal-strongest);
+    }
+
+    &:focus-within:not(.cursor-not-allowed):not(:has(.ant-menu-item-selected)) {
+      background: var(--bg-brand-tonal-strongest);
+
+      a {
+        color: var(--gray-600) !important;
+        font-weight: 600 !important;
+      }
+    }
+  }
+}
+
+:host .label-tab {
+  padding: 8px 22px !important;
+  @include fontSetup(
+    var(--fg-neutral-stronger) !important,
+    12px,
+    16px,
+    normal,
+    600
+  );
+}
+
+:host ::ng-deep .ant-menu-inline {
+  width: 188px;
+  padding: 0px 12px;
+  & > .ant-menu-submenu > .ant-menu-submenu-title {
+    height: 32px;
+  }
+
+  & .ant-menu-item-selected {
+    background: var(--bg-brand-tonal-stronger) !important;
+
+    .item-name {
+      @include fontSetup(
+        var(--fg-neutral-strongest) !important,
+        14px,
+        20px,
+        normal,
+        600 !important
+      );
+    }
+  }
+}
+
+::ng-deep {
+  .ant-tooltip.tool-tip-item {
+    text-align: left !important;
+    max-width: 250px;
+    .ant-tooltip-inner {
+      text-align: left !important;
+      border-radius: 4px;
+    }
+    .ant-tooltip-arrow {
+      .ant-tooltip-arrow-content::before {
+        background: rgba(100, 100, 100, 0.8);
+      }
+    }
+  }
+}

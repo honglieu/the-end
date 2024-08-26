@@ -1,0 +1,34 @@
+@import 'function';
+
+:host ::ng-deep {
+  .receivers-info-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    &-content {
+      overflow: hidden;
+      white-space: nowrap;
+      width: 100%;
+    }
+
+    .number-more {
+      color: var(--gray-400, #999999);
+    }
+
+    .to-place-holder {
+      @include fontSetup(var(--bg-overlay-dark), 14px, 20px, normal, 400);
+    }
+
+    .pseudo-prefix {
+      @include fontSetup(var(--fg-neutral-weaker), 14px, 20px, normal, 400);
+      :focus {
+        color: red !important;
+      }
+    }
+
+    .separate-el {
+      @include fontSetup(var(--fg-neutral-weaker), 14px, 20px, normal, 400);
+    }
+  }
+}

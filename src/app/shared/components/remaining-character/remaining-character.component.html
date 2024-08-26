@@ -1,0 +1,9 @@
+<ng-container *ngIf="showCurrentTextLength; else remainingTextBlock">
+  <p>
+    {{ countCharacterUp ? currentTextLength + '/' + maxlength : remainingText +
+    '/' + maxlength}}
+  </p></ng-container
+>
+<ng-template #remainingTextBlock>
+  <p>{{remainingText}}</p>
+</ng-template>

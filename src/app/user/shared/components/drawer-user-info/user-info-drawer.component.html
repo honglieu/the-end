@@ -1,0 +1,418 @@
+<!-- drawer case contact page -->
+<trudi-drawer
+  *ngIf="openFrom !== ETypePage.TASK_DETAIL"
+  [visible]="visible"
+  (onClose)="onCloseDrawer()"
+  [hiddenFooter]="true"
+  [width]="470"
+  [headerTpl]="headerTpl">
+  <ng-container
+    *ngTemplateOutlet="isLoading ? loadingTpl : defaultTpl"></ng-container>
+  <ng-container *ngTemplateOutlet="modalTpl"></ng-container>
+</trudi-drawer>
+
+<!-- drawer case task detail -->
+<div *ngIf="openFrom === ETypePage.TASK_DETAIL">
+  <div
+    class="modal-container"
+    [style.height]="isTaskDetail ? '100vh' : 'calc(100vh - 52px)'"
+    [style.top.px]="isTaskDetail ? 0 : 52"
+    [class.modal-container-white]="!listUser?.length || isLoading"
+    [@openClose]="visible">
+    <ng-container *ngTemplateOutlet="headerTpl"></ng-container>
+    <ng-container
+      *ngTemplateOutlet="isLoading ? loadingTpl : listUser.length || isMailboxType ? defaultTpl : emptyTpl
+    "></ng-container>
+  </div>
+  <ng-container *ngTemplateOutlet="modalTpl"></ng-container>
+</div>
+
+<ng-template #headerTpl>
+  <ng-container [ngSwitch]="openFrom">
+    <div *ngSwitchCase="ETypePage.TASK_DETAIL">
+      <div class="drawer-header">
+        <ng-container
+          *ngIf="!isMailboxType || isAppMessage || isSMSMessage || isWhatsApp; else headerTpl_mailbox">
+          @switch (currentDataUser?.createdFrom ||
+          currentDataUser?.conversationType) { @case
+          (EConversationType.VOICE_MAIL) {
+          <div class="drawer-header__title">
+            {{(currentDataUser?.fromPhoneNumber || 'Unknown') |
+            phoneNumberFormat}}
+          </div>
+          } @case (EConversationType.SMS) {
+          <div class="drawer-header__title">
+            {{currentDataUser?.pmNameClick ? currentDataUser.email :
+            currentDataUser?.fromPhoneNumber | phoneNumberFormat}}
+          </div>
+          } @case (EConversationType.WHATSAPP) {
+          <div class="drawer-header__title">
+            {{currentDataUser?.pmNameClick ? currentDataUser.email :
+            (currentDataUser?.externalId || currentDataUser?.fromPhoneNumber) |
+            phoneNumberFormat}}
+          </div>
+          } @case (EConversationType.MESSENGER) {
+          @if(currentDataUser?.pmNameClick){
+          <div class="drawer-header__title">{{currentDataUser.email}}</div>
+          } @else {
+          <div class="drawer-header__title drawer-header__title--facebook">
+            <div class="drawer-header__title__name">
+              {{currentDataUser?.name}}
+            </div>
+            <div class="drawer-header__title__email">
+              <span> {{currentDataUser?.emailVerified}} </span>
+              @if(currentDataUser?.emailVerified) {
+              <trudi-icon
+                [nzTooltipTitle]="'Verified'"
+                nz-tooltip
+                icon="verifiedIcon"></trudi-icon>
+              }
+            </div>
+          </div>
+          } } @default {
+          <div class="drawer-header__title">{{currentDataUser?.email}}</div>
+          } }
+
+          <div
+            *ngIf="[EConversationType.SMS, EConversationType.WHATSAPP].includes(currentDataUser?.conversationType) && currentDataUser?.emailVerified?.length && !currentDataUser?.pmNameClick"
+            class="drawer-header__email">
+            <span class="email-text">{{currentDataUser?.emailVerified}}</span>
+            <trudi-icon
+              icon="activeCheckboxCircle"
+              nz-tooltip
+              [nzTooltipTitle]="'Verified'"
+              nzTooltipPlacement="bottom"
+              [style]="{ 'width.px': 14, 'height.px': 14 }"></trudi-icon>
+          </div>
+          <div class="drawer-header__action" *ngIf="isHiddenAddContactButton">
+            <add-contact-popup
+              [participantInfo]="currentDataUser"
+              [popoverPlacement]="'leftTop'"
+              [applySecondaryLogic]="true"
+              (onOk)="handleAddContact()"
+              [disabled]="[EConversationType.SMS, EConversationType.WHATSAPP, EConversationType.MESSENGER].includes(currentDataUser?.conversationType) && (!currentDataUser.isUserVerified || !currentDataUser.currentPMJoined)">
+              <ng-template #template>
+                <span class="d-flex align-items-center gap-4">
+                  <img src="/assets/icon/icon-plus.svg" alt="icon plus" />
+                  <span>Add contact</span>
+                </span>
+              </ng-template>
+            </add-contact-popup>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <ng-container *ngSwitchDefault></ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #headerTpl_mailbox>
+  <div class="drawer-header__title">{{currentDataUser?.email}}</div>
+  <div class="drawer-header__mailbox-name">
+    {{currentDataUser?.name || currentDataUser?.firstName}}
+  </div>
+</ng-template>
+
+<ng-template #defaultTpl>
+  <ng-container [ngSwitch]="openFrom" *ngIf="!isMailboxType || isAppMessage">
+    <div
+      *ngSwitchCase="ETypePage.TASK_DETAIL"
+      class="list-user-email-container"
+      #infinityScroll>
+      <list-user-email
+        [isDisableActionByOffBoardStatus]="isDisableActionByOffBoardStatus"
+        [isNotDetectedContact]="isNotDetectedContact && [EConversationType.SMS,EConversationType.WHATSAPP].includes(currentDataUser?.conversationType)"
+        [userContacts]="listUser"
+        [isRmSystem]="isRmSystem"
+        [visible]="visible"
+        [currentDataUser]="currentDataUser"
+        [isSMSMessage]="isSMSMessage"
+        [isWhatsApp]="isWhatsApp"
+        [isAppMessage]="isAppMessage"></list-user-email>
+    </div>
+
+    <ng-container *ngSwitchDefault>
+      <ng-container
+        *ngIf="openFrom === ETypePage.TENANTS_LANLORDS  else otherPage">
+        <div *ngFor="let item of listUser" class="list-user-property-container">
+          <list-user-property
+            [isDisableActionByOffBoardStatus]="isDisableActionByOffBoardStatus"
+            [currentDataUser]="item.user"
+            [openFrom]="openFrom"
+            [userProperty]="item"></list-user-property>
+        </div>
+      </ng-container>
+      <ng-template #otherPage>
+        <list-user-property
+          [isDisableActionByOffBoardStatus]="isDisableActionByOffBoardStatus"
+          [currentDataUser]="currentDataUser"
+          [openFrom]="openFrom"></list-user-property>
+      </ng-template>
+    </ng-container>
+  </ng-container>
+  <ng-container
+    *ngIf="isMailboxType && currentDataUser?.isSender && [ETypePage.TASK_DETAIL].includes(openFrom) && listUser?.length && !isAppMessage">
+    <div class="description-text">Team member who sent this email:</div>
+    <profile-card [profileData]="listUser[0].user"></profile-card>
+  </ng-container>
+</ng-template>
+
+<ng-template #emptyTpl>
+  <div class="user-info-not-found-container">
+    <trudi-icon icon="noContact"></trudi-icon>
+    <div class="user-info-not-found-container__action">
+      @if (currentDataUser?.isBlockNumber) {
+      <span class="user-info-not-found-container__title">
+        We can't identify this contact.
+      </span>
+      } @else { @if (unhappyCaseContent) {
+      <span class="user-info-not-found-container__title">
+        {{ unhappyCaseContent.title }}
+      </span>
+      <span class="user-info-not-found-container__text">
+        {{ unhappyCaseContent.description }}
+      </span>
+      <add-contact-popup
+        [participantInfo]="currentDataUser"
+        [popoverPlacement]="'leftTop'"
+        [applySecondaryLogic]="currentDataUser?.conversationType === EConversationType.SMS"
+        (onOk)="handleAddContact()">
+        <ng-template #template>
+          <button
+            trudi-btn
+            [disabled]="!visible || ([EConversationType.SMS, EConversationType.WHATSAPP, EConversationType.MESSENGER].includes(currentDataUser?.conversationType) && (!currentDataUser.isUserVerified || !currentDataUser.currentPMJoined))">
+            <div class="d-flex gap-8">
+              <trudi-icon icon="plusWhite"></trudi-icon>
+              <span>Add contact</span>
+            </div>
+          </button>
+        </ng-template>
+      </add-contact-popup>
+      } }
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #modalTpl>
+  <export-conversation-history
+    [disableExportButton]="disableExportButton"
+    (exportConversationHistory)="exportConversationHistory()"
+    (visibleChange)="closeExportModal()"
+    [visible]="exportConversationState?.state">
+  </export-conversation-history>
+
+  <call-request
+    *ngIf="callRequestState?.state"
+    [visible]="callRequestState.state"
+    [typeOfCall]="callRequestState.typeCall"
+    [userProperty]="callRequestState.user"
+    [listPhoneNumber]="callRequestState.listMobileNumber"
+    [callTo]="callRequestState.callTo"
+    (onCloseModal)="onCloseMultiModal()"></call-request>
+
+  <plans-summary-pop-up
+    [isShowModal]="upgradePlanState?.state"
+    [currentPlan]="upgradePlanState.plan"
+    (onQuit)="onCloseMultiModal();"
+    (changePlan)=" onChangePlanSummaryModal()">
+  </plans-summary-pop-up>
+
+  <trudi-modal
+    *ngIf="upgradePlanState?.stateRequestSend"
+    [visible]="upgradePlanState?.stateRequestSend"
+    [modelWidth]="624"
+    [closable]="false"
+    [autoFocus]="null"
+    [hiddenCancelBtn]="true"
+    okText="Ok, got it"
+    className="task-editor-popup"
+    title="We’re on it"
+    subTitle=""
+    (onOk)="onCloseMultiModal()">
+    <div class="d-flex flex-dir-column gap-20 request-sent-text">
+      <div>We’ve received your request to upgrade your subscription.</div>
+      <div>One of our Sales team will be in contact shortly.</div>
+    </div>
+  </trudi-modal>
+</ng-template>
+
+<ng-template #loadingTpl>
+  <div class="user-info-skeleton d-flex flex-dir-column gap-16">
+    <div class="header-user-info">
+      <div class="d-flex gap-6">
+        <div class="avatar-wrapper">
+          <div class="avatar">
+            <nz-skeleton
+              [nzAvatar]="true"
+              [nzParagraph]="{ rows: 4 }"></nz-skeleton>
+          </div>
+          <div class="sync-cloud">
+            <nz-skeleton
+              style="width: 16px; height: 14px"
+              class="skeleton-icon"
+              [nzActive]="true"
+              [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+          </div>
+        </div>
+        <div class="d-flex flex-dir-column gap-10">
+          <nz-skeleton
+            style="width: 46px"
+            [nzActive]="true"
+            [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+          <div class="d-flex align-items-center gap-12">
+            <nz-skeleton
+              style="width: 94px"
+              [nzActive]="true"
+              [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+            <nz-skeleton
+              style="width: 34px"
+              [nzActive]="true"
+              [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+          </div>
+        </div>
+
+        <div class="d-flex gap-16 ml-auto">
+          <nz-skeleton
+            style="width: 16px; height: 14px"
+            class="skeleton-icon"
+            [nzActive]="true"
+            [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+          <nz-skeleton
+            style="width: 16px; height: 14px"
+            class="skeleton-icon"
+            [nzActive]="true"
+            [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+          <nz-skeleton
+            style="width: 16px; height: 14px"
+            class="skeleton-icon"
+            [nzActive]="true"
+            [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+        </div>
+      </div>
+    </div>
+    <div class="content-user-info d-flex flex-dir-column gap-16">
+      <div class="d-flex gap-6">
+        <nz-skeleton
+          class="skeleton-icon"
+          style="width: 16px; height: 14px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+        <nz-skeleton
+          style="width: 134px; height: 10px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+      </div>
+      <div class="d-flex gap-6">
+        <nz-skeleton
+          class="skeleton-icon"
+          style="width: 16px; height: 14px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+        <nz-skeleton
+          style="width: 46px; height: 10px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+      </div>
+      <div class="d-flex gap-6">
+        <nz-skeleton
+          class="skeleton-icon"
+          style="width: 16px; height: 14px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+        <div class="d-flex flex-dir-column gap-8">
+          <nz-skeleton
+            style="width: 76px; height: 10px"
+            [nzActive]="true"
+            [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+          <nz-skeleton
+            style="width: 84px; height: 10px"
+            [nzActive]="true"
+            [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+        </div>
+      </div>
+      <div class="d-flex gap-6">
+        <nz-skeleton
+          class="skeleton-icon"
+          style="width: 16px; height: 14px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+        <nz-skeleton
+          style="width: 58px; height: 10px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+      </div>
+    </div>
+
+    <div class="content-user-info d-flex flex-dir-column gap-16">
+      <div class="d-flex gap-6">
+        <nz-skeleton
+          style="width: 163px; height: 10px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+        <nz-skeleton
+          style="width: 94px; height: 10px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+      </div>
+
+      <div class="d-flex gap-6">
+        <nz-skeleton
+          style="width: 163px; height: 10px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+        <nz-skeleton
+          style="width: 94px; height: 10px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+      </div>
+
+      <div class="d-flex gap-6">
+        <nz-skeleton
+          style="width: 232px; height: 10px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+        <div class="d-flex gap-10">
+          <nz-skeleton
+            style="width: 33px; height: 10px"
+            [nzActive]="true"
+            [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+          <nz-skeleton
+            style="width: 243px; height: 10px"
+            [nzActive]="true"
+            [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+        </div>
+      </div>
+
+      <div class="d-flex gap-6">
+        <nz-skeleton
+          class="skeleton-icon"
+          style="width: 12px; height: 12px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+        <nz-skeleton
+          style="width: 173px; height: 10px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+      </div>
+
+      <div class="d-flex gap-6">
+        <nz-skeleton
+          style="width: 60px; height: 12px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+        <nz-skeleton
+          style="width: 129px; height: 10px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+      </div>
+    </div>
+  </div>
+</ng-template>

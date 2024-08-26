@@ -1,0 +1,46 @@
+appId: com.trudi.portal.preprod
+productName: "Trudi® PreProd"
+buildVersion: 0.0.0
+protocols:
+  - name: PreprodWebContent
+    schemes:
+      - preprod-web-content
+win:
+  target:
+    - nsis
+    - appx
+  icon: assets/icons/icon.png
+nsis:
+  oneClick: false
+  artifactName: ${productName}.${ext}
+  uninstallDisplayName: ${productName}
+  allowToChangeInstallationDirectory: true
+  deleteAppDataOnUninstall: true
+  perMachine: true
+appx:
+  identityName: TruletPropertyManagementP.TrudiPortal
+  publisher: CN=60EF9709-292B-40D4-BC16-6B1BA4707AE4
+  publisherDisplayName: TRULET PROPERTY MANAGEMENT PTY LTD.
+mac:
+  target:
+    - target: mas
+      arch: universal
+    - dmg
+  minimumSystemVersion: 11.0.0
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  extendInfo:
+    NSMicrophoneUsageDescription: Access to the Microphone is required to facilitate video calls between users from within the app.
+    NSCameraUsageDescription: Camera is used to facilitate video calls between users from within the app.
+  icon: assets/icons/icon.icns
+  entitlements: build/preprod/entitlements.mac.plist
+  provisioningProfile: build/preprod/TRUDI_PORTAL_PRE_PROD.provisionprofile
+mas:
+  type: distribution
+  hardenedRuntime: false
+  extendInfo:
+    NSMicrophoneUsageDescription: Access to the Microphone is required to facilitate video calls between users from within the app.
+    NSCameraUsageDescription: Camera is used to facilitate video calls between users from within the app.
+  entitlements: build/preprod/entitlements.mas.plist
+  entitlementsInherit: build/preprod/entitlements.mas.inherit.plist
+  entitlementsLoginHelper: build/preprod/entitlements.mas.loginhelper.plist

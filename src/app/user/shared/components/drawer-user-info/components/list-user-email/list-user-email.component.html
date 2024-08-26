@@ -1,0 +1,182 @@
+<div class="user-email-container">
+  <!-- internal contact -->
+  @if(textNoPropertyOrNoAssignedContact?.length &&
+  listContactInternalProperty.length === 0) {
+  <div class="user-email-container__no-contact-matching">
+    {{textNoPropertyOrNoAssignedContact}}
+  </div>
+  }
+  <div class="user-email-container__internal-contact">
+    <div
+      *ngFor="let item of listContactInternalProperty; trackBy: trackByUserId">
+      <div
+        class="user-email-container__item--assignee"
+        [ngClass]="{
+            'user-email-container__item--not-assignee': !item.isAssigned,
+            'user-email-container__item--assignee': item.isAssigned,
+            'user-email-container__assignee-box': item.isAssigned
+          }">
+        <div
+          *ngIf="item.isAssigned"
+          class="user-email-container__assignee-info">
+          <trudi-icon icon="tickWhite"></trudi-icon> Currently assigned to this
+          conversation
+        </div>
+        <ng-container
+          *ngTemplateOutlet="boxTemplate;
+          context: { item: item, hiddenBtnAssign: true, from: 'internal' }"></ng-container>
+      </div>
+    </div>
+  </div>
+
+  <!-- other contact -->
+  @if (listContactExternalProperty.length) {
+  <div
+    class="user-email-container__title-other"
+    [ngClass]="{'no-property': !(conversationPropertyId || currentDataUser?.conversationPropertyId) && isSMSMessage}">
+    @switch (currentDataUser?.conversationType || '') { @case
+    (([conversationType.VOICE_MAIL,
+    conversationType.SMS].includes(currentDataUser?.conversationType) &&
+    !currentDataUser?.emailVerified) ? currentDataUser?.conversationType :
+    'none' ) {
+    <span class="break-all"
+      >{{currentDataUser?.fromPhoneNumber | phoneNumberFormat}}</span
+    >
+    } @case (([conversationType.MESSENGER, conversationType.SMS,
+    conversationType.WHATSAPP].includes(currentDataUser?.conversationType)) ?
+    currentDataUser?.conversationType : 'none') {
+    <span>This user</span>
+    } @default { {{ currentDataUser?.email}} }}
+    {{(currentDataUser?.conversationType === conversationType.WHATSAPP &&
+    !currentDataUser?.emailVerified && isAssigned) ? 'is linked to the other
+    contacts:' : 'is linked to the following contacts in your database:'}}
+  </div>
+  }
+  <div class="user-email-container__external-contact">
+    <div
+      *ngFor="let item of listContactExternalProperty; trackBy: trackByUserId">
+      <div
+        class="user-email-container__item--assignee user-email-container__item--not-assignee">
+        <ng-container
+          *ngTemplateOutlet="boxTemplate;
+        context: { item: item, hiddenBtnAssign: false , from: 'external' }"></ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template
+  #boxTemplate
+  let-item="item"
+  let-hiddenBtnAssign="hiddenBtnAssign"
+  let-from="from">
+  <div class="user-email-container__box">
+    <user-header-toolbar
+      [isDisableActionByOffBoardStatus]="isDisableActionByOffBoardStatus"
+      [openFrom]="ETypePage.TASK_DETAIL"
+      [selectUserProperty]="currentDataUser"
+      [userProperty]="item"
+      [currentDataUser]="item.user"
+      [isAppMessage]="isAppMessage"
+      [isNotDetectedContact]="isNotDetectedContact"></user-header-toolbar>
+    <card-user-info
+      [currentDataUser]="item.user"
+      [selectUserProperty]="currentDataUser"
+      [openFrom]="ETypePage.TASK_DETAIL"
+      [isNotDetectedContact]="isNotDetectedContact"></card-user-info>
+    <ng-container *ngIf="item.isMatchesProperty || isNoPropertyConversation">
+      <lease-user-info [userProperty]="item"></lease-user-info>
+    </ng-container>
+    <div
+      class="user-email-container__box--action d-flex justify-content-between"
+      *ngIf="item.type === EUserPropertyType.LEAD ? !item?.isAssigned &&
+        (
+          (
+             currentDataUser?.conversationType !== conversationType.MESSENGER
+             && currentDataUser?.conversationType !== conversationType.WHATSAPP
+          )
+          || currentDataUser?.conversationType !== conversationType.SMS
+       )
+      : true">
+      <div
+        *ngIf="getAssignButtonHiddenStatus(item, hiddenBtnAssign)"
+        class="d-flex gap-4 align-items-center">
+        <span
+          class="cursor-pointer"
+          [ngClass]="{ 'disabled': isLoading || isConsole || isArchiveMailbox || isDisconnectedMailbox || isNotDetectedContact
+          ||
+          (
+            [conversationType.SMS, conversationType.WHATSAPP, conversationType.MESSENGER].includes(currentDataUser?.conversationType)
+            && (!currentDataUser.isUserVerified || !currentDataUser.currentPMJoined))
+          }"
+          [tabIndex]="0"
+          PreventButton
+          [attr.data-button-key]="EButtonTask.ASSIGN_CONTACT"
+          [attr.data-button-type]="EButtonType.TASK"
+          (leftClick)="handleAssignConversation(item)"
+          >Assign to this conversation</span
+        >
+      </div>
+      <div
+        *ngIf="item.type !== EUserPropertyType.LEAD"
+        class="d-flex justify-content-center align-content ml-auto">
+        <button
+          [disabled]="isNotDetectedContact"
+          trudi-tooltip
+          nzTooltipTrigger="hover"
+          nzTooltipTitle="Export conversation history as PDF"
+          nzTooltipPlacement="topRight"
+          nzTooltipOverlayClassName="tooltip-action-button"
+          class="action-button export-button"
+          PreventButton
+          [attr.data-button-key]="EButtonTask.EXPORT_HISTORY_CONVERSATION"
+          [attr.data-button-type]="EButtonType.TASK"
+          (leftClick)="handleExportHistoryConversation(item)"
+          *ngIf="!item.isMatchesException">
+          <trudi-icon icon="exportUserIcon" class="cursor-pointer"></trudi-icon>
+        </button>
+        <div
+          class="action-button disabled"
+          *ngIf="(item.isDisableDeleted || isLoading || isNotDetectedContact || currentDataUser?.pmNameClick); else activeDelete"
+          trudi-tooltip
+          [nzTooltipTitle]="item?.textTooltip"
+          nzTooltipPlacement="topRight"
+          nzTooltipOverlayClassName="tooltip-action-button">
+          <trudi-icon icon="deletedDisable"></trudi-icon>
+        </div>
+
+        <ng-template #activeDelete>
+          <div
+            trudi-tooltip
+            nzTooltipTrigger="hover"
+            nzTooltipTitle="Delete contact"
+            nzTooltipPlacement="topRight"
+            nzTooltipOverlayClassName="tooltip-action-button"
+            class="action-button"
+            PreventButton
+            [attr.data-button-key]="EButtonTask.DELETE_CONTACT"
+            [attr.data-button-type]="EButtonType.TASK"
+            (leftClick)="handlePreventDeleteContact(item)">
+            <trudi-icon
+              icon="deleteUserIcon"
+              class="cursor-pointer"></trudi-icon>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<trudi-modal
+  *ngIf="isShowQuitConfirm"
+  [visible]="isShowQuitConfirm"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  className="trudi-modal-custom">
+  <app-popup-delete
+    [title]="'Are you sure you want to delete?'"
+    [disable]="isConsole || isArchiveMailbox || isDisconnectedMailbox"
+    (onCancel)="handleCloseModalDelete()"
+    (onDelete)="handleDeleteItems()">
+  </app-popup-delete>
+</trudi-modal>

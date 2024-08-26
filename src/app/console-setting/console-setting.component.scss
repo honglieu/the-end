@@ -1,0 +1,45 @@
+@import 'function';
+
+.console-setting {
+  height: 100vh;
+  .left-sidebar {
+    padding: 16px;
+    background-color: var(--gray-50);
+    .header {
+      &_icon {
+        .exit-btn {
+          color: var(--gray-500);
+        }
+      }
+      &_title {
+        padding: 12px;
+        @include fontSetup(
+          var(--fg-neutral-strongest),
+          18px,
+          28px,
+          normal,
+          600
+        );
+      }
+    }
+    .sidebar-title {
+      margin: 12px auto 16px auto;
+      @include fontSetup(var(--gray-600), 16px, 24px, normal, 600);
+    }
+    ::ng-deep ul {
+      padding: 0;
+      li {
+        background: var(--gray-200);
+      }
+    }
+  }
+}
+  ::ng-deep .console-setting {
+  .sidebar-wrapper {
+    height: 100%;
+    .left-content {
+      width: auto !important;
+      overflow: initial !important;
+    }
+  }
+}

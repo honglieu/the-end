@@ -1,0 +1,98 @@
+@import 'function';
+
+:host {
+  .form__advance--container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    ::ng-deep trudi-text-field .trudi-ui-text-field-label {
+      @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 400);
+    }
+
+    ::ng-deep trudi-date-picker input {
+      @include fontSetup(
+        var(--fg-neutral-weaker, #999),
+        14px,
+        20px,
+        normal,
+        500
+      );
+    }
+
+    ::ng-deep .notice-issue trudi-text-field input {
+      @include fontSetup(
+        var(--fg-neutral-weaker, #999) !important,
+        14px,
+        20px,
+        normal,
+        500
+      );
+    }
+  }
+}
+
+.control__pre-screen,
+.control__pre-screen-attachment {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+::ng-deep {
+  .trudi-picker-disabled {
+    .trudi-picker-suffix {
+      cursor: not-allowed !important;
+    }
+  }
+}
+
+.control__label {
+  @include fontSetup(
+    var(--fg-neutral-stronger, #3d3d3d),
+    14px,
+    20px,
+    normal,
+    600
+  );
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.row-label__container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.row-content {
+  border-radius: 8px;
+  border: 1px solid var(--border-neutral-dark, #d8dcdf);
+
+  display: flex;
+  padding: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  align-self: stretch;
+}
+
+.trudi-picker {
+  max-width: unset !important;
+}
+
+.control__label-content {
+  @include fontSetup(
+    var(--fg-neutral-normal, #646464),
+    12px,
+    16px,
+    normal,
+    400
+  );
+}
+
+.pre-screen__title,
+.pre-screen__select-time,
+.attachment__form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}

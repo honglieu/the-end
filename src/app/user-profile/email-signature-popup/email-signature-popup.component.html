@@ -1,0 +1,83 @@
+<trudi-modal
+  [(visible)]="this.showEmailSignatureModal"
+  [autoFocus]="false"
+  [modelWidth]="640"
+  (onCancel)="closeModal.emit()"
+  className="modal-email-signature"
+  title="Email signature">
+  <div class="email-signature-body">
+    <!-- Image -->
+    <div class="croppie-wrapper d-flex gap-16 flex-dir-column">
+      <nz-skeleton
+        [nzTitle]="false"
+        class="content-signature-preview"
+        [nzRound]="true"
+        [nzParagraph]="{ rows: 4, width: [80, '100%', '100%', 200] }"></nz-skeleton>
+
+      <img
+        #myImage
+        [class]="{
+          'image-signature': !!currentImageSignature,
+          'visibility-0 ': !currentImageSignature
+        }"
+        [style.width.px]="currentImageSize?.width"
+        [style.height.px]="currentImageSize?.height"
+        [src]="currentImageSignature?.mediaLink || ''" />
+
+      <div class="signature">
+        <div
+          class="fit-content"
+          [innerHTML]="(agencySignature || '') | safe"></div>
+      </div>
+    </div>
+
+    <!-- Slider -->
+    <div class="slider-wrapper d-flex align-items-center">
+      <button class="minus-button" (click)="handleZoomInOut(sliderType.MINUS)">
+        <trudi-icon icon="minus"></trudi-icon>
+      </button>
+      <nz-slider
+        class="w-100"
+        [nzTooltipVisible]="'never'"
+        [nzMin]="0.35"
+        [nzMax]="1"
+        [nzStep]="stepNumber"
+        [(ngModel)]="sliderValue"
+        (ngModelChange)="onChangeSlider()"></nz-slider>
+      <canvas #canvas hidden></canvas>
+      <button class="plus-button" (click)="handleZoomInOut(sliderType.PLUS)">
+        <trudi-icon icon="plus"></trudi-icon>
+      </button>
+    </div>
+  </div>
+
+  <ng-template #footerModal>
+    <div class="d-flex gap-12 align-items-center justify-content-end">
+      <button
+        trudi-btn
+        variant="tonal"
+        [disabled]="uploadingImage"
+        (click)="uploader.click()"
+        data-e2e="confirm-btn">
+        Change image
+      </button>
+
+      <button
+        trudi-btn
+        [disabled]="uploadingImage"
+        (click)="onConfirm()"
+        data-e2e="confirm-btn">
+        Save changes
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>
+
+<input
+  hidden
+  name="uploader"
+  id="uploader"
+  #uploader
+  type="file"
+  [accept]="EMAIL_SIGNATURE_IMAGE_VALID_TYPE"
+  (change)="onFileChange($event)" />

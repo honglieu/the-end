@@ -1,0 +1,54 @@
+<trudi-step
+  [model]="model"
+  [showIconTitle]="false"
+  [hideProcessLine]="false"
+  [propertyTreeStep]="false"
+  [buttonKey]="buttonKey"
+  (onProcess)="enableProcess()">
+</trudi-step>
+
+<resizable-modal-popup
+  *ngIf="stepPopupState.lettingRecommendation"
+  [show]="stepPopupState.lettingRecommendation"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [closable]="true"
+  [title]="model?.fields?.customControl?.lettingTitle || ''"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="472"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [footerTemplate]="footerModal"
+  class="task-editor-popup"
+  (onCancel)="handleCloseEventModal()"
+  [isCustomMoveable]="true">
+  <ng-template #footerModal>
+    <div class="d-flex gap-8 letting-recommendations-footer">
+      <button
+        *ngIf="hasConfirmEssential"
+        trudi-btn
+        variant="outlined"
+        btnType="neutral"
+        (click)="onBack()">
+        Back
+      </button>
+      <button trudi-btn (click)="handleConfirmEventModal()">Next</button>
+    </div>
+  </ng-template>
+  <div class="letting-wrapper">
+    <letting-recommendation-form
+      #lettingForm
+      [prefillData]="lettingRecommendationData"
+      [isRequired]="model?.fields?.customControl?.isRequired"></letting-recommendation-form>
+  </div>
+</resizable-modal-popup>
+<!-- <trudi-send-msg-v2
+  *ngIf="stepPopupState.trudiSendMessage"
+  [rawMsg]="textForwardMessg"
+  [configs]="sendMessageConfigs"
+  [listOfFiles]="model?.fields?.files || []"
+  (onQuit)="handleQuitSendMsg()"
+  (onSendMsg)="onSendMsg($event)"
+  (onBack)="handleBackSendMsg()"></trudi-send-msg-v2> -->

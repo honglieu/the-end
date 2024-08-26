@@ -1,0 +1,54 @@
+<div class="wraper-step">
+  <ng-container
+    *rxFor="let section of sections; let last = last; let first=first; trackBy: trackByFn;">
+    <ng-container *ngIf="section.buttons; else noneSection">
+      <trudi-section class="d-block mt-12" [groupTitle]="section.name">
+        <div
+          class="trudi-suggested-step-group-container"
+          [ngClass]="{'has-process-line': section.buttons.length > 1}">
+          <ng-container
+            *rxFor="let button of section.buttons; let index = index; let lastBtn = last; let firstBtn = first; trackBy: trackByFn">
+            <ng-container
+              *ngTemplateOutlet="step; context: {$implicit:button, classCondition: button.hasLine, last:lastBtn && !firstBtn, first:firstBtn && lastBtn}"></ng-container>
+          </ng-container>
+        </div>
+      </trudi-section>
+    </ng-container>
+    <ng-template #noneSection>
+      <ng-container
+        *ngTemplateOutlet="step; context: {$implicit:section, classCondition:section?.hasLine, first: first && !last, last: last && !first}"></ng-container>
+    </ng-template>
+  </ng-container>
+</div>
+
+<ng-template
+  #step
+  let-data
+  let-classCondition="classCondition"
+  let-first="first"
+  let-last="last">
+  <div
+    nz-popover
+    #popover="nzPopover"
+    [nzPopoverContent]="currentStep?.id === data?.id && contentTemplate"
+    [nzPopoverVisible]="(showStepDetailPanel$ | async) && currentStep?.id === data?.id"
+    (nzPopoverVisibleChange)="handlePopoverVisibleChange($event)"
+    [nzPopoverPlacement]="'rightTop'"
+    [nzPopoverTrigger]="(disableTriggerDetailPanel$ | async) ? null : 'click'"
+    nzPopoverOverlayClassName="step-details-panel">
+    <step
+      [button]="data"
+      [class.first]="data?.first && !data?.last"
+      [class.last]="data?.last && !data?.first"
+      [class.selected]="popover?.visible"
+      [classContainer]="classCondition ? 'has-process-line' : 'none-section'"></step>
+  </div>
+</ng-template>
+
+<ng-template #contentTemplate>
+  <step-details-panel
+    [currentStep]="currentStep"
+    [buttonKey]="buttonKey"
+    (triggerClosePopover)="handlePopoverVisibleChange(false)"
+    (triggerClickCtaOption)="handleClickCtaOption($event)"></step-details-panel>
+</ng-template>

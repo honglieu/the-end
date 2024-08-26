@@ -1,0 +1,126 @@
+<ng-container [ngSwitch]="viewMode">
+  <ng-container *ngSwitchCase="ESubscribeCalendar.INLINE">
+    <div
+      [appE2E]="'calendar-subscribe-banner'"
+      class="integration-calendar"
+      [ngClass]="{ 'mt-0': this.isRmEnvironment}">
+      <div class="integration-calendar__header">
+        <h2 class="integration-calendar__header--title">
+          Calendar subscription
+        </h2>
+        <p class="integration-calendar__header--description">
+          Subscribe to your personalized Trudi® calendar to have events from
+          your portfolios displayed automatically in your calendar application
+          or mobile device.
+        </p>
+      </div>
+      <p class="integration-calendar__title-step">
+        Please follow these steps to set up your calendar subscription:
+      </p>
+      <div class="integration-calendar__step">
+        <p>
+          <span>1</span>Select your calendar application from the below options.
+        </p>
+        <p>
+          <span>2</span>
+          This will open your calendar application and display a calendar
+          subscription notice.
+        </p>
+        <p><span>3</span>Accept the notice to subscribe to your calendar.</p>
+      </div>
+      <div class="integration-calendar__action">
+        <ng-container *ngTemplateOutlet="actionCalendar"> </ng-container>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngSwitchCase="ESubscribeCalendar.NOTIFICATION">
+    <div
+      *ngIf="isOpenPopup && !isConsole"
+      class="banner-calendar"
+      [appE2E]="'calendar-subscribe-banner'">
+      <div class="banner-calendar__content d-flex flex-dir-column gap-4">
+        <div class="banner-calendar__content--title no-pointer-event">
+          Subscribe to calendar
+        </div>
+        <div class="banner-calendar__content--subTitle no-pointer-event">
+          See all your portfolio events in your own calendar application.
+        </div>
+      </div>
+      <div class="banner-calendar__action">
+        <button
+          trudi-btn
+          nz-popover
+          [disabled]="false"
+          [nzPopoverTrigger]="'click'"
+          [(nzPopoverPlacement)]="placement"
+          [nzPopoverContent]="menu"
+          class="banner-calendar__action--subscribe"
+          [appE2E]="'events-subscribe-button'"
+          nzPopoverOverlayClassName="filter-to-calendars-popover">
+          Subscribe to calendar
+        </button>
+        <button
+          class="banner-calendar__action--close"
+          (click)="handleClosePopup()">
+          <trudi-icon svgClass="size-12" [icon]="'closeGray64'"></trudi-icon>
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
+
+<ng-template #menu>
+  <div nz-menu>
+    <div class="banner-menu">
+      <ng-container *ngTemplateOutlet="actionCalendar"> </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #actionCalendar>
+  <button
+    trudi-btn
+    variant="outlined"
+    btnType="neutral"
+    [disabled]="!!loadingState.isGoogleLoading"
+    [appE2E]="'calendar-subscribe-google'"
+    (click)="!loadingState.isGoogleLoading && handleSubscribe(ESubscribe.GOOGLE)">
+    <trudi-icon
+      svgClass="size-20"
+      [icon]="'iconLoginGoogle'"
+      class="no-pointer-event"></trudi-icon>
+    <p class="no-pointer-event">
+      {{loadingState.isGoogleLoading ? "Subscribing" : "Google"}}
+    </p>
+  </button>
+  <button
+    trudi-btn
+    variant="outlined"
+    btnType="neutral"
+    [disabled]="!!loadingState.isOutlookLoading"
+    [appE2E]="'calendar-subscribe-outlook'"
+    (click)="!loadingState.isOutlookLoading && handleSubscribe(ESubscribe.OUTLOOK)">
+    <trudi-icon
+      class="no-pointer-event"
+      svgClass="size-28"
+      [icon]="'iconOutlookCalendar'"></trudi-icon>
+    <p class="no-pointer-event">
+      {{loadingState.isOutlookLoading ? "Subscribing" : "Outlook"}}
+    </p>
+  </button>
+  <button
+    trudi-btn
+    variant="outlined"
+    btnType="neutral"
+    [disabled]="!!loadingState.isIcloudLoading"
+    [appE2E]="'calendar-subscribe-apple'"
+    (click)="!loadingState.isIcloudLoading && handleSubscribe(ESubscribe.APPLE)">
+    <trudi-icon
+      class="no-pointer-event"
+      svgClass="size-28"
+      [icon]="'apple'"></trudi-icon>
+    <p class="no-pointer-event">
+      {{loadingState.isIcloudLoading ? "Subscribing" : "Apple"}}
+    </p>
+  </button>
+</ng-template>

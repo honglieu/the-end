@@ -1,0 +1,78 @@
+@import 'function';
+
+.info-user-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  &.task-detail {
+    .list-info .globe {
+      max-width: 300px;
+    }
+  }
+}
+
+.list-info {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  align-items: flex-start;
+  row-gap: 4px;
+  .align-items-start {
+    align-items: flex-start !important;
+  }
+  .margin-top-8 {
+    margin-top: 8px;
+  }
+  .align-content {
+    min-height: 16px;
+    display: flex;
+    align-items: center;
+
+    .has-value {
+      @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+    }
+    .globe {
+      @include fontSetup(var(--fg-hyperlink), 12px, 16px, normal, 400);
+      overflow: hidden;
+      max-width: 400px;
+      text-overflow: ellipsis;
+    }
+
+    .secondary-email {
+      &:hover .delete-email {
+        opacity: 1 !important;
+      }
+    }
+
+    .primary-email {
+      &:hover .add-email {
+        opacity: 1 !important;
+      }
+    }
+
+    .add-email,
+    .delete-email {
+      opacity: 0;
+      &:focus-visible {
+        opacity: 1 !important;
+      }
+    }
+  }
+  .no-value {
+    @include fontSetup(var(--gray-500), 12px, 16px, italic, 400);
+  }
+}
+
+::ng-deep .normal-icon trudi-icon  svg path {
+  fill: var(--gray-400);
+}
+
+.d-inline {
+  display: inline-flex;
+}
+.btn-action {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  border-radius: 100px;
+}

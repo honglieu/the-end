@@ -1,0 +1,81 @@
+<div class="contact-card gap-8">
+  <div class="contact-card__header d-flex justify-content-between">
+    <div class="header-content gap-4 w-100">
+      <div class="overflow-text">
+        {{ (contact?.firstName || contact?.lastName) ? ((contact?.firstName ??
+        '') + ' ' + (contact?.lastName ?? '')) : '' }}
+      </div>
+      <trudi-badge
+        [text]="contact?.displayContactType | userTypeInPT : isPTEnvironment :
+          {
+            contactType: contact?.userPropertyContactType?.type,
+            type: contact?.type,
+            isPrimary: contact?.isPrimary
+          } :
+          true"
+        [allowTruncated]="true"
+        [size]="'small'"
+        [variant]="getVariant(contact?.type)"></trudi-badge>
+    </div>
+  </div>
+  <div class="contact-card__content">
+    <div class="content-item d-flex gap-4">
+      <div class="d-flex align-items-start mt-2">
+        <trudi-icon icon="phoneThin"></trudi-icon>
+      </div>
+      <div
+        class="d-flex align-items-center"
+        [ngClass]="{ 'unknown-information': !contact?.phoneNumber }">
+        <div class="overflow-text">
+          {{ contact?.phoneNumber ? (contact.phoneNumber | phoneNumberFormat) :
+          "(no phone number)" }}
+        </div>
+      </div>
+    </div>
+    <div
+      *ngIf="contact?.type !== userPropertyType.SUPPLIER && contact?.type !== userPropertyType.LEAD"
+      class="content-item d-flex gap-4">
+      <div class="d-flex align-items-start mt-2">
+        <trudi-icon icon="locationDotThin"></trudi-icon>
+      </div>
+      <div
+        class="d-flex align-items-center"
+        [ngClass]="{ 'unknown-information': !contact?.address }">
+        <div class="overflow-text">
+          {{ contact?.address ? contact?.address : "(no property)" }}
+        </div>
+      </div>
+    </div>
+    <div class="content-item d-flex gap-4">
+      <div class="d-flex align-items-start mt-2">
+        <trudi-icon icon="mailThin"></trudi-icon>
+      </div>
+      <div
+        class="d-flex align-items-center"
+        [ngClass]="{ 'unknown-information': !contact?.email }">
+        <div class="overflow-text">
+          {{ contact?.email ? contact?.email : "(no email)" }}
+        </div>
+      </div>
+    </div>
+    <div
+      *ngIf="contact?.type === userPropertyType.SUPPLIER"
+      class="content-item d-flex gap-4">
+      <div class="d-flex align-items-start mt-2">
+        <trudi-icon icon="globeThin"></trudi-icon>
+      </div>
+      <div
+        class="d-flex align-items-center flex-1 gap-4"
+        [ngClass]="{ 'unknown-information' :!contact?.landingPage, 'website': contact?.landingPage }">
+        <ng-container *ngIf="contact?.landingPage; else noWebsite">
+          <p class="text-ellipsis">{{ contact?.landingPage }}</p>
+          <trudi-icon
+            class="cursor-pointer"
+            (click)="handleClick(contact?.landingPage)"
+            icon="moveIcon"></trudi-icon>
+        </ng-container>
+        <ng-template #noWebsite>(no website)</ng-template>
+      </div>
+    </div>
+  </div>
+</div>

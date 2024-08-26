@@ -1,0 +1,80 @@
+@import 'function';
+
+.contact-card {
+  width: 276px;
+  padding: 12px;
+  border: 1px solid rgba(166, 166, 166, 0.3);
+  border-radius: 8px;
+  background-color: var(--white);
+
+  &__header {
+    .header-content {
+      @include fontSetup(var(--gray-700), 14px, 20px, normal, 600);
+      trudi-badge {
+        margin-top: 8px;
+        margin-bottom: 8px;
+        max-width: 250px;
+      }
+    }
+  }
+
+  &__content {
+    &_email {
+      word-break: break-all;
+    }
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--fg-neutral-normal, '#61646c');
+  }
+
+  .content-item {
+    margin-bottom: 8px;
+    width: 100%;
+    word-break: break-all;
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .website {
+      width: calc(100% - 20px);
+
+      p {
+        margin: 0;
+      }
+    }
+  }
+
+  .overflow-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 232px;
+  }
+
+  .unknown-information {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--fg-neutral-normal, '#61646c');
+  }
+
+  ::ng-deep {
+    .ant-tooltip.tool-tip-streetLine {
+      text-align: left !important;
+      .ant-tooltip-inner {
+        margin: 0 !important;
+        border: none !important;
+        text-align: left !important;
+        font-size: 12px !important;
+      }
+      .ant-tooltip-arrow {
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        .ant-tooltip-arrow-content {
+          border-color: var(--gray-500) !important;
+          background-color: var(--gray-500) !important;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,15 @@
+<ng-container *ngIf="popupState.showSelectTypePopup">
+  <select-routine-inspection
+    [modalId]="modalId"
+    [isShowModal]="popupState.showSelectTypePopup"
+    (handleCloseModalSelect)="handleCloseModal()"
+    (handleNextModal)="handleNextModal()"></select-routine-inspection>
+</ng-container>
+<div>{{popupState.showRoutineFormPopup}}</div>
+<ng-container *ngIf="popupState.showRoutineFormPopup">
+  <sync-routine-inspection
+    [modalId]="modalId"
+    [isShowModal]="popupState.showRoutineFormPopup"
+    (handleCloseModalSync)="handleCloseModal()"
+    (handleBackModalSync)="handleBackModal()"></sync-routine-inspection>
+</ng-container>

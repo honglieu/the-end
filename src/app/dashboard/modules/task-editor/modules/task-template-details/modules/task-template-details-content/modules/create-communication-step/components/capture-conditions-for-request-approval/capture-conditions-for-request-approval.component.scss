@@ -1,0 +1,36 @@
+@import 'function';
+
+:host {
+  .capture-conditions-for-request-approval-label {
+    @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 600);
+  }
+
+  .label-wrapper {
+    .required-checkbox {
+      ::ng-deep trudi-checkbox label.trudi-checkbox .label-text {
+        @include fontSetup(
+          var(--fg-neutral-strongest, #202020),
+          14px,
+          20px,
+          normal,
+          400
+        );
+      }
+    }
+  }
+
+  .capture-conditions-for-request-approval-form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border-neutral-dark, #d8dcdf);
+
+    ::ng-deep trudi-text-field .trudi-ui-text-field-label {
+      color: var(--gray-500) !important;
+      font-size: 12px !important;
+      font-weight: 400 !important;
+    }
+  }
+}

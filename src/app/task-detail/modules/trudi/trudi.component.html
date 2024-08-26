@@ -1,0 +1,459 @@
+<app-select-people-popup
+  *ngIf="forwardLandlordsVisible"
+  [isOpenFrom]="'trudi'"
+  [show]="forwardLandlordsVisible"
+  [mode]="selectMode"
+  [onlyOwnerTenant]="onlySendOwnerTenant"
+  [onlySupplier]="onlySendSupplier"
+  [headerName]="headerText"
+  (isCloseModal)="showSelectPeople($event)"
+  (isOpenSendMessageModal)="showAppSendMessageFromSelectPeople($event)"
+  (isOpenLikeToSay)="showOpenLikeToSay($event)"
+  (listSelectedUser)="getSelectedUser($event)">
+</app-select-people-popup>
+<send-quote-landlord
+  *ngIf="isSendQuoteLandlord"
+  (isCloseModal)="closeSendQuoteLandlord($event)"
+  (listSelected)="getlistQuoteSupplierSelected($event)"
+  [listQuoteSupplier]="listQuoteSelect"
+  (isOpenSendMessageModal)="showAppSendMessage($event, false, false, true, false)"
+  [show]="isSendQuoteLandlord"
+  [conversationId]="conversationIdToGetFilesSupplierReply"
+  [isBack]="isBackSendQuoteLandlord"
+  (isOpenFile)="showAddFiles($event)">
+</send-quote-landlord>
+
+<app-modal-popup
+  *ngIf="isShowSendMessageModal"
+  [bigSize]="true"
+  [show]="isShowSendMessageModal"
+  [position]="popupModalPosition.center">
+  <app-send-message
+    [attr.data-e2e]="'send-message-modal'"
+    [openFrom]="openFrom"
+    (isOpenSelectPeople)="showSelectPeople($event)"
+    (isOpenQuitConfirmModal)="showQuitConfirm($event)"
+    (isBackModal)="onSendMsgPopupBack($event)"
+    [show]="isShowSendMessageModal"
+    (isOpenSuccessModal)="showSuccessMessageModal($event)"
+    [ticket]="selectedTicket"
+    [listOfUser]="selectedUsersFromPopup"
+    [isReset]="isResetModal"
+    [listOfFiles]="selectedFiles"
+    (isOpenFile)="showAddFiles($event)"
+    (isCloseModal)="closeModal($event)"
+    [forwardAction]="buttonAction"
+    [trudiStep]="trudiStep"
+    [infoAddition]="infoAddition"
+    [forwardButtons]="forwardButtons"
+    [trudiResponseVariable]="trudiResponseVariable"
+    [noBackBtn]="noBackBtn"
+    [listConversationForwardLandlord]="listUserQuoteSelected"
+    [noTicket]="noTicket"
+    [noAddFile]="noAddFile"
+    [likeToSaySelectedIndex]="likeToSaySelectedIndex"
+    [isBackSendQuote]="true"
+    [maintenanceFromAppChat]="{ isForward: false, sendQuote: true }"
+    [showTextForward]="true"
+    (removeFileItem)="handleRemoveFileItem($event)"
+    (isBackModalSendQuote)="showSendQuote($event)"
+    [isSendQuote]="isFlowSendQuote"></app-send-message>
+</app-modal-popup>
+
+<app-modal-popup
+  *ngIf="showSendInvoicePt"
+  [show]="showSendInvoicePt"
+  [position]="popupModalPosition.center"
+  [widthInPercent]="65">
+  <send-invoice-pt
+    [show]="showSendInvoicePt"
+    (onClose)="handleOnCloseSendInvoice()">
+  </send-invoice-pt>
+</app-modal-popup>
+<app-modal-popup
+  *ngIf="showCompletePT"
+  [show]="showCompletePT"
+  [position]="popupModalPosition.center">
+  <notification-popup
+    [leftButtonBackground]="'gray'"
+    [rightButtonBackground]="haveSentInvoice ? 'green' : 'red'"
+    [haveSentInvoice]="haveSentInvoice"
+    [isSendInvoiceFail]="false"
+    (onClose)="showCompletePT = false"></notification-popup>
+</app-modal-popup>
+
+<!--<app-modal-popup [show]="forwardSupplierVisible" [position]="popupModalPosition.center">
+  <popup-layout
+    (whenCancel)="onForwardSupplierClose()"
+    (whenConfirmed)="onForwardSupplierConfirm()"
+    (whenClosed)="onForwardSupplierClose()"
+    [disabledRightButton]="!supplierCheckedList.length"
+    [headerText]="forwardSuppliersHeader"
+    logoSvgSegmentId="#trudi-default-logo"
+    ngClass="forward-supplier-popup">
+    <select-supplier (whenCheckListChanged)="onCheckedSupplierChange($event)"></select-supplier>
+  </popup-layout>
+</app-modal-popup>-->
+
+<app-add-files-popup
+  [show]="isShowAddFilesModal"
+  (isOpenQuitConfirmModal)="showQuitConfirm($event)"
+  (isOpenSendMessageModal)="showAppSendMessage($event, true)"
+  (isOpenSendQuote)="showSendQuote($event)"
+  (outSelectedFile)="getSelectedFile($event)"
+  [fileTypeSelect]="fileTypeQuote"
+  (isBackSendMess)="backAddFile($event)"
+  (isDoneAddFile)="doneAddFile($event)"></app-add-files-popup>
+<app-modal-popup
+  *ngIf="isShowQuitConfirmModal"
+  [show]="isShowQuitConfirmModal"
+  [position]="popupModalPosition.center">
+  <app-quit-confirm
+    (isCloseModal)="showQuitConfirm($event)"
+    (isOpenSendMessageModal)="onGoBackSendMessage($event)"
+    (isOpenFileModal)="showAddFiles($event)"></app-quit-confirm>
+</app-modal-popup>
+<!-- <app-modal-popup  [show]="likeToSayVisible" [position]="popupModalPosition.center">
+  <app-popup-like-to-say
+    (isCloseModal)="likeToSayVisible = false"
+    (isBackModal)="likeToSayVisible = false; forwardLandlordsVisible = true"
+		(isNextModal)="onNextPopupLikeToSay($event)"
+		[showPopup]="likeToSayVisible"
+	>
+  </app-popup-like-to-say>
+</app-modal-popup> -->
+
+<!-- <app-modal-popup *ngIf="forwardSupplierVisible" [show]="forwardSupplierVisible" [position]="popupModalPosition.center">
+  <supplier-conducting-work
+		[openFrom]="forwardButtonAction.supToTenant"
+    [headerText]="supplierConductingHeader"
+    (nextSupplierConducting)="getCheckedSupplier($event)"
+    (closeSupplierConducting)="onSupplierConductingForwardSupplierClose($event)"
+    [supplierList]="listSupplierSendedQuote"
+    [attr.data-e2e]="'select-supplier-modal'"
+	>
+  </supplier-conducting-work>
+</app-modal-popup> -->
+
+<app-document-request-add-tenancy-agreement-popup
+  *ngIf="addTenancyAgreementDocumentRequestVisible"
+  [show]="addTenancyAgreementDocumentRequestVisible"
+  (addTenancyAgreementNext)="onNextModalAddTenancyAgreement($event)"
+  (isCloseModal)="onCloseModalAddTenancyAgreement($event)"></app-document-request-add-tenancy-agreement-popup>
+
+<app-modal-popup
+  *ngIf="sendMessageDocumentRequestVisible"
+  [bigSize]="true"
+  [show]="sendMessageDocumentRequestVisible"
+  [position]="popupModalPosition.center">
+  <app-document-request-send-message
+    [openFrom]="openFrom"
+    (isOpenSelectPeople)="showSelectPeople($event)"
+    (isOpenQuitConfirmDocumentRequestModal)="showQuitConfirmDocumentRequest()"
+    (isBackModal)="onSendMsgPopupBack($event)"
+    [show]="sendMessageDocumentRequestVisible"
+    (isOpenSuccessModal)="showSuccessMessageDocumentRequestModal($event)"
+    [ticket]="selectedTicket"
+    [listOfUser]="selectedUsersFromPopup"
+    [isReset]="isResetModal"
+    [listOfFiles]="selectedFiles"
+    (isOpenPopupFileDocumentRequest)="showAddFileDocumentRequest($event)"
+    (isCloseModal)="closeModal($event)"
+    [forwardAction]="buttonAction"
+    [trudiStep]="trudiStep"
+    [infoAddition]="infoAddition"
+    [forwardButtons]="forwardButtons"
+    [noBackBtn]="noBackBtn"
+    [listConversationForwardLandlord]="listUserQuoteSelected"
+    [listTenantConversation]="listTenantConversation"
+    [noTicket]="noTicket"
+    [noAddFile]="noAddFile"
+    [likeToSaySelectedIndex]="likeToSaySelectedIndex"
+    [isBackSendQuote]="true"
+    [textContentSendMsg]="textContentSendMsg"
+    (isBackModalSendQuote)="showSendQuote($event)"
+    [isSendQuote]="isFlowSendQuote"></app-document-request-send-message>
+</app-modal-popup>
+
+<app-modal-popup
+  *ngIf="isShowQuitConfirmDocumentRequestModal"
+  [show]="isShowQuitConfirmDocumentRequestModal"
+  [position]="popupModalPosition.center">
+  <app-document-request-quit-confirm
+    (isCloseModal)="handleCloseQuitDocumentRequestModal($event)"></app-document-request-quit-confirm>
+</app-modal-popup>
+
+<trudi-modal
+  *ngIf="isShowAddFilesDocumentRequestModal"
+  [visible]="isShowAddFilesDocumentRequestModal"
+  [autoFocus]="null"
+  [modelWidth]="375"
+  className="trudi-modal-custom">
+  <app-add-files-document-request-popup
+    [show]="isShowAddFilesDocumentRequestModal"
+    (isOpenQuitConfirmModal)="showQuitConfirmDocumentRequest()"
+    (isOpenSendMessageModal)="backToSendMessageDocumentRequest($event)"
+    (isOpenSendQuote)="showSendQuote($event)"
+    (outSelectedFile)="getSelectedFileDocumentRequest($event)"
+    [fileTypeSelect]="fileTypeQuote"></app-add-files-document-request-popup>
+</trudi-modal>
+
+<ng-template
+  [ngIf]="typeTrudi === TYPE_TRUDI.unhappy_path && currentTask?.taskType === TaskType.MESSAGE">
+  <div class="section-trudi">
+    <!-- <app-unhappy-path-trudi
+      [overlayDropdown]="overlayDropdown"
+      [taskId]="currentTask?.id"
+      [title]="trudiResponse.data[0]?.body?.text"
+      [items]="contactList"
+      [propertyList]="propertyList"
+      [taskNameList]="taskNameList"
+      [isUnHappyPath]="isUnHappyPath"
+      [isUnidentifiedEmail]="isUnindentifiedEmail"
+      [isUnindentifiedProperty]="isUnindentifiedProperty"
+      [unhappyStatus]="unhappyStatus"
+      [placeholder]="placeHolderTrudiUnhappy"
+      (onConfirm)="handleConfirmSelectContact($event)"
+      (onSearch)="handleOnSearchUnHappyPath($event)"
+      (onChange)="handleOnChangeUnHappyPath($event)"
+    ></app-unhappy-path-trudi> -->
+    <unhappy-path class="w-100"></unhappy-path>
+  </div>
+</ng-template>
+
+<ng-template [ngIf]="typeTrudi === TYPE_TRUDI.q_a">
+  <!-- Document Request -->
+  <ng-container
+    *ngIf="trudiResponse.setting?.categoryId === CATEGORY_ENUM.documentReq">
+    <ng-container *ngIf="trudiResponse">
+      <div
+        class="header-title d-flex align-items-center justify-content-between">
+        <h3
+          class="header-title-text"
+          data-e2e="trudi-understood-text"
+          [innerText]="trudiResponse.data[currentStep]?.header.text"></h3>
+        <img
+          class="cursor-pointer"
+          (click)="isShowAllTrudiButton = !isShowAllTrudiButton"
+          [src]="isShowAllTrudiButton ? '/assets/icon/Show.svg' : '/assets/icon/Hide.svg'"
+          [ngClass]="{'d-none': trudiResponse.type === TYPE_TRUDI.q_a}" />
+      </div>
+      <div class="forward-btns d-flex flex-dir-column">
+        <div
+          *ngFor="let btn of trudiResponse.data[currentStep]?.body.button; let i = index"
+          class="item-btn">
+          <forward-request
+            [isTypeTrudi]="typeTrudi"
+            [btnInfo]="btn"
+            [activeTag]="btn.isProPlan"
+            (onBtnClick)="onForwardDocumentRequestBtnClick(btn)"></forward-request>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <ng-container
+    *ngIf="trudiResponse.setting?.categoryId !== CATEGORY_ENUM.documentReq">
+    <div class="section-trudi">
+      <ng-container *ngIf="trudiResponse">
+        <header-trudi-page
+          [size]="36"
+          [title]="trudiResponse.data[currentStep]?.header.text"></header-trudi-page>
+        <box-trudi
+          *ngIf="!trudiResponse.data[currentStep]?.body.isOnceTimeChoice"
+          (moveNextStep)="onMoveToStep($event)"
+          [trudiBody]="trudiResponse.data[currentStep]?.body">
+        </box-trudi>
+        <ng-template
+          [ngIf]="trudiResponse.data[currentStep]?.body.isOnceTimeChoice">
+          <div class="forward-btns d-flex flex-dir-column">
+            <div
+              *ngFor="let btn of trudiResponse.data[currentStep]?.body.button; let i = index"
+              class="item-btn">
+              <forward-request
+                [isTypeTrudi]="typeTrudi"
+                [btnInfo]="btn"
+                [activeTag]="btn.isProPlan"
+                (onBtnClick)="onForwardRequestBtnClick(btn)"></forward-request>
+            </div>
+          </div>
+        </ng-template>
+      </ng-container>
+    </div>
+  </ng-container>
+</ng-template>
+<ng-template
+  [ngIf]="(typeTrudi === TYPE_TRUDI.super_happy_path || !typeTrudi) && currentTask?.taskType === TaskType.MESSAGE">
+  <div class="section-trudi super-happy-path">
+    <ng-container *ngIf="trudiResponse">
+      <ng-container
+        *ngIf="!trudiResponse.data[0].isCompleted && trudiResponse.raiseVia === ETrudiRaiseByType.EMAIL">
+        <div
+          *ngIf="trudiResponseSuggestions?.data"
+          class="header-text"
+          data-e2e="reply-enquiry-title">
+          {{ trudiResponseSuggestions.data[0].header.text }}
+        </div>
+        <!-- ticket -->
+        <ng-container
+          *ngIf="trudiResponseSuggestions?.type === TYPE_TRUDI.suggestion">
+          <box-trudi-suggestion
+            [trudiBody]="trudiResponseSuggestions"
+            [unableResolve]="!!trudiResponseSuggestions"
+            (completeStep)="handleCompleteStepTrudiBox($event)"></box-trudi-suggestion>
+        </ng-container>
+      </ng-container>
+
+      <!-- q_a -->
+      <ng-container *ngIf="trudiResponseSuggestions?.type === TYPE_TRUDI.q_a">
+        <!-- Disable box trudi in this flow: disable = true -->
+        <ng-container
+          *ngIf="trudiResponseSuggestions?.setting?.categoryId === CATEGORY_ENUM.documentReq; else notDocumentReq">
+          <!-- trigger document request flow when select dropdown -->
+          <div class="forward-btns disabled d-flex flex-dir-column">
+            <div
+              *ngFor="let btn of trudiResponseSuggestions.data[currentStep]?.body.button; let i = index"
+              class="item-btn">
+              <forward-request
+                [isTypeUnhappyTrudi]="trudiResponseSuggestions?.type"
+                [isTypeTrudi]="typeTrudi"
+                [btnInfo]="btn"
+                [activeTag]="btn.isProPlan"
+                (onBtnClick)="onForwardDocumentRequestBtnClick(btn)"></forward-request>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #notDocumentReq>
+          <box-trudi
+            *ngIf="!trudiResponse.data[currentStep]?.body.isOnceTimeChoice"
+            (moveNextStep)="onMoveToStep($event)"
+            [trudiBody]="trudiResponseSuggestions?.data[currentStep]?.body"
+            [disable]="false">
+          </box-trudi>
+          <ng-template
+            [ngIf]="trudiResponse.data[currentStep]?.body.isOnceTimeChoice">
+            <div class="forward-btns d-flex flex-dir-column">
+              <div
+                *ngFor="let btn of trudiResponse.data[currentStep]?.body.button; let i = index"
+                class="item-btn">
+                <forward-request
+                  [isTypeUnhappyTrudi]="trudiResponseSuggestions?.type"
+                  [isTypeTrudi]="typeTrudi"
+                  [btnInfo]="btn"
+                  [activeTag]="btn.isProPlan"
+                  (onBtnClick)="onForwardRequestBtnClick(btn)"></forward-request>
+              </div>
+            </div>
+          </ng-template>
+        </ng-template>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngIf="!showConvertTaskSuperHappyPath">
+      <div class="convert-block d-flex flex-dir-column gap-12 w-100">
+        <div class="header-title-text" data-e2e="convert-task-title">
+          Convert to task
+        </div>
+        <div class="convert-to-task-container d-flex gap-12 w-100 relative">
+          <convert-to-task-dropdown
+            [listConvertToTask]="listConvertToTask"
+            [listTaskName]="listTaskName"
+            [isShowCreateTaskBtn]="intentList[0]?.id !== CATEGORY_ENUM.generalEnquiryId"
+            data-e2e="task-dropdown"
+            [isError]="isShowErrConvertToTask"
+            [noPrefill]="intentList[0]?.id === CATEGORY_ENUM.generalEnquiryId ||
+            (trudiResponse?.data?.[0]?.body?.newSuggestion?.type === 'ticket' &&
+            trudiResponse?.data?.[0]?.body?.newSuggestion?.convertToTask === null) ||
+            (selectedIntentId === CATEGORY_ENUM.landlordRequest)"
+            (getSelectedTask)="getSelectedTaskToConvert($event)"
+            class="w-100"></convert-to-task-dropdown>
+          <button
+            [disabled]="isArchiveMailbox || isDisabledProperty || currentTask?.status === taskStatusType.deleted"
+            [ngClass]="d-none"
+            data-e2e="create-task-btn"
+            class="trudi-btn trudi-btn-large trudi-btn-detail w-100"
+            (click)="handleConvertToTask()">
+            Create
+          </button>
+        </div>
+        <ng-container [ngTemplateOutlet]="upgradeMsgOutlet"> </ng-container>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="showConvertTaskSuperHappyPath">
+      <div
+        class="convert-to-task-container d-flex flex-dir-column gap-12 w-100">
+        <div class="header-title-text" data-e2e="convert-task-title">
+          Convert to task
+        </div>
+        <convert-to-task-super-happy-path
+          (selectedTask)="getSelectedTaskToConvert($event)"
+          [selectedTaskToConvert]="selectedTaskToConvert"
+          [listConvertSuggestTask]="listConvertSuggestTask"
+          [isShowCreateTaskBtn]="intentList[0]?.id !== CATEGORY_ENUM.generalEnquiryId && trudiResponse?.data?.[0]?.body?.newSuggestion?.suggestedTask.length"
+          [noPrefill]="trudiResponse?.data?.[0]?.body?.newSuggestion?.suggestedTask.length ? false : true"
+          [taskStatus]="currentTask?.status"
+          class="w-100">
+        </convert-to-task-super-happy-path>
+        <ng-container [ngTemplateOutlet]="upgradeMsgOutlet"> </ng-container>
+      </div>
+    </ng-container>
+    <select-move-task
+      [title]="'Move message to existing task'"
+      [taskStatus]="currentTask?.status"
+      class="w-100">
+    </select-move-task>
+    <create-task-by-category
+      *ngIf="showCreateTaskByCate"
+      [show]="showCreateTaskByCate"
+      [assignedUserIds]="assignedUserIds"
+      [attr.data-e2e]="'create-routine-maintenance-modal'"
+      [taskNameId]="selectedTaskToConvert?.id"
+      [taskNameRegionId]="selectedTaskToConvert?.taskNameRegion?.taskNameRegionId"
+      [propertyId]="currentPropertyId"
+      [openFrom]="'CONVERT_TO_TASK'"
+      [showBackBtn]="false"
+      [prefillValue]="createTaskPrefillValue"
+      [mediaFilesInConversation]="mediaFilesInConversation"
+      [sendViaApp]="trudiResponse?.raiseVia"
+      (onCloseModal)="onCloseCreateTaskByCateModal()"
+      (onConfirm)="onComfirmCreateTaskByCate($event)"></create-task-by-category>
+    <app-modal-popup
+      [show]="showCreateRequestLandlordTenantTaskModal"
+      *ngIf="showCreateRequestLandlordTenantTaskModal"
+      [position]="popupModalPosition.center">
+      <request-landlord-tenant
+        [leftButtonText]="''"
+        [title]="titleRequestLandlordTenant"
+        [sendViaApp]="trudiResponse?.raiseVia"
+        [openFrom]="'CONVERT_TO_TASK'"
+        [taskNameRegionId]="selectedTaskToConvert?.taskNameRegion.taskNameRegionId"
+        [propertyId]="currentPropertyId"
+        [summaryText]="createTaskPrefillValue.description"
+        [imageCheckList]="createTaskPrefillValue.files"
+        [mediaFilesInConversation]="mediaFilesInConversation"
+        (onCloseModal)="showCreateRequestLandlordTenantTaskModal = false"
+        (onNext)="onComfirmCreateTaskByCate($event)"></request-landlord-tenant>
+    </app-modal-popup>
+    <create-new-task-pop-up
+      [selectedTaskToConvert]="selectedTaskToConvert"
+      *ngIf="showNewTaskPopupState"
+      [taskNameList]="listTaskName"
+      [configs]="configs"
+      [openFrom]="'CONVERT_TO_TASK'"
+      [selectedTaskNameRegionId]="newTaskNameRegionId"
+      [activeProperty]="activeProperty"
+      [selectedTaskNameId]="newTaskTaskNameId"
+      (stopProcessCreateNewTask)="showNewTaskPopupState = false">
+    </create-new-task-pop-up>
+  </div>
+</ng-template>
+
+<ng-template #upgradeMsg>
+  <upgrade-message
+    [isIcon]="true"
+    [action]="ACTION_UPGRADE.GENERATE_YOUR_TASKS">
+  </upgrade-message>
+</ng-template>
+
+<!-- TODO: Development render new trudi step -->
+
+<steps *ngIf="isTemplate && currentTask?.taskType === TaskType.TASK"></steps>

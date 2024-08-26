@@ -1,0 +1,163 @@
+@import 'function';
+
+.pre-property-wrapper {
+  position: fixed;
+  background-color: var(--white);
+  z-index: 2;
+  width: calc(100% - 352px);
+  .pre-property-name {
+    @include fontSetup(var(--gray-700), 18px, 28px, normal, 600);
+  }
+
+  &.property-disabled {
+    & .pre-property-name,
+    & ::ng-deep trudi-icon {
+      opacity: 0.5;
+    }
+
+    & .pre-property-name {
+      color: var(--fg-neutral-weakest) !important;
+    }
+  }
+
+  & .text-underline-address:hover {
+    text-decoration: underline;
+  }
+}
+
+.property-wrapper {
+  gap: 8px;
+}
+
+.unit-wrapper {
+  gap: 6px;
+  margin-left: 32px;
+}
+
+.property-name {
+  @include fontSetup(var(--gray-700), 18px, 28px, normal, 600);
+}
+
+.unit-name {
+  @include fontSetup(var(--gray-600), 16px, 24px, normal, 600);
+  &.deleted {
+    color: var(--fg-neutral-weakest) !important;
+  }
+}
+
+.content-main {
+  height: calc(100vh - 165px);
+  &.skeleton {
+    overflow-y: hidden;
+  }
+  &:has(.auto-hide-scroll:hover) {
+    .pre-property-wrapper {
+      width: calc(100% - 358px);
+    }
+  }
+}
+
+:host
+  ::ng-deep
+  cdk-virtual-scroll-viewport
+  .cdk-virtual-scroll-content-wrapper {
+  min-width: 1300px;
+  width: 100%;
+}
+
+$block-widths: (
+  'first': 170.18px,
+  'custom': 68.91px,
+  'last': 99.91px,
+  'size-90': 110.48px,
+  'size-40': 47.96px,
+  'size-60': 90px
+);
+
+.property-skeleton-wrapper {
+  margin-top: 10px;
+  .property-contact-container {
+    .property-skeleton-header {
+      padding-bottom: 10px;
+      ::ng-deep .ant-skeleton-content {
+        .ant-skeleton-title {
+          margin-top: 5px;
+          margin-left: 10px;
+          width: 274px !important;
+        }
+      }
+    }
+
+    .property-block-content {
+      margin-bottom: 15px;
+      padding-left: 40px;
+      .property-block-header {
+        height: 35px;
+        background-color: var(--gray-50);
+        border-radius: 5px;
+
+        ::ng-deep .ant-skeleton-content {
+          .ant-skeleton-title {
+            width: 78px !important;
+            margin-left: 21px;
+            margin-top: 10px;
+          }
+        }
+      }
+
+      .property-block-main {
+        margin-top: 15px;
+        margin-left: 21px;
+
+        .property-block-row {
+          display: grid;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 2px;
+
+          @each $name, $width in $block-widths {
+            .#{$name}-block ::ng-deep .ant-skeleton-content {
+              width: $width !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.no-result-block {
+  .header-text {
+    @include fontSetup(var(--gray-700), 18px, 28px, normal, 500);
+  }
+
+  .desc-text {
+    @include fontSetup(var(--gray-500), 14px, 20px, normal, 400);
+    margin-top: 8px;
+  }
+}
+
+.property {
+  .unit-wrapper {
+    trudi-icon {
+      &.deleted {
+        opacity: 0.4;
+      }
+    }
+  }
+  .property-wrapper {
+    trudi-icon {
+      &.deleted {
+        opacity: 0.4;
+      }
+    }
+    .property-name {
+      &.deleted {
+        color: var(--fg-neutral-weakest);
+      }
+    }
+  }
+}
+
+.id-property {
+  background-color: var(--gray-950);
+}

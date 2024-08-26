@@ -1,0 +1,312 @@
+@import 'function';
+
+.voice-mail-inbox-detail {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: var(--gray-50);
+
+  .header-section {
+    background: var(--white);
+    padding: 12px;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .info-row {
+      &-first {
+        display: flex;
+        align-items: center;
+
+        .title {
+          font-size: 16px;
+          line-height: 24px;
+          font-weight: 600;
+
+          &-contact {
+            margin-left: 4px;
+            color: var(--fg-neutral-stronger, #333741);
+            display: flex;
+            align-items: center;
+
+            &:hover {
+              cursor: pointer;
+              text-decoration: underline;
+            }
+          }
+        }
+
+        .status {
+          margin-left: 8px;
+          white-space: nowrap;
+        }
+
+        .voice-mail-actions {
+          margin-left: auto;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+        }
+      }
+
+      &-second {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .ant-skeleton-element .ant-skeleton-avatar-lg {
+          width: 24px !important;
+          height: 24px !important;
+        }
+
+        .ant-skeleton-header {
+          padding-right: 0 !important;
+        }
+
+        .property-address {
+          display: flex;
+          align-items: center;
+          gap: 4px !important;
+          svg path {
+            fill: var(--fg-neutral-normal, #61646c);
+          }
+        }
+
+        .assignees {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          &.disabled {
+            opacity: 0.5;
+          }
+        }
+
+        .sync {
+          @include fontSetup(
+            var(--fg-neutral-normal, #61646c),
+            12px,
+            16px,
+            normal,
+            400
+          );
+          padding: 2px;
+          &-success {
+            color: var(--fg-neutral-normal, #61646c);
+          }
+
+          &-fail {
+            color: var(--fg-neutral-normal, #61646c);
+          }
+        }
+      }
+    }
+  }
+
+  .audio-section {
+    padding: 8px 12px;
+    @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .ant-skeleton-element .ant-skeleton-button {
+      width: 170px !important;
+      border-radius: 100px;
+    }
+
+    .audio-player {
+      width: 266px;
+
+      .audio-control .audio-action .time-line-progress {
+        background: var(--bg-neutral-tonal-stronger, #e7eaed) !important;
+      }
+
+      .audio-control .isCollapsed {
+        height: max-content !important;
+      }
+
+      .audio-control .audio-action {
+        background: var(--bg-neutral-tonal-normal, #f2f5f7) !important;
+        border: none !important;
+        margin-top: 0 !important;
+
+        .button-play {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: var(--white) !important;
+          border: 1px solid var(--border-neutral-dark, #d8dcdf) !important;
+          transition: all 0.1s ease-in !important;
+          cursor: pointer !important;
+
+          &:hover {
+            background: var(--bg-neutral-tonal-stronger, #e7eaed);
+          }
+
+          &:active {
+            background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+          }
+        }
+      }
+    }
+  }
+
+  .message-section {
+    flex: 1;
+    overflow-y: auto;
+    padding-top: 16px;
+    transition: padding-bottom 0.25s ease-in-out;
+
+    &-skeleton {
+      padding: 16px;
+    }
+
+    .text-skeleton {
+      position: relative;
+    }
+
+    .ant-skeleton-element .ant-skeleton-button {
+      width: 307px !important;
+      height: 36px !important;
+    }
+
+    .loading-spinner {
+      width: 72px;
+      height: 72px;
+      margin-inline: auto;
+    }
+
+    .red-line {
+      height: 16px;
+      padding: 4px 4px 4px 0;
+      width: calc(100% - 32px);
+      margin: 12px auto;
+      display: flex;
+      align-items: center;
+      hr {
+        flex: 1;
+        margin: 0 -4px;
+        margin-bottom: 1px;
+        border-top: 1px solid var(--danger-500);
+      }
+    }
+  }
+
+  .bottom-section {
+    position: absolute;
+    bottom: 16px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    flex-direction: column;
+
+    & conversation-summary {
+      width: 100%;
+    }
+
+    .view-most-recent {
+      position: absolute;
+      left: 50%;
+      top: -35px;
+      transform: translateX(-50%);
+      box-shadow: 0px 4px 8px -1px #0000001a, 0px -2px 6px -1px #0000000f;
+    }
+
+    .button-skeleton {
+      position: relative;
+    }
+
+    .ant-skeleton-element .ant-skeleton-button {
+      width: 300px !important;
+      height: 36px !important;
+    }
+  }
+
+  &.skeleton {
+    .header-section {
+      row-gap: 14px;
+      padding: 16px 12px;
+
+      .voice-mail-actions {
+        column-gap: 8px;
+      }
+    }
+  }
+}
+
+.empty-task-chat-container {
+  overflow: auto;
+  height: 100%;
+  background: var(--gray-50);
+  border-top: 2px solid var(--gray-50);
+}
+
+.title-conversation,
+.title-contact-role {
+  white-space: nowrap;
+}
+
+@media (max-width: 1440px) {
+  .voice-mail-actions-btn-text {
+    display: none !important;
+  }
+
+  .voice-mail-actions-btn {
+    padding: 4px !important;
+    min-width: unset !important;
+  }
+
+  .title-contact-role {
+    display: none !important;
+  }
+}
+
+::ng-deep {
+  .spin-syncing-v2 {
+    -webkit-animation: spinSyncing 8s linear infinite;
+    -moz-animation: spinSyncing 8s linear infinite;
+    animation: spinSyncing 8s linear infinite;
+  }
+
+  @-moz-keyframes spinSyncing {
+    100% {
+      -moz-transform: rotate(360deg);
+    }
+  }
+
+  @-webkit-keyframes spinSyncing {
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spinSyncing {
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(-360deg);
+    }
+  }
+}
+::ng-deep .sync-task-detail {
+  .y-center {
+    align-items: flex-start;
+  }
+}
+::ng-deep .move-to-icon.ant-tooltip-placement-bottomLeft .ant-tooltip-arrow {
+  left: 25px !important;
+}
+::ng-deep .synced {
+  max-height: 20px;
+}
+
+.cdk-overlay-container:has(.sync-resolved) {
+  .ant-tooltip-placement-bottom {
+    padding-top: 8px !important;
+  }
+}

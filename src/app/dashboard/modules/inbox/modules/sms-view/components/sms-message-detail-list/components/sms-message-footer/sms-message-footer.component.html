@@ -1,0 +1,34 @@
+<div
+  class="message-default-footer d-flex align-items-center gap-4 white-space-nowrap"
+  [class.justify-content-end]="!message.isUserFromSms">
+  <!-- Sending state -->
+  <ng-container *ngIf="message.isSending && isShowSending">
+    Sending<span class="dot">.</span><span class="dot">.</span
+    ><span class="dot">.</span>
+  </ng-container>
+
+  <!-- Error state -->
+  <span *ngIf="message.isError" class="error-text">
+    Delivery failed, click to resend
+  </span>
+
+  <!-- Normal message state -->
+  <ng-container *ngIf="!message.isSending && !message.isError">
+    <ng-container *ngIf="!message.isUserFromSms">
+      <trudi-icon
+        svgClass="size-12"
+        [icon]="isRead ? 'iconSeenLogo' : 'iconSentLogo'">
+      </trudi-icon>
+
+      <div *ngIf="fullName">
+        Sent by
+        <span [class.role-btn]="clickable" (click)="handleOpenUserProfile()">
+          {{ fullName }}
+        </span>
+        at
+      </div>
+    </ng-container>
+
+    <div *ngIf="createdAt">{{ createdAt | formatTime: true | async }}</div>
+  </ng-container>
+</div>

@@ -1,0 +1,230 @@
+@import 'function';
+
+@mixin sidebarActive($backgroundColor, $color) {
+  background: var($backgroundColor);
+
+  &.sidebar-link {
+    color: var($color);
+
+    &-custom::ng-deep {
+      trudi-icon svg-icon svg path {
+        fill: var($color);
+      }
+    }
+  }
+
+  .item-icon {
+    color: var($color);
+  }
+}
+
+:host {
+  &.sidebar-item {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    list-style: none;
+    position: relative;
+
+    &:focus-visible {
+      border: 2px solid var(--brand-500);
+    }
+
+    &.horizontal {
+      .item-icon {
+        color: var(--fg-neutral-normal);
+      }
+
+      justify-content: flex-start;
+
+      .sidebar-link {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        height: 100%;
+        width: 100%;
+        @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+        gap: 8px;
+
+        &:hover {
+          @include sidebarActive(--bg-neutral-tonal-stronger, --gray-700);
+        }
+
+        &:active,
+        &.active {
+          @include sidebarActive(--bg-neutral-tonal-strongest, --gray-700);
+        }
+      }
+    }
+
+    &:not(.horizontal) {
+      .sidebar-link {
+        @include fontSetup(var(--fg-neutral-weaker), 10px, 12px, normal, 600);
+        width: 100%;
+        padding: 14px 0;
+      }
+
+      &:not(.not-link) {
+        .sidebar-link {
+          &:focus-visible {
+            border: 2px solid var(--brand-500);
+          }
+
+          &:hover {
+            @include sidebarActive(--bg-brand-tonal-stronger, --fg-brand);
+          }
+
+          &:active,
+          &.active {
+            @include sidebarActive(--bg-brand-tonal-strongest, --fg-brand);
+          }
+        }
+      }
+
+      &.not-link {
+        .sidebar-link {
+          &:hover {
+            .item-icon {
+              width: fit-content;
+              margin: 0 auto 4px auto;
+              background: var(--bg-neutral-tonal-stronger);
+              border-radius: 50%;
+            }
+          }
+        }
+      }
+    }
+
+    .item-icon {
+      display: flex;
+      justify-content: center;
+    }
+
+    .content {
+      position: absolute;
+      right: -165px;
+    }
+
+    .wrapper-logo {
+      width: 28px;
+      height: 28px;
+
+      .logo {
+        width: 100%;
+        height: 100%;
+        border-radius: 4px;
+      }
+    }
+
+    .item-icon-wrapper {
+      position: relative;
+
+      .check-unread {
+        position: absolute;
+        top: -7px;
+        right: 13px;
+      }
+    }
+
+    &.sync {
+      & .item-icon-wrapper {
+        & .item-icon {
+          color: var(--fg-neutral-weaker);
+        }
+      }
+
+      &:hover {
+        background-color: var(--bg-brand-tonal-normal);
+
+        & span {
+          color: var(--fg-brand);
+        }
+
+        & .item-icon-wrapper {
+          & .item-icon {
+            color: var(--fg-brand);
+          }
+        }
+      }
+    }
+
+    &.sync-fail {
+      & span {
+        color: var(--fg-danger);
+      }
+
+      & .item-icon-wrapper {
+        & .item-icon {
+          color: var(--fg-danger);
+        }
+      }
+
+      &:hover {
+        color: var(--fg-danger) !important;
+
+        & .item-icon-wrapper {
+          & .item-icon {
+            color: var(--fg-danger) !important;
+          }
+        }
+      }
+    }
+
+    &.syncing {
+      & span {
+        color: var(--fg-brand);
+      }
+
+      & .item-icon-wrapper {
+        & .item-icon {
+          color: var(--fg-brand);
+        }
+      }
+    }
+
+    &.synced {
+      & span {
+        color: var(--fg-success);
+      }
+
+      & .item-icon-wrapper {
+        & .item-icon {
+          color: var(--fg-success);
+        }
+      }
+    }
+  }
+}
+
+:host ::ng-deep {
+  .syncing-arrow {
+    animation: up-and-down 1.7s none infinite;
+  }
+
+  @keyframes up-and-down {
+    0% {
+      transform: translateY(0);
+    }
+
+    49% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-3px);
+    }
+
+    99% {
+      transform: translateY(-3px);
+    }
+
+    100% {
+      transform: translateY(0);
+    }
+  }
+}
+
+#notificationSideBarItem * {
+  pointer-events: none;
+}

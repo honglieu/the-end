@@ -1,0 +1,188 @@
+<div class="team-permissions">
+  <div
+    *ngIf="mailBoxType === EMailBoxType.COMPANY"
+    class="tooltip-company d-flex gap-4 align-items-center">
+    <trudi-icon
+      [icon]="'toolTip2'"
+      [style]="{'width.px': 16, 'height.px': 16}"></trudi-icon>
+    <span class="tooltip-company-title"
+      >As this is the company mailbox, all team members have access.</span
+    >
+  </div>
+  <div
+    class="table-fix-header"
+    infiniteScroll
+    [scrollWindow]="false"
+    [infiniteScrollDistance]="0"
+    [infiniteScrollThrottle]="300"
+    (scrolled)="onElementScroll()"
+    [alwaysCallback]="true"
+    [immediateCheck]="true"
+    [fromRoot]="true"
+    [class.loading]="(isLoading || !userRoleInMailbox) && !isError"
+    [style.maxHeight]="'calc(100vh - 32px)'">
+    <div class="d-flex flex-dir-column w-100 h-100">
+      <table #tableProperty class="table-property">
+        <thead>
+          <ng-container *ngTemplateOutlet="theadTemplate"></ng-container>
+        </thead>
+        <tbody
+          cdkVirtualScrollingElement
+          *ngIf="(!isLoading && userRoleInMailbox)">
+          <tr
+            *ngFor="let row of (mailboxSettingService.teamPermissonData$ | async); index as i; trackBy: trackByUser">
+            <ng-container
+              *ngTemplateOutlet="rowTemplate; context: { row: row, i: i }">
+            </ng-container>
+          </tr>
+        </tbody>
+        <tbody
+          *ngIf="(isLoading || !userRoleInMailbox || !(mailboxSettingService.teamPermissonData$ | async)?.length) && !isError">
+          <tr *ngFor="let _ of [].constructor(10); let i = index">
+            <ng-container
+              *ngTemplateOutlet="rowSkeletonTemplate  context: { i: i }">
+            </ng-container>
+          </tr>
+        </tbody>
+        <tbody *ngIf="isError" class="no-nember">
+          <tr>
+            <td>
+              <span> No members found for this mailbox </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<ng-template #theadTemplate>
+  <tr>
+    <th *ngFor="let thead of theadTable">
+      <span>
+        {{thead.label}}
+        <trudi-icon
+          *ngIf="thead.tooltip"
+          nz-tooltip
+          [nzTooltipTitle]="thead?.tooltip"
+          nzTooltipOverlayClassName="team-permissions__customTooltip"
+          icon="toolTip2"></trudi-icon>
+      </span>
+    </th>
+    <th>
+      <div
+        class="action"
+        *ngIf="(userRoleInMailbox | checkMailboxPermission) && !isError">
+        <div class="action-wrap-btn">
+          <button
+            class="action-btn-edit"
+            [disabled]="isConsole || (inboxService?.isArchiveMailbox$ | async)"
+            [class.cursor-not-allowed-unset]="inboxService?.isArchiveMailbox$ | async"
+            *ngIf="disableCheckbox && !isLoading"
+            (click)="onEdit()">
+            <span> Edit </span>
+          </button>
+          <button
+            *ngIf="!disableCheckbox"
+            class="btn-icon btn-confirm mr-12"
+            (click)="onConfirm()">
+            <trudi-icon
+              icon="check"
+              [style]="{ 'width.px': 20, 'height.px': 20}"></trudi-icon>
+          </button>
+          <button
+            *ngIf="!disableCheckbox"
+            class="btn-icon btn-cancel"
+            (click)="onCancel()">
+            <trudi-icon
+              icon="cancel"
+              [style]="{ 'width.px': 20, 'height.px': 20}"></trudi-icon>
+          </button>
+        </div>
+      </div>
+    </th>
+  </tr>
+</ng-template>
+
+<ng-template #rowTemplate let-row="row" let-i="i">
+  <td>
+    <span>
+      <app-user-avatar
+        [avatar]="row.googleAvatar"
+        [user]="row"
+        [style]="'width: 32px; height: 32px; font-size: 16px;'"></app-user-avatar>
+      {{row.firstName}} {{row.lastName}}
+      <trudi-icon
+        *ngIf="row.role?.includes(EUserMailboxRole.OWNER)"
+        icon="crownGold">
+      </trudi-icon>
+    </span>
+  </td>
+  <td>
+    <span *ngIf="!row.role?.includes(EUserMailboxRole.OWNER)">
+      <trudi-checkbox
+        [ngModel]="row.role?.includes(EUserMailboxRole.COLLABORATOR)"
+        [disabled]="disableCheckbox || mailBoxType === EMailBoxType.COMPANY"
+        (change)="onCheckboxChange($event, row, EUserMailboxRole.COLLABORATOR)"></trudi-checkbox
+    ></span>
+  </td>
+  <td>
+    <span *ngIf="!row.role?.includes(EUserMailboxRole.OWNER)"
+      ><trudi-checkbox
+        [ngModel]="row.role?.includes(EUserMailboxRole.ADMIN)"
+        [disabled]="disableCheckbox"
+        (change)="onCheckboxChange($event, row, EUserMailboxRole.ADMIN)"></trudi-checkbox>
+    </span>
+  </td>
+  <td>
+    <span
+      ><trudi-checkbox
+        [(ngModel)]="row.isDefault"
+        [disabled]="disableCheckbox"
+        (change)="onCheckboxChange($event, row)"></trudi-checkbox
+    ></span>
+  </td>
+  <td></td>
+</ng-template>
+
+<ng-template #rowSkeletonTemplate let-i="i">
+  <td>
+    <span>
+      <nz-skeleton-element
+        nzType="avatar"
+        [nzActive]="true"
+        [nzSize]="small"></nz-skeleton-element>
+      <nz-skeleton
+        [nzParagraph]="{ rows: 0 }"
+        [nzActive]="true"
+        class="w-100"></nz-skeleton>
+    </span>
+  </td>
+  <td>
+    <span>
+      <nz-skeleton
+        *ngIf="i > 0"
+        [nzParagraph]="{ rows: 0 }"
+        [nzActive]="true"
+        class="size-14"></nz-skeleton>
+    </span>
+  </td>
+  <td>
+    <span>
+      <nz-skeleton
+        *ngIf="i > 0"
+        [nzParagraph]="{ rows: 0 }"
+        [nzActive]="true"
+        class="size-14"></nz-skeleton>
+    </span>
+  </td>
+  <td>
+    <span>
+      <nz-skeleton
+        [nzParagraph]="{ rows: 0 }"
+        [nzActive]="true"
+        class="size-14"></nz-skeleton>
+    </span>
+  </td>
+  <td></td>
+</ng-template>

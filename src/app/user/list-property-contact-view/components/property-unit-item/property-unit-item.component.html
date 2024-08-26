@@ -1,0 +1,19 @@
+<div
+  class="y-center"
+  [class.cursor-pointer]="(environmentType === EContactPageType.RM && item.data?.displayAddress !== NO_PROPERTY) || environmentType === EContactPageType.PT"
+  [class.cursor-default]="!item?.data?.propertyId && item.data.status !== ERentPropertyStatus.DELETED"
+  [class.cursor-not-allowed]="item.data.status === ERentPropertyStatus.DELETED"
+  [class.unit-wrapper]="item.data?.sourceProperty?.type === EEntityType.UNIT"
+  [class.property-wrapper]="item.data?.sourceProperty?.type !== EEntityType.UNIT">
+  <trudi-icon
+    [ngClass]="{'deleted': isDisabledByStatus}"
+    [icon]="item?.data?.sourceProperty?.type === EEntityType.UNIT ? 'greenDot' : 'buildingIcon'">
+  </trudi-icon>
+
+  <span
+    [ngClass]="{'deleted': isDisabledByStatus, 'text-underline-address': item?.data?.propertyId && ![ERentPropertyStatus.DELETED].includes(item?.data?.status)}"
+    [class.unit-name]="item?.data?.sourceProperty?.type === EEntityType.UNIT"
+    [class.property-name]="item.data?.sourceProperty?.type !== EEntityType.UNIT"
+    [innerHTML]="(item.data?.displayAddress || item.data?.streetline) | highlight: searchValue">
+  </span>
+</div>

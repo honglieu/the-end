@@ -1,0 +1,67 @@
+<div [formGroup]="applicationShortlistForm">
+  <div class="application-shortlist-form-wrapper">
+    <div class="d-flex align-items-center justify-content-between">
+      <p class="pre-screen-heading">Pre-screen</p>
+      <trudi-checkbox
+        label="Required"
+        formControlName="preScreenIsRequired"></trudi-checkbox>
+    </div>
+    <div class="pre-screen-wrapper">
+      <div>
+        <trudi-form-control [checkSubmit]="!isSubmittedCommunicationForm">
+          <trudi-text-field
+            [checkSubmit]="!isSubmittedCommunicationForm"
+            label="Title"
+            formControlName="title"
+            [maxCharacter]="150">
+          </trudi-text-field>
+        </trudi-form-control>
+      </div>
+      <div class="mt-16">
+        <p class="application-heading">Application 1 (required)</p>
+        <div class="d-flex align-items-center justify-content-between gap-16">
+          <trudi-text-field
+            label="Name"
+            placeholder="Free text field"
+            formControlName="applicationName1">
+          </trudi-text-field>
+          <trudi-text-field
+            label="Summary"
+            placeholder="Free text field"
+            formControlName="applicationSummary1">
+          </trudi-text-field>
+        </div>
+      </div>
+      <div class="mt-16">
+        <p class="application-heading">Application 2</p>
+        <div class="d-flex align-items-center justify-content-between gap-16">
+          <trudi-text-field
+            label="Name"
+            placeholder="Free text field"
+            formControlName="applicationName2">
+          </trudi-text-field>
+          <trudi-text-field
+            label="Summary"
+            placeholder="Free text field"
+            formControlName="applicationSummary2">
+          </trudi-text-field>
+        </div>
+      </div>
+      <div class="mt-16">
+        <p class="application-heading">Application 3</p>
+        <div class="d-flex align-items-center justify-content-between gap-16">
+          <trudi-text-field
+            label="Name"
+            placeholder="Free text field"
+            formControlName="applicationName3">
+          </trudi-text-field>
+          <trudi-text-field
+            label="Summary"
+            placeholder="Free text field"
+            formControlName="applicationSummary3">
+          </trudi-text-field>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

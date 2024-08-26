@@ -1,0 +1,191 @@
+<div
+  *ngIf="isShowFile"
+  PreventButton
+  [attr.data-button-key]="EButtonTask.VIEW_FILE"
+  [attr.data-button-type]="EButtonType.TASK"
+  (leftClick)="loadFile(noteFile.id)"
+  class="attachment-message"
+  [ngSwitch]="noteFile.fileTypeString"
+  id="source-drag-file"
+  [cdkDropListData]="[noteFile]"
+  [cdkDropListConnectedTo]="'destination-drop-photo'">
+  <ng-container *ngSwitchCase="EFileType.FILE">
+    <ng-container
+      *ngTemplateOutlet="formTemplate; context: {msgFile: noteFile}"></ng-container>
+  </ng-container>
+  <ng-container *ngSwitchCase="EFileType.AUDIO">
+    <ng-container
+      *ngTemplateOutlet="formTemplate; context: {msgFile: noteFile}"></ng-container>
+  </ng-container>
+
+  <ng-template #formTemplate let-msgFile="msgFile">
+    <div
+      class="main-title"
+      [ngClass]="{'active-audio': isShowAudioControl && selectedFileId === (msgFile.id + '_')}">
+      <div class="elements-container">
+        <div class="link-img link-img-file">
+          <trudi-icon
+            [icon]="msgFile.fileIcon"
+            [style]="{ 'width.px': 36, 'height.px': 36 }">
+          </trudi-icon>
+          <trudi-icon
+            *ngIf="msgFile.syncPTStatus === ESyncStatus.SUCCESS"
+            icon="syncSuccess"
+            [style]="{'width.px': 20, 'height.px': 20}"
+            class="link-img-icon link-img-icon--file"></trudi-icon>
+        </div>
+        <div class="text-elements">
+          <span
+            class="title-text"
+            nz-tooltip
+            [nzTooltipTitle]="((msgFile?.title || msgFile?.name) | uppercaseFirstLetter)"
+            [nzTooltipOverlayStyle]="{ 'max-width': '208px' }"
+            >{{ msgFile?.title || msgFile?.name | uppercaseFirstLetter}}</span
+          >
+          <div class="sub-title-text">{{msgFile?.size| convertFileSize}}</div>
+        </div>
+      </div>
+
+      <audio-control
+        class="w-100"
+        [isCollapsed]="isShowAudioControl && selectedFileId === (msgFile.id + '_')"
+        [isStop]="false"
+        [linkMedia]="msgFile?.mediaLink"></audio-control>
+    </div>
+  </ng-template>
+
+  <ng-container *ngSwitchCase="EFileType.VIDEO">
+    <div cdkDrag cdkDragHandle>
+      <div
+        [ngClass]="{'sending-from-user-media': false}"
+        [style.width.px]="size"
+        [style.height.px]="size"
+        class="video-wrapper">
+        <ng-container *ngIf="noteFile.thumbMediaLink else notThumbMediaLink">
+          <img
+            [src]="noteFile.thumbMediaLink"
+            alt="{{noteFile.mediaLink}}"
+            (click)="onVideoLoaded()" />
+        </ng-container>
+        <ng-template #notThumbMediaLink>
+          <img [src]="'/assets/images/bgblack.jpg'" class="video-thumb" />
+        </ng-template>
+        <trudi-icon
+          class="play-icon"
+          svgClass="size-32"
+          icon="play"></trudi-icon>
+        <trudi-icon
+          *ngIf="noteFile.syncPTStatus === ESyncStatus.SUCCESS"
+          icon="syncSuccess"
+          [style]="{'width.px': 20, 'height.px': 20}"
+          class="link-img-icon link-img-icon--video"></trudi-icon>
+      </div>
+      <div *cdkDragPreview class="video-wrapper-preview">
+        <video
+          [src]="noteFile.linkVideo"
+          (loadeddata)="onVideoLoaded()"></video>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngSwitchCase="EFileType.PHOTO">
+    <div cdkDrag cdkDragHandle>
+      <div
+        [ngClass]="{'sending-from-user-media': false}"
+        [style.width.px]="size"
+        [style.height.px]="size"
+        class="message-file">
+        <img
+          class="file-image"
+          [style.width.px]="size"
+          [style.height.px]="size"
+          loading="lazy"
+          src="{{
+						noteFile.mediaLink ? noteFile.mediaLink : ('assets/images/icons/' + fileType)
+					}}" />
+        <trudi-icon
+          *ngIf="noteFile.syncPTStatus === ESyncStatus.SUCCESS"
+          icon="syncSuccess"
+          [style]="{'width.px': 20, 'height.px': 20}"
+          class="link-img-icon link-img-icon--photo"></trudi-icon>
+      </div>
+      <div *cdkDragPreview class="message-file-preview">
+        <img
+          loading="lazy"
+          src="{{
+						noteFile.mediaLink ? noteFile.mediaLink : ('assets/images/icons/' + fileType)
+					}}" />
+        <trudi-icon
+          *ngIf="noteFile.syncPTStatus === ESyncStatus.SUCCESS"
+          icon="syncSuccess"
+          [style]="{'width.px': 20, 'height.px': 20}"
+          class="link-img-icon link-img-icon--photo"></trudi-icon>
+      </div>
+    </div>
+  </ng-container>
+</div>
+<div
+  *ngIf="true"
+  nz-dropdown
+  nzTrigger="click"
+  class="attachment-message-action-button"
+  [nzDropdownMenu]="menu"
+  [ngClass]="{'-active': noteFile?.id === fileIdDropdown}"
+  [(nzVisible)]="visibleDropdownMenu"
+  (nzVisibleChange)="onDropdownVisibleChanged($event)">
+  <trudi-icon class="size-16" icon="greyThreeDot"></trudi-icon>
+</div>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <ul nz-menu class="menu-button">
+    <li disableOpenSendMsgModal nz-menu-item (click)="onForward(noteFile)">
+      <div class="d-flex align-items-center gap-8">
+        <trudi-icon
+          [style]="{'width.px': 16, 'height.px': 16, 'color': '#3D3D3D'}"
+          class="size-16"
+          icon="moveToIcon"></trudi-icon>
+        <div class="dropdown-item-text">Forward</div>
+      </div>
+    </li>
+    <li nz-menu-divider></li>
+    <li
+      nz-menu-item
+      (click)="onDownloadFile(noteFile.mediaLink, noteFile.name)">
+      <div class="d-flex align-items-center gap-8">
+        <trudi-icon
+          [style]="{'width.px': 16, 'height.px': 16, 'color': '#3D3D3D'}"
+          class="size-16"
+          icon="iconDownload"></trudi-icon>
+        <div class="dropdown-item-text">Download</div>
+      </div>
+    </li>
+    <li nz-menu-divider></li>
+    <li
+      nz-menu-item
+      [ngClass]="{'disabled': isConsole || (currentTask?.property?.isTemporary)}"
+      (click)="handleSync(noteFile); visibleDropdownMenu = false; fileIdDropdown = null">
+      <div
+        trudi-tooltip
+        nzTooltipPlacement="bottom"
+        [nzTooltipTitle]="visibleDropdownMenu ? 'No property assigned' : null"
+        [nzTooltipTrigger]="(currentTask?.property?.isTemporary) ? 'hover' : null"
+        *ngIf="(!isSyncing); else syncingButtonTemplate"
+        class="d-flex align-items-center gap-8">
+        <trudi-icon
+          [style]="{'width.px': 16, 'height.px': 16, 'color': '#3D3D3D'}"
+          class="size-16"
+          icon="iconSync"></trudi-icon>
+        <div class="dropdown-item-text">{{syncFileText}}</div>
+      </div>
+
+      <ng-template #syncingButtonTemplate>
+        <div class="d-flex align-items-center gap-8">
+          <trudi-icon
+            [style]="{'width.px': 16, 'height.px': 16, 'color': '#3D3D3D'}"
+            class="size-16 spin"
+            icon="syncSuccessPic"></trudi-icon>
+          <div class="dropdown-item-text">Syncing</div>
+        </div>
+      </ng-template>
+    </li>
+  </ul>
+</nz-dropdown-menu>

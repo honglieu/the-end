@@ -1,0 +1,69 @@
+<select-events-provider
+  [provider]="selectedCalendarProvider"
+  [config]="configEventsList"
+  [status]="status"
+  [userCalendarId]="userCalendarSettingId">
+</select-events-provider>
+
+<div
+  *ngIf="isOpenPopup && !isConsole"
+  class="popup-container"
+  [style.backgroundColor]="!status  ? '#FFEDD5' : isReconnect ? '#FFE1E7' : ''"
+  [style.borderColor]="!status ? '#FA781A': isReconnect ? '#E1024F': ''">
+  <div class="title-group">
+    <ng-container
+      *ngIf="isReconnect && selectedCalendarProvider === emailProvider.GOOGLE">
+      <trudi-icon svgClass="size-40" [icon]="'iconGoogleCalendar'"></trudi-icon>
+    </ng-container>
+    <ng-container
+      *ngIf="isReconnect && selectedCalendarProvider === emailProvider.OUTLOOK">
+      <trudi-icon
+        svgClass="size-40"
+        [icon]="'iconOutlookCalendar'"></trudi-icon>
+    </ng-container>
+    <div class="text-group">
+      <span class="text-title">{{title}}</span>
+      <span class="text-description">{{description}}</span>
+    </div>
+  </div>
+  <div class="btn-group">
+    <ng-container *ngIf="!status">
+      <button
+        trudi-btn
+        variant="outlined"
+        [btnType]="'neutral'"
+        [placement]="placement"
+        (click)="handleActive(emailProvider.GOOGLE)">
+        <trudi-icon
+          svgClass="size-20"
+          [icon]="'iconGoogleCalendar'"></trudi-icon>
+        Google calendar
+      </button>
+      <button
+        trudi-btn
+        variant="outlined"
+        [btnType]="'neutral'"
+        [placement]="placement"
+        (click)="handleActive(emailProvider.OUTLOOK)">
+        <trudi-icon
+          svgClass="size-28"
+          [icon]="'iconOutlookCalendar'"></trudi-icon>
+        Outlook calendar
+      </button>
+    </ng-container>
+    <ng-container *ngIf="isReconnect">
+      <button
+        trudi-btn
+        variant="outlined"
+        [btnType]="'neutral'"
+        [placement]="placement"
+        (click)="handleReconnect()">
+        {{status === EIntegrationsStatus.DISCONNECTED ? 'Reconnect' : 'Try
+        again'}}
+      </button>
+    </ng-container>
+    <div (click)="  handleClosePopup()" class="btn-close">
+      <trudi-icon svgClass="size-12" [icon]="'closeGray64'"></trudi-icon>
+    </div>
+  </div>
+</div>

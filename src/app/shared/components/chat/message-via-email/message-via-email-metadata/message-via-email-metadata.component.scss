@@ -1,0 +1,43 @@
+@import 'function';
+
+.wrap-text > span {
+  white-space: normal;
+  overflow: hidden !important;
+}
+
+.wrap-email-metadata > span:not(:first-child) {
+  overflow: hidden;
+}
+
+.user-title-underline {
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.info-email {
+  @include fontSetup(
+    var(--fg-neutral-stronger, #3d3d3d),
+    12px,
+    16px,
+    normal,
+    400
+  );
+}
+
+.info-name-email {
+  max-width: 187px;
+  display: inline;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.add-contact {
+  margin-left: 6px;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}

@@ -1,0 +1,41 @@
+@import 'function';
+
+.wrapper-email-copy {
+  border: 1px solid var(--border-neutral-dark, #d8dcdf);
+  border-radius: 4px;
+  .block-email-copy {
+    padding: 12px;
+    gap: 12px;
+    .email-copy {
+      @include fontSetup(
+        var(--fg-neutral-stronger, #3d3d3d),
+        14px,
+        20px,
+        normal,
+        400
+      );
+    }
+
+    .no-emails {
+      @include fontSetup(var(--gray-400, #999999), 14px, 16px, italic, 400);
+    }
+  }
+}
+
+::ng-deep .unverified-tooltip {
+  &.ant-tooltip-placement-top,
+  .ant-tooltip-placement-topLeft,
+  .ant-tooltip-placement-topRight {
+    padding-bottom: 6px !important;
+  }
+  .ant-tooltip-arrow {
+    display: none;
+  }
+  &.ant-tooltip {
+    max-width: unset !important;
+  }
+}
+
+.unverified-text {
+  padding-right: 5px;
+}

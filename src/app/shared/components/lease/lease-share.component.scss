@@ -1,0 +1,54 @@
+@import 'function';
+
+:host {
+  display: block;
+}
+.lease-box {
+  span {
+    font-weight: 600;
+    line-height: 16px;
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.87);
+  }
+  .lease-duration-date {
+    .date-start-end {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.8rem;
+
+      .days-remaining {
+        @include fontSetup(var(--gray-500), 12px, 16px, normal, 500);
+      }
+    }
+    .item-pay {
+      margin-top: 6px;
+      justify-content: space-between;
+
+      .paid-to {
+        @include fontSetup(var(--gray-400), 12px, 16px, normal, 400);
+      }
+      .content-pay {
+        @include fontSetup(var(--gray-700), 14px, 16px, normal, 600);
+
+        .content-date {
+          @include fontSetup(var(--gray-500), 12px, 16px, normal, 500);
+        }
+      }
+    }
+  }
+}
+.day {
+  @include fontSetup(var(--gray-500), 12px, 16px, normal, 500);
+}
+
+.lease-in-duration {
+  color: var(--gray-700);
+}
+
+.lease-expired {
+  color: var(--danger-500);
+}
+
+.lease-not-available {
+  color: var(--gray-500) !important;
+}

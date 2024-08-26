@@ -1,0 +1,89 @@
+<div class="trudi-input-label mt-12">Tasks</div>
+<div class="form-group-container">
+  <trudi-multi-select
+    #selectTaskTemplates
+    placeholder="Select tasks"
+    [formControl]="tasksControl"
+    [loading]="isLoading"
+    [items]="taskTemplates"
+    [searchFn]="customSearchFn"
+    bindValue="id"
+    bindLabel="name"
+    [virtualScroll]="true"
+    [clearSearchOnAdd]="false"
+    dropdownPosition="auto">
+    <ng-template trudi-label-tmp let-items="items" let-clear="clear">
+      <div class="ng-value" *ngFor="let item of items">
+        <div
+          class="task-template-label-wrapper d-flex gap-4 align-items-center trudi-label-wrapper border-rad-8">
+          <div class="trudi-select-label">{{item.name}}</div>
+          <ng-template #regionTooltipTemplate>
+            <ng-container
+              *ngTemplateOutlet="tooltipTemplate; context: {regions: item.taskTemplateRegions}"></ng-container>
+          </ng-template>
+          <div class="close-wrapper">
+            <trudi-icon
+              class="cursor-pointer"
+              icon="closeGray64"
+              [style]="{ 'width.px': 8, 'height.px': 8 }"
+              (click)="clear(item); $event.stopPropagation()"></trudi-icon>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template trudi-header-tmp>
+      <div class="trudi-select-header-custom">
+        <span class="trudi-select-header-custom__label"
+          >{{tasksControl?.value.length}}/{{taskTemplates.length}}</span
+        >
+        <div class="trudi-select-header-custom__action">
+          <span class="label">Select all</span>
+          <span (click)="handleCLickSelectAll()">
+            <trudi-checkbox
+              [isSelectedAll]="taskTemplates.length !== tasksControl.value.length"
+              [ngModel]="tasksControl.value.length"></trudi-checkbox>
+          </span>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template
+      trudi-option-tmp
+      let-item="item"
+      let-searchTerm="searchTerm"
+      let-item$="item$">
+      <div
+        class="task-template-option trudi-select-option d-flex justify-content-between align-items-center w-100 gap-8">
+        <div
+          class="task-template-option__label d-flex align-items-center w-100 gap-8">
+          <div
+            class="item-label"
+            [ngOptionHighlight]="searchTerm ? searchTerm : ''">
+            {{item.name}}
+          </div>
+        </div>
+        <ng-template #regionTooltipTemplate>
+          <ng-container
+            *ngTemplateOutlet="tooltipTemplate; context: {regions: item.taskTemplateRegions}"></ng-container>
+        </ng-template>
+        <div class="d-flex align-items-center">
+          <trudi-checkbox [ngModel]="item$.selected"></trudi-checkbox>
+        </div>
+      </div>
+    </ng-template>
+  </trudi-multi-select>
+  <p *ngIf="!crmControl?.value" class="warning-text">Please select CRM</p>
+</div>
+
+<ng-template #tooltipTemplate let-regions="regions">
+  <div class="task-template-region-tooltip">
+    <div
+      style="text-align: start"
+      *ngFor="let taskTemplateRegion of regions?.slice(0, 20)">
+      {{ taskTemplateRegion.regionFullName + ' (' +
+      taskTemplateRegion.regionName + ')' }}
+    </div>
+    <div style="text-align: start" *ngIf="regions.length > 20">
+      {{ ' +' + (regions.length - 20) + ' more' }}
+    </div>
+  </div>
+</ng-template>

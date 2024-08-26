@@ -1,0 +1,29 @@
+@import 'function';
+
+.pt-widget-notes-wrapper {
+  width: 100%;
+  max-height: 248px;
+  margin-top: 8px;
+  border-radius: 8px;
+  padding: 12px;
+  border: solid 1px var(--gray-200);
+  overflow: auto;
+  background-color: var(--white);
+
+  .header {
+    display: flex;
+    align-items: center;
+
+    &-content {
+      @include fontSetup(var(--gray-500), 12px, 16px, normal, 600);
+    }
+
+    .lock-icon {
+      margin-left: 4px;
+    }
+  }
+
+  .body {
+    @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+  }
+}

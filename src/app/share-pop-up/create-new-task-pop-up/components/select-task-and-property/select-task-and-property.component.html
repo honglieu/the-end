@@ -1,0 +1,327 @@
+<trudi-modal
+  [(visible)]="appearanceState"
+  [autoFocus]="null"
+  (onCancel)="isOpenModal(false)"
+  subTitle="">
+  <ng-template #headerModal>
+    <div class="modal-header-create-new-task__title--default">
+      <div class="modal-header-create-new-task-body">
+        <div class="title w-100 flex-1">
+          <span class="flex-1">{{titlePopup}}</span>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <div class="invite-wrapper" #selectTaskAndProperty>
+    <div
+      [formGroup]="formGroup"
+      class="body"
+      [class.ng-selected]="inputFocused">
+      <trudi-workflows
+        [direction]="'vertical'"
+        [stepCurrent]="currentStep"
+        [readonly]="true">
+        <trudi-workflow>
+          <ng-template trudi-workflow-content>
+            <div class="small-label" data-e2e="select-task-label">
+              Select task template
+            </div>
+
+            <div class="select-task-template">
+              <select-single-task-template
+                [items]="taskNameList"
+                [isShowRegion]="false"
+                [formControl]="getSelectedTask"
+                (onTaskChanged)="onTaskTemplateChange($event)"></select-single-task-template>
+            </div>
+          </ng-template>
+        </trudi-workflow>
+
+        <ng-container *ngIf="!createMultiple">
+          <trudi-workflow>
+            <ng-template trudi-workflow-content>
+              <div
+                [class]="calendarEventSelected?.id ? 'search-box disable-select':'search-box'"
+                id="property-select">
+                <div class="small-label" data-e2e="select-property-label">
+                  Assign a property
+                </div>
+                <ng-select
+                  #selectProperty
+                  id="property-list"
+                  [items]="listOfPeopleInSelectBox"
+                  formControlName="property"
+                  placeholder="Select property"
+                  bindValue="id"
+                  [class.empty-value-search]="searchInputEmpty"
+                  bindLabel="streetline"
+                  [searchable]="true"
+                  [clearable]="true"
+                  [virtualScroll]="true"
+                  (open)="onOpenSelect('property-select', 'focus')"
+                  (change)="selectProperty.blur(); onPeopleSelectChanged($event)"
+                  (focus)="onOpenPropertyDropdown()"
+                  [loading]="loading"
+                  notFoundText="No results found"
+                  data-e2e="select-property-dropdown"
+                  [readonly]="readonly || disabledPropertyField || currentStep < eCreateTaskStep.PROPERTY_STEP">
+                  <ng-template
+                    ng-option-tmp
+                    let-item="item"
+                    let-search="searchTerm">
+                    <div class="y-center justify-content-between flex-1 gap-8">
+                      <div class="y-center gap-8">
+                        <span
+                          [ngOptionHighlight]="search || ''"
+                          [title]="item.streetline"
+                          class="white-space-normal"
+                          [ngClass]="{'selected-property': item.id === crtUser?.id}"
+                          >{{item.streetline}}</span
+                        >
+                        <div
+                          class="property-tree y-center gap-4"
+                          *ngIf="item.manager">
+                          <span class="property-tree-name"
+                            >{{item?.manager?.firstName}}
+                            {{item?.manager?.lastName}}</span
+                          >
+                        </div>
+                      </div>
+                      <trudi-icon
+                        icon="checkSuccess"
+                        *ngIf="item.id === crtUser?.id"
+                        svgClass="size-16"></trudi-icon>
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </div>
+            </ng-template>
+          </trudi-workflow>
+        </ng-container>
+
+        <trudi-workflow>
+          <ng-template trudi-workflow-content>
+            <div class="search-box" id="assign-select">
+              <div class="small-label">Add team members</div>
+              <ng-select
+                #ngSelectAssignTo
+                class="select-agency"
+                [ngClass]="{'height-dropdown': isComplianceFlow}"
+                id="assign-list"
+                placeholder="Select assignee"
+                [items]="listOfAgent"
+                formControlName="assign"
+                bindValue="value"
+                bindLabel="label"
+                [searchable]="true"
+                [clearable]="false"
+                [editableSearchTerm]="true"
+                [virtualScroll]="true"
+                [compareWith]="compareAssign"
+                dropdownPosition="auto"
+                [multiple]="true"
+                (focus)="formValidate.assign = false"
+                (open)="onOpenSelect('assign-select', 'focus')"
+                (change)="updateCurrentStep()"
+                notFoundText="No results found"
+                [readonly]="(createMultiple && currentStep < (eCreateTaskStep.ASSIGNEE_STEP - 1))
+                || (!createMultiple && currentStep < eCreateTaskStep.ASSIGNEE_STEP)"
+                [closeOnSelect]="false">
+                <ng-template ng-label-tmp let-item="item" let-clear="clear">
+                  <trudi-icon
+                    (click)="clear(item)"
+                    class="ng-value-icon left"
+                    icon="closeGray64"
+                    [style]="{ 'width.px': 10, 'height.px': 10, 'min-width.px': 10, 'min-height.px': 10 }"></trudi-icon>
+                  <div class="d-flex">
+                    <app-user-avatar
+                      [avatar]="item.value?.googleAvatar"
+                      [user]="item.value"
+                      [style]="'width: 20px; height: 20px; font-size: 10px;'"></app-user-avatar>
+                    <div class="label-name">
+                      {{item.label}} {{item?.isCurrentPM ? "(Me)" : ""}}
+                    </div>
+                  </div>
+                </ng-template>
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-search="searchTerm">
+                  <div class="label-select" [title]="item.label">
+                    <app-user-avatar
+                      [avatar]="item.value?.googleAvatar"
+                      [user]="item.value"
+                      [style]="'width: 28px; height: 28px; font-size: 14px;'"></app-user-avatar>
+                    <div
+                      class="label-name-select"
+                      [ngOptionHighlight]="search ? (search | nzTrim) : ''"
+                      [ngClass]="{'active': checkSelectedAgent(item.id)}">
+                      {{item.label}}
+                    </div>
+                  </div>
+                  <trudi-icon
+                    [icon]="(checkSelectedAgent(item.id) && item.value.inviteStatus !== listInviteStatus.DEACTIVATED) ? 'userChecked' : (item.value.inviteStatus === listInviteStatus.DEACTIVATED ? 'checkboxDeactived' : 'userUnCheck')"
+                    class="user-checkbox checkbox-head"></trudi-icon>
+                </ng-template>
+
+                <ng-template ng-header-tmp>
+                  <div
+                    *ngIf="listOfAgent.length"
+                    class="d-flex align-items-center justify-content-between pd-12">
+                    <div>
+                      <span class="count-text"
+                        >{{formGroup.get('assign').value.length}}/{{listOfAgent.length}}</span
+                      >
+                    </div>
+                    <span
+                      class="clear-btn clear-selection-btn"
+                      *ngIf="formGroup.get('assign').value.length"
+                      (click)="handleClearAllAssign()"
+                      >Clear selection</span
+                    >
+                  </div>
+                </ng-template>
+              </ng-select>
+            </div>
+          </ng-template>
+        </trudi-workflow>
+
+        <trudi-workflow>
+          <ng-template trudi-workflow-content>
+            <div
+              class="search-box"
+              id="folder-select"
+              [class.folder-select-no-clear]="getSaveToField.value.length < 2">
+              <div class="small-label" data-e2e="select-folder-label">
+                Save to
+              </div>
+              <trudi-form-control [showErrorMessage]="false">
+                <ng-select
+                  #folderSingleSelect
+                  dropdownPosition="auto"
+                  [clearable]="true"
+                  [multiple]="true"
+                  [formControl]="saveToFieldControl"
+                  bindValue="id"
+                  bindLabel="name"
+                  [items]="isFolderMode ? listFolder : listMailBoxs"
+                  (blur)="handleBlurSelectFolder()"
+                  (change)="onFolderOrMailboxChange($event)"
+                  [searchable]="false"
+                  [readonly]="(createMultiple && currentStep < (eCreateTaskStep.FOLDER_STEP - 1))
+                  || (!createMultiple && currentStep < eCreateTaskStep.FOLDER_STEP)"
+                  [closeOnSelect]="isFolderMode ? true : false">
+                  <ng-template ng-header-tmp>
+                    <div
+                      class="d-flex align-items-center justify-content-between pd-12">
+                      <div>
+                        <span class="folder-field-title">
+                          {{isFolderMode ? 'SELECT FOLDER' : 'SELECT MAILBOX'}}
+                        </span>
+                      </div>
+                      <span
+                        *ngIf="(listMailBoxs && listMailBoxs.length && isShowSelectMailBox)"
+                        class="folder-field-btn"
+                        (click)="isFolderMode = !isFolderMode">
+                        {{isFolderMode ? 'Select mailbox' : 'Select folder'}}
+                      </span>
+                    </div>
+                  </ng-template>
+                  <ng-template ng-label-tmp let-item="item">
+                    <div
+                      class="y-center gap-8 w-100"
+                      [class.mailbox-name]="item?.id !== currentFolderId">
+                      <trudi-icon
+                        [icon]="item.id === currentFolderId ? 'iconFolder' : 'mailThin'"
+                        [style]="{'width.px': 20, 'height.px': 20}"></trudi-icon>
+                      <span class="label-folder-name">
+                        {{(item?.id === currentFolderId) ? item?.name :
+                        currentMailBox?.name}}
+                      </span>
+                      <span *ngIf="item.id !== currentFolderId">/</span>
+                      <ng-container *ngIf="!currentFolderId">
+                        <trudi-icon
+                          [icon]="'iconFolder'"
+                          class="no-selected-folder"
+                          [style]="{'width.px': 20, 'height.px': 20}"></trudi-icon>
+                        <span class="no-selected-folder">Select folder</span>
+                      </ng-container>
+                    </div>
+                  </ng-template>
+                  <ng-template ng-option-tmp let-item="item">
+                    <div class="y-center justify-content-between flex-1">
+                      <div class="y-center gap-8 folder-field-option">
+                        <span class="trudi-icon" *ngIf="isFolderMode">
+                          <trudi-icon [icon]="item?.icon"></trudi-icon>
+                        </span>
+                        <span [title]="item.name">{{item?.name}}</span>
+                        <span
+                          *ngIf="!isFolderMode && item?.type === mailBoxType.COMPANY"
+                          class="size-16 company-icon">
+                          <trudi-icon
+                            svgClass="size-16"
+                            icon="buildings"></trudi-icon>
+                        </span>
+                        <trudi-badge
+                          *ngIf="!isFolderMode"
+                          variant="role"
+                          [text]="item?.emailAddress">
+                        </trudi-badge>
+                      </div>
+                      <trudi-icon
+                        icon="checkSuccess"
+                        *ngIf="item.id === (isFolderMode ? currentFolderId : currentMailBox?.id)"
+                        svgClass="size-16"></trudi-icon>
+                    </div>
+                  </ng-template>
+                  <ng-template ng-notfound-tmp>
+                    <div class="ng-option ng-option-disabled not-found-text">
+                      No items found
+                    </div>
+                  </ng-template>
+                  <ng-container *ngIf="isFolderMode">
+                    <ng-template ng-footer-tmp>
+                      <button class="btn-add-folder" (click)="addNewFolder()">
+                        <trudi-icon icon="plusInvite"></trudi-icon>
+                        <span class="ml-4">Add new folder</span>
+                      </button>
+                    </ng-template>
+                  </ng-container>
+                </ng-select>
+              </trudi-form-control>
+            </div>
+          </ng-template>
+        </trudi-workflow>
+      </trudi-workflows>
+    </div>
+
+    <ng-template #footerModal>
+      <div class="footer-modal-create-task">
+        <button
+          *ngIf="showBackBtn"
+          trudi-btn
+          btnType="neutral"
+          variant="outlined"
+          (click)="handleBack()">
+          Back
+        </button>
+        <button
+          disableOpenSendMsgModal
+          [disabled]="!isFormValid
+            || disabledNextBtn
+            || !hasAddAccount
+            || !listMailBoxs?.length
+            || ((inboxService.syncMailBoxStatus$ | async) === EMailBoxStatus.ARCHIVE && !isShowSelectMailBox)
+            || ((inboxService.syncMailBoxStatus$ | async) === EMailBoxStatus.DISCONNECT && !isShowSelectMailBox)
+            || isConsole || isDisconnected"
+          trudi-btn
+          (click)="createTask()"
+          data-e2e="next-btn">
+          {{openFrom ===
+          createTaskByCateOpenFrom.CALENDAR_EVENT_BULK_CREATE_TASKS ? 'Next' :
+          'Create'}}
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</trudi-modal>

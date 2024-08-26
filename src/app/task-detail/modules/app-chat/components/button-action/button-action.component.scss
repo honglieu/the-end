@@ -1,0 +1,19 @@
+@import 'function';
+
+.full-width {
+  width: 100%;
+}
+
+.footer-btn-action {
+  display: flex;
+  gap: 8px;
+
+  .btn-action {
+    display: flex;
+    gap: 8px;
+
+    ::ng-deep svg-icon svg path {
+      fill: var(--gray-500) !important;
+    }
+  }
+}

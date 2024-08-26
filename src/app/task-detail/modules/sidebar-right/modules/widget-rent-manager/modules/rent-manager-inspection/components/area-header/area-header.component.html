@@ -1,0 +1,51 @@
+<div class="area-header">
+  <div class="d-flex align-items-center gap-8 area-name-wrapper">
+    <div
+      [ngClass]="{'cursor-not-allowed' : isDisabled}"
+      (click)="handleEditTaskName();$event.stopPropagation()"
+      class="area-name text-ellipsis"
+      trudi-tooltip
+      nzTooltipPlacement="top"
+      [nzTooltipTitle]="isDisabled ? '' : 'Click to edit'">
+      {{inspectionArea.value.name}}
+    </div>
+    <div [class.editing]="isEdittingAreaName" class="area-name-editing w-100">
+      <trudi-text-field
+        (click)="$event.stopPropagation()"
+        #trudiTextField
+        (triggerEventBlur)="handleBlurAreaName()"
+        [maxCharacter]="100"
+        [showCounting]="false"
+        [formControl]="areaNameControl"></trudi-text-field>
+    </div>
+  </div>
+  <div class="action-wrapper" (click)="$event.stopPropagation()">
+    <div
+      [ngClass]="{'cursor-not-allowed' : isDisabled}"
+      class="more-icon"
+      nz-dropdown
+      [nzBackdrop]="true"
+      [nzPlacement]="'bottomRight'"
+      [nzDropdownMenu]="menu"
+      [nzDisabled]="isDisabled"
+      [nzTrigger]="'click'">
+      <trudi-icon icon="verticalMore"></trudi-icon>
+    </div>
+    <nz-dropdown-menu #menu="nzDropdownMenu">
+      <div class="options-wrapper" nz-menu>
+        <div
+          *ngFor="let item of optionsList"
+          class="item"
+          nz-menu-item
+          trudi-tooltip
+          [nzTooltipOverlayClassName]="'tool-tip-areas'"
+          [nzTooltipTitle]="item.type === EOption.DELETE && isSyncedToRm() && 'Item can only be deleted directly from Rent Manager'"
+          [nzDisabled]="item.type === EOption.DELETE && isSyncedToRm()"
+          [class.disabled]="item.type === EOption.DELETE && isSyncedToRm()"
+          (click)="handleOption(item.type)">
+          <span class="text">{{item.text}}</span>
+        </div>
+      </div>
+    </nz-dropdown-menu>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+<ul
+  nz-menu
+  nzMode="inline"
+  class="border-r-none drop_task--folder"
+  [attr.folder-type]="item?.folderType"
+  [attr.folder-uid]="item?.id">
+  <li class="border-rad-8 single-item m-0" nz-menu-item nzMatchRouter>
+    <a
+      class="d-flex align-items-center w-100"
+      routerLink="mail"
+      [queryParams]="{ status: item?.status, externalId: item['externalId'] , taskTypeID: null, taskStatus: null, conversationLogId: null }"
+      queryParamsHandling="merge">
+      <div class="d-flex align-items-center">
+        <trudi-icon class="mr-8 item-icon" [icon]="item?.icon"></trudi-icon>
+        <span class="item-name"> {{ item?.name }} </span>
+        <span
+          class="item-unRead ml-4 border-rad-16"
+          *ngIf="item?.unReadMsgCount">
+          {{ item?.unReadMsgCount | totalCountPipe }}
+        </span>
+      </div>
+      <span class="item-total ml-auto" *ngIf="item?.total !== null">
+        {{ item?.total | totalCountPipe }}
+      </span>
+    </a>
+  </li>
+</ul>

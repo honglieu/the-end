@@ -1,0 +1,125 @@
+<div class="header">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex gap-16">
+      <div class="d-flex flex-dir-column gap-2">
+        <div class="header--title">Create new contact</div>
+        <div class="header--sub-title">
+          For {{phoneNumber? 'phone number' : 'email'}}:
+          <span *ngIf="phoneNumber">{{phoneNumber | phoneNumberFormat}}</span>
+          <span *ngIf="!phoneNumber">{{email}}</span>
+        </div>
+      </div>
+    </div>
+    <div
+      data-e2e="button-close"
+      class="close-btn close-modal-btn"
+      (click)="close()">
+      <trudi-icon icon="closeBtn" class="trudi-icon"></trudi-icon>
+    </div>
+  </div>
+</div>
+<div
+  class="content d-flex flex-dir-column gap-16"
+  [formGroup]="createContactForm">
+  <trudi-form-control
+    [checkSubmit]="!isSubmit"
+    [errors]="[{
+      errorName: 'exists',
+      errorMessage: 'Contact name already exists'
+    }]">
+    <trudi-text-field
+      [checkSubmit]="!isSubmit"
+      size="extra-large"
+      label="Contact name"
+      [maxCharacter]="100"
+      [showCounting]="false"
+      [formControl]="contactName"></trudi-text-field>
+  </trudi-form-control>
+  <trudi-form-control [checkSubmit]="!isSubmit">
+    <div
+      class="input-wrapper d-flex flex-dir-column gap-6 justify-content-between">
+      <p>Role</p>
+      <ng-select
+        class="resize-none border-rad-8 share-ng-select"
+        id="select"
+        [items]="roleArray"
+        formControlName="role"
+        bindLabel="name"
+        bindValue="id"
+        [searchable]="false"
+        [clearable]="true"
+        [ngClass]="{
+          'empty': isSubmit && role.value?.length === 0,
+          'ng-valid-form': isSubmit && role?.invalid,
+          'ng-touched-form': isSubmit && role?.touched
+        }">
+        <ng-template ng-label-tmp let-item="item">
+          <span>{{item.name}}</span>
+        </ng-template>
+        <ng-template ng-option-tmp let-item="item" let-index="index">
+          <div class="y-center justify-content-between flex-1 w-100">
+            <div class="y-center gap-8 w-100 justify-content-between">
+              <div class="y-center gap-4">
+                <span class="title">{{ item.name }}</span>
+              </div>
+              <img
+                *ngIf="item.id === role?.value"
+                class="icon-check"
+                src="/assets/icon/check-success.svg"
+                alt="selected-icon" />
+            </div>
+          </div>
+        </ng-template>
+      </ng-select>
+    </div>
+  </trudi-form-control>
+  <div
+    *ngIf="role.value === EUserPropertyType.OTHER"
+    class="input-wrapper d-flex flex-dir-column gap-6 justify-content-between">
+    <trudi-form-control [checkSubmit]="!isSubmit">
+      <p>Contact type</p>
+      <ng-select
+        class="resize-none border-rad-8 share-ng-select"
+        id="select"
+        [items]="contactTypeArray"
+        formControlName="contactType"
+        placeholder="Contact Type"
+        bindLabel="name"
+        bindValue="id"
+        [searchable]="false"
+        [clearable]="true"
+        [ngClass]="{
+          'empty': isSubmit && contactType.value?.length === 0,
+          'ng-valid-form': isSubmit && contactType?.invalid,
+          'ng-touched-form': isSubmit && contactType?.touched
+        }">
+        <ng-template ng-label-tmp let-item="item">
+          <span>{{item.name}}</span>
+        </ng-template>
+        <ng-template ng-option-tmp let-item="item" let-index="index">
+          <div class="y-center justify-content-between flex-1 w-100">
+            <div class="y-center gap-8 w-100 justify-content-between">
+              <div class="y-center gap-4">
+                <span class="title">{{ item.name }}</span>
+              </div>
+              <img
+                *ngIf="item.id === contactType?.value"
+                class="icon-check"
+                src="/assets/icon/check-success.svg"
+                alt="selected-icon" />
+            </div>
+          </div>
+        </ng-template>
+      </ng-select>
+    </trudi-form-control>
+  </div>
+</div>
+<div
+  class="footer-section d-flex align-items-center justify-content-between flex-dir-row-reverse">
+  <button
+    [disabled]="(inboxService?.isArchiveMailbox$ | async) || isConsole"
+    trudi-btn
+    (click)="submit()">
+    Create
+  </button>
+</div>

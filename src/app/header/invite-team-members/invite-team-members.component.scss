@@ -1,0 +1,147 @@
+@import 'function';
+
+::ng-deep ng-select.share-ng-select .ng-select-container {
+  height: 42px !important;
+}
+
+::ng-deep .ant-modal.trudi-modal.trudi-modal-invite-team-nember {
+  .ant-modal-body {
+    padding: 0px !important;
+  }
+}
+
+.invite-wrapper {
+  max-height: 646px;
+  .form-invite-team {
+    overflow-y: auto;
+    max-height: calc(100vh - 439px);
+  }
+
+  .body {
+    padding: 20px 24px;
+    gap: 20px;
+    .invite-input-list {
+      margin-bottom: 20px;
+    }
+    .invite-item {
+      margin-bottom: 20px;
+    }
+    .label {
+      text-align: left;
+      padding: 0px 2px;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--gray-600);
+      margin: 0px !important;
+    }
+    .input-invite,
+    .select-role {
+      padding: 12px;
+      min-width: 324px;
+      width: 324px;
+      gap: 8px;
+      height: 44px;
+      background-color: var(--gray-200) !important;
+      border-radius: 8px;
+      border: none;
+      font-weight: 500;
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--gray-700);
+      margin-left: 2px;
+      -webkit-max-logical-width: 213.33px;
+    }
+
+    .input-invite:hover {
+      background: var(--gray-100) !important;
+    }
+
+    .input-invite:focus {
+      background: var(--white) !important;
+      border: 1px solid var(--brand-500) !important;
+      box-shadow: var(--shadow-brand);
+    }
+
+    .input-invite:focus-visible {
+      border: none !important;
+    }
+
+    .input-invite.error,
+    .select-role.input-error-select {
+      background-color: var(--gray-200);
+      color: var(--gray-700) !important;
+      border: 1px solid var(--danger-500) !important;
+      box-shadow: var(--shadow-danger) !important;
+    }
+    .input-row {
+      margin-bottom: 8px;
+      flex: 1;
+      align-items: flex-start;
+      justify-content: space-between;
+      &-item {
+        width: 324px;
+      }
+      .error-container {
+        margin-top: 0px !important;
+      }
+    }
+    .hr-line-height {
+      width: 664px;
+      height: 2px;
+      background-color: var(--gray-200);
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    .select-role {
+      min-width: 324px;
+      gap: 8px;
+      margin-top: 0px !important;
+      background-color: var(--gray-200) !important;
+      border-radius: 8px;
+      padding: 0px !important;
+      margin-left: 2px;
+      height: auto;
+      .ng-value-label-wraper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+    }
+
+    .delete-wrapper {
+      justify-content: flex-end;
+    }
+    .delete-invite-btn {
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--gray-600);
+      text-decoration: underline;
+      margin-right: 14px;
+      background-color: transparent;
+      border: none;
+    }
+    .note-wrapper {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+      &-info {
+        @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+      }
+    }
+  }
+}
+.hr-full {
+  width: calc(100% + 20px);
+  margin: 0px;
+  margin-left: -10px;
+}
+
+.btn-wrapper {
+  margin: 0;
+}
+
+::ng-deep ng-select.select-role .ng-dropdown-panel:not(.ng-select-top) {
+  top: calc(100% + 5px) !important;
+}

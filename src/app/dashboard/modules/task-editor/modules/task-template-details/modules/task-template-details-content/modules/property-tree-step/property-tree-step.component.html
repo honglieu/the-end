@@ -1,0 +1,39 @@
+<trudi-drawer
+  *ngIf="showDrawer"
+  [(visible)]="showDrawer"
+  [wrapClassName]="isJiggling ? 'shaking-task-editor-drawer' : ''"
+  [enableBackBtn]="!editStep || isDisableForm"
+  [enableDeleteBtn]="editStep && !isDisableForm"
+  [enableOkBtn]="!isDisableForm"
+  [enableCancel]="!isDisableForm"
+  [okText]="editStep ? 'Update' : 'Add'"
+  [nzClosable]="true"
+  (onOk)="handleOk()"
+  (onBack)="handleBack()"
+  (onDelete)="handleDelete()"
+  (onCancel)="handleCancel()"
+  (onClose)="handleCancel(true)"
+  [headerTpl]="headerTpl">
+  <property-tree-step-form
+    [editStep]="editStep"
+    [disabled]="isDisableForm"
+    [isShowUpgradeMessage]="canEdit && isDisableForm"></property-tree-step-form>
+</trudi-drawer>
+
+<ng-template #headerTpl>
+  <div
+    [formGroup]="ptStepForm"
+    class="pt-step-header d-flex flex-dir-column gap-4">
+    <div class="header-badge">
+      <trudi-badge text="Property Tree action" size="small"></trudi-badge>
+      <div *ngIf="crmLogo" class="crm-logo">
+        <img [src]="crmLogo" alt="logo" />
+      </div>
+    </div>
+    <trudi-text-field
+      [disabled]="isDisableForm"
+      class="step-name-field"
+      formControlName="stepName"
+      placeholder="Add your step name here"></trudi-text-field>
+  </div>
+</ng-template>

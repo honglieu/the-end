@@ -1,0 +1,83 @@
+.property-profile-skeleton,
+.property-profile-wrap {
+  display: flex;
+  flex-direction: column;
+  background: var(--gray-50);
+  height: 100%;
+
+  .header-wrap {
+    background: var(--white);
+  }
+
+  .property-address {
+    word-break: break-word;
+    color: var(--gray-600);
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    margin-bottom: 6px;
+  }
+
+  ::ng-deep .ant-tabs {
+    &-tab {
+      margin: 0;
+    }
+    .ant-tabs-nav-wrap {
+      border-bottom: 1px solid var(--border-neutral-dark, #ececed);
+      background: var(--white);
+    }
+
+    .ant-tabs-nav-operations {
+      display: none;
+    }
+
+    .property-tab-item {
+      width: 120px;
+      text-align: center;
+    }
+  }
+
+  .trudi-badge {
+    &.property-status-badge {
+      margin-right: 6px;
+
+      &.trudi-badge-success {
+        background: var(--success-100);
+        color: var(--success-600);
+      }
+      &.trudi-badge-archive {
+        background: var(--bg-neutral-tonal-stronger, #e4e4e7);
+        color: var(--fg-neutral-normal, #51525c);
+      }
+    }
+  }
+
+  .property-tree-icon-wrap {
+    border: 1px solid var(--border-neutral-dark, #ececed);
+    border-radius: 16px;
+    padding: 1px 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .property-profile-content-wrap {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  .property-profile-content-wrap:has(.event-tab) {
+    overflow-y: hidden;
+  }
+}
+
+.property-profile-skeleton {
+  .header-skeleton{
+    background: var(--white);
+  }
+  .button-skeleton {
+    ::ng-deep .ant-skeleton-button {
+      height: 20px;
+    }
+  }
+}

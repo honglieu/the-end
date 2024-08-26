@@ -1,0 +1,49 @@
+<div class="highlight-color-wrapper">
+  <button
+    (click)="$event.stopPropagation()"
+    class="btn-action"
+    nz-button
+    trudi-tooltip
+    [nzTooltipTitle]="'Highlight color'"
+    nz-dropdown
+    [nzClickHide]="false"
+    [nzTrigger]="'click'"
+    [nzDropdownMenu]="menu"
+    [nzPlacement]="'topLeft'"
+    [nzVisible]="visibleDropdown"
+    (nzVisibleChange)="visibleDropdown = $event">
+    <trudi-icon icon="penColorIcon" svgClass="size-13"></trudi-icon>
+    <div
+      class="btn-underline"
+      [style.opacity]="!isMultipleSelected ? '1' : '0'"
+      [style.background-color]="currentBackgroundColor.format"></div>
+  </button>
+</div>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div nz-menu focusElement [isFocus]="visibleDropdown" tabindex="0">
+    <div class="highlight-color-menu-wrapper">
+      <ng-container *ngFor="let item of backgroundColors">
+        <div
+          nz-menu-item
+          class="btn-item"
+          [ngClass]="{'item-selected': item.format === currentBackgroundColor.format}">
+          <div
+            class="item"
+            [style.background-color]="item.format"
+            tabindex="0"
+            (clickStopPropagation)="onHandleChangeBackgroundColor(item)"></div>
+        </div>
+      </ng-container>
+      <div
+        nz-menu-item
+        class="btn-item"
+        (click)="removeBackgroundColor()"
+        (keydown.enter)="removeBackgroundColor()">
+        <div class="item delete-highlight" tabindex="0">
+          <trudi-icon icon="removeColor" svgClass="size-16"></trudi-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>

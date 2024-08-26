@@ -1,0 +1,200 @@
+<ng-container *ngIf="loadingService.isLoading$ | push; else detailPTWidget">
+  <div class="wrapper-skeleton-pt-tree">
+    <div
+      class="justify-content-between align-items-center files-item pd-12 skeleton-bg">
+      <div class="skeleton-rectangle">
+        <nz-skeleton
+          [nzParagraph]="paragraph"
+          [nzActive]="true"
+          class="w-100"></nz-skeleton>
+      </div>
+      <div class="w-25">
+        <nz-skeleton-element
+          class="skeleton-circle"
+          nzType="avatar"
+          [nzActive]="true"
+          [nzSize]="'small'"></nz-skeleton-element>
+      </div>
+      <div class="d-flex justify-content-end w-25">
+        <nz-skeleton-element
+          class="skeleton-circle"
+          nzType="avatar"
+          [nzActive]="true"
+          [nzSize]="'small'"></nz-skeleton-element>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-template #detailPTWidget>
+  <div class="widget">
+    <trudi-collapse-widget
+      [titleHeader]="headerTextTemplates"
+      [activeExpand]="isExpandAttachments"
+      (activeChange)="isExpandAttachments=$event"
+      [isShowItemsCount]="true"
+      [itemsCount]="itemsCounts"
+      [hidden]="false"
+      class="widget-attachments">
+      <ng-container *ngIf="!noData; else emptyList">
+        <ng-container
+          *ngFor="let item of propertyTreeArray; trackBy: widgetPTTrackBy">
+          <ng-container [ngSwitch]="item.componentType">
+            <ng-template [ngSwitchCase]="PTWidgetDataField.NOTES">
+              <widget-note [note]="item"></widget-note
+            ></ng-template>
+            <ng-template [ngSwitchCase]="PTWidgetDataField.CREDITOR_INVOICES"
+              ><creditor-invoice-widget
+                [invoice]="item"></creditor-invoice-widget
+            ></ng-template>
+            <ng-template [ngSwitchCase]="PTWidgetDataField.TENANCY_INVOICES"
+              ><tenancy-invoice-widget [invoice]="item"></tenancy-invoice-widget
+            ></ng-template>
+            <ng-template [ngSwitchCase]="PTWidgetDataField.ROUTINE_INSPECTION"
+              ><routine-widget [routineInspection]="item"></routine-widget
+            ></ng-template>
+            <ng-template [ngSwitchCase]="PTWidgetDataField.OUTGOING_INSPECTION"
+              ><outgoing-widget [outgoingInspection]="item"></outgoing-widget
+            ></ng-template>
+            <ng-template [ngSwitchCase]="PTWidgetDataField.INGOING_INSPECTION"
+              ><ingoing-widget [ingoingInspection]="item"></ingoing-widget
+            ></ng-template>
+            <ng-template [ngSwitchCase]="PTWidgetDataField.MAINTENANCE_INVOICE">
+              <maintenance-invoice-card [invoiceCard]="item">
+              </maintenance-invoice-card>
+            </ng-template>
+            <ng-template [ngSwitchCase]="PTWidgetDataField.MAINTENANCE_REQUEST"
+              ><maintenance-request-card></maintenance-request-card
+            ></ng-template>
+            <ng-template [ngSwitchCase]="PTWidgetDataField.TENANT_VACATES"
+              ><tenant-vacate-widget
+                [tenantVacate]="item"></tenant-vacate-widget
+            ></ng-template>
+            <ng-template [ngSwitchCase]="PTWidgetDataField.LEASE_RENEWAL"
+              ><list-widget-lease-renewal></list-widget-lease-renewal
+            ></ng-template>
+            <ng-template [ngSwitchCase]="PTWidgetDataField.LEASING"
+              ><leasing-widget></leasing-widget
+            ></ng-template>
+            <ng-template [ngSwitchCase]="PTWidgetDataField.COMPLIANCES"
+              ><app-widget-compliance
+                [complianceItem]="item"></app-widget-compliance
+            ></ng-template>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </trudi-collapse-widget>
+    <ng-template #headerTextTemplates>
+      <div
+        class="d-flex gap-8 align-items-center trudi-collapse-header-content">
+        <trudi-icon icon="ptLogo"></trudi-icon>
+        <button
+          trudi-btn
+          variant="outlined"
+          btnType="neutral"
+          shape="circle"
+          size="extra-small"
+          [disabled]="isNoPropertyTask"
+          [attr.data-button-key]="EButtonWidget.PROPERTY_TREE"
+          [attr.data-button-type]="EButtonType.WIDGET"
+          PreventButton
+          (click)="handleCreateNew($event)"
+          nz-dropdown
+          [nzOverlayClassName]="'dropdown-pt'"
+          [nzDropdownMenu]="menu"
+          [nzPlacement]="'bottomRight'"
+          [nzTrigger]="!isProcessStep && !isNoPropertyTask && 'click'">
+          <trudi-icon svgClass="size-16" [icon]="'iconPlus2'" viewBox="auto">
+          </trudi-icon>
+        </button>
+      </div>
+      <ng-container>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul
+            focusElement
+            [isFocus]="visibleDropdown"
+            tabindex="0"
+            nz-menu
+            class="dropdown-property-tree">
+            <div class="box-list">
+              <ng-container *ngFor="let menuItem of menuItems">
+                <li
+                  tabindex="0"
+                  *ngIf="!menuItem.subMenu"
+                  nz-menu-item
+                  class="dropdown-item-property-tree"
+                  [ngClass]="getMenuClass(menuItem.type)"
+                  [nzDisabled]="isMenuDisable(menuItem.type)"
+                  PreventButton
+                  [attr.data-button-key]="getNormalizedType(menuItem?.type)"
+                  [attr.data-button-type]="EButtonType.STEP"
+                  (leftClick)="trigerPropertyTree(menuItem?.type)">
+                  <span [ngClass]="getMenuClass(menuItem.type)">
+                    {{ menuItem.label }}
+                  </span>
+                  <trudi-icon
+                    *ngIf="isMenuDisable(menuItem.type)"
+                    class="size-16 ml-4"
+                    viewBox="auto"
+                    icon="circleInfo"
+                    nz-tooltip
+                    [nzTooltipTitle]="getTooltipText(menuItem.type)"
+                    nzTooltipPlacement="topRight"
+                    nzTooltipOverlayClassName="menu-tooltip-base"
+                    #visibleTrigger>
+                  </trudi-icon>
+                </li>
+                <li
+                  tabindex="0"
+                  *ngIf="menuItem.subMenu"
+                  nz-submenu
+                  [nzMenuClassName]="'sub-menu-pt'"
+                  [nzTitle]="menuItem.label"
+                  class="dropdown-item-property-tree">
+                  <ul class="box-sub-menu-pt">
+                    <li
+                      tabindex="0"
+                      *ngFor="let subMenuItem of menuItem.subMenu"
+                      class="d-flex gap-4 dropdown-sub-menu-property-tree"
+                      nz-menu-item
+                      [ngClass]="getMenuClass(subMenuItem.type)"
+                      [nzDisabled]="isMenuDisable(subMenuItem.type)"
+                      PreventButton
+                      [attr.data-button-key]="getNormalizedType(subMenuItem?.type)"
+                      [attr.data-button-type]="EButtonType.STEP"
+                      (leftClick)="trigerPropertyTree(subMenuItem?.type)">
+                      <span
+                        [class.disabled-tenancy-text]="isMenuDisable(subMenuItem.type)">
+                        {{ subMenuItem.label }}
+                      </span>
+                      <span
+                        class="trudi-icon"
+                        nz-tooltip
+                        [nzTooltipTitle]="getTooltipText(subMenuItem.type)"
+                        nzTooltipPlacement="topRight"
+                        nzTooltipOverlayClassName="sub-menu-tooltip-base"
+                        #visibleTrigger>
+                        <trudi-icon
+                          *ngIf="isMenuDisable(subMenuItem.type)"
+                          class="size-16"
+                          viewBox="auto"
+                          icon="circleInfo">
+                        </trudi-icon>
+                      </span>
+                    </li>
+                  </ul>
+                </li>
+              </ng-container>
+            </div>
+          </ul>
+        </nz-dropdown-menu>
+      </ng-container>
+    </ng-template>
+  </div>
+</ng-template>
+
+<ng-template #emptyList>
+  <div class="title-empty">
+    {{!isNoPropertyTask ? WIDGET_DESCRIPTION.NO_LINKED_COMPONENTS :
+    WIDGET_DESCRIPTION.NO_PROPERTY_TASK[EWidgetSectionType.PROPERTY_TREE]}}
+  </div>
+</ng-template>

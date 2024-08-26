@@ -1,0 +1,59 @@
+:host {
+  .dropdown-open.trudi-ui-btn {
+    background-color: var(--bg-neutral-tonal-strongest);
+  }
+  ::ng-deep .skeleton-element.ant-skeleton-element .ant-skeleton-button {
+    width: 110px;
+  }
+}
+
+.modal-header-settings-insights {
+  display: flex;
+  align-items: center;
+  height: 48px;
+}
+
+.modal-header-settings-insights-title {
+  margin: 16px;
+  span {
+    color: var(--fg-neutral-stronger, #3d3d3d);
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 28px;
+  }
+}
+
+.modal-body-settings-insights {
+  .setting-instruction {
+    color: var(--fg-neutral-normal, #646464);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 20px;
+    margin-bottom: 14px;
+  }
+}
+
+.setting-options-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.wrapper-btn-footer {
+  display: flex;
+  gap: 12px;
+  .revert-btn {
+    background-color: var(--white);
+    color: var(--brand-500);
+  }
+  .revert-btn-disabled {
+    background-color: var(--white);
+    color: var(--gray-300);
+  }
+}
+
+.btn-not-allow {
+  cursor: no-drop;
+}

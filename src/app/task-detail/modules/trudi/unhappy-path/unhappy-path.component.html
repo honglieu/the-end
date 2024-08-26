@@ -1,0 +1,18 @@
+<div class="convert-to-task d-flex flex-dir-column">
+  <div class="container-convert-to-task d-flex flex-dir-column gap-12">
+    <div class="title">Convert to task</div>
+    <convert-to-task-unhappy-path class="w-100"></convert-to-task-unhappy-path>
+  </div>
+  <ng-container [ngTemplateOutlet]="upgradeMsgOutlet"> </ng-container>
+  <div class="container-move-to-task d-flex flex-dir-column gap-12">
+    <div class="title">Move message to existing task</div>
+    <move-to-task-unhappy-path class="w-100"></move-to-task-unhappy-path>
+  </div>
+</div>
+
+<ng-template #upgradeMsg>
+  <upgrade-message
+    [isIcon]="true"
+    [action]="ACTION_UPGRADE.GENERATE_YOUR_TASKS">
+  </upgrade-message>
+</ng-template>

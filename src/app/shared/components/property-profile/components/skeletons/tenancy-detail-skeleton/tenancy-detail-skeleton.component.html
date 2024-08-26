@@ -1,0 +1,31 @@
+<div class="tenancy-detail-skeleton">
+  <div class="header-skeleton d-flex align-items-center gap-8">
+    <button class="btn-back" (click)="handleClickBackBtn()">
+      <trudi-icon icon="chevronLeft"></trudi-icon>
+    </button>
+    <nz-skeleton-element
+      class="button-skeleton"
+      nzType="button"
+      [nzActive]="true"></nz-skeleton-element>
+  </div>
+  <div class="body-skeleton">
+    <div class="mb-8">
+      <nz-skeleton-element
+        class="button-skeleton sk-since"
+        nzType="button"
+        [nzActive]="true"></nz-skeleton-element>
+    </div>
+    <div *ngFor="let _ of [].constructor(3)" class="info-row d-flex">
+      <nz-skeleton-element
+        class="button-skeleton sk-label"
+        nzType="button"
+        [nzActive]="true"></nz-skeleton-element>
+      <nz-skeleton-element
+        class="button-skeleton sk-value"
+        nzType="button"
+        [nzActive]="true"></nz-skeleton-element>
+    </div>
+  </div>
+</div>
+<!--Skeleton for list tenant-->
+<tenancies-section-skeleton></tenancies-section-skeleton>

@@ -1,0 +1,148 @@
+<trudi-modal
+  okText="Next"
+  [visible]="popupState.emailImport"
+  [modelWidth]="640"
+  [hiddenCancelBtn]="true"
+  [disableOkBtn]="isScanning || !currentMailbox || isConsole || isDisconnectedMailbox || isDisconnectAllMail"
+  (onOk)="next()"
+  (onCancel)="handleClose()">
+  <div class="mr-8 ml-8">
+    <ng-template #headerModal>
+      <div class="d-flex gap-16 align-items-center">
+        <trudi-icon
+          class="size-48"
+          icon="trudiAvt"
+          [style]="{ 'width.px': 48, 'height.px': 48 }">
+        </trudi-icon>
+        <div class="title w-100 flex-1">
+          <span class="flex-1">Upload email file</span>
+          <div #dropdown *ngIf="currentMailbox" class="sub-title">
+            <div class="sub-title d-flex align-items-center gap-4">
+              Destination mailbox:
+              <span
+                #mailboxInfo
+                nz-tooltip
+                nzTooltipPlacement="bottom"
+                [nzTooltipTitle]="tooltipTemplate"
+                [nzTooltipOverlayStyle]="{ 'padding-top': '5px', 'max-width': '484px'}"
+                [nzTooltipTrigger]="mailboxInfo?.offsetWidth < mailboxInfo?.scrollWidth ? 'hover' : null"
+                class="destination-title text-ellipsis">
+                <span class="mailbox-text text-ellipsis">
+                  {{currentMailbox?.name || ''}}
+                </span>
+                - {{currentMailbox?.emailAddress || ''}}
+              </span>
+              <trudi-icon
+                class="cursor-pointer"
+                nz-dropdown
+                icon="grayChevronDown"
+                svgClass="size-16"
+                [nzDropdownMenu]="menu"
+                nz-popover
+                nzPopoverTrigger="click"
+                [nzPopoverContent]="contentTemplate"
+                nzPopoverPlacement="bottomRight"
+                [(nzPopoverVisible)]="showPopover"
+                nzPopoverOverlayClassName="list-mailboxs-popover">
+              </trudi-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <div class="body" *ngIf="!isScanning; else scanning">
+      <div
+        [tabIndex]="0"
+        class="drop-file-wrapper cursor-pointer flex-1"
+        appDnd
+        (keyup.enter)="fileDropRef.click()"
+        (filesDropped)="fileBrowseHandler($event)">
+        <div class="dropzone">
+          <input
+            [tabIndex]="-1"
+            class="cursor-pointer"
+            title=""
+            type="file"
+            accept=".eml,.msg"
+            #fileDropRef
+            id="fileDropRef"
+            (change)="fileBrowseHandler($event)" />
+          <trudi-icon
+            class="entry-img d-flex justify-content-center"
+            icon="uploadCloundIcon"></trudi-icon>
+          <div
+            class="d-flex justify-content-center align-items-center gap-4 mb-4 mt-20">
+            <p class="entry-text m-0">Drop here or</p>
+            <label for="fileDropRef"> Browse files</label>
+          </div>
+          <p class="file-support">Supported file: .eml / .msg</p>
+        </div>
+      </div>
+      <div
+        *ngIf="fileError"
+        class="rei-form-error d-flex align-items-center gap-4">
+        <trudi-icon
+          svgClass="size-14"
+          class="icon-warning"
+          icon="iconWarningRed"></trudi-icon>
+        <div class="flex align-items-center">
+          <span class="text-warning">{{fileError}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</trudi-modal>
+
+<ng-template #scanning>
+  <div class="scanning w-100 d-flex align-items-center flex-dir-column">
+    <img
+      class="m-auto"
+      width="110"
+      src="/assets/images/green-circle-spinner.gif" />
+    <p>Processing...</p>
+  </div>
+</ng-template>
+
+<ng-template #contentTemplate>
+  <div class="popover-container">
+    <div class="popover-content">
+      <div
+        class="popover-content-mail-wrapper"
+        *ngFor="let item of listMailBoxs; let i = index"
+        (click)="handleChangeMailbox(item)">
+        <div class="popover-content-mail-wrapper-info gap-4 align-items-center">
+          <div class="text-ellipsis title-mailbox">
+            <span>{{item?.name}}</span>
+          </div>
+          <div *ngIf="item?.type === mailBoxType.COMPANY" class="size-16">
+            <trudi-icon svgClass="size-16" icon="buildings"></trudi-icon>
+          </div>
+        </div>
+        <trudi-icon
+          *ngIf="item?.id === currentMailbox?.id"
+          icon="checkSuccess"
+          [style]="{ 'width.px': 20, 'height.px': 20}"></trudi-icon>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #tooltipTemplate>
+  <div>
+    {{currentMailbox?.name || ''}} - {{currentMailbox?.emailAddress || ''}}
+  </div>
+</ng-template>
+
+<email-preview
+  *ngIf="popupState.emailPreview"
+  [crmStatus]="crmStatus"
+  [isImporting]="isImporting"
+  [currentMailbox]="currentMailbox"
+  [previewData]="previewData"
+  [currentMailbox]="currentMailbox"
+  [visible]="popupState.emailPreview"
+  (handleClose)="handleClose()"
+  (handleBack)="handlePreviewBack()"
+  (handleImport)="handleImport()">
+</email-preview>

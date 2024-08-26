@@ -1,0 +1,72 @@
+<nz-drawer
+  [nzBodyStyle]="{ overflow: 'auto' }"
+  [nzClosable]="nzClosable"
+  [nzWidth]="width"
+  [nzVisible]="visible"
+  [nzFooter]="!hiddenFooter ? drawerFooterTpl : ''"
+  [nzTitle]="headerTpl"
+  [nzContent]="contentTpl"
+  [nzMaskStyle]="{'background-color': 'var(--bg-overlay-light)'}"
+  (nzOnClose)="handleClose()"
+  [nzWrapClassName]="'trudi-drawer-wrapper ' + wrapClassName">
+  <!-- drawer body -->
+  <ng-template #contentTpl>
+    <ng-content></ng-content>
+  </ng-template>
+
+  <!-- drawer footer -->
+  <ng-template #drawerFooterTpl>
+    <ng-container
+      *ngTemplateOutlet="footerTpl || defaultFooterTpl"></ng-container>
+  </ng-template>
+
+  <!-- default footer -->
+  <ng-template #defaultFooterTpl>
+    <div class="trudi-drawer-footer">
+      <div class="trudi-drawer-footer-left">
+        <button
+          *ngIf="enableDeleteBtn"
+          trudi-btn
+          btnType="danger"
+          variant="outlined"
+          [disabled]="disabledDelete"
+          (click)="handleDelete()">
+          Delete
+        </button>
+        <button
+          *ngIf="enableBackBtn"
+          trudi-btn
+          btnType="neutral"
+          variant="outlined"
+          (click)="handleBack()">
+          <ng-template iconPrefix>
+            <div>
+              <trudi-icon icon="iconArrowBack" class="size-20"></trudi-icon>
+            </div>
+          </ng-template>
+          <div>Back</div>
+        </button>
+      </div>
+      <div class="trudi-drawer-footer-right">
+        <button
+          *ngIf="enableCancel"
+          trudi-btn
+          size="large"
+          btnType="neutral"
+          variant="outlined"
+          [disabled]="disabledCancel"
+          (click)="handleCancel()">
+          Cancel
+        </button>
+        <button
+          class="trudi-drawer-footer-right-btn"
+          *ngIf="enableOkBtn"
+          trudi-btn
+          [disabled]="disabledNext"
+          (click)="handleOk()">
+          {{ okText }}
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</nz-drawer>

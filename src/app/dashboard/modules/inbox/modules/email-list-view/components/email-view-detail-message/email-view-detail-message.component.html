@@ -1,0 +1,319 @@
+<ng-container *ngIf="message">
+  <div class="message-wrapper" appE2E e2eId="email-details-message">
+    <div
+      class="message-header"
+      (click)="collapseMess(); $event.preventDefault();$event.stopPropagation();">
+      <div class="sender-info d-flex align-items-center">
+        <app-circle-avatar
+          [firstName]="message.firstName"
+          [lastName]="message.lastName"
+          [size]="32"
+          [userType]="message.userPropertyType || message.userType"
+          [avatar]="message.googleAvatar"
+          [userId]="message.userId">
+        </app-circle-avatar>
+
+        <div class="header-right">
+          <div class="header-sender">
+            <div class="sender-detail d-flex flex-dir-column">
+              <div class="sender-name">
+                <span
+                  appE2E
+                  e2eId="email-details-message-username"
+                  class="sender-name-detail"
+                  #emailSenderInfo
+                  nz-tooltip
+                  nzTooltipPlacement="bottom"
+                  [nzTooltipTitle]="senderName ? senderName : senderEmail"
+                  [nzTooltipOverlayStyle]="{ 'max-width': '266px', 'padding-top': '10px' }"
+                  [nzTooltipTrigger]="emailSenderInfo?.offsetWidth < emailSenderInfo?.scrollWidth ? 'hover' : null"
+                  >{{senderName ? senderName : senderEmail}}</span
+                >
+                <ng-container *ngIf="!isCollapseMess">
+                  <button
+                    trudi-btn
+                    variant="ghost"
+                    btnType="neutral"
+                    size="extra-small"
+                    shape="circle"
+                    [selected]="isShowBoxInfo"
+                    class="arrow-icon"
+                    (click)="handleShowBoxInfo(message?.id); $event.stopPropagation()"
+                    appOutsideClickListener
+                    (clickOutside)="isShowBoxInfo = false">
+                    <trudi-icon icon="arrowAppChatPrimary"></trudi-icon>
+                  </button>
+                </ng-container>
+              </div>
+              <span class="sender-email d-flex">
+                <ng-container *ngIf="isShowBoxInfo && !isCollapseMess">
+                  <div class="box-sender-info">
+                    <div class="box-sender-items d-flex gap-12">
+                      <span class="box-sender-items-title"> from: </span>
+                      <div
+                        appE2E
+                        e2eId="sender-info"
+                        *ngIf="!!senderName || !!senderEmail"
+                        class="box-sender-items-info-from">
+                        {{senderName}}
+                        <span *ngIf="!!senderEmail"> <{{senderEmail}}> </span>
+                      </div>
+                    </div>
+                    <div class="box-sender-items d-flex gap-12">
+                      <span class="box-sender-items-title"> to: </span>
+                      <div
+                        appE2E
+                        e2eId="recipient-info"
+                        class="box-sender-items-info"
+                        [innerHTML]="recipientFormatted"></div>
+                    </div>
+                    <div
+                      class="box-sender-items d-flex gap-12"
+                      *ngIf="message.cc">
+                      <span class="box-sender-items-title"> cc: </span>
+                      <div
+                        appE2E
+                        e2eId="recipient-cc-info"
+                        class="box-sender-items-info"
+                        [innerHTML]="ccFormatted"></div>
+                    </div>
+                    <div
+                      class="box-sender-items d-flex gap-12"
+                      *ngIf="message.bcc">
+                      <span class="box-sender-items-title"> bcc: </span>
+                      <div
+                        appE2E
+                        e2eId="recipient-cc-info"
+                        class="box-sender-items-info"
+                        [innerHTML]="bccFormatted"></div>
+                    </div>
+                    <div class="box-sender-items d-flex gap-12">
+                      <span class="box-sender-items-title"> title: </span>
+                      <div
+                        appE2E
+                        e2eId="email-subject"
+                        class="box-sender-items-info">
+                        {{message.subject ? message.subject : '(no subject)'}}
+                      </div>
+                    </div>
+                    <div class="box-sender-items d-flex gap-12">
+                      <span class="box-sender-items-title"> sent: </span>
+                      <div
+                        appE2E
+                        e2eId="email-sent-time"
+                        class="box-sender-items-info">
+                        {{message.timestamp | formatTime: true | async |
+                        uppercase}}
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </span>
+            </div>
+            <div class="send-time-container align-items-center">
+              <ng-container *ngIf="isCollapseMess">
+                <div
+                  *ngIf="message?.attachments?.length > 0"
+                  class="attachment-quantity">
+                  <trudi-icon icon="attachments"></trudi-icon>
+                  <div>{{message?.attachments?.length}}</div>
+                </div>
+              </ng-container>
+              <div appE2E e2eId="email-sent-time" class="send-time">
+                {{ message.timestamp | formatDateTime | async | lowercase}}
+              </div>
+            </div>
+          </div>
+          <ng-container *ngIf="isCollapseMess">
+            <div
+              class="shortened-message text-ellipsis"
+              [innerHTML]="message?.textContent"></div>
+          </ng-container>
+          <ng-container *ngIf="!isCollapseMess">
+            <div class="box-receiver">
+              <div class="d-flex receiver">
+                To:
+                <div
+                  appE2E
+                  e2eId="recipient-info"
+                  class="box-sender-items-info text-ellipsis"
+                  [ngClass]="(message?.cc && message?.bcc) ? 'max-width-200' : 'max-width'"
+                  [innerHTML]="recipientFormattedCollapse"></div>
+                <span *ngIf="countMetaData.to >= 1">+{{countMetaData.to}}</span>
+              </div>
+              <div *ngIf="message.cc" class="d-flex receiver">
+                Cc:
+                <div
+                  appE2E
+                  e2eId="recipient-info"
+                  class="box-sender-items-info text-ellipsis"
+                  [ngClass]="(message?.cc && message?.bcc) ? 'max-width-200' : 'max-width'"
+                  [innerHTML]="ccFormattedCollapse"></div>
+                <span *ngIf="countMetaData.cc >= 1">+{{countMetaData.cc}}</span>
+              </div>
+              <div *ngIf="message.bcc" class="d-flex receiver">
+                Bcc:
+                <div
+                  appE2E
+                  e2eId="recipient-info"
+                  class="box-sender-items-info text-ellipsis"
+                  [ngClass]="(message?.cc && message?.bcc) ? 'max-width-200' : 'max-width'"
+                  [innerHTML]="bccFormattedCollapse"></div>
+                <span *ngIf="countMetaData?.bcc >= 1"
+                  >+{{countMetaData?.bcc}}</span
+                >
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <ng-container *ngIf="!isCollapseMess">
+      <div class="message-body mt-16" appE2E e2eId="email-details-message-copy">
+        <span class="text w-100 overflow-x-auto" id="source-drag-text">
+          <ng-container *ngIf="isShowIframeContent; else contentMessage">
+            <iframe-message
+              [triggerAddPolicyPopup]="true"
+              [message]="message"
+              [htmlContent]="htmlContent">
+            </iframe-message>
+          </ng-container>
+          <ng-template #contentMessage>
+            <div
+              [triggerTextSelectionAddPolicy]="true"
+              [imageErrorHandler]
+              class="html-content"
+              [style]="!(message.htmlContent | isHTML) ? 'white-space: pre-line' : null"
+              [innerHtml]="message.htmlContent | safe"
+              appE2E
+              e2eId="email-content"></div>
+          </ng-template>
+        </span>
+        <div class="files-list d-flex" *ngIf="message.attachments.length">
+          <ng-container *ngFor="let msgFile of message.attachments">
+            <div class="files-list" *ngIf="msgFile.files.mediaList?.length">
+              <div
+                *ngFor="let item of msgFile.files.mediaList"
+                cdkDrag
+                cdkDragHandle>
+                <app-message-file
+                  [showBoxShadow]="false"
+                  [grayBorder]="true"
+                  [widthInPercent]="30"
+                  [messageFile]="item"
+                  [message]="msgFile"
+                  [isFileDeleted]="msgFile.isShowFile"
+                  [isShowActionButton]="false"
+                  [size]="92"
+                  [isShowImage]="false"
+                  [isFileFromFolder]="true"
+                  (loadFileFromFolder)="loadFile(msgFile)"></app-message-file>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+        <div class="files-list d-flex" *ngIf="message.attachments.length">
+          <ng-container *ngFor="let msgFile of message.attachments">
+            <div class="files-list" *ngIf="msgFile.files.audioList?.length">
+              <div
+                *ngFor="let item of msgFile.files.audioList"
+                cdkDrag
+                cdkDragHandle>
+                <app-message-file
+                  [showBoxShadow]="false"
+                  [grayBorder]="true"
+                  [widthInPercent]="30"
+                  [messageFile]="item"
+                  [message]="msgFile"
+                  [isFileDeleted]="msgFile.isShowFile"
+                  [isShowActionButton]="false"
+                  [size]="92"
+                  [isShowImage]="false"
+                  [isFileFromFolder]="true"
+                  (loadFileFromFolder)="loadFile(msgFile)"></app-message-file>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <div
+          class="files-list d-flex flex-dir-column"
+          *ngIf="message.attachments.length">
+          <ng-container *ngFor="let msgFile of message.attachments">
+            <div
+              *ngIf="msgFile.files.fileList?.length"
+              class="d-flex files-list-action-wrapper">
+              <div
+                class="d-flex files-list-action-wrapper"
+                *ngFor="let item of msgFile.files.fileList">
+                <app-message-file
+                  [attr.data-e2e]="'invoice-card'"
+                  class="file-block"
+                  [showBoxShadow]="false"
+                  [grayBorder]="true"
+                  [widthInPercent]="30"
+                  [messageFile]="msgFile"
+                  [isFileDeleted]="msgFile.isShowFile"
+                  [isShowActionButton]="true"
+                  [size]="92"
+                  [isShowImage]="false"
+                  [isFileFromFolder]="true"
+                  (loadFileFromFolder)="loadFile(msgFile)">
+                </app-message-file>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <div
+          class="files-list d-flex flex-dir-column"
+          *ngIf="message.attachments.length">
+          <ng-container *ngFor="let msgFile of message.attachments">
+            <div
+              *ngIf="msgFile.files.unSupportedList?.length"
+              class="d-flex files-list-action-wrapper">
+              <div
+                class="d-flex files-list-action-wrapper"
+                *ngFor="let item of msgFile.files.unSupportedList">
+                <app-message-file
+                  [attr.data-e2e]="'invoice-card'"
+                  class="file-block"
+                  [showBoxShadow]="false"
+                  [grayBorder]="true"
+                  [widthInPercent]="30"
+                  [messageFile]="msgFile"
+                  [isFileDeleted]="msgFile.isShowFile"
+                  [isShowActionButton]="true"
+                  [size]="92"
+                  [isShowImage]="false"
+                  [isFileFromFolder]="true"
+                  (loadFileFromFolder)="loadFile(msgFile)">
+                </app-message-file>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+      <ng-container
+        *ngIf="!message?.isSyncedAttachment && message?.unhandledAttachmentCount > 0">
+        <msg-attachment-load
+          class="attachment-load"
+          [threadIds]="message?.threadId ? [message.threadId] : []"
+          [(attachmentSynced)]="message.isSyncedAttachment"></msg-attachment-load>
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-container>
+
+<app-modal-popup
+  *ngIf="isShowCarousel"
+  [transparent]="true"
+  [show]="isShowCarousel"
+  [position]="popupModalPosition.full_screen">
+  <app-images-carousel
+    *ngIf="isShowCarousel"
+    [open]="false"
+    [imageUrlList]="arrayImageCarousel"
+    [initialIndex]="initialIndex"
+    (showCarousel)="manageCarouselState($event)">
+  </app-images-carousel>
+</app-modal-popup>

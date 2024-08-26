@@ -1,0 +1,18 @@
+<div
+  class="btn-circle"
+  (click)="onClick.emit(button)"
+  nz-tooltip
+  [nzTooltipTitle]="button?.hint"
+  nzTooltipPlacement="top">
+  <button
+    [style.width.px]="size"
+    [style.height.px]="size"
+    class="button-circle"
+    [attr.data-e2e]="hintImg">
+    <img
+      [style.width.px]="sizeimg"
+      [style.height.px]="sizeimg"
+      [src]="srcImg"
+      alt="" />
+  </button>
+</div>

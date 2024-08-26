@@ -1,0 +1,50 @@
+<ng-container *ngIf="invoice">
+  <div class="mt-4">
+    <widget-common
+      title="Tenancy Invoice"
+      [buttonKey]="mapComponentToTitleKey[invoice?.invoiceWidgetType]"
+      [type]="invoice?.syncStatus"
+      [externalError]="invoice?.externalError"
+      (retry)="handleRetryInvoice(invoice)"
+      (remove)="handleRemove(invoice)"
+      (showModal)="handleEditInvoice(invoice)"
+      [firstTimeSyncSuccess]="invoice?.firstTimeSyncSuccess"
+      [isDislayBtnCancel]="invoice.tenancyInvoice.isSuccessful">
+      <div class="content-sync-tenancy-invoice d-flex flex-dir-column gap-4">
+        <div class="d-flex">
+          <span class="title-invoice d-flex flex-dir-column">Invoice</span>
+          <span class="text-invoice-description">
+            {{invoice.tenancyInvoice?.description}}</span
+          >
+        </div>
+        <div class="d-flex">
+          <span class="title-invoice d-flex flex-dir-column">Tenancy</span>
+          <span class="text-invoice">{{invoice?.tenancyName}}</span>
+        </div>
+        <div class="d-flex">
+          <span class="title-invoice d-flex flex-dir-column">Amount</span>
+          <span class="text-invoice"
+            >{{invoice?.tenancyInvoice?.amount ? ('$' +
+            invoice?.tenancyInvoice?.amount) : ''}}</span
+          >
+        </div>
+        <div
+          class="d-flex"
+          *ngIf="![SYNCTYPE.INPROGRESS].includes(invoice?.syncStatus) && invoice?.tenancyInvoice?.status !== null">
+          <span class="title-invoice d-flex flex-dir-column">Status</span>
+          <span
+            class="text-invoice"
+            [ngClass]="{
+                    'unpaid-tenancy-text': invoice?.tenancyInvoice?.status === EStatusInvoice.UNPAID,
+                    'paid-tenancy-text': invoice?.tenancyInvoice?.status === EStatusInvoice.PAID,
+                    'part-paid-tenancy-text': invoice?.tenancyInvoice?.status === EStatusInvoice.PARTPAID,
+                    'cancel-tenancy-text': invoice?.tenancyInvoice?.status === EStatusInvoice.CANCELLED
+                  }">
+            {{(invoice?.tenancyInvoice?.status === EStatusInvoice.PARTPAID ) ?
+            'Part-paid' : (invoice?.tenancyInvoice?.status | titlecase) }}</span
+          >
+        </div>
+      </div>
+    </widget-common>
+  </div>
+</ng-container>

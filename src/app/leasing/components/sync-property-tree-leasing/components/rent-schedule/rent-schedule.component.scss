@@ -1,0 +1,313 @@
+@import 'function';
+
+.second-block {
+  padding: 0px 3px 10px 3px;
+
+  &--title {
+    margin-bottom: 12px;
+    @include fontSetup(var(--gray-600), 14px, 18px, normal, 600);
+  }
+
+  &--proceeding {
+    .proceeding--block,
+    .rent-block {
+      margin-bottom: 12px;
+
+      .title {
+        @include fontSetup(var(--gray-600), 12px, 18px, normal, 400);
+        margin-bottom: 6px;
+      }
+
+      .ng-option {
+        .title {
+          @include fontSetup(var(--gray-600), 14px, 18px, normal, 500);
+          margin-bottom: 6px;
+        }
+
+        &:hover .title,
+        .item-selected {
+          color: var(--gray-700);
+        }
+      }
+
+      .trudi-picker.trudi-picker-disabled {
+        background: var(--gray-200) !important;
+      }
+
+      .form-input {
+        gap: 4px;
+      }
+
+      .form-input-disable {
+        cursor: not-allowed;
+        height: 36px;
+
+        input {
+          background-color: var(--gray-200) !important;
+          color: var(--gray-400) !important;
+          pointer-events: none;
+
+          &:focus {
+            outline: 0px !important;
+            border: 0px !important;
+          }
+        }
+      }
+      .rent--input {
+        position: relative;
+        height: 36px;
+        width: 100%;
+      }
+
+      .rent--input-disable {
+        position: relative;
+        cursor: not-allowed;
+        height: 36px;
+        width: 100%;
+
+        input {
+          height: 100%;
+          background: var(--gray-200) !important;
+          color: var(--gray-400) !important;
+          pointer-events: none;
+        }
+      }
+      .trudi-date trudi-date-picker {
+        max-width: unset !important;
+        height: 36px !important;
+      }
+
+      .content-disable {
+        cursor: not-allowed !important;
+        gap: 8px;
+        ::ng-deep ng-select {
+          pointer-events: none;
+
+          .ng-select-container {
+            height: 36px;
+            padding: 8px;
+            background-color: var(--gray-200) !important;
+            color: var(--gray-400) !important;
+            cursor: not-allowed;
+            border-radius: 8px;
+            border: none;
+
+            input {
+              cursor: not-allowed !important;
+              pointer-events: none;
+            }
+
+            .ng-input {
+              padding-top: 8px !important;
+              padding-bottom: 8px !important;
+              padding-left: 8px !important;
+              @include fontSetup(
+                var(--gray-700) !important,
+                14px!important,
+                16px!important,
+                normal,
+                500!important
+              );
+            }
+            .title-select {
+              color: var(--gray-600);
+              font-size: 14px;
+              font-weight: 500;
+              line-height: 20px;
+            }
+          }
+        }
+      }
+
+      .content {
+        gap: 8px;
+        ::ng-deep ng-select {
+          .ng-select-container {
+            height: 36px;
+            padding: 8px;
+            background-color: var(--gray-200);
+            border-radius: 8px;
+            border: none;
+
+            @include fontSetup(
+              var(--gray-700) !important,
+              14px!important,
+              16px!important,
+              normal,
+              500!important
+            );
+
+            .ng-input {
+              > input {
+                border-radius: 0px;
+              }
+
+              padding: 8px !important;
+              @include fontSetup(
+                var(--gray-700) !important,
+                14px!important,
+                16px!important,
+                normal,
+                500!important
+              );
+            }
+
+            .ng-placeholder {
+              display: block;
+            }
+          }
+
+          .ng-arrow-wrapper {
+            width: 12px;
+            padding-right: 0;
+            .ng-arrow {
+              top: 0;
+              width: 12px;
+              height: 8px;
+              border: none;
+              background: url('/assets/images/arow.png');
+            }
+          }
+
+          .ng-dropdown-panel {
+            overflow: hidden;
+            top: calc(100% + 12px);
+            border-radius: 8px !important;
+            filter: drop-shadow(1px 4px 14px var(--bg-overlay-light));
+
+            &.ng-select-top {
+              bottom: unset !important;
+            }
+
+            .ng-dropdown-panel-items {
+              max-height: calc(40px * 7);
+              .ng-option-disabled:first-child,
+              .ng-option:first-child {
+                border: none !important;
+              }
+              .ng-option-disabled,
+              .ng-option {
+                border-top: 1px solid var(--gray-200);
+                padding: 10px 12px !important;
+                .highlighted {
+                  @include fontSetup(
+                    var(--brand-500),
+                    14px!important,
+                    16px,
+                    normal,
+                    600!important
+                  );
+                }
+              }
+              .ng-option {
+                .item-label {
+                  @include fontSetup(var(--gray-600), 14px, 18px, normal, 500);
+                }
+
+                &:hover .item-label,
+                .item-selected {
+                  color: var(--gray-700) !important;
+                }
+              }
+
+              ::-webkit-scrollbar {
+                width: 7px;
+              }
+              ::-webkit-scrollbar-track {
+                border-radius: 6px;
+                background: var(--gray-500);
+                opacity: 0.37;
+              }
+              ::-webkit-scrollbar-thumb {
+                background: var(--gray-500);
+                opacity: 0.12;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+ng-select {
+  &:focus {
+    @include box-shadow-input-select(var(--shadow-brand));
+    background: var(--bg-base);
+  }
+}
+
+.error-wrapper {
+  margin-top: 4px;
+  .text-warning {
+    color: var(--danger-500);
+    font-size: 12px;
+    line-height: 16px;
+    margin-left: 4px;
+  }
+}
+
+input {
+  width: 100%;
+  padding: 10px 12px 10px 24px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  background: var(--bg-neutral-tonal-normal);
+  &:focus {
+    @include box-shadow-input-select(var(--shadow-brand));
+    background: var(--bg-base);
+  }
+}
+
+.dollar.focused {
+  color: var(--gray-700);
+}
+.dollar.disable {
+  color: var(--gray-400) !important;
+}
+
+.dark-gray-color {
+  color: var(--gray-700) !important ;
+}
+
+.rent-container {
+  height: 36px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.dollar {
+  position: absolute;
+  left: 12px;
+  color: var(--fg-neutral-weaker, #999);
+}
+
+.input-error {
+  border-radius: 8px;
+  background: var(--bg-base);
+  @include box-shadow-input-select(var(--shadow-danger));
+  &:focus {
+    border-radius: 8px !important;
+    @include box-shadow-input-select(var(--shadow-danger));
+  }
+}
+
+.checkbox {
+  padding-left: 0;
+  gap: 8px;
+}
+
+:host ::ng-deep .rent-block-description trudi-max-character {
+  display: none;
+}
+
+::ng-deep
+  ng-select.input-error-select
+  .ng-select-container:not(.ng-select-opened) {
+  @include box-shadow-input-select(var(--shadow-danger));
+  &:hover {
+    @include box-shadow-input-select(var(--shadow-danger) !important);
+  }
+}

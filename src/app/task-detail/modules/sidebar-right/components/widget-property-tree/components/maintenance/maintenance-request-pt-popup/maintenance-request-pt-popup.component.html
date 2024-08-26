@@ -1,0 +1,76 @@
+<resizable-modal-popup
+  *ngIf="popupState"
+  [modalId]="modalId"
+  [show]="popupState"
+  [showTitle]="true"
+  [title]="'Maintenance request'"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [iconName]="'ptLogo'"
+  [styleIcon]="null"
+  [classIconTitle]="null"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [footerTemplate]="footerModal"
+  (onCancel)="closeModel()"
+  [isCustomMoveable]="true"
+  class="maintainance-request-popup">
+  <div [formGroup]="MaintenanceRequestForm">
+    <div class="trudi-form-control" *ngIf="isShowStatus">
+      <div class="trudi-input-label label-with-status">
+        <span class="mr-8">Status</span>
+        <ng-container [ngSwitch]="statusControl.value">
+          <dropdown-pill
+            *ngSwitchCase="EMaintenanceStatusType.OPEN"
+            [value]="statusValue || statusControl.value"
+            [options]="optionsSendMaintenanceStatus"
+            (onChange)="onChangeStatusControl($event)"></dropdown-pill>
+          <trudi-badge
+            *ngSwitchDefault
+            [variant]="getBadgeType(statusControl.value)"
+            [text]="statusControl.value"></trudi-badge>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="trudi-form-control">
+      <trudi-form-control *ngIf="popupState" [checkSubmit]="!isSubmitted">
+        <trudi-text-field
+          label="Summary"
+          size="large"
+          [checkSubmit]="!isSubmitted"
+          formControlName="summary"
+          [disabled]="[ESyncPropertyTree.INPROGRESS].includes(syncStatusControl.value) || [EMaintenanceStatusType.CANCELLED, EMaintenanceStatusType.COMPLETE].includes(statusControl.value)"
+          [maxCharacter]="summaryMaxLength"
+          (input)="onChangeSummary()"></trudi-text-field>
+      </trudi-form-control>
+    </div>
+  </div>
+
+  <ng-template #footerModal>
+    <div
+      class="maintenance-request-pt-footer-wrap d-flex align-items-center justify-content-between w-100">
+      <div class="info-status d-flex align-items-center">
+        <pt-widget-sync-status
+          [lastTimeSynced]="updatedAtControl.value"
+          [syncStatus]="syncStatusControl.value">
+        </pt-widget-sync-status>
+      </div>
+      <div
+        *ngIf="[ESyncPropertyTree.INPROGRESS].includes(syncStatusControl.value) || ![EMaintenanceStatusType.CANCELLED, EMaintenanceStatusType.COMPLETE].includes(statusControl.value)"
+        class="footer-wrapper d-flex"
+        [style.gap.px]="12">
+        <button
+          type="button"
+          class="btn-confirm trudi-btn trudi-btn-semi-large trudi-btn-primary"
+          [disabled]="isConsole || [ESyncPropertyTree.INPROGRESS].includes(syncStatusControl.value) || isProcessing || isArchiveMailbox"
+          (click)="syncToPT()"
+          [appE2E]="'pt-widget-maintenance-request'">
+          <span class="btn-text no-pointer-event">Sync to Property Tree</span>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</resizable-modal-popup>

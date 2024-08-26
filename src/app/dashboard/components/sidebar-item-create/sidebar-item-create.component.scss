@@ -1,0 +1,58 @@
+@import 'function';
+
+.create-menu-wrapper {
+  border-radius: 8px;
+  background: var(--bg-base);
+  min-width: 155px;
+  overflow: hidden;
+
+  & > sidebar-item:not(:last-child):not(:focus-visible) {
+    border-bottom: 1px solid var(--border-neutral-light);
+  }
+  .mail-import ::ng-deep {
+    trudi-icon svg-icon svg path {
+      fill: var(--fg-neutral-stronger);
+    }
+  }
+}
+
+::ng-deep .create-menu-wrapper {
+  .sidebar-item:focus-visible {
+    border-bottom: 2px solid var(--brand-500) !important;
+  }
+
+  .sidebar-item trudi-icon svg {
+    width: 20px;
+    height: 20px;
+    min-width: 20px;
+    min-height: 20px;
+  }
+
+  .sidebar-item:first-child {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+  }
+
+  .sidebar-item:last-child {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+
+  .disabled {
+    cursor: default;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+}
+
+::ng-deep .ant-popover.sidebar-popover {
+  .ant-popover-inner-content {
+    padding: 0;
+  }
+  .ant-popover-placement-right {
+    padding-left: 0;
+  }
+  .ant-popover-arrow {
+    display: none;
+  }
+}

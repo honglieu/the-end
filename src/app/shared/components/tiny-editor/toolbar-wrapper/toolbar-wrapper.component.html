@@ -1,0 +1,21 @@
+<div #toolbar class="btn-list">
+  <div class="btn-group d-flex gap-8 align-items-center" #toolbarItems>
+    <ng-content> </ng-content>
+  </div>
+  <div
+    class="btn-scroll-toolbar"
+    [style.display]="isShowBtnScrollToolbar ? 'flex' : 'none'">
+    <button
+      (click)="handleActionScrollToolbar('left')"
+      class="btn-scroll-action"
+      [style.opacity]="currentDirectionScrollToolbar === 'left' ? '0.5' : '1'">
+      <trudi-icon icon="chevronLeft"></trudi-icon>
+    </button>
+    <button
+      (click)="handleActionScrollToolbar('right')"
+      [style.opacity]="currentDirectionScrollToolbar === 'right' ? '0.5' : '1'"
+      class="btn-scroll-action">
+      <trudi-icon icon="chevronRight"></trudi-icon>
+    </button>
+  </div>
+</div>

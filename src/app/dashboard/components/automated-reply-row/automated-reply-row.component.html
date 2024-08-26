@@ -1,0 +1,64 @@
+<div
+  [ngClass]="{
+  'automated-reply-row': !isLoading,
+  'automated-reply-selected': aiReply?.selected
+}">
+  <ng-container *ngIf="!isLoading; else loading">
+    <div class="automated-reply-checkbox">
+      <trudi-checkbox
+        [(ngModel)]="aiReply.selected"
+        [disabled]="disabled"></trudi-checkbox>
+    </div>
+    <div class="automated-reply-questions">
+      <question-tag
+        [isCurrentQuestion]="isCurrentQuestion"
+        [listQuestions]="isCurrentQuestion ? aiReply : aiReply.chatGPTEnquiries"
+        [isShowMore]="isCurrentQuestion ? false : true"></question-tag>
+    </div>
+    <div
+      class="automated-reply-sample-answers"
+      [innerHTML]="isCurrentQuestion ? aiReply.rawAnswer : aiReply.rawMessage"></div>
+  </ng-container>
+
+  <ng-template #loading>
+    <div
+      class="wrapper-skeleton w-100 gap-40 d-flex align-items-center justify-content-between">
+      <div class="skeleton-checkbox-container">
+        <div class="skeleton-checkbox"></div>
+      </div>
+      <div class="d-flex gap-2 w-100 flex-dir-column">
+        <nz-skeleton
+          [nzParagraph]="false"
+          [nzRound]="true"
+          [nzActive]="true"></nz-skeleton>
+        <div class="d-flex w-100 gap-10">
+          <ng-container *ngFor="let width of ['40%', '30%']">
+            <nz-skeleton
+              [nzRound]="true"
+              [nzParagraph]="false"
+              [nzActive]="true"
+              [ngStyle]="{'width': width}"></nz-skeleton>
+          </ng-container>
+        </div>
+        <div class="d-flex w-100 gap-10">
+          <ng-container *ngFor="let width of ['33%', '33%', '25%']">
+            <nz-skeleton
+              [nzRound]="true"
+              [nzParagraph]="false"
+              [nzActive]="true"
+              [ngStyle]="{'width': width}"></nz-skeleton>
+          </ng-container>
+        </div>
+      </div>
+      <div class="d-flex gap-2 w-100 flex-dir-column">
+        <ng-container *ngFor="let width of ['100%', '70%', '50%']">
+          <nz-skeleton
+            [nzRound]="true"
+            [nzParagraph]="false"
+            [nzActive]="true"
+            [ngStyle]="{'width': width}"></nz-skeleton>
+        </ng-container>
+      </div>
+    </div>
+  </ng-template>
+</div>

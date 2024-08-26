@@ -1,0 +1,135 @@
+<div class="select-receiver-container d-flex flex-dir-column">
+  <div class="toCcBccWrapper" [hidden]="!isShowPreview">
+    <div
+      class="to-preview pd-12"
+      tabindex="0"
+      (click)="onClickToField()"
+      (keydown.enter)="onClickToField()">
+      <select-receiver-preview
+        *ngIf="isShowPreview"
+        [selectedProperty]="selectedProperty"
+        [toRawUsers]="selectedReceivers?.value || []"
+        [toRawCcUsers]="ccReceivers?.value || []"
+        [toRawBccUsers]="bccReceivers?.value || []"
+        [prefix]="toPrefixTemplate"
+        [placeholder]="toPlaceholder"></select-receiver-preview>
+    </div>
+  </div>
+  <div
+    form="formGroup"
+    [hidden]="isShowPreview"
+    class="select-receiver-content select-receiver-content-focused"
+    [ngClass]="{'select-receiver-content-invalid' : (selectedReceivers.invalid || ccReceivers.invalid || bccReceivers.invalid) && isFormSubmitted}">
+    <ng-container *ngIf="isContactType">
+      <ng-content class="receiver-wrapper"></ng-content>
+    </ng-container>
+    <ng-container *ngIf="!isContactType">
+      <select-specific-receiver
+        #selectSpecificReceiver
+        class="receiver-wrapper"
+        [placeholder]="toPlaceholder"
+        [formCtl]="selectedReceivers"
+        [prefixTemplate]="toPrefixTemplate"
+        [suffixTemplate]="suffixForTOFieldTemplate"
+        [configs]="configs"
+        [isAddItem]="true"
+        [isShowSuffix]="true"
+        [isShowBCCBtn]="isShowBCCBtnForTOField"
+        [isShowCCBtn]="isShowCCBtnForTOField"
+        (setPreviewLabel)="setPreviewLabel($event)"
+        [prefillReceivers]="prefillTOReceiversLists"
+        [selectedProperty]="selectedProperty"
+        [suffixPaddingLeft]="suffixPaddingLeft"
+        [recipientsFromConfigs]="configs.body.prefillToCcBccReceiversList?.to"
+        [isRmEnvironment]="isRmEnvironment"
+        [appendTo]="appendTo">
+      </select-specific-receiver>
+    </ng-container>
+
+    <ng-container
+      *ngIf="!isShowCCBtnForTOField || !isShowCCBtnForBCCField || prefillCCReceiversLists?.length > 0">
+      <div class="select-receiver-content-cc">
+        <select-specific-receiver
+          #ccField
+          class="cc-receiver-wrapper"
+          [placeholder]="ccBccPlaceholder"
+          [formCtl]="ccReceivers"
+          [isOnlySupplierAndOther]="isOnlySupplierAndOther"
+          prefixTemplate="Cc"
+          [suffixTemplate]="isShowBCCBtnForCCField ? suffixForCCAndBCCFieldsTemplate : null"
+          [configs]="configs"
+          [isAddItem]="true"
+          [isShowSuffix]="true"
+          [selectedProperty]="selectedProperty"
+          [isShowBCCBtn]="isShowBCCBtnForCCField"
+          (setPreviewLabel)="setPreviewLabel($event)"
+          [prefillReceivers]="prefillCCReceiversLists"
+          [recipientsFromConfigs]="configs.body.prefillToCcBccReceiversList?.cc"
+          [isRmEnvironment]="isRmEnvironment"
+          [appendTo]="appendTo"></select-specific-receiver>
+      </div>
+    </ng-container>
+    <ng-container
+      *ngIf="!isShowBCCBtnForTOField || !isShowBCCBtnForCCField || prefillBCCReceiversLists?.length > 0">
+      <div class="select-receiver-content-bcc">
+        <select-specific-receiver
+          #bccField
+          class="bcc-receiver-wrapper"
+          [placeholder]="ccBccPlaceholder"
+          [formCtl]="bccReceivers"
+          [isOnlySupplierAndOther]="isOnlySupplierAndOther"
+          prefixTemplate="Bcc"
+          [suffixTemplate]="isShowCCBtnForBCCField ? suffixForCCAndBCCFieldsTemplate : null"
+          [configs]="configs"
+          [isAddItem]="true"
+          [isShowSuffix]="true"
+          [isShowCCBtn]="isShowCCBtnForBCCField"
+          [selectedProperty]="selectedProperty"
+          (setPreviewLabel)="setPreviewLabel($event)"
+          [prefillReceivers]="prefillBCCReceiversLists"
+          [recipientsFromConfigs]="configs.body.prefillToCcBccReceiversList?.bcc"
+          [isRmEnvironment]="isRmEnvironment"
+          [appendTo]="appendTo"></select-specific-receiver>
+      </div>
+    </ng-container>
+  </div>
+  <div
+    class="error-container d-flex align-items-center gap-4"
+    *ngIf="(selectedReceivers.invalid || ccReceivers.invalid || bccReceivers.invalid) && isFormSubmitted">
+    <trudi-icon icon="iconWarning"></trudi-icon>
+    <div class="error-text">
+      {{ selectedReceivers?.errors?.required ? 'Required field' : 'Please remove
+      invalid email' }}
+    </div>
+  </div>
+  <ng-template #suffixForTOFieldTemplate>
+    <div *ngIf="isShowCCBtnForTOField && isShowBCCBtnForTOField">
+      <div
+        class="function-btn-wrapper d-flex gap-4"
+        *ngIf="!prefillBCCReceiversLists?.length && !prefillCCReceiversLists?.length">
+        <button class="function-btn ccBtn" (click)="clickCCInToField()">
+          Cc
+        </button>
+        <button class="function-btn bccBtn" (click)="clickBCCInToField()">
+          Bcc
+        </button>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #suffixForCCAndBCCFieldsTemplate>
+    <div class="function-btn-wrapper d-flex gap-4">
+      <button
+        class="function-btn ccBtn"
+        *ngIf="isShowCCBtnForTOField && isShowCCBtnForBCCField && !prefillCCReceiversLists?.length > 0"
+        (click)="isShowCCBtnForBCCField = false; focusField(EReceiverType.CC)">
+        Cc
+      </button>
+      <button
+        class="function-btn bccBtn"
+        *ngIf="isShowBCCBtnForTOField && isShowBCCBtnForCCField && !prefillBCCReceiversLists?.length > 0"
+        (click)="isShowBCCBtnForCCField = false; focusField(EReceiverType.BCC)">
+        Bcc
+      </button>
+    </div>
+  </ng-template>
+</div>

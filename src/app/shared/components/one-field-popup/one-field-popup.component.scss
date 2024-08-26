@@ -1,0 +1,12 @@
+
+::ng-deep .ant-modal.trudi-modal.trudi-modal-one-field {
+  .ant-modal-footer {
+    button {
+      min-width: 100px !important;
+    }
+  }
+}
+
+:host ::ng-deep .bond-amount-due-body {
+  padding: 20px 24px;
+}

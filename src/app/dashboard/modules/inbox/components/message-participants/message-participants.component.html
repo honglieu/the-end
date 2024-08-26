@@ -1,0 +1,57 @@
+<ng-container
+  *rxLet="participantContext$; let context; strategy: renderStrategy">
+  <div
+    class="participants-container text-ellipsis"
+    [class.seen]="context.isReadMessage">
+    <ng-container *rxIf="context.isDraftFolder && context.isDraft">
+      <span
+        *ngIf="context.participants?.length === 0"
+        class="participants-name-draft"
+        [innerHTML]="'No recipient' | highlight: context.search"></span>
+    </ng-container>
+    <div class="participants-list text-ellipsis">
+      <ng-container *rxIf="context.participants?.length">
+        <div
+          class="d-flex align-items-center fit-content"
+          trudi-tooltip
+          [hideWhenClick]="true"
+          [nzTooltipTitle]="tooltipTemplate"
+          [nzTooltipArrowPointAtCenter]="true"
+          [nzTooltipMouseEnterDelay]="1"
+          nzTooltipOverlayClassName="participants-tooltip-position participants-tooltip">
+          <div
+            class="participants-item-wrapper"
+            [class.has-checkbox]="context.isSelectingMode">
+            <ng-container
+              *rxFor="
+                let participant of context.displayParticipants; trackBy: 'email';
+                let last = last;
+               ">
+              <div
+                *rxIf="!context.isCreatedFromVoiceMail
+                || (context.isCreatedFromVoiceMail && context.participant.email)"
+                class="participants-name text-ellipsis"
+                [innerHTML]="participant.title | highlight: context.search"></div>
+
+              <div
+                *rxIf="context.isCreatedFromVoiceMail && !context.participant.email"
+                class="participants-name text-ellipsis"
+                [innerHTML]="participant.title | phoneNumberFormat | highlight: context.search"></div>
+              <div
+                *rxIf="!!context.hiddenParticipants?.length ? true : !last"
+                class="participants-name">
+                ,&nbsp;
+              </div>
+            </ng-container>
+          </div>
+          <div *rxIf="!!context.hiddenParticipants?.length" class="count">
+            +{{context.hiddenParticipants.length}}
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <ng-template #tooltipTemplate>
+    <div [innerHTML]="context.tooltipTitle"></div>
+  </ng-template>
+</ng-container>

@@ -1,0 +1,57 @@
+<div
+  class="status-selected d-flex align-items-center justify-content-between"
+  nz-tooltip
+  [nzTooltipTitle]="canEdit && disabled && statusTooltip"
+  nzTooltipPlacement="bottom">
+  <div
+    class="wrap-status-button d-flex align-items-center justify-content-between"
+    (click-validation)="handleShowDropdownStatus()"
+    appOutsideClickListener
+    (clickOutside)="onClickOutSide()"
+    [ngClass]="{'cursor-pointer': !disabled, 'wrap-status-disabled': disabled}"
+    tabindex="0"
+    (keydown.enter)="handleShowDropdownStatus()">
+    <span class="status-text" [ngClass]="{'status-disabled': disabled}">
+      {{ status | titlecase }}
+    </span>
+    <trudi-icon
+      *ngIf="canEdit"
+      class="icon-expand size-16"
+      [icon]="disabled ? 'whiteDropdownCheckIcon' : 'chevronDown'"
+      [ngClass]="{'icon-rotate': isShowDropdownStatus, 'cursor-pointer': !disabled}"></trudi-icon>
+  </div>
+
+  <div
+    class="wrap-status cursor-pointer"
+    *ngIf="isShowDropdownStatus"
+    (click)="$event.stopPropagation();"
+    appOutsideClickListener>
+    <div
+      class="status-item d-flex justify-content-between"
+      *ngFor="let item of taskTemplateStatus"
+      [ngClass]="{'item-selected': item.value === status, 'item-disabled': item.disabled }"
+      (click)="onEditStatus(item.value, item.disabled)">
+      <p class="status-name no-margin">{{ item.name }}</p>
+      <trudi-icon
+        icon="checkSuccess"
+        svgClass="size-16"
+        *ngIf="item.value === status">
+      </trudi-icon>
+    </div>
+  </div>
+</div>
+
+<warning-unpublish-popup
+  *ngIf="isShowWarningUnpublishedTaskTemplate"
+  [visible]="isShowWarningUnpublishedTaskTemplate"
+  [taskTemplates]="referenceTemplates"
+  [taskState]="taskState"
+  (onConfirm)="handleAction($event)"
+  (onClose)="handleClose()">
+</warning-unpublish-popup>
+
+<ng-template #statusTooltip>
+  <upgrade-message
+    [action]="EActionShowMessageTooltip.EDIT_TASK_STATUS"
+    [isTooltip]="true"></upgrade-message>
+</ng-template>

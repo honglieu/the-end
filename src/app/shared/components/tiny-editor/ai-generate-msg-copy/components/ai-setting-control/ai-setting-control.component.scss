@@ -1,0 +1,118 @@
+@import 'function';
+
+::ng-deep .ai-setting-overlay {
+  padding-bottom: 8px !important;
+  padding-top: 8px !important;
+  .ai-setting {
+    .setting-item {
+      margin-bottom: 16px;
+      label {
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 16px;
+        color: var(--gray-500);
+        margin-left: 2px;
+        margin-bottom: 6px;
+      }
+      .setting-control {
+        display: flex;
+        gap: 6px;
+        .setting-option {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          width: 100%;
+          background: var(--gray-50);
+          border-radius: 6px;
+
+          label {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 32px;
+            align-items: center;
+            padding: 0px 8px;
+            gap: 4px;
+            margin-bottom: 0;
+            cursor: pointer;
+          }
+
+          input[type='radio'] {
+            display: none;
+          }
+
+          span {
+            font-weight: 600;
+            font-size: 12px;
+            line-height: 18px;
+            color: var(--gray-700);
+          }
+
+          img {
+            width: 13px;
+          }
+        }
+      }
+    }
+
+    .ai-setting-footer button {
+      /* Button */
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 0px 12px;
+      gap: 8px;
+
+      width: 263px;
+      height: 32px;
+
+      background: var(--brand-500);
+      border: none;
+      border-radius: 8px;
+
+      @include fontSetup(var(--white), 14px, 20px, normal, 600);
+      /* identical to box height, or 143% */
+
+      font-feature-settings: 'tnum' on, 'lnum' on;
+
+      /* base */
+    }
+  }
+  .ant-popover-inner-content {
+    padding: 16px;
+  }
+  .ant-popover-arrow {
+    display: none;
+  }
+  .ant-popover-inner {
+    box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.08),
+      0px 14px 36px rgba(0, 0, 0, 0.13);
+    border-radius: 12px;
+  }
+}
+
+::ng-deep .ai-setting-control {
+  display: flex;
+  align-items: center;
+  .position-relative {
+    width: 24px;
+    height: 24px;
+    position: relative;
+    .btn-item {
+      position: absolute;
+      top: 0;
+      left: 0;
+      &.selected {
+        z-index: 999;
+      }
+    }
+  }
+  .btn-item {
+    margin: 0 2px;
+  }
+  button.disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}

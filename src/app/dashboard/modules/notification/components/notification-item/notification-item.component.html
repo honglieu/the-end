@@ -1,0 +1,297 @@
+<div
+  #notificationItem
+  [tabIndex]="0"
+  (keyup.enter)="notificationItem.click()"
+  (click)="checkToNavigate($event)"
+  class="notification-item-wrapper cursor-pointer"
+  [ngClass]="{ read: notification.status === NotificationStatusEnum.SEEN }">
+  <div class="d-flex justify-content-between">
+    <div class="content-wrapper d-flex">
+      <div class="flex-1 d-flex justify-content-between">
+        <p
+          class="content"
+          [innerHTML]="titleNotification | landlordToOwner"></p>
+        <p class="time">
+          @if(notification?.notiType === NotificationType.COMPANY_POLICY) {
+          {{(notification?.options?.actionType === EPolicyType.create ?
+          notification?.options?.createdTime : notification?.options?.actionType
+          === EPolicyType.update ? notification?.options?.updatedTime :
+          notification?.options?.deletedTime) | formatTime: true | async |
+          uppercase }} } @else { {{ notification.createdAt | formatTime: true |
+          async | uppercase }} }
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-wrapper" *ngIf="notification?.taskType === taskType.MESSAGE">
+    <div class="d-flex align-items-center justify-content-between w-full">
+      <div class="task-wrapper-item">
+        <div *ngIf="notification?.userMessage" class="d-flex">
+          <div
+            class="title title-elippse"
+            style="white-space: pre-line"
+            [innerHTML]="taskName | landlordToOwner"></div>
+        </div>
+        <div
+          *ngIf="notification?.options?.userConversation && userName"
+          class="d-flex mb-6">
+          <trudi-icon icon="user2" alt="user" class="icon"></trudi-icon>
+          <p class="user">
+            {{ userName }}&nbsp;{{ showMessageUserType && userType &&
+            (isRmEnvironment || isPtEnvironment) ? "(" + (isRmEnvironment ? (
+            userType | userTypeInRm: pipeType : isRmEnvironment |
+            landlordToOwner | titleCasePipe ) : (userType | userTypeInPT :
+            isPtEnvironment : {contactType:
+            userConversation?.userPropertyContactType?.type, type:
+            userConversation?.type, isPrimary: userConversation?.isPrimary} :
+            true | titleCasePipe)) + ")" : "" }}
+          </p>
+        </div>
+        <div *ngIf="isShowPropertyAddressMsgType" class="d-flex">
+          <trudi-icon
+            icon="mapPin"
+            alt="user"
+            class="icon icon-map-pin"></trudi-icon>
+          <div class="address">
+            {{ notification.propertyAddress | landlordToOwner }}
+          </div>
+        </div>
+      </div>
+      <div
+        class="cursor-pointer"
+        [nzTooltipTitle]="notification.status === NotificationStatusEnum.UN_SEEN ? statusNotifications.markAsRead : statusNotifications.markAsUnread"
+        nz-tooltip
+        nzTooltipPlacement="top"
+        (click)="changeStatusNoti($event)"
+        class="icon-background cursor-pointer">
+        <trudi-icon
+          [icon]="notification.status === NotificationStatusEnum.UN_SEEN ? 'iconSeen' : 'bellIconV3'"></trudi-icon>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="task-wrapper"
+    *ngIf="
+      notification?.taskType === taskType.TASK &&
+      notification?.notiType !== NotificationType.EVENT_CHANGE_DATA &&
+      notification?.notiType !== NotificationType.REMINDER &&
+      notification?.notiType !== NotificationType.NEW_INTERNAL_NOTE_MENTIONED &&
+      notification?.notiType !== NotificationType.NEW_INTERNAL_NOTE_COMMENTED
+    ">
+    <div class="d-flex align-items-center justify-content-between w-full">
+      <div class="task-wrapper-item">
+        <div *ngIf="notification?.userMessage" class="d-flex">
+          <div
+            class="title title-elippse"
+            style="white-space: pre-line"
+            [innerHTML]="taskName | landlordToOwner"></div>
+        </div>
+        <div
+          *ngIf="
+            notification?.userMessage &&
+            (notification?.userMessage?.firstName ||
+              notification?.userMessage?.lastName)
+          "
+          class="d-flex mb-6 align-items-center">
+          <trudi-icon icon="user2" alt="user" class="icon"></trudi-icon>
+          <p class="user">
+            {{ notification?.userMessage?.firstName }} {{
+            notification?.userMessage?.lastName }} {{ userType ? "(" + (userType
+            | userTypeInRm: pipeType: isRmEnvironment | titleCasePipe |
+            landlordToOwner) + ")" : "" }}
+          </p>
+        </div>
+        <div *ngIf="isShowPropertyAddressTaskType" class="d-flex">
+          <trudi-icon
+            icon="mapPin"
+            alt="user"
+            class="icon icon-map-pin"></trudi-icon>
+          <div class="address">
+            {{ notification.propertyAddress | landlordToOwner }}
+          </div>
+        </div>
+        <div
+          class="link-task d-flex align-items-center justify-content-start"
+          *ngIf="(notification.options?.['type'] === 'ASSIGNED_TASK') && notification.countTask > 0">
+          <trudi-icon class="icon" icon="iconLinkEvent"></trudi-icon>
+          <span>{{textLinktask}}</span>
+        </div>
+      </div>
+      <div
+        class="cursor-pointer"
+        [nzTooltipTitle]="notification.status === NotificationStatusEnum.UN_SEEN ? statusNotifications.markAsRead : statusNotifications.markAsUnread"
+        nz-tooltip
+        nzTooltipPlacement="top"
+        (click)="changeStatusNoti($event)"
+        class="icon-background cursor-pointer">
+        <trudi-icon
+          [icon]="notification.status === NotificationStatusEnum.UN_SEEN ? 'iconSeen' : 'bellIconV3'"></trudi-icon>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="task-wrapper"
+    *ngIf="notification?.notiType === NotificationType.EVENT_CHANGE_DATA">
+    <div class="d-flex align-items-center justify-content-between w-full">
+      <div class="task-wrapper-item">
+        <div class="d-flex">
+          <div
+            class="title title-elippse"
+            style="white-space: pre-line"
+            [innerHTML]="taskName | landlordToOwner"></div>
+        </div>
+        <div
+          *ngIf="notification?.options?.propertyAddress?.length"
+          class="d-flex">
+          <trudi-icon
+            icon="mapPin"
+            alt="user"
+            class="icon icon-map-pin"></trudi-icon>
+          <div class="address">
+            {{ notification?.options?.propertyAddress | landlordToOwner}}
+          </div>
+        </div>
+        <div
+          class="link-task d-flex align-items-center justify-content-start"
+          *ngIf="notification.countTask > 0">
+          <trudi-icon class="icon" icon="iconLinkEvent"></trudi-icon>
+          <span>{{textLinktask}}</span>
+        </div>
+      </div>
+      <div
+        class="cursor-pointer"
+        [nzTooltipTitle]="notification.status === NotificationStatusEnum.UN_SEEN ? statusNotifications.markAsRead : statusNotifications.markAsUnread"
+        nz-tooltip
+        nzTooltipPlacement="top"
+        (click)="changeStatusNoti($event)"
+        class="icon-background cursor-pointer">
+        <trudi-icon
+          [icon]="notification.status === NotificationStatusEnum.UN_SEEN ? 'iconSeen' : 'bellIconV3'"></trudi-icon>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="task-wrapper"
+    *ngIf="notification?.notiType === NotificationType.REMINDER">
+    <div class="d-flex align-items-center justify-content-between w-full">
+      <div class="task-wrapper-item">
+        <div class="d-flex">
+          <div
+            class="title title-elippse"
+            style="white-space: pre-line"
+            [innerHTML]="taskName | landlordToOwner"></div>
+        </div>
+        <div
+          *ngIf="
+            notification?.options?.propertyAddress?.length &&
+            userType !== 'Property Manager'
+          "
+          class="d-flex">
+          <trudi-icon
+            icon="mapPin"
+            alt="user"
+            class="icon icon-map-pin"></trudi-icon>
+          <div class="address">
+            {{ notification?.options?.propertyAddress | landlordToOwner}}
+          </div>
+        </div>
+        <button
+          class="button-create__createTask"
+          *ngIf="notification.countTask === 0"
+          trudi-btn
+          [variant]="outlined"
+          [size]="sizeBtn"
+          (click)="createTask($event)">
+          <trudi-icon class="item-icon" icon="iconPlus"></trudi-icon>
+          Create task
+        </button>
+        <div
+          class="link-task d-flex align-items-center justify-content-start"
+          *ngIf="notification.countTask > 0">
+          <trudi-icon class="icon" icon="iconLinkEvent"></trudi-icon>
+          <span>{{textLinktask}}</span>
+        </div>
+      </div>
+      <div
+        [nzTooltipTitle]="notification.status === NotificationStatusEnum.UN_SEEN ? statusNotifications.markAsRead : statusNotifications.markAsUnread"
+        nz-tooltip
+        nzTooltipPlacement="top"
+        (click)="changeStatusNoti($event)"
+        class="icon-background cursor-pointer">
+        <trudi-icon
+          [icon]="notification.status === NotificationStatusEnum.UN_SEEN ? 'iconSeen' : 'bellIconV3'"></trudi-icon>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="task-wrapper"
+    *ngIf="notification?.notiType === NotificationType.NEW_SHARED_MAIL_BOX">
+    <div class="d-flex align-items-center justify-content-between w-full">
+      <div class="task-wrapper-item">
+        <div class="title title-elippse">{{taskName}}</div>
+      </div>
+      <div
+        [nzTooltipTitle]="notification.status === NotificationStatusEnum.UN_SEEN ? statusNotifications.markAsRead : statusNotifications.markAsUnread"
+        nz-tooltip
+        nzTooltipPlacement="top"
+        (click)="changeStatusNoti($event)"
+        class="icon-background cursor-pointer">
+        <trudi-icon
+          [icon]="notification.status === NotificationStatusEnum.UN_SEEN ? 'iconSeen' : 'bellIconV3'"></trudi-icon>
+      </div>
+    </div>
+  </div>
+  <div
+    class="task-wrapper internal-note-wrapper"
+    *ngIf="notification?.notiType | isShowNotificationNewInternalNote">
+    <div class="d-flex align-items-center justify-content-between w-full">
+      <div class="task-wrapper-item">
+        <div class="title title-elippse">{{taskName}}</div>
+        <div class="body">
+          <p
+            class="title-elippse"
+            [innerHTML]="internalNoteContent | safeHtml"></p>
+        </div>
+        <div class="attachment d-flex flex-wrap gap-8 mt-8">
+          @for (file of internalNoteFile; track file.id) {
+          <notification-item-attachment
+            [file]="file"></notification-item-attachment>
+          }
+        </div>
+      </div>
+      <div
+        [nzTooltipTitle]="notification.status === NotificationStatusEnum.UN_SEEN ? statusNotifications.markAsRead : statusNotifications.markAsUnread"
+        nz-tooltip
+        nzTooltipPlacement="top"
+        (click)="changeStatusNoti($event)"
+        class="icon-background cursor-pointer">
+        <trudi-icon
+          [icon]="notification.status === NotificationStatusEnum.UN_SEEN ? 'iconSeen' : 'bellIconV3'"></trudi-icon>
+      </div>
+    </div>
+  </div>
+
+  @if(notification?.notiType === NotificationType.COMPANY_POLICY){
+  <div class="task-wrapper">
+    <div class="d-flex align-items-center justify-content-between w-full">
+      <div class="policy-title title-elippse" style="white-space: pre-line">
+        {{taskName}}
+      </div>
+      <div
+        [nzTooltipTitle]="notification.status === NotificationStatusEnum.UN_SEEN ? statusNotifications.markAsRead : statusNotifications.markAsUnread"
+        nz-tooltip
+        nzTooltipPlacement="top"
+        (click)="changeStatusNoti($event)"
+        class="icon-background cursor-pointer">
+        <trudi-icon
+          [icon]="notification.status === NotificationStatusEnum.UN_SEEN ? 'iconSeen' : 'bellIconV3'"></trudi-icon>
+      </div>
+    </div>
+  </div>
+  }
+</div>

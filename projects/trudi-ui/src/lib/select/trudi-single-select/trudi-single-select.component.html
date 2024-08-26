@@ -1,0 +1,159 @@
+<ng-container *ngIf="labelTpl; else noLabelTpl">
+  <ng-container *ngTemplateOutlet="labelTpl"></ng-container>
+</ng-container>
+<ng-template #noLabelTpl>
+  <div class="select-label" *ngIf="label">{{label}}</div>
+</ng-template>
+
+<ng-select
+  [markFirst]="true"
+  [appendTo]="appendTo"
+  [items]="items"
+  (open)="isOpened.emit()"
+  [(ngModel)]="valueSelected"
+  (ngModelChange)="onChange($event)"
+  class="trudi-single-select"
+  [ngClass]="{ 'trudi-single-select-hidden-group' : isHideLabelGroup }"
+  [bindLabel]="bindLabel"
+  [bindValue]="bindValue"
+  [searchable]="enableSearch"
+  (clear)="handleClear()"
+  [readonly]="disabled || isDisabled"
+  [clearable]="clearable"
+  [editableSearchTerm]="editableSearchTerm"
+  (close)="clearSearchTerm()"
+  [searchFn]="handledSearchFn.bind(this)"
+  [trackByFn]="trackByFn"
+  [notFoundText]="notFoundText"
+  [placeholder]="placeholder"
+  [dropdownPosition]="dropdownPosition"
+  [groupBy]="groupBy"
+  [compareWith]="compareWith"
+  [virtualScroll]="virtualScroll"
+  [loading]="loading"
+  [typeahead]="typeahead"
+  [typeToSearchText]="typeToSearchText"
+  (change)="handleChange($event)"
+  (search)="search.emit($event)"
+  (focus)="handleFocus()"
+  (click)="handleFocus()"
+  [isOpen]="isOpen"
+  (blur)="triggerEventBlur.emit($event)"
+  (scrollToEnd)="scrollToEnd.emit($event)"
+  (change)="trackUserChange()"
+  #select
+  appOutsideClickListener
+  (clickOutside)="handleClickOutsideSingleSelect()">
+  <ng-template ng-header-tmp *ngIf="headerTemplate?.templateRef">
+    <ng-container *ngTemplateOutlet="headerTemplate.templateRef">
+    </ng-container>
+  </ng-template>
+
+  <ng-template ng-header-tmp *ngIf="isTimeValue">
+    <div class="item d-flex justify-content-between tz-hint">
+      <span *ngIf="'' | formatDateTimeAbbrev | async" class="label-hint">
+        Times displayed in {{ '' | formatDateTimeAbbrev: false : true | async}}
+      </span>
+    </div>
+  </ng-template>
+
+  <ng-template ng-label-tmp let-item="item">
+    <div
+      *ngIf="bindLabel || bindValue"
+      [class.d-flex]="showLeftIcon && item[bindLabel]"
+      [class]="isUnlimitedContentLong ? 'item-label-unlimit-content' : 'item-label'">
+      <trudi-icon
+        class="item-label-icon mr-8"
+        *ngIf="showLeftIcon && item[bindLabel]"
+        [icon]="iconName"></trudi-icon>
+      <span *ngIf="itemSelected && item[bindValue] === itemSelected[bindValue]">
+        {{itemSelected[bindLabel]}} {{ isTimeValue ? ('' | formatDateTimeAbbrev:
+        true | async) : '' }}
+      </span>
+      <span
+        *ngIf="!(itemSelected && item[bindValue] === itemSelected[bindValue])">
+        {{item[bindLabel]}} {{ isTimeValue ? ('' | formatDateTimeAbbrev: true |
+        async) : ''}}
+      </span>
+      <span *ngIf="isShowSubLabel"
+        >{{item?.subLabel ? ': ' + item?.subLabel : ''}}</span
+      >
+    </div>
+    <ng-container *ngIf="labelTemplate">
+      <ng-container
+        *ngTemplateOutlet="labelTemplate?.templateRef || defaultSelectLabel; context: {item: item, clear: clear, isSearching: isSearching}"></ng-container>
+    </ng-container>
+  </ng-template>
+
+  <ng-template
+    ng-option-tmp
+    let-item="item"
+    let-item$="item$"
+    let-searchTerm="searchTerm">
+    <ng-container
+      *ngTemplateOutlet="optionTemplate?.templateRef || defaultOptionTmp; context: {item: item, item$: item$, searchTerm:  searchTerm ? (searchTerm | nzTrim ) : '', valueSelected: valueSelected, isSearching: isSearching}">
+    </ng-container>
+  </ng-template>
+
+  <ng-template ng-optgroup-tmp let-item$="item$" let-item="item">
+    <ng-container
+      *ngTemplateOutlet="groupTemplate?.templateRef || defaultGroupOptionTmp; context: {item: item, item$: item$, searchTerm: searchTerm, valueSelected: valueSelected, isSearching: isSearching}">
+    </ng-container>
+  </ng-template>
+
+  <ng-template *ngIf="footerTemplate?.templateRef" ng-footer-tmp>
+    <div
+      class="footer-wrapper"
+      (click)="select.close(); footerClick.emit($event)">
+      <ng-container
+        *ngTemplateOutlet="footerTemplate?.templateRef"></ng-container>
+    </div>
+  </ng-template>
+</ng-select>
+
+<ng-template #defaultOptionTmp let-item="item" let-searchTerm="searchTerm">
+  <div
+    class="trudi-select-label d-flex justify-content-between align-items-center w-100 gap-8"
+    [ngClass]="{'trudi-select-sublabel': isShowSubLabelOption}">
+    <div class="y-center gap-4 overflow-hidden">
+      <trudi-icon
+        class="mr-8"
+        *ngIf="showLeftIcon"
+        [icon]="iconName"></trudi-icon>
+      <div class="overflow-hidden">
+        <div
+          [class]="isUnlimitedContentLong ? 'item-label-unlimit-content' : 'item-label'"
+          [ngOptionHighlight]="searchTerm ? searchTerm : ''">
+          {{item[bindLabel]}}
+        </div>
+        <span
+          *ngIf="isShowSubLabelOption"
+          class="item-sublabel"
+          [ngOptionHighlight]="searchTerm ? searchTerm : ''">
+          {{item?.subLabel}}
+        </span>
+      </div>
+      <trudi-icon
+        *ngIf="item.helpText"
+        icon="infoFill"
+        nz-tooltip
+        [nzTooltipTitle]="item?.helpText"
+        [nzTooltipOverlayStyle]="{'max-width': '208px'}"></trudi-icon>
+      <trudi-badge
+        *ngIf="item?.suggested && isShowLabelSuggested"
+        text="Suggested"
+        variant="inProgress"
+        size="small">
+        Suggested
+      </trudi-badge>
+    </div>
+    <div
+      *ngIf="valueSelected && (valueSelected === item[bindValue])"
+      class="d-flex align-items-center">
+      <trudi-icon icon="checkSuccess"></trudi-icon>
+    </div>
+  </div>
+</ng-template>
+<ng-template #defaultGroupOptionTmp ng-optgroup-tmp let-item="item">
+  <span class="ng-option-label">{{item[groupBy]}}</span>
+</ng-template>

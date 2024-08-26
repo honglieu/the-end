@@ -1,0 +1,85 @@
+@import 'function';
+
+:host {
+  .chart-title {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      16px,
+      24px,
+      normal,
+      500
+    );
+    margin-bottom: 20px;
+  }
+  .chart-content.no-data-chart {
+    position: relative;
+  }
+  .no-data-chart-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    @include fontSetup(var(--fg-neutral-normal), 14px, 20px, italic, 400);
+  }
+  .chart-body {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 72px;
+    height: 500px;
+    .annotation {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      &-item {
+        display: flex;
+        gap: 6px;
+        &__title {
+          display: flex;
+          gap: 4px;
+          @include fontSetup(
+            var(--fg-neutral-stronger, #3d3d3d),
+            14px,
+            20px,
+            normal,
+            600
+          );
+          font-variant-numeric: lining-nums tabular-nums;
+          text-wrap: nowrap;
+          .trudi-badge {
+            color: white !important;
+            max-width: 100%;
+          }
+        }
+        &__color {
+          opacity: 0.6;
+          width: 12px;
+          height: 18px;
+          border-radius: 2px;
+        }
+      }
+    }
+  }
+}
+
+.default-tooltip {
+  display: flex;
+  flex-direction: column;
+  gap: 1.98px;
+  background: white;
+  padding: 8px;
+  border-radius: 8px;
+  border: 0.991px solid var(--border-neutral-light, #f2f5f7);
+  box-shadow: 0px 13.86849px 35.66184px 0px rgba(0, 0, 0, 0.13),
+    0px 1.98121px 11.88728px 0px rgba(0, 0, 0, 0.08);
+  &__value {
+    color: var(--fg-neutral-normal);
+  }
+  &__header {
+    color: var(--fg-neutral-strongest);
+  }
+  &__footer {
+    color: var(--fg-success);
+  }
+}

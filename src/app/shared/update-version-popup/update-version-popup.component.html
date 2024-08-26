@@ -1,0 +1,45 @@
+<trudi-modal
+  [visible]="visible"
+  iconName="iconTrudi"
+  [closable]="false"
+  [modelWidth]="536"
+  [isHideFooter]="true"
+  [title]="''"
+  className="update-version"
+  [autoFocus]="null">
+  <div class="container gap-40">
+    <div class="title">Hey there!</div>
+    <ng-container *ngIf="isWindows else mac">
+      <div class="content gap-25">
+        <p>We've got a brand new version of the app for you.</p>
+        <p>
+          Please take a moment to download the latest desktop app from your
+          Microsoft .
+        </p>
+      </div>
+      <div>
+        <button trudi-btn class="btn-app" (click)="handleGoStoreApp()">
+          <trudi-icon icon="microsoft"></trudi-icon>
+          <span>Go to</span>
+          <div class="app-store">Microsoft</div>
+        </button>
+      </div>
+    </ng-container>
+    <ng-template #mac>
+      <div class="content gap-25">
+        <p>We've got a brand new version of the app for you.</p>
+        <p>
+          Please take a moment to download the latest desktop app from your App
+          store.
+        </p>
+      </div>
+      <div>
+        <button trudi-btn class="btn-app" (click)="handleGoStoreApp()">
+          <trudi-icon icon="app-store"></trudi-icon>
+          <span>Go to</span>
+          <div class="app-store">App Store</div>
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</trudi-modal>

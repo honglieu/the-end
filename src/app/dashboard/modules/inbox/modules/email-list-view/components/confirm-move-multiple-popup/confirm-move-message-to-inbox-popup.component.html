@@ -1,0 +1,84 @@
+<div class="confirm-popup">
+  <div class="content-popup d-flex">
+    <div class="round-icon">
+      <img
+        src="/assets/icon/icon-warning-red.svg"
+        alt="Trudi"
+        data-e2e="warning-icon" />
+    </div>
+    <div class="content-wrapper">
+      <div class="confirm-text">
+        <div class="d-flex">
+          <p class="title-text" data-e2e="title">{{ title }}</p>
+          <button
+            #closeIcon
+            (click)="handleCancel()"
+            class="close-btn cursor-pointer">
+            <trudi-icon
+              class="close-icon"
+              [style]="{ 'width.px': 24, 'height.px': 24, color: '#646464' }"
+              icon="closeIcon"></trudi-icon>
+          </button>
+        </div>
+        <p class="sub-text">{{ subtitle }}</p>
+      </div>
+      <div class="confirm-content text-ellipsis">
+        <ng-container *ngFor="let message of listMessagesConfirm">
+          <div class="d-flex flex-dir-column message-wrapper">
+            <div class="d-flex">
+              <span class="participants-name text-ellipsis"
+                >{{message?.displayParticipants.join(', ') }}</span
+              >
+              <span
+                *ngIf="!!message?.remainingParticipants.length"
+                class="count-participants"
+                >&nbsp;+{{message?.remainingParticipants.length}}</span
+              >
+            </div>
+            <div class="quote-wrapper text-ellipsis">
+              <trudi-quote
+                e2ePrefix="email-message"
+                [isConsole]="isConsole"
+                [taskDetailViewMode]="EDetailViewMode.EMAIL"
+                [iconName]="'mailThin'"
+                [isConversationOfMsg]="true"
+                isRead="false"
+                [content]="{
+                  senderName: message?.subject ? message?.subject : '(no subject)',
+                  message: message?.message,
+                  dateTime: message?.timestamp,
+                  attachmentCount: message?.attachmentCount
+                  }">
+              </trudi-quote>
+            </div>
+            <div class="d-flex">
+              <span class="label-task"> Task: </span>
+              <span class="task-name text-ellipsis"
+                >&nbsp;{{ message?.title }}</span
+              >
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div class="footer-popup">
+    <div class="d-flex justify-content-end gap-12">
+      <button
+        type="button"
+        class="trudi-btn trudi-btn-large trudi-btn-tertiary btn-cancel"
+        (click)="handleLeftButtonClick($event)"
+        data-e2e="go-back-btn">
+        No, cancel
+      </button>
+      <button
+        type="button"
+        class="trudi-btn trudi-btn-large btn-confirm"
+        (click)="handleRightButtonClick($event)"
+        [disabled]="isDisabled"
+        data-e2e="confirm-btn">
+        Yes, move to inbox
+      </button>
+    </div>
+  </div>
+</div>

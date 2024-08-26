@@ -1,0 +1,73 @@
+@import 'function';
+
+:host {
+  .general-information-wrapper {
+    width: 100%;
+    .general-information-form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      .general-information-form-row {
+        display: flex;
+        column-gap: 20px;
+        .general-information-form-item {
+          flex: 1;
+          &__label {
+            display: block;
+            @include fontSetup(
+              var(--fg-neutral-normal),
+              12px,
+              16px,
+              normal,
+              400
+            );
+            margin-bottom: 6px;
+            margin-left: 2px;
+          }
+
+          ::ng-deep trudi-date-picker {
+            max-width: unset;
+            transition: unset;
+            height: 40px;
+          }
+
+          ::ng-deep time-picker {
+            .date-time-group div {
+              width: 100%;
+            }
+
+            input {
+              max-width: unset;
+              transition: unset;
+              height: 40px;
+              width: 100%;
+              padding: 12px 30px 12px 12px;
+            }
+
+            .date-time-picker .input-wrapper input:not(:focus) {
+              box-shadow: unset !important;
+            }
+
+            &.trudi-time-picker-error {
+              .date-time-picker .input-wrapper input.input-error:not(:focus) {
+                box-shadow: var(--shadow-danger) !important;
+              }
+            }
+
+            &:has(input.disabled) {
+              input {
+                cursor: not-allowed;
+                color: var(--fg-neutral-weakest);
+                background-color: var(--bg-neutral-tonal-strongest, #d8dcdf);
+              }
+              trudi-icon {
+                cursor: not-allowed;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

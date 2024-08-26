@@ -1,0 +1,126 @@
+<trudi-modal
+  [visible]="configPopup.showModal"
+  [modelWidth]="624"
+  [autoFocus]="null"
+  [closable]="true"
+  (onCancel)="onQuit()">
+  <ng-template #headerModal>
+    <div class="confirm-property-header">
+      <trudi-icon
+        icon="propertyTreeLogo"
+        [svgClass]="size-20"
+        [viewBox]="auto"></trudi-icon>
+      <div class="title">{{configPopup.title}}</div>
+    </div>
+  </ng-template>
+  <div class="properties-container">
+    <div class="properties-container__warning">
+      <trudi-icon [icon]="'iconWarningRed'" [svgClass]="'size-24'">
+      </trudi-icon>
+      <div class="badge-title">
+        <div class="box-title">
+          <div class="sub-title">{{configPopup.titleWarning}}</div>
+        </div>
+      </div>
+    </div>
+    <div id="form" [formGroup]="userForm">
+      <div formArrayName="listConversationTaskNotMove" class="card-info">
+        <ng-container
+          *ngFor="let item of listConversationTaskFolderGroups; let i = index">
+          <div [formGroupName]="i" class="card-info-wrapper">
+            <div class="card-info-container">
+              <div class="user-info">
+                <div class="user-info__text-content">
+                  <div class="text-content">{{item.taskTitle}}</div>
+                  <div class="user-info__checkbox">
+                    <trudi-checkbox
+                      type="circle"
+                      formControlName="isSelected"></trudi-checkbox>
+                  </div>
+                </div>
+              </div>
+              <div class="user-info">
+                <div class="user-info__message">
+                  <trudi-icon
+                    [icon]="'iconFolder'"
+                    svgClass="size-20"></trudi-icon>
+                  <div class="message-content">
+                    {{item.taskFolderName | titleCasePipe}}
+                  </div>
+                  <div class="message-content">/</div>
+                  <div class="message-content">{{item.name}}</div>
+                </div>
+              </div>
+            </div>
+            <div class="user-info">
+              <div class="search-box" id="property-select">
+                <label class="user-info__label">Select property</label>
+                <trudi-single-select
+                  [ngClass]="{'red-border': isRequired(i) && submitted}"
+                  [items]="listPropertySelectBox"
+                  [bindValue]="'id'"
+                  [bindLabel]="'streetline'"
+                  [virtualScroll]="true"
+                  [disabled]="!userForm.get(['listConversationTaskNotMove', i, 'isSelected']).value"
+                  (triggerEventChange)="handleSelectProperties($event, i)"
+                  formControlName="propertyId">
+                  <ng-template
+                    trudi-option-tmp
+                    let-item="item"
+                    let-searchTerm="searchTerm">
+                    <div class="y-center justify-content-between flex-1">
+                      <div class="y-center gap-8">
+                        <span
+                          class="white-space-normal"
+                          [innerHTML]="item.streetline || '' | highlight: searchTerm"></span>
+
+                        <div
+                          class="property-tree y-center gap-4"
+                          *ngIf="item.manager">
+                          <span class="property-tree-name"
+                            >{{item?.manager?.firstName}}
+                            {{item?.manager?.lastName}}</span
+                          >
+                        </div>
+                      </div>
+                      <ng-container
+                        *ngIf="selectedProperty[i] && selectedProperty[i].propertyId === item.id">
+                        <trudi-icon
+                          icon="checkSuccess"
+                          *ngIf="true"
+                          svgClass="size-16"></trudi-icon>
+                      </ng-container>
+                    </div>
+                  </ng-template>
+                </trudi-single-select>
+                <div
+                  *ngIf="isRequired(i) && submitted"
+                  class="wrap-error-des y-center gap-4">
+                  <trudi-icon svgClass="size-12" icon="errorBgRed"></trudi-icon>
+                  <span class="required-field">Required field</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <div *ngIf="showRequired" class="required">
+      <trudi-icon svgClass="size-12" icon="errorBgRed"></trudi-icon>
+      <span class="required-field">Select at least an option to continue</span>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div class="d-flex justify-content-end gap-12">
+      <button
+        trudi-btn
+        size="large"
+        variant="filled"
+        [disabled]="false"
+        class="trudi-btn trudi-btn-large ml-auto"
+        (click)="onNext()">
+        {{configPopup.actionButton}}
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

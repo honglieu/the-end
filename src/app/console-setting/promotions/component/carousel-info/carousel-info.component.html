@@ -1,0 +1,102 @@
+<div [ngClass]="{'mt-24': index !== 0}" class="promotions-info">
+  <span class="title">{{title}}</span>
+  <div class="promotions-info-wrapper mt-4 border-rad-8">
+    <div [formGroup]="formGroup">
+      <div class="file">
+        <div class="d-flex align-items-center gap-8">
+          <input
+            #uploader
+            (change)="handleUploadFileLocal($event)"
+            type="file"
+            [accept]="supportTypeFile"
+            hidden />
+          <button
+            trudi-btn
+            variant="tonal"
+            [btnType]="imageUrl.value?.length ? 'neutral' : 'primary'"
+            (click)="uploader.click()">
+            {{imageUrl.value?.length ? 'Change image': 'Upload image'}}
+          </button>
+          <span class="file-extension mt-6">png / jpeg / jpg</span>
+        </div>
+        <trudi-form-control
+          class="w-100"
+          [control]="imageUrl"
+          [errors]="FILES_CONTROL_ERROR_MESSAGE">
+          <input style="display: none" type="text" formControlName="image" />
+        </trudi-form-control>
+        <div class="file-info d-flex align-items-center mt-4">
+          <ng-container
+            *ngFor="let item of imageUrl.value || []; let i = index">
+            <ng-container *ngIf="!isInValidSupportTypeOrTooLarge">
+              <div
+                class="d-flex"
+                [innerHTML]="handleFileNameExtension(item?.fileName)"></div>
+              <trudi-icon
+                (click)="handleCloseFile()"
+                [icon]="'closeModal'"
+                class="size-20 mb-4 ml-4 cursor-pointer"></trudi-icon>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+      <div class="col-item">
+        <trudi-form-control class="w-100" [control]="featureName">
+          <trudi-text-field
+            size="large"
+            label="Item name"
+            [maxCharacter]="50"
+            [showCounting]="true"
+            formControlName="featureName"></trudi-text-field>
+        </trudi-form-control>
+      </div>
+      <div class="col-item">
+        <trudi-form-control [control]="description">
+          <trudi-textarea
+            formControlName="description"
+            [label]="'Description'"
+            [rows]="2"
+            [maxCharacter]="150"
+            [showCounting]="true"
+            [resizable]="false"></trudi-textarea>
+        </trudi-form-control>
+      </div>
+      <div class="col-item">
+        <trudi-form-control
+          class="w-100"
+          [control]="url"
+          [errors]="[{errorName: 'invalidUrl', errorMessage: 'Invalid URL'}]">
+          <trudi-text-field
+            size="large"
+            formControlName="url"
+            label="URL"></trudi-text-field>
+        </trudi-form-control>
+      </div>
+      <ng-container *ngIf="url.value && url.valid">
+        <div class="col-item custom-url-display">
+          <trudi-form-control [control]="urlDisplay">
+            <trudi-text-field
+              formControlName="urlDisplay"
+              [maxCharacter]="30"
+              [showCounting]="true"
+              placeholder="Enter display text">
+            </trudi-text-field>
+          </trudi-form-control>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
+<trudi-modal
+  *ngIf="isShowCarouselImagePreview"
+  [visible]="isShowCarouselImagePreview"
+  [isCustomPopup]="true"
+  [modelWidth]="500"
+  [className]="'trudi-modal-custom'">
+  <carousel-image-preview-popup
+    (getListFile)="handleGetListFile($event)"
+    [currentFile]="currentFile"
+    [fileUploadLocal]="fileUploadLocal"
+    [isShowCarouselImagePreviewPopup]="isShowCarouselImagePreview"
+    (closePopup)="closeCarouselPreviewPopup()"></carousel-image-preview-popup>
+</trudi-modal>

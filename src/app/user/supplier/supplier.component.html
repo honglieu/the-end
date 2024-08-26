@@ -1,0 +1,395 @@
+<div class="supplier-wrapper">
+  <supplier-contact-search></supplier-contact-search>
+  <div
+    (scroll)="onScrollDown()"
+    class="table-fix-feader scroll-bar-margin-top-10"
+    #table
+    [ngClass]="[isLoading ? 'overflow-hidden' : 'auto-hide-scroll']">
+    <table
+      data-e2e="suppliers-table"
+      class="table-property"
+      data-console="supplier-table">
+      <thead>
+        <tr>
+          <th
+            data-console="company-name-title"
+            [ngClass]="{'right-border': haveRightBorder && !isLoading}">
+            Company
+          </th>
+          <th data-console="crm-status">CRM status</th>
+          <th data-console="email-title">Email</th>
+          <th data-console="phone-number-title">Phone number</th>
+          <th data-console="website-title">Website</th>
+          <th data-console="account-title">Account</th>
+          <th data-console="favourite" class="text-center">Favourite</th>
+          <th></th>
+        </tr>
+      </thead>
+      <ng-container *ngIf="isLoading; else noResultsFound">
+        <tbody>
+          <ng-container *ngFor="let _ of [].constructor(30); let i = index">
+            <tr [data-e2e]="'suppliers-item-' + i">
+              <td class="property people-cursor table-border-bottom">
+                <div class="prop-name gap-2">
+                  <nz-skeleton
+                    [nzParagraph]="{ rows: 0 }"
+                    [nzActive]="true"
+                    style="width: 400px"></nz-skeleton>
+                </div>
+              </td>
+              <td class="prop-email table-border-bottom">
+                <div class="d-flex flex-dir-column gap-4">
+                  <nz-skeleton
+                    [nzParagraph]="{ rows: 0 }"
+                    [nzActive]="true"></nz-skeleton>
+                </div>
+              </td>
+              <td
+                class="prop-phone text-capitalize white-space-nowrap table-border-bottom">
+                <nz-skeleton
+                  [nzParagraph]="{ rows: 0 }"
+                  [nzActive]="true"></nz-skeleton>
+              </td>
+              <td class="prop-website table-border-bottom">
+                <nz-skeleton
+                  [nzParagraph]="{ rows: 0 }"
+                  [nzActive]="true"></nz-skeleton>
+              </td>
+              <td class="prop-website table-border-bottom">
+                <nz-skeleton
+                  [nzParagraph]="{ rows: 0 }"
+                  [nzActive]="true"></nz-skeleton>
+              </td>
+              <td class="prop-website table-border-bottom">
+                <nz-skeleton
+                  [nzParagraph]="{ rows: 0 }"
+                  [nzActive]="true"></nz-skeleton>
+              </td>
+              <td class="prop-website table-border-bottom">
+                <nz-skeleton
+                  [nzParagraph]="{ rows: 0 }"
+                  [nzActive]="true"></nz-skeleton>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </ng-container>
+
+      <ng-template #noResultsFound>
+        <tbody [class]="!dataTable?.list.length ? 'empty-block' : ''">
+          <ng-container *ngIf="!dataTable?.list.length; else notEmptyBlock">
+            <tr class="no-result-text">
+              <div class="header-text">No results found</div>
+              <div class="content-text">
+                You may want to try using different keywords, check for correct
+                spelling or adjust your filters.
+              </div>
+            </tr>
+          </ng-container>
+
+          <ng-template #notEmptyBlock>
+            <ng-container
+              *ngFor="let data of listSupplierProperty; let i = index">
+              <tr
+                class="supplier-item"
+                tabindex="0"
+                (clickStopPropagation)="handleClickSupplier(data)"
+                [ngClass]="{
+                  'deleted': !isActiveCrmStatus(data.status)
+                }"
+                [data-e2e]="'suppliers-item-' + i"
+                [id]="i">
+                <td
+                  class="property people-cursor table-border-bottom cursor-pointer"
+                  [ngClass]="{'right-border': haveRightBorder && !isLoading}">
+                  <div class="prop-name gap-2">
+                    <span
+                      [innerHTML]="data.fullName | highlight: searchValue"
+                      class="td-text">
+                    </span>
+                    <trudi-icon
+                      *ngIf="!data.isSystemCreate"
+                      icon="ptCloud"></trudi-icon>
+                  </div>
+                </td>
+                <td class="table-border-bottom cursor-pointer">
+                  {{ crmStatusLabels[data.status] }}
+                </td>
+                <td class="prop-email table-border-bottom">
+                  <div class="d-flex flex-dir-column gap-4">
+                    <ng-container
+                      *ngIf="(data.email || !data.secondaryEmails?.length); else firstSecondaryEmail">
+                      <div
+                        class="d-flex align-items-center primary-email cursor-pointer action">
+                        <div
+                          [nzTooltipTitle]="data.email"
+                          nz-tooltip
+                          [innerHTML]="(data.email) | highlight: searchValue"></div>
+                        <button
+                          *ngIf="data.email"
+                          trudi-btn
+                          size="extra-small"
+                          variant="outlined"
+                          btnType="neutral"
+                          shape="circle"
+                          [disabled]="isConsole"
+                          class="action-function email-function"
+                          data-e2e="plus-icon"
+                          (clickStopPropagation)="handleClickAddEmail(data)">
+                          <span>
+                            <trudi-icon icon="iconPlus2"></trudi-icon>
+                          </span>
+                        </button>
+                      </div>
+                    </ng-container>
+                    <ng-template #firstSecondaryEmail>
+                      <div class="mt-20"></div>
+                    </ng-template>
+                    <ng-container
+                      *ngFor="let secondaryEmail of data.secondaryEmails; let SEIdx = index">
+                      <div
+                        *ngIf="secondaryEmail?.email?.length ? (SEIdx >= 0) : (SEIdx >= 1)"
+                        class="secondary-email d-flex align-items-center cursor-pointer action">
+                        <div
+                          nz-tooltip
+                          [nzTooltipTitle]="secondaryEmail?.email"
+                          [innerHTML]="secondaryEmail?.email | highlight: searchValue"></div>
+                        <button
+                          *ngIf="secondaryEmail?.email"
+                          trudi-btn
+                          size="extra-small"
+                          variant="outlined"
+                          btnType="neutral"
+                          shape="circle"
+                          [disabled]="isConsole"
+                          class="action-function email-function"
+                          data-e2e="delete-option"
+                          (clickStopPropagation)="onDeleteEmail(secondaryEmail)">
+                          <span>
+                            <trudi-icon icon="deleteIconOutline"></trudi-icon>
+                          </span>
+                        </button>
+                      </div>
+                    </ng-container>
+                  </div>
+                </td>
+                <td
+                  class="prop-phone text-capitalize white-space-nowrap table-border-bottom">
+                  <div class="d-flex flex-dir-column gap-4">
+                    <div
+                      *ngIf="data.phoneNumber;  else firstSecondaryPhone"
+                      class="primary-phone cursor-pointer">
+                      <div
+                        [innerHTML]="data.phoneNumber | phoneNumberFormat | phoneNumberHighlight: searchValue"></div>
+                    </div>
+                    <ng-template #firstSecondaryPhone>
+                      <div class="mt-20"></div>
+                    </ng-template>
+                    <ng-container
+                      *ngFor="let secondaryPhone of data.secondaryPhones; let SEIdx = index">
+                      <div
+                        class="d-flex secondary-phone align-items-center cursor-pointer action">
+                        <div
+                          [innerHTML]="secondaryPhone.phoneNumber | phoneNumberFormat | phoneNumberHighlight: searchValue"></div>
+                        <button
+                          *ngIf="secondaryPhone.phoneNumber"
+                          trudi-btn
+                          size="extra-small"
+                          variant="outlined"
+                          btnType="neutral"
+                          shape="circle"
+                          [disabled]="isConsole"
+                          class="action-function email-function"
+                          data-e2e="delete-option"
+                          (clickStopPropagation)="onDeletePhoneNumber(secondaryPhone)">
+                          <span>
+                            <trudi-icon icon="deleteIconOutline"></trudi-icon>
+                          </span>
+                        </button>
+                      </div>
+                    </ng-container>
+                  </div>
+                </td>
+                <td class="prop-website table-border-bottom">
+                  <a
+                    *ngIf="data.landingPage"
+                    [class]="isActiveCrmStatus(data.status) ? 'hyperlink' : 'unclickable-link'"
+                    [href]="isActiveCrmStatus(data.status) ? getUrl(data.landingPage) : '#'"
+                    target="_blank">
+                    <span
+                      class="content"
+                      [innerHTML]="data.landingPage | highlight: searchValue"
+                      >{{data.landingPage}}</span
+                    >
+                    <svg class="hyperlink-icon" width="12" height="12">
+                      <use xlink:href="#navigate-on-link" />
+                    </svg>
+                  </a>
+                </td>
+                <td class="table-border-bottom">
+                  <ng-container *ngIf="data?.userMessengers?.length">
+                    <ng-container
+                      *ngTemplateOutlet="contactListChannels; context: { contacts: data.userMessengers, icon: 'messengerLogo', label: 'name' }">
+                    </ng-container>
+                  </ng-container>
+                  <ng-container *ngIf="data?.userWhatsApps?.length">
+                    <ng-container
+                      *ngTemplateOutlet="contactListChannels; context: { contacts: data.userWhatsApps, icon: 'whatsappLogo', label: 'externalId' }">
+                    </ng-container>
+                  </ng-container>
+                </td>
+                <td class="text-center table-border-bottom">
+                  <favourite-star
+                    [attr.data-e2e]="'star-icon'"
+                    [isActive]="data.isFavourite"
+                    (onUpdateFavourite)="handleUpdateFavourite($event, data.id)"></favourite-star>
+                </td>
+                <td class="prop-website table-border-bottom">
+                  <button
+                    class="checkbox-item"
+                    (clickStopPropagation)="setCheckBoxValue(data?.id)"
+                    [disabled]="!data.isSystemCreate">
+                    <trudi-checkbox
+                      [(ngModel)]="userSelectedObject[data?.id]"
+                      (ngModelChange)="handleChangeSelected()"
+                      [disabled]="!data.isSystemCreate">
+                    </trudi-checkbox>
+                  </button>
+                </td>
+              </tr>
+            </ng-container>
+            <ng-container *ngIf="isLoadingMore">
+              <ng-container *ngFor="let _ of [].constructor(2); let i = index">
+                <tr>
+                  <td class="property people-cursor table-border-bottom">
+                    <div class="prop-name gap-2">
+                      <nz-skeleton
+                        [nzParagraph]="{ rows: 0 }"
+                        [nzActive]="true"
+                        style="width: 400px"></nz-skeleton>
+                    </div>
+                  </td>
+                  <td class="prop-email table-border-bottom">
+                    <div class="d-flex flex-dir-column gap-4">
+                      <nz-skeleton
+                        [nzParagraph]="{ rows: 0 }"
+                        [nzActive]="true"></nz-skeleton>
+                    </div>
+                  </td>
+                  <td
+                    class="prop-phone text-capitalize white-space-nowrap table-border-bottom">
+                    <nz-skeleton
+                      [nzParagraph]="{ rows: 0 }"
+                      [nzActive]="true"></nz-skeleton>
+                  </td>
+                  <td class="prop-website table-border-bottom">
+                    <nz-skeleton
+                      [nzParagraph]="{ rows: 0 }"
+                      [nzActive]="true"></nz-skeleton>
+                  </td>
+                  <td class="prop-website table-border-bottom">
+                    <nz-skeleton
+                      [nzParagraph]="{ rows: 0 }"
+                      [nzActive]="true"></nz-skeleton>
+                  </td>
+                  <td class="prop-website table-border-bottom">
+                    <nz-skeleton
+                      [nzParagraph]="{ rows: 0 }"
+                      [nzActive]="true"></nz-skeleton>
+                  </td>
+                  <td class="prop-website table-border-bottom">
+                    <nz-skeleton
+                      [nzParagraph]="{ rows: 0 }"
+                      [nzActive]="true"></nz-skeleton>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-container>
+          </ng-template>
+        </tbody>
+      </ng-template>
+    </table>
+  </div>
+</div>
+
+<ng-template
+  #contactListChannels
+  let-contacts="contacts"
+  let-icon="icon"
+  let-label="label">
+  <div class="d-flex gap-4 align-items-top cursor-pointer">
+    <trudi-icon svgClass="size-16" [icon]="icon" class="mt-2"></trudi-icon>
+    <div class="d-flex flex-dir-column gap-4 wrapper-list-messenger">
+      <ng-container *ngFor="let contact of contacts">
+        <span
+          *ngIf="contact?.[label]"
+          disableTooltipOnWidth
+          nz-tooltip
+          [nzTooltipTitle]="contact?.[label]"
+          nzTooltipPlacement="top"
+          class="text-ellipsis"
+          [innerHTML]="contact?.[label] | highlight: searchValue">
+        </span>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<trudi-modal
+  *ngIf="isShowQuitConfirm"
+  [visible]="isShowQuitConfirm"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  className="trudi-modal-custom">
+  <app-quit-confirm
+    (isCloseModal)="showQuitConfirm($event)"
+    (targetOpenForm)="onTargetOpenForm($event)"
+    (delete)="onDeleteConfirm($event)"></app-quit-confirm>
+</trudi-modal>
+
+<trudi-modal
+  *ngIf="showDeleteEmailError"
+  [visible]="showDeleteEmailError"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  className="trudi-modal-custom">
+  <confirm-popup
+    [titleText]="deleteEmailErrorText.title"
+    [subTexts]="[deleteEmailErrorText.subText]"
+    [buttonRight]="deleteEmailErrorText.btnText"
+    btnType="danger"
+    (onButtonRightClick)="showDeleteEmailError = false">
+  </confirm-popup>
+</trudi-modal>
+
+<add-email-pop-up
+  [APIerr]="addEmailErr"
+  [isShowModal]="popupState.showAddEmail"
+  [addEmailTitle]="addEmailTitle"
+  (onCancel)="handleCloseModal()"
+  (onConfirm)="handleAddNewEmail($event)">
+</add-email-pop-up>
+
+<trudi-modal
+  [visible]="popupState.showPopupDelete"
+  iconName="iconWarningRed"
+  [modelWidth]="510"
+  [closable]="false"
+  colorBtn="danger"
+  type="confirm"
+  title="Are you sure you want to delete?"
+  okText="Delete"
+  cancelText="Cancel"
+  [isHideBody]="true"
+  [disableOkBtn]="disableDeleteModal"
+  (onCancel)="handleCloseModalDelete()"
+  (onOk)="handleDeleteItems()">
+</trudi-modal>
+
+<task-editor-toolbar></task-editor-toolbar>
+
+<user-info-drawer
+  [visible]="visible"
+  [currentDataUser]="currentDataUser"
+  [openFrom]="ETypePage.SUPPLIER"
+  (triggerCloseDrawer)="visible = false"></user-info-drawer>

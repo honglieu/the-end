@@ -1,0 +1,60 @@
+.add-contact-btn {
+  border-radius: 50%;
+  background-color: var(--brand-100);
+
+  &:hover {
+    background-color: var(--brand-200);
+  }
+
+  &:active {
+    background-color: var(--brand-300);
+  }
+}
+.action-btn {
+  border: none;
+  padding: 0;
+}
+.tenancy-detail-title {
+  color: var(--gray-600);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.contact-card-list {
+  display: grid;
+  grid-template-columns: auto auto;
+}
+
+.error-wrapper {
+  margin-top: 4px;
+  .text-warning {
+    color: var(--danger-500);
+    font-size: 12px;
+    line-height: 16px;
+    margin-left: 4px;
+  }
+}
+
+.max-character-text {
+  color: var(--gray-500);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+}
+
+:host ::ng-deep .ng-star-inserted trudi-max-character {
+  display: none;
+}
+
+.form-title {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  color: var(--fg-neutral-normal, #646464);
+}
+
+.add-tenancy-detail{
+  align-items: center;
+}

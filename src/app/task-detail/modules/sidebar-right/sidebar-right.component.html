@@ -1,0 +1,121 @@
+<app-modal-popup
+  *ngIf="isShowQuitConfirmModal"
+  [show]="isShowQuitConfirmModal"
+  [position]="popupModalPosition.center"
+  [appendBody]="true"
+  [specificWidth]="510">
+  <app-quit-confirm
+    (isCloseModal)="showQuitConfirm($event)"
+    (isOpenSendMessageModal)="showAppSendMessage($event)"
+    (isOpenFileModal)="showAddFiles($event)"></app-quit-confirm>
+</app-modal-popup>
+
+<create-task-by-category
+  [show]="isShowCreateTaskByCategory"
+  *ngIf="isShowCreateTaskByCategory"
+  [show]="isShowCreateTaskByCategory"
+  [isEdit]="true"
+  [openFrom]="'TASK_DETAIL'"
+  [prefillValue]="dataPrefill"
+  [taskNameId]="taskTypeId"
+  [mediaFilesInConversation]="mediaFilesInConversation"
+  [showBackBtn]="false"
+  (onConfirm)="handleConfirmEdit($event)"
+  (onCloseModal)="isShowCreateTaskByCategory = false"></create-task-by-category>
+
+<app-modal-popup
+  [show]="isShowEditDetailLandlordTenantTask"
+  *ngIf="isShowEditDetailLandlordTenantTask"
+  [appendBody]="true"
+  [position]="popupModalPosition.center">
+  <request-landlord-tenant
+    [isEdit]="true"
+    [taskNameId]="taskTypeId"
+    [openFrom]="'TASK_DETAIL'"
+    [leftButtonText]="''"
+    [title]="requestTitle"
+    [summaryText]="dataPrefill.description"
+    [imageCheckList]="dataPrefill.files"
+    [mediaFilesInConversation]="mediaFilesInConversation"
+    (onCloseModal)="isShowEditDetailLandlordTenantTask = false"
+    (onNext)="editDetailRequestLandlordTenantTask($event)"></request-landlord-tenant>
+</app-modal-popup>
+
+<div
+  *ngIf="taskType === TaskTypeEnum.TASK"
+  class="side-panel-collapse cursor-pointer d-flex flex-dir-column gap-12"
+  (click)="handleExpandSidePanel()">
+  <ng-container
+    *ngTemplateOutlet="sidePanelCollapse; context: {icon: 'filledRequest', counts: (widgetLinked?.linkedAction?.length) || 0}">
+  </ng-container>
+  <ng-container
+    *ngTemplateOutlet="sidePanelCollapse; context: {icon: 'filledCalendar', counts: widgetCalendar?.listEvents.length || 0}">
+  </ng-container>
+  <ng-container
+    *ngTemplateOutlet="(currentCompanyCRMSystemName$ | async) === CRMSystemName.PROPERTY_TREE && sidePanelCollapse; context: {icon: 'filledPropertyTree', counts: widgetPropertyTree?.itemsCounts || 0}">
+  </ng-container>
+  <ng-container
+    *ngTemplateOutlet="reiToken.length && sidePanelCollapse; context: {icon: 'filledReiForm', counts: (widgetReiForm?.reiForms$ | async)?.result?.length || 0}">
+  </ng-container>
+  <ng-container
+    *ngTemplateOutlet="sidePanelCollapse; context: {icon: 'filledFile', counts: widgetAttachments?.itemsCounts || 0}">
+  </ng-container>
+</div>
+
+<ng-template #sidePanelCollapse let-icon="icon" let-counts="counts">
+  <div class="items">
+    <div class="count"><span>{{counts}}</span></div>
+    <trudi-icon [icon]="icon" class="icon size-32"> </trudi-icon>
+  </div>
+</ng-template>
+
+@defer { @if (shouldRenderWidgets) {
+<div class="modal-container" [@openClose]="isShowSidebarRight ? true : false">
+  <ng-container>
+    <div class="content-modal sidebar-right-wrapper">
+      <widget-ai-summary
+        #widgetAiSummary
+        [inputTaskType]="taskType"></widget-ai-summary>
+      <ng-container *ngIf="taskType === TaskTypeEnum.TASK">
+        <widget-linked #widgetLinked></widget-linked>
+        <widget-calendar
+          #widgetCalendar
+          [isNoPropertyTask]="isNoPropertyTask"
+          [class.hight-light]="hightLightCalendarEvent"></widget-calendar>
+        <ng-container [ngSwitch]="currentCompanyCRMSystemName$ | push">
+          <widget-property-tree
+            #widgetPropertyTree
+            [isNoPropertyTask]="isNoPropertyTask"
+            *ngSwitchCase="CRMSystemName.PROPERTY_TREE"></widget-property-tree>
+          <!-- <widget-rent-manager
+                    [isNoPropertyTask]="isNoPropertyTask"
+                    *ngSwitchCase="CRMSystemName.RENT_MANAGER"></widget-rent-manager> -->
+        </ng-container>
+      </ng-container>
+
+      <widget-rei-form #widgetReiForm *ngIf="reiToken.length"></widget-rei-form>
+
+      <widget-attachments #widgetAttachments></widget-attachments>
+    </div>
+  </ng-container>
+</div>
+} }
+
+<trudi-send-msg
+  *ngIf="isShowTrudiSendMsg"
+  [configs]="declineMsgConfig"
+  [rawMsg]="textForward"
+  [prefillVariables]="prefillVariables"
+  (onSendMsg)="onSendMsg($event)"
+  (onQuit)="stopProcess()"></trudi-send-msg>
+
+<ng-container *rxLet="propertyTreeWidgetState$; let propertyTreeWidgetState;">
+  <popup-widget-property-tree
+    [typePopup]="propertyTreeWidgetState.typePopup"
+    [optionPopup]="propertyTreeWidgetState.optionPopup"></popup-widget-property-tree>
+</ng-container>
+
+<popup-widget-calendar *rxIf="isShowCalendarEventPopup$">
+</popup-widget-calendar>
+
+<popup-widget-rei-form></popup-widget-rei-form>

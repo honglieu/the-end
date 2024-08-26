@@ -1,0 +1,95 @@
+<div class="toolbar" #toolbar>
+  <div class="toolbar-panel" #panel>
+    <!-- <ng-container *ngFor="let template of visibleTemplates; let idx = index">
+      <div
+        toolbarItem
+        class="toolbar-item-visible"
+        [aria-id]="idx"
+        [style.marginLeft.px]="idx > 0 ? elementGap : 0">
+        <ng-container *ngTemplateOutlet="template"></ng-container>
+      </div>
+    </ng-container> -->
+
+    <div
+      #buttonMoreContainer
+      class="toolbar-anchor"
+      [style.marginLeft.px]="elementGap">
+      <ng-container *ngIf="hiddenTemplates?.length">
+        <button
+          #buttonMore
+          size="small"
+          variant="neutral"
+          class="assigned-agent-container"
+          data-console="assignee-button"
+          [disabled]="(inboxService.isAllFiltersDisabled$ | async)"
+          nz-popover
+          [nzPopoverTrigger]="'click'"
+          nzPopoverPlacement="bottomRight"
+          [nzPopoverContent]="menu"
+          nzPopoverOverlayClassName="toolbar-popover"
+          [(nzPopoverVisible)]="visibleDropdown"
+          (nzPopoverVisibleChange)="onDropdownMenuVisibleChange($event)"
+          menuKeyboard
+          [visibleMenu]="visibleDropdown"
+          [menuType]="EMenuDropdownType.Popover"
+          (nzVisibleChange)="onDropdownMenuVisibleChange($event)">
+          <ng-container>
+            <div
+              class="cursor-pointer assigned-agent d-flex align-items-center target-person">
+              <ng-container>
+                <div class="td-icon-circle-btn">
+                  <div class="text-agent-detail d-flex align-items-center">
+                    <span
+                      *ngIf="taskDetailViewMode !== EViewDetailMode.MESSAGE && taskDetailViewMode !== EViewDetailMode.TASK && taskDetailViewMode !== EViewDetailMode.APP_MESSAGE && taskDetailViewMode !== EViewDetailMode.SMS_MESSAGE"
+                      class="info"
+                      >Filter
+                    </span>
+                    <div class="filter-wrapper">
+                      <trudi-icon
+                        *ngIf="[EViewDetailMode.MESSAGE, EViewDetailMode.TASK, EViewDetailMode.APP_MESSAGE, EViewDetailMode.SMS_MESSAGE].includes(taskDetailViewMode)"
+                        svgClass="size-20 filter-icon"
+                        viewBox="auto"
+                        icon="filterTask"></trudi-icon>
+                      <span
+                        [ngClass]="{'right-big-count': totalCount > 9}"
+                        *ngIf="totalCount && taskDetailViewMode !== EViewDetailMode.TASK"
+                        class="text-count">
+                        {{totalCount}}</span
+                      >
+                    </div>
+                    <span
+                      *ngIf="taskDetailViewMode === EViewDetailMode.TASK"
+                      class="info"
+                      >Filter
+                    </span>
+                    <span
+                      *ngIf="totalCount && taskDetailViewMode === EViewDetailMode.TASK"
+                      class="text-agent">
+                      {{totalCount}}</span
+                    >
+                    <trudi-icon
+                      *ngIf="taskDetailViewMode !== EViewDetailMode.MESSAGE && taskDetailViewMode !== EViewDetailMode.TASK && taskDetailViewMode !== EViewDetailMode.APP_MESSAGE && taskDetailViewMode !== EViewDetailMode.SMS_MESSAGE"
+                      svgClass="size-20"
+                      viewBox="auto"
+                      icon="chevronDown"></trudi-icon>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </button>
+        <ng-template #menu>
+          <div nz-menu>
+            <div tabindex="-1" class="hidden-templates">
+              <ng-container *ngFor="let template of hiddenTemplates">
+                <div toolbarItem class="toolbar-item-hidden">
+                  <ng-template *ngTemplateOutlet="template"></ng-template>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </ng-template>
+      </ng-container>
+    </div>
+  </div>
+</div>

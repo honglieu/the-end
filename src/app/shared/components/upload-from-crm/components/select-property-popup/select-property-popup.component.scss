@@ -1,0 +1,88 @@
+@import 'function';
+
+.trudi-modal-select-property {
+  &-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    @include fontSetup(var(---fg-neutral-strongest), 18px, 28px, normal, 600);
+  }
+  &-footer {
+    justify-content: flex-end;
+  }
+}
+::ng-deep {
+  .ng-select.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
+    background: var(--bg-base);
+    box-shadow: var(--shadow-brand) !important;
+    border-radius: 8px;
+  }
+  .new-task-form-skeleton {
+    .skeleton-rectangle {
+      border-radius: 17.5px;
+      h3.ant-skeleton-title {
+        margin-top: 0px;
+      }
+    }
+    .skeleton-label {
+      width: 15%;
+    }
+    .skeleton-select {
+      height: 44px;
+      border-radius: 8px;
+      margin-top: 0 !important;
+      padding-right: 10px;
+      background: var(--bg-neutral-tonal-normal);
+      .skeleton-rectangle,
+      .skeleton-rectangle h3.ant-skeleton-title {
+        height: 20px;
+      }
+    }
+  }
+
+  .skeleton-rectangle-value {
+    width: 70%;
+    h3.ant-skeleton-title {
+      margin-top: 0px;
+    }
+  }
+  .skeleton-input {
+    span.ant-skeleton-avatar.ant-skeleton-avatar-circle {
+      margin-top: 0px;
+      width: 24px;
+      height: 24px;
+    }
+  }
+}
+.property-tree {
+  padding: 5px 8px;
+  border-radius: 8px;
+  background-color: var(--brand-100);
+  .property-tree-name {
+    @include fontSetup(var(--brand-500) !important, 12px, 18px, normal, 500);
+    width: auto;
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.option-wrapper {
+  padding: 12px !important;
+}
+
+::ng-deep trudi-single-select ng-select.trudi-single-select {
+  .ng-option {
+    box-shadow: unset;
+    &:not(:last-child) {
+      .option-wrapper {
+        border-bottom: 1px solid var(--gray-50);
+      }
+    }
+  }
+}
+
+.option-wrapper:not(:last-child) {
+  border-bottom: 1px solid var(--gray-200);
+}

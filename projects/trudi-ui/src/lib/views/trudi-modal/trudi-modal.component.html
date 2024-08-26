@@ -1,0 +1,134 @@
+<nz-modal
+  #trudiModal
+  [(nzVisible)]="visible"
+  [nzTitle]="isCustomPopup ? null : isHideHeader ? null : headerTemplate"
+  [nzFooter]="isCustomPopup ? null : isHideFooter ? null : templateFooter"
+  [nzClosable]="false"
+  [nzClassName]="nzClassName"
+  (nzOnCancel)="handleCancel()"
+  [nzWidth]="nzWidth"
+  [nzMaskClosable]="maskClosable"
+  [nzAutofocus]="autoFocus"
+  [nzNoAnimation]="noAnimation"
+  [nzWrapClassName]="containerClasses"
+  (nzAfterClose)="handleAfterClose()"
+  [nzBodyStyle]="{padding: isCustomPopup || isHideBody ? 0 : {}}">
+  <ng-container *nzModalContent>
+    <ng-content></ng-content>
+  </ng-container>
+</nz-modal>
+
+<ng-template #headerTemplate>
+  <div class="trudi-modal-header">
+    <div class="trudi-modal-header__title wrapper-title break-word">
+      <ng-container
+        *ngTemplateOutlet="isCondense ? condenseTitleTemplate : headerCustomTemplate || titleTemplate"></ng-container>
+    </div>
+    <button
+      *ngIf="expandable"
+      #resizeIcon
+      (click)="triggerExpandOrResizeModal(!isFullScreenModal)"
+      class="trudi-icon cursor-pointer resize-icon trudi-ui-btn-circle">
+      <trudi-icon
+        class="trudi-icon"
+        [style]="{ 'width.px': 24, 'height.px': 24, color: '#646464' }"
+        [icon]="isFullScreenModal ? 'modalCollapse' : 'modalExpand'"></trudi-icon>
+    </button>
+    <button
+      *ngIf="closable"
+      #closeIcon
+      trudi-btn
+      variant="ghost"
+      btnType="neutral"
+      size="medium"
+      shape="circle"
+      (click)="handleCancel()"
+      class="close-btn">
+      <trudi-icon
+        class="trudi-icon"
+        [style]="{ 'width.px': 24, 'height.px': 24, color: '#646464' }"
+        icon="closeIcon"></trudi-icon>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #templateFooter>
+  <ng-container *ngIf="!isHideFooter">
+    <ng-container *ngIf="allowCheckbox; else footerWrapper">
+      <div class="trudi-modal-footer">
+        <div class="trudi-modal-footer__checkbox">
+          <label for="cb-creditor-btn" class="no-margin-bottom cursor-pointer">
+            <trudi-checkbox
+              [(ngModel)]="isChecked"
+              [label]="checkboxLabel"></trudi-checkbox>
+          </label>
+        </div>
+        <ng-container
+          [ngTemplateOutlet]="footerCustomTemplate || footerBtn"></ng-container>
+      </div>
+    </ng-container>
+    <ng-template #footerWrapper>
+      <div class="d-flex flex-1 justify-content-end">
+        <ng-container
+          [ngTemplateOutlet]="footerCustomTemplate || footerBtn"></ng-container>
+      </div>
+    </ng-template>
+  </ng-container>
+</ng-template>
+
+<ng-template #footerBtn>
+  <div class="trudi-modal-footer__button--default">
+    <button
+      *ngIf="showBackBtn"
+      trudi-btn
+      btnType="neutral"
+      variant="outlined"
+      class="calender-today"
+      [appE2E]="dataE2E?.backBtn || ''"
+      (click)="handleBack()">
+      Back
+    </button>
+    <button
+      *ngIf="!hiddenCancelBtn"
+      trudi-btn
+      btnType="neutral"
+      variant="outlined"
+      class="calender-today"
+      [appE2E]="dataE2E?.cancelBtn || ''"
+      (click)="handleCancel()">
+      {{ cancelText }}
+    </button>
+    <button
+      [disabled]="disableOkBtn"
+      *ngIf="!hiddenOkBtn"
+      trudi-btn
+      [btnType]="colorBtn"
+      (click)="handleOk()"
+      [appE2E]="dataE2E?.okBtn || ''">
+      {{ okText }}
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #titleTemplate>
+  <div class="trudi-modal-header__title--default">
+    <trudi-icon
+      *ngIf="showIconName && !!iconName"
+      class="size-48"
+      [icon]="iconName"
+      [style]="{ 'width.px': 48, 'height.px': 48 }"></trudi-icon>
+    <div class="title w-100 flex-1 cursor-default">
+      <span class="flex-1">{{ title }}</span>
+      <div class="sub-title" *ngIf="subTitle">{{ subTitle }}</div>
+      <ng-container *ngTemplateOutlet="subTitleTemplate"></ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #condenseTitleTemplate>
+  <div class="trudi-modal-header__title--default">
+    <div class="title w-100 flex-1">
+      <span class="flex-1">{{title}}</span>
+    </div>
+  </div>
+</ng-template>

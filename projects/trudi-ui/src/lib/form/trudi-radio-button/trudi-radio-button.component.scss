@@ -1,0 +1,75 @@
+@import 'function';
+
+:host ::ng-deep {
+  .ant-radio-checked.ant-radio-disabled {
+    .ant-radio-inner {
+      background: white !important;
+      border-color: var(--bg-brand-tonal-strongest, #b9e8e4) !important;
+      border-width: 1.2px;
+    }
+    .ant-radio-inner::after {
+      background: var(--bg-brand-tonal-strongest, #b9e8e4);
+    }
+  }
+  .ant-radio-disabled .ant-radio-inner {
+    border: 1px solid var(--border-neutral-darker, #cecfd2);
+  }
+  .ant-radio-input:focus + .ant-radio-inner {
+    box-shadow: none;
+  }
+
+  nz-radio-group.radio-group {
+    .ant-radio-wrapper-disabled {
+      .ant-radio-inner {
+        background: var(--bg-neutral-tonal-strongest);
+      }
+    }
+
+    .ant-radio-inner {
+      width: 20px !important;
+      height: 20px !important;
+
+      &::after {
+        width: 20px;
+        height: 20px;
+        margin-top: -10px;
+        margin-left: -10px;
+      }
+    }
+
+    .radio-label {
+      .ant-radio {
+        padding-bottom: 5px;
+      }
+      span:not(.ant-radio) {
+        padding-top: 2px;
+      }
+      span {
+        @include fontSetup(var(--gray-700), 14px, 20px, normal, 600);
+      }
+      &:focus-visible {
+        box-shadow: 0px 0px 0px 2px var(--brand-200);
+        border-radius: 4px;
+      }
+    }
+    .content-trudi-radio {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+}
+
+:host ::ng-deep {
+  .ant-radio-checked.ant-radio-disabled .ant-radio-inner::after {
+    background-color: var(--white) !important;
+  }
+  .ant-radio-checked.ant-radio-disabled .ant-radio-inner {
+    border-color: var(--bg-brand-tonal-strongest, #caf3ee) !important;
+    background-color: var(--bg-brand-tonal-strongest, #caf3ee) !important;
+  }
+  .ant-radio-disabled .ant-radio-inner::after {
+    border-color: var(--gray-200) !important;
+    background-color: var(--gray-300) !important;
+  }
+}

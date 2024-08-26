@@ -1,0 +1,21 @@
+@import 'function';
+
+.mailbox-activity {
+  &-header__title {
+    @include fontSetup(var(--gray-700), 18px, 28px, normal, 600);
+  }
+  &-title {
+    @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+  }
+  &-item_title {
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+  }
+  &-icon {
+    margin-right: 48px;
+  }
+  &-content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}

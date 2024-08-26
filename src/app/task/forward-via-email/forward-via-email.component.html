@@ -1,0 +1,74 @@
+<div class="forward-email-wrapper">
+  <div class="header">
+    <div
+      class="detail-invite d-flex justify-content-between align-items-center">
+      <div class="detail-invite-icon">
+        <div
+          class="background-icon d-flex align-items-center justify-content-around">
+          <trudi-icon svgClass="size-48" icon="trudiAvt"></trudi-icon>
+        </div>
+      </div>
+      <div class="detail-invite-text d-flex align-items-center">
+        <p>Who would you like to forward this email to?</p>
+      </div>
+      <div
+        data-e2e="button-close"
+        class="close-btn cursor-pointer"
+        (click)="onQuitModal($event)">
+        <trudi-icon icon="closeModal"></trudi-icon>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div class="body">
+    <div class="text-header">Email address</div>
+    <div class="supplier-tab">
+      <ng-select
+        [items]="listEmail"
+        [(ngModel)]="selected"
+        class="supplier-select supplier-dropdown"
+        [ngClass]="isDirty ? 'required-border' : ''"
+        bindLabel="email"
+        bindValue="id"
+        placeholder="Enter email address"
+        [multiple]="true"
+        (search)="onSearchEmail($event)"
+        [loading]="loading"
+        (blur)="onBlur($event)"
+        [isOpen]="isOpenDropdown"
+        notFoundText="{{!currentSearch ? 'Please enter the word' : 'No results found'}}"
+        (change)="changeSelectedEmail($event)"
+        (click)="isDirty = false">
+        <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+          <span
+            [ngOptionHighlight]="search ? search : ''"
+            class="supplier-name-item"
+            >{{item.email}}</span
+          >
+          <div class="supplier-dot"></div>
+          <span class="supplier-email-item">{{item.userTypeName}}</span>
+          <div
+            *ngIf="item.userTypeName !== 'Property Manager'"
+            class="supplier-address">
+            {{item.address}}
+          </div>
+        </ng-template>
+      </ng-select>
+    </div>
+    <div *ngIf="isDirty" class="required-message">
+      <trudi-icon icon="errorInputIcon"></trudi-icon>
+      <span>Required field</span>
+    </div>
+  </div>
+  <div class="move-footer d-flex justify-content-between">
+    <div class="btn-wrapper">
+      <button
+        type="button"
+        class="confirm-btn d-flex align-items-center"
+        [disabled]="disabledForwardButton"
+        (click)="onSubmit($event)">
+        <span class="btn-text"> Forward email </span>
+      </button>
+    </div>
+  </div>
+</div>

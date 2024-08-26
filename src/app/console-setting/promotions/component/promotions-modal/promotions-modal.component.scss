@@ -1,0 +1,82 @@
+@import 'function';
+
+p {
+  margin: 0;
+}
+
+.mySwiper2 {
+  width: 312px;
+  height: fit-content;
+}
+
+.sortable-handler {
+  touch-action: none;
+}
+
+.wrap-promotions {
+  width: 360px;
+  z-index: 10000;
+  box-shadow: 0px 16px 66px 0px var(--bg-overlay-light);
+  padding: 20px 24px 24px;
+  border-radius: 16px;
+  background-color: var(--white);
+
+  .header-title {
+    @include fontSetup(var(--brand-500), 14px, 20px, normal, 600);
+  }
+
+  .wrap-content {
+    width: 100%;
+    text-align: left;
+    background-color: var(--gray-50);
+    border-radius: 4px;
+    padding: 16px 12px;
+    position: relative;
+
+    .wrap-img {
+      width: 120px;
+      height: 120px;
+
+      img {
+        object-fit: cover;
+      }
+    }
+
+    .content-title {
+      @include fontSetup(var(--gray-950), 20px, 24px, normal, 600);
+    }
+
+    .content {
+      @include fontSetup(var(--gray-500), 12px, 16px, normal, 500);
+
+      .link-name {
+        color: var(--brand-500);
+      }
+    }
+  }
+
+  .wrap-footer {
+    width: 40px;
+    height: 24px;
+
+    .left-button {
+      left: 24px;
+    }
+
+    .right-button {
+      right: 24px;
+
+      .close-btn {
+        background-color: var(--brand-500);
+        border: none;
+        padding: 4px 13px;
+        border-radius: 6px;
+        @include fontSetup(var(--white), 12px, 16px, normal, 600);
+      }
+    }
+  }
+}
+
+.wrap-break-word {
+  word-wrap: break-word;
+}

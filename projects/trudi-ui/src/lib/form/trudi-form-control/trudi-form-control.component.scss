@@ -1,0 +1,19 @@
+@import 'function';
+
+.trudi-form-control-wrapper {
+  .error-container {
+    margin-top: 6px;
+
+    &.existMaxLength {
+      margin-top: -14px;
+    }
+
+    .error-text {
+      @include fontSetup(var(--danger-500), 12px, 16px, normal, 400);
+    }
+
+    trudi-max-character {
+      margin-left: auto;
+    }
+  }
+}

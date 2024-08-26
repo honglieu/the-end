@@ -1,0 +1,67 @@
+<div class="card-signature">
+  <div
+    *ngIf="readOnly"
+    class="notify-card-signature d-flex gap-4 align-items-center mb-8">
+    <trudi-icon icon="infoFill" [style]="{ 'width.px': 12, 'height.px': 12 }">
+    </trudi-icon>
+    <span class="warning-notice-text"
+      >You need to be an account administrator to edit this page.</span
+    >
+  </div>
+  <div class="title-card-signature">Email signature</div>
+  <div
+    class="form-input-signature"
+    [ngClass]="{'highlighted': highlighted ,'error': err && !valueInput }"
+    appOutsideClickListener
+    (clickOutside)="clickOutSide()"
+    (click)="onBoxClick()">
+    <div class="tab-card">
+      <button
+        trudi-btn
+        variant="ghost"
+        btnType="neutral"
+        size="extra-small"
+        [selected]="activeTab1"
+        (click)="activeTab1 = true; activeTab2 = false;">
+        Design
+      </button>
+      <div class="line"></div>
+      <button
+        trudi-btn
+        variant="ghost"
+        btnType="neutral"
+        size="extra-small"
+        [selected]="activeTab2"
+        (click)="activeTab1 = false; activeTab2 = true;">
+        HTML
+      </button>
+    </div>
+    <div class="card-info">
+      <div
+        style="width: 100%"
+        [ngClass]="{'hide': showTextarea || err}"
+        [innerHTML]="valueInput | safe"></div>
+      <editor
+        [ngClass]="{'hide': !activeTab1 || !showTextarea}"
+        style="width: 100%; padding-top: 2px"
+        [init]="editorConfig"
+        [(ngModel)]="valueInput"></editor>
+      <textarea
+        [ngClass]="{'hide': !activeTab2 || !showTextarea}"
+        [(ngModel)]="valueInput"
+        [ngStyle]="{'height': getHeight(), background: !readOnly ? 'white' : 'var(--gray-200)'}"
+        [placeholder]="'Copy and paste HTML...'"
+        [readonly]="readOnly"></textarea>
+    </div>
+  </div>
+  <div *ngIf="isButtonsVisible" class="bottom-card">
+    <button
+      (click)="onCancel($event)"
+      trudi-btn
+      variant="outlined"
+      btnType="neutral">
+      Cancel
+    </button>
+    <button (click)="onSave($event)" trudi-btn>Save</button>
+  </div>
+</div>

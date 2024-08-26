@@ -1,0 +1,37 @@
+<div
+  class="reply-file-wrapper justify-content-between files-spacing"
+  [ngClass]="classes">
+  <div class="message-file" style="margin: 0">
+    <div
+      class="message-file-logo"
+      [class.dim-brightness]="(file?.isSupportedVideo)">
+      <img
+        *ngIf="(file?.isDraft && file?.thumbMediaLink)"
+        [src]="file?.thumbMediaLink | safe: 'resourceUrl'" />
+      <img
+        *ngIf="!file?.localThumb && !file?.[0]?.localThumb || (file?.isDraft && file?.thumbMediaLink)"
+        [src]="(((file?.name || file[0]?.name || file?.fileName || (file?.isDraft && file?.thumbMediaLink)) | getFileIconType))" />
+      <div
+        *ngIf="(file?.localThumb && file?.isSupportedVideo) || (file?.[0]?.localThumb && file?.[0]?.isSupportedVideo) || (file?.isDraft && file?.thumbMediaLink)"
+        class="play-icon">
+        <trudi-icon icon="playSolid"></trudi-icon>
+      </div>
+    </div>
+    <div class="file">
+      <div
+        #trudiSendfileName
+        class="file-name"
+        nz-tooltip
+        nzTooltipPlacement="top"
+        [nzTooltipTitle]="file.title || file.name"
+        [nzTooltipOverlayStyle]="{'max-width': '240px', 'word-break': 'break-all'}"
+        [nzTooltipTrigger]="trudiSendfileName?.offsetWidth < trudiSendfileName?.scrollWidth ? 'hover' : null">
+        {{file.title || file.name}}
+      </div>
+      <div class="file-size">
+        {{(file?.size || file[0]?.size) || file[0]?.fileSize|| file.fileSize |
+        convertFileSize}}
+      </div>
+    </div>
+  </div>
+</div>

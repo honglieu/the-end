@@ -1,0 +1,38 @@
+<div *ngIf="visible" class="task-editor-toolbar" @toolbarAnimation>
+  <ng-container *ngFor="let item of toolbars">
+    <div
+      disableOpenSendMsgModal
+      [attr.data-button-key]="item.type || 'count-selected'"
+      class="task-editor-item"
+      nz-tooltip
+      [nzTooltipTitle]="item?.disabled && !isConsole ? titleTemplate: ''">
+      <div
+        [appE2E]="item?.dataE2e || ''"
+        class="toolbar-item"
+        [ngClass]="{
+        'count-selected cursor-default': item?.count,
+        'disable-field': item?.disabled,
+        'text-disabled': item?.disabled
+      }"
+        (click)="item?.action?.()">
+        <ng-container *ngIf="item?.count; else icon">
+          <span class="count">{{ item?.count }}</span>
+        </ng-container>
+        <ng-template #icon>
+          <trudi-icon
+            class="toolbar-icon no-pointer-event"
+            [icon]="item.icon"
+            [style]="{ 'width.px': 20, 'height.px': 20 }"></trudi-icon>
+        </ng-template>
+        <div *ngIf="item?.label" class="d-flex text-center no-pointer-event">
+          {{ item?.label }}
+        </div>
+      </div>
+    </div>
+    <ng-template #titleTemplate>
+      <upgrade-message
+        [action]="actionShowMessageToolbar[item?.type]"
+        [isTooltip]="true"></upgrade-message>
+    </ng-template>
+  </ng-container>
+</div>

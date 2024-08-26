@@ -1,0 +1,126 @@
+<div class="select-label" *ngIf="label">{{label}}</div>
+<ng-select
+  appOutsideClickListener
+  [appendTo]="appendTo"
+  [markFirst]="true"
+  [items]="items"
+  [(ngModel)]="valueSelected"
+  [multiple]="true"
+  [addTag]="addTagFn"
+  (add)="(addTagFn || closeOnSelect) && onAdd($event)"
+  (ngModelChange)="onChange($event)"
+  class="trudi-single-select"
+  [bindLabel]="bindLabel"
+  [bindValue]="bindValue"
+  [searchable]="true"
+  [readonly]="disabled || readonly"
+  [clearable]="clearable"
+  [editableSearchTerm]="false"
+  (close)="onDropdownClose($event)"
+  [closeOnSelect]="false"
+  [searchFn]="serversideSearch ? searchFnFake : searchFn"
+  [trackByFn]="trackByFn"
+  notFoundText="No results found"
+  [placeholder]="placeholder"
+  [dropdownPosition]="dropdownPosition"
+  [groupBy]="groupBy"
+  [clearSearchOnAdd]="clearSearchOnAdd"
+  [virtualScroll]="virtualScroll"
+  [loading]="loading"
+  [typeahead]="typeahead"
+  (open)="onDropdownOpen($event)"
+  (focus)="handleFocus()"
+  (search)="handleSearch($event)"
+  (scrollToEnd)="scrollToEnd.emit($event)"
+  appOutsideClickListener
+  [whiteList]="['.trudi-multi-select-header', '.trudi-label-wrapper']"
+  [class.disabled-only-checkbox]="disabledOnlyCheckbox"
+  (clickOutside)="handleClickOutsideMultiSelect()"
+  #select>
+  <ng-template
+    ng-option-tmp
+    let-item="item"
+    let-searchTerm="searchTerm"
+    let-item$="item$">
+    <ng-container
+      *ngTemplateOutlet="optionTemplate?.templateRef || defaultOptionTmp; context: {item: item, searchTerm: searchTerm, valueSelected: valueSelected, isSearching: isSearching, item$: item$}">
+    </ng-container>
+  </ng-template>
+
+  <ng-template *ngIf="footerTemplate?.templateRef" ng-footer-tmp>
+    <div class="footer-wrapper" (click)="footerClick.emit($event)">
+      <ng-container
+        *ngTemplateOutlet="footerTemplate?.templateRef; context: {clearAll: clearAll}"></ng-container>
+    </div>
+  </ng-template>
+
+  <ng-template ng-header-tmp>
+    <ng-container
+      *ngTemplateOutlet="headerTemplate?.templateRef || defaultSelectHeader"></ng-container>
+  </ng-template>
+
+  <ng-template
+    ng-multi-label-tmp
+    let-items="items"
+    let-searchTerm="searchTerm"
+    let-clear="clear">
+    <ng-container
+      *ngTemplateOutlet="labelTemplate?.templateRef || defaultSelectLabel; context: {items: items, clear: clear, isSearching: isSearching}"></ng-container>
+  </ng-template>
+</ng-select>
+
+<ng-template
+  #defaultOptionTmp
+  let-item="item"
+  let-searchTerm="searchTerm"
+  let-item$="item$">
+  <div
+    class="trudi-select-option d-flex justify-content-between align-items-center w-100 gap-8">
+    <div class="item-label" [ngOptionHighlight]="searchTerm ? searchTerm : ''">
+      {{item[bindLabel]}}
+    </div>
+    <div class="d-flex align-items-center">
+      <trudi-checkbox [ngModel]="item$.selected"></trudi-checkbox>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #defaultSelectLabel let-items="items" let-clear="clear">
+  <div class="ng-value" *ngFor="let item of items">
+    <div
+      class="d-flex gap-4 align-items-center trudi-label-wrapper border-rad-8">
+      <div class="trudi-select-label">{{item[bindLabel]}}</div>
+      <div
+        *ngIf="!disabled"
+        class="close-wrapper"
+        (click)="clear(item); $event.stopPropagation()">
+        <trudi-icon
+          *ngIf="!item?.disabled"
+          class="cursor-pointer"
+          icon="closeGray64"
+          [style]="{ 'width.px': 8, 'height.px': 8 }"></trudi-icon>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #defaultSelectHeader ng-header-tmp>
+  <div
+    *ngIf="totalOptions || items?.length"
+    class="d-flex trudi-multi-select-header align-items-center justify-content-between pd-12">
+    <div>
+      <span class="count-text"
+        >{{select.selectedValues.length}}/{{totalOptions || items.length}}</span
+      >
+    </div>
+    <button
+      trudi-btn
+      size="small"
+      variant="link"
+      btnType="neutral"
+      *ngIf="select.hasValue"
+      (click)="clearAll(); $event.stopPropagation()">
+      Clear selection
+    </button>
+  </div>
+</ng-template>

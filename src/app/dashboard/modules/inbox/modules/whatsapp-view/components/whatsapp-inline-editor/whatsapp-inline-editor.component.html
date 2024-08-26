@@ -1,0 +1,118 @@
+<div
+  [formGroup]="sendMsgForm"
+  class="header-conversation d-flex flex-dir-column">
+  <div
+    nz-resizable
+    class="compose-section resizable-box"
+    [style.height.px]="contentHeight"
+    [nzMaxHeight]="CONTENT_MAX_HEIGHT"
+    [nzMinHeight]="minHeight"
+    [nzBounds]="'window'"
+    (nzResize)="onContentResize($event)">
+    <nz-resize-handle nzDirection="top">
+      <div class="content-resize-line"></div>
+    </nz-resize-handle>
+
+    <div
+      #attachments
+      class="attachments"
+      [ngClass]="{hidden: !listOfFiles?.value?.length}">
+      <div
+        class="file-section"
+        [ngClass]="{hidden: !listOfFiles?.value?.length}">
+        <trudi-send-msg-file
+          [fileValidType]="FILE_VALID_TYPE_WHATSAPP"
+          [acceptOnlySupportedFile]="ACCEPT_ONLY_SUPPORTED_FILE_WHATSAPP"
+          [maxFileSize]="16"
+          [maxImageFilesSize]="5"></trudi-send-msg-file>
+      </div>
+    </div>
+    <div
+      #editor
+      class="inline-editor"
+      id="inlineEditor"
+      appOutsideClickListener
+      [whiteList]="whiteList">
+      <tiny-editor
+        [from]="TinyEditorOpenFrom.AppChat"
+        [createMessageFrom]="ECreateMessageFrom.WHATSAPP"
+        [text]="prefillText"
+        placeholder="Type your message here"
+        [toolbarPosition]="'BOTTOM'"
+        [isEmailSignature]="false"
+        [isShowEmailSignature]="false"
+        [inlineMessage]="true"
+        [isAppReply]="true"
+        [listCodeOptions]="listDynamicParams"
+        [isShowBackBtn]="false"
+        [isShowEmbedCodeOptionsFunction]="configs?.body?.tinyEditor?.isShowDynamicFieldFunction"
+        [enableAiGenerateMsgCopy]="true"
+        [isReplaceDynamicParamWithData]="true"
+        [currentProperty]="currentProperty"
+        (value)="handleValueChange($event)"
+        (onChangeSendOption)="handleChangeTypeSendMessage($event)"
+        (submitSend)="handleSendMsg($event)"
+        (addFileComputer)="editorAddFileComputer()"
+        (addContactCard)="editorAddContactCard()"
+        (contentHeightChange)="handleContentHeightChange($event)"
+        (addFileCRM)="editorAddFileFromCrm()"
+        [isDisabledSendBtn]="isDisableSendBtn"
+        [defaultSelectedSendOption]="configs?.body?.typeSendMsg === ESendMsgAction.SendAndResolve ? EDefaultBtnDropdownOptions.SendAndResolve : EDefaultBtnDropdownOptions.Send"
+        [errorMsg]="errorMsg"
+        [maxRemainCharacter]="1600"
+        [isInlineMessenger]="true"
+        [sendOptionsToRemove]="sendOptionsToRemove"
+        [allowFontFamily]="false"
+        [allowTextColor]="false"
+        [allowTextBackgroundColor]="false"
+        [allowFontSize]="false"
+        [allowTextStyle]="false"
+        [showInsertLink]="false"
+        [allowInsertContactCardToContent]="true"
+        class="whatsapp-inline-container"
+        #editorContainer
+        (onBlur)="onBlur()"
+        (onFocus)="onFocus($event)"></tiny-editor>
+    </div>
+  </div>
+</div>
+
+<trudi-modal
+  *ngIf="isShowModalWarning"
+  [visible]="isShowModalWarning"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  className="trudi-modal-custom">
+  <warning-note-popup
+    [warningMessage]="errorMessage"
+    [timeToCloseModal]="3000"
+    (isCloseModal)="isShowModalWarning = $event">
+  </warning-note-popup>
+</trudi-modal>
+
+<trudi-add-contact-card
+  *ngIf="contactCardPopupState.addContactCard"
+  [visible]="contactCardPopupState.addContactCard"
+  [openFrom]="configs?.inputs?.openFrom"
+  [configs]="attachmentTextEditorConfigs"
+  [listContactCard]="configs?.inputs?.listContactCard"
+  [form]="sendMsgForm"
+  [closable]="false"
+  [selectedContactCard]="selectedContactCard"
+  (onTrigger)="onTriggerAddContactCard()"
+  (changeValue)="handleChangeFormValue('contact')"
+  (onClose)="onCloseAddContactCard()"></trudi-add-contact-card>
+
+<upload-from-crm
+  [configs]="attachmentTextEditorConfigs"
+  (onTrigger)="onTriggerAddFilesFromCrm()"
+  (onClose)="onCloseUploadFromCRM()"
+  (changeValue)="handleChangeFormValue('crmFile')"
+  *ngIf="uploadFileFromCRMPopupState.uploadFileFromCRM"></upload-from-crm>
+
+<div
+  *ngIf="popupState.addReiFormOutside"
+  [show]="popupState.addReiFormOutside"
+  [position]="ModalPopupPosition.center">
+  <trudi-rei-form-card></trudi-rei-form-card>
+</div>

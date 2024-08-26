@@ -1,0 +1,121 @@
+<div class="general-information-wrapper">
+  <div [formGroup]="generalInformationForm" class="general-information-form">
+    <div class="general-information-form-row general-information-form-row-1">
+      <div class="general-information-form-item">
+        <trudi-form-control [checkSubmit]="!isSubmittedRentIssueForm">
+          <trudi-text-field
+            [checkSubmit]="!isSubmittedRentIssueForm"
+            size="large"
+            label="Title (required)"
+            formControlName="title"
+            [showCounting]="true"
+            maxCharacter="2000"></trudi-text-field>
+        </trudi-form-control>
+      </div>
+      <div class="general-information-form-item">
+        <trudi-form-control>
+          <label class="general-information-form-item__label">
+            Schedule date
+          </label>
+          <trudi-date-picker formControlName="scheduleDate"></trudi-date-picker>
+        </trudi-form-control>
+      </div>
+      <div class="general-information-form-item">
+        <trudi-form-control>
+          <label class="general-information-form-item__label"> Due date </label>
+          <trudi-date-picker formControlName="dueDate"></trudi-date-picker>
+        </trudi-form-control>
+      </div>
+      <div class="general-information-form-item">
+        <trudi-form-control>
+          <label class="general-information-form-item__label"> Status </label>
+          <trudi-single-select
+            [items]="statusItems"
+            bindValue="id"
+            bindLabel="name"
+            formControlName="statusId"></trudi-single-select>
+        </trudi-form-control>
+      </div>
+    </div>
+    <div class="general-information-form-row general-information-form-row-2">
+      <div class="general-information-form-item">
+        <trudi-form-control
+          [checkSubmit]="!isSubmittedRentIssueForm"
+          [errors]="[{ errorName: 'invalidDate', errorMessage: 'Open date must be prior to Close date' }]">
+          <label class="general-information-form-item__label">
+            Open date (required)
+          </label>
+          <trudi-date-picker
+            [breakNochange]="true"
+            formControlName="openDate"
+            [defaultValue]="openDateControl.value"
+            [class.trudi-picker-error]="isSubmittedRentIssueForm && openDateControl?.invalid && openDateControl?.touched && openDateControl?.errors"></trudi-date-picker>
+        </trudi-form-control>
+      </div>
+      <div class="general-information-form-item">
+        <trudi-form-control
+          [checkSubmit]="!isSubmittedRentIssueForm"
+          [control]="openTimeControl"
+          [errors]="[{ errorName: 'invalidTime', errorMessage: 'Open time must be prior to Close time' }]">
+          <label class="general-information-form-item__label">
+            Open time (required)
+          </label>
+          <time-picker
+            class="w-100"
+            [rangeFrom]="0"
+            [rangeTo]="0"
+            [label]="'--:--'"
+            [(ngModel)]="openTime"
+            [ngModelOptions]="{standalone: true}"
+            [disabled]="openTimeControl?.disabled"
+            [disableTimeChange]="openTimeControl?.disabled"
+            [position]="POSITION_MAP.bottomRight"
+            (onChangeHour)="handleChangeHour($event, 'openTime')"
+            [hasError]="isSubmittedRentIssueForm && openTimeControl?.invalid && openTimeControl?.touched && openTimeControl?.errors"
+            [class.trudi-time-picker-error]="isSubmittedRentIssueForm &&  openTimeControl?.invalid && openTimeControl?.touched && openTimeControl?.errors"
+            [readonly]="false">
+          </time-picker>
+        </trudi-form-control>
+      </div>
+      <div class="general-information-form-item">
+        <trudi-form-control
+          [checkSubmit]="!isSubmittedRentIssueForm"
+          [errors]="[{ errorName: 'invalidDate', errorMessage: 'Close date must be after Open date' }]">
+          <label class="general-information-form-item__label">
+            Close date
+          </label>
+          <trudi-date-picker
+            [breakNochange]="true"
+            formControlName="closeDate"
+            [defaultValue]="closeDateControl.value"
+            [class.trudi-picker-error]="isSubmittedRentIssueForm && closeDateControl?.invalid && closeDateControl?.touched && closeDateControl?.errors"></trudi-date-picker>
+        </trudi-form-control>
+      </div>
+      <div class="general-information-form-item">
+        <trudi-form-control
+          [checkSubmit]="!isSubmittedRentIssueForm"
+          [control]="closeTimeControl"
+          [errors]="[{ errorName: 'invalidTime', errorMessage: 'Close time must be after Open time' }]">
+          <label class="general-information-form-item__label">
+            Close time
+          </label>
+          <time-picker
+            class="w-100"
+            [rangeFrom]="0"
+            [rangeTo]="0"
+            [label]="'--:--'"
+            [(ngModel)]="closeTime"
+            [ngModelOptions]="{standalone: true}"
+            [disabled]="openTimeControl?.disabled"
+            [disableTimeChange]="closeTimeControl?.disabled"
+            [position]="POSITION_MAP.bottomRight"
+            (onChangeHour)="handleChangeHour($event, 'closeTime')"
+            [hasError]="isSubmittedRentIssueForm && closeTimeControl?.invalid && closeTimeControl?.touched && closeTimeControl?.errors"
+            [class.trudi-time-picker-error]="isSubmittedRentIssueForm &&  closeTimeControl?.invalid && closeTimeControl?.touched && closeTimeControl?.errors"
+            [readonly]="false">
+          </time-picker>
+        </trudi-form-control>
+      </div>
+    </div>
+  </div>
+</div>

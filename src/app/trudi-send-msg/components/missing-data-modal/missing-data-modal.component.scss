@@ -1,0 +1,136 @@
+@import 'function';
+
+::ng-deep .modal-missing {
+  .title {
+    color: var(--fg-neutral-stronger, #3d3d3d) !important;
+  }
+}
+
+::ng-deep .modal-missing_container {
+  .ant-modal-body {
+    max-height: calc(80vh - 80px - 84px);
+    overflow-y: auto;
+  }
+}
+
+::ng-deep nz-modal-container.modal-missing_container .ant-modal-content {
+  .ant-modal-header,
+  .ant-modal-footer {
+    padding: 12px 16px;
+  }
+
+  .ant-modal-body {
+    padding: 0px 16px;
+    .content-modal {
+      padding: 0;
+    }
+    .param-info-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      .param-info {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        align-items: flex-start;
+        align-self: stretch;
+        &:not(:last-child) {
+          border-bottom: 1px solid var(--gray-200, #d8dcdf);
+        }
+        &__name {
+          @include fontSetup(
+            var(--fg-danger, #e1024f),
+            14px,
+            20px,
+            normal,
+            500
+          );
+        }
+
+        &__description {
+          @include fontSetup(
+            var(--fg-neutral-normal, #646464),
+            14px,
+            20px,
+            normal,
+            400
+          );
+        }
+
+        &__users-wrapper {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          width: 100%;
+          // margin-top: 4px;
+          .param-info__user {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            padding-bottom: 12px;
+            &--name {
+              @include fontSetup(
+                var(--fg-neutral-strongest),
+                14px,
+                20px,
+                normal,
+                600
+              );
+              &.unidentified-contact {
+                color: var(--fg-danger);
+              }
+            }
+
+            &--address,
+            &--warning {
+              display: flex;
+              align-items: center;
+              gap: 4px;
+              p {
+                @include fontSetup(
+                  var(--fg-neutral-normal, #646464),
+                  12px,
+                  16px,
+                  normal,
+                  400
+                );
+              }
+            }
+
+            &--warning {
+              trudi-icon {
+                padding: 2px;
+                vertical-align: bottom;
+              }
+              p {
+                @include fontSetup(
+                  var(--fg-danger, #e1024f),
+                  12px,
+                  16px,
+                  normal,
+                  400
+                );
+              }
+            }
+
+            &--address {
+              &.no-property {
+                p {
+                  color: var(--gray-300);
+                  font-style: italic;
+                }
+                &::ng-deep trudi-icon svg-icon svg path {
+                  fill: var(--gray-300);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.d-inline {
+  display: inline-block;
+}

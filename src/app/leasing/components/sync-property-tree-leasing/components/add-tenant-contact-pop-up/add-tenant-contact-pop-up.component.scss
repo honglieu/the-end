@@ -1,0 +1,233 @@
+@import 'function';
+
+.tenancy-name-form-group {
+  padding: 20px 24px;
+  max-height: calc(100vh - 178px * 2);
+  overflow: auto;
+
+  .tenancy-name-wrapper {
+    padding: 0px 3px 10px 3px;
+
+    .input-error {
+      border: 1px solid var(--danger-500) !important;
+      border-radius: 8px !important;
+      outline: 2px solid rgba(225, 2, 79, 0.6) !important;
+
+      &:focus {
+        border: 1px solid var(--danger-500) !important;
+        border-radius: 8px !important;
+        outline: 2px solid rgba(225, 2, 79, 0.6) !important;
+      }
+    }
+
+    input {
+      border-radius: 8px;
+      background-color: var(--gray-200);
+      height: 44px;
+      width: 100%;
+      border: none;
+      padding: 0.8rem;
+
+      @include fontSetup(var(--gray-700) !important, 14px, 20px, normal, 500);
+
+      &::placeholder {
+        @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+      }
+
+      &:hover {
+        border-color: var(--gray-100) !important;
+        background: var(--gray-100) !important;
+        box-shadow: none !important;
+        cursor: pointer;
+      }
+
+      &:focus {
+        background: var(--white);
+        border: 1px solid var(--brand-500) !important;
+        outline: 2px solid rgba(var(--brand-500-rgb), 0.6) !important;
+
+        &::-webkit-input-placeholder {
+          opacity: 0;
+        }
+      }
+    }
+    .title {
+      @include fontSetup(var(--gray-700), 14px, 18px, normal, 600);
+    }
+    .tenancy-name-form {
+      .flex-row {
+        display: flex;
+      }
+
+      .center {
+        justify-content: center;
+        align-items: center;
+      }
+
+      .ml {
+        margin-left: auto;
+      }
+
+      .mt-12 {
+        margin-top: 12px;
+      }
+
+      .mt-6 {
+        margin-top: 6px;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 16px;
+
+        .form-title {
+          @include fontSetup(var(--gray-500), 12px, 18px, normal, 400);
+        }
+
+        .form-field {
+          width: 100%;
+        }
+
+        .form-input {
+          gap: 4px;
+          width: 100%;
+
+          .frequency-input {
+            width: 50%;
+          }
+
+          .frequency-select {
+            width: 50%;
+            .remove-mt {
+              margin-top: 0px !important;
+            }
+          }
+
+          .input-managed {
+            color: var(--gray-500);
+          }
+        }
+
+        .trudi-date trudi-date-picker {
+          max-width: unset !important;
+          height: 32px !important;
+        }
+
+        .note-area {
+          textarea {
+            width: 100%;
+            background: var(--gray-200);
+            resize: none;
+            white-space: pre-wrap;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid var(--gray-200);
+            @include fontSetup(var(--gray-700), 12px, 18px, normal, 400);
+
+            &::-webkit-scrollbar {
+              width: 0;
+            }
+
+            &::placeholder {
+              color: var(--gray-500);
+            }
+
+            &:focus {
+              border: 1px solid var(--brand-500) !important;
+              outline: 2px solid rgba(var(--brand-500-rgb), 0.6) !important;
+              background-color: var(--white) !important;
+            }
+
+            &:hover:not(:focus) {
+              background: var(--gray-100) !important;
+            }
+          }
+        }
+      }
+
+      .service-select {
+        ::ng-deep ng-select {
+          .ng-select-container {
+            .ng-value-container {
+              color: var(--gray-500);
+            }
+            .ng-arrow-wrapper {
+              display: none !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .error-wrapper {
+    margin-top: 4px;
+    .icon-warning {
+      max-width: 12px;
+    }
+    .text-warning {
+      color: var(--danger-500);
+      font-size: 12px;
+      line-height: 16px;
+      margin-left: 4px;
+    }
+  }
+
+  .divider {
+    border-top: 1px solid var(--gray-200);
+  }
+}
+
+.subTitle {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--gray-500);
+}
+
+.button-wrapper {
+  height: 40px;
+  min-width: 100px;
+  padding: 0px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.btn-back {
+  background-color: var(--bg-base);
+  color: var(--gray-500);
+  border-radius: 8px;
+  border: 1px solid var(--border-neutral-dark, #d8dcdf);
+  &:hover {
+    background-color: var(--bg-neutral-tonal-stronger);
+  }
+  &:active {
+    background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+  }
+}
+
+.btn-save {
+  background-color: var(--bg-brand-solid-normal);
+  color: var(--fg-base);
+  border-radius: 8px;
+  border: none;
+  &:hover {
+    background-color: var(--brand-400);
+  }
+  &:active {
+    background: var(--bg-brand-solid-strongest, #0aa095);
+  }
+}
+
+.add-tenant-contact-footer {
+  width: 100%;
+  padding: 16px 24px;
+  display: flex;
+  align-items: end;
+  justify-content: end;
+  border-top: 1px solid var(--gray-200);
+}

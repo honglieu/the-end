@@ -1,0 +1,37 @@
+@import 'function';
+
+.name-wrapper {
+  .name-status {
+    min-width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .name-active {
+    background-color: var(--bg-brand-solid-normal);
+  }
+
+  .name-error {
+    background-color: var(--bg-danger-solid-normal);
+  }
+
+  .name-text {
+    @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+  }
+  .event-cancelled {
+    text-decoration: line-through;
+  }
+  .name-status-cancelled {
+    display: none;
+  }
+}
+
+:host {
+  ::ng-deep {
+    mark.highlight {
+      background-color: var(--bg-tenant-solid-normal);
+      color: unset;
+      border-radius: 2px;
+    }
+  }
+}

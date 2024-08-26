@@ -1,0 +1,13 @@
+.file-error {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-left:1px solid var(--gray-200) ;
+  p {
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--gray-400);
+  }
+}

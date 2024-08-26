@@ -1,0 +1,49 @@
+@import 'function';
+
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  height: 52px;
+  position: sticky;
+  top: 0px;
+  z-index: 1;
+  transform: translateY(-100px);
+  transition: all 1s ease;
+  margin-bottom: 12px;
+}
+
+.message {
+  width: 100%;
+  height: 100%;
+  border: solid 1px var(--danger-500);
+  background-color: var(--warning-50);
+  padding: 12px;
+  border-radius: 8px;
+  & .content {
+    column-gap: 12px;
+  }
+  & .icon {
+    width: 20px;
+    height: 20px;
+    & img {
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+  & .text {
+    @include fontSetup(var(--gray-500), 12px, 20px, normal, 500);
+    & a {
+      color: var(--warning-500);
+      text-decoration: underline;
+    }
+  }
+}
+
+.timer {
+  @include fontSetup(var(--gray-500), 12px, 20px, normal, 500);
+}

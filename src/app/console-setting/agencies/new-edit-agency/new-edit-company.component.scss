@@ -1,0 +1,104 @@
+@import 'function';
+
+.content-modal {
+  padding: 20px 24px;
+}
+
+::ng-deep {
+  .skeleton {
+    &-header .ant-skeleton-button {
+      width: 60%;
+    }
+
+    &-label .ant-skeleton-button {
+      width: 100px;
+      height: 20px;
+    }
+
+    &-input .ant-skeleton-button {
+      width: 100%;
+      height: 44px;
+    }
+
+    &-checkbox .ant-skeleton-avatar {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .ant-drawer-title {
+    .drawer-input-header {
+      padding: 16px 16px 8px 16px;
+
+      trudi-text-field {
+        .trudi-text-field-wrapper {
+          background: transparent;
+
+          .trudi-ui-text-field {
+            @include fontSetup(
+              var(--fg-neutral-strongest),
+              20px,
+              32px,
+              normal,
+              600
+            );
+            &::placeholder {
+              @include fontSetup(
+                var(--fg-neutral-weakest),
+                20px,
+                32px,
+                normal,
+                600
+              );
+            }
+          }
+        }
+      }
+
+      .step-name {
+        @include fontSetup(
+          var(--fg-neutral-strongest),
+          20px,
+          32px,
+          normal,
+          600
+        );
+      }
+    }
+  }
+
+  .trudi-select-label {
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+  }
+
+  .ng-value {
+    border: none !important;
+    .trudi-label-wrapper {
+      border: 1px solid var(--border-neutral-dark);
+      &.error {
+        border: 1px solid var(--danger-500) !important;
+      }
+    }
+  }
+
+  .customer-option {
+    padding: 8px 12px;
+    &-name {
+      @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+    }
+    &-email {
+      @include fontSetup(var(--gray-600), 12px, 16px, normal, 400);
+    }
+  }
+
+  .trudi-form-control-wrapper trudi-text-field {
+    label.trudi-ui-text-field-label {
+      @include fontSetup(var(--gray-600), 14px, 20px, normal, 600);
+      margin-top: 12px;
+    }
+  }
+}
+
+.trudi-input-label {
+  @include fontSetup(var(--gray-600), 14px, 20px, normal, 600);
+}

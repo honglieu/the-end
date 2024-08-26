@@ -1,0 +1,16 @@
+@import 'function';
+
+.internetDisconnect {
+  background-color: var(--danger-500);
+  padding: 4px 0;
+
+  .contentDcn {
+    text-align: center;
+    @include fontSetup(var(--white), 14px, 20px, normal, 600);
+  }
+
+  .closeDcn {
+    padding: 6px;
+    cursor: pointer;
+  }
+}

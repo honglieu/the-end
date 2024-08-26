@@ -1,0 +1,39 @@
+<div class="head-wrapper">
+  <div class="left-act">
+    <task-editor-search></task-editor-search>
+    <div
+      class="create-task"
+      *trudiPermission="permission.create"
+      nz-tooltip
+      [nzTooltipTitle]="isDisable ? titleTemplate : ''"
+      nzTooltipPlacement="left"
+      nzTooltipOverlayClassName="box-tooltip-create-task">
+      <button
+        trudi-btn
+        class="trudi-icon"
+        [disabled]="isDisable"
+        (click)="handleCreateNewTaskEditor(true)">
+        <trudi-icon icon="plusIconWhite"></trudi-icon>
+        <div class="text-button-task">{{titleCreateTask}}</div>
+      </button>
+    </div>
+  </div>
+  <div class="status-task-editor" *trudiPermission="permission.tab">
+    <trudi-tabs
+      [tabs]="inboxTabs"
+      type="card"
+      (changeTab)="handleChangeTab()"></trudi-tabs>
+  </div>
+</div>
+
+<ng-container *ngIf="isShowPopupCreateTask === popupEnum.PopupCreateTask">
+  <create-task-editor-popup (onBack)="handleBack()"></create-task-editor-popup>
+</ng-container>
+<ng-container *ngIf="isShowPopupCreateTask === popupEnum.PopupSelectCRM">
+  <select-crm-create-task-editor></select-crm-create-task-editor>
+</ng-container>
+<ng-template #titleTemplate>
+  <upgrade-message
+    [action]="actionShowMessageTooltip.ADD_NEW_TASKS"
+    [isTooltip]="true"></upgrade-message>
+</ng-template>

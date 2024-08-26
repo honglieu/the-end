@@ -1,0 +1,14 @@
+<div
+  class="deleted-mark d-flex align-items-center gap-4 wrap-conversation-status"
+  data-e2e="marker-deleted-text">
+  <trudi-icon
+    icon="deleteIconOutline"
+    [style]="{ 'width.px': 16, 'height.px': 16}"></trudi-icon>
+  <div>
+    <span> Deleted {{isFromMailBox ? 'from' : 'by'}} </span>
+    <span class="highlighted">
+      {{isFromMailBox ? title : message | formatDisplayFullName : false}}
+    </span>
+    <span> {{ message.createdAt | trudiDateTime : EPage.DETAILS | async}}</span>
+  </div>
+</div>

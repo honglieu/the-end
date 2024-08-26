@@ -1,0 +1,23 @@
+<ng-container *ngIf="note">
+  <widget-common
+    title="Note"
+    [buttonKey]="EButtonStepKey.NOTES"
+    (showModal)="handleEditNote(note)"
+    [type]="note?.syncStatus"
+    [externalError]="note?.externalError"
+    (retry)="handleRetryNote(note)"
+    (remove)="confirmCancel(note.id)"
+    [firstTimeSyncSuccess]="note.firstTimeSyncSuccess"
+    [isDislayBtnCancel]="note.isSuccessful">
+    <div class="card-wrapper" (leftClick)="handleEditNote(note)">
+      <div class="card-wrapper-content">
+        <div class="item-category">
+          {{note.entityType}} Note - {{note.categoryName}}
+          {{note?.nameUserPropertyGroup ? "(" + (note?.nameUserPropertyGroup) +
+          ")" : "" }}
+        </div>
+        <div class="item-description">{{note.description}}</div>
+      </div>
+    </div>
+  </widget-common>
+</ng-container>

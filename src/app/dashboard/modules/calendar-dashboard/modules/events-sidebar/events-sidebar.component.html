@@ -1,0 +1,46 @@
+<div class="sidebar-left d-flex flex-dir-column gap-12">
+  <div
+    *ngIf="events?.length"
+    class="menu-container"
+    cdkDropList
+    [cdkDropListData]="events"
+    (cdkDropListDropped)="dropped($event)"
+    cdkScrollable>
+    <div
+      *ngFor="let child of events; index as i"
+      nz-menu-item
+      nzMatchRouter
+      (cdkDragStarted)="handleStartDrag()"
+      (click)="handleSelectedEvent(child.value)"
+      (keydown.enter)="handleSelectedEvent(child.value)"
+      class="border-rad-4 single-item my-0"
+      [ngClass]="child.value === selectedEvent ? 'item-selected' : 'non-selected'"
+      cdkDrag
+      cdkDropListSortingDisabled
+      tabindex="0"
+      [cdkDragData]="child">
+      <div
+        class="d-flex align-items-center w-100 relative single-item--link justify-content-between">
+        <span class="item-name text-ellipsis ml-8 no-pointer-event">
+          {{ child?.label}}
+        </span>
+        <trudi-icon
+          class="drag-icon"
+          icon="drag"
+          [style]="{ 'width.px': 16, 'height.px': 16}">
+        </trudi-icon>
+      </div>
+      <div *cdkDragPlaceholder class="cdk-placeholder">
+        <div
+          class="preview-wrapper d-flex align-items-center justify-content-between">
+          <span class="item-name ml-8"> {{ child?.label}} </span>
+          <trudi-icon icon="drag" [style]="{ 'width.px': 16, 'height.px': 16}">
+          </trudi-icon>
+        </div>
+      </div>
+      <div *cdkDragPreview [matchSize]="true">
+        <div class="preview-wrapper d-flex align-items-center"></div>
+      </div>
+    </div>
+  </div>
+</div>

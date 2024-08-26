@@ -1,0 +1,55 @@
+@import 'function';
+
+::ng-deep {
+  .ant-drawer-title {
+    .communication-step-header {
+      padding: 16px 16px 8px 16px;
+      trudi-text-field {
+        .trudi-text-field-wrapper {
+          background: transparent;
+
+          .trudi-ui-text-field {
+            @include fontSetup(
+              var(--fg-neutral-strongest),
+              20px,
+              32px,
+              normal,
+              600
+            );
+            &::placeholder {
+              @include fontSetup(
+                var(--fg-neutral-weakest),
+                20px,
+                32px,
+                normal,
+                600
+              );
+            }
+          }
+        }
+        .disabled {
+          .trudi-ui-text-field {
+            color: var(--gray-700) !important;
+          }
+        }
+      }
+
+      .step-name {
+        margin-left: 8px;
+        @include fontSetup(
+          var(--fg-neutral-strongest),
+          20px,
+          32px,
+          normal,
+          600
+        );
+      }
+    }
+  }
+
+  .trudi-drawer-footer {
+    button {
+      min-width: 100px;
+    }
+  }
+}

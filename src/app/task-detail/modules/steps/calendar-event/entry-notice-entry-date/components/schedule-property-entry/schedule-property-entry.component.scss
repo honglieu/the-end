@@ -1,0 +1,97 @@
+@import 'function';
+.header-modal {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  .header-title {
+    letter-spacing: 0em;
+    @include fontSetup(var(--gray-600), 18px, 28px, normal, 600);
+  }
+}
+
+.trudi-picker {
+  max-width: 100%;
+}
+
+.option-title {
+  @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 600);
+}
+
+.title-text {
+  @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+}
+
+::ng-deep .radio-label span {
+  font-weight: 500 !important;
+}
+
+::ng-deep .entry-time {
+  &.fieldDisable {
+    input {
+      background: var(--bg-neutral-tonal-strongest) !important;
+      color: var(--fg-neutral-weakest) !important;
+      cursor: not-allowed !important;
+    }
+  }
+  .input-wrapper {
+    display: flex;
+    flex: 1;
+    .btn-group {
+      flex: 1;
+    }
+  }
+  input {
+    line-height: 20px !important;
+    min-width: 100%;
+    max-width: 100%;
+    padding: 12px !important;
+  }
+  &.fieldSuccess {
+    input.input-error {
+      box-shadow: none !important;
+    }
+  }
+}
+
+:host {
+  ::ng-deep time-picker {
+    .input-error,
+    input-error:focus {
+      box-shadow: none !important;
+    }
+  }
+}
+
+::ng-deep {
+  .entry-time-container {
+    .date-time-picker .input-wrapper input:not(:focus) {
+      box-shadow: unset !important;
+    }
+    .input-error.input-error-hour:focus {
+      box-shadow: var(--shadow-brand) !important;
+    }
+    .trudi-time-picker-error {
+      background-color: red;
+      .date-time-picker .input-wrapper input.input-error:not(:focus) {
+        box-shadow: var(--shadow-danger) !important;
+      }
+      .input-error.input-error-hour {
+        box-shadow: var(--shadow-danger) !important;
+      }
+    }
+  }
+}
+
+.content-modal {
+  padding: 20px 24px;
+}
+
+.footer-modal {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 24px;
+  gap: 12px;
+  background: transparent;
+  border-top: 1px solid var(--gray-100);
+  border-radius: 0 0 8px 8px;
+}

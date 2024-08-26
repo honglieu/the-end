@@ -1,0 +1,23 @@
+<div class="confirm-wrapper">
+  <div class="header">
+    <div class="warning-icon">
+      <img src="/assets/icon/icon-warning-red.svg" />
+    </div>
+    <div class="confirm-text">
+      <p class="bold-text">Delete this task name?</p>
+      <p class="grey-text">This task name will be permanently deleted.</p>
+    </div>
+  </div>
+  <div class="btn-wrapper">
+    <button data-e2e="button-cancel" type="button" class="go-back-btn">
+      <span class="btn-text" (click)="isOpenModal(false)"> Cancel </span>
+    </button>
+    <button
+      data-e2e="button-delete"
+      type="button"
+      class="confirm-btn"
+      (click)="onDelete()">
+      <span class="btn-text"> Delete </span>
+    </button>
+  </div>
+</div>

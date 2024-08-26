@@ -1,0 +1,85 @@
+@import 'function';
+
+.modal-header-select-facebook-page__title--default {
+  .modal-header-select-facebook-page-body span {
+    @include fontSetup(var(--fg-neutral-stronger), 18px, 28px, normal, 600);
+  }
+}
+
+.modal-select-facebook-page__body {
+  & ::ng-deep .ant-radio-group .container-trudi-radio {
+    width: fit-content;
+  }
+
+  & ::ng-deep nz-radio-group {
+    gap: 16px;
+
+    &.radio-group .radio-label .content-trudi-radio .label-trudi-radio {
+      padding-top: 1px;
+    }
+  }
+}
+
+.empty-content {
+  @include fontSetup(var(--fg-neutral-weaker), 14px, 20px, normal, 400);
+}
+
+.facebook-error {
+  @include fontSetup(var(--danger-500), 14px, 20px, normal, 500);
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+}
+
+.skeleton-loading {
+  .quote-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    span {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1px solid var(--border-neutral-darker, #cecfd2);
+      background: var(--bg-base, #fff);
+    }
+  }
+}
+
+::ng-deep .modal-facebook-connect-succcess {
+  & .ant-modal-header {
+    border-bottom: unset;
+  }
+
+  .modal-succcess__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 24px;
+
+    & trudi-icon {
+      display: flex;
+      justify-content: center;
+    }
+
+    .modal-succcess__body__content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      &--title {
+        @include fontSetup(var(--fg-neutral-stronger), 24px, 32px, normal, 600);
+      }
+
+      &--description {
+        @include fontSetup(var(--fg-neutral-weaker), 14px, 20px, normal, 400);
+      }
+
+      &--title,
+      &--description {
+        text-align: center;
+      }
+    }
+  }
+}

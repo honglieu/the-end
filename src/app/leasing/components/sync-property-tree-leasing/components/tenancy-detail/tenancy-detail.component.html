@@ -1,0 +1,67 @@
+<div [formGroup]="leasingForm" class="tenancy-detail-wrapper">
+  <div class="tenancy-detail-wrapper">
+    <div class="tenancy-detail-title">Tenancy details</div>
+    <div class="tenancy-detail-form">
+      <div class="form-row mt-8">
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="form-title">Tenancy name</div>
+          <div class="max-character-text">
+            {{150 - leasingForm.get('tenancyName').value.length}}/150
+          </div>
+        </div>
+        <div class="mt-6">
+          <trudi-form-control [control]="tenancyName">
+            <trudi-text-field
+              [maxCharacter]="150"
+              [size]="'large'"
+              [disabled]="disable"
+              [formControl]="tenancyName"></trudi-text-field>
+          </trudi-form-control>
+        </div>
+      </div>
+    </div>
+    <div class="tenancy-detail-form">
+      <div class="add-tenancy-detail d-flex mt-12 gap-8">
+        <div class="form-title">Tenancy contact</div>
+        <button
+          (click)="toggleAddTenantContactPopup()"
+          [class]="'action-btn ' +  (disable ? '' : 'add-contact-btn cursor-pointer')">
+          <trudi-icon
+            [icon]="disable ? 'circlePlusDisable' : 'addCreditor'"
+            alt="mri-logo"></trudi-icon>
+        </button>
+      </div>
+      <div
+        *ngIf="leasingForm.get('tenantContacts').value.length"
+        class="mt-12 gap-12 contact-card-list">
+        <ng-container
+          *ngFor="let contact of tenantContactsOrder; let i = index">
+          <tenancy-contact-card
+            [contact]="contact.contact"
+            [contactIndex]="i"
+            [tenancyName]="tenancyName"
+            [isPrimaryTenant]="contact.isPrimary"
+            (onToggleAddTenantContact)="toggleAddTenantContactPopup($event)"
+            (onToggleRemoveTenantContact)="onToggleRemoveTenantContact($event)"
+            [disable]="disable"
+            [syncStatus]="syncStatus">
+          </tenancy-contact-card>
+        </ng-container>
+      </div>
+      <ng-container
+        *ngTemplateOutlet="
+          errorMessage;
+          context: {error: isFieldValid('tenantContacts')}
+        "></ng-container>
+    </div>
+  </div>
+
+  <ng-template #errorMessage let-error="error">
+    <ng-container *ngIf="error">
+      <div class="a1 error-wrapper d-flex align-items-center">
+        <trudi-icon icon="iconWarning"></trudi-icon>
+        <span class="text-warning">Required field</span>
+      </div>
+    </ng-container>
+  </ng-template>
+</div>

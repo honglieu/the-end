@@ -1,0 +1,52 @@
+<div
+  #trudiSuggestedStepContainer
+  (click)="enableProcess()"
+  nz-tooltip
+  [nzTooltipTitle]="model.isCompleted && !disabled ? 'Click to repeat' : ''"
+  class="trudi-suggested-step-container">
+  <ng-container>
+    <trudi-checkbox
+      [disabled]="disabled"
+      [(ngModel)]="model.isCompleted"
+      type="circle"></trudi-checkbox>
+  </ng-container>
+
+  <div class="trudi-suggested-step-content">
+    <div
+      class="trudi-suggested-step-title"
+      [ngClass]="{'required': isStepRequired}">
+      <p>
+        <span
+          #stepTitle
+          (keyup.enter)="trudiSuggestedStepContainer.click()"
+          [tabIndex]="0"
+          >{{ model?.text | uppercaseFirstLetter }}</span
+        >
+        <trudi-icon
+          *ngIf="showIconTitle"
+          icon="iconNavigate"
+          [style]="{'color': '#3D3D3D'}"></trudi-icon>
+      </p>
+      <div class="flex-1" *ngIf="isStepRequired">
+        <trudi-badge text="required" variant="error" size="small"></trudi-badge>
+      </div>
+    </div>
+    <div class="trudi-suggested-step-description">
+      <img
+        *ngIf="propertyTreeStep"
+        class="image-property-tree"
+        src="assets/images/property-tree-icon-new.png"
+        alt="" />
+      <trudi-badge
+        icon="documentIcon"
+        customIconSize="16"
+        *ngIf="reiFormDetail"
+        [text]="reiFormDetail"
+        variant="role"></trudi-badge>
+      <reminder-time [reminderTimes]="reminderTimes"></reminder-time>
+      <ng-container *nzStringTemplateOutlet="description"
+        >{{ description }}</ng-container
+      >
+    </div>
+  </div>
+</div>

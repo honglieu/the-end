@@ -1,0 +1,116 @@
+<div
+  [formGroup]="sendMsgForm"
+  class="header-conversation d-flex flex-dir-column"
+  [class.h-100]="composeType === ComposeEditorType.NEW">
+  <div class="header-wrapper" *ngIf="composeType === ComposeEditorType.NEW">
+    <message-receiver-container
+      [class.invalid-receiver-value]="isSubmitted && selectedReceivers.invalid"
+      [configs]="configs"
+      (changeReceivers)="handleChangeFormValue('selectedReceivers')"
+      [isRmEnvironment]="isRmEnvironment">
+    </message-receiver-container>
+  </div>
+  <div
+    class="center-conversation flex-1"
+    *ngIf="composeType === ComposeEditorType.NEW"></div>
+  @if(!currentConversation.id || currentConversation?.isPmJoined &&
+  currentConversation?.lastPmJoined.id === currentUser.id ||
+  currentConversation.id && !hasGroupMessage) {
+  <div
+    nz-resizable
+    class="compose-section resizable-box"
+    [style.height.px]="contentHeight"
+    [nzMaxHeight]="CONTENT_MAX_HEIGHT"
+    [nzMinHeight]="minHeight"
+    [nzBounds]="'window'"
+    (nzResize)="onContentResize($event)">
+    <nz-resize-handle nzDirection="top">
+      <div class="content-resize-line"></div>
+    </nz-resize-handle>
+    <div
+      #schedule
+      *ngIf="configs?.body?.typeSendMsg === SendOption.ScheduleForSend"
+      class="schedule-msg">
+      <div class="schedule-msg-item">
+        <schedule-message-v2
+          [scheduleDate]="scheduleDate"
+          [defaultValue]="configs?.otherConfigs?.scheduleDraft || selectTimeSchedule"
+          [additionalInfo]="additionalInfo"
+          [isDateUnknown]="isDateUnknown"
+          [dueDateTooltipText]="dueDateTooltipText"
+          [selectedEvent]="configs?.body?.otherConfigs?.calendarEvent"
+          [action]="configs.trudiButton?.action"
+          [customClassTimePicker]="'schedule-msg-inline'"
+          [nzPopupStyle]="{ right: '22%', bottom: '8px' }"
+          (dateTime)="onDateTimeSelected($event)"
+          (errorMsgEmitter)="handleErrorMsg($event)"
+          (timeSecondEmitter)="handleTimeSecond($event)"
+          (dateEmitter)="handleDate($event)"></schedule-message-v2>
+      </div>
+    </div>
+    <div
+      #attachments
+      class="attachments"
+      [ngClass]="{hidden: !(selectedContactCard$ | async)?.length && !listOfFiles?.value?.length}">
+      <div
+        class="card-section"
+        [ngClass]="{hidden: !(selectedContactCard$ | async)?.length}">
+        <trudi-form-control
+          [control]="selectedContactCardControl"
+          [errors]="[{errorName: 'requiredContactCard', errorMessage: 'Please add contact card to continue'}]">
+          <div class="card-container">
+            <ng-container
+              *ngFor="let contact of selectedContactCard$ | async; let i = index">
+              <trudi-contact-card
+                [contact]="contact"
+                (onClose)="onClearContact(contact, i)"></trudi-contact-card>
+            </ng-container>
+          </div>
+        </trudi-form-control>
+      </div>
+      <div
+        class="file-section"
+        [ngClass]="{hidden: !listOfFiles?.value?.length}">
+        <trudi-send-msg-file></trudi-send-msg-file>
+      </div>
+    </div>
+    <div
+      #editor
+      class="inline-editor"
+      id="inlineEditor"
+      appOutsideClickListener
+      [whiteList]="whiteList"
+      (clickOutside)="onOutSide()">
+      <inline-message-editor
+        #inlineTinyEditor
+        [configs]="configs"
+        [prefillText]="prefillText"
+        [isDisableSendBtn]="isConsole || isDisableSendBtn || !activeMobileApp || appMessageCreateType === 'NEW_APP_MESSAGE_DONE'"
+        [deleteInlineType]="deleteInlineType"
+        [sendOptionsToRemove]="sendOptionsToRemove"
+        [composeType]="composeType"
+        [currentProperty]="currentProperty || currentReceiverProperty"
+        [listDynamicParams]="listDynamicParams"
+        [errorMsg]="errorMsg"
+        [timeSecond]="timeSecond"
+        [date]="date"
+        (onChangeSendOption)="handleChangeTypeSendMessage($event)"
+        (contentHeightChange)="handleContentHeightChange($event)"
+        (submitToSendMsg)="handleSendMsg($event)"></inline-message-editor>
+    </div>
+  </div>
+  }
+</div>
+
+<trudi-modal
+  *ngIf="isShowModalWarning"
+  [visible]="isShowModalWarning"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  className="trudi-modal-custom">
+  <warning-note-popup
+    [warningMessage]="errorMessage"
+    [timeToCloseModal]="3000"
+    (isCloseModal)="isShowModalWarning = $event">
+  </warning-note-popup>
+</trudi-modal>

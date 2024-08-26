@@ -1,0 +1,46 @@
+@import 'function';
+:host ::ng-deep {
+  .warning-modal {
+    .modal-window {
+      min-width: 510px !important;
+      width: 510px !important;
+    }
+
+    .warning-popup {
+      .warning-icon {
+        margin-top: -2px;
+      }
+
+      .bold-text {
+        @include fontSetup(var(--gray-700), 2rem, 24px, normal, 600);
+        margin-bottom: 8px;
+      }
+
+      .go-back-btn {
+        @include fontSetup(var(--gray-700), 1.4rem, 16px, normal, 600);
+        display: flex;
+        padding: 12px 16px;
+        min-width: 118px;
+        min-height: 40px;
+        margin-right: 2rem;
+        background: var(--gray-200);
+        border-radius: 0.7rem;
+        border: 0;
+        align-items: center;
+      }
+
+      .btn-wrapper {
+        margin-top: 18px;
+        .confirm-btn {
+          padding: 10px 30px;
+          font-weight: 600;
+          min-height: 40px;
+        }
+      }
+
+      p.text-desc {
+        @include fontSetup(var(--gray-500), 1.4rem, 20px, normal, 500);
+      }
+    }
+  }
+}

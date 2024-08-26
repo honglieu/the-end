@@ -1,0 +1,47 @@
+@import 'function';
+
+:host ::ng-deep {
+  .wrapper-skeleton-notes {
+    margin: 0 10px;
+    .skeleton-rectangle {
+      width: 50%;
+      height: 0px;
+      margin-right: 7px;
+      h3.ant-skeleton-title {
+        margin-top: -8px;
+      }
+    }
+    .skeleton-circle {
+      span.ant-skeleton-avatar.ant-skeleton-avatar-circle {
+        margin-top: 0px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+}
+
+::ng-deep .wrapper-trudi-collapse {
+  background-color: var(--white);
+
+  .header {
+    .red-dot {
+      width: 6px;
+      height: 6px;
+      margin-left: 5px;
+      border-radius: 100%;
+      background-color: var(--danger-500);
+    }
+  }
+
+  .content {
+    @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+    padding: 12px;
+    background-color: var(--gray-200);
+    border-radius: 8px;
+
+    .no-data {
+      font-style: italic;
+    }
+  }
+}

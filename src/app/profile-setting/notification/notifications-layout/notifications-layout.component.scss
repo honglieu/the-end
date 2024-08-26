@@ -1,0 +1,26 @@
+@import 'function';
+.email-title {
+  margin-bottom: 20px;
+  h3 {
+    @include fontSetup(var(--gray-700), 20px, 32px, normal, 600);
+  }
+  .platform-title {
+    text-align: center;
+    @include fontSetup(var(--gray-500), 12px, 32px, normal, 500);
+    width: 102px;
+    padding-right: 0px;
+  }
+  .title-wrapper {
+    padding: 0 15px;
+    width: 435px !important;
+  }
+}
+.notification-checkbox-label {
+  min-width: 430px !important;
+  @include fontSetup(var(--gray-700), 14px, 20px, normal, 400);
+  padding-left: 15px;
+}
+
+.checkbox-wrapper {
+  width: 100px;
+}

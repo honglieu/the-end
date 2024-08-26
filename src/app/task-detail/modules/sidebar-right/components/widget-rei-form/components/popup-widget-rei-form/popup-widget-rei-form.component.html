@@ -1,0 +1,14 @@
+<trudi-rei-form-card
+  *ngIf="isShowREIFormPopup"
+  [modalId]="modalId"
+  [isResizableModal]="true"></trudi-rei-form-card>
+
+<review-attachment-popup
+  *ngIf="showReviewAttachPopup"
+  [modalId]="modalId"
+  [showReviewAttachPopup]="showReviewAttachPopup"
+  [showAttachDaftFormPopup]="false"
+  [reiFormLink]="reiFormLink"
+  [isHideBottomWrapper]="true"
+  [isResizableModal]="true"
+  (onHandleClose)="onReviewAttachmentPopupClosed()"></review-attachment-popup>

@@ -1,0 +1,33 @@
+<div
+  class="historical-event"
+  [class.historical-event-inspection]="startTime || endTime"
+  [class.hide-process-line]="isEventLatest">
+  <div
+    class="dot"
+    [ngClass]="isEventLatest
+      ? [EHistoricalEventStatus.CANCELLED, EHistoricalEventStatus.CLOSED].includes(status)
+        ? 'dot-red'
+        : 'dot-green'
+      : ''"></div>
+  <div
+    class="historical-event-title"
+    [class.historical-event-title-latest]="isEventLatest"
+    [class.historical-event-title-inspection]="startTime || endTime">
+    <div *ngIf="startTime || endTime">
+      <span *ngIf="startTime"> {{startTime | formatTime: true | async }} </span>
+      <span *ngIf="endTime"> - {{endTime | formatTime: true | async}} </span>
+    </div>
+    <span>{{event?.eventDate | formatDate | async}}</span>
+  </div>
+  <div class="flex-1 historical-event-status">
+    <trudi-badge
+      [variant]="isEventLatest
+        ? ([EHistoricalEventStatus.CANCELLED, EHistoricalEventStatus.CLOSED].includes(status)
+          ? 'error'
+          : 'primary')
+        : 'role'"
+      [text]="status"
+      [extraClass]="!isEventLatest ? 'trudi-badge-line-through' : ''"
+      size="small"></trudi-badge>
+  </div>
+</div>

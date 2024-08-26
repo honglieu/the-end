@@ -1,0 +1,27 @@
+@import 'function';
+
+.wrapper-group {
+  .group-list-message {
+    padding-top: 12px;
+
+    .header-collapse {
+      display: flex;
+      align-items: center;
+      width: fit-content;
+      padding: 0 6px;
+      background-color: #f0f1f1;
+      border-radius: 4px;
+      border: none;
+      gap: 6px;
+      margin-bottom: 3px;
+
+      .header-collapse-name {
+        @include fontSetup(var(--gray-600), 12px, 20px, normal, 500);
+      }
+    }
+  }
+
+  .not-allowed-cursor {
+    cursor: not-allowed;
+  }
+}

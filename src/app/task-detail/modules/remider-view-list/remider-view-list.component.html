@@ -1,0 +1,34 @@
+<message-reminder-control
+  (selectedReminderTime)="handleChangeReminderTime($event)"
+  (toggleIgnore)="handleToggleIgnore($event)"></message-reminder-control>
+<ng-container
+  *ngIf="isStopLoading && reminderList?.length && !isRemoveAll; else isStopLoading && reminderList?.length === 0 || isStopLoading && isRemoveAll ? noItem : loadingSkeleton">
+  <virtual-reminder-list-viewport
+    [isLoading]="loadingMore"
+    [reminderList]="reminderList"
+    [queryParam]="queryParam"
+    [isIgnore]="isIgnore"
+    (changePage)="handleChangePage($event)">
+  </virtual-reminder-list-viewport>
+</ng-container>
+
+<ng-template #loadingSkeleton>
+  <message-list-reminder-skeleton></message-list-reminder-skeleton>
+</ng-template>
+
+<ng-template #noItem>
+  <ng-container
+    [ngTemplateOutlet]="(isFocusView && teamMembersInMailBox > 1 && !hasFilter) ? noMyMessageTemplate : noTeamMessageTemplate"></ng-container>
+  <ng-template #noTeamMessageTemplate>
+    <empty-focused-view-page
+      message="No reminders to display."
+      [subMessage]="hasFilter ? '' : 'To see reminders you have ignored, adjust your'"
+      [remiderSetting]="true"></empty-focused-view-page>
+  </ng-template>
+  <ng-template #noMyMessageTemplate>
+    <empty-focused-view-page
+      message="Nice work! You’ve dealt with all reminders assigned to you."
+      [subMessage]="subMessage"
+      [isMessageReminder]="true"></empty-focused-view-page
+  ></ng-template>
+</ng-template>

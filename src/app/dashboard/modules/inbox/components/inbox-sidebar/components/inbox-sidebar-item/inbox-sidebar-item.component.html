@@ -1,0 +1,161 @@
+<ul nz-menu nzMode="inline" class="border-r-none background--white">
+  <li
+    nz-submenu
+    [nzTitle]="sidebarTitle"
+    [(nzOpen)]="item.isOpen"
+    class="relative submenu"
+    tabindex="0">
+    <ul
+      *ngIf="item?.children?.length; else noTasks"
+      class="menu-container"
+      cdkDropList
+      [cdkDropListData]="item?.children"
+      [cdkDropListDisabled]="item?.folderType !== EFolderType.TASKS"
+      (cdkDropListDropped)="dropped($event)"
+      cdkScrollable>
+      <div
+        *ngFor="let child of item?.children; trackBy: trackByItems"
+        nz-menu-item
+        nzMatchRouter
+        (cdkDragStarted)="handleStartDragFolder()"
+        class="border-rad-4 single-item my-0 drop_task--folder"
+        [ngClass]="(child | taskFolderSelected: currentQueryParam: item) ? 'item-selected' : 'non-selected'"
+        [attr.folder-uid]="child.id"
+        [attr.folder-type]="item?.folderType"
+        [attr.folder-status]="child?.status"
+        cdkDrag
+        cdkDropListSortingDisabled
+        [cdkDragData]="child">
+        <a
+          trudi-tooltip
+          nzTooltipPlacement="right"
+          [nzTooltipTitle]="child?.name.length > 20 ? child?.name : null"
+          class="d-flex align-items-center w-100 relative single-item--link"
+          [appE2E]="child?.dataE2E || ''"
+          [tabIndex]="item.isOpen ? 0 : -1"
+          [routerLink]="child.routerLink"
+          [queryParams]="getMergedQueryParams(child.queryParams)"
+          [queryParamsHandling]="(item?.folderType === EFolderType.MORE && !!child?.queryParams?.status) ? '' : 'merge'">
+          <div
+            class="d-flex align-items-center item w-100"
+            [class.can-edit]="child?.canEditFolder">
+            <div
+              class="icon-wrapper"
+              [class.task-icon]="item?.folderType === EFolderType.TASKS">
+              <trudi-icon
+                class="item-icon"
+                [icon]="(currentTaskFolderId === child.id) ? 'verticalCustom' : child.icon"
+                [style]="{'width.px': 16, 'height.px': 16}"></trudi-icon>
+            </div>
+            <ng-container
+              *ngTemplateOutlet="iconMoreTemplate; context: { child: child }"></ng-container>
+            <span class="item-name text-ellipsis ml-8 no-pointer-event">
+              {{ child?.name}}
+            </span>
+            <span
+              class="item-unRead ml-4 border-rad-16"
+              *ngIf="child?.unReadTaskCount || child?.unreadInternalNoteCount">
+              {{ ((child?.unReadTaskCount || 0) +
+              (child?.unreadInternalNoteCount || 0)) | totalCountPipe }}
+            </span>
+          </div>
+          <span class="item-total ml-auto no-pointer-event">
+            {{ child?.taskCount | totalCountPipe: 999: true }}
+          </span>
+        </a>
+        <div *cdkDragPlaceholder class="example-custom-placeholder"></div>
+        <div *cdkDragPreview [matchSize]="true" class="group-drag-preview">
+          <div class="preview-wrapper d-flex align-items-center">
+            <div class="d-flex align-items-center">
+              <div
+                class="icon-wrapper"
+                [class.task-icon]="item?.folderType === EFolderType.TASKS">
+                <trudi-icon
+                  class="item-icon"
+                  [icon]="child.icon"
+                  [style]="{'width.px': 16, 'height.px': 16}"></trudi-icon>
+              </div>
+              <span class="item-name ml-8"> {{ child?.name}} </span>
+              <span
+                class="item-unRead border-rad-16"
+                *ngIf="child?.unReadTaskCount">
+                {{ ((child?.unReadTaskCount || 0) +
+                (child?.unreadInternalNoteCount || 0)) | totalCountPipe }}
+              </span>
+            </div>
+            <span class="item-total ml-auto">
+              {{ child?.taskCount | totalCountPipe: 999: true }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </ul>
+
+    <ng-template #sidebarTitle>
+      <div
+        [ngClass]="{
+          'task-sidebar-title-wrapper': true,
+          'task-folder-group-collapse-title': item.type === EFolderType.TASKS,
+          'more-folder-group-collapse-title': item.type === EFolderType.MORE
+        }">
+        <div class="task-sidebar-title">
+          <span class="title">{{ item?.name | uppercase }}</span>
+          <div *ngIf="hasRedDot" class="red-dot"></div>
+        </div>
+        <button
+          *ngIf="item?.icon"
+          class="task-sidebar-icon"
+          (click)="$event.stopPropagation(); clickFolderRightIcon()">
+          <trudi-icon
+            trudi-tooltip
+            nzTooltipTrigger="hover"
+            nzTooltipTitle="New folder"
+            nzTooltipPlacement="top"
+            [icon]="item?.icon"
+            [style]="{'width.px': 16, 'height.px': 16}"></trudi-icon>
+        </button>
+      </div>
+    </ng-template>
+  </li>
+</ul>
+
+<ng-template #noTasks>
+  <div class="no-tasks">
+    <span class="no-tasks-text">No folders to display.</span>
+  </div>
+</ng-template>
+
+<ng-template #iconMoreTemplate let-child="child">
+  <div
+    *ngIf="child?.canEditFolder"
+    class="icon-more-wrapper"
+    (click)="$event.preventDefault(); $event.stopPropagation(); currentTaskFolderId = child.id"
+    nz-dropdown
+    nzTrigger="click"
+    (nzVisibleChange)="folderMenu($event, child.id)"
+    [nzDropdownMenu]="menu">
+    <trudi-icon
+      class="icon-more"
+      icon="verticalCustom"
+      [style]="{'width.px': 16, 'height.px': 16}"></trudi-icon>
+  </div>
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <div nz-menu class="task-folder-dropdown">
+      <div
+        (click)="handleFolderAction(child, EFolderAction.EDIT)"
+        nz-menu-item
+        class="dropdown-item">
+        <trudi-icon icon="editIconOutline"></trudi-icon>
+        Edit folder
+      </div>
+      <div
+        *ngIf="!child.taskCount"
+        nz-menu-item
+        (click)="handleFolderAction(child, EFolderAction.DELETE)"
+        class="dropdown-item delete">
+        <trudi-icon class="delete-icon" icon="deleteIconOutline"></trudi-icon>
+        Delete
+      </div>
+    </div>
+  </nz-dropdown-menu>
+</ng-template>

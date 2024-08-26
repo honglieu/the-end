@@ -1,0 +1,120 @@
+@import 'function';
+:host {
+  .select-field-label {
+    margin-bottom: 6px;
+    @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 600);
+  }
+  ::ng-deep contact-type-and-receiver-wrapper ng-select .ng-select-container {
+    background-color: var(--bg-neutral-tonal-normal);
+    height: 40px !important;
+    padding: 10px 4px !important;
+    border-radius: 8px !important;
+    overflow-y: auto;
+    border: unset;
+    align-items: flex-start;
+  }
+  ::ng-deep {
+    trudi-multi-select {
+      .trudi-select-label,
+      .select-label {
+        @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+      }
+
+      .select-label {
+        font-weight: 600;
+      }
+
+      .select-item {
+        .overflow-text {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 200px;
+        }
+        .select-item-remove {
+          display: flex;
+          align-items: center;
+        }
+      }
+
+      .select-item-label {
+        border: 1px solid var(--border-neutral-dark);
+        padding: 1px 8px;
+        border-radius: 8px;
+        height: 28px;
+        background: var(--bg-base, #fff) !important;
+      }
+
+      .ng-label-focused {
+        @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+      }
+
+      .select-item-label-invalid {
+        color: var(--fg-danger);
+      }
+
+      &.custom-select-options ng-select.trudi-single-select {
+        .ng-dropdown-panel {
+          .ng-dropdown-panel-items {
+            .ng-option {
+              padding: 0;
+              &:has(.external-email-option) {
+                display: none !important;
+              }
+
+              .bulk-send-to-option {
+                padding: 12px;
+              }
+
+              &:not(:has(.bulk-send-to-option)) {
+                padding: 12px !important;
+              }
+
+              &:has(span.ng-tag-label) {
+                .ng-star-inserted {
+                  display: block;
+                  max-width: 100%;
+                  white-space: nowrap;
+                  overflow: hidden !important;
+                  text-overflow: ellipsis;
+                }
+              }
+            }
+          }
+        }
+      }
+      &.custom-select-options-no-gap ng-select {
+        .ng-select-container {
+          .ng-value-container {
+            margin-top: 6px;
+            padding: 0 14px 5px 3px;
+            gap: 0 !important;
+            .ng-input {
+              margin: 0;
+              padding: 0;
+              width: 0;
+              height: 0;
+              overflow: hidden;
+            }
+            .ng-label-focused {
+              max-width: 100%;
+              span.external-email-text {
+                overflow-x: hidden;
+                max-width: 100%;
+                white-space: nowrap;
+                overflow: hidden !important;
+                text-overflow: ellipsis;
+              }
+            }
+          }
+        }
+      }
+    }
+    .ng-select-disabled {
+      .trudi-select-label,
+      .select-label {
+        @include fontSetup(var(--fg-neutral-weakest), 14px, 20px, normal, 500);
+      }
+    }
+  }
+}

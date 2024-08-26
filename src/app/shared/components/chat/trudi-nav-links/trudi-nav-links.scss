@@ -1,0 +1,49 @@
+.trudi-nav-link {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  margin: 24px 0;
+  min-height: 72px;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  background-color: var(--white);
+
+  &__wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__icon {
+    padding-right: 13px;
+  }
+
+  &__arrow {
+    position: relative;
+    margin-right: 19px;
+
+    img {
+      position: absolute;
+    }
+  }
+
+  &__header {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--gray-950);
+  }
+
+  &__subheader {
+    height: 19px;
+    font-size: 16px;
+    color: var(--gray-600);
+  }
+
+  &__arrow {
+    width: 10px;
+    height: 14px;
+  }
+}

@@ -1,0 +1,14 @@
+<div class="portfolios-row d-flex justify-content-between">
+  <div class="d-flex gap-8">
+    <div class="portfolios-name">{{ portfolios?.fullName }}</div>
+    <trudi-badge [icon]="'homePortfolio'" [size]="'small'" variant="role">
+      <ng-template #customBadgeTextTemplate>
+        {{ portfolios?.portfolioCount }}
+      </ng-template>
+    </trudi-badge>
+  </div>
+  <switch-checkbox
+    [isChecked]="portfolios.isFollowed"
+    (tdCheckboxChanged)="handleUpdatePortfolios($event, portfolios.id)">
+  </switch-checkbox>
+</div>

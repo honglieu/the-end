@@ -1,0 +1,89 @@
+@import 'function';
+
+.wrapper-select-mailbox-type {
+  .wrapper-select-type {
+    display: flex;
+    column-gap: 16px;
+
+    .mailbox-type {
+      cursor: pointer;
+      padding: 32px 24px;
+      width: 282px;
+      height: 152px;
+      border-radius: 8px;
+      background-color: var(--white);
+      border: 1px solid var(--gray-200);
+
+      &:hover {
+        background-color: var(--gray-100);
+      }
+
+      &.selected {
+        border: 4px solid var(--brand-500);
+      }
+
+      .icon-type {
+        display: flex;
+        justify-content: center;
+      }
+
+      .value-type {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 16px;
+
+        .name-type {
+          @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+        }
+
+        .icon-tooltip {
+          margin-left: 4px;
+        }
+      }
+      &:focus {
+        border: 4px solid var(--brand-500);
+      }
+    }
+  }
+
+  .error-no-select {
+    display: flex;
+    align-items: center;
+    margin-top: 16px;
+
+    span {
+      @include fontSetup(var(--danger-500), 12px, 16px, normal, 400);
+      margin-left: 4px;
+    }
+  }
+}
+
+.tooltip-type-mailbox-company {
+  .ant-tooltip-inner {
+    padding: 4px 6px;
+    max-width: 200px !important;
+
+    ul {
+      list-style-position: outside;
+      padding-left: 20px;
+
+      li {
+        text-align: left;
+        @include fontSetup(var(--white), 12px, 16px, normal, 400);
+      }
+    }
+  }
+}
+
+.tooltip-type-mailbox-individual {
+  .ant-tooltip-inner {
+    padding: 4px 6px;
+    max-width: 200px !important;
+
+    div {
+      @include fontSetup(var(--white), 12px, 16px, normal, 400);
+      text-align: left;
+    }
+  }
+}

@@ -1,0 +1,125 @@
+@if(!disableSummaryGeneration){
+<div
+  class="conversation-summary"
+  [@collapseModal]="isExpandConversationSummary ? 'expanded' : 'collapsed'"
+  [ngClass]="{'collapsed-message-summary': !isExpandConversationSummary}"
+  [class.conversation-summary-expanded]="isExpandConversationSummary"
+  appOutsideClickListener
+  [whiteList]="whiteListMsgDetail"
+  (@collapseModal.done)="onAnimationEnd($event)"
+  (clickOutside)="onOutsideClick()">
+  <div
+    nz-resizable
+    [ngClass]="{'conversation-summary-resizable w-100': !disableSummaryGeneration}"
+    [style.height.px]="contentHeight"
+    [nzMaxHeight]="maxHeight"
+    [nzMinHeight]="minHeight"
+    [nzBounds]="'window'"
+    (nzResize)="onResizable($event)">
+    @if(isExpandConversationSummary && !isResizeDisable) {
+    <nz-resize-handle nzDirection="top">
+      <div class="content-resize-line"></div>
+    </nz-resize-handle>
+    }
+
+    <div
+      class="conversation-summary-header"
+      (click)="toggleConversationSummary()">
+      <div class="mr-4">
+        <trudi-icon svgClass="size-24" icon="aiSummaryStar"></trudi-icon>
+      </div>
+      <div class="conversation-summary-description d-flex">
+        Conversation summary&nbsp; @if(currentConversation?.countUnreadTicket >
+        0) {
+        <div class="conversation-summary-badge-action-item">
+          +{{currentConversation?.countUnreadTicket | pluralize: 'action items'
+          }}
+        </div>
+        }
+      </div>
+      <button
+        trudi-btn
+        variant="ghost"
+        size="medium"
+        btnType="neutral"
+        shape="circle"
+        class="conversation-summary-arrow-btn">
+        <trudi-icon svgClass="size-20" icon="arrowDetail"></trudi-icon>
+      </button>
+    </div>
+
+    <div
+      #conversationSummaryContainer
+      class="conversation-summary-body-container">
+      <div class="body-conversation-summary" #conversationSummary>
+        @if(isGeneratingMsg) {
+        <nz-timeline
+          class="conversation-summary-timeline conversation-summary-skeleton">
+          <ng-container *rxFor="let _ of [].constructor(4)">
+            <nz-timeline-item>
+              <div class="d-flex flex-dir-column mt-4">
+                <nz-skeleton
+                  [nzParagraph]="{ rows: 0 }"
+                  [nzActive]="true"
+                  [style.width.%]="25"></nz-skeleton>
+                <nz-skeleton
+                  [nzParagraph]="{ rows: 0 }"
+                  [nzActive]="true"></nz-skeleton>
+              </div>
+            </nz-timeline-item>
+          </ng-container>
+        </nz-timeline>
+        } @else {
+        <nz-timeline class="conversation-summary-timeline">
+          <ng-container
+            *rxFor="let message of listConversationSummary; trackBy: 'sessionId'; strategy: 'immediate'">
+            <nz-timeline-item>
+              <conversation-summary-item
+                [message]="message"
+                [inputTaskType]="inputTaskType"
+                [currentConversation]="currentConversation"
+                [isExpandConversationSummary]="isExpandConversationSummary"
+                [selectedTicketId]="selectedTicketId"
+                [emailVerified]="emailVerified"
+                [currentTask]="currentTask"></conversation-summary-item
+            ></nz-timeline-item>
+          </ng-container>
+        </nz-timeline>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+} @if(currentConversation?.conversationType !== EConversationType.EMAIL &&
+disableSummaryGeneration) {
+<div class="conversation-summary-disabled">
+  <div class="mr-4">
+    <trudi-icon
+      svgClass="size-24"
+      class="no-pointer-event"
+      icon="aiSummaryStarDisabled"></trudi-icon>
+  </div>
+  <div class="conversation-summary-disabled-description">
+    Conversation summary
+  </div>
+</div>
+} @if( currentConversation?.conversationType === EConversationType.EMAIL &&
+disableSummaryGeneration) {
+<div class="conversation-summary-disabled">
+  <div class="mr-4">
+    <trudi-icon
+      svgClass="size-24"
+      class="no-pointer-event"
+      icon="aiSummaryStar"></trudi-icon>
+  </div>
+  <div class="conversation-summary-disabled-description">
+    There are no messages to summarize
+  </div>
+</div>
+} @if(currentConversation?.conversationType === EConversationType.VOICE_MAIL ||
+currentConversation?.conversationType === EConversationType.APP) {
+<conversation-summary-file
+  [listAudioFile]="listAudioFile"
+  [currentTask]="currentTask"
+  [currentConversation]="currentConversation" />
+}

@@ -1,0 +1,35 @@
+<div class="team-deactive">
+  <div class="d-flex gap-16">
+    <img class="size-48" src="assets/icon/icon-warning-red.svg" />
+    <div class="confirm-text">
+      <p class="bold-text">Deactivate {{nameOfUser}} ?</p>
+      <div class="grey-text">
+        <p>What happens when an account is deactivated?</p>
+        <ul>
+          <li>The member will no longer be able to sign in to Trudi.</li>
+          <li>
+            The member's conversations and tasks will still be accessible.
+          </li>
+          <li>The member's individual mailboxes will be archived.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="btn-wrapper gap-12">
+    <button
+      data-e2e="button-cancel"
+      trudi-btn
+      variant="tonal"
+      btnType="neutral"
+      (click)="isOpenModal(false)">
+      <span class="btn-text"> Cancel </span>
+    </button>
+    <button
+      data-e2e="button-deactive"
+      trudi-btn
+      btnType="danger"
+      (click)="isDeactivate()">
+      <span class="btn-text"> Deactivate </span>
+    </button>
+  </div>
+</div>

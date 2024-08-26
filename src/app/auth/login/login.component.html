@@ -1,0 +1,287 @@
+<ng-container *ngIf="showLoading else notLoading">
+  <div class="modal-loading">
+    <div class="loading-container">
+      <div>
+        <div class="circle-loader">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #notLoading>
+  <div class="page-default">
+    <div class="page-section-1">
+      <img src="/assets/images/emptyTrudi.png" alt="emptyPage" />
+    </div>
+    <div class="page-section-2">
+      <div class="page-form">
+        <div class="form-header">
+          <p class="form-content">
+            Oops, you can't use Trudi® from your mobile just yet
+          </p>
+          <p class="form-content-text">
+            Please re-visit this page on your desktop device or tablet to get
+            started.
+          </p>
+        </div>
+        <div class="divider w-100"></div>
+        <div [formGroup]="emailForm">
+          <div class="form-footer">
+            <p class="form-text">
+              For quick access, enter your email, and we’ll email you the links
+              for your device type.
+            </p>
+            <div
+              class="form-control"
+              [ngClass]="{'error-filed': (emailForm.get('emailMobile').hasError('required') && isSubmit
+              || emailForm.get('emailMobile').hasError('email') && emailForm.get('emailMobile').touched)
+              || emailForm.get('emailMobile').hasError('pattern') && emailForm.get('emailMobile').touched}">
+              <input
+                formControlName="emailMobile"
+                type="email"
+                class="form-input w-100"
+                data-e2e="email-textbox"
+                placeholder="Enter your email"
+                id="input-email"
+                autocomplete="on" />
+            </div>
+            <div
+              *ngIf="emailForm.get('emailMobile').hasError('required') && isSubmit"
+              class="d-flex gap-4">
+              <span class="text-danger">This field cannot be empty</span>
+            </div>
+            <div
+              *ngIf="emailForm.get('emailMobile').hasError('email') && emailForm.get('emailMobile').touched
+              || emailForm.get('emailMobile').hasError('pattern') && emailForm.get('emailMobile').touched"
+              class="d-flex gap-4">
+              <span class="text-danger">Please input a valid email</span>
+            </div>
+            <button
+              class="submit-email"
+              data-e2e="submit-button"
+              (click)="submitEmail()"
+              [disabled]="disabledBtn">
+              Submit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-wrapper">
+    <div class="container">
+      <div class="d-flex">
+        <div class="form-wrapper">
+          <ng-container *ngIf="isPreLoginScreen; else loginTemplate">
+            <ng-container *ngTemplateOutlet="downloadScreen"></ng-container>
+          </ng-container>
+        </div>
+        <div class="auth-bg-wrapper">
+          <div class="auth-bg" #bgPrimary>
+            <div class="circle"></div>
+            <div class="circle-medium"></div>
+            <div
+              class="circle-large"
+              [style.top]="(bgPrimary.offsetHeight + bgPrimary.offsetWidth ) / 2.78 + 'px'"
+              [style.width]="bgPrimary.offsetWidth + 'px'"
+              [style.height]="bgPrimary.offsetWidth + 'px'"></div>
+            <img
+              (load)="handleOnloadBanner()"
+              style="display: none"
+              src="/assets/images/onboarding-bg.png"
+              alt="auth bg" />
+            <img
+              *ngIf="showBanner"
+              class="img-auth"
+              src="/assets/images/onboarding-bg.png"
+              alt="auth bg" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #downloadScreen>
+    <div class="auth-login-wrapper download-wrapper">
+      <div class="auth-logo">
+        <img src="assets/icon/trudi-logo.svg" alt="logo" />
+      </div>
+      <h1 class="download-title">{{preLoginData.title}}</h1>
+      <p class="download-desc">
+        Get the Trudi® desktop app for the best user experience
+      </p>
+      <div class="d-flex align-items-center gap-12">
+        <trudi-icon
+          class="cursor-pointer"
+          [icon]="preLoginData.storeImg"
+          (click)="openDownloadLink(preLoginData.downloadLink)"></trudi-icon>
+        <trudi-icon
+          class="cursor-pointer"
+          icon="continueWeb"
+          (click)="continueWeb()"></trudi-icon>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #loginTemplate>
+    <div class="auth-login-wrapper">
+      <div class="auth-logo">
+        <img src="assets/icon/trudi-logo.svg" alt="logo" />
+      </div>
+      <h3 class="auth-hero">Log In</h3>
+      <p class="auth-title">Please enter your email and password</p>
+      <div class="auth-form-wrapper">
+        <div [formGroup]="form" class="auth-form">
+          <div class="auth-form-control" *ngIf="sso">
+            <label for="auth-input-email" class="auth-form-label">
+              Your region
+            </label>
+            <div class="auth-region">
+              <trudi-radio-button
+                classType="ROW"
+                [options]="regionList"
+                formControlName="region"
+                class="content-region"
+                [showIcon]="true"
+                (ngModelChange)="handleChangeRegion()">
+              </trudi-radio-button>
+            </div>
+          </div>
+          <div class="auth-form-control">
+            <label for="auth-input-email" class="auth-form-label">
+              Email
+            </label>
+            <div
+              class="form-control"
+              [ngClass]="{'input-focus': emailFocus}"
+              appOutsideClickListener
+              (clickOutside)="emailFocus = false">
+              <input
+                formControlName="email"
+                type="email"
+                (keyup.enter)="onLogin()"
+                class="auth-form-input w-100"
+                data-e2e="email-textbox"
+                placeholder="Enter your email"
+                id="auth-input-email"
+                autocomplete="on"
+                (focus)="emailFocus = true" />
+            </div>
+          </div>
+          <div class="auth-form-control form-password">
+            <label for="auth-input-password" class="auth-form-label">
+              Password
+            </label>
+            <div
+              class="form-control d-flex gap-8 justify-content-between"
+              [ngClass]="{'show-password': showPassword, 'input-focus': passwordFocus}"
+              appOutsideClickListener
+              (clickOutside)="passwordFocus = false">
+              <input
+                formControlName="password"
+                type="password"
+                data-e2e="password-textbox"
+                #password
+                (keyup.enter)="onLogin()"
+                class="auth-form-input input-password border-rad-8"
+                placeholder="Enter your password"
+                id="auth-input-password"
+                autocomplete="on"
+                (focus)="passwordFocus = true" />
+              <div (click)="toggleShowPassword()">
+                <img
+                  class="size-24"
+                  [src]="showPassword ? 'assets/images/icons/eye-show.svg' : 'assets/images/icons/eye.svg'" />
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-between mt-8">
+            <button trudi-btn size="small" variant="link">
+              <a
+                class="link-unset"
+                [routerLink]="'/auth/forgot-password'"
+                data-e2e="forgot-password"
+                >Forgot password?</a
+              >
+            </button>
+            <div
+              *ngIf="loginError"
+              class="auth-validate-msg"
+              data-e2e="validation-error-label">
+              <img src="/assets/icon/tool-tip-red.svg" />
+              {{loginErrorMessage}}
+            </div>
+          </div>
+          <div class="d-flex justify-content-between remember-me">
+            <ng-container>
+              <trudi-checkbox
+                [label]="'Remember me'"
+                [stringValue]="true"
+                formControlName="rememberMe"></trudi-checkbox>
+            </ng-container>
+          </div>
+          <div class="auth-btn-wrapper">
+            <button
+              trudi-btn
+              size="extra-large"
+              [disabled]="!form.valid"
+              class="w-100"
+              data-e2e="login-button"
+              (click)="onLogin()">
+              Log In
+            </button>
+          </div>
+          <div class="auth-btn-wrapper" *ngIf="showLoginGoogle">
+            <button
+              *ngIf="loginGooleButton"
+              class="auth-btn-google position-relative"
+              (click)="onLoginGoogle()">
+              <img src="assets/images/icons/google.svg" alt="google-icon" />
+              <span> Log in with Google </span>
+            </button>
+            <button
+              *ngIf="!loginGooleButton"
+              class="auth-btn-google position-relative">
+              <img
+                src="assets/images/icons/google.svg"
+                alt="google-icon"
+                style="opacity: 0" />
+              <div class="loader">Loading...</div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <trudi-modal
+    *ngIf="visible"
+    [(visible)]="visible"
+    [modelWidth]="361"
+    [autoFocus]="null"
+    [nzTitle]="headerTemplate"
+    [isHideFooter]="true"
+    [nzClosable]="false"
+    className="modal-close">
+    <div class="content-send">
+      <div class="content-title">That's sent!</div>
+      <div class="content-child-title">Please check your email.</div>
+    </div>
+    <button
+      class="submit-email text-close"
+      data-e2e="close-button"
+      (click)="handleClose()">
+      Close
+    </button>
+  </trudi-modal>
+</ng-template>

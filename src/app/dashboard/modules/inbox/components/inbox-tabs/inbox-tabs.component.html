@@ -1,0 +1,6 @@
+<div *ngIf="isAccountAdded" class="tabs-inbox__container">
+  <trudi-tabs
+    [tabs]="tabs"
+    [type]="'card'"
+    (changeTab)="handleChangeTab()"></trudi-tabs>
+</div>

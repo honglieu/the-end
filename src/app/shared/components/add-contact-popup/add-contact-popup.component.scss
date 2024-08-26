@@ -1,0 +1,71 @@
+@import 'function';
+
+.add-contact-container {
+  min-width: fit-content;
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+
+  .add-contact-detail {
+    width: fit-content;
+
+    .text-agent-detail {
+      display: flex;
+      gap: 4px;
+    }
+  }
+
+  .add-contact-detail {
+    &.btn-focus {
+    }
+  }
+}
+
+::ng-deep .ant-popover.add-contact-popover {
+  &.ant-popover-placement-bottomRight {
+    padding-top: 4px;
+  }
+  &.ant-popover-placement-bottomLeft {
+    padding-top: 4px;
+  }
+  &.ant-popover-placement-leftTop {
+    padding-right: 15px;
+  }
+  .ant-popover-inner-content {
+    padding: 0;
+  }
+  .ant-popover-arrow {
+    display: none;
+  }
+  .ant-menu {
+    border-radius: 8px;
+  }
+}
+
+.icon-down {
+  display: flex;
+}
+.icon-left {
+  display: none;
+}
+
+:host ::ng-deep {
+  .assigned-number-skeleton,
+  .assigned-number-skeleton
+    span.ant-skeleton-avatar.ant-skeleton-avatar-circle.ant-skeleton-avatar-sm {
+    width: 16px;
+    height: 16px;
+  }
+  .assigned-number-skeleton {
+    margin-left: 8px;
+  }
+}
+
+.clear-btn {
+  padding: 0;
+  border: none;
+  width: 16px;
+  height: 16px;
+  margin-left: 4px;
+}

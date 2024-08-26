@@ -1,0 +1,86 @@
+@import 'function';
+
+.integrations {
+  height: 100vh;
+  padding: 32px;
+
+.integrations-messenger-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 40px;
+  width: 460px;
+
+  .connect-wrapper {
+    ::ng-deep {
+      .trudi-badge-large {
+        height: 24px !important;
+        padding: 4px, 8px, 4px, 6px !important;
+        font-size: 12px;
+        line-height: 16px;
+        font-weight: 600;
+        gap: 4px;
+      }
+    }
+  }
+
+  .messenger-box {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 8px;
+
+    .messenger-text {
+      @include fontSetup(unset, 16px, 24px, normal, 600);
+      background: radial-gradient(
+        110% 110% at 16.75% 100%,
+        #09f 0%,
+        #a033ff 60%,
+        #ff5280 90%,
+        #ff7061 100%
+      );
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+
+  .integrations-messenger-description {
+    display: block;
+    @include fontSetup(var(--fg-neutral-emphasis), 14px, 20px, normal, 400);
+  }
+
+  .integrations-messenger-connected-description {
+    display: flex;
+    align-items: start;
+    gap: 8px;
+    width: 460px;
+    padding: 12px 0;
+
+    &__title {
+      white-space: nowrap;
+      @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 400);
+    }
+
+    &__page-name {
+      width: fit-content;
+      overflow: hidden;
+      word-wrap: break-word;
+      @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+    }
+
+    & ::ng-deep trudi-icon {
+      margin-top: 2px;
+      & svg-icon svg {
+        width: 16px !important;
+        height: 16px !important;
+      }
+    }
+  }
+
+  .signIn-btn,
+  .disconnect-btn {
+    width: fit-content;
+  }
+}
+}

@@ -1,0 +1,143 @@
+<div class="wrapper">
+  <div class="main-container d-flex">
+    <div class="sidebar-calendar">
+      <div class="sidebar-header d-flex">
+        <button
+          trudi-btn
+          size="medium"
+          variant="outlined"
+          btnType="neutral"
+          shape="circle"
+          (click)="onBackContact()">
+          <trudi-icon icon="arrowLeft" svgClass="size-16"></trudi-icon>
+        </button>
+        <h4 class="sidebar-calendar-title">Company holidays</h4>
+      </div>
+      <div class="content-hodidays">
+        <div class="collapes collapes-public">
+          <trudi-collapse
+            [titleHeader]="headerPublicHolidays"
+            [activeExpand]="true">
+            <ul class="list-holidays d-flex flex-dir-column auto-hide-scroll">
+              <ng-container
+                *ngFor="let item of holidayListDefault; let i = index">
+                <li
+                  *ngIf="item['availableYear'].includes(yearNumber)"
+                  class="hodiday-item d-flex align-items-center">
+                  <div
+                    class="first-check-box"
+                    disableTooltipOnWidth
+                    [maxWidthTooltip]="232"
+                    nz-tooltip
+                    [nzTooltipOverlayClassName]="'tooltipCalendarView'"
+                    [nzTooltipTitle]="item[1][0].name">
+                    <trudi-checkbox
+                      [label]="item[1][0].name"
+                      [(ngModel)]="item[1][0].isActive"
+                      (ngModelChange)="onCheckboxHoliday(item[1][0])"></trudi-checkbox>
+                  </div>
+                </li>
+              </ng-container>
+            </ul>
+          </trudi-collapse>
+          <ng-template #headerPublicHolidays>
+            <div class="d-flex align-items-center gap-4">
+              <div class="header-title">
+                Public holidays in
+                <span>{{getStateWorking?.value?.label}}</span>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+
+        <div class="collapes collapes-orther">
+          <trudi-collapse
+            [titleHeader]="headerOrtherHolidays"
+            [activeExpand]="true">
+            <ul class="list-holidays d-flex flex-dir-column auto-hide-scroll">
+              <ng-container
+                *ngFor="let item of holidayListNotDefault; let j = index">
+                <li
+                  *ngIf="item['availableYear']?.includes(yearNumber)"
+                  class="hodiday-item d-flex align-items-center justify-content-between">
+                  <div class="content-holiday d-flex align-items-center">
+                    <div
+                      disableTooltipOnWidth
+                      [maxWidthTooltip]="232"
+                      [nzTooltipOverlayClassName]="'tooltipCalendarView'"
+                      [nzTooltipTitle]="item[1][0].name"
+                      class="first-check-box">
+                      <trudi-checkbox
+                        [label]="item[1][0].name"
+                        [(ngModel)]="item[1][0].isActive"
+                        (ngModelChange)="onCheckboxHoliday(item[1][0])"></trudi-checkbox>
+                    </div>
+                  </div>
+                  <div
+                    class="remove-btn-file pointer"
+                    (click)="removeHolidayOther(item[1][0])">
+                    <trudi-icon icon="closeBtn"></trudi-icon>
+                  </div>
+                </li>
+              </ng-container>
+            </ul>
+          </trudi-collapse>
+          <ng-template #headerOrtherHolidays>
+            <div class="d-flex align-items-center gap-4">
+              <div class="header-title header-title-other">Other</div>
+              <div
+                class="add-hodiday"
+                (click)="$event.stopPropagation();openAddHoliday($event)">
+                <trudi-icon icon="iconPlus2"></trudi-icon>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="footer-calendar d-flex align-items-center gap-20">
+        <button
+          trudi-btn
+          variant="tonal"
+          btnType="neutral"
+          [disabled]="isDisabled"
+          (click)="handleDiscardChanges()">
+          Cancel
+        </button>
+        <button
+          trudi-btn
+          [disabled]="isDisabled"
+          (click)="handleUpdateHoliday()">
+          Save changes
+        </button>
+      </div>
+    </div>
+    <div class="content-calendar">
+      <year-calendar
+        [height]="'95vh'"
+        [holidayData]="holidayData"
+        [dayOffsOfWeek]="dayOffsOfWeek"
+        (onChangeYear)="handleChangeYear($event)"
+        (onSetHoliday)="handleSetHoliday($event)"
+        (onRemoveHoliday)="handleRemoveHoliday($event)">
+      </year-calendar>
+    </div>
+  </div>
+</div>
+<add-holiday-pop-up
+  [visible]="showCreateHoliday"
+  [regionId]="regionId"
+  [dateHoliday]="dateHoliday"
+  [addHolidayTitle]="addHolidayTitle"
+  (onCancel)="handleCloseModal()"
+  (onConfirm)="handleSubmitHoliday($event)"></add-holiday-pop-up>
+
+<app-modal-popup [show]="showModalDuplicateDate" [specificWidth]="510">
+  <duplicate-holiday-popup
+    (isCloseModal)="handleCloseModalDuplicate($event)"
+    (handleConfirmChange)="handleConfirmChange($event)"
+    [holidayId]="holidayId"
+    [nameChosen]="nameChosen"
+    [nameChange]="nameChange">
+  </duplicate-holiday-popup>
+</app-modal-popup>

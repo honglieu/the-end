@@ -1,0 +1,32 @@
+@import 'function';
+.list-user {
+  .export-conversation {
+    margin: 10px 0px 50px 0px;
+    padding-top: 10px;
+    border-top: 1px solid var(--gray-100);
+  }
+  .btn-action {
+    border-radius: 100px;
+    border: none;
+    background-color: transparent;
+    padding: 0;
+  }
+  .action-icon {
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    &:hover {
+      background-color: var(--gray-100);
+    }
+  }
+}
+
+::ng-deep {
+  .ant-drawer.ant-drawer-right:has(.list-user) {
+    top: 52px;
+  }
+}
+
+::ng-deep .move-to-icon .ant-tooltip-arrow {
+  right: 0px !important;
+}

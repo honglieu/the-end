@@ -1,0 +1,19 @@
+<div class="message-resolved d-flex justify-content-center align-items-center">
+  <div
+    class="resolved-wrapper d-flex flex-dir-column align-items-center justify-content-center wrap-conversation-status">
+    <div class="resolved-mark" data-e2e="marker-resolved-text">
+      <trudi-icon icon="greyCheck"></trudi-icon>
+      <span> Resolved {{isFromMailBox ? 'from' : 'by'}} </span>
+      <span
+        class="highlighted"
+        (click)="handleOpenProfileDrawer($event)"
+        [class.name-clickable]="isClickable">
+        {{isFromMailBox ? title : ((message.userId === _trudiUserId ?
+        message.creator : message) | formatDisplayFullName : false)}}
+      </span>
+      <span>
+        {{ message.createdAt | trudiDateTime : EPage.DETAILS | async}}</span
+      >
+    </div>
+  </div>
+</div>

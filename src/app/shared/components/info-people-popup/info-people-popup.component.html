@@ -1,0 +1,226 @@
+<trudi-modal
+  *ngIf="isShow"
+  [(visible)]="isShow"
+  [modelWidth]="728"
+  [autoFocus]="null"
+  (onCancel)="isOpenModal(false)"
+  [isHideFooter]="true">
+  <div class="modal-people">
+    <ng-template #headerModal>
+      <div class="header x-between relative">
+        <div class="header-content y-center">
+          <trudi-icon
+            class="header-icon"
+            svgClass="size-48"
+            icon="trudiAvt"></trudi-icon>
+          <div class="heading">
+            <div>
+              <h4 class="header-title">{{streetline}}</h4>
+            </div>
+            <ng-container *ngIf="propertyManagerName">
+              <div class="sub-title">
+                <div class="span-title y-center flex-dir-row cursor-default">
+                  <trudi-icon icon="home2"></trudi-icon>
+                  <span
+                    nz-popover
+                    [nzPopoverContent]="contentTemplate"
+                    nzPopoverTrigger="hover"
+                    [nzPopoverOverlayClassName]="'custom-popover'"
+                    [nzPopoverPlacement]="'bottomLeft'">
+                    {{propertyManagerName}}</span
+                  >
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <div class="body-modal">
+      <!-- SKELETON START -->
+      <div
+        class="wrapper"
+        *ngIf="loadingService.isLoading$ | async; else content">
+        <div class="col-left justify-content-between">
+          <card-info-people [isLoading]="true"></card-info-people>
+        </div>
+        <div class="col-right relative">
+          <div class="item-property">
+            <div>
+              <ng-container
+                *ngFor="let item of [].constructor(1) , let i = index">
+                <div class="card-property relative m-0">
+                  <nz-skeleton
+                    [nzParagraph]="{ rows: 2 }"
+                    [nzActive]="true"></nz-skeleton>
+                </div>
+              </ng-container>
+            </div>
+            <div class="item-maintenance">
+              <div
+                class="list-sub-item"
+                [ngClass]="{'position-inherit' : true}">
+                <div class="card-maintenance content relative">
+                  <nz-skeleton
+                    [nzParagraph]="{ rows: 2 }"
+                    [nzTitle]="true"
+                    [nzActive]="true"></nz-skeleton>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- SKELETON END -->
+
+      <ng-template #content>
+        <div class="wrapper">
+          <div class="col-left justify-content-between">
+            <card-info-people
+              [listOfUser]="listOfUser"
+              [crmSystemId]="crmSystemId"></card-info-people>
+          </div>
+          <div class="divider"></div>
+          <div class="col-right relative">
+            <div class="item-property">
+              <div class="d-flex justify-content-between align-items-center">
+                <button
+                  class="property-title button-toogle-gray y-center gap-4"
+                  (click)="toggleProperty()">
+                  <trudi-icon
+                    class="mt-4"
+                    [ngClass]="!isExpandProperty ? 'rotate-180' : 'rotate-0'"
+                    icon="toggleGray"></trudi-icon>
+                  Property notes ({{listPropertyNote?.length}})
+                </button>
+                <button
+                  class="item-button"
+                  (click)="handleOpenModalAddNote()"
+                  [disabled]="isConsole">
+                  <trudi-icon icon="buttonAdd"></trudi-icon>
+                </button>
+              </div>
+              <div
+                #scrollControlProperty
+                class="list-sub-item"
+                [style.max-height]="isExpandProperty? scrollControlProperty?.scrollHeight + 'px' : '0'">
+                <ng-container
+                  *ngFor="let item of listPropertyNote , let i = index">
+                  <div
+                    class="card-property relative"
+                    [class.cursor-pointer]="selectedItem !== item.id && !isConsole"
+                    (click)="selectedItem !== item.id && item.syncStatus !== TYPE_SYNC_MAINTENANCE.INPROGRESS && !isConsole && editNote(item)">
+                    <div class="card-title y-center justify-content-between">
+                      <div class="card-title-category y-center text-ellipsis">
+                        <div>{{item.categoryName}}</div>
+
+                        <ng-container *ngIf="isShowStatus">
+                          <div class="sync-maintenance y-center gap-4">
+                            <ng-container
+                              *ngIf="item.syncStatus === TYPE_SYNC_MAINTENANCE.INPROGRESS">
+                              <trudi-icon
+                                class="sync-icon spin"
+                                icon="refreshGreen"></trudi-icon>
+                              <span>Syncing</span>
+                            </ng-container>
+                            <ng-container
+                              *ngIf="item.syncStatus === TYPE_SYNC_MAINTENANCE.FAILED">
+                              <trudi-icon icon="warningsync"></trudi-icon>
+                              <span>Fail to sync</span>
+                            </ng-container>
+                            <ng-container
+                              *ngIf="item.syncStatus === TYPE_SYNC_MAINTENANCE.COMPLETED">
+                              <trudi-icon icon="checkedSync"></trudi-icon>
+                              <span>Synced</span>
+                            </ng-container>
+                          </div>
+                        </ng-container>
+                      </div>
+                      <button
+                        class="card-action"
+                        *ngIf="selectedItem !== item.id && item.syncStatus !== TYPE_SYNC_MAINTENANCE.INPROGRESS && !isConsole && !isArchiveMailbox"
+                        (click)="editNote(item)">
+                        <trudi-icon icon="penGray"></trudi-icon>
+                      </button>
+                      <button
+                        class="card-action"
+                        *ngIf="selectedItem === item.id"
+                        (mousedown)="updateNote(item)">
+                        <trudi-icon icon="checkNote"></trudi-icon>
+                      </button>
+                    </div>
+                    <div class="card-title-date">
+                      Updated {{item.lastModified | formatDate | async}}
+                    </div>
+                    <div class="card-content">
+                      <div class="content relative">
+                        <ng-container
+                          *ngIf="selectedItem !== item.id; else selected">
+                          <div class="title">{{item.description}}</div>
+                        </ng-container>
+                        <ng-template #selected>
+                          <textarea
+                            #decriptionNote
+                            type="text"
+                            rows="2"
+                            autosize
+                            [(ngModel)]="item.description"
+                            (focusout)="handleFocusOut(item)"
+                            [maxlength]="MAX_TEXT_MESS_LENGTH"
+                            data-e2e="data-e2e"></textarea>
+                        </ng-template>
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+              <div
+                class="item-maintenance"
+                *ngIf="crmSystemId === ECrmSystemId.PROPERTY_TREE">
+                <button
+                  class="y-center gap-4 button-toogle-gray"
+                  (click)="toggleMaintenance()">
+                  <trudi-icon
+                    [ngClass]="{'display' : isOpenExpand}"
+                    [ngClass]="[!isExpandMaintenance ? 'rotate-180' : 'rotate-0', 'cursor-pointer', 'mt-4']"
+                    icon="toggleGray"></trudi-icon>
+                  Maintenance notes
+                </button>
+                <div
+                  #scrollControlMaintenance
+                  *ngIf="isExpandMaintenance"
+                  class="list-sub-item"
+                  [style.max-height]="isExpandMaintenance? scrollControlMaintenance?.scrollHeight + 'px' : '0'"
+                  [ngClass]="{'position-inherit' : isOpenExpand}">
+                  <div
+                    #textAreaWrapper
+                    class="card-maintenance content relative"
+                    *ngIf="maintenanceNote">
+                    {{ maintenanceNote }}
+                  </div>
+                </div>
+                <div
+                  class="item-expenditure x-between"
+                  *ngIf="expenditureLimit">
+                  <div class="lable-expenditure">Expenditure limit:</div>
+                  <div class="pay-expenditure">
+                    ${{ expenditureLimit | number: '1.2-2'}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+    <ng-template #footerModal>
+      <div></div>
+    </ng-template>
+  </div>
+</trudi-modal>
+
+<ng-template #contentTemplate>
+  <div class="popover-container" *ngFor="let item of propertyManager">
+    <span class="text-ellipsis">{{item?.firstName}} {{item?.lastName}}</span>
+  </div>
+</ng-template>

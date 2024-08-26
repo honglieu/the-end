@@ -1,0 +1,26 @@
+.user-avatar {
+  .text {
+    font-weight: 600 !important;
+    border-radius: 50% !important;
+    color: var(--white) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: var(--brand-500) !important;
+    height: 100% !important;
+    width: 100% !important;
+    font-style: normal !important;
+  }
+
+  &.no-round {
+    img {
+      border-radius: 0 !important;
+    }
+  }
+
+  img {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 50% !important;
+  }
+}

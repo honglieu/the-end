@@ -1,0 +1,14 @@
+@import 'function';
+
+.inbox-wrapper {
+  .inbox-wrapper-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .text-content {
+      text-align: center;
+      @include fontSetup(var(--fg-neutral-weaker), 14px, 20px, normal, 500);
+    }
+  }
+}

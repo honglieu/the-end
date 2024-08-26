@@ -1,0 +1,43 @@
+<ul
+  nz-menu
+  nzMode="inline"
+  class="border-r-none background--white"
+  id="archived-mailbox-list">
+  <li
+    appE2E
+    e2eId="inbox-email-folder-dropdown"
+    nz-submenu
+    [nzTitle]="sidebarTitle"
+    class="submenu"
+    [nzOpen]="isShowArchivedMailbox"
+    [ngClass]="['relative']"
+    tabindex="0"
+    (click)="hanldShowArchivedMailbox()">
+    <div class="box-content">
+      <ng-container>
+        <div class="archived-mailbox-list">
+          @for (item of listMailBoxs; track item.id; let i = $index) {
+          <archived-mailbox-item
+            [item]="item"
+            [unreadList]="unreadList"
+            (expandMailbox)="handleExandMailbox($event)"></archived-mailbox-item>
+          }
+          <div class="wrapper-archived-channel">
+            @for (item of [listArchiveMessenger, listArchiveWhatsApp]; track
+            $index;) {
+            <archived-channel-list
+              [listArchiveChannel]="item"
+              [listMailBoxS]="listMailBoxsClone"></archived-channel-list>
+            }
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <ng-template #sidebarTitle>
+      <div
+        class="d-flex align-items-center justify-content-between archived-mailbox">
+        <div class="archived-mailbox-text">VIEW ARCHIVED</div>
+      </div>
+    </ng-template>
+  </li>
+</ul>

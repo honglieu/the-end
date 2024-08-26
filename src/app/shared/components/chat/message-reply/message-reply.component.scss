@@ -1,0 +1,69 @@
+@import 'function';
+
+.msg-reply {
+  cursor: pointer;
+  width: fit-content;
+  max-width: 100%;
+  .reply-text {
+    position: relative;
+    top: 8px;
+    border-radius: 8px;
+    padding: 4px 8px 12px 8px;
+    background: var(--bg-opacity-stronger, #99999933);
+    ::ng-deep {
+      .reply-message.message-reply {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: normal;
+
+        padding-bottom: 0;
+        background: transparent;
+        @include fontSetup(
+          var(--fg-neutral-normal, #61646c),
+          12px,
+          16px,
+          normal,
+          400
+        );
+      }
+    }
+  }
+
+  .reply-attachment {
+    position: relative;
+    top: 5px;
+    ::ng-deep {
+      .image-wrapper,
+      .video-wrapper,
+      .reply-file-wrapper {
+        &.message-reply {
+          opacity: 0.6;
+        }
+      }
+      .image-wrapper,
+      .video-wrapper {
+        &.message-reply {
+          img {
+            width: 80px;
+            height: 80px;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+.m-l-auto {
+  margin-left: auto;
+}
+
+.m-r-auto {
+  margin-right: auto;
+}

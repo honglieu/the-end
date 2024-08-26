@@ -1,0 +1,394 @@
+<ng-container *ngIf="loadingService.isLoading$ | async; else companyDetails">
+  <div class="company-setting">
+    <div class="contact-details">
+      <div class="contact-details-header" data-console="contact-details-header">
+        Information
+      </div>
+      <div class="contact-details-content">
+        <div class="contact-details-row">
+          <nz-skeleton
+            [nzParagraph]="{ rows: 6 }"
+            [style.width.px]="400"
+            [nzTitle]="false"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </div>
+    </div>
+    <div class="trust-account-details mb-16">
+      <div class="trust-account-details-header">Trust account details</div>
+      <nz-skeleton
+        [nzParagraph]="{ rows: 3 }"
+        [style.width.px]="400"
+        [nzTitle]="false"
+        [nzActive]="true"></nz-skeleton>
+    </div>
+  </div>
+</ng-container>
+<ng-template #companyDetails>
+  <ng-container>
+    <div *ngIf="!isPermissionEdit" class="d-flex gap-4 align-items-center mb-8">
+      <trudi-icon icon="infoFill" [style]="{ 'width.px': 12, 'height.px': 12 }">
+      </trudi-icon>
+      <span class="warning-notice-text"
+        >You need to be an account administrator to edit this page.</span
+      >
+    </div>
+    <div class="company-setting company-setting-edit">
+      <div [formGroup]="editCompanyDetails">
+        <div class="contact-details">
+          <div
+            class="contact-details-header"
+            data-console="contact-details-header">
+            Information
+          </div>
+          <div
+            class="contact-details-content"
+            *ngIf="agentDetailInfo; else hasNoInfo">
+            <div class="contact-details-row">
+              <div class="contact-details-logo">
+                <span class="title">Company logo </span>
+                <div class="info info-center">
+                  <div class="size-40">
+                    <img [src]="urlCompanyLogo" alt="Logo" />
+                  </div>
+                  <button
+                    *ngIf="isPermissionEdit"
+                    trudi-btn
+                    size="extra-small"
+                    btnType="neutral"
+                    variant="tonal"
+                    shape="circle"
+                    (click)="onShowUploadLogoModalChange(true)">
+                    <trudi-icon icon="penIcon" alt="Edit Icon"></trudi-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="contact-details-trading-name">
+                <span class="title" data-console="trading-name-title">
+                  Company name
+                </span>
+                <div class="contact-details-input">
+                  <trudi-form-control
+                    [checkSubmit]="checkSubmit"
+                    [errors]="[{errorName: 'name', errorMessage: 'This agency name is already existed'}]">
+                    <trudi-text-field
+                      [checkSubmit]="checkSubmit"
+                      size="medium"
+                      formControlName="name"
+                      (triggerEventInput)="handleOnchangeForm()"
+                      (triggerEventBlur)="onSubmitEdit()"></trudi-text-field>
+                  </trudi-form-control>
+                </div>
+              </div>
+              <div class="contact-details-business-name">
+                <span class="title" data-console="trading-name-title">
+                  Registered business name
+                </span>
+                <div class="contact-details-input">
+                  <trudi-form-control
+                    [checkSubmit]="checkSubmit"
+                    [errors]="[{errorName: 'businessName', errorMessage: 'This business name is already existed'}]">
+                    <trudi-text-field
+                      [checkSubmit]="checkSubmit"
+                      [maxCharacter]="255"
+                      size="medium"
+                      formControlName="businessName"
+                      (triggerEventInput)="handleOnchangeForm()"
+                      (triggerEventBlur)="onSubmitEdit()"></trudi-text-field>
+                  </trudi-form-control>
+                </div>
+              </div>
+              <div class="contact-details-address">
+                <span class="title">Office address </span>
+                <div class="contact-details-input">
+                  <trudi-form-control
+                    [checkSubmit]="checkSubmit"
+                    [errors]="[{errorName: 'address', errorMessage: 'Please remove invalid address'}]">
+                    <trudi-text-field
+                      [checkSubmit]="checkSubmit"
+                      size="medium"
+                      formControlName="address"
+                      (triggerEventInput)="handleOnchangeForm()"
+                      (triggerEventBlur)="onSubmitEdit()"></trudi-text-field>
+                  </trudi-form-control>
+                </div>
+              </div>
+              <div class="contact-details-email">
+                <span class="title">
+                  Company email&nbsp;
+                  <trudi-icon
+                    icon="toolTip2"
+                    class="tool-tip"
+                    nz-tooltip
+                    nzTooltipTitle="{{tooltipTextEmail}}"
+                    [nzTooltipOverlayClassName]="'tool-tip-email'"
+                    nzTooltipPlacement="top">
+                  </trudi-icon>
+                </span>
+                <div class="contact-details-input">
+                  <trudi-form-control
+                    [checkSubmit]="checkSubmit"
+                    [errors]="[{errorName: 'companyEmail', errorMessage: 'This email is already existed'}]">
+                    <trudi-text-field
+                      [checkSubmit]="checkSubmit"
+                      size="medium"
+                      formControlName="companyEmail"
+                      (triggerEventInput)="handleOnchangeForm()"
+                      (triggerEventBlur)="onSubmitEdit()"></trudi-text-field>
+                  </trudi-form-control>
+                </div>
+              </div>
+              <div class="contact-details-phone">
+                <span class="title" data-console="company-phone-title">
+                  Phone
+                </span>
+                <div class="contact-details-input">
+                  <trudi-form-control
+                    [checkSubmit]="checkSubmit"
+                    [errors]="[{errorName: 'invalidPhoneNumber', errorMessage: 'Invalid phone number'}]">
+                    <trudi-number-field
+                      [disableDotKey]="isRmEnvironment"
+                      [checkSubmit]="checkSubmit"
+                      (onChangeData)="onPhoneNumberChange($event)"
+                      (triggerEventBlur)="onSubmitEdit()"
+                      [maskPattern]="maskPattern"
+                      [prefixText]="'(' + areaCode + ')' || ''"
+                      size="medium"
+                      [maxCharacter]="maxCharacter"
+                      formControlName="phoneNumber"></trudi-number-field>
+                  </trudi-form-control>
+                </div>
+              </div>
+              <div class="contact-details-link">
+                <span class="title">Website</span>
+                <div *ngIf="!isAddLinkSuccess && isAddedLink">
+                  <span class="info">
+                    <button
+                      trudi-btn
+                      size="medium"
+                      variant="link"
+                      (click)="togglePopupAddLink()">
+                      + Add link
+                    </button>
+                  </span>
+                </div>
+                <div class="contact-details-input">
+                  <trudi-form-control
+                    [checkSubmit]="checkSubmit"
+                    [errors]="[{errorName: 'websiteUrl', errorMessage: 'This website url is already existed'}]">
+                    <trudi-text-field
+                      [checkSubmit]="checkSubmit"
+                      size="medium"
+                      formControlName="websiteUrl"
+                      (triggerEventInput)="handleOnchangeForm()"
+                      (triggerEventBlur)="onSubmitEdit()"></trudi-text-field>
+                  </trudi-form-control>
+                </div>
+              </div>
+              <div class="contact-details-timezone">
+                <span class="title">Timezone</span>
+                <div class="timezone-ddl">
+                  <trudi-form-control [checkSubmit]="checkSubmit">
+                    <trudi-select-dropdown
+                      [overlayClassName]="'timezone-event'"
+                      bindValue="value"
+                      placeholder="Search"
+                      [items]="timezoneOptions"
+                      backdrop="true"
+                      [searchable]="true"
+                      [clearable]="false"
+                      [placement]="'bottomLeft'"
+                      [dropdownWidth]="512"
+                      formControlName="agencyTimezone"
+                      (visibleChange)="onSubmitEdit()"
+                      (valueChange)="handleOnchangeForm()">
+                      <ng-template trudi-select-dropdown-title-tmp>
+                        <div class="timezone-ddl-title">
+                          <span class="timezone-ddl-title--hour"
+                            >{{currentTimeZone.gmt}}</span
+                          >
+                          <span class="timezone-ddl-title--label">
+                            {{currentTimeZone.tzLabel}}
+                          </span>
+                        </div>
+                      </ng-template>
+                      <ng-template
+                        trudi-select-dropdown-option-tmp
+                        let-item="item">
+                        <div class="list-timezone-option">
+                          <div class="trudi-select-dropdown-item__info">
+                            <span
+                              class="trudi-select-dropdown-item__info--hour">
+                              {{item.gmt}}
+                            </span>
+                            <p class="trudi-select-dropdown-item__info--label">
+                              {{ item.tzLabel }}
+                            </p>
+                          </div>
+                          <trudi-icon
+                            class="checked-icon"
+                            icon="checkCurrentColor"></trudi-icon>
+                        </div>
+                      </ng-template>
+                    </trudi-select-dropdown>
+                  </trudi-form-control>
+                </div>
+              </div>
+              <div class="contact-details-link">
+                <span class="title align-self-start">Office hours</span>
+                <div>
+                  <span
+                    class="info add-time add-time-btn"
+                    *ngIf="!lastOfficeHour?.timeLabel?.length">
+                    <button
+                      trudi-btn
+                      size="medium"
+                      variant="link"
+                      (click)="setWorkingHour()">
+                      + Add time
+                    </button>
+                  </span>
+                  <div
+                    class="office-hours-wrapper"
+                    *ngIf="lastOfficeHour?.timeLabel?.length">
+                    <div class="hours-detail d-flex justify-content-between">
+                      <div>
+                        <div
+                          class="hours-item"
+                          *ngFor="let item of lastOfficeHour.regionWorkingHours">
+                          <span class="day-hourd">
+                            {{item.label | titlecase}}
+                          </span>
+                          <span
+                            class="time-hourd"
+                            *ngIf="item.isEnable; else closeTime">
+                            {{ item.startTime12 }} - {{ item.endTime12 }}
+                          </span>
+                          <ng-template #closeTime>
+                            <span class="time-close"> Closed </span>
+                          </ng-template>
+                        </div>
+                      </div>
+                      <button
+                        trudi-btn
+                        variant="outlined"
+                        size="extra-small"
+                        btnType="neutral"
+                        [disabled]="isDisableOfficeHoursEditBtn"
+                        class="align-self-start"
+                        (click)="setWorkingHour()">
+                        Edit
+                      </button>
+                    </div>
+                    <div class="info add-time">
+                      <span class="time-label mt-8">
+                        {{lastOfficeHour?.dayLabel}}
+                        <span class="edited-item">(edited)</span>
+                        <ng-container *ngIf="publicHolidays.length">
+                          <div
+                            class="holiday-hover-popup border-rad-16 cursor-default">
+                            <div class="holiday-hover-popup-content">
+                              <div
+                                class="holiday-hover-popup-title white-space-nowrap">
+                                List of public holidays
+                              </div>
+                              <hr class="divider" />
+                              <div
+                                class="holiday-hover-popup-list d-flex flex-dir-column gap-12 auto-hide-scroll">
+                                <ng-container
+                                  *ngFor="let holiday of publicHolidays">
+                                  <div
+                                    class="holiday-hover-popup-list-item d-flex justify-content-between gap-12 white-space-nowrap">
+                                    <div
+                                      class="holiday-name d-flex align-items-center gap-8">
+                                      <span
+                                        class="holiday-dot"
+                                        [ngClass]="{'color--bright-red': holiday.isDefault}">
+                                        •
+                                      </span>
+                                      <span class="text-ellipsis">
+                                        {{holiday.name}}
+                                      </span>
+                                    </div>
+                                    <div class="holiday-date">
+                                      {{holiday.date}}
+                                    </div>
+                                  </div>
+                                </ng-container>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-container>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ng-template #hasNoInfo>
+            <circle-loading-indicator></circle-loading-indicator>
+          </ng-template>
+        </div>
+        <div class="trust-account-details">
+          <div
+            class="trust-account-details-header"
+            data-console="trust-account-details-header">
+            Trust account details
+          </div>
+          <ng-template #hasNoInfo>
+            <circle-loading-indicator></circle-loading-indicator>
+          </ng-template>
+          <trust-account
+            [listOfSubscription]="listOfSubscription"
+            [listOfTrustAccount]="listOfTrustAccount"></trust-account>
+        </div>
+      </div>
+      <ng-template #hasNoInfo>
+        <circle-loading-indicator></circle-loading-indicator>
+      </ng-template>
+    </div>
+  </ng-container>
+</ng-template>
+
+<app-set-working-hour
+  [stateId]="lastOfficeHour?.id"
+  [isAddTime]="!lastOfficeHour?.timeLabel?.length"
+  *ngIf="showWorkingHour"
+  (onCloseModal)="showWorkingHour = false"
+  (onEditSuccess)="getWorkingHoursExist()">
+</app-set-working-hour>
+
+<trudi-modal
+  *ngIf="isShowUploadLogoModal"
+  [visible]="isShowUploadLogoModal"
+  [modelWidth]="624"
+  [autoFocus]="null"
+  [className]="!showCroppie ? 'hidden trudi-modal-custom' : 'trudi-modal-custom'">
+  <app-agency-logo-popup
+    (showCroppieChange)="onShowCroppieChange($event)"
+    (showQuitConfirmChange)="onQuitConfirmChange($event)"
+    [currentStep]="currentStep"
+    [imageUrl]="urlLogo"
+    [currentCompany]="currentCompany"
+    (currentStepChange)="onCurrentStepChange($event)"
+    (showUploadModalChange)="onShowUploadLogoModalChange($event)"
+    (saveChange)="handleSaveLogo()"
+    (linkNewImage)="onLinkNewImage($event)"></app-agency-logo-popup>
+</trudi-modal>
+
+<trudi-modal
+  *ngIf="isShowUploadQuitConfirm"
+  [visible]="isShowUploadQuitConfirm"
+  [modelWidth]="624"
+  [autoFocus]="null"
+  className="quit-confirm trudi-modal-custom">
+  <app-upload-logo-quit-confirm
+    (showCroppieChange)="onShowCroppieChange($event)"
+    [currentStep]="currentStep"
+    (currentStepChange)="onCurrentStepChange($event)"
+    (showUploadModalChange)="onShowUploadLogoModalChange($event)"
+    (showQuitConfirmChange)="onQuitConfirmChange($event)"
+    [attr.data-e2e]="'cancel-confirmation-modal'">
+  </app-upload-logo-quit-confirm>
+</trudi-modal>

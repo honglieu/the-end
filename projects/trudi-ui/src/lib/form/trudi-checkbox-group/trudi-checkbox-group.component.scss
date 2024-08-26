@@ -1,0 +1,15 @@
+@import 'function';
+
+.trudi-checkbox-group {
+  margin-top: -5px;
+  &-label {
+    @include fontSetup(var(--gray-500), 1.2rem, 1.8rem, normal, 600);
+  }
+
+  &-container {
+    margin-top: 9px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+}

@@ -1,0 +1,89 @@
+<div
+  class="trudi-pagination-wrapper d-flex align-items-center"
+  [ngClass]="{
+    'justify-content-center': paginationPlacement === PAGINATION_PLACEMENT.CENTER,
+    'justify-content-end': paginationPlacement === PAGINATION_PLACEMENT.END,
+    'justify-content-start': paginationPlacement === PAGINATION_PLACEMENT.START
+  }">
+  <div class="page-size-option d-flex align-items-center">
+    <span class="page-size-option-label">Show rows</span>
+
+    <ng-select
+      class="share-ng-select pagination-ng-select"
+      data-console="show-rows-dropdown"
+      [items]="pageSizeOptions"
+      bindLabel="label"
+      bindValue="id"
+      [searchable]="false"
+      [clearable]="false"
+      (change)="handleChangePageSizeOptions($event)"
+      [(ngModel)]="currentPageSizeOption">
+    </ng-select>
+  </div>
+
+  <div class="page-size-item">
+    {{ (paginationData.totalItems > 0) ? (pageIndex * pageSize + 1) : 0 }} - {{
+    ((pageIndex + 1) * pageSize > paginationData.totalItems) ?
+    paginationData.totalItems : ((pageIndex + 1) * pageSize) }} of {{
+    paginationData.totalItems }}
+  </div>
+
+  <div class="arrow-wrapper d-flex align-items-center">
+    <div class="icon-item" [class.pagination-disable]="pageIndex === 0">
+      <button
+        (click)="onClickArrow(ARROW_ICON_TYPE.FIRST_PAGE, pageSize)"
+        [tabindex]="pageIndex === 0 ? '-1' :'0'">
+        <trudi-icon
+          viewBox="auto"
+          svgClass="size-20"
+          icon="chevronFirst"
+          nz-tooltip
+          nzTooltipPlacement="top"
+          nzTooltipTitle="First"></trudi-icon>
+      </button>
+    </div>
+    <div class="icon-item" [class.pagination-disable]="pageIndex === 0">
+      <button
+        (click)="onClickArrow(ARROW_ICON_TYPE.PREV_PAGE, pageSize)"
+        [tabindex]="pageIndex === 0 ? '-1' :'0'">
+        <trudi-icon
+          viewBox="auto"
+          svgClass="size-20"
+          icon="chevronLeft"
+          nz-tooltip
+          nzTooltipPlacement="top"
+          nzTooltipTitle="Previous"></trudi-icon>
+      </button>
+    </div>
+    <div
+      class="icon-item"
+      [class.pagination-disable]="paginationData?.totalPages === 0 || pageIndex === paginationData?.totalPages - 1">
+      <button
+        (click)="onClickArrow(ARROW_ICON_TYPE.NEXT_PAGE, pageSize)"
+        [tabindex]="paginationData?.totalPages === 0 || pageIndex === paginationData?.totalPages - 1 ? '-1' :'0'">
+        <trudi-icon
+          viewBox="auto"
+          svgClass="size-20"
+          icon="chevronRight"
+          nz-tooltip
+          nzTooltipPlacement="top"
+          nzTooltipTitle="Next"></trudi-icon>
+      </button>
+    </div>
+    <div
+      class="icon-item"
+      [class.pagination-disable]="paginationData?.totalPages === 0 || pageIndex === paginationData?.totalPages - 1">
+      <button
+        (click)="onClickArrow(ARROW_ICON_TYPE.LAST_PAGE, pageSize)"
+        [tabindex]="paginationData?.totalPages === 0 || pageIndex === paginationData?.totalPages - 1 ? '-1' :'0'">
+        <trudi-icon
+          viewBox="auto"
+          svgClass="size-20"
+          icon="chevronLast"
+          nz-tooltip
+          nzTooltipPlacement="top"
+          nzTooltipTitle="Last"></trudi-icon>
+      </button>
+    </div>
+  </div>
+</div>

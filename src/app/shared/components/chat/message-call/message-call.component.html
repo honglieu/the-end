@@ -1,0 +1,112 @@
+<ng-container *ngIf="message.conversationId === currentConversationId">
+  <ng-container
+    *ngIf="message.callType !== callType.voiceCall; else voiceCallTemplate">
+    <ng-container [ngSwitch]="callState">
+      <!-- <div *ngSwitchCase="messageCallState.active">
+        <div class="call-in-progress">
+          <div class="call-logo"><img src="assets/images/rent-payments.svg" /></div>
+          <div class="call-status">
+            <div class="call-status-header">
+              <div class="call-status-header-text">Call in progress</div>
+              <div class="call-status-header-time">
+                {{message.messageCall.callTime || getCallTime}}
+              </div>
+            </div>
+            <div class="call-status-message">{{message.firstName}} has started a video call.</div>
+          </div>
+          <div class="call-status-message">{{message.firstName}} has started a video call.</div>
+        </div>
+      </div>
+    </div> -->
+      <div *ngSwitchCase="messageCallState.missed">
+        <!-- <app-message-header
+        [firstName]="message.firstName"
+        [lastName]="message.lastName"
+        [createdAt]="message.createdAt"
+      ></app-message-header> -->
+        <div class="call-missed">
+          <div class="call-logo">
+            <trudi-icon
+              [icon]="message.callType === callType.voiceCall ? 'missCall' : 'missVideoCall'"></trudi-icon>
+          </div>
+          <div class="call-status">
+            <div class="call-status-header">
+              <div class="call-status-header-text">
+                {{message?.callType === callType.voiceCall ? "Missed phone call"
+                : "Missed video call"}}
+              </div>
+              <!-- <div class="call-status-header-time" *ngIf="!message.message[0].value?.includes('miss') || message.message">
+              {{message.messageCall.callTime || getCallTime}}
+            </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngSwitchCase="messageCallState.finished">
+        <!-- <app-message-header
+        [firstName]="message.firstName"
+        [lastName]="message.lastName"
+        [createdAt]="message.createdAt"
+      ></app-message-header> -->
+        <div class="call-was-completed">
+          <div class="call-logo">
+            <trudi-icon
+              [icon]="message?.callType === callType.voiceCall ? 'audioCallEnd' : 'endVideoCall'"></trudi-icon>
+          </div>
+          <div class="call-status">
+            <div class="call-status-header">
+              <div class="call-status-header-text">
+                {{message?.callType === callType.voiceCall ? "Phone call" :
+                "Video call"}}
+              </div>
+              <div class="call-status-header-time">
+                Call end • {{ message.messageCall?.callTime || getCallTime }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #voiceCallTemplate>
+    <ng-container [ngSwitch]="callState">
+      <div *ngSwitchCase="messageCallState.missed">
+        <div class="call-missed">
+          <div class="call-logo">
+            <trudi-icon icon="missCall"></trudi-icon>
+          </div>
+          <div class="call-status">
+            <div class="call-status-header">
+              <div class="call-status-header-text">Missed phone call</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngSwitchCase="messageCallState.finished">
+        <div class="call-was-completed">
+          <div class="call-logo">
+            <trudi-icon icon="audioCallEnd"></trudi-icon>
+          </div>
+          <div class="call-status">
+            <div class="call-status-header">
+              <div class="call-status-header-text">
+                Call to {{message?.messageCall?.callToPhoneNumber |
+                phoneNumberFormat}}
+              </div>
+              <div class="call-status-header-time">
+                Call end • {{ message?.messageCall?.callTime || getCallTime }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </ng-template>
+
+  <div
+    class="text-right call-footer text-muted"
+    *ngIf="callState !== messageCallState.active && message.createdAt">
+    {{message.createdAt | timeAgo}}
+  </div>
+</ng-container>

@@ -1,0 +1,64 @@
+<trudi-modal
+  [visible]="visible"
+  classContainer="view-recipients-container"
+  okText="Confirm"
+  title="Confirm recipients of bulk message"
+  [disableOkBtn]="disabled || viewRecipientsForm?.invalid || isFetchingData"
+  [hiddenCancelBtn]="true"
+  modelWidth="720px"
+  showBackBtn="true"
+  [isCondense]="true"
+  (onOk)="handleConfirm()"
+  (onBack)="handleBack()"
+  (onCancel)="handleCancel()"
+  (triggerAfterClose)="handleAfterClose()">
+  <div class="view-recipients-container">
+    <div class="select-field">
+      <div class="select-field__label">Add recipients</div>
+      <trudi-select-receiver-v2
+        class="receiver-wrapper"
+        [formControl]="extraRecipientsControl"
+        prefixTemplate=""
+        [configs]="configs"
+        [taskIds]="configs.otherConfigs.createMessageFrom !== ECreateMessageFrom.MULTI_MESSAGES ? selectedTaskIds : []"
+        [ignoreUsers]="ignoreUsers"
+        [isAddItem]="configs.otherConfigs.createMessageFrom !== ECreateMessageFrom.MULTI_TASKS"
+        [compareWith]="compareWith"
+        extraCls="select-recipients"
+        [selectedProperty]="selectedProperty"
+        [skipLogicByConversationProperty]="true"
+        (clearAll)="extraRecipientsControl.setValue([])"
+        [isRmEnvironment]="isRmEnvironment"></trudi-select-receiver-v2>
+    </div>
+    <div class="recipient-list">
+      <div class="recipient-item" *ngFor="let recipient of displayRecipients">
+        <div class="recipient-item-content">
+          <div class="recipient-info">
+            <div
+              *ngIf="configs.otherConfigs.createMessageFrom === ECreateMessageFrom.MULTI_MESSAGES"
+              class="recipient-name">
+              {{recipient.recipientParticipantsTitle}}
+            </div>
+            <div
+              *ngIf="configs.otherConfigs.createMessageFrom !== ECreateMessageFrom.MULTI_MESSAGES"
+              class="recipient-name">
+              {{recipient.recipientTitle}}
+            </div>
+            <div
+              class="recipient-address"
+              [class.no-property]="!recipient.streetLine">
+              <trudi-icon icon="iconAddress"></trudi-icon>
+              <p class="m-0">
+                {{ recipient.shortenStreetline || recipient.streetLine || 'No
+                property' }}
+              </p>
+            </div>
+          </div>
+          <trudi-checkbox
+            [(ngModel)]="recipient.isChecked"
+            (ngModelChange)="handleChangeSelectedRecipients()"></trudi-checkbox>
+        </div>
+      </div>
+    </div>
+  </div>
+</trudi-modal>

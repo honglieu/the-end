@@ -1,0 +1,203 @@
+<div class="contact-wrapper" [formGroup]="contactForm">
+  <div class="table-fix-feader">
+    <table class="table-property">
+      <thead>
+        <tr class="cursor-default">
+          <th>Contacts</th>
+          <th>Set as primary</th>
+          <th></th>
+        </tr>
+      </thead>
+      <ng-container *ngIf="!isLoading else skeletonTemplate">
+        <tbody>
+          <tr *ngFor="let field of contactForm.controls; let i = index">
+            <td class="contact-info table-border-bottom">
+              <div class="contact-info-item first-name">
+                <trudi-form-control>
+                  <trudi-text-field
+                    [formControl]="field.get('firstName')"
+                    [showCounting]="false"
+                    [maxCharacter]="25"
+                    [size]="'large'"
+                    label="First name"></trudi-text-field>
+                </trudi-form-control>
+              </div>
+              <div class="contact-info-item last-name">
+                <trudi-form-control [checkSubmit]="!isSubmitted">
+                  <trudi-text-field
+                    [checkSubmit]="!isSubmitted"
+                    [formControl]="field.get('lastName')"
+                    [showCounting]="false"
+                    [maxCharacter]="75"
+                    [size]="'large'"
+                    label="Last name (required)"></trudi-text-field>
+                </trudi-form-control>
+              </div>
+              <div class="contact-info-item contact-type">
+                <p class="cursor-default">Contact type</p>
+                <trudi-form-control>
+                  <trudi-single-select
+                    [items]="listContactType"
+                    bindLabel="label"
+                    bindValue="value"
+                    className="contact-select"
+                    appendTo="body"
+                    [formControl]="field.get('contactType')">
+                  </trudi-single-select>
+                </trudi-form-control>
+              </div>
+              <div class="contact-info-item email">
+                <trudi-form-control
+                  [checkSubmit]="!isSubmitted"
+                  [errors]="[{errorName: 'invalidEmail', errorMessage: 'Invalid format'}]">
+                  <trudi-text-field
+                    [checkSubmit]="!isSubmitted"
+                    [formControl]="field.get('email')"
+                    [maxCharacter]="255"
+                    [showCounting]="false"
+                    [size]="'large'"
+                    label="Email address"></trudi-text-field>
+                </trudi-form-control>
+              </div>
+              <div class="contact-info-item phone-number">
+                <trudi-form-control>
+                  <trudi-number-field
+                    [disableDotKey]="true"
+                    [formControl]="field.get('phoneNumber')"
+                    [maxCharacter]="22"
+                    [size]="'small'"
+                    [maskLeadZero]="false"
+                    (onChangeData)="onPhoneNumberChange($event, i)"
+                    [isContactFormNewTenant]="true"
+                    [maskPattern]="maskPattern"
+                    label="Phone number"></trudi-number-field>
+                </trudi-form-control>
+              </div>
+              <div class="contact-info-item co-app">
+                <p class="cursor-default">Applicant type (required)</p>
+                <trudi-form-control>
+                  <trudi-single-select
+                    [items]="listCoApplicant"
+                    bindLabel="label"
+                    bindValue="value"
+                    className="contact-select"
+                    (triggerEventChange)="onChangeApplicantType($event, i)"
+                    appendTo="body"
+                    [formControl]="field.get('applicantType')">
+                  </trudi-single-select>
+                </trudi-form-control>
+              </div>
+            </td>
+
+            <td class="contact-primary table-border-bottom">
+              <div
+                #radioPrimary
+                [tabIndex]="0"
+                [ngClass]="isSyncing && field.get('isPrimary').value ? 'disabled-selected' : isSyncing ? 'disabled' : ''"
+                class="contact-primary-checked d-flex align-items-center justify-content-center cursor-pointer"
+                (keyup.enter)="radioPrimary.click()"
+                (click)="isSyncing ? null : setPrimary($event,i)">
+                <trudi-icon
+                  [icon]="field.get('isPrimary').value ? 'radioChecked' : 'radioUncheck'"></trudi-icon>
+              </div>
+            </td>
+            <td class="contact-delete table-border-bottom">
+              <div
+                #deleteBtn
+                [tabIndex]="field.get('isPrimary').value || field.get('contactId')?.value ? -1 : 0"
+                nz-tooltip
+                nzTooltipPlacement="left"
+                [nzTooltipOverlayClassName]="'tooltip-btn-delete'"
+                [nzTooltipTitle]="field | showTextTooltip"
+                class="delete-icon cursor-pointer"
+                (keyup.enter)="deleteBtn.click()"
+                [class.cursor-not-allowed]="isSyncing"
+                [class.disabled]="isSyncing || field.get('isPrimary').value || field.get('contactId')?.value"
+                (click)="!isSyncing && !(field.get('isPrimary').value || field.get('contactId')?.value) && handleDeleteContact(i)">
+                <trudi-icon icon="iconDeleteGrey"></trudi-icon>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>
+              <div
+                #addBtn
+                [tabIndex]="0"
+                [class.disabled]="isSyncing"
+                class="btn-add cursor-pointer d-flex align-items-center gap-8"
+                (keyup.enter)="addBtn.click()"
+                (click)="isSyncing ? null : handleAddNewFormContact()">
+                <trudi-icon icon="iconPlus2"></trudi-icon>
+                <button [disabled]="isSyncing" [tabIndex]="-1">Add</button>
+              </div>
+            </td>
+          </tr>
+        </tfoot>
+      </ng-container>
+    </table>
+  </div>
+</div>
+
+<ng-template #skeletonTemplate>
+  <tbody>
+    <tr>
+      <td class="contact-info skeleton-contact-info table-border-bottom">
+        <div class="contact-info-item first-name">
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+        <div class="contact-info-item last-name">
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+        <div class="contact-info-item contact-type">
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+        <div class="contact-info-item email">
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+        <div class="contact-info-item phone-number">
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+        <div class="contact-info-item co-app">
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </td>
+      <td class="table-border-bottom">
+        <nz-skeleton
+          class="skeleton-btn skeleton-btn-primary"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+      </td>
+      <td class="contact-delete table-border-bottom">
+        <nz-skeleton
+          class="skeleton-btn skeleton-btn-delete"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+      </td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr>
+      <td>
+        <nz-skeleton
+          nzType="button"
+          class="skeleton-btn-add"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+      </td>
+    </tr>
+  </tfoot>
+</ng-template>

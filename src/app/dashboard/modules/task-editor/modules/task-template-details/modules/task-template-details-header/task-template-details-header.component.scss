@@ -1,0 +1,221 @@
+@import 'function';
+
+:host ::ng-deep {
+  .header-wrapper {
+    padding: 24px 32px 16px 32px !important;
+  }
+  .wrapper-skeleton-task-editor-header {
+    width: 503px;
+    margin: 0 10px;
+    .skeleton-template-title {
+      width: 38%;
+      height: 0px;
+      margin-right: 40px;
+      h3.ant-skeleton-title {
+        margin-top: -14px;
+        border-radius: 25px;
+        height: 24px;
+      }
+    }
+    .skeleton-template-region {
+      width: 12%;
+      height: 0px;
+      margin-right: 20px;
+      h3.ant-skeleton-title {
+        margin-top: -14px;
+        border-radius: 24px;
+        height: 24px;
+        background: var(--bg-neutral-tonal-normal, #f2f5f7);
+      }
+    }
+    .skeleton-template-status {
+      width: 20%;
+      height: 0px;
+      margin-right: 20px;
+      h3.ant-skeleton-title {
+        margin-top: -14px;
+        height: 24px;
+      }
+    }
+
+    .skeleton-button-back {
+      span.ant-skeleton-avatar.ant-skeleton-avatar-circle {
+        margin-top: 0px;
+        width: 18px;
+        height: 18px;
+        margin-right: 8px;
+      }
+    }
+    .skeleton-button-setting {
+      span.ant-skeleton-avatar.ant-skeleton-avatar-circle {
+        margin-top: 0px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+}
+
+.w-4 {
+  width: 8%;
+}
+
+.py-12 {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+:host {
+  .task-template-details-header-container {
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
+    .task-template-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      img {
+        height: 24px;
+        width: auto;
+      }
+    }
+
+    .task-template-title-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      column-gap: 12px;
+      margin: 0;
+      max-width: calc(100vw - 540px);
+
+      span.task-template-title {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        cursor: default;
+        max-width: calc(100vw - 585px);
+        @include fontSetup(
+          var(--fg-neutral-strongest, #202020),
+          20px,
+          32px,
+          normal,
+          600
+        );
+      }
+
+      &:has(.task-title-editing.editing) {
+        min-width: 220px;
+      }
+
+      .task-title-editing {
+        position: absolute;
+        top: -6px;
+        left: -8px;
+        width: calc(100% + 15px);
+        background-color: transparent;
+        opacity: 0;
+        z-index: -1;
+
+        &.editing {
+          opacity: 1;
+          z-index: unset;
+          min-width: 220px;
+        }
+
+        ::ng-deep trudi-text-field {
+          min-width: 220px;
+          .trudi-text-field-wrapper {
+            padding: 6px 8px;
+            input.trudi-ui-text-field {
+              @include fontSetup(
+                var(--fg-neutral-strongest, #202020),
+                20px,
+                32px,
+                normal,
+                600
+              );
+            }
+          }
+        }
+
+        .task-title-editing-action {
+          display: flex;
+          width: 100%;
+          align-items: center;
+          justify-content: flex-end;
+          column-gap: 12px;
+          margin-top: 4px;
+
+          .base-icon-edit {
+            width: 32px;
+            height: 32px;
+            justify-content: center;
+            background-color: var(--white);
+            border: 1px solid var(--gray-200);
+            cursor: pointer;
+            border-radius: 50%;
+          }
+        }
+      }
+    }
+
+    ::ng-deep trudi-badge {
+      cursor: default;
+      max-width: unset;
+    }
+  }
+
+  .button-wrapper {
+    .button-add {
+      cursor: pointer;
+      background-color: var(--bg-brand-solid-normal, #28ad99);
+      border-radius: 6px;
+      @include fontSetup(var(--fg-base), 14px, 20px, normal, 600);
+      &.button-add-disabled {
+        background-color: var(--brand-300);
+        cursor: not-allowed;
+      }
+      &:not(.button-add-disabled):hover {
+        background-color: var(--bg-brand-solid-stronger, #209386);
+      }
+      .add-step-btn {
+        padding: 8px;
+      }
+    }
+    .dropdown-icon {
+      padding: 8px 8px 8px 0;
+      &::before {
+        margin-right: 6px;
+        position: relative;
+        display: block;
+        content: '';
+        height: 20px;
+        width: 1px;
+        background-color: var(--border-neutral-dark);
+        left: 0;
+        bottom: 0px;
+      }
+    }
+  }
+}
+
+.create-menu-wrapper {
+  box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.08),
+    0px 14px 36px rgba(0, 0, 0, 0.13);
+  border-radius: 8px;
+  background: var(--bg-base);
+  min-width: 155px;
+  overflow: hidden;
+  margin-left: 4px;
+
+  & > menu-item:not(:last-child) {
+    border-bottom: 1px solid var(--border-neutral-light);
+  }
+  .menu-item {
+    cursor: pointer;
+    padding: 12px;
+    width: 191px;
+    border-bottom: 1px solid var(--border-neutral-light);
+    @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+  }
+}

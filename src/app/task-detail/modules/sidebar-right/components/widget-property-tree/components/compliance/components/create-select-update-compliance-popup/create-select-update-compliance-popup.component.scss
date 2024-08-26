@@ -1,0 +1,112 @@
+@import 'function';
+
+.header-popup {
+  display: flex;
+  height: 39px;
+  justify-items: flex-start;
+  align-items: center;
+
+  .title {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.body-popup {
+  padding: 20px 24px;
+  .radio-button {
+    margin-bottom: 8px;
+
+    trudi-radio-button {
+      span {
+        font-weight: 400 !important;
+      }
+    }
+  }
+
+  .select-label {
+    @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+    margin-bottom: 6px;
+  }
+
+  .select-option {
+    ng-select {
+      .ng-dropdown-panel {
+        background-color: var(--brand-200);
+
+        .ng-dropdown-panel-items {
+          .ng-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            &.ng-option-disabled {
+              font-style: italic;
+            }
+          }
+        }
+      }
+    }
+
+    .required-field {
+      display: flex;
+      justify-items: flex-start;
+      align-items: center;
+      margin-top: 6px;
+
+      .required-text {
+        @include fontSetup(var(--danger-500), 12px, 16px, normal, 400);
+        margin-left: 4px;
+      }
+    }
+  }
+}
+
+.footer-popup {
+  padding: 20px 24px;
+  display: flex;
+  gap: 12px;
+  background: transparent;
+  border-top: 1px solid var(--gray-100);
+  border-radius: 0 0 8px 8px;
+  justify-content: flex-end;
+  button {
+    @include fontSetup(var(--white), 14px, 20px, normal, 600);
+    width: 100px;
+    height: 40px;
+    background-color: var(--brand-500);
+    border-radius: 8px;
+    border: none;
+  }
+}
+
+.item-text-selected {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  @include fontSetup(
+    var(--fg-neutral-stronger, #3d3d3d) !important,
+    14px,
+    20px,
+    normal,
+    500
+  );
+}
+
+.create-update-compliance-popup .modal-popup-content {
+  overflow-y: unset !important;
+}
+
+.create-update-compliance-popup .resizable-modal-header .title {
+  flex: initial;
+  display: flex;
+  justify-content: center;
+  span {
+    flex: initial;
+  }
+}
+
+.create-update-compliance-popup .resizable-modal-header__title--default {
+  column-gap: unset !important;
+}

@@ -1,0 +1,19 @@
+@import 'function';
+.content-wrapper {
+  padding: 14px;
+  display: flex;
+  .success-content {
+    margin-left: 24px;
+    p {
+      @include fontSetup(var(--gray-950), 2rem, 2.8rem, normal, 600);
+    }
+    .number-sent {
+      display: flex;
+      margin-top: 8px;
+      @include fontSetup(var(--gray-500), 1.4rem, 2rem, normal, 500);
+      span {
+        white-space: break-spaces;
+      }
+    }
+  }
+}

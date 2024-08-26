@@ -1,0 +1,54 @@
+<div class="cta-btn-container align-items-center relative ml-auto d-flex gap-8">
+  <div
+    class="cta-btn border-rad-6 d-flex cursor-pointer align-items-center"
+    [ngClass]="{
+      'cta-btn-disabled':disabled || (currentStep.id === (stepService.currentStep$ | async)?.step?.id) && (stepService.isExecutingStep$ | async),
+      'cta-btn-neutral': currentStep.status === TrudiButtonEnumStatus.COMPLETED}">
+    <button
+      [attr.data-button-key]="buttonKey"
+      [attr.data-button-type]="EButtonType.STEP"
+      [clearProcessOnDestroy]="false"
+      PreventButton
+      (leftClick)="onClickOption(selectedCtaOption)"
+      trudi-btn
+      variant="text"
+      class="d-flex gap-4 align-items-center execute-btn">
+      <div class="cta-text white-space-nowrap no-pointer-event">
+        {{selectedCtaOption}}
+      </div>
+    </button>
+    @if(dropdownOptions?.length) {
+    <button
+      trudi-btn
+      variant="text"
+      [class.selecting]="showCtaOptions"
+      class="d-flex gap-4 align-items-center select-btn"
+      #dropdownBtn="nzDropdown"
+      nz-dropdown
+      [nzDropdownMenu]="menu"
+      nzPlacement="bottomRight"
+      nzTrigger="click"
+      (click)="$event.stopPropagation()"
+      (nzVisibleChange)="showCtaOptions = $event">
+      <trudi-icon icon="whiteChevronDown"></trudi-icon>
+    </button>
+    }
+  </div>
+</div>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <ul nz-menu class="dropdown-list-ctn-btn border-rad-8 align-items-center">
+    <ng-container *ngFor="let option of dropdownOptions">
+      <li
+        nz-menu-item
+        class="d-flex gap-8 list-item"
+        (click)="onClickOption(option)">
+        <div
+          class="white-space-nowrap no-pointer-event"
+          [ngClass]="{'color--dark-gray' : selectedCtaOption === option}">
+          {{option}}
+        </div>
+      </li>
+    </ng-container>
+  </ul>
+</nz-dropdown-menu>

@@ -1,0 +1,17 @@
+<div *ngIf="hasNotes" class="pt-widget-notes-wrapper">
+  <div class="header">
+    <span class="header-content">{{header}}</span>
+    <trudi-icon
+      class="lock-icon"
+      [icon]="'lock'"
+      [style.width.px]="12"></trudi-icon>
+  </div>
+  <ng-container *ngIf="type == eTypeNote.MAINTENANCE">
+    <div class="body">
+      Expenditure limit - {{expenditure ? '$' : 'None'}}{{expenditure??
+      expenditure | number:"1.2-2"}}
+    </div>
+    <div class="body">Notes - {{notes ? notes : 'None'}}</div>
+  </ng-container>
+  <div *ngIf="type == eTypeNote.INSPECTION" class="body">{{notes}}</div>
+</div>

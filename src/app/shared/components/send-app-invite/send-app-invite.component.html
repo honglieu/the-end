@@ -1,0 +1,30 @@
+<div class="invite-wrapper">
+  <div class="detail-invite gap-16 d-flex align-items-center">
+    <div class="send-invite-icon size-48">
+      <img src="/assets/icon/icon-invite-circle.svg" />
+    </div>
+    <div class="send-invite-text">
+      <div class="text-sure">Send Tenant App Invite</div>
+      <div class="cannot-text">
+        Sending Tenant App invite to {{numberSent}} {{numberSent > 1 ?
+        'recipients' : 'recipient'}}
+      </div>
+    </div>
+  </div>
+  <div class="btn-wrapper gap-12">
+    <button
+      data-e2e="button-cancel"
+      type="button"
+      class="trudi-btn trudi-btn-large trudi-btn-tertiary"
+      (click)="isOpenModal(false)">
+      <span class="btn-text"> Cancel </span>
+    </button>
+    <button
+      data-e2e="button-confirm"
+      type="button"
+      class="trudi-btn trudi-btn-large trudi-btn-primary"
+      (click)="openInviteSuccessModal(false)">
+      <span class="btn-text"> Confirm </span>
+    </button>
+  </div>
+</div>

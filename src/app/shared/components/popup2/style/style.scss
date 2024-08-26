@@ -1,0 +1,133 @@
+@import 'function';
+.popup {
+  &__container {
+    background: var(--white);
+    height: auto;
+    color: var(--gray-950);
+    border-radius: 8px;
+    padding: 10px 14px 10px;
+  }
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .header-content {
+      display: flex;
+      align-items: center;
+
+      .round-icon {
+        width: 48px;
+        height: 48px;
+        justify-content: unset;
+
+        img {
+          width: 40px;
+          height: 40px;
+          margin: auto;
+        }
+      }
+
+      .text {
+        margin-left: 16px;
+        text-align: left;
+
+        .text-header {
+          @include fontSetup(var(--gray-950), 18px, 24px, normal, 600);
+          margin-bottom: 3px;
+        }
+
+        .text-des {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          font-size: 14px;
+          line-height: 16px;
+          color: var(--gray-500);
+          margin-top: 3px;
+        }
+      }
+    }
+  }
+  &__body {
+    font-size: 14px;
+    margin-bottom: 30px;
+    font-weight: 500;
+    color: var(--gray-950);
+    text-align: left;
+
+    &__item {
+      padding: 16px 0;
+      box-shadow: inset 0px -0.8px 0px rgba(0, 0, 0, 0.08);
+
+      &__text {
+        @include fontSetup(var(--gray-700), 16px, 24px, normal, 600);
+      }
+    }
+    .over-size-err {
+      @include fontSetup(var(--danger-500), 12px, 16px, normal, 400);
+      margin-top: 10px;
+    }
+  }
+  &__footer {
+    position: relative;
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      @include fontSetup(inherit, 14px, 16px, normal, 600);
+      // font-weight: 600;
+      // font-size: 12px;
+      padding: 12px 22px;
+      border-radius: 12px;
+      border: 0;
+    }
+
+    .btn-cancel {
+      background: var(--gray-200);
+      color: var(--gray-700);
+      margin-right: 23px;
+    }
+    .btn-resolved {
+      color: var(--white);
+      background: var(--brand-500);
+
+      &:disabled {
+        background: var(--brand-200);
+      }
+    }
+  }
+  hr.divider {
+    margin: 20px -22px 0;
+  }
+}
+
+.btn-creditor {
+  @include fontSetup(var(--brand-500), 12px, 16px, normal, 600);
+  padding: 4px 8px;
+  border-radius: 24px;
+  margin-top: 5px;
+  border: none;
+  display: flex;
+  align-items: center;
+}
+
+.unpaid-creditor-btn {
+  color: var(--warning-500);
+  background: var(--warning-50);
+}
+
+.part-paid-creditor-btn {
+  color: var(--tenant-500);
+  background: var(--tenant-50);
+}
+
+.paid-creditor-btn {
+  color: var(--success-500);
+  background: var(--success-50);
+}
+
+.cancel-creditor-btn {
+  color: var(--danger-500);
+  background: var(--warning-50);
+}

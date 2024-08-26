@@ -1,0 +1,22 @@
+::ng-deep {
+  .ant-drawer:has(.shaking-task-editor-drawer) {
+    .shaking-task-editor-drawer {
+      animation: jiggle 0.3s;
+    }
+  }
+}
+
+@keyframes jiggle {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(10px);
+  }
+  75% {
+    transform: translateX(-10px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

@@ -1,0 +1,261 @@
+<div class="view-mode">
+  <div
+    cdkDropList
+    cdkDropListSortingDisabled
+    [cdkDropListData]="gmailList"
+    (cdkDropListDropped)="handleDropMessageToFolder($event)"
+    *ngIf="!isSkeleton && gmailList?.length; else !isSkeleton && gmailList?.length === 0 ? noItem : loadingSkeleton">
+    <div
+      infiniteScroll
+      [scrollWindow]="false"
+      [infiniteScrollUp]="true"
+      [infiniteScrollUpDistance]="0.5"
+      [infiniteScrollDistance]="0.5"
+      [infiniteScrollThrottle]="300"
+      [immediateCheck]="true"
+      (scrolled)="onScrollToBottom()"
+      (scroll)="onDistinctScroll($event)"
+      (scrolledUp)="onScrollToTop()"
+      #infiniteScrollIndex
+      class="email-list-wrapper">
+      <div #infiniteScrollView>
+        <div
+          *ngIf="showSpinnerTop"
+          class="email-row loading-spinner loading-spinner-top">
+          <img src="assets/images/loading-spinner.gif" />
+        </div>
+        <app-message-groups
+          [items]="gmailList"
+          [listItemsTemplate]="gmailListOutlet"
+          [totalItems]="totalMail"
+          groupField="timestamp">
+        </app-message-groups>
+        <ng-template #gmailListOutlet let-itemsInGroup="itemsInGroup">
+          <div
+            *rxFor="let gmail of itemsInGroup; index as i; trackBy: trackByMessageEmail"
+            [attr.data-thread-id]="gmail.threadId"
+            [attr.data-email-message-id]="gmail.id"
+            cdkDrag
+            dragCursor
+            (cdkDragMoved)="dragMovedHandler($event)"
+            [cdkDragDisabled]="isConsoleUser"
+            (cdkDragStarted)="handleDragStarted(gmail)"
+            [cdkDragData]="gmail"
+            class="email-row">
+            <email-view-row
+              [queryThreadId]="queryThreadId"
+              [search]="searchText"
+              [gmail]="gmail"
+              [(isSelected)]="gmail.isSelected"
+              [currentMailboxId]="currentMailboxId"
+              [index]="gmail.originIndex"
+              (contextmenu)="!isConsoleUser && onRightClick($event, menu, gmail)"
+              [activeGmailList]="activeGmailList"
+              (pressDelete)="!isConsoleUser && handleDeleteGmail($event)"
+              (pressShiftClick)="!isConsoleUser && handleSelectedGmails($event)"
+              (removeActiveGmail)="!isConsoleUser && handleRemoveActiveGmail($event)"
+              (addSelectedGmail)="!isConsoleUser && handleAddSelectedGmail($event)"
+              (unableRightClick)="resetRightClickSelectedState()"
+              (downKeyPressed)="handleNavigateNextEmail()"
+              (upKeyPressed)="handleNavigatePreEmail()"></email-view-row>
+            <div class="email-row drag_placeholder" *cdkDragPlaceholder>
+              <email-view-row
+                [queryThreadId]="queryThreadId"
+                [search]="searchText"
+                [gmail]="gmail"
+                [activeGmailList]="activeGmailList"
+                [(isSelected)]="gmail.isSelected"
+                [currentMailboxId]="currentMailboxId"></email-view-row>
+            </div>
+            <div *cdkDragPreview class="drag_preview">
+              <p *ngIf="currentDraggingToFolderName" class="tooltip-for-drag">
+                <span class="tooltip-content"
+                  >{{currentDraggingToFolderName}}</span
+                >
+                <span class="tooltip-arrow"></span>
+              </p>
+              <span class="email-subject text-ellipsis">
+                {{ titleDropMessage }}</span
+              >
+            </div>
+          </div>
+        </ng-template>
+        <div
+          *ngIf="showSpinnerBottom && !isError"
+          class="email-row loading-spinner">
+          <img src="assets/images/loading-spinner.gif" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noItem>
+  <div class="list-wrapper">
+    <div class="no-gmail">
+      <trudi-icon class="size-140" icon="noConversationsV2"> </trudi-icon>
+      <div class="no-gmail__text">None to display</div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template class="email-list" #loadingSkeleton>
+  <div class="email-skeleton">
+    <ng-container
+      *ngTemplateOutlet="skeletonLoadingItem; context: {rowNumber: 20}">
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #skeletonLoadingItem let-row="rowNumber">
+  <div
+    *ngFor="let _ of [].constructor(row); let i = index"
+    class="gmail-row-wrapper d-flex flex-dir-column gap-4">
+    <div>
+      <div class="d-flex align-items-center gap-16">
+        <div class="d-flex gap-8 flex-1 align-items-center">
+          <nz-skeleton
+            *hideWithConsole
+            class="ant-skeleton-checkbox"
+            [nzParagraph]="paragraph"
+            [nzActive]="true"
+            class="size-16"></nz-skeleton>
+          <div class="d-flex flex-1 align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-12">
+              <div class="gmail-name">
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"
+                  class="w-50"></nz-skeleton>
+              </div>
+              <div class="gmail-role">
+                <span class="task-item-time-text text-ellipsis">
+                  <nz-skeleton
+                    [nzParagraph]="paragraph"
+                    [nzActive]="true"
+                    class="ant-skeleton-gmail-role"></nz-skeleton>
+                </span>
+              </div>
+              <div class="property-address">
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"
+                  class="w-50"></nz-skeleton>
+              </div>
+            </div>
+            <nz-skeleton
+              class="ant-skeleton-circle"
+              [nzParagraph]="paragraph"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </div>
+      </div>
+      <div class="quote-wrapper">
+        <nz-skeleton
+          class="ant-skeleton-custom"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+      </div>
+      <nz-skeleton
+        class="ant-skeleton-custom"
+        [nzParagraph]="paragraph"
+        [nzActive]="true"></nz-skeleton>
+    </div>
+  </div>
+</ng-template>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div nz-menu>
+    <div class="menu-wrapper menu-wrapper-message border-rad-8">
+      <div
+        nz-submenu
+        nzMenuClassName="sub-menu-nongap"
+        [nzTitle]="subMenuTitle"
+        class="move-to"
+        (mouseenter)="handleOpenMoveTo($event)">
+        <button
+          [ngClass]="{'disabled': !menuDropDown[EInboxAction.MOVE_MESSAGE_TO_INBOX]}"
+          [disabled]="!menuDropDown[EInboxAction.MOVE_MESSAGE_TO_INBOX]"
+          class="submenu-item"
+          [appE2E]="EDataE2EMailFolder.MOVE_TO_INBOX"
+          nz-menu-item
+          (click)="handleContextMenu(EInboxAction.MOVE_MESSAGE_TO_INBOX)">
+          Inbox
+        </button>
+        <button
+          [ngClass]="{'disabled': !menuDropDown[EInboxAction.MOVE_MESSAGE_TO_EMAIL]}"
+          [disabled]="!menuDropDown[EInboxAction.MOVE_MESSAGE_TO_EMAIL]"
+          class="submenu-item"
+          nz-menu-item
+          (click)="handleContextMenu(EInboxAction.MOVE_MESSAGE_TO_EMAIL)">
+          Email folder
+        </button>
+        <button
+          [ngClass]="{'disabled': !menuDropDown[EInboxAction.MOVE_MESSAGE_TO_RESOLVED]}"
+          [disabled]="!menuDropDown[EInboxAction.MOVE_MESSAGE_TO_RESOLVED]"
+          class="submenu-item"
+          nz-menu-item
+          (click)="handleContextMenu(EInboxAction.MOVE_MESSAGE_TO_RESOLVED)">
+          Resolve enquiries
+        </button>
+        <button
+          [ngClass]="{'disabled': !menuDropDown[EInboxAction.MOVE_MESSAGE_TO_DELETED]}"
+          [disabled]="!menuDropDown[EInboxAction.MOVE_MESSAGE_TO_DELETED]"
+          class="submenu-item"
+          nz-menu-item
+          (click)="handleContextMenu(EInboxAction.MOVE_MESSAGE_TO_DELETED)">
+          Deleted enquiries
+        </button>
+      </div>
+      <div
+        *ngIf="menuDropDown[EInboxAction.REPORT_SPAM]"
+        class="item d-flex align-items-center gap-8"
+        appE2E="email-details-right-click-report-spam"
+        ripple
+        (click)="handleContextMenu(EInboxAction.REPORT_SPAM)">
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          class="no-pointer-event"
+          icon="alertOctagonv2"></trudi-icon>
+        <p class="text no-pointer-event">Report spam</p>
+      </div>
+      <div
+        *ngIf="menuDropDown[EInboxAction.NOT_SPAM]"
+        class="item d-flex align-items-center gap-8"
+        ripple
+        (click)="handleContextMenu(EInboxAction.NOT_SPAM)">
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          icon="unmarkSpam"></trudi-icon>
+        <p class="text">Not spam</p>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<app-modal-popup
+  *ngIf="showPopupConfirmMoveMultiple"
+  [show]="showPopupConfirmMoveMultiple"
+  [position]="popupModalPosition.center"
+  [appendBody]="true"
+  [specificWidth]="510">
+  <confirm-move-message-to-inbox-popup
+    [listMessages]="listConfirmMoveMailToInbox"
+    (cancel)="handleCancelPopupConfirm()"
+    (confirm)="handleConfirmPopupConfirm($event)"></confirm-move-message-to-inbox-popup>
+</app-modal-popup>
+
+<ng-template #subMenuTitle>
+  <div class="d-flex justify-content-between align-items-center gap-8">
+    <div class="move-to-item d-flex align-items-center gap-8">
+      <trudi-icon
+        svgClass="size-20"
+        viewBox="auto"
+        icon="nextArrowBold"></trudi-icon>
+      <p class="text">Move to</p>
+    </div>
+    <trudi-icon svgClass="size-20" icon="iconChevronRight"></trudi-icon>
+  </div>
+</ng-template>

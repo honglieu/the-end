@@ -1,0 +1,243 @@
+@import 'function';
+
+:host ::ng-deep .email-notification-settings {
+  display: flex;
+  justify-content: center;
+
+  .notification-settings {
+    display: flex;
+    padding: 0px 116px;
+    align-items: center;
+  }
+  .wrapper-email-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px;
+    padding-top: 76px;
+    padding-bottom: 64px;
+
+    .skeleton-title-email {
+      width: 400px;
+    }
+    .skeleton-description-email {
+      width: 600px;
+    }
+    .skeleton-title-group-item {
+      width: 400px;
+    }
+    .skeleton-item-email {
+      width: 350px;
+    }
+    .skeleton-icon-checkbox {
+      width: 15px;
+    }
+  }
+  .image-email-settings {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    flex: 1;
+    align-items: center;
+  }
+  .logo-trudi {
+    width: 64px;
+    height: 64px;
+  }
+  .content-text-email-notification-settings {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    align-self: stretch;
+  }
+  .text-header {
+    @include fontSetup(var(--gray-800), 32px, normal, normal, 600);
+  }
+  .text-sub-header {
+    @include fontSetup(var(--gray-700), 16px, normal, normal, 500);
+  }
+  .block-checkbox-button {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 48px;
+    align-self: stretch;
+  }
+  .group-block-checkbox {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 40px;
+    align-self: stretch;
+  }
+  .group-checkbox {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    align-self: stretch;
+  }
+  .text-header-group-checkbox {
+    @include fontSetup(var(--gray-800), 20px, normal, normal, 600);
+  }
+  .item-text-email-notification-settings {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    flex: 1 0 0;
+  }
+  .item-header-email-notification-settings {
+    @include fontSetup(var(--gray-700), 16px, normal, normal, 500);
+  }
+  .item-sub-header-email-notification-settings {
+    @include fontSetup(var(--gray-500), 14px, normal, normal, 500);
+  }
+  .item-text-first-checkbox {
+    @include fontSetup(var(--gray-800), 20px, normal, normal, 600);
+  }
+  .button-save-notification-email {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    align-self: stretch;
+
+    .button-inner {
+      display: flex;
+      padding: 0 16px;
+      height: 48px;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      border-radius: 4px;
+      background: var(--brand-500);
+      border: 0;
+      min-width: 311px;
+
+      .text {
+        @include fontSetup(var(--white), 16px, normal, normal, 600);
+        text-align: center;
+      }
+    }
+  }
+  .email-notification-thanks {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
+  }
+  .wrapper-email-left-thanks {
+    padding-top: 0;
+  }
+  .image-email-settings-thanks {
+    padding-top: 0;
+  }
+  .skeleton-title-group-item {
+    width: 300px;
+  }
+
+  @media (max-width: 768px) {
+    display: block;
+    .notification-settings {
+      display: block;
+      padding: 32px 20px;
+    }
+    .wrapper-email-left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 32px;
+      flex: 1 0 0;
+      padding-top: 0px;
+      padding-bottom: 0px;
+      width: 100%;
+
+      .skeleton-title-email {
+        width: 200px;
+      }
+      .skeleton-description-email {
+        width: 230px;
+      }
+      .skeleton-title-group-item {
+        width: 270px;
+      }
+      .skeleton-item-email {
+        width: 150px;
+      }
+    }
+    .button-save-notification-email {
+      .button-inner {
+        width: 100%;
+        min-width: auto;
+      }
+      .button-skeleton {
+        span.ant-skeleton-button {
+          width: 270px;
+        }
+      }
+    }
+    .image-email-settings {
+      display: none !important;
+    }
+    // .skeleton-image {
+    //   span.ant-skeleton-button {
+    //     width: 200px;
+    //     height: 100px;
+    //   }
+    // }
+  }
+  @media (min-width: 768px) {
+    .wrapper-email-left {
+      width: 50%;
+    }
+    .img-notification-email-setting {
+      padding-left: 50px;
+      padding-bottom: 150px;
+      width: max-content;
+      height: max-content;
+    }
+  }
+  @media (min-width: 1440px) {
+    .notification-settings {
+      margin: 0 auto;
+    }
+    .img-notification-email-setting {
+      padding-left: 114px;
+      padding-bottom: 150px;
+      width: max-content;
+      height: max-content;
+    }
+  }
+  .checkbox-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    align-self: stretch;
+  }
+  .group-only-checkbox {
+    display: flex;
+    padding: 1px 0px;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .button-skeleton {
+    padding: 0px !important;
+    border: none !important;
+
+    span.ant-skeleton-button {
+      width: 300px;
+      height: 50px;
+    }
+  }
+  .skeleton-image {
+    span.ant-skeleton-button {
+      width: 400px;
+      height: 300px;
+    }
+  }
+
+  .unsubscribe-email {
+    pointer-events: none;
+  }
+}

@@ -1,0 +1,66 @@
+@import 'function';
+
+:host {
+  .filter-container {
+    display: flex;
+    align-items: center;
+    padding: 20px 12px;
+    gap: 8px;
+    width: 100%;
+    position: relative;
+    &-focus {
+      height: 40px;
+    }
+    ::ng-deep filter-dropdown {
+      width: 100%;
+      overflow: hidden;
+    }
+    &.message-view {
+      padding: 0;
+      justify-content: space-between;
+      .search-wrapper {
+        width: 180px;
+        transition: width 50ms ease-in-out;
+        transition-timing-function: linear;
+        -webkit-transition: 50ms ease-in-out;
+        -webkit-transition-timing-function: linear;
+        &-expanded {
+          width: 100%;
+          min-width: 100%;
+          position: absolute;
+          top: 4px;
+          z-index: 10;
+        }
+        &::ng-deep trudi-text-field {
+          .trudi-text-field-wrapper {
+            gap: 0;
+          }
+          input {
+            margin-left: 8px;
+          }
+        }
+      }
+    }
+    .search-wrapper {
+      width: 31%;
+      min-width: 31%;
+      ::ng-deep trudi-text-field {
+        .trudi-text-field-wrapper {
+          padding: 10px 12px;
+          .close-icon-wrapper {
+            cursor: pointer;
+          }
+        }
+      }
+    }
+  }
+}
+
+.size-320 {
+  width: 320px;
+  :host ::ng-deep .ant-skeleton-content .ant-skeleton {
+    h3.ant-skeleton-title {
+      height: 40px;
+    }
+  }
+}

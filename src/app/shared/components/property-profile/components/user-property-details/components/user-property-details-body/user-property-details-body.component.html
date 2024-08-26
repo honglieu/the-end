@@ -1,0 +1,259 @@
+<ng-template
+  [ngIfElse]="detailTemplate"
+  [ngIfThen]="skeleton"
+  [ngIf]="isLoading"></ng-template>
+<ng-template #detailTemplate>
+  <div [class.task-detail]="isTaskDetail" class="info-user-content">
+    <!--  Map-pin-->
+    <div
+      (click)="handleClickAddress()"
+      *ngIf="userProperty?.property?.streetline || (userProperty?.property?.sourceProperty?.parentStreetline && isUnitOwner)"
+      class="list-info list-info-address gap-8 d-flex justify-content-between flex-dir-row cursor-pointer">
+      <div class="d-flex justify-content-between flex-dir-row gap-6">
+        <div class="align-items-start">
+          <trudi-icon
+            class="line-prefix-icon"
+            icon="iconMap"
+            svgClass="size-16"></trudi-icon>
+        </div>
+        <div class="align-content gap-4">
+          <div class="text-with-underline">
+            {{isUnitOwner ?
+            userProperty?.property?.sourceProperty?.parentStreetline :
+            userProperty?.property?.streetline }}
+          </div>
+        </div>
+      </div>
+      <div class="align-items-start">
+        <trudi-icon
+          class="list-info-address-icon"
+          icon="iconTrailing"
+          svgClass="size-16"></trudi-icon>
+      </div>
+    </div>
+
+    <!--  Phone-->
+    <div class="list-info gap-6 align-items-start">
+      <div class="align-items-start">
+        <trudi-icon
+          class="line-prefix-icon"
+          icon="iconPhoneGray"
+          svgClass="size-16"></trudi-icon>
+      </div>
+      <div class="align-content flex-dir-column">
+        <ng-container
+          *ngIf="!userProperty?.user?.phoneNumber  && !userProperty.user?.secondaryPhones?.length > 0; else hasPhone">
+          <span class="no-value w-100">no phone number</span>
+        </ng-container>
+        <ng-template #hasPhone>
+          <div class="d-flex flex-dir-column gap-4">
+            <div
+              *ngIf="userProperty?.user?.phoneNumber"
+              class="white-space-nowrap has-value">
+              <span
+                >{{ userProperty?.user?.phoneNumber | phoneNumberFormat }}</span
+              >
+            </div>
+            <ng-template
+              [ngIf]="[ETypePage.TASK_DETAIL, ETypePage.TENANTS_LANLORDS].includes(openFrom)">
+              <div *ngFor="let number of mobilePhones">
+                <span class="white-space-nowrap has-value"
+                  >{{ number | phoneNumberFormat }}</span
+                >
+              </div>
+            </ng-template>
+            <ng-container
+              *ngFor="let secondaryPhone of userProperty.user?.secondaryPhones">
+              <div
+                *ngIf="secondaryPhone.phoneNumber"
+                class="cursor-pointer d-inline gap-4 secondary-email relative has-value"
+                (click)="$event.stopPropagation()">
+                <span class="has-value"
+                  >{{ secondaryPhone.phoneNumber | phoneNumberFormat }}</span
+                >
+                <button
+                  (click)="onDeletePhoneNumber(secondaryPhone)"
+                  class="btn-action delete-email">
+                  <trudi-icon
+                    icon="circleDeleteGrey"
+                    svgClass="size-16"></trudi-icon>
+                </button>
+              </div>
+            </ng-container>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <!--  Mail-->
+    <div class="list-info gap-6 align-items-start">
+      <div class="align-items-start">
+        <trudi-icon
+          class="line-prefix-icon"
+          icon="mailThin"
+          svgClass="size-16"></trudi-icon>
+      </div>
+      <div class="align-content flex-dir-column align-items-center">
+        <ng-container
+          *ngIf="!userProperty?.user?.email && !userProperty?.user?.secondaryEmails?.length > 0; else hasEmail">
+          <span class="no-value w-100 align-items-center"
+            >no email address</span
+          >
+        </ng-container>
+        <ng-template #hasEmail>
+          <div class="d-flex flex-dir-column gap-4">
+            <div
+              *ngIf="userProperty?.user?.email"
+              [class.cursor-pointer]="!isTaskDetail"
+              class="d-inline gap-4 primary-email align-items-center">
+              <span class="has-value">{{ userProperty?.user?.email }}</span>
+              <div *ngIf="!isTaskDetail" class="suffix-icon-button">
+                <button
+                  (click)="onAddEmail()"
+                  class="add-email btn-action align-items-center">
+                  <trudi-icon
+                    icon="circlePlusGrey"
+                    svgClass="size-16"></trudi-icon>
+                </button>
+              </div>
+            </div>
+            <ng-container
+              *ngFor="let secondaryEmail of userProperty?.user?.secondaryEmails;">
+              <div
+                *ngIf="secondaryEmail?.email"
+                class="cursor-pointer d-inline gap-4 secondary-email relative align-items-center">
+                <span class="has-value">{{ secondaryEmail?.email }}</span>
+                <button
+                  (click)="onDeleteEmail(secondaryEmail)"
+                  class="btn-action delete-email align-items-center suffix-icon-button">
+                  <trudi-icon
+                    icon="circleDeleteGrey"
+                    svgClass="size-16"></trudi-icon>
+                </button>
+              </div>
+            </ng-container>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+
+    <!--  time-->
+    <div
+      *ngIf="userProperty?.user?.inviteStatus || userProperty?.user?.iviteSent"
+      class="list-info gap-6">
+      <div class="align-content">
+        <trudi-icon svgClass="size-16" icon="trudiLogoBorder"></trudi-icon>
+      </div>
+      <div class="align-content gap-4">
+        <div
+          class="has-value white-space-nowrap cursor-pointer"
+          nz-tooltip
+          nzTooltipPlacement="top"
+          [nzTooltipTitle]="'Trudi® App invite status'">
+          <ng-container [ngSwitch]="userProperty?.user?.inviteStatus">
+            <span *ngSwitchCase="EInviteStatus.ACTIVE"
+              >Last active {{ userProperty?.user?.lastActivity | formatDate |
+              async }}</span
+            >
+            <span *ngSwitchCase="EInviteStatus.INVITED"
+              >Invited {{ userProperty?.user?.iviteSent | formatDate | async
+              }}</span
+            >
+            <span *ngSwitchCase="EInviteStatus.UNINVITED">Uninvited</span>
+            <span *ngSwitchCase="EInviteStatus.OFFBOARDED">Offboarded</span>
+            <span *ngSwitchDefault
+              >Invited {{ userProperty?.user?.iviteSent | formatDate | async
+              }}</span
+            >
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <ng-container *ngIf="userProperty?.user?.userMessengers?.length">
+      <ng-container
+        *ngTemplateOutlet="contactListChannels; context: { contacts: userProperty?.user?.userMessengers, icon: 'messengerLogo', label: 'name'}">
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="userProperty?.user?.userWhatsApps?.length">
+      <ng-container
+        *ngTemplateOutlet="contactListChannels; context: { contacts: userProperty?.user?.userWhatsApps, icon: 'whatsappLogo', label: 'externalId'}">
+      </ng-container>
+    </ng-container>
+  </div>
+
+  <div
+    *ngIf="isRM && currentStep === EPropertyProfileStep.TENANT_DETAIL && userTenancyList?.userPropertyGroupLeases?.length > 0"
+    class="item-people-tenancy">
+    <ng-template
+      ngFor
+      [ngForOf]="userTenancyList?.userPropertyGroupLeases"
+      let-lease>
+      <div class="owner-content justify-content-between relative">
+        <div
+          class="d-flex flex-dir-row gap-2"
+          *ngIf="lease?.originalLeaseStartDate">
+          <span class="owner-content-title gap-2">
+            Tenant since {{lease?.originalLeaseStartDate | formatDate | async }}
+          </span>
+          <span class="owner-content-title">
+            {{ lease?.originalLeaseStartDate | rentedTime }}
+          </span>
+        </div>
+      </div>
+      <app-lease-share
+        [crmSystemId]="crmSystemId"
+        [dayRemaining]="lease.dayRemaining"
+        [endDate]="lease.endDate?.toString()"
+        [frequency]="lease.frequency"
+        [paidDate]="lease.paidTo?.toString()"
+        [rentAmount]="lease.rentAmount"
+        [startDate]="lease.startDate?.toString()"
+        [forceShowRentAmount]="true"></app-lease-share>
+    </ng-template>
+  </div>
+</ng-template>
+
+<ng-template
+  #contactListChannels
+  let-contacts="contacts"
+  let-icon="icon"
+  let-label="label">
+  <div class="list-info gap-6">
+    <div class="align-content min-content">
+      <trudi-icon svgClass="size-16" [icon]="icon"></trudi-icon>
+    </div>
+    <div class="align-content flex-dir-column align-items-start gap-4">
+      <ng-container *ngFor="let contact of contacts">
+        <div *ngIf="contact?.[label]" class="has-value white-space-nowrap">
+          <span>{{ contact?.[label] }}</span>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #skeleton>
+  <nz-skeleton nzActive></nz-skeleton>
+</ng-template>
+
+<trudi-modal
+  *ngIf="visibleDeleteEmailConfirm"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  [visible]="visibleDeleteEmailConfirm"
+  className="trudi-modal-custom">
+  <app-quit-confirm
+    (delete)="onDeleteConfirm($event)"
+    (isCloseModal)="showQuitConfirm()"
+    (targetOpenForm)="onTargetOpenForm($event)"
+    [disable]="isConsole || isArchiveMailbox || isDisconnectedMailbox"></app-quit-confirm>
+</trudi-modal>
+
+<add-email-pop-up
+  (onCancel)="handleCloseModal()"
+  (onConfirm)="onAddEmailConfirm($event)"
+  [APIerr]="addEmailErr"
+  [addEmailTitle]="addEmailTitle"
+  [isShowModal]="isShowAddEmail">
+</add-email-pop-up>

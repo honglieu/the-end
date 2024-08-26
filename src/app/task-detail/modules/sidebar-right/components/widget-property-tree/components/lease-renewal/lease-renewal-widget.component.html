@@ -1,0 +1,58 @@
+<resizable-modal-popup
+  *ngIf="popupState.showLeaseRenewalModal"
+  [show]="popupState.showLeaseRenewalModal"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [title]="'Lease renewal'"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [iconName]="'ptLogo'"
+  [styleIcon]="null"
+  [classIconTitle]="null"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [footerTemplate]="footerModal"
+  (onCancel)="cancel()"
+  [isCustomMoveable]="true"
+  class="lease-renewal-popup">
+  <lease-renewal-form
+    [readonly]="readonly"
+    [readonlyTenancy]="readonlyTenancy"
+    [disableRemoveButton]="disableRemoveButton"
+    [showLeaseRenewalModal]="popupState.showLeaseRenewalModal"
+    (setStatusSyncButton)="setStatusyncButtonEvent($event)"
+    (listOfFile)="handleGetListFile($event)">
+  </lease-renewal-form>
+
+  <ng-template #footerModal>
+    <div
+      class="lease-footer-wrap d-flex align-items-center justify-content-between w-100">
+      <div class="info-status d-flex align-items-center">
+        <trudi-icon
+          [icon]="synData[syncPTStatus]?.icon"
+          [style]="{ 'width.px': 12, 'height.px': 12 }"
+          [ngClass]="{'spin': syncPTStatus === LeaseRenewalSyncStatus.INPROGRESS}"></trudi-icon>
+        <span>{{synData[syncPTStatus]?.text}}</span>
+        <ng-container
+          *ngIf="lastTimeSynced && (syncPTStatus && syncPTStatus !== LeaseRenewalSyncStatus.INPROGRESS)">
+          <span> • </span>
+          <span class="sync-text"
+            >{{lastTimeSynced | formatDateTime | push}}</span
+          >
+        </ng-container>
+      </div>
+      <div class="footer-wrapper d-flex" [style.gap.px]="12">
+        <button
+          type="button"
+          [disabled]="isConsole || readonly || isArchiveMailbox || isDisableSyncButton"
+          class="btn-confirm trudi-btn trudi-btn-semi-large trudi-btn-primary"
+          (click)="handleSyncPT()"
+          [appE2E]="'pt-widget-lease-renewal'">
+          <span class="btn-text no-pointer-event">Sync to Property Tree</span>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</resizable-modal-popup>

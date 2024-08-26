@@ -1,0 +1,124 @@
+<trudi-modal
+  [autoFocus]="null"
+  [(visible)]="showLinkTaskPopup"
+  [closable]="true"
+  [autoFocus]="null"
+  (onCancel)="isBackButtonClicked = false; closeLinkTaskModal()">
+  <ng-template #headerModal>
+    <div class="modal-header-create-new-task__title--default">
+      <div class="modal-header-create-new-task-body">
+        <div class="title w-100 flex-1">
+          <span class="flex-1">Link task</span>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-container [ngTemplateOutlet]="body"></ng-container>
+  <ng-template #footerModal>
+    <button
+      trudi-btn
+      [disabled]="disableLinkTaskButton || isArchiveAllMail || isConsole"
+      (click)="linkTask()">
+      Link task
+    </button>
+  </ng-template>
+</trudi-modal>
+
+<ng-template #body>
+  <div class="">
+    <trudi-radio-button
+      class="link-task__radio"
+      [options]="linkTaskDecisionList"
+      [(ngModel)]="linkTaskDecision"
+      (ngModelChange)="changeLinkTaskDecision($event)">
+      <ng-template trudi-radio-button-tmp let-value="value">
+        <div
+          class="select-wrapper"
+          *ngIf="value === ELinkTaskDecision.CREATE_NEW_TASK">
+          <trudi-form-control [control]="selectTaskNameModel?.control">
+            <trudi-filterable-checkbox-select
+              [clearable]="true"
+              [items]="taskNameList"
+              [(ngModel)]="newTaskNameId"
+              bindValue="id"
+              bindLabel="label"
+              groupBy="group"
+              [required]="true"
+              [virtualScroll]="true"
+              (onchange)="onTaskSelectChanged($event)"
+              name="selectedTaskName"
+              #selectTaskNameModel="ngModel"
+              (footerClick)="openCreateBlankTask()">
+              <ng-template trudi-label-tmp let-item="item">
+                <div class="task-item-selected-label gap-4">
+                  <span class="task__item-title">{{item.label}}</span>
+                </div>
+              </ng-template>
+              <ng-template
+                trudi-option-tmp
+                let-item="item"
+                let-valueSelected="valueSelected"
+                let-searchTerm="searchTerm"
+                let-isSearching="isSearching">
+                <div class="y-center justify-content-between flex-1 w-100">
+                  <div class="y-center gap-8 w-100 task-option">
+                    <span
+                      class="text-ellipsis"
+                      [ngOptionHighlight]="isSearching ? searchTerm || '' : ''"
+                      [title]="item.label"
+                      [ngClass]="{'selected-task': item.id === valueSelected}"
+                      >{{item.label}}</span
+                    >
+                  </div>
+                  <trudi-icon
+                    *ngIf="item?.id === currentSelectedTask?.id &&  item?.regionId === currentSelectedTask?.regionId"
+                    icon="checkSuccess"></trudi-icon>
+                </div>
+              </ng-template>
+            </trudi-filterable-checkbox-select>
+          </trudi-form-control>
+        </div>
+        <div
+          class="select-wrapper"
+          *ngIf="value === ELinkTaskDecision.EXIST_TASK">
+          <dropdown-group
+            [items]="listTask"
+            [show]="true"
+            [isMoveTaskConfirmed]="false"
+            (onChange)="onItemChange($event)"
+            [isMissingRequiredField]="isMissingRequiredField"
+            [userType]="userType"
+            (onNewPage)="getNextPage()"
+            (onChangeSearchTask)="handleChangeSearchTask($event)"
+            [isShowAddress]="true"
+            [isShowRegionName]="false"
+            class="link-event__select">
+          </dropdown-group>
+          <div
+            *ngIf="isMissingRequiredField"
+            class="error-container d-flex align-items-center gap-4">
+            <trudi-icon icon="iconWarning"></trudi-icon>
+            <div class="error-text">Required field</div>
+          </div>
+        </div>
+      </ng-template>
+    </trudi-radio-button>
+  </div>
+</ng-template>
+
+<create-new-task-pop-up
+  *ngIf="popupState.showCreateNewTask"
+  [defaultMailBoxId]="currentMailBoxId"
+  [showBackBtn]="true"
+  [taskNameList]="taskNamesForCreateModal"
+  [openFrom]="createTaskByCateType.CALENDAR"
+  [activeProperty]="activeProperty"
+  [selectedTaskNameId]="newTask"
+  [configs]="configs"
+  [selectedTenancyId]="selectedTenancyId"
+  [selectedComplianceId]="selectedComplianceId"
+  (stopProcessCreateNewTask)="closeLinkTaskModal()"
+  (onCloseModal)="closeLinkTaskModal()"
+  (onBack)="onBackLinkTask()"
+  (onQuit)="closeLinkTaskModal()">
+</create-new-task-pop-up>

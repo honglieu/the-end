@@ -1,0 +1,136 @@
+<trudi-modal
+  *ngIf="isShowUploadPhotoModal"
+  [visible]="isShowUploadPhotoModal"
+  [autoFocus]="null"
+  [modelWidth]="492"
+  className="trudi-modal-custom">
+  <app-picture-profile-popup
+    (isCloseModal)="handlePictureProfile()"
+    [avatarTemp]="dataImgBase64"
+    (getAvatarData)="getAvatarData($event)">
+  </app-picture-profile-popup>
+</trudi-modal>
+
+<trudi-modal
+  *ngIf="isShowChangePasswordModal"
+  [visible]="isShowChangePasswordModal"
+  [autoFocus]="null"
+  [modelWidth]="520"
+  className="trudi-modal-custom modal-changepassword">
+  <app-change-password-popup (isCloseModal)="showChangePassword()">
+  </app-change-password-popup>
+</trudi-modal>
+
+<delete-account-popup
+  *ngIf="isShowModalForm || isShowModalConfirm"
+  [isRoleOwner]="isRoleOwner"
+  [isShowModalConfirm]="isShowModalConfirm"
+  [isShowModalForm]="isShowModalForm"
+  [listMailboxAssignee]="listMailboxAssignee"
+  (onClose)="showDeleteAccount()">
+</delete-account-popup>
+
+<div class="user-profile-wrapper d-flex">
+  <div class="wrapper" *ngIf="(loadingService.isLoading$ | async)">
+    <div class="avatar-wapper">
+      <div>
+        <nz-skeleton-element
+          nzType="avatar"
+          [nzSize]="64"
+          [nzShape]="'circle'"
+          [nzActive]="true"></nz-skeleton-element>
+      </div>
+    </div>
+    <div class="form-wrapper d-flex flex-dir-column">
+      <div class="d-flex flex-dir-column gap-16">
+        <div class="profile-form-control d-flex h-24">
+          <label class="userprofile-form-label"> Account role </label>
+          <nz-skeleton-element
+            class="form-control userprofile-form-input tag-skeleton"
+            nzType="input"
+            [nzActive]="true"></nz-skeleton-element>
+        </div>
+
+        <div class="profile-form-control d-flex h-20">
+          <label class="userprofile-form-label"> Email address </label>
+          <nz-skeleton-element
+            class="form-control userprofile-form-input input-skeleton"
+            nzType="input"
+            [nzActive]="true"></nz-skeleton-element>
+        </div>
+        <div class="profile-btn-wrapper">
+          <nz-skeleton-element
+            class="button-skeleton"
+            nzType="button"
+            [nzActive]="true"></nz-skeleton-element>
+          <nz-skeleton-element
+            class="button-skeleton"
+            nzType="button"
+            [nzActive]="true"></nz-skeleton-element>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="wrapper d-flex flex-dir-column"
+    *ngIf="(loadingService.isLoading$ | async) === false">
+    <div class="avatar-wapper">
+      <div class="avatar">
+        <div *ngIf="!isShowPictureBase64">
+          <app-user-avatar
+            [avatar]="currentUser?.googleAvatar"
+            [user]="currentUser"
+            [style]="'width: 64px; height: 64px; font-size: 24px;'"></app-user-avatar>
+        </div>
+        <div *ngIf="isShowPictureBase64" class="user-avatar-base64">
+          <img [src]="dataImgBase64" alt="avatar" />
+        </div>
+        <button class="icon-wrapper" (click)="handlePictureProfile()">
+          <trudi-icon icon="penGray"></trudi-icon>
+        </button>
+      </div>
+    </div>
+    <div class="d-flex flex-dir-column">
+      <div class="form-wrapper d-flex flex-dir-column" autocomplete="off">
+        <div class="profile-form-control d-flex gap-12">
+          <div class="userprofile-form-label align-self-center">
+            Account role
+          </div>
+          <trudi-badge
+            [text]="currentRole | convertRoleName"
+            [variant]="currentRole | convertRoleName: { convertVariant: true }"></trudi-badge>
+        </div>
+        <div class="profile-form-control d-flex gap-12">
+          <div class="userprofile-form-label align-self-center">
+            Email address
+          </div>
+          <button
+            trudi-btn
+            variant="tonal"
+            btnType="neutral"
+            class="profile-email"
+            disabled>
+            <span>{{currentUser?.email}}</span>
+          </button>
+        </div>
+      </div>
+      <div class="profile-btn-wrapper mt-16">
+        <button
+          trudi-btn
+          variant="tonal"
+          btnType="neutral"
+          (click)="showChangePassword()">
+          Reset password
+        </button>
+        <button
+          trudi-btn
+          variant="tonal"
+          btnType="danger"
+          (click)="showDeleteAccount()">
+          Delete account
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

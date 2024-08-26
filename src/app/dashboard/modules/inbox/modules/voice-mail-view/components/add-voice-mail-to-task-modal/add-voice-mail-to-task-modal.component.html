@@ -1,0 +1,50 @@
+<trudi-modal
+  *ngIf="visible"
+  [(visible)]="visible"
+  [modelWidth]="546"
+  [autoFocus]="null"
+  [title]="headerTitle"
+  subTitle=""
+  [isHideFooter]="true"
+  (onCancel)="visibleChange.emit()"
+  className="add-voice-mail-to-task-modal">
+  <div class="add-voice-mail-to-task-content">
+    <button
+      *ngIf="!currentVoicemailTasks || isSelectedMove && currentVoicemailTasks.length === 1"
+      class="add-voice-mail-to-task-button"
+      [class.disabled]="isActionInProgress"
+      (click)="!isActionInProgress && handleMenu(MenuOption.CREATE_NEW_TASK)">
+      <trudi-icon icon="newTaskIcon"></trudi-icon>
+      <div class="title">
+        <div>Create new task</div>
+        <div>Create a new task and add voicemail to this task</div>
+      </div>
+    </button>
+
+    <button
+      *ngIf="!currentVoicemailTasks || isSelectedMove && currentVoicemailTasks.length === 1"
+      class="add-voice-mail-to-task-button"
+      [class.disabled]="isActionInProgress"
+      (click)="!isActionInProgress && handleMenu(MenuOption.MOVE_TO_TASK)">
+      <trudi-icon icon="existingTaskIcon"></trudi-icon>
+      <div class="title">
+        <div>Add to existing task</div>
+        <div>Add voicemail to an existing task</div>
+      </div>
+    </button>
+
+    <button
+      *ngIf="isSelectedMove && currentVoicemailTasks?.length > 1"
+      class="add-voice-mail-to-task-button"
+      [class.disabled]="isActionInProgress"
+      (click)="!isActionInProgress && handleMenu(MenuOption.BULK_CREATE_NEW_TASK)">
+      <trudi-icon icon="bulkMessage"></trudi-icon>
+      <div class="title">
+        <div>Bulk create tasks</div>
+        <div>
+          Create multiple tasks at once - one task for each message selected
+        </div>
+      </div>
+    </button>
+  </div>
+</trudi-modal>

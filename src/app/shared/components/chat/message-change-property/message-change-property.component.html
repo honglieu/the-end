@@ -1,0 +1,16 @@
+<p
+  class="mark-change-property wrap-conversation-status d-flex gap-4 align-items-start text-ellipsis">
+  <trudi-icon class="size-16" [icon]="'iconAddress'"></trudi-icon>
+  <span>Property has been changed from</span>
+  <span class="property-name text-ellipsis">{{oldPropertyStreetline}}</span>
+  <span>to</span>
+  <span class="property-name text-ellipsis">{{newPropertyStreetline}}</span>
+  <span>by</span>
+  <span
+    class="highlighted"
+    [class.name-clickable]="isClickable"
+    (click)="handleOpenProfileDrawer($event)">
+    {{ message | formatDisplayFullName : false}}
+  </span>
+  <span> {{ message.createdAt | trudiDateTime : EPage.DETAILS | async}}</span>
+</p>

@@ -1,0 +1,34 @@
+<div class="generated-reply-content-container" [formGroup]="formGroup">
+  <editor
+    #tinyEditor
+    class="editor-policy"
+    [ngClass]="{'invalid' : invalid, 'focus': isFocus}"
+    (onFocus)="handleFocus()"
+    (onBlur)="handleBlur()"
+    [init]="TinyMCEConfig"
+    [formControlName]="controlName">
+  </editor>
+  <div class="toolbar-wrapper" [ngClass]="{'focus': isFocus}">
+    <trudi-icon
+      [icon]="showAttachMenu ? 'attachSelected': 'attach'"
+      svgClass="size-28"
+      nz-tooltip
+      nzTooltipTitle="Attachment"
+      nz-dropdown
+      nzPlacement="bottomLeft"
+      nzTrigger="click"
+      nzOverlayClassName="generated-reply-toolbar-dropdown"
+      [nzDropdownMenu]="attachMenu"
+      [(nzVisible)]="showAttachMenu"
+      (nzVisibleChange)="onDropdownVisibleChange($event)"></trudi-icon>
+  </div>
+
+  <nz-dropdown-menu #attachMenu="nzDropdownMenu">
+    <li nz-menu-item (click)="triggerUploadComputer.emit()">
+      {{toolbarItems.uploadFile}}
+    </li>
+    <li nz-menu-item (click)="triggerUploadContactCard.emit()">
+      {{toolbarItems.addContactCard}}
+    </li>
+  </nz-dropdown-menu>
+</div>

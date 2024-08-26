@@ -1,0 +1,52 @@
+<trudi-modal
+  [(visible)]="isShowPopupSendBulkMsg"
+  [autoFocus]="null"
+  [modelWidth]="520"
+  [closable]="false"
+  (onCancel)="handleCancel()"
+  classContainer="select-option-send-bulk-msg-container">
+  <ng-template #headerModal>
+    <div class="modal-header-create-new-task__title--default">
+      <div class="modal-header-create-new-task-body">
+        <div
+          class="title w-100 flex-1 flex-dir-column d-flex align-items-start">
+          <span class="flex-1">Ready to get these tasks started?</span>
+          <button
+            trudi-btn
+            size="medium"
+            variant="link"
+            (click)="handleViewTasks()">
+            View tasks
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <div class="select-option-wrapper">
+    <div class="body">
+      Our bulk send feature allows you to trigger emails across all your tasks
+      with just one click.
+    </div>
+    <ng-template #footerModal>
+      <div class="gap-12 d-flex">
+        <button
+          trudi-btn
+          type="button"
+          variant="outlined"
+          btnType="neutral"
+          (click)="handleCancel()"
+          class="trudi-btn trudi-btn-large cancel-btn">
+          No, cancel
+        </button>
+        <button
+          trudi-btn
+          type="button"
+          (click)="handleClickNext()"
+          class="trudi-btn trudi-btn-large trudi-btn-primary"
+          data-e2e="next-btn">
+          Yes, let's go
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</trudi-modal>

@@ -1,0 +1,95 @@
+<ng-template #headerModal>
+  <div class="select-inspection-header-modal">
+    <div class="header-modal">
+      <trudi-icon icon="ptLogo" class="cursor-pointer"></trudi-icon>
+      <div class="header-title">Routine inspection</div>
+    </div>
+    <button
+      (click)="handleCloseModal()"
+      class="trudi-icon close-btn cursor-pointer close-icon trudi-ui-btn-circle">
+      <trudi-icon
+        [style]="{ 'width.px': 24, 'height.px': 24, color: '#646464' }"
+        icon="closeIcon"></trudi-icon>
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #footerModal>
+  <div class="footer-modal">
+    <button
+      class="trudi-btn trudi-btn-large trudi-btn-primary"
+      (click)="handleNext()">
+      <div class="text-btn">Next</div>
+    </button>
+  </div>
+</ng-template>
+
+<resizable-modal-popup
+  *ngIf="isShowModal"
+  [modalId]="modalId"
+  [show]="isShowModal"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [headerTemplate]="headerModal"
+  [footerTemplate]="footerModal"
+  (onCancel)="handleCloseModal()"
+  [isCustomMoveable]="true"
+  class="select-routine-inspection-popup">
+  <div class="content-modal">
+    <div class="select-inspection-body">
+      <div
+        class="d-flex flex-dir-column align-items-center justify-content-start align-items-start gap-16">
+        <trudi-radio-button
+          [options]="checkboxList"
+          [(ngModel)]="selectedOption"
+          (ngModelChange)="onCheckboxChange()">
+        </trudi-radio-button>
+      </div>
+      <div class="select-form-wrapper">
+        <div
+          class="form-select-wrapper form-distance"
+          *ngIf="selectedOption === selectInspectionType.SELECT_EXISTING"
+          [formGroup]="selectInspectionRequest">
+          <trudi-form-control [control]="selectExistInspection">
+            <ng-select
+              class="share-ng-select"
+              id="inspection-list"
+              data-e2e="select-inspection-dropdown"
+              [items]="listOfInspection"
+              formControlName="selectExistInspection"
+              bindValue="value.id"
+              bindLabel="label"
+              [searchable]="true"
+              [clearable]="true"
+              [virtualScroll]="true"
+              [editableSearchTerm]="false"
+              [ngClass]="{'red-border': getSelectedInspection.invalid && (getSelectedInspection.dirty ||  getSelectedInspection.touched) }"
+              notFoundText="No results found">
+              <ng-template
+                ng-option-tmp
+                let-item$="item$"
+                let-search="searchTerm">
+                <div class="w-100 d-flex justify-content-between">
+                  <span
+                    [ngOptionHighlight]="search ? search : ''"
+                    [title]="item$.label">
+                    {{item$.label}}
+                  </span>
+                  <trudi-icon
+                    *ngIf="item$.selected"
+                    icon="checkSuccess"
+                    svgClass="size-16"
+                    viewBox="auto"></trudi-icon>
+                </div>
+              </ng-template>
+            </ng-select>
+          </trudi-form-control>
+        </div>
+      </div>
+    </div>
+  </div>
+</resizable-modal-popup>

@@ -1,0 +1,88 @@
+@import 'function';
+
+:host::ng-deep app-lease-share {
+  .day {
+    color: var(--gray-600);
+  }
+
+  .lease-box .lease-duration-date {
+    .date-start-end .days-remaining {
+      color: var(--gray-500) !important;
+    }
+
+    .item-pay .paid-to {
+      color: var(--gray-600) !important;
+
+      span {
+        color: var(--gray-500) !important;
+      }
+    }
+  }
+}
+
+.item-people-tenancy {
+  background: var(--tenant-50);
+  border-radius: 8px;
+  padding: 16px;
+  margin: 0 16px;
+  min-width: 315px;
+
+  .owner-content {
+    margin-bottom: 10px;
+
+    .owner-content-title {
+      @include fontSetup(var(--gray-800), 12px, 16px, normal, 400);
+    }
+  }
+}
+
+.info-arrears-grid {
+  display: grid;
+  gap: 26px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+
+  .info-arrears-label {
+    grid-column: span 1 / span 1;
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 400);
+  }
+
+  .info-arrears-data {
+    grid-column: span 2 / span 2;
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+  }
+
+  .total-arrears {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    .total {
+      @include fontSetup(var(--danger-600), 14px, 20px, normal, 500);
+    }
+  }
+}
+
+.info-arrears {
+  margin: 0 16px;
+  padding: 8px 0;
+  gap: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.info-arrears-amount-wrapper {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 100px minmax(0, 1fr);
+}
+
+.info-arrears-amount-list {
+  max-width: 240px;
+
+  .arrears-item-value {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-word;
+    white-space: nowrap;
+  }
+}

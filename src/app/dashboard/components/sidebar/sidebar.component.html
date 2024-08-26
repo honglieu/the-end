@@ -1,0 +1,56 @@
+<div class="sidebar-container d-flex flex-dir-column h-100">
+  <ul
+    class="wrapper-sidebar d-flex flex-dir-column h-100"
+    nz-menu
+    [nzMode]="'vertical'">
+    <div class="top-sidebar flex-1">
+      <li nzMatchRouter>
+        <sidebar-item
+          tabindex="-1"
+          titleName="inbox"
+          iconName="iconInboxV2"
+          [routerLink]="['/dashboard', 'inbox']"
+          [hoverIconName]=" 'iconInboxFillV2'"
+          [isUnread]="isUnreadInbox$ | async"></sidebar-item>
+      </li>
+      <li nzMatchRouter>
+        <sidebar-item
+          tabindex="-1"
+          titleName="tasks"
+          iconName="taskCheckListV2"
+          [routerLink]="['/dashboard', 'tasks']"
+          [hoverIconName]=" 'taskCheckListFillV2'"
+          [isUnread]="isUnreadTask$ | async"></sidebar-item>
+      </li>
+      <li nzMatchRouter>
+        <sidebar-item
+          [dataE2e]="'events-page-nav'"
+          tabindex="-1"
+          titleName="Events"
+          iconName="iconCalendarV2"
+          [routerLink]="['/dashboard', 'event']"
+          [hoverIconName]="'iconCalendarFillV2'"></sidebar-item>
+      </li>
+      <li nzMatchRouter>
+        <sidebar-item
+          tabindex="-1"
+          titleName="contacts"
+          iconName="building"
+          [hoverIconName]="'buildings'"
+          [routerLink]="['/dashboard', 'contacts']"></sidebar-item>
+      </li>
+      <li nzMatchRouter>
+        <sidebar-item
+          tabindex="-1"
+          titleName="insights"
+          iconName="chartUp"
+          [hoverIconName]="'chartUpPrimary'"
+          [routerLink]="['/dashboard', 'insights']"></sidebar-item>
+      </li>
+      <nz-divider></nz-divider>
+      <li nzMatchRouter>
+        <sidebar-item-create></sidebar-item-create>
+      </li>
+    </div>
+  </ul>
+</div>

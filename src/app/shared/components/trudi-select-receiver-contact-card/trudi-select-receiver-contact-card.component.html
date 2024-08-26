@@ -1,0 +1,337 @@
+<div #ref class="select-wrapper">
+  <ng-select
+    #ngSelectReceiver
+    [items]="items"
+    [bindLabel]="bindLabel"
+    [bindValue]="bindValue"
+    [multiple]="true"
+    [clearable]="false"
+    [searchFn]="lazyLoad ? customSearchFnFake : customSearchFn"
+    [closeOnSelect]="false"
+    (search)="onSearch($event)"
+    [placeholder]="isPolicy ? 'Search name, email or phone' : 'Search name, email, phone or property address'"
+    [addTag]="isAddItem ? addEmail : false"
+    [virtualScroll]="virtualScroll"
+    [clearSearchOnAdd]="false"
+    [(ngModel)]="selectedValue"
+    (ngModelChange)="onModelChange($event)"
+    [ngClass]="extraCls"
+    [disabled]="disabled"
+    (close)="clearSearchTerm()"
+    [loading]="loading"
+    [class.disabled-only-checkbox]="disabledOnlyCheckbox"
+    [class.hide-dropdown]="!(searchTerm.length || isSelectedProperty || isPolicy || isOutOfOffice)"
+    [class.hide-last-child]="isHiddenLastChild"
+    [class.isAddItem]="isAddItem"
+    [compareWith]="compareWith"
+    (input)="onInput($event.target.value)"
+    (scrollToEnd)="nextPage.emit()"
+    [trackByFn]="trackByFn">
+    <ng-template
+      ng-label-tmp
+      let-item="item"
+      let-items="items"
+      let-clear="clear">
+      <div
+        class="select-item select-item-label d-flex align-items-center gap-8"
+        [ngClass]="{'disable-field': disabled}"
+        appHoverShow
+        [appHoverShow]="hoverInformation"
+        (onTooltipHidden)="onTooltipHidden()"
+        #c="child">
+        <ng-container
+          *ngTemplateOutlet="
+            customizeTemplate;
+            context: { item: item, item$: item$ }
+          "></ng-container>
+        <trudi-icon
+          *ngIf="!item?.disabled"
+          class="cursor-pointer select-item-remove"
+          icon="closeGray64"
+          [style]="{ 'width.px': 8, 'height.px': 8 }"
+          (click)="handleClear(item); $event.stopPropagation(); c.hideTooltip()"></trudi-icon>
+        <ng-template #hoverInformation>
+          <ng-container
+            class="gap-4px"
+            *ngTemplateOutlet="
+              customizeInfoTemplate;
+              context: { item: item, item$: item$, visible: c.isTooltipVisible }
+            "></ng-container>
+        </ng-template>
+      </div>
+    </ng-template>
+
+    <ng-template
+      ng-option-tmp
+      let-item="item"
+      let-item$="item$"
+      let-index="index"
+      let-search="searchTerm">
+      <div
+        class="select-item d-flex select-item-contact-card align-items-center"
+        [ngClass]="{'disable-field': item.disabled}">
+        <ng-container
+          *ngTemplateOutlet="
+            customizeOptionTemplate;
+            context: { item: item, item$: item$, searchTerm: searchTerm }
+          ">
+        </ng-container>
+        <div>
+          @if (item?.status === crmStatusType.archived) {
+          <input
+            nz-tooltip
+            nzTooltipPlacement="top"
+            [nzTooltipTitle]="item.disabled ? 'Archived supplier' : ''"
+            [nzTooltipOverlayClassName]="'tooltip-archived-contact-view'"
+            [disabled]="item.disabled"
+            id="select-checkbox"
+            class="visible-checkbox-in-safari"
+            type="checkbox"
+            [ngModel]="item$.selected" />
+          } @else {
+          <input
+            id="select-checkbox"
+            class="visible-checkbox-in-safari"
+            type="checkbox"
+            [ngModel]="item$.selected" />
+          }
+        </div>
+      </div>
+    </ng-template>
+    <ng-template ng-header-tmp>
+      <div
+        *ngIf="totalReceiver || totalReceiver === 0"
+        class="d-flex align-items-center justify-content-between select-header"
+        [ngClass]="{'justify-content-end': isPolicy}">
+        <trudi-switch
+          *ngIf="!isPolicy"
+          [(ngModel)]="isShowArchivedContacts"
+          (ngModelChange)="onHandleShowArchivedContacts($event)"
+          class="mr-auto show-archived-deleted-contact-toggle"
+          [label]="'Archived contacts'">
+        </trudi-switch>
+        <button
+          class="clear-btn clear-selection-btn"
+          [disabled]="!selectedValue?.length"
+          (click)="handleClearAll()">
+          Clear selection
+        </button>
+      </div>
+    </ng-template>
+  </ng-select>
+  <div
+    #pseudoTemplate
+    class="pseudo-input"
+    [ngClass]="{'has-value': selectedValue?.length > 0}">
+    <ng-container *ngIf="iconTemplate; else default">
+      <trudi-icon
+        class="cursor-pointer"
+        [icon]="iconTemplate"
+        [style]="{ 'width.px': 20, 'height.px': 20 }"
+        (click)="$event.stopPropagation(); clear(item); c.hideTooltip()"></trudi-icon>
+    </ng-container>
+    <ng-template #default> {{ textTemplate }}: </ng-template>
+  </div>
+</div>
+
+<!-- customize template -->
+
+<!-- customize template for label show value on input -->
+<ng-template #customizeTemplate let-item="item" let-item$="item$">
+  <div
+    class="select-item__info flex-grow-1 d-flex gap-4"
+    [ngClass]="{'select-item__info--invalid': item.type === EUserPropertyType.EXTERNAL && !item.isValid}">
+    <app-circle-avatar
+      [userId]="item.id"
+      [firstName]="item.firstName"
+      [lastName]="item.lastName"
+      [userType]="item.type"
+      [avatar]="item?.googleAvatar"
+      [size]="16"
+      [isValid]="item.type === EUserPropertyType.EXTERNAL ? item.isValid : true">
+    </app-circle-avatar>
+    <span class="custom-select-text text-ellipsis">
+      {{ item.type === EUserPropertyType.EXTERNAL ? item.secondaryEmail?.email
+      || item.email : ((item?.firstName || item?.lastName || item?.fullName ||
+      '')) }}
+    </span>
+    <span>
+      ({{(item | contactTitleByConversationProperty: {isNoPropertyConversation:
+      false, isMatchingPropertyWithConversation: true, showOnlyRole: true,
+      showPMRole: true})}})
+    </span>
+  </div>
+</ng-template>
+
+<!-- customize template for option display when click dropdown -->
+<ng-template
+  #customizeOptionTemplate
+  let-item="item"
+  let-item$="item$"
+  let-search="searchTerm">
+  <div class="select-item__info flex-grow-1 text-ellipsis">
+    <div
+      class="gap-6 d-flex align-items-center"
+      [ngClass]="{ 'item-checked': item$.selected }">
+      <span
+        class="select-item__title"
+        [nzTooltipTitle]='(item.type === EUserPropertyType.UNIDENTIFIED) ? item.secondaryEmail?.email || item.email :
+        ((item?.firstName || "") + " " + (item?.lastName || ""))'
+        nzTooltipPlacement="top"
+        nz-tooltip
+        [ngOptionHighlight]="searchTerm ? searchTerm : ''">
+        {{ item.type === EUserPropertyType.EXTERNAL ? item.secondaryEmail?.email
+        || item.email : ((item?.firstName || "") + " " + (item?.lastName || "")
+        )}}
+      </span>
+      <span>&#x2022;</span>
+      <span
+        class="select-item__type"
+        [ngOptionHighlight]="searchTerm && item.type === EUserPropertyType.LEAD ? searchTerm : ''">
+        {{(item | contactTitleByConversationProperty: {
+        isNoPropertyConversation: false, isMatchingPropertyWithConversation:
+        true, showOnlyRole: true, showPMRole: true, showPMTitle: true})}}
+      </span>
+      <trudi-icon
+        *ngIf="item.isPrimary && item.type === EUserPropertyType.SUPPLIER"
+        class="toolbar-icon"
+        svgClass="size-16"
+        [icon]="'goldStar'"
+        nzTooltipTitle="Favorite supplier"
+        nzTooltipPlacement="top"
+        nz-tooltip></trudi-icon>
+      <trudi-icon
+        *ngIf="item.isAppUser"
+        class="toolbar-icon"
+        svgClass="size-16"
+        [icon]="'appUser'"
+        variant="role"
+        nzTooltipTitle="App User"
+        nzTooltipPlacement="top"
+        nz-tooltip></trudi-icon>
+      <span
+        *ngIf="item.secondaryEmail?.email || item.email"
+        class="select-item__email-wrapper d-flex align-items-center gap-4"
+        [ngStyle]="{'max-width': isPolicy ? '40%' : '20%'}"
+        [nzTooltipTitle]="item.secondaryEmail?.email || item.email"
+        nzTooltipPlacement="top"
+        nz-tooltip>
+        <trudi-icon
+          class="toolbar-icon"
+          svgClass="size-14"
+          [icon]="'mailThin'"
+          variant="role"></trudi-icon>
+        <span
+          class="select-item__email"
+          [ngOptionHighlight]="searchTerm ? searchTerm : ''">
+          {{item.secondaryEmail?.email || item.email}}
+        </span>
+      </span>
+      <span
+        *ngIf="item?.phoneNumber && item?.type === EUserPropertyType.LEAD"
+        class="select-item__street-wrapper d-flex align-items-center gap-4">
+        <trudi-icon
+          class="toolbar-icon"
+          svgClass="size-14"
+          [icon]="'phoneContactIcon'"></trudi-icon>
+        <span
+          class="select-item__street-wrapper___title"
+          [nzTooltipTitle]="item.phoneNumber | phoneNumberFormat"
+          nzTooltipPlacement="top"
+          [innerHTML]="item.phoneNumber | phoneNumberFormat | phoneNumberHighlight:
+          searchTerm"
+          nz-tooltip></span>
+      </span>
+      <span
+        *ngIf="item?.shortenStreetLine || item?.shortenStreetline"
+        class="select-item__street-wrapper d-flex align-items-center gap-4">
+        <trudi-icon
+          class="toolbar-icon"
+          svgClass="size-14"
+          [icon]="'mapPin'"></trudi-icon>
+        <span
+          class="select-item__street-wrapper___title"
+          [ngOptionHighlight]="searchTerm ? searchTerm : ''"
+          [nzTooltipTitle]="item?.shortenStreetLine || item?.shortenStreetline"
+          nzTooltipPlacement="top"
+          nz-tooltip
+          >{{item?.shortenStreetLine || item?.shortenStreetline}}</span
+        >
+      </span>
+      <trudi-badge
+        *ngIf="item?.userPropertyStatus === EContactStatus.DELETED ||
+      item?.userPropertyStatus === EContactStatus.ARCHIVED || item?.status === crmStatusType.archived"
+        class="select-item__status"
+        [text]="item.userPropertyStatus || item.status | titleCasePipe"
+        size="small"
+        variant="sidebar"
+        [allowTruncated]="visible"></trudi-badge>
+    </div>
+  </div>
+</ng-template>
+
+<!-- customize template information -->
+<ng-template
+  #customizeInfoTemplate
+  let-item="item"
+  let-item$="item$"
+  let-visible="visible">
+  <div
+    *ngIf="item.streetLine"
+    class="select-item__address white-space-brakes"
+    [ngClass]="{'hover-template' : visible}">
+    <trudi-badge
+      [text]="item.streetLine"
+      [highlighText]="searchTerm"
+      [icon]="'mapGrey'"
+      size="small-min-height"
+      variant="role"
+      [allowTruncated]="visible"></trudi-badge>
+  </div>
+  <div
+    *ngIf="item.secondaryEmail?.email || item.email || item.isAppUser"
+    class="select-item__contact d-flex flex-wrap gap-4 white-space-brakes"
+    [ngClass]="{'hover-template' : visible}">
+    <trudi-badge
+      *ngIf="item.secondaryEmail?.email || item.email"
+      [text]="item.secondaryEmail?.email || item.email"
+      [highlighText]="searchTerm"
+      [icon]="'mailFillV2'"
+      [customIconSize]="16"
+      size="small-min-height"
+      variant="role"
+      [allowTruncated]="visible"></trudi-badge>
+    <trudi-badge
+      *ngIf="item.isAppUser"
+      [text]="'App user'"
+      [icon]="'appUser'"
+      size="small-min-height"
+      variant="role"
+      [allowTruncated]="visible"></trudi-badge>
+  </div>
+  <div
+    *ngIf="item?.phoneNumber && item?.type === EUserPropertyType.LEAD"
+    class="select-item__phone white-space-brakes"
+    [ngClass]="{'hover-template' : visible}">
+    <trudi-badge
+      [text]="item.phoneNumber | phoneNumberFormat"
+      [highlighText]="searchTerm"
+      [icon]="'phoneContactFillIcon'"
+      [customIconSize]="16"
+      size="small-min-height"
+      variant="role"
+      [allowTruncated]="visible"></trudi-badge>
+  </div>
+  <div
+    *ngIf="item.contactType"
+    class="select-item__other-contact"
+    [ngClass]="{'hover-template' : visible}">
+    <trudi-badge
+      [text]="item.contactType | titleCasePipe"
+      [highlighText]="searchTerm"
+      [icon]="'circleInfo'"
+      size="small"
+      variant="role"
+      [allowTruncated]="visible"></trudi-badge>
+  </div>
+</ng-template>

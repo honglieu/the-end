@@ -1,0 +1,154 @@
+<div
+  class="box-drop-files h-100"
+  cdkDropList
+  #parentDropList="cdkDropList"
+  [cdkDropListConnectedTo]="connectedChild"
+  (cdkDropListDropped)="drop($event)">
+  <ng-template #hasContent>
+    <div
+      class="content-wrapper chat-container"
+      infiniteScroll
+      [scrollWindow]="false"
+      [infiniteScrollDistance]="3"
+      [infiniteScrollThrottle]="50"
+      [immediateCheck]="false"
+      (scroll)="handleScrollNoteArea($event)"
+      (scrolledUp)="handleScrollUp()"
+      #scrollDown>
+      <div
+        class="group-note"
+        *ngFor="let group of listNotesGroup; trackBy: dateTrackBy">
+        <div class="timestamp-badge message-date wrap-order-day y-center">
+          <div class="divider flex-1 hideDivider"></div>
+          <div class="order-day timeStamp">
+            {{group.date | dateTimeString | push | uppercaseFirstLetter}}
+          </div>
+          <div class="divider flex-1 hideDivider"></div>
+        </div>
+        <div *ngFor="let note of group.notes; trackBy: noteTrackBy">
+          <div
+            class="message-note d-flex mt-12"
+            [ngClass]="{'justify-content-end': note.isPmNote}">
+            <ng-container [ngSwitch]="note.type">
+              <ng-container *ngSwitchCase="ENoteType.TEXT">
+                <message-note
+                  class="mw-60"
+                  [messageNote]="note"
+                  (editStatusChange)="editStatusChange($event)"
+                  data-e2e="chat-note-thread"></message-note
+              ></ng-container>
+              <ng-container *ngSwitchCase="ENoteType.FILE">
+                <div class="d-block gap-8">
+                  <document-note
+                    class="document-note"
+                    [ngClass]="{'row-revert': note.isPmNote}"
+                    (fileEmit)="handleFileEmit($event)"
+                    [crmSystemId]="crmSystemId"
+                    (fileOnClicked)="manageCarouselState($event)"
+                    [noteFile]="note.file"></document-note>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="ENoteType.CARD">
+                <div class="d-block gap-8">
+                  <div class="list-contact d-flex flex-dir-column gap-12">
+                    <info-ticket
+                      [contact]="note.metadata"
+                      [size]="'small'"></info-ticket>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+          <div
+            [ngClass]="{'justify-content-end': note.isPmNote}"
+            class="time-stamp d-flex mt-4">
+            <app-message-footer
+              [senderType]="'user'"
+              [createdAt]="note.createdAt"></app-message-footer>
+          </div>
+          <div
+            *ngIf="note?.isLastReadMessage && showRedLine"
+            class="d-flex flex-dir-row align-items-center red-line"
+            #redLineNew>
+            <hr />
+            <trudi-icon icon="newMessageTag"> </trudi-icon>
+          </div>
+        </div>
+      </div>
+      <button
+        *ngIf="showScrollToBottomButton"
+        class="view-most-recent d-flex align-items-center gap-4"
+        (click)="handleViewMostRecent(EBehaviorScroll.SMOOTH)">
+        <trudi-icon icon="chevronDown" svgClass="size-16"> </trudi-icon>
+        <span>View most recent</span>
+      </button>
+    </div>
+  </ng-template>
+  <ng-container *ngIf="(isLoading || isErrorMailbox) else hasContent">
+    <div class="content-wrapper-skeleton">
+      <div *ngFor="let _ of [].constructor(4);let i = index">
+        <div
+          class="message-note-skeleton d-flex"
+          [ngClass]="{'justify-content-end':i % 2}">
+          <div
+            [ngClass]="{'message-note-admin' : i % 2}"
+            class="message-note-wrapper">
+            <div class="message-note-skeleton">
+              <div class="message-header d-flex mt-12">
+                <div
+                  class="message-header_avatar d-flex"
+                  data-e2e="chat-note-thread-avartar">
+                  <nz-skeleton-element
+                    class="ant-skeleton-circle"
+                    nzType="avatar"
+                    [nzActive]="true"></nz-skeleton-element>
+                </div>
+                <div class="message-header_title">
+                  <nz-skeleton
+                    [nzParagraph]="{ rows: 1 }"
+                    [style.width.px]="300"
+                    [nzTitle]="false"
+                    [nzActive]="true"></nz-skeleton>
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div class="message-content">
+                <nz-skeleton
+                  [nzActive]="true"
+                  [nzParagraph]="{ rows: 1, width: [140] }"></nz-skeleton>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<app-modal-popup
+  *ngIf="isShowCarousel"
+  [transparent]="true"
+  [show]="isShowCarousel"
+  [position]="popupModalPosition.full_screen">
+  <app-images-carousel
+    *ngIf="isShowCarousel"
+    [open]="isShowCarousel"
+    [isSyncing]="isSyncing"
+    [isInternalNote]="true"
+    [imageUrlList]="listImageCarousel"
+    [initialIndex]="initialIndex"
+    (showCarousel)="manageCarouselState($event)"
+    (fileEmit)="handleFileEmit($event.file)"></app-images-carousel>
+</app-modal-popup>
+
+<app-modal-popup
+  *ngIf="isShowImage"
+  [transparent]="isShowImage"
+  [show]="isShowImage"
+  [position]="popupModalPosition.full_screen">
+  <app-image-detail
+    *ngIf="isShowImage"
+    [open]="isShowImage"
+    [imageUrl]="imageDetailUrl"
+    (onClose)="handleCloseImageDetail()"></app-image-detail>
+</app-modal-popup>

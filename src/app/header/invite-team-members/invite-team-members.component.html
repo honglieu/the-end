@@ -1,0 +1,169 @@
+<trudi-modal
+  *ngIf="show"
+  [(visible)]="show"
+  [modelWidth]="715"
+  subTitle=""
+  [autoFocus]="null"
+  title="Invite team members"
+  (onCancel)="closeModal()"
+  className="trudi-modal-invite-team-nember">
+  <div class="invite-wrapper">
+    <div [formGroup]="memberForm" autocomplete="off">
+      <div class="body" #elementRefInvite>
+        <div class="invite-input-list">
+          <div
+            formArrayName="members"
+            *ngFor="let member of memberControls.controls; let i = index"
+            class="input-item">
+            <div [formGroupName]="i">
+              <div *ngIf="i > 0" class="hr-line-height"></div>
+              <div class="d-flex gap-12 input-row">
+                <div
+                  class="d-flex flex-dir-column justify-content-end gap-6 input-row-item">
+                  <label for="email" class="label">Email</label>
+                  <input
+                    maxlength="100"
+                    type="text"
+                    formControlName="email"
+                    class="input-invite"
+                    [ngClass]="{ 'error': (getEmailErrorMessage(i) || isCheckUsedEmail(i)) && isSubmit }"
+                    (input)="onInputChange($event)" />
+                  <div
+                    *ngIf="(getEmailErrorMessage(i) || isCheckUsedEmail(i)) && isSubmit"
+                    class="error-container d-flex align-items-center gap-4">
+                    <trudi-icon
+                      icon="iconWarning"
+                      alt="msfb-error"></trudi-icon>
+                    <div class="error-text">{{getEmailErrorMessage(i)}}</div>
+                    <div *ngIf="isCheckUsedEmail(i)" class="error-text">
+                      Email address already in use
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="d-flex flex-dir-column justify-content-end gap-6 input-row-item">
+                  <label for="name" class="label">Name</label>
+                  <input
+                    maxlength="50"
+                    type="text"
+                    class="input-invite"
+                    formControlName="name"
+                    [ngClass]="{ 'error': isNameInvalid(i) && isSubmit }" />
+                  <div
+                    *ngIf="isNameInvalid(i) && isSubmit"
+                    class="error-container d-flex align-items-center gap-4">
+                    <trudi-icon
+                      icon="iconWarning"
+                      alt="msfb-error"></trudi-icon>
+                    <div class="error-text">{{ requiredMessage }}</div>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex gap-12 input-row">
+                <div
+                  class="d-flex flex-dir-column justify-content-end gap-6 input-row-item">
+                  <label for="role" class="label">Role</label>
+                  <ng-select
+                    class="share-ng-select select-role"
+                    [items]="listRole.get(i)"
+                    [clearable]="true"
+                    [virtualScroll]="true"
+                    [searchable]="true"
+                    formControlName="role"
+                    bindValue="value"
+                    bindLabel="name"
+                    [ngClass]="{ 'input-error-select': isRoleInvalid(i) && isSubmit }"
+                    [editableSearchTerm]="true">
+                    <ng-template ng-label-tmp let-item="item">
+                      <div class="select-item d-flex align-items-center">
+                        <div class="select-item-name">
+                          <span *ngIf="item.name" class="ng-value-label">
+                            {{item.name}}
+                          </span>
+                        </div>
+                      </div>
+                    </ng-template>
+                    <ng-template
+                      ng-option-tmp
+                      let-item="item"
+                      let-index="index">
+                      <div class="ng-value-label-wraper">
+                        <span class="ng-value-label select-role-option">
+                          {{item.name}}
+                        </span>
+                        <trudi-icon
+                          icon="checkSuccess"
+                          [style]="{ 'width.px': 20, 'height.px': 20}"
+                          *ngIf="item.value === memberForm.get('members').value[i].role"></trudi-icon>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                  <div
+                    *ngIf="isRoleInvalid(i) && isSubmit"
+                    class="error-container d-flex align-items-center gap-4">
+                    <trudi-icon
+                      icon="iconWarning"
+                      alt="msfb-error"></trudi-icon>
+                    <div class="error-text">{{ requiredMessage }}</div>
+                  </div>
+                </div>
+                <div
+                  class="d-flex flex-dir-column justify-content-end gap-6 input-row-item">
+                  <label for="title" class="label">Public-facing title</label>
+                  <input
+                    maxlength="40"
+                    type="text"
+                    class="input-invite"
+                    formControlName="title"
+                    [ngClass]="{ 'error': isTitleInvalid(i) && isSubmit }" />
+                  <div
+                    *ngIf="isTitleInvalid(i) && isSubmit"
+                    class="error-container d-flex align-items-center gap-4">
+                    <trudi-icon
+                      icon="iconWarning"
+                      alt="msfb-error"></trudi-icon>
+                    <div class="error-text">{{ requiredMessage }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="i > 0" class="d-flex delete-wrapper">
+              <button
+                trudi-btn
+                btnType="neutral"
+                variant="link"
+                size="small"
+                (click)="removeMember(i)">
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+        <button
+          trudi-btn
+          variant="tonal"
+          size="medium"
+          *ngIf="memberCount < 10"
+          (click)="addMember()">
+          <trudi-icon
+            icon="plusImg"
+            [style]="{ 'width.px': 14}"
+            class="plus-invite">
+          </trudi-icon>
+          <div class="add-btn-label">Add</div>
+        </button>
+      </div>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div class="btn-wrapper">
+      <button
+        trudi-btn
+        data-e2e="next-btn"
+        [disabled]="disableButtonInvite"
+        (click)="inviteMembers()">
+        Invite
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

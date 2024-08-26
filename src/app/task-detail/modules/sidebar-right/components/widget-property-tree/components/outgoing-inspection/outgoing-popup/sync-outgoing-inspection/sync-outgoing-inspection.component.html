@@ -1,0 +1,249 @@
+<div class="invite-wrapper">
+  <resizable-modal-popup
+    *ngIf="isShowModal"
+    [modalId]="modalId"
+    [show]="isShowModal"
+    [draggable]="true"
+    [hasBackdrop]="false"
+    [resizable]="false"
+    [heightCustom]="'auto'"
+    [widthCustom]="624"
+    [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+    [headerTemplate]="headerModal"
+    [footerTemplate]="footerModal"
+    (onCancel)="handleCloseModal()"
+    [isCustomMoveable]="true"
+    class="sync-outgoing-inspection-modal">
+    <ng-template #headerModal>
+      <div class="select-outgoing-inspection-header-modal">
+        <div class="header-modal">
+          <trudi-icon icon="ptLogo"></trudi-icon>
+          <div class="header-title">Outgoing inspection</div>
+        </div>
+        <button
+          (click)="handleCloseModal()"
+          class="trudi-icon close-btn cursor-pointer close-icon trudi-ui-btn-circle">
+          <trudi-icon
+            [style]="{ 'width.px': 24, 'height.px': 24, color: '#646464' }"
+            icon="closeIcon"></trudi-icon>
+        </button>
+      </div>
+    </ng-template>
+    <div class="content-modal">
+      <div
+        [formGroup]="outgoingForm"
+        class="content-tenancy-invoice d-flex flex-tenancy flex-dir-column gap-24">
+        <div class="inspection-details d-flex flex-dir-column gap-12">
+          <div class="tenancy-dropdown d-flex flex-dir-column gap-8">
+            <div class="search-box" id="tenancy-select">
+              <div
+                class="wrap-invoice-name title-sync d-flex align-items-center gap-4">
+                <inspection-popup-title
+                  [status]="status"
+                  [disabled]="isConsole || syncStatus === syncPropertyTree.INPROGRESS"
+                  [inspectionData]="this.prevData"
+                  (cancelInspection)="handleCancelOrCloseInspection(false)"
+                  (closeInspection)="handleCancelOrCloseInspection(true, $event)"></inspection-popup-title>
+              </div>
+              <div class="trudi-input-label">Select tenancy</div>
+              <trudi-form-control [control]="tenancyId">
+                <ng-select
+                  id="document-list"
+                  class="share-ng-select"
+                  formControlName="tenancyId"
+                  [items]="listOfTenancy"
+                  bindValue="id"
+                  bindLabel="name"
+                  [ngClass]="{'red-border': tenancyId.invalid && (tenancyId.dirty ||  tenancyId.touched)}"
+                  [clearable]="true"
+                  [virtualScroll]="true"
+                  [searchable]="true"
+                  [editableSearchTerm]="true"
+                  (change)="onTenancySelectChanged($event)"
+                  (search)="onSearchTenancy($event)"
+                  notFoundText="No results found">
+                  <ng-template
+                    ng-option-tmp
+                    let-item$="item$"
+                    let-search="searchTerm">
+                    <div class="y-center justify-content-between flex-1">
+                      {{item$?.label}}
+                      <trudi-icon
+                        *ngIf="item$.selected"
+                        icon="checkSuccess"
+                        svgClass="size-16"
+                        viewBox="auto"></trudi-icon>
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </trudi-form-control>
+            </div>
+          </div>
+          <div class="trudi-form-group d-flex flex-dir-column gap-12">
+            <div class="search-box" id="date-select">
+              <div class="trudi-input-label">Date</div>
+              <div class="box-field-date">
+                <trudi-form-control [control]="date">
+                  <trudi-date-picker
+                    class="date"
+                    formControlName="date"
+                    [class.trudi-picker-error]="date?.invalid && (date.dirty || date.touched)"
+                    [trudiDisabled]="disableTime || listOfTenancy.length === 0"
+                    [breakNochange]="true"
+                    [defaultValue]="outgoingForm.get('date').value"
+                    (trudiOnOpenChange)="triggerInputTouched($event, 'date')">
+                  </trudi-date-picker>
+                </trudi-form-control>
+              </div>
+            </div>
+            <div class="time d-flex gap-20">
+              <div class="d-flex flex-dir-column w-50">
+                <div class="trudi-input-label">Start time</div>
+                <trudi-form-control>
+                  <time-picker
+                    class="time-picker-inspection w-100"
+                    [value]="startTime.value"
+                    [rangeFrom]="rangeFrom"
+                    [rangeTo]="rangeTo"
+                    [label]="'--:--'"
+                    [disableTimeChange]="disableTime"
+                    [isFrom]="true"
+                    [position]="position"
+                    formControlName="startTime"
+                    [ngClass]="{'invalid-time': startTime.invalid && (startTime.dirty ||  startTime.touched), 'fieldSuccess': startTime.value, 'fieldDisable': disableTime}"
+                    (isFocus)="triggerInputTouched($event, 'startTime')"
+                    [readonly]="false"
+                    (onChangeHour)="handleChangeStartHour($event)">
+                  </time-picker>
+                </trudi-form-control>
+              </div>
+              <div class="d-flex flex-dir-column w-50">
+                <div class="trudi-input-label">End time</div>
+                <trudi-form-control>
+                  <time-picker
+                    class="time-picker-inspection w-100"
+                    [value]="endTime.value"
+                    [rangeFrom]="rangeFrom"
+                    [rangeTo]="rangeTo"
+                    [disableTimeChange]="disableTime || listOfTenancy.length === 0"
+                    [label]="'--:--'"
+                    [isTo]="true"
+                    [position]="position"
+                    formControlName="endTime"
+                    [ngClass]="{'invalid-time': endTime.invalid && (endTime.dirty ||  endTime.touched), 'fieldSuccess': endTime.value, 'fieldDisable': disableTime}"
+                    (isFocus)="triggerInputTouched($event, 'endTime')"
+                    [readonly]="false"
+                    (onChangeHour)="handleChangeEndHour($event)">
+                  </time-picker>
+                </trudi-form-control>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="inspection-outputs">
+          <div>
+            <div class="wrap-invoice-name title-sync d-flex gap-4">
+              <h4 class="title trudi-input-label">Inspection outputs</h4>
+              <span
+                class="icon-circle"
+                nz-tooltip
+                nzTooltipTitle="Inspection outputs can be edited when inspection has moved to completed status."
+                nzTooltipOverlayClassName="box-tooltip">
+                <trudi-icon
+                  svgClass="size-16"
+                  viewBox="auto"
+                  icon="toolTip2"></trudi-icon>
+              </span>
+            </div>
+            <div class="d-flex flex-dir-column gap-12">
+              <div class="value-output">
+                <div class="trudi-input-label">Tenant notes</div>
+                <trudi-form-control [control]="tenantNotes">
+                  <textarea
+                    #textarea
+                    [ngClass]="{'disabled-field': status === statusPropertyTree.CLOSED || (((status !== statusPropertyTree.CONDUCTED && status !== statusPropertyTree.CLOSED) || syncStatus === syncPropertyTree.INPROGRESS) && !statusInspectionExist)}"
+                    type="text"
+                    rows="4"
+                    maxlength="750"
+                    autosize
+                    formControlName="tenantNotes"
+                    data-e2e="summary-textarea"></textarea>
+                </trudi-form-control>
+              </div>
+              <div class="value-output">
+                <div class="trudi-input-label">Actions</div>
+                <trudi-form-control [control]="action">
+                  <textarea
+                    #textarea
+                    [ngClass]="{'disabled-field': status === statusPropertyTree.CLOSED || (((status !== statusPropertyTree.CONDUCTED && status !== statusPropertyTree.CLOSED) || syncStatus === syncPropertyTree.INPROGRESS) && !statusInspectionExist)}"
+                    type="text"
+                    rows="4"
+                    maxlength="750"
+                    autosize
+                    formControlName="action"
+                    data-e2e="summary-textarea"></textarea>
+                </trudi-form-control>
+              </div>
+              <div class="value-output">
+                <div class="trudi-input-label">Owner notes</div>
+                <trudi-form-control [control]="ownerNotes">
+                  <textarea
+                    #textarea
+                    [ngClass]="{'disabled-field': status === statusPropertyTree.CLOSED || (((status !== statusPropertyTree.CONDUCTED && status !== statusPropertyTree.CLOSED) || syncStatus === syncPropertyTree.INPROGRESS) && !statusInspectionExist)}"
+                    type="text"
+                    rows="4"
+                    maxlength="750"
+                    autosize
+                    formControlName="ownerNotes"
+                    data-e2e="summary-textarea"></textarea>
+                </trudi-form-control>
+              </div>
+              <div class="value-output">
+                <div class="trudi-input-label">Follow-up Items</div>
+                <trudi-form-control [control]="followUpItems">
+                  <div #textAreaWrapper class="content relative">
+                    <textarea
+                      #textarea
+                      [ngClass]="{'disabled-field': status === statusPropertyTree.CLOSED || (((status !== statusPropertyTree.CONDUCTED && status !== statusPropertyTree.CLOSED) || syncStatus === syncPropertyTree.INPROGRESS) && !statusInspectionExist)}"
+                      type="text"
+                      rows="4"
+                      maxlength="750"
+                      autosize
+                      formControlName="followUpItems"
+                      data-e2e="summary-textarea"></textarea>
+                  </div>
+                </trudi-form-control>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #footerModal>
+      <div class="footer-modal">
+        <pt-widget-sync-status
+          [syncStatus]="syncStatus"
+          [lastTimeSynced]="lastTimeSynced"></pt-widget-sync-status>
+        <div class="button-footer">
+          <button
+            *ngIf="!isEditInspection || isUpdateOutgoingInspectionModal"
+            class="button-back"
+            (click)="handleBack()">
+            <div class="text-btn-back">Back</div>
+          </button>
+          <button
+            *ngIf="!isShowButtonSync.includes(status)"
+            [disabled]="isConsole || syncStatus === syncPropertyTree.INPROGRESS || isArchiveMailbox"
+            [ngClass]="{'disabled-sync': syncStatus === syncPropertyTree.INPROGRESS}"
+            class="button-sync"
+            (click)="handleSync()"
+            [appE2E]="'pt-widget-outgoing-inspection'">
+            <div class="text-btn-sync no-pointer-event">
+              Sync to Property Tree
+            </div>
+          </button>
+        </div>
+      </div>
+    </ng-template>
+  </resizable-modal-popup>
+</div>

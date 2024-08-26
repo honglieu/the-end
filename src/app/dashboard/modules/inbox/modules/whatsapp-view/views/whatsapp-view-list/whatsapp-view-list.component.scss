@@ -1,0 +1,254 @@
+@import 'function';
+
+.whatsapp-inbox {
+  display: flex;
+  height: 100%;
+
+  &__index-section {
+    width: 400px;
+    flex: none;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--gray-200);
+
+    &--container {
+      height: 100%;
+      overflow-y: auto;
+      scroll-behavior: auto;
+
+      > div {
+        overflow: visible;
+        box-sizing: border-box;
+      }
+    }
+
+    &--no-item {
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &--no-message {
+      margin: 0 auto;
+      gap: 16px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      span {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        @include fontSetup(var(--bg-overlay-dark), 14px, 16px, normal, 500);
+      }
+    }
+  }
+
+  &__detail-section {
+    width: calc(100% - 400px);
+
+    &--no-select {
+      height: 100vh;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      img {
+        width: 241px;
+        height: auto;
+        &.selected-item {
+          margin-top: -6px;
+        }
+      }
+
+      p {
+        margin: -14px 0 0 0;
+        @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 600);
+      }
+    }
+  }
+
+  ::ng-deep .wrapper-group {
+    height: 100% !important;
+  }
+
+  ::ng-deep .whatsapp-skeleton {
+    padding: 0 12px;
+
+    .ant-skeleton h3.ant-skeleton-title {
+      margin-top: 0 !important;
+      border-radius: 50px;
+    }
+
+    .ant-skeleton.skeleton-icon h3.ant-skeleton-title {
+      width: 16px !important;
+      height: 14px !important;
+      border-radius: 50%;
+    }
+
+    .ant-skeleton-paragraph {
+      display: none;
+    }
+
+    .ant-skeleton-content .ant-skeleton-title {
+      margin-top: 0 !important;
+    }
+
+    > div {
+      width: 100%;
+      padding: 12px 0px;
+      border-bottom: 1px solid var(--border-neutral-dark, #d8dcdf);
+    }
+  }
+  ::ng-deep {
+    .group-list-message .header-collapse {
+      margin: 0 12px;
+    }
+  }
+}
+
+.loading-spinner {
+  height: 104px;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-left: 0px;
+  border-top-right-radius: 0%;
+
+  img {
+    height: 64px;
+    width: 64px;
+  }
+}
+
+.select_option--task {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cdk-drop-list {
+  height: calc(100% - 108px);
+}
+
+.convert_task,
+.move_task,
+.bulk_create_task {
+  display: flex;
+  align-items: center;
+  padding: 24px;
+  height: 92px;
+  border-radius: 8px;
+  border: 1px solid var(--border-neutral-dark, #d8dcdf);
+  background: var(--bg-base, #fff);
+
+  &:hover {
+    border: 1px solid var(--border-neutral-dark, #d8dcdf);
+    background: var(--bg-neutral-tonal-stronger, #d8dcdf);
+  }
+}
+
+.convert_task p,
+.move_task p,
+.bulk_create_task p {
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  color: var(--fg-neutral-stronger, #3d3d3d);
+  font-size: 16px;
+  font-weight: 600;
+
+  &:hover {
+    color: var(--fg-neutral-stronger, #3d3d3d);
+  }
+}
+
+::ng-deep .modal_select--task {
+  & .ant-modal .ant-modal-content .ant-modal-footer {
+    display: none;
+  }
+}
+
+.convert_task span,
+.move_task span,
+.bulk_create_task span {
+  color: var(--fg-neutral-weaker, #999999);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+}
+
+.content_btn_task {
+  display: flex;
+  gap: 20px;
+}
+
+.drag_preview {
+  display: flex;
+  justify-content: center;
+  overflow: visible;
+  position: relative;
+  max-width: 440px;
+  backdrop-filter: blur(4px);
+
+  @include fontSetup(var(--white), 14px, 20px, normal, 500);
+
+  .tooltip-for-drag {
+    position: absolute;
+    top: -50px;
+    left: -20px;
+
+    .tooltip-content {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      max-width: 440px;
+      display: block;
+      background-color: var(--bg-overlay-dark);
+      color: var(--white);
+      text-align: center;
+      padding: 4px 6px;
+      z-index: 1;
+      border-radius: 4px;
+    }
+
+    .tooltip-arrow {
+      position: absolute;
+      left: 12px;
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 5px solid var(--bg-overlay-dark);
+    }
+  }
+
+  .message-count {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    border-radius: 4px;
+    background: var(--info-500);
+    padding: 8px 12px;
+  }
+}
+
+.cdk-drag-placeholder {
+  opacity: 1;
+}
+
+@media (max-width: 1200px) {
+  .whatsapp-inbox__detail-section {
+    width: 722px;
+    flex: none;
+  }
+}

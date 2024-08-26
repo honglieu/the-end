@@ -1,0 +1,46 @@
+<input
+  id="cb-{{ uuid4 }}"
+  class="d-none checkbox-input"
+  type="checkbox"
+  [disabled]="disabled || pendingDisabled"
+  [(ngModel)]="value"
+  (click)="handleClick($event)"
+  (keydown.enter)="handleClick($event)"
+  (change)="triggerEventChange.emit()" />
+<label
+  appE2E
+  [e2ePrefix]="e2ePrefix"
+  e2eId="checkbox"
+  class="trudi-checkbox border-rad-6 d-flex align-items-center gap-4 cursor-pointer m-0"
+  for="cb-{{ uuid4 }}"
+  (click)="handleClick($event)"
+  (keydown.enter)="handleKeydownEnter($event)"
+  [class.cursor-not-allowed]="disabled || pendingDisabled"
+  [ngClass]="{'flex-dir-row-reverse': labelPosition === ELabelPosition.LEFT}">
+  <span
+    class="no-pointer-event border-rad-4 d-flex align-items-center justify-content-center"
+    [tabIndex]="disabled || !focusInputOnly ? '-1' :'0'">
+    <trudi-icon
+      *ngIf="!isSelectedAll && type === 'circle' && !disabled"
+      icon="checkMarkFill"></trudi-icon>
+    <trudi-icon
+      *ngIf="!isSelectedAll && type === 'circle' && disabled"
+      icon="checkMark"></trudi-icon>
+    <svg *ngIf="!isSelectedAll && type === 'square'" width="24" height="24">
+      <use xlink:href="#check"></use>
+    </svg>
+    <div *ngIf="isSelectedAll" class="selected-all"></div>
+  </span>
+  <span *ngIf="label" class="label-text">{{ label }}</span>
+</label>
+
+<!-- checked svg -->
+<svg class="checkbox-symbol">
+  <symbol id="check" viewBox="0 0 20 20">
+    <polyline
+      points="1.5 6 4.5 9 10.5 1"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"></polyline>
+  </symbol>
+</svg>

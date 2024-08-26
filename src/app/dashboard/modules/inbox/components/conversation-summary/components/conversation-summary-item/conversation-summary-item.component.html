@@ -1,0 +1,145 @@
+<div
+  class="conversation-summary-action-item"
+  [id]="'item_' + message?.sessionId">
+  <div
+    class="conversation-summary-date"
+    [ngClass]="{'conversation-summary-email': currentConversation?.conversationType === EConversationType.EMAIL && message?.isOpen}">
+    <div class="d-flex align-items-center gap-2">
+      <div class="conversation-datetime d-flex">
+        {{ message?.sessionCreatedAt | trudiDateTime: EPage.INDEX: true: true |
+        async }}&nbsp;@if(message?.displayName){
+        <span> •&nbsp;{{message?.displayName}} </span>}
+      </div>
+      <button
+        class="button-conversation-datetime"
+        (click)="toggleConversationSummary()"
+        [class.conversation-summary-btn-expanded]="message?.isOpen">
+        <div class="arrow-btn">
+          <trudi-icon svgClass="size-16" icon="chevronDown"></trudi-icon>
+        </div>
+      </button>
+    </div>
+    <div
+      [class.conversation-summary-item-expanded]="message?.isOpen"
+      [@collapseMotion]="message?.isOpen ? 'expanded' : 'collapsed'"
+      (click)="handleClickMessageSummaryItem(message)"
+      class="mt-4">
+      <div class="d-flex gap-4 conversation-summary-content-title">
+        <span class="session-conversation-summary">
+          {{ (message?.messagesTranslate && message?.languageCode !== 'en' &&
+          message?.languageCode !== 'und') ? message?.messagesTranslate :
+          (message?.summary === '[NO_MESSAGE_SUMMARY]') ? 'No message' :
+          message?.summary }}
+        </span>
+        @if (message?.attachments?.length || message?.countAttachments) {
+        <div class="attachments">
+          <div
+            class="conversation-summary-icon-attachments"
+            [ngClass]="{'msg': isConversationOfMsg}"
+            nz-tooltip
+            nzTooltipTitle="View attachments"
+            (click)="$event.stopPropagation(); handleShowAttachment()">
+            <trudi-icon
+              icon="attachments"
+              class="d-flex align-items-center mr-4"></trudi-icon>
+            <span
+              >{{ (message?.attachments?.length || message?.countAttachments) |
+              totalCountPipe: 99 }}</span
+            >
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    @if(currentConversation?.conversationType === EConversationType.EMAIL &&
+    message?.isOpen){
+    <div class="copy-send-msg-summary">
+      <button
+        nz-tooltip
+        [nzTooltipPlacement]="'top'"
+        [nzTooltipTitle]="'Forward'"
+        (click)="openPopupSendMessage($event, message?.attachments)"
+        disableOpenSendMsgModal
+        class="btn-action">
+        <trudi-icon class="trudi-icon" icon="forwardMsgIcon"></trudi-icon>
+      </button>
+      <button
+        nz-tooltip
+        [nzTooltipTitle]="isCopy ? 'Copied' : 'Copy'"
+        [nzTooltipPlacement]="'top'"
+        (click)="$event.stopPropagation(); copyToClipboard(message?.summary)"
+        class="btn-action">
+        <trudi-icon
+          class="trudi-icon"
+          svgClass="size-14"
+          icon="copy"></trudi-icon>
+      </button>
+    </div>
+    }
+  </div>
+  <div
+    #conversationSummary
+    class="conversation-summary-action-item-expanded"
+    [class.conversation-summary-btn-expanded]="message?.isOpen"
+    [@collapseMotion]="message?.isOpen ? 'expanded' : 'collapsed'">
+    @if(message.audioFile?.name) {
+    <button
+      class="audio-box d-flex align-items-center gap-4 mb-4"
+      PreventButton
+      (leftClick)="$event.stopPropagation(); loadFile(message.audioFile, message.audioFile.id ||  message.audioFile.fileId)">
+      <trudi-icon svgClass="size-16" icon="TrudiFiSrPlay"></trudi-icon>
+      <span class="audio_name d-flex">
+        <span class="text-ellipsis">{{objectNameAudioMP3.firstPart}}</span>
+        <span>{{objectNameAudioMP3.secondPart}}</span>
+      </span>
+    </button>
+    } @if (message?.attachments?.length) {
+    <div
+      [class.conversation-summary-btn-expanded]="showAttachment"
+      [@collapseMotion]="showAttachment? 'expanded' : 'collapsed'">
+      <div
+        class="d-flex align-items-center gap-4 list-attachment"
+        #attachmentsListTemp>
+        <ng-container
+          *rxFor="let file of message?.attachments; trackBy: 'id'; strategy: 'immediate'">
+          <conversation-summary-attachment
+            [file]="file"></conversation-summary-attachment>
+        </ng-container>
+      </div>
+    </div>
+    } @if (message?.messagesTranslate && message?.languageCode !== 'en' &&
+    message?.languageCode !== 'und') {
+    <div class="translation-label mb-8">
+      <language-translation-label
+        [messagesTranslate]="message?.messagesTranslate"
+        [inputLanguage]="message?.languageCode"></language-translation-label>
+    </div>
+    } @if (message?.messagesTranslate && message?.languageCode !== 'en' &&
+    message?.languageCode !== 'und') {
+    <div class="language-original-content mb-8">
+      <language-original-content
+        #languageOriginalContent
+        [isOpenDescription]="isOpenDescription"
+        [content]="message?.summary"></language-original-content>
+    </div>
+    } @if (message?.messageRequest?.length) {
+    <div class="facebook-conversation-summary-request" #scrollContainer>
+      <ng-container
+        *rxFor="let request of message?.messageRequest; trackBy: 'messageId'; strategy: 'immediate'">
+        <conversation-summary-request
+          [isTemporary]="message?.isTemporary"
+          [displayName]="message?.displayName"
+          [channelUserName]="message?.channelUserName"
+          [emailMetaData]="message?.emailMetaData"
+          [currentConversation]="currentConversation"
+          [requestItem]="request"
+          [isLinkedConversationsExpanded]="request?.linkedConversations"
+          [message]="message"
+          [emailVerified]="emailVerified"
+          (reloadMessageRequest)="processMessageReload($event)">
+        </conversation-summary-request>
+      </ng-container>
+    </div>
+    }
+  </div>
+</div>

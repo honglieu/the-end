@@ -1,0 +1,62 @@
+@import 'function';
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+.call {
+  &-in-progress,
+  &-missed,
+  &-was-completed {
+    padding: 12px;
+    align-items: center;
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04);
+    display: flex;
+    margin: 12px 0 8px;
+    margin-bottom: 8px;
+    .call-logo {
+      width: 3.5rem;
+      height: 3.5rem;
+      margin-right: 16px;
+
+      img {
+        width: 3.5rem;
+        height: 3.5rem;
+      }
+    }
+  }
+  &-in-progress {
+    padding: 1.6rem;
+    .call-logo {
+      width: 4rem;
+      height: 4rem;
+
+      img {
+        min-width: 4rem;
+        height: 4rem;
+      }
+    }
+  }
+  &-status {
+    width: 100%;
+    &-message {
+      @include fontSetup(var(--gray-500), 16px, 20px, normal, 600);
+    }
+    &-header {
+      display: flex;
+      align-items: flex-start;
+      flex-direction: column;
+      justify-content: center;
+      &-text {
+        @include fontSetup(var(--gray-950), 16px, 20px, normal, 600);
+      }
+      &-time {
+        @include fontSetup(var(--gray-300), 12px, 18px, normal, 500);
+      }
+    }
+  }
+}
+.call-footer {
+  @include fontSetup(var(--fg-neutral-normal, #61646C), 10px, 12px, normal, 400);
+}

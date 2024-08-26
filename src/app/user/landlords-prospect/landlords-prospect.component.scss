@@ -1,0 +1,12 @@
+@import 'function';
+
+:host ::ng-deep {
+  td.name {
+    min-width: 20vw;
+  }
+  td.crm-status {
+    .wrapper-text {
+      min-width: 14vw;
+    }
+  }
+}

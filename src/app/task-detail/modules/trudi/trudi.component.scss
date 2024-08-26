@@ -1,0 +1,124 @@
+@import 'function';
+
+.section-trudi {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  ::ng-deep ng-select {
+    margin-top: 0;
+  }
+
+  .suggest-title {
+    margin-bottom: 12px;
+    @include fontSetup(var(--bg-overlay-light), 14px, 20px, normal, 600);
+  }
+
+  .task-name-dropdown {
+    margin-top: 6px;
+    .task-name-item {
+      @include fontSetup(var(--gray-950), 14px, 20px, normal, 400);
+    }
+  }
+
+  .confirm-btn {
+    margin: 24px 0;
+  }
+
+  &.super-happy-path {
+    .header-text {
+      @include fontSetup(var(--gray-950), 14px, 20px, normal, 600);
+    }
+  }
+
+  .pet-request-decision {
+    p {
+      color: inherit !important;
+    }
+  }
+}
+
+.header-section-logo {
+  margin: 10px 0;
+}
+
+.header-title-text {
+  @include fontSetup(var(--gray-700), 14px, 20px, normal, 600);
+}
+.convert-to-task-container {
+  align-items: flex-start;
+
+  .trudi-btn-detail {
+    display: flex;
+    width: fit-content;
+    height: 36px;
+    padding: 0px 12px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    border-radius: 8px;
+    background: var(--bg-brand-tonal-normal, #e1f8f5);
+    color: var(--bg-brand-solid-normal, #00aa9f);
+    &:hover {
+      background: var(--bg-brand-tonal-stronger, #d1f0ed);
+    }
+    &:active {
+      background: var(--bg-brand-tonal-strongest, #b9e8e4);
+    }
+    &:disabled {
+      background: var(--bg-brand-tonal-strongest, #b9e8e4);
+      color: var(--fg-base);
+      opacity: 1;
+    }
+  }
+}
+
+.forward-btns {
+  gap: 8px;
+  margin: 12px 0;
+
+  .item-btn {
+    border-radius: 8px;
+  }
+}
+
+.convert-block {
+  align-items: flex-start;
+  gap: 12px;
+
+  .wrap-error-des {
+    margin-top: -6px;
+    .required-field {
+      @include fontSetup(var(--danger-500), 12px, 16px, normal, 400);
+    }
+  }
+}
+
+.forward-title {
+  @include fontSetup(var(--gray-950), 14px, 20px, normal, 600);
+  margin-bottom: 12px;
+  margin-top: 16px;
+}
+
+.forward-btns {
+  max-height: calc(100vh - 430px);
+  padding-right: 15px;
+  gap: 8px;
+  margin: 12px -10px 12px 0;
+
+  &.disabled {
+    cursor: default;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .item-btn {
+    border-radius: 8px;
+  }
+}
+
+.disabled-select {
+  padding: 10px 12px;
+  background: var(--gray-200);
+  @include fontSetup(var(--gray-500), 14px, 20px, italic, 400);
+}

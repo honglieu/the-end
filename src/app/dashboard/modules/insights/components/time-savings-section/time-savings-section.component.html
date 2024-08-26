@@ -1,0 +1,61 @@
+<p class="mb-16 text-title">Time savings</p>
+<div class="d-flex flex-dir-column gap-16" id="chart-section">
+  <div class="total-time">
+    <chart-wrapper
+      [chartTitle]="'Total time saved'"
+      chartNote="* Hold Ctrl and scroll to zoom in/out">
+      <div class="d-flex gap-12">
+        <trudi-select-dropdown
+          bindLabel="label"
+          bindValue="id"
+          [clearable]="false"
+          [items]="chartTypeDropdown"
+          [ngModel]="currentChartType"
+          (valueChange)="onHandleChangeChartType($event)">
+        </trudi-select-dropdown>
+        <trudi-select-dropdown
+          bindLabel="label"
+          bindValue="id"
+          [items]="chartPeriodDropdown"
+          [ngModel]="currentChartPeriod"
+          (valueChange)="onHandleChangePeriodType($event)"
+          [clearable]="false">
+        </trudi-select-dropdown>
+      </div>
+      <ng-container
+        *ngIf="timeSavingData | shouldShowChartPipe: 'totalTimeSaved'; else noChartFoundTemplate">
+        <ng-container [ngSwitch]="currentChartType">
+          <ng-template [ngSwitchCase]="EChartType.BAR">
+            <bar-chart
+              [config]="barChartConfigs"
+              [tooltipTemplate]="tooltipTemplate"></bar-chart>
+          </ng-template>
+          <ng-template [ngSwitchCase]="EChartType.LINE">
+            <div class="w-100">
+              <trudi-line-chart
+                [config]="lineChartConfigs"
+                [tooltipTemplate]="tooltipTemplate"></trudi-line-chart>
+            </div>
+          </ng-template>
+        </ng-container>
+      </ng-container>
+    </chart-wrapper>
+  </div>
+  <div class="break-down">
+    <chart-wrapper [chartTitle]="'Breakdown of time saved'">
+      <ng-container *ngIf="breakDownTimeSavedData; else noChartFoundTemplate">
+        <donut-chart [config]="donutChartConfigs"></donut-chart>
+      </ng-container>
+    </chart-wrapper>
+  </div>
+</div>
+<ng-template #noChartFoundTemplate>
+  <div class="no-data-found">No data available</div>
+</ng-template>
+<ng-template #tooltipTemplate>
+  <div class="default-tooltip tooltip-wrapper">
+    <div class="default-tooltip--date">tooltip_date</div>
+    <div class="default-tooltip--hours">tooltip_hours</div>
+    <div class="default-tooltip--trend">tooltip_trend</div>
+  </div>
+</ng-template>

@@ -1,0 +1,108 @@
+<div
+  *ngIf="![statusType.mailfolder].includes(statusParam)"
+  class="d-flex align-items-center gap-8">
+  <ng-container
+    *ngTemplateOutlet="(teamMembers || isConsole) ? inboxFilterTemplate : condensedInboxFilterTemplate"></ng-container>
+  <ng-template #inboxFilterTemplate>
+    <trudi-toolbar
+      [taskDetailViewMode]="taskDetailViewMode"
+      [ngClass]="{'trudi-toolbar-wrapper': isContractFilter}"
+      [elementGap]="8">
+      <ng-template toolbarItemTemplate>
+        @if (isInbox && !isHiddenTaskMessage) {
+        <filter-show-task-message></filter-show-task-message>
+        }
+      </ng-template>
+      <ng-template
+        toolbarItemTemplate
+        (visibleChange)="onFilterAssigneeVisibleChange($event)">
+        <filter-by-assignee
+          *ngIf="!isAiAssistant"
+          class="item-toolbar"
+          nz-tooltip
+          [id]="0"
+          nzTooltipPlacement="right"
+          [popoverPlacement]="popoverPlacement.assignee"
+          [ngClass]="{'disabled': isFilterDisabled}"
+          [isInbox]="isInbox"
+          [disabled]="isFilterDisabled"
+          [nzTooltipTitle]="(isFilterDisabled ? tooltipTemplate :'')"
+          [nzTooltipOverlayClassName]="'tool-tip-inbox-filter'"
+          [teamMembers]="teamMembers"></filter-by-assignee>
+      </ng-template>
+      <ng-template
+        toolbarItemTemplate
+        (visibleChange)="onFilterPortfolioVisibleChange($event)">
+        <filter-by-portfolio
+          class="item-toolbar"
+          [id]="1"
+          [popoverPlacement]="popoverPlacement.portfolio"
+          [disabled]="isFilterDisabled"></filter-by-portfolio>
+      </ng-template>
+      <ng-template
+        toolbarItemTemplate
+        [visibleViewContainer]="shouldDisplayTaskFilter"
+        (visibleChange)="onFilterEventVisibleChange($event)">
+        <filter-by-event
+          [prefixIcon]="prefixIconEvent"
+          class="item_toolbar--dropdown"
+          [id]="3"
+          [popoverPlacement]="popoverPlacement.calendarEvent"
+          [disabled]="disabledFilterTask"
+          [calendarEventList]="calendarEventFilterList"></filter-by-event>
+      </ng-template>
+      <ng-template
+        toolbarItemTemplate
+        [visibleViewContainer]="shouldDisplayTaskFilter"
+        (visibleChange)="onFilterTaskTypeVisibleChange($event)">
+        <filter-by-task-type
+          [prefixIcon]="prefixIconTaskType"
+          class="item_toolbar--dropdown"
+          [id]="2"
+          [popoverPlacement]="popoverPlacement.taskType"
+          [disabled]="disabledFilterTask"
+          [listTaskEditor]="listTaskEditor">
+        </filter-by-task-type>
+      </ng-template>
+      <ng-template
+        toolbarItemTemplate
+        [visibleViewContainer]="isInbox"
+        (visibleChange)="onFilterStatusVisibleChange($event)">
+        <filter-by-status
+          class="item-toolbar"
+          [ngClass]="{'disabled': isFilterDisabled}"
+          [popoverPlacement]="popoverPlacement.portfolio"
+          [disabled]="isFilterDisabled"></filter-by-status
+      ></ng-template>
+    </trudi-toolbar>
+  </ng-template>
+  <ng-template #condensedInboxFilterTemplate>
+    <trudi-toolbar [elementGap]="0">
+      <ng-template
+        toolbarItemTemplate
+        [visibleViewContainer]="shouldDisplayTaskFilter"
+        (visibleChange)="onFilterEventVisibleChange($event)">
+        <filter-by-event
+          [prefixIcon]="prefixIconEvent"
+          class="item_toolbar--dropdown"
+          [id]="3"
+          [popoverPlacement]="popoverPlacement.calendarEvent"
+          [disabled]="disabledFilterTask"
+          [calendarEventList]="calendarEventFilterList"></filter-by-event>
+      </ng-template>
+      <ng-template
+        toolbarItemTemplate
+        [visibleViewContainer]="shouldDisplayTaskFilter"
+        (visibleChange)="onFilterTaskTypeVisibleChange($event)">
+        <filter-by-task-type
+          [prefixIcon]="prefixIconTaskType"
+          class="item_toolbar--dropdown"
+          [id]="2"
+          [popoverPlacement]="popoverPlacement.taskType"
+          [disabled]="disabledFilterTask"
+          [listTaskEditor]="listTaskEditor">
+        </filter-by-task-type>
+      </ng-template>
+    </trudi-toolbar>
+  </ng-template>
+</div>

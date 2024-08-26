@@ -1,0 +1,17 @@
+@import 'function';
+
+.not-found-wrapper {
+  height: 100vh;
+  background: white;
+  .not-found {
+    margin: 28px 0 32px 0;
+    &-title {
+      @include fontSetup(var(--fg-neutral-stronger), 20px, 32px, normal, 600);
+      margin-bottom: 12px;
+    }
+    &-sub {
+      margin-bottom: 0;
+      @include fontSetup(var(--fg-neutral-stronger), 16px, 16px, normal, 500);
+    }
+  }
+}

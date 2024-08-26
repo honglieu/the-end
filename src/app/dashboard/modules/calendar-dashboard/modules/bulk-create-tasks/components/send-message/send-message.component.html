@@ -1,0 +1,20 @@
+<select-option-send-bulk-msg
+  *ngIf="displayPopup === typePopup.SELECT_OPTION_FOR_SEND_MESSAGE"
+  [isShowPopupSendBulkMsg]="displayPopup === typePopup.SELECT_OPTION_FOR_SEND_MESSAGE && !this.isShowBulkSendMethod"
+  (onCloseModal)="handleCancel($event)"
+  (onNext)="onNextSendCustomMessage()"
+  (viewTasks)="handleViewTasks()"></select-option-send-bulk-msg>
+
+<select-bulk-send-method
+  [visible]="isShowBulkSendMethod"
+  (onClose)="handleCloseSelectBulkSendMethodModal($event)"
+  (onNext)="handleSelectBulkSendMethod($event)">
+</select-bulk-send-method>
+
+<view-tasks-modal
+  [isVisible]="(modalManagementService.openModalId$ | async) === EModalID.ViewTasks"
+  [items]="listTasks"
+  [selectedItems]="selectedTasks"
+  (confirm)="handleConfirmViewTasks($event)"
+  (cancel)="handleCancelViewTasks()"
+  *ngIf="(modalManagementService.modalState$ | async)?.includes(EModalID.ViewTasks)"></view-tasks-modal>

@@ -1,0 +1,259 @@
+<trudi-modal
+  *ngIf="isShowForwardViaEmail"
+  [visible]="isShowForwardViaEmail"
+  [autoFocus]="null"
+  className="trudi-modal-custom">
+  <app-forward-via-email
+    [show]="isShowForwardViaEmail"
+    [conversation]="conversationForward"
+    (isQuitModal)="isShowForwardViaEmail = false"
+    [isCreateMessageType]="false"></app-forward-via-email>
+</trudi-modal>
+
+<ng-container *ngIf="taskType === TaskTypeEnum.TASK">
+  <ng-container *ngIf="isShowSelectPeopleBtn">
+    <div
+      class="image-conversation-button"
+      data-console="create-conversation-button"
+      (click)="isShowTrudiSendMsg = true"
+      [ngClass]="{'disable-field': (isUnHappyPath && (!unHappyStatus?.isConfirmContactUser || !unHappyStatus?.isConfirmProperty))}">
+      <img src="/assets/icon/plus-icon-primary.svg" alt="" />
+    </div>
+  </ng-container>
+
+  <div
+    class="messages-container"
+    [class.from-app-chat]="!visible"
+    [ngStyle]="{
+      'box-shadow': !visible? 'unset': ''
+    }">
+    <div
+      id="conversation-list-box"
+      *ngIf="listOfConversations && listOfConversations.length; else emptyConversations;"
+      class="message-main"
+      #scrollDown>
+      <div
+        class="half-round"
+        data-e2e="conversation"
+        *ngFor="let conversation of listOfConversations; index as i">
+        <div
+          class="message"
+          (click)="openConversation(conversation, i)"
+          [ngClass]="{
+          'active-three-dot': conversation.id === fileIdDropdown,
+          'readed-message': conversation.isRead || conversation.status === MessageStatus.schedule,
+          'unread-message': (currentConvId !== conversation.id) && !conversation.isRead && conversation.status !== MessageStatus.schedule,
+          'active': conversation.id === this.currentConvId,
+          'border-btm-right': i === currentActiveIndex - 1,
+          'border-top-right': i === currentActiveIndex + 1
+        }"
+          #convNav>
+          <app-circle-avatar
+            class="left"
+            [userId]="conversation.userId"
+            [firstName]="conversation?.firstName"
+            [lastName]="conversation?.lastName"
+            [userType]="conversation?.startMessageBy"
+            [size]="28"
+            [attr.data-e2e]="userPropertyType.SUPPLIER === conversation.startMessageBy? 'supplier-avatar': ''">
+          </app-circle-avatar>
+          <div class="info-wrapper">
+            <div class="main-info">
+              <div class="center">
+                <div class="center__header">
+                  <div class="title">
+                    <span
+                      [class]="(currentConvId !== conversation.id && conversation.isUnreadIndicator) ? 'text-high-light' : 'text-un-high-light'"
+                      *ngIf="
+                      ![userPropertyType.SUPPLIER, userPropertyType.UNIDENTIFIED, userPropertyType.OTHER, userPropertyType.EXTERNAL].includes(conversation.startMessageBy)">
+                      {{ conversation.startMessageBy | titlecase }}
+                    </span>
+                    <span
+                      class="small-circle"
+                      [class]="{'small-circle-high-light': (currentConvId !== conversation.id && conversation.isUnreadIndicator)}"
+                      *ngIf="
+                       ![userPropertyType.SUPPLIER, userPropertyType.UNIDENTIFIED, userPropertyType.OTHER, userPropertyType.EXTERNAL].includes(conversation.startMessageBy)"></span>
+                    <div
+                      [style.max-width]="(conversation.startMessageBy !== userPropertyType.SUPPLIER && conversation.startMessageBy !== userPropertyType.EXTERNAL) ? '60px' : '130px'"
+                      class="title-in-short"
+                      [class]="(currentConvId !== conversation.id && conversation.isUnreadIndicator) ? 'text-high-light' : 'text-un-high-light'">
+                      <span
+                        *ngIf="(conversation?.firstName || conversation?.lastName) && conversation.startMessageBy !== userPropertyType.EXTERNAL"
+                        [innerHTML]="conversation.fullName | highlight: conversationSearch"
+                        >{{conversation.fullName}}</span
+                      >
+                      <span
+                        *ngIf="conversation.startMessageBy === userPropertyType.EXTERNAL"
+                        [innerHTML]="conversation.email | highlight: conversationSearch"
+                        [title]="conversation.email"
+                        >{{conversation.email}}</span
+                      >
+                    </div>
+                    <span
+                      *ngIf="(!conversationService.trudiResponseType) && (currentConvId !== conversation.id && conversation.isUnreadIndicator)"
+                      class="unread-indicator"></span>
+                  </div>
+
+                  <div
+                    class="date"
+                    [class]="(currentConvId !== conversation.id && conversation.isUnreadIndicator) ? 'date-high-light' : 'date-un-high-light'">
+                    {{ conversation.updatedAt | timeAgo }}
+                  </div>
+                </div>
+
+                <div class="center__message gap-4">
+                  <div
+                    class="message-in-short"
+                    [innerHTML]="conversation.lastMessage">
+                    {{ conversation.lastMessage }}
+                  </div>
+                  <div
+                    *ngIf="!!conversation.attachmentCount"
+                    class="icon-attachments">
+                    <img src="/assets/icon/attachments.svg" alt="" />
+                    <span> {{ conversation.attachmentCount }} </span>
+                  </div>
+                  <ng-container *ngIf="!currentTaskDeleted">
+                    <div
+                      [id]="'actionMove-' + i"
+                      class="icon-more"
+                      (click)="moreFromConversation($event, conversation.id, i, conversation.propertyType, $event)">
+                      <img
+                        src="/assets/icon/three-dot-primary.svg"
+                        alt="more" />
+                      <div
+                        *ngIf="conversation.id === fileIdDropdown"
+                        class="menu-options from-conversation border-rad-8">
+                        <div
+                          class="item border-b-1 y-center cs-more cs-move d-flex align-items-center gap-8"
+                          ripple
+                          cdkOverlayOrigin
+                          (click)="onOpenOptions(conversation.id, conversation?.trudiResponse)">
+                          <trudi-icon
+                            class="size-20"
+                            icon="iconMoveV2"
+                            style="color: #646464"></trudi-icon>
+                          <p class="text">Move to task</p>
+                        </div>
+                        <div
+                          *ngIf="conversation.isForwardEmail && (!!conversation.trudiResponse || ((taskService.currentTask$ | push).trudiResponse?.data[0]?.startConversationId === conversation.id))"
+                          class="item border-b-1 y-center cs-more cs-move"
+                          ripple
+                          (click)="onOpenForward(conversation);"
+                          cdkOverlayOrigin>
+                          <img
+                            class="size-20"
+                            src="assets/images/icons/forward-icon.svg" />
+                          <p class="text">Forward via email</p>
+                        </div>
+                        <div
+                          *ngIf="conversation?.status !== conversationType.resolved"
+                          class="item border-b-1 y-center cs-more cs-move"
+                          ripple
+                          (click)="handleResolve(conversation, $event)">
+                          <img
+                            class="size-20"
+                            src="assets/images/icons/resolve1-icon.svg" />
+                          <p class="text">Resolve</p>
+                        </div>
+                        <div
+                          class="item y-center cs-more cs-move"
+                          ripple
+                          (click)="deleteConversation(conversation, $event)">
+                          <img
+                            class="size-20"
+                            src="assets/images/icons/delete-icon.svg" />
+                          <p class="text">Delete</p>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+            <div class="message-address hide">
+              <img src="/assets/icon/icon_pin.svg" alt="" />
+              <span
+                [innerHTML]="conversation.streetline | highlight: conversationSearch"
+                >{{conversation.streetline}}</span
+              >
+              <ng-container *ngIf="conversation.isSendViaEmail">
+                <img
+                  src="assets/icon/send-via-email.svg"
+                  alt="send-via-email" />
+              </ng-container>
+            </div>
+          </div>
+          <ng-container
+            *ngIf="!visible && conversation.id === this.currentConvId">
+            <svg
+              class="top"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 0C20 15 6.66667 19.5833 0 20H20V0Z" fill="#F2F5F7" />
+            </svg>
+            <svg
+              class="bottom"
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M20 20C20 5 6.66667 0.416666 0 0H20V20Z"
+                fill="#F2F5F7" />
+            </svg>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+    <ng-template #emptyConversations>
+      <div class="no-data-icon">
+        <div class="position-center-w">
+          <img
+            src="assets/icon/no-conversations.svg"
+            alt=""
+            style="width: 140px; height: 140px" />
+          <p>No conversations to display</p>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</ng-container>
+
+<trudi-send-msg
+  *ngIf="isShowTrudiSendMsg"
+  [configs]="createNewConversationConfigs"
+  (onQuit)="isShowTrudiSendMsg = false"
+  (onSendMsg)="onSendMsg($event)"></trudi-send-msg>
+
+<trudi-modal
+  *ngIf="isShowModalWarning"
+  [visible]="isShowModalWarning"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  className="trudi-modal-custom">
+  <warning-note-popup
+    [warningMessage]="errorMessage"
+    [timeToCloseModal]="3000"
+    (isCloseModal)="isShowModalWarning = $event">
+  </warning-note-popup>
+</trudi-modal>
+
+<trudi-modal
+  *ngIf="moveConversationState"
+  [visible]="moveConversationState"
+  [autoFocus]="null"
+  className="trudi-modal-custom">
+  <app-move-mess-to-different-task-v2
+    [propertyIds]="[propertyId]"
+    [show]="moveConversationState"
+    (isQuitModal)="stopMoveToTask()"
+    [isUnHappyPath]="isUnHappyPath"
+    [conversationId]="targetConvId"
+    [isShowAddress]="isShowAddressMoveConversation"
+    (isQuitModal)="moveConversationState = false"></app-move-mess-to-different-task-v2>
+</trudi-modal>

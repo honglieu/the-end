@@ -1,0 +1,83 @@
+<trudi-step
+  [model]="model"
+  [showIconTitle]="false"
+  [hideProcessLine]="false"
+  [propertyTreeStep]="false"
+  [buttonKey]="buttonKey"
+  (onProcess)="enableProcess()">
+</trudi-step>
+
+<resizable-modal-popup
+  *ngIf="stepPopupState.bondSummaryPopup"
+  [show]="stepPopupState.bondSummaryPopup"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [title]="model?.fields?.customControl?.bondTitle || ''"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="640"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [footerTemplate]="footerModal"
+  (onCancel)="handleCloseEventModal()"
+  [isCustomMoveable]="true">
+  <ng-template #footerModal>
+    <div class="d-flex gap-8 bond-return-summary-footer">
+      <button
+        *ngIf="hasConfirmEssential"
+        trudi-btn
+        variant="outlined"
+        btnType="neutral"
+        (click)="onBack()">
+        Back
+      </button>
+      <button trudi-btn (click)="handleConfirmEventModal()">Next</button>
+    </div>
+  </ng-template>
+  <div
+    *ngIf="bondSummaryForm"
+    [formGroup]="bondSummaryForm"
+    class="bond-summary-wrapper">
+    <trudi-form-control>
+      <trudi-number-field
+        [maskLeadZero]="true"
+        [maskPattern]="maskPattern"
+        [maxCharacter]="13"
+        thousandSeparatorType=","
+        size="extra-large"
+        formControlName="bondTenant"
+        label="Bond amount returned to the tenant?"
+        iconLeft="dollarIcon">
+      </trudi-number-field>
+    </trudi-form-control>
+    <trudi-form-control [control]="bondDeductControl">
+      <trudi-number-field
+        [maskLeadZero]="true"
+        [maskPattern]="maskPattern"
+        [maxCharacter]="13"
+        thousandSeparatorType=","
+        size="extra-large"
+        formControlName="bondDeduct"
+        label="Bond amount to be deducted? (Optional)"
+        iconLeft="dollarIcon">
+      </trudi-number-field>
+    </trudi-form-control>
+    <trudi-form-control *ngIf="bondDeductControl?.value">
+      <trudi-text-field
+        formControlName="reasonDeduct"
+        label="Reason for bond deduction?"
+        placeholder="Enter reason"
+        [showCounting]="false">
+      </trudi-text-field>
+    </trudi-form-control>
+  </div>
+</resizable-modal-popup>
+<!-- <trudi-send-msg-v2
+  *ngIf="stepPopupState.trudiSendMessage"
+  [rawMsg]="textForwardMessg"
+  [configs]="sendMessageConfigs"
+  [listOfFiles]="model?.fields?.files || []"
+  (onQuit)="handleQuitSendMsg()"
+  (onSendMsg)="onSendMsg($event)"
+  (onBack)="handleBackSendMsg()"></trudi-send-msg-v2> -->

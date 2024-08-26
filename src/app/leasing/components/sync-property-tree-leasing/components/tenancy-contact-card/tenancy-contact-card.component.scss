@@ -1,0 +1,146 @@
+@import 'function';
+
+.content-card-disable {
+  background-color: var(--gray-50);
+}
+
+.contact-card {
+  padding: 12px;
+  border: 1px solid rgba(166, 166, 166, 0.3);
+  border-radius: 8px;
+  background-color: var(--white);
+  position: relative;
+  width: 282px;
+
+  .contact-card__action {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+
+    .card {
+      width: 100%;
+      height: 100%;
+    }
+
+    .card {
+      .content {
+        .content-circle {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          border: 0.8px solid var(--gray-200);
+          background-color: var(--white);
+          box-shadow: 0px -2px 6px -1px rgba(0, 0, 0, 0.06),
+            0px 4px 8px -1px var(--bg-overlay-light);
+          border-radius: 80px;
+          &:hover {
+            background-color: var(--gray-200) !important;
+          }
+        }
+      }
+    }
+
+    .card {
+      .content {
+        div {
+          width: 50px;
+          height: 50px;
+        }
+      }
+    }
+
+    .card {
+      .content {
+        display: flex;
+        justify-content: flex-end;
+        gap: 4px;
+        margin-top: 6px;
+        margin-right: 12px;
+        transform: translateY(100%);
+        opacity: 0;
+        transition: 0.3s ease-in-out;
+      }
+    }
+
+    .card:hover {
+      .content {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .cardBox::before {
+      content: '';
+      position: absolute;
+      width: 40%;
+      height: 150%;
+      animation: glowing01 5s linear infinite;
+      transform-origin: center;
+      animation: glowing 5s linear infinite;
+    }
+
+    @keyframes glowing {
+      0% {
+        transform: rotate(0);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  }
+
+  &__header {
+    .header-content {
+      @include fontSetup(var(--gray-700), 14px, 20px, normal, 600);
+      margin-bottom: 8px;
+
+      .header-name {
+        max-width: 125px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .header-action {
+      display: none;
+    }
+  }
+
+  &__content {
+    &_email {
+      word-break: break-all;
+    }
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gray-500);
+  }
+
+  .content-item {
+    margin-bottom: 8px;
+    width: 100%;
+    word-break: break-word;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .website {
+      width: calc(100% - 20px);
+
+      p {
+        margin: 0;
+      }
+    }
+  }
+
+  .unknown-information {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--gray-400);
+  }
+}

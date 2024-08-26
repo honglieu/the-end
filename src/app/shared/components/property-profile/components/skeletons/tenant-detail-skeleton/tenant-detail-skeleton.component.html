@@ -1,0 +1,40 @@
+<div class="tenant-detail-skeleton">
+  <div
+    class="header-skeleton d-flex align-items-center justify-content-between">
+    <div class="d-flex align-items-center gap-8">
+      <button class="btn-back" (click)="handleClickBackBtn()">
+        <trudi-icon icon="chevronLeft"></trudi-icon>
+      </button>
+      <nz-skeleton-element
+        class="button-skeleton"
+        nzType="button"
+        [nzActive]="true"></nz-skeleton-element>
+    </div>
+    <nz-skeleton-element
+      class="avatar-skeleton"
+      nzType="avatar"
+      [nzActive]="true"></nz-skeleton-element>
+  </div>
+  <div class="tenant-detail-body-skeleton">
+    <div *ngFor="let _ of [].constructor(4)" class="info-row d-flex gap-10">
+      <nz-skeleton-element
+        class="avatar-skeleton"
+        nzType="avatar"
+        [nzActive]="true"></nz-skeleton-element>
+      <nz-skeleton-element
+        class="button-skeleton"
+        nzType="button"
+        [nzActive]="true"></nz-skeleton-element>
+    </div>
+  </div>
+  <div class="footer-skeleton d-flex justify-content-end gap-10">
+    <nz-skeleton-element
+      class="avatar-skeleton"
+      nzType="avatar"
+      [nzActive]="true"></nz-skeleton-element>
+    <nz-skeleton-element
+      class="avatar-skeleton"
+      nzType="avatar"
+      [nzActive]="true"></nz-skeleton-element>
+  </div>
+</div>

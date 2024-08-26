@@ -1,0 +1,87 @@
+<ng-container *ngIf="typePopup === typePropertyTree.CREDITOR_INVOICE">
+  <creditor-invoice-property-tree
+    [isCreditorInvoice]="typePopup === typePropertyTree.CREDITOR_INVOICE"
+    (onClose)="handleCancel()">
+  </creditor-invoice-property-tree>
+</ng-container>
+
+<ng-container *ngIf="typePopup === typePropertyTree.NEW_TENANCY">
+  <leasing-popup></leasing-popup>
+</ng-container>
+
+<ng-container *ngIf="typePopup === typePropertyTree.ROUTINE_INSPECTION">
+  <routine-popup></routine-popup>
+</ng-container>
+
+<ng-container>
+  <select-note-pop-up
+    *ngIf="typePopup === typePropertyTree.CREATE_NOTES"
+    (onNext)="handleOpenSelectNote()"
+    (onCancel)="handleClose()"
+    [visible]="typePopup === typePropertyTree.CREATE_NOTES">
+  </select-note-pop-up>
+  <sync-note-pop-up
+    *ngIf="typePopup === typePropertyTree.SYNC_PROPERTY_TREE"
+    (onBack)="handleBack()"
+    (onCancel)="handleClose()"
+    [visible]="typePopup === typePropertyTree.SYNC_PROPERTY_TREE"
+    [showBackBtn]="optionPopup?.showBack ?? true"></sync-note-pop-up>
+</ng-container>
+
+<ng-container *ngIf="typePopup === typePropertyTree.UPDATE_NOTES">
+  <select-update-note-pop-up
+    (onNext)="handleOpenSelectNote($event)"
+    (onCancel)="handleClose()"
+    [visible]="typePopup === typePropertyTree.UPDATE_NOTES"></select-update-note-pop-up>
+</ng-container>
+
+<ng-container *ngIf="typePopup === typePropertyTree.INGOING_INSPECTION">
+  <ingoing-popup></ingoing-popup>
+</ng-container>
+
+<ng-container *ngIf="typePopup === typePropertyTree.OUTGOING_INSPECTION">
+  <outgoing-popup></outgoing-popup>
+</ng-container>
+
+<ng-container *ngIf="selectInvoicePopupType">
+  <select-existing-invoice
+    [visible]="invoicePopupManager.showSelectInvoiceModal$ | push"
+    [invoiceType]="selectInvoicePopupType"
+    (next)="nextSelectInvoice($event)"
+    (cancel)="cancelSelectInvoice()"></select-existing-invoice>
+</ng-container>
+
+<ng-container *ngIf="typePopup === typePropertyTree.TENANCY_INVOICE">
+  <tenancy-invoice-popup></tenancy-invoice-popup>
+</ng-container>
+
+<lease-renewal-widget-pt-popup
+  [syncPTStatus]="syncPTStatus"
+  [lastTimeSynced]="lastTimeSynced">
+</lease-renewal-widget-pt-popup>
+
+<tenancy-invoice-property-tree
+  [isTenancyInvoice]="typePopup === typePropertyTree.TENANCY_INVOICE"
+  (canceled)="handleCancel()">
+</tenancy-invoice-property-tree>
+
+<!--compliance-->
+<compliance></compliance>
+
+<!--maintenance-->
+<maintenance-request-pt-popup></maintenance-request-pt-popup>
+<maintenance-invoice-pt-popup></maintenance-invoice-pt-popup>
+
+<sync-note-pop-up
+  *ngIf="widgetNoteService.isEditNote$ | push"
+  [isEditNote]="widgetNoteService.isEditNote$ | push"
+  (onCancel)="handleCloseSyncNote()"
+  [showBackBtn]="false">
+</sync-note-pop-up>
+
+<vacate-details-popup
+  (onSync)="handleSyncPtWidgetTenantVacate($event)"
+  (canceled)="handleCancelSyncVacateDetail($event)"
+  [showTenantVacateModal]="popupState"
+  [lastTimeSynced]="lastTimeSyncedTenantVacate">
+</vacate-details-popup>

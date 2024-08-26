@@ -1,0 +1,333 @@
+<trudi-modal
+  [className]="'lease-renewal-popup'"
+  [visible]="true"
+  type="default"
+  [closable]="true"
+  [modelWidth]="760"
+  [hiddenCancelBtn]="true"
+  (onCancel)="cancel()"
+  [autoFocus]="false">
+  <div class="lease-renewal-form" [formGroup]="leaseRenewalForm">
+    <div class="trudi-form-control mb-24">
+      <div class="trudi-input-label">Select tenant</div>
+      <trudi-form-control [checkSubmit]="!submitted" [control]="tenancyControl">
+        <ng-select
+          [readonly]="disableTenancy || disableField"
+          [items]="tenanciesOptions"
+          formControlName="tenancy"
+          [ngClass]="{'input-error-select': tenancyControl.invalid && (tenancyControl.dirty || tenancyControl.touched) && submitted }"
+          class="share-ng-select"
+          bindValue="id"
+          bindLabel="label"
+          [clearable]="true"
+          [virtualScroll]="true"
+          [searchable]="true"
+          [editableSearchTerm]="true"
+          dropdownPosition="bottom"
+          notFoundText="No results found"
+          (change)="onTenancyChanged($event)">
+          <ng-template
+            ng-option-tmp
+            let-item="item"
+            let-index="index"
+            let-search="searchTerm">
+            <div class="d-flex">
+              <span class="flex-1">{{item.label}}</span>
+              <trudi-icon
+                icon="checkSuccess"
+                *ngIf="item.id === tenancyControl.value"
+                [style]="{'width.px': 16, 'height.px': 20}"></trudi-icon>
+            </div>
+            <ng-template #original>{{item.label}}</ng-template>
+          </ng-template>
+        </ng-select>
+      </trudi-form-control>
+    </div>
+    <div class="mb-12">
+      <h4 class="title">New lease details</h4>
+      <div class="trudi-form-group mb-12">
+        <div class="trudi-form-control">
+          <div class="trudi-input-label">Lease start</div>
+          <trudi-form-control
+            [checkSubmit]="!submitted"
+            [control]="leaseStartControl">
+            <trudi-date-picker
+              [breakNochange]="true"
+              [trudiDisabled]="disableField"
+              [class.trudi-picker-error]="leaseStartControl.invalid && (leaseStartControl.dirty || leaseStartControl.touched) && submitted"
+              formControlName="leaseStart"
+              [defaultValue]="leaseStartControl?.value"
+              (trudiOnOk)="handleChangeLeaseStart($event)"
+              class="pointer">
+            </trudi-date-picker>
+          </trudi-form-control>
+        </div>
+
+        <div class="trudi-form-control">
+          <div class="trudi-input-label">Lease end</div>
+          <trudi-form-control
+            [checkSubmit]="!submitted"
+            [control]="leaseEndControl">
+            <trudi-date-picker
+              [breakNochange]="true"
+              [trudiDisabled]="disableField"
+              [class.trudi-picker-error]="leaseEndControl.invalid && (leaseEndControl.dirty || leaseEndControl.touched) && submitted"
+              formControlName="leaseEnd"
+              [defaultValue]="leaseEndControl?.value"
+              class="pointer">
+            </trudi-date-picker>
+          </trudi-form-control>
+        </div>
+      </div>
+
+      <div class="trudi-form-group mb-12">
+        <div class="trudi-form-control">
+          <div class="trudi-input-label">Lease sign</div>
+          <trudi-form-control
+            [checkSubmit]="!submitted"
+            [control]="leaseSignControl">
+            <trudi-date-picker
+              [breakNochange]="true"
+              [trudiDisabled]="disableField"
+              [class.trudi-picker-error]="leaseSignControl.invalid && (leaseSignControl.dirty || leaseSignControl.touched) && submitted"
+              formControlName="leaseSign"
+              [defaultValue]="leaseSignControl?.value"
+              class="pointer">
+            </trudi-date-picker>
+          </trudi-form-control>
+        </div>
+
+        <div class="trudi-form-control">
+          <div class="trudi-input-label">Lease term</div>
+          <trudi-form-control
+            [checkSubmit]="!submitted"
+            [control]="leaseTermControl">
+            <ng-select
+              [readonly]="disableField"
+              [items]="leaseTermOptions"
+              formControlName="leaseTerm"
+              [ngClass]="{'input-error-select': leaseTermControl.invalid && (leaseTermControl.dirty || leaseTermControl.touched) && submitted }"
+              class="share-ng-select"
+              bindValue="value"
+              bindLabel="label"
+              [clearable]="true"
+              [virtualScroll]="true"
+              [searchable]="true"
+              (change)="onLeaseTermChanged($event)">
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm">
+                <div class="d-flex">
+                  <span class="flex-1">{{item.label}}</span>
+                  <trudi-icon
+                    icon="checkSuccess"
+                    *ngIf="item.value === leaseTermControl.value"
+                    [style]="{'width.px': 16, 'height.px': 20}"></trudi-icon>
+                </div>
+              </ng-template>
+            </ng-select>
+          </trudi-form-control>
+        </div>
+      </div>
+      <div class="trudi-form-group mb-12">
+        <div class="trudi-form-control">
+          <div class="trudi-input-label">Rent period</div>
+          <trudi-form-control
+            [checkSubmit]="!submitted"
+            [control]="rentPeriodControl">
+            <ng-select
+              [readonly]="disableField"
+              [items]="listRent"
+              formControlName="rentPeriod"
+              [ngClass]="{'input-error-select': rentPeriodControl.invalid && (rentPeriodControl.dirty || rentPeriodControl.touched) && submitted}"
+              class="share-ng-select"
+              bindValue="value"
+              bindLabel="label"
+              [clearable]="true"
+              [virtualScroll]="true"
+              [searchable]="true">
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm">
+                <div class="d-flex">
+                  <span class="flex-1">{{item.label}}</span>
+                  <trudi-icon
+                    icon="checkSuccess"
+                    *ngIf="item.value === rentPeriodControl.value"
+                    [style]="{'width.px': 16, 'height.px': 20}"></trudi-icon>
+                </div>
+              </ng-template>
+            </ng-select>
+          </trudi-form-control>
+        </div>
+        <div
+          [ngStyle]="!(rentPeriodControl.value && rentPeriodControl.value !== frequencyRental.DAILY) && {visibility : 'hidden'}"
+          class="trudi-form-control">
+          <div class="trudi-input-label">Due day</div>
+          <trudi-form-control
+            [checkSubmit]="!submitted"
+            [control]="dueDayControl">
+            <ng-container [ngSwitch]="rentPeriodControl.value">
+              <trudi-number-field
+                [disabled]="disableField"
+                [checkSubmit]="!submitted"
+                *ngSwitchCase="frequencyRental.MONTHLY"
+                [formControl]="dueDayControl"
+                size="large"
+                [maxCharacter]="3">
+              </trudi-number-field>
+              <ng-select
+                [readonly]="disableField"
+                *ngSwitchCase="frequencyRental.WEEKLY"
+                [items]="listWeekly"
+                formControlName="dueDay"
+                [ngClass]="{'input-error-select': dueDayControl.invalid && dueDayControl.touched && submitted}"
+                class="share-ng-select"
+                bindValue="value"
+                bindLabel="label"
+                [clearable]="false"
+                [virtualScroll]="true"
+                [searchable]="true"
+                [editableSearchTerm]="true">
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm">
+                  <div class="d-flex">
+                    <span class="flex-1">{{item.label}}</span>
+                    <trudi-icon
+                      icon="checkSuccess"
+                      *ngIf="item.value === dueDayControl.value"
+                      [style]="{'width.px': 16, 'height.px': 20}"></trudi-icon>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <ng-template *ngSwitchDefault></ng-template>
+            </ng-container>
+          </trudi-form-control>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex gap-12 flex-dir-column">
+    <div class="d-flex justify-content-between align-items-center">
+      <h4 class="title">Recurring charges</h4>
+      <button
+        [ngClass]="{'disabled-btn': syncRMStatus === LeaseRenewalSyncStatus.INPROGRESS}"
+        (click)="onOpenRecurringCharges()"
+        class="d-flex pointer gap-4 align-items-center btn-add button-tab">
+        <trudi-icon
+          icon="plusInvite"
+          [style]="{'width.px': 16, 'height.px': 16}"></trudi-icon>
+        <span>Add charge</span>
+      </button>
+    </div>
+    <table class="table-property">
+      <thead>
+        <tr>
+          <th>Charge</th>
+          <th>Charge type</th>
+          <th>Frequency</th>
+          <th>From date</th>
+          <th>To date</th>
+          <th>Amount</th>
+          <th></th>
+        </tr>
+      </thead>
+
+      <tbody [class]="recurringChargeList?.length === 0 ? 'empty-block' : ''">
+        <ng-container *ngIf="recurringChargeList?.length === 0">
+          <tr class="no-result-text">
+            <div class="content-text">No recurring charges found</div>
+          </tr>
+        </ng-container>
+        <tr *ngFor="let item of recurringChargeList; index as i">
+          <td>{{item.entityType | formatEntityType}}</td>
+          <td>{{item.chargeType?.name || item.chargeType}}</td>
+          <td class="text-center" [ngStyle]="{'width.px': 88}">
+            {{item.frequency}}
+          </td>
+          <td>{{item.fromDate | formatDate | push}}</td>
+          <td>{{item.toDate | formatDate | push}}</td>
+          <td class="text-center" [ngStyle]="{'width.px': 80}">
+            {{item.amount | formatAmount}}
+          </td>
+          <td [ngStyle]="{'width': 'auto'}">
+            <button
+              [ngClass]="{'disabled-btn': disableField}"
+              [dropdownTriggerFor]="dropdown"
+              class="icon-more pointer">
+              <trudi-icon
+                icon="verticalMore"
+                [style]="{ 'width.px': 20, 'height.px': 20 }"></trudi-icon>
+            </button>
+            <dropdown-menu #dropdown>
+              <div class="team-menu-options">
+                <button
+                  *ngIf="item.entityType !== entityType.TENANT; else tenant"
+                  (click)="onOpenRecurringCharges(i)"
+                  class="item">
+                  <trudi-icon
+                    [style]="{ 'width.px': 20, 'height.px': 20 }"
+                    icon="eyeShow"></trudi-icon>
+                  <span>View details</span>
+                </button>
+                <ng-template #tenant>
+                  <button (click)="onOpenRecurringCharges(i)" class="item">
+                    <trudi-icon icon="editIconOutline"></trudi-icon>
+                    <span>Edit</span>
+                  </button>
+                  <button
+                    (click)="!item?.id ? handleDeleteRecurringCharge(i) : null"
+                    [ngClass]="{'disabled': item?.id}"
+                    class="item"
+                    nz-tooltip
+                    [nzTooltipTitle]="item?.id ? 'Item can only be deleted directly from Rent Manager' : ''"
+                    [nzTooltipOverlayStyle]="{'max-width': '200px'}">
+                    <trudi-icon icon="deleteIconOutline"></trudi-icon>
+                    <span>Delete</span>
+                  </button>
+                </ng-template>
+              </div>
+            </dropdown-menu>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #headerModal>
+    <div class="lease-header-wrap d-flex align-items-center">
+      <trudi-icon
+        [style]="{ 'width.px': 106, 'height.px': 20 }"
+        [icon]="'rentManager'"></trudi-icon>
+      <div class="title w-100 lease-header-wrap-title">
+        <span>Lease renewal</span>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #footerModal>
+    <div
+      class="lease-footer-wrap d-flex align-items-center justify-content-between w-100">
+      <sync-status
+        [syncStatus]="syncRMStatus"
+        [lastTimeSynced]="lastTimeSynced"></sync-status>
+      <div class="footer-wrapper d-flex gap-12">
+        <button
+          [disabled]="isConsole || disableField || isArchiveMailbox"
+          (click)="onSync()"
+          type="submit"
+          class="btn-confirm trudi-btn trudi-btn-semi-large trudi-btn-primary">
+          <span class="btn-text">Sync to Rent Manager</span>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</trudi-modal>

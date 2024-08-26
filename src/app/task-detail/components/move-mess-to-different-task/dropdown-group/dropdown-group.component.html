@@ -1,0 +1,116 @@
+<div
+  id="move-to-different-task"
+  class="dropdown-wrapper"
+  [ngClass]="{'move-task-confirmed': !isMoveTaskConfirmed}">
+  <div class="move-task">
+    <ng-select
+      #inputElm
+      dropdownPosition="bottom"
+      [items]="listTaskItem"
+      (change)="onItemClick($event)"
+      (search)="handleSearch($event)"
+      class="share-ng-select select-move select-move-task"
+      [ngClass]="{'input-error-select': isMissingRequiredField}"
+      bindLabel="title"
+      bindValue="id"
+      [clearable]="true"
+      (scrollToEnd)="getNextPage()"
+      (clear)="handleClear()"
+      [editableSearchTerm]="true"
+      (blur)="onBlur()"
+      [searchFn]="searchFn"
+      [appendTo]="!isMoveTaskConfirmed ? '#move-to-different-task' : '#right-side-bar'"
+      notFoundText="No results found"
+      [placeholder]="placeholder"
+      [groupBy]="'topicName'"
+      [(ngModel)]="selectedTaskId"
+      [loading]="isLoading">
+      <ng-template ng-header-tmp>
+        <div class="checkbox-container">
+          <td-checkbox
+            class="align-items-center display-completed"
+            [size]="24"
+            [isChecked]="searchTask.onlyMyTasks"
+            [spaceBetween]="false"
+            [reverse]="true"
+            label="My tasks"
+            (tdCheckboxChanged)="onCheckboxMyTasksChange($event)">
+          </td-checkbox>
+          <td-checkbox
+            class="align-items-center display-completed"
+            [size]="24"
+            [isChecked]="searchTask.onlyInprogress"
+            [spaceBetween]="false"
+            [reverse]="true"
+            label="In progress tasks"
+            (tdCheckboxChanged)="onCheckboxInprogressTasksChange($event)">
+          </td-checkbox>
+        </div>
+      </ng-template>
+      <ng-template
+        ng-option-tmp
+        let-item="item"
+        let-search="searchTerm?.trim() || ''">
+        <div *ngIf="item !== itemSkeleton; else showSkeleton">
+          <div class="y-center justify-content-between w-100 task-item">
+            <div class="flex-1 task-info">
+              <div class="w-100">
+                <div class="y-center gap-4">
+                  <span
+                    class="text-ellipsis"
+                    [ngOptionHighlight]="isSearching ? search || '' : ''"
+                    [title]="item.title"
+                    [ngClass]="{'selected-task': item.id === selectedTaskId}"
+                    >{{item.title}}</span
+                  >
+                  <span
+                    class="task__item-label"
+                    *ngIf="item?.regionName && isShowRegionName"
+                    >{{item.regionName}}</span
+                  >
+                  <trudi-badge
+                    *ngIf="item?.statusBadge"
+                    variant="role"
+                    [text]="(item.statusBadge | push)"
+                    size="small">
+                  </trudi-badge>
+                </div>
+              </div>
+              <div
+                *ngIf="isSupplierOrOtherOrExternal || isShowAddress"
+                class="y-center gap-8 w-100">
+                <div
+                  class="task-property-streetline y-center gap-4 task-item-no-property w-100">
+                  <span
+                    [ngOptionHighlight]="search ? search : ''"
+                    class="property-streetline"
+                    >{{item?.property?.streetline || (isRmEnvironment ?
+                    item?.property?.propertyName : '')}}</span
+                  >
+                </div>
+              </div>
+            </div>
+            <div>
+              <trudi-icon
+                *ngIf="item.id === selectedTaskId"
+                class="icon-check"
+                icon="checkSuccess"></trudi-icon>
+            </div>
+          </div>
+        </div>
+        <ng-template #showSkeleton>
+          <div class="skeleton-container w-100">
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="w-75 mb-4 skeleton-title"></nz-skeleton>
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="w-50"></nz-skeleton>
+          </div>
+        </ng-template>
+      </ng-template>
+    </ng-select>
+  </div>
+</div>

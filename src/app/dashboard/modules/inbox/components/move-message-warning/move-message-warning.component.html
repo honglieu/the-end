@@ -1,0 +1,69 @@
+<trudi-modal
+  *ngIf="visible"
+  [modelWidth]="624"
+  [visible]="visible"
+  [autoFocus]="null"
+  title="Move to existing task"
+  [subTitle]="subTitleMoveToTask"
+  (onCancel)="handleClose()">
+  <div class="wrapper">
+    <div class="d-flex flex-dir-column gap-12">
+      <div class="d-flex gap-12 warning-message">
+        <trudi-icon
+          icon="iconWarningRed"
+          svgClass="size-24"
+          class="icon-waring-message"></trudi-icon>
+        <span class="text-warning-message"> {{warningMessageNotMoved}} </span>
+      </div>
+      <div class="d-flex gap-8 wrapper-message">
+        <div class="d-flex flex-dir-column gap-12">
+          <ng-container *ngIf="immovableMessages.length > 0; else showSkeleton">
+            <ng-container
+              *ngFor="let message of immovableMessages; let idx = index">
+              <div class="d-flex gap-6 content-message">
+                <trudi-icon icon="oneDot" svgClass="size-4"></trudi-icon>
+                <span class="title-message">
+                  {{ message?.title || message?.task?.title }} {{
+                  message?.property?.streetline ? ' - ' +
+                  message?.property?.streetline : '' }}
+                </span>
+              </div>
+            </ng-container>
+          </ng-container>
+          <ng-template #showSkeleton>
+            <div
+              *ngFor="let _ of [].constructor(3); let i = index"
+              class="skeleton-container w-100">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"
+                class="skeleton-title"></nz-skeleton>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div class="d-flex align-items-center gap-12">
+      <ng-container>
+        <button
+          trudi-btn
+          [disabled]="isDisabledButton"
+          btnType="neutral"
+          variant="outlined"
+          (click)="handleBack()"
+          class="btn-back-assign d-flex align-items-center gap-8">
+          Back
+        </button>
+      </ng-container>
+      <button
+        [disabled]="isDisabledButton"
+        trudi-btn
+        class="btn-save-assign d-flex align-items-center gap-8"
+        (click)="handleNext()">
+        Next
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

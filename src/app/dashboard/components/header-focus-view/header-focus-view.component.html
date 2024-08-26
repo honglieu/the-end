@@ -1,0 +1,39 @@
+<button
+  class="cursor-pointer btn-focus-view"
+  cdkOverlayOrigin
+  #trigger="cdkOverlayOrigin"
+  (click)="onFocusView()"
+  nz-tooltip
+  nzTooltipPlacement="bottom"
+  [nzTooltipTitle]="'Focused view'"
+  [class.focus-on]="isChecked"
+  [class.trigger]="showPopup">
+  @if(isChecked) {
+  <trudi-icon svgClass="size-32" [icon]="'focusViewOn'"></trudi-icon>
+  } @else {
+  <trudi-icon svgClass="size-32" [icon]="'focusViewOff'"></trudi-icon>
+  }
+</button>
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="showPopup"
+  (overlayOutsideClick)="overlayOutsideClick($event)">
+  <div class="header-focus-container" [class.focus-on]="isChecked">
+    <div class="d-flex w-100 justify-content-between align-items-center gap-12">
+      <div class="title">Focused view</div>
+      <switch-checkbox
+        [index]="isChecked"
+        [isChecked]="isChecked"
+        [reverse]="true"
+        [disabled]="isDisabled"
+        (tdCheckboxChanged)="onCheckboxChange($event)"></switch-checkbox>
+    </div>
+    <div class="description">
+      <p>
+        Switch on to stay focused on messages, tasks and events assigned to you.
+      </p>
+      <p>Switch off to see what your entire team is working on.</p>
+    </div>
+  </div>
+</ng-template>

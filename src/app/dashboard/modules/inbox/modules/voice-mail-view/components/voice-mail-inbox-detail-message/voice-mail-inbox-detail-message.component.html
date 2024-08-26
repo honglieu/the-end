@@ -1,0 +1,53 @@
+<div class="voice-mail-inbox-detail-message">
+  <div
+    [class]="message.senderType | lowercase"
+    [ngClass]="{
+      'message-ticket': (message.messageType | uppercase) === EMessagesType.ticket
+    }">
+    <ng-container *ngIf="message.messageType">
+      <ng-container [ngSwitch]="message.messageType | uppercase">
+        <ng-container *ngSwitchCase="EMessagesType.syncConversation">
+          <div class="message-body full-width no-padding">
+            <message-synced-conversation
+              [message]="message"></message-synced-conversation>
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="EMessagesType.solved">
+          <div class="message-body full-width no-padding">
+            <app-message-resolved
+              [message]="message"
+              [attr.data-e2e]="'message-resolved'"></app-message-resolved>
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="EMessagesType.changeProperty">
+          <div class="message-body full-width no-padding">
+            <message-change-property
+              [message]="message"
+              [listProperty]="propertiesService.listPropertyAllStatus | async"></message-change-property>
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="EMessagesType.reopened">
+          <div class="message-body full-width no-padding">
+            <app-message-reopened [message]="message"></app-message-reopened>
+          </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="EMessagesType.defaultText">
+          <div
+            class="message-body"
+            [ngClass]="{'row-reverse': message.senderType !== 'user'}">
+            <div class="message-container d-flex flex-dir-column gap-4">
+              <div class="message-box">
+                <app-message-default
+                  [showAvatar]="false"
+                  [message]="message"></app-message-default>
+              </div>
+              <div class="sent-time">
+                {{message.createdAt | formatTime: true | async}}
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>

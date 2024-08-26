@@ -1,0 +1,39 @@
+<div class="setting-option-item">
+  <span class="setting-question">
+    <span>
+      {{settingQuestion }}
+      <span class="wrapper-badge">
+        <trudi-badge
+          *ngIf="badge"
+          [text]="badge"
+          [highlighText]="badge"
+          [icon]="badge === EBadgeSetting.PRO ? 'crownPro': 'diamondElite'"
+          [ngStyle]="{backgroundColor: badge === EBadgeSetting.PRO ? EBadgeSettingColor.PRO :EBadgeSettingColor.ELITE}"
+          size="small"
+          variant="role"
+          [allowTruncated]="true">
+        </trudi-badge>
+      </span>
+    </span>
+  </span>
+  <div [formGroup]="formGroup">
+    <trudi-form-control
+      [checkSubmit]="checkSubmit"
+      [errors]="[{errorName: 'integerPart', errorMessage: 'Must be less than 100.00'},
+      {errorName: 'positiveNumber', errorMessage: 'Must be greater than 0'},
+      {errorName: 'companyAverage', errorMessage: 'Must be less than 1000'}]">
+      <div class="wrapper-input-time">
+        <trudi-number-field
+          class="ml-8 mr-8"
+          [maskLeadZero]="true"
+          [maxCharacter]="5"
+          [maskPattern]="controlName === 'propertiesNational' ? '00000' : maskPattern"
+          size="small"
+          [checkSubmit]="checkSubmit"
+          [formControlName]="controlName">
+        </trudi-number-field>
+        <span class="unit-measure">{{unitOfMeasure}}</span>
+      </div>
+    </trudi-form-control>
+  </div>
+</div>

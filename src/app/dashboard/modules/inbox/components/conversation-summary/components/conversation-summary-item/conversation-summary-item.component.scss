@@ -1,0 +1,228 @@
+@import 'function';
+
+:host .conversation-summary-action-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+  position: relative;
+
+  .conversation-summary-email {
+    &:hover {
+      background-color: var(--border-neutral-light, #f2f5f7);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  }
+  
+  .conversation-summary-date {
+    width: 100%;
+    padding: 4px 8px;
+
+    .conversation-datetime{
+      @include fontSetup(
+        var(--fg-neutral-weaker, #85888e),
+        12px,
+        16px,
+        normal,
+        400
+      );
+      white-space: nowrap;
+    }
+
+    .button-conversation-datetime {
+      border: none !important;
+      background: none !important;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.5s ease;
+      border-radius: 50%;
+      width: 24px;
+  
+      &.active,
+      :active {
+        rotate: 180deg;
+        transition: 0.5s ease;
+      }
+    }
+
+    &:hover {
+      .copy-send-msg-summary {
+        opacity: 1;
+      }
+    }
+  }
+
+  .session-conversation-summary {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #333741),
+      14px,
+      20px,
+      normal,
+      400
+    );
+  }
+
+  .list-attachment {
+    flex-wrap: wrap;
+    padding: 4px 0;
+  }
+
+  .conversation-summary-content-title {
+    white-space: inherit;
+    display: inline;
+
+    .attachments {
+      display: inline-block;
+      transform: translateY(0px);
+
+      .conversation-summary-icon-attachments {
+        min-width: fit-content;
+        display: flex;
+        padding: 2px 6px 2px 4px;
+        border-radius: 4px;
+        align-items: center;
+        color: var(--gray-500);
+        border: 1px solid var(--bg-neutral-tonal-strongest, #d8dcdf);
+        background: var(--white);
+        height: 20px;
+        border-radius: 6px;
+        width: fit-content;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .audio-box {
+    border-radius: 6px;
+    border: 1px solid var(--border-neutral-dark);
+    background: var(--bg-base);
+    width: fit-content;
+    padding: 2px 4px;
+    cursor: pointer;
+
+    &:hover, &:active {
+      border: 1px solid var(--border-neutral-dark, #ECECED);
+    }
+
+    &:hover {
+      background: var(--bg-neutral-tonal-stronger, #F0F1F1);
+    }
+
+    &:active {
+      background: var(--bg-neutral-tonal-strongest, #ECECED);
+    }
+
+    .audio_name {
+      max-width: 200px;
+      flex-wrap: nowrap;
+
+      @include fontSetup(
+        var(--fg-neutral-stronger, #333741),
+        14px,
+        20px,
+        normal,
+        500
+      );
+
+      & span:first-child {
+        flex: 1;
+      }
+    }
+  }
+
+  .conversation-summary-btn-expanded {
+    padding: 0 8px;
+    .arrow-btn {
+      transform: rotate(180deg);
+    }
+  }
+
+  .arrow-btn {
+    transition: transform 0.25s ease;
+    transform: rotate(0deg);
+
+    trudi-icon {
+      color: var(--fg-neutral-weaker, #85888e);
+    }
+  }
+
+  .facebook-conversation-summary-request {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 8px;
+  }
+
+  &::ng-deep .language-original-content language-original-content {
+    .original-content {
+      border-left: 2px solid var(--border-neutral-dark, #d8dcdf) !important;
+      margin-top: 8px !important;
+    }
+
+    .original-content-text {
+      @include fontSetup(
+        var(--fg-neutral-normal, #61646c) !important,
+        12px,
+        16px,
+        italic,
+        400
+      );
+    }
+
+    button {
+      color: var(--fg-brand, #28ad99);
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.copy-send-msg-summary {
+  position: absolute;
+  z-index: 9;
+  right: 0px;
+  background-color: var(--gray-100);
+  border-radius: 32px;
+  padding: 4px;
+  display: flex;
+  gap: 4px;
+  background: var(--bg-base, #fff);
+  box-shadow: 0px 4px 12px 0px var(--bg-overlay-light),
+    0px 8px 28px 0px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  border: 1px solid #E7EAED;
+  top: 0;
+
+  .btn-action {
+    padding: 4px;
+    border: none;
+    border-radius: 50%;
+    background-color: var(--white);
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: 0.5s ease;
+
+    &:hover {
+      background-color: var(--bg-neutral-tonal-stronger);
+      border-radius: 50%;
+    }
+
+    &:active,
+    &.active {
+      background-color: var(--border-neutral-dark);
+      box-shadow: none !important;
+      border-radius: 50%;
+    }
+
+    &:disabled {
+      background-color: var(--border-neutral-dark);
+      pointer-events: none;
+      border-radius: 50%;
+    }
+  }
+}

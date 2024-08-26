@@ -1,0 +1,152 @@
+@import 'function';
+
+.property-note-wrapper {
+  input {
+    border-radius: 8px;
+    background-color: var(--gray-200);
+    height: 32px;
+    width: 100%;
+    border: none;
+    padding: 14px 12px;
+    @include fontSetup(var(--gray-700), 12px, 16px, normal, 500);
+
+    &::placeholder {
+      @include fontSetup(var(--gray-500), 12px, 16px, normal, 500);
+    }
+
+    &:hover {
+      border-color: var(--gray-100) !important;
+      background: var(--gray-100) !important;
+      box-shadow: none !important;
+      cursor: pointer;
+    }
+
+    &:focus {
+      background: var(--white);
+      border: 1px solid var(--brand-500) !important;
+      outline: 2px solid rgba(var(--brand-500-rgb), 0.6) !important;
+
+      &::-webkit-input-placeholder {
+        opacity: 0;
+      }
+    }
+  }
+  .property-note-title {
+    @include fontSetup(var(--gray-700), 14px, 18px, normal, 600);
+  }
+  .property-note-form {
+    .mt-12 {
+      margin-top: 12px;
+    }
+    .mt-6 {
+      margin-top: 6px;
+    }
+    .form-row {
+      .form-title {
+        @include fontSetup(var(--gray-500), 12px, 18px, normal, 400);
+      }
+      .form-input {
+        gap: 4px;
+      }
+      .trudi-date trudi-date-picker {
+        max-width: unset !important;
+      }
+      .w-33 {
+        width: 33%;
+      }
+    }
+    .service-select {
+      ::ng-deep ng-select {
+        .ng-select-container ng-select-disabled {
+          .ng-value-container input:disabled {
+            color: var(--gray-500);
+          }
+          .ng-arrow-wrapper {
+            display: none !important;
+          }
+        }
+        ng-dropdown-panel .ng-dropdown-panel-items {
+          .ng-option {
+            .title {
+              min-width: 250px !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+:host ::ng-deep .ng-select.select-smoke-type {
+  .ng-select-container {
+    background-color: var(--gray-200) !important;
+    .ng-value-container {
+      .ng-value {
+        font-size: 12px !important;
+      }
+      .ng-placeholder {
+        @include fontSetup(var(--gray-500), 12px, 16px, normal, 500);
+      }
+    }
+  }
+  .ng-dropdown-panel {
+    .ng-dropdown-panel-items {
+      .ng-option {
+        span {
+          color: var(--gray-500) !important;
+        }
+      }
+
+      .ng-option-selected {
+        span {
+          color: var(--gray-700) !important;
+          font-weight: 500 !important;
+        }
+      }
+      .ng-option-disabled {
+        font-style: italic !important;
+      }
+    }
+  }
+}
+
+:host
+  ::ng-deep
+  .ng-select.select-smoke-type.ng-select-disabled
+  .ng-select-container {
+  background: var(--gray-200) !important;
+  .ng-value-container {
+    color: var(--fg-neutral-weakest);
+  }
+}
+
+:host ::ng-deep .trudi-date .trudi-picker {
+  .trudi-picker-input {
+    input {
+      font-size: 12px !important;
+    }
+  }
+}
+
+:host ::ng-deep .trudi-date .trudi-picker.trudi-picker-disabled {
+  background-color: var(--gray-200) !important;
+}
+
+:host ::ng-deep .ng-select.select-smoke-type.input-error-select {
+  .ng-select-container {
+    outline: 2px solid rgba(var(--danger-500-rgb), 0.6) !important;
+  }
+}
+
+:host
+  ::ng-deep
+  .ng-select
+  .ng-select-container
+  .ng-value-container
+  .ng-input
+  > input {
+  font-size: 12px;
+}
+
+:host ::ng-deep .trudi-textarea-wrapper #trudi-textarea {
+  font-size: 12px !important;
+}

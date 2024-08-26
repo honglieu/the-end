@@ -1,0 +1,11 @@
+@import 'function';
+
+:host ::ng-deep confirm-send-invite-or-message {
+  .invite-wrapper {
+    .detail-invite {
+      .invalid-users {
+        max-height: 45vh !important;
+      }
+    }
+  }
+}

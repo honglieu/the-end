@@ -1,0 +1,37 @@
+.workflow-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  &__left {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    //styleName: Text S/Semibold;
+    font-family: Inter;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    text-align: left;
+    color: var(--fg-neutral-weaker, #85888E);
+  }
+
+  &__right {
+    display: flex;
+    align-self: center;
+
+    .eye-button {
+      width: 28px;
+      height: 28px;
+      border: 1px solid var(--border-neutral-dark, #ECECED);
+      border-radius: 50%;
+      background-color: var(--bg-base);
+      &:hover {
+        background-color: var(--bg-neutral-tonal-normal, #F5F5F6);
+      }
+      &:active {
+        background-color: var(--bg-neutral-tonal-stronger, #F0F1F1);
+      }
+    }
+  }
+}

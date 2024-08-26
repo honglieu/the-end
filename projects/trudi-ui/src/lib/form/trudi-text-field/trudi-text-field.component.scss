@@ -1,0 +1,287 @@
+@import 'function';
+
+.text-field-wrapper {
+  position: relative;
+}
+
+.trudi-ui-text-field {
+  border: none;
+  outline: none;
+}
+
+:host {
+  width: 100%;
+  &.trudi-ui {
+    --icon-size: 20px;
+    .close-icon-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-grow: 1;
+      right: 12px;
+      width: var(--icon-size);
+      height: var(--icon-size);
+      top: calc((100% - var(--icon-size)) / 2);
+      cursor: pointer;
+    }
+
+    &-extra-large {
+      .trudi-text-field-wrapper {
+        padding: 12px 12px;
+      }
+    }
+
+    &-large {
+      .trudi-text-field-wrapper {
+        padding: 10px 12px;
+      }
+    }
+
+    &-medium {
+      .trudi-text-field-wrapper {
+        padding: 8px 12px;
+      }
+    }
+
+    &-small {
+      .trudi-text-field-wrapper {
+        --icon-size: 16px;
+        padding: 6px 8px;
+      }
+    }
+  }
+
+  .unClick {
+    pointer-events: none;
+  }
+}
+
+.trudi-ui-text-field-label {
+  @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 400);
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.trudi-text-field-wrapper {
+  border-radius: 8px;
+  border: none;
+  width: 100%;
+  background: var(--gray-50);
+
+  &.disabled {
+    background: var(--gray-200);
+    color: var(--fg-neutral-weakest);
+    .trudi-ui-text-field {
+      color: var(--fg-neutral-weakest);
+      cursor: no-drop;
+    }
+  }
+  &:hover:not(.disabled) {
+    background: var(--gray-100);
+    box-shadow: inset 0px 0px 1px var(--border-neutral-dark);
+  }
+
+  &:has(.trudi-ui-text-field:invalid),
+  &:has(.trudi-ui-text-field.ng-invalid.ng-dirty) {
+    background: var(--bg-base);
+    outline: none !important;
+    box-shadow: inset 0px 0px 0px 1px var(--danger-500),
+      0px 0px 0px 2px rgba(var(--danger-500-rgb), 0.6) !important;
+    &::-webkit-input-placeholder {
+      opacity: 0;
+    }
+  }
+
+  &:focus-within:has(:hover),
+  &:has(.trudi-ui-text-field:focus:not(.ng-invalid)) {
+    background: var(--bg-base) !important;
+    box-shadow: inset 0px 0px 0px 1px var(--brand-500),
+      0px 0px 0px 2px rgba(var(--brand-500-rgb), 0.6) !important;
+    &::-webkit-input-placeholder {
+      opacity: 0;
+    }
+  }
+
+  &:has(.trudi-ui-text-field:active):not(.trudi-ui-text-field.ng-invalid):not(
+      .disabled
+    ) {
+    background: var(--bg-neutral-tonal-normal);
+    box-shadow: inset 0px 0px 0px 1px var(--border-neutral-dark);
+    .close-icon-wrapper {
+      display: flex;
+    }
+  }
+  &:active:not(.disabled) {
+    background: var(--bg-neutral-tonal-normal);
+    box-shadow: inset 0px 0px 0px 1px var(--border-neutral-dark);
+    .close-icon-wrapper {
+      display: flex;
+    }
+  }
+  .trudi-ui-text-field {
+    @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+    background: none !important;
+    border: none !important;
+    outline: unset !important;
+    flex-grow: 1;
+    width: 100%;
+    padding: 0;
+
+    &::placeholder {
+      @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+    }
+    &:focus {
+      & ~ .close-icon-wrapper {
+        display: flex;
+      }
+    }
+  }
+
+  .empty.trudi-ui-text-field {
+    width: calc(100% + 28px);
+  }
+
+  .left-icon,
+  .right-icon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .prefix-text {
+    @include fontSetup(var(--gray-400), 14px, 20px, normal, 600);
+    &.prefix-text-disabled {
+      &:hover {
+        cursor: no-drop !important;
+      }
+    }
+  }
+}
+
+.warning-wrapper {
+  margin-top: 8px;
+
+  span {
+    @include fontSetup(var(--danger-500), 12px, 16px, normal, 400);
+  }
+}
+
+:host {
+  width: 100%;
+
+  &.ng-invalid.ng-touched .trudi-text-field-wrapper.not-check-submit,
+  .ng-invalid.ng-dirty .trudi-text-field-wrapper.not-check-submit {
+    background: var(--bg-base);
+    outline: none !important;
+    box-shadow: inset 0px 0px 0px 1px var(--danger-500),
+      0px 0px 0px 2px rgba(var(--danger-500-rgb), 0.6) !important;
+    &::-webkit-input-placeholder {
+      opacity: 0;
+    }
+  }
+}
+.box-list {
+  min-width: 234px;
+  max-height: 308px;
+  overflow: auto;
+}
+
+::ng-deep .dropdown-pt {
+  &.ant-dropdown-menu-item,
+  .ant-dropdown-menu-submenu-title {
+    padding: 12px;
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      14px,
+      20px,
+      normal,
+      500
+    );
+  }
+}
+
+.dropdown-property-tree {
+  .ant-dropdown-menu-item {
+    padding: 12px;
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      14px,
+      20px,
+      normal,
+      500
+    );
+  }
+  .ant-dropdown-menu-item:first-child {
+    border-top-right-radius: 0;
+  }
+  .ant-dropdown-menu-item:last-child {
+    border-bottom-right-radius: 0;
+  }
+  .ant-dropdown-menu-item-disabled {
+    pointer-events: unset !important;
+  }
+}
+:host ::ng-deep .ant-dropdown-menu-submenu-expand-icon {
+  display: none !important;
+}
+
+.box-sub-menu-pt .ant-dropdown-menu-item {
+  padding: 12px;
+  @include fontSetup(
+    var(--fg-neutral-stronger, #3d3d3d),
+    14px,
+    20px,
+    normal,
+    500
+  );
+}
+.box-sub-menu-pt {
+  min-width: 234px;
+  max-height: 308px;
+  .ant-dropdown-menu-item-disabled {
+    pointer-events: unset !important;
+  }
+}
+::ng-deep .sub-menu-pt {
+  margin-left: 7px;
+  min-width: 161px;
+}
+.box-sub-menu-pt .disabled-tenancy-text {
+  @include fontSetup(var(--fg-neutral-weakest), 14px, 20px, italic, 400);
+}
+.dropdown-item-property-tree.ant-dropdown-menu-submenu-vertical {
+  .ant-dropdown-menu-submenu-expand-icon {
+    display: none;
+  }
+}
+.btn-emded-code {
+  border: none;
+  background: unset;
+}
+
+.input-sizer {
+  padding: 0px 8px !important;
+  border-radius: 4px !important;
+  input {
+    @include fontSetup(
+      var(--gray-700) !important,
+      18px !important,
+      28px !important,
+      normal,
+      600 !important
+    );
+  }
+}
+
+.block-event {
+  cursor: pointer;
+  pointer-events: none;
+}

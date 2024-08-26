@@ -1,0 +1,12 @@
+<ng2-pdfjs-viewer
+  *ngIf="!hasFileError"
+  #pdfViewer
+  [showSpinner]="showSpinner"
+  [download]="download"
+  [openFile]="openFile"
+  [viewBookmark]="viewBookmark"
+  [zoom]="'auto'">
+</ng2-pdfjs-viewer>
+<div class="file-error" *ngIf="hasFileError">
+  <p>The file is damaged and cannot be opened</p>
+</div>

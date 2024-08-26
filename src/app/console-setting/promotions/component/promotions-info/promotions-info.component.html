@@ -1,0 +1,138 @@
+<trudi-drawer
+  *ngIf="trudiDrawerConfig.visible"
+  [(visible)]="trudiDrawerConfig.visible"
+  [enableOkBtn]="trudiDrawerConfig.enableOkBtn"
+  [enableBackBtn]="trudiDrawerConfig.enableBackBtn"
+  [enableDeleteBtn]="trudiDrawerConfig.enableDeleteBtn"
+  [headerTpl]="headerTpl"
+  [footerTpl]="footerTpl"
+  (onCancel)="trudiDrawerConfig.enableOkBtn = false">
+  <trudi-modal
+    *ngIf="isShowPromotionsModal"
+    [visible]="isShowPromotionsModal"
+    [isCustomPopup]="true"
+    [className]="'modal-container'">
+    <promotions-modal
+      [promotionsData]="promotionsData"
+      [isShowPromotionsModal]="isShowPromotionsModal"
+      [position]="{'top': '40px', 'left': '50%', 'transform': 'translateX(-50%)'}"
+      (closePromotionModal)="isShowPromotionsModal = false">
+    </promotions-modal>
+  </trudi-modal>
+
+  <div [formGroup]="promotionsForm">
+    <ng-template #headerTpl>
+      <div
+        class="drawer-input-header promotion-header d-flex flex-dir-column gap-4">
+        <trudi-form-control [control]="titleName">
+          <trudi-text-field
+            [maxCharacter]="100"
+            [showCounting]="false"
+            formControlName="titleName"
+            placeholder="Add promotion title here">
+          </trudi-text-field>
+        </trudi-form-control>
+      </div>
+    </ng-template>
+    <div class="content-modal">
+      <div
+        class="content-modal-date d-flex align-items-center justify-content-between gap-20"
+        [ngClass]="{'trudi-content-date': (publishDate?.invalid && (publishDate?.dirty || publishDate?.touched)) || (unpublishDate?.invalid && (unpublishDate?.dirty || unpublishDate?.touched)) || invalidPublishDate}">
+        <div class="trudi-form-control trudi-date-control">
+          <div class="trudi-input-label">Published at 12:01am on</div>
+          <trudi-form-control
+            [errors]="[{errorName: 'invalidPublishDate', errorMessage: 'Another promotion is running during this time'}]"
+            [control]="publishDate">
+            <trudi-date-picker
+              (trudiOnOk)="handleValidatePublishDate($event)"
+              formControlName="publishDate"
+              [class.trudi-picker-error]="publishDate?.invalid && (publishDate?.dirty || publishDate?.touched) || needToRefresh"
+              [trudiDisabledDate]="publishedDate"
+              class="pointer">
+            </trudi-date-picker>
+          </trudi-form-control>
+        </div>
+        <div class="trudi-form-control trudi-date-control">
+          <div class="trudi-input-label">Unpublished at 11:59pm on</div>
+          <trudi-form-control [control]="unpublishDate">
+            <trudi-date-picker
+              (trudiOnOk)="handleValidateUnpublishDate($event)"
+              formControlName="unpublishDate"
+              [class.trudi-picker-error]="unpublishDate?.invalid && (unpublishDate?.dirty || unpublishDate?.touched) || needToRefresh"
+              [trudiDisabledDate]="unpublishedDate"
+              [ngClass]="{'publish-err': isRestricted}"
+              class="pointer">
+            </trudi-date-picker>
+          </trudi-form-control>
+        </div>
+      </div>
+      <ng-container *ngIf="needToRefresh">
+        <div class="error-refresh-page d-flex align-items-center">
+          <trudi-icon icon="iconWarning"></trudi-icon>
+          <div class="error-refresh-text d-flex align-items-center">
+            <div class="error-text">Changes have been made,</div>
+            <div (click)="refreshList()" class="refresh-test cursor-pointer">
+              Refresh this page
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="'' | formatDateTimeAbbrev | async">
+        <div
+          class="title-time-zone"
+          [ngClass]="{'padding-title-time-zone': !((publishDate?.invalid && (publishDate?.dirty || publishDate?.touched)) || (unpublishDate?.invalid && (unpublishDate?.dirty || unpublishDate?.touched)) || invalidPublishDate)}">
+          Times displayed in {{'' | formatDateTimeAbbrev: false : true | async
+          }}
+        </div>
+      </ng-container>
+      <div formArrayName="infoCarousel">
+        <ng-container *ngIf="trudiDrawerConfig.visible">
+          <carousel-info
+            *ngFor="let group of infoCarousel.controls; let i = index"
+            [formGroup]="group"
+            [title]="titles[i]"
+            [index]="i"></carousel-info>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #footerTpl>
+    <div
+      class="promotions-footer align-items-center justify-content-between d-flex">
+      <div class="d-flex gap-16">
+        <button
+          trudi-btn
+          btnType="neutral"
+          variant="outlined"
+          class="ml-auto"
+          (click)="handleCancel()">
+          Cancel
+        </button>
+      </div>
+      <div class="d-flex gap-16">
+        <ng-container *ngIf="!isCreatePromotion">
+          <button
+            trudi-btn
+            btnType="neutral"
+            variant="outlined"
+            class="ml-auto"
+            (click)="handleDeleted()">
+            Delete
+          </button>
+        </ng-container>
+        <button
+          trudi-btn
+          btnType="neutral"
+          variant="outlined"
+          class="ml-auto"
+          (click)="handlePreview()">
+          Preview
+        </button>
+        <button trudi-btn [disabled]="isDisableSave" (click)="handleSave()">
+          Save
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</trudi-drawer>

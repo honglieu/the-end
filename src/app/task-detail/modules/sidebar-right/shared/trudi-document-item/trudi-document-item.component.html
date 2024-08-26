@@ -1,0 +1,67 @@
+<div
+  [class.-focused]="isWidgetFocused"
+  class="document-item d-flex flex-dir-column gap-4">
+  <div class="d-flex align-items-center gap-8" (click)="onClick.emit($event)">
+    <ng-container
+      [ngTemplateOutlet]="fileIcon"
+      [ngTemplateOutletContext]="{fileType, isSync, thumbnail}">
+    </ng-container>
+    <div class="d-flex flex-dir-column gap-4">
+      <div class="title">
+        <ng-content select="[title]"></ng-content>
+      </div>
+      <div class="subtitle">
+        <ng-content select="[subtitle]"></ng-content>
+      </div>
+    </div>
+  </div>
+
+  <div (click)="handleClickIconThreeDot($event)">
+    <trudi-icon
+      nz-dropdown
+      nzTrigger="click"
+      [nzDropdownMenu]="menu"
+      (nzVisibleChange)="handleMenuVisibleChange($event)"
+      class="icon-more-action"
+      icon="threeDotPrimary">
+    </trudi-icon>
+  </div>
+
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <ul nz-menu>
+      <li class="menu-item" nz-menu-item (click)="onSend.emit($event)">
+        <div class="d-flex gap-8 align-items-center">
+          <trudi-icon icon="icon_send" class="size-16"></trudi-icon>
+          <div class="menu-item-text">Send</div>
+        </div>
+      </li>
+      <li nz-menu-divider></li>
+      <li class="menu-item" nz-menu-item (click)="onDownload.emit($event)">
+        <div class="d-flex gap-8 align-items-center">
+          <trudi-icon icon="iconDownload" class="size-16"></trudi-icon>
+          <div class="menu-item-text">Download</div>
+        </div>
+      </li>
+      <li nz-menu-divider></li>
+      <li class="menu-item" nz-menu-item (click)="onSync.emit($event)">
+        <div class="d-flex gap-8 align-items-center">
+          <trudi-icon icon="iconSync" class="size-16"></trudi-icon>
+          <div class="menu-item-text">Sync to Property Tree</div>
+        </div>
+      </li>
+    </ul>
+  </nz-dropdown-menu>
+</div>
+
+<ng-template
+  #fileIcon
+  let-fileType="fileType"
+  let-isSync="isSync"
+  let-thumbnail="thumbnail">
+  <div class="document-item-file-icon">
+    <img class="icon-file-type" [src]="fileType | fileIcon: thumbnail" />
+    <ng-container *ngIf="isSync">
+      <img class="icon-sync-success" src="/assets/icon/sync-success.svg" />
+    </ng-container>
+  </div>
+</ng-template>

@@ -1,0 +1,75 @@
+@import 'function';
+
+.modal-integrate-imap {
+  .wrapper-body {
+    .input-name {
+      .trudi-ui-text-field {
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+
+    .wrapper-server {
+      padding: 12px;
+      border: solid 1px var(--gray-200);
+      border-radius: 8px;
+      display: flex;
+
+      .title-server {
+        @include fontSetup(var(--gray-700), 14px, 20px, normal, 600);
+      }
+
+      .inbox-server {
+        width: 275px;
+      }
+
+      .oubox-server {
+        width: 275px;
+      }
+
+      .vertical-line {
+        width: 2px;
+        height: 242px;
+        background-color: var(--gray-50);
+        margin: 0px 12px;
+      }
+    }
+
+    .wrapper-assistance {
+      border: none;
+      padding: 12px;
+      background-color: var(--brand-100);
+      border-radius: 8px;
+
+      .title-assistance {
+        @include fontSetup(var(--gray-600), 14px, 20px, normal, 600);
+      }
+
+      .body-assistance {
+        margin-top: 8px;
+
+        .content-assistance {
+          @include fontSetup(var(--gray-600), 14px, 20px, normal, 400);
+        }
+
+        .link-assistance {
+          @include fontSetup(var(--brand-500), 14px, 20px, normal, 500);
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  .wrapper-footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .margin-left-12 {
+    margin-left: 12px;
+  }
+}
+
+.display-none {
+  display: none;
+}

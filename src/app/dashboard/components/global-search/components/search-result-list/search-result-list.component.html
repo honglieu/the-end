@@ -1,0 +1,42 @@
+<div class="search-result-list-wrapper">
+  <ng-container
+    *ngIf="isLoading; else searchResultList?.length ? resultList : noResult">
+    <search-list-skeleton></search-list-skeleton>
+  </ng-container>
+</div>
+
+<ng-template #resultList>
+  <div class="search-result-list" (scroll)="onScrollDown($event)">
+    <div
+      *ngFor="let row of searchResultList"
+      class="searh-result-row"
+      (keydown)="handleKeydown($event)"
+      tabindex="0">
+      <search-result-row [searchResultRow]="row"> </search-result-row>
+    </div>
+    <ng-container *ngIf="isLoadingMore">
+      <ng-container *ngTemplateOutlet="loadingSpinner"> </ng-container>
+    </ng-container>
+  </div>
+</ng-template>
+<ng-template #loadingSpinner>
+  <div class="loading-spinner">
+    <img src="assets/images/loading-spinner.gif" />
+  </div>
+</ng-template>
+
+<ng-template #noResult>
+  <div
+    class="no-result-wrapper d-flex flex-dir-column align-items-center justify-content-center">
+    <div
+      class="no-result d-flex flex-dir-column align-items-center gap-16 text-center">
+      <trudi-icon icon="searchNoResult"> </trudi-icon>
+      <div>
+        <p class="m-0">No results found</p>
+        <p class="m-0">
+          Try adjusting your search terms or filters to see more results.
+        </p>
+      </div>
+    </div>
+  </div>
+</ng-template>

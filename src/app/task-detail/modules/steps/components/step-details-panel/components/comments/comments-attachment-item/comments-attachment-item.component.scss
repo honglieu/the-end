@@ -1,0 +1,108 @@
+@import 'function';
+.attachment-files {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 8px;
+  .comment-attachment {
+    position: relative;
+    display: flex;
+    background-color: var(--bg-base);
+    max-width: 248px;
+    height: 28px;
+    border: 1px solid var(--border-neutral-dark);
+    border-radius: 8px;
+    align-items: center;
+    padding: 2px 8px;
+    gap: 4px;
+    &-remove {
+      padding: 4px;
+      border-radius: 50%;
+      &:hover {
+        background: var(--bg-neutral-tonal-stronger, #e7eaed);
+      }
+      &:active {
+        background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+      }
+    }
+    .attachment {
+      flex: 1;
+      display: flex;
+      flex-direction: row;
+      width: calc(100% - 60px);
+      align-self: center;
+      &.send-file {
+        width: unset;
+        margin: 2px 10px 2px 18px;
+      }
+      .attachment-name {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        @include fontSetup(
+          var(--fg-neutral-stronger, #3d3d3d),
+          14px,
+          20px,
+          normal,
+          500
+        );
+      }
+      .attachment-extension {
+        @include fontSetup(
+          var(--fg-neutral-stronger, #3d3d3d),
+          14px,
+          20px,
+          normal,
+          500
+        );
+      }
+      .attachment-size {
+        @include fontSetup(
+          var(--fg-neutral-stronger, #3d3d3d),
+          14px,
+          20px,
+          normal,
+          500
+        );
+      }
+    }
+    .remove-btn {
+      right: 0px;
+      top: 22%;
+      left: 0px;
+      transform: unset;
+    }
+    .remove-btn-file {
+      position: absolute;
+      right: 5px;
+      cursor: pointer;
+    }
+
+    .image-rotation {
+      width: 16px;
+      height: 22px;
+      display: inline-block;
+    }
+
+    .rotate-image {
+      animation: rotate 2s linear 0s infinite;
+    }
+
+  }
+  .invalid {
+    border: 2px solid var(--danger-500) !important;
+  }
+  :hover {
+    cursor: pointer;
+  }
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

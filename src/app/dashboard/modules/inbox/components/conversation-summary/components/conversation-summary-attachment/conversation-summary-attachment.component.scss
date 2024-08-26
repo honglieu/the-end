@@ -1,0 +1,37 @@
+@import 'function';
+
+.badge-attachment {
+  border-radius: 24px;
+  padding: 4px 8px 4px 6px;
+  max-width: 208px;
+  cursor: pointer;
+
+  img {
+    width: 15px;
+    height: 15px;
+    border-radius: 4px;
+  }
+
+  background: var(--bg-base, #ffffff);
+  .name-attachment {
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      12px,
+      16px,
+      normal,
+      600
+    );
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+
+.text-before {
+  display: inline-block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.text-after {
+  display: inline-block;
+}

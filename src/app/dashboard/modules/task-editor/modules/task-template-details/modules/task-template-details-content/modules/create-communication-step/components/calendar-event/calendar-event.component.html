@@ -1,0 +1,25 @@
+<div [formGroup]="calendarEventForm">
+  <div class="calendar-event__container">
+    <trudi-form-control>
+      <trudi-single-select
+        bindValue="value"
+        bindLabel="label"
+        formControlName="event"
+        placeholder="Select event type"
+        [labelTpl]="labelTpl"
+        [items]="calendarEvents"
+        [required]="true">
+      </trudi-single-select>
+    </trudi-form-control>
+  </div>
+  <ng-template #labelTpl>
+    <div class="row-label__container">
+      <span class="calendar-select__label">Select calendar event</span>
+      <trudi-checkbox
+        label="Required"
+        [disabled]="disabled"
+        formControlName="isRequired">
+      </trudi-checkbox>
+    </div>
+  </ng-template>
+</div>

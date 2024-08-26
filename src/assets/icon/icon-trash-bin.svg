@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="24px" viewBox="0 0 20 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Shape</title>
+    <g id="Global-Action-links" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Global-Action-List-Style" transform="translate(-1342.000000, -634.000000)" fill="#00A99F" fill-rule="nonzero">
+            <g id="Group-5" transform="translate(112.000000, 160.000000)">
+                <g id="Group-42-Copy-5" transform="translate(0.000000, 438.000000)">
+                    <g id="delete_black_24dp-copy" transform="translate(1224.000000, 32.000000)">
+                        <path d="M8,25.3333333 C8,26.8 9.2,28 10.6666667,28 L21.3333333,28 C22.8,28 24,26.8 24,25.3333333 L24,9.33333333 L8,9.33333333 L8,25.3333333 Z M25.3333333,5.33333333 L20.6666667,5.33333333 L19.3333333,4 L12.6666667,4 L11.3333333,5.33333333 L6.66666667,5.33333333 L6.66666667,8 L25.3333333,8 L25.3333333,5.33333333 Z" id="Shape"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

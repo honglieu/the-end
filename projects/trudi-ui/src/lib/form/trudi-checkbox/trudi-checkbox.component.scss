@@ -1,0 +1,112 @@
+@import 'function';
+
+:host {
+  .label-text {
+    @include fontSetup(var(--gray-500), 1.4rem, 2rem, normal, 500);
+  }
+
+  .checkbox-symbol {
+    position: absolute;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .trudi-checkbox {
+    user-select: none;
+    padding: 2px;
+
+    span:first-child {
+      position: relative;
+      transform: scale(1);
+      border: 1px solid var(--border-neutral-darker, #cecfd2);
+      width: 20px;
+      height: 20px;
+      &:hover {
+        background-color: var(--bg-neutral-tonal-normal, #f5f5f6);
+      }
+
+      svg {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        fill: none;
+        stroke: unset;
+        stroke-dasharray: 13px;
+        stroke-dashoffset: 8px;
+      }
+
+      &:focus-visible {
+        border: none !important;
+        box-shadow: 0px 0px 0px 2px var(--brand-200);
+      }
+    }
+  }
+
+  .checkbox-input:checked + .trudi-checkbox span:first-child {
+    background-color: var(--bg-brand-solid-normal, #28ad99);
+    border-color: var(--bg-brand-solid-normal, #28ad99);
+
+    svg {
+      stroke-dashoffset: 0;
+      stroke: var(--white);
+    }
+
+    .selected-all {
+      width: 10px;
+      height: 2px;
+      background-color: var(--white);
+      border-radius: 4px;
+    }
+    &:focus-visible {
+      border: none !important;
+      box-shadow: 0px 0px 0px 2px var(--brand-200);
+    }
+  }
+
+  .checkbox-input:disabled + .trudi-checkbox span:first-child {
+    background-color: var(--bg-neutral-tonal-strongest, #ececed);
+    border-color: var(--border-neutral-darker, #cecfd2);
+
+    svg {
+      stroke-dashoffset: 0;
+      stroke: unset;
+    }
+  }
+
+  .checkbox-input:checked:disabled + .trudi-checkbox span:first-child {
+    background-color: var(--bg-brand-tonal-strongest, #caf3ee);
+    border-color: var(--bg-brand-tonal-strongest, #caf3ee);
+
+    svg {
+      stroke-dashoffset: 0;
+      stroke: var(--white);
+    }
+  }
+
+  &.trudi-checkbox-circle {
+    .trudi-checkbox {
+      span:first-child {
+        border-radius: 50%;
+      }
+    }
+
+    .checkbox-input + .trudi-checkbox span:first-child {
+      ::ng-deep trudi-icon {
+        display: none;
+      }
+    }
+
+    .checkbox-input:disabled + .trudi-checkbox span:first-child {
+      background-color: var(--bg-neutral-tonal-strongest, #ececed);
+      border-color: var(--border-neutral-darker, #cecfd2);
+    }
+
+    .checkbox-input:checked + .trudi-checkbox span:first-child {
+      ::ng-deep trudi-icon {
+        display: unset;
+      }
+    }
+  }
+}

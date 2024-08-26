@@ -1,0 +1,85 @@
+<trudi-modal
+  *ngIf="visible"
+  [(visible)]="visible"
+  [modelWidth]="472"
+  title="Schedule message"
+  subTitle=""
+  className="modal-form-schedule-message"
+  [autoFocus]="null"
+  (onCancel)="onClose()">
+  <div [formGroup]="formGroup" class="d-flex flex-dir-column">
+    <div class="d-flex gap-20 flex-1">
+      <div class="d-flex gap-8 flex-dir-column flex-1">
+        <div class="title-text">Date</div>
+        <trudi-form-control [checkSubmit]="!isConfirmed">
+          <trudi-ui-date-picker
+            formControlName="date"
+            [nzDisabledDate]="disabledDate"
+            [nzFormat]=" datePickerFormatPipe$ | async"
+            [nzShowToday]="false"
+            [calendarEvent]="selectedEvent">
+          </trudi-ui-date-picker>
+        </trudi-form-control>
+      </div>
+      <div class="d-flex gap-8 flex-dir-column flex-1">
+        <div class="title-text">Time</div>
+        <time-picker
+          [label]="'--:--'"
+          [rangeFrom]="rangeFrom"
+          [rangeTo]="86400"
+          [isTo]="true"
+          formControlName="time"
+          [readonly]="false"
+          [minuteControl]="minuteControl"
+          (onChangeHour)="handleSelectTime($event)"
+          (onError)="handleError($event)"
+          (isFocus)="handleFocus($event)"
+          [hasError]="errorMsg"
+          [isDefault]="true"
+          [customClass]="'sizeDropdown'">
+        </time-picker>
+      </div>
+    </div>
+    <div class="gap-4 d-flex align-items-center mt-2">
+      <app-time-detail-routine
+        *ngIf="formGroup.get('date').value && scheduleDate && !isDateUnknown"
+        [reminderTime]="formGroup.get('date').value"
+        [scheduleDate]="scheduleDate"
+        [specialStringDue]="specialStringDue"
+        [additionalInfo]="additionalInfo">
+      </app-time-detail-routine>
+      <app-time-detail-routine
+        *ngIf="formGroup.get('date').value && isDateUnknown"
+        [reminderTime]="formGroup.get('date').value"
+        [isDateUnknown]="isDateUnknown">
+      </app-time-detail-routine>
+    </div>
+    <div *ngIf="errorMsg" class="d-flex gap-4 align-items-center warning-text">
+      <trudi-icon
+        [style]="{'width.px': 12, 'height.px': 12}"
+        icon="iconWarningRedFit"></trudi-icon>
+      {{warningMessage}}
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div class="trudi-send-msg-footer">
+      <div class="trudi-send-msg-footer-btn-wrapper">
+        <button
+          *ngIf="isShowBackBtn"
+          class="trudi-btn trudi-btn-large trudi-btn-tertiary"
+          variant="outlined"
+          btnType="neutral"
+          (click)="onBack()">
+          Back
+        </button>
+        <button
+          class="trudi-btn trudi-btn-large trudi-btn-primary"
+          data-e2e="send-btn"
+          [disabled]="errorMsg || timeSecond === undefined || !date"
+          (click)="onConfirm()">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</trudi-modal>

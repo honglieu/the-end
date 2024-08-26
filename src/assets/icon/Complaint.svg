@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="40px" height="40px" viewBox="0 0 40 40" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 56.2 (81672) - https://sketch.com -->
+    <title>Icons/Topics/Complaint</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Transaction-History" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Transaction-History-3" transform="translate(-32.000000, -167.000000)">
+            <g id="Group-3" transform="translate(16.000000, 128.000000)">
+                <g id="Icons/Topics/Complaint" transform="translate(16.000000, 39.000000)">
+                    <g id="Group-19">
+                        <circle id="Oval-Copy-5" fill="#fa3939" cx="20" cy="20" r="20"></circle>
+                        <path d="M19.9393145,22.1052632 C23.5416745,22.1052632 26.926578,23.5039155 29.4736842,26.0440161 L27.0900918,28.4210526 C25.1801836,26.5163975 22.6415059,25.4674082 19.9393145,25.4674082 C17.2860086,25.4674082 14.7776737,26.4861382 12.8795655,28.3319558 L10.5263158,25.9229789 C13.0582506,23.4618887 16.4026971,22.1052632 19.9393145,22.1052632 Z M13.1105076,12.6315789 L16.4819255,12.6315789 L16.4819255,17.8947368 L13.1105076,17.8947368 L13.1105076,12.6315789 Z M23.2247612,12.6315789 L26.5961791,12.6315789 L26.5961791,17.8947368 L23.2247612,17.8947368 L23.2247612,12.6315789 Z" id="Combined-Shape" fill="#F9F9F9" fill-rule="nonzero"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

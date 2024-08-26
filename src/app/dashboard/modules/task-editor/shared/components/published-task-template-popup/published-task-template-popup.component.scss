@@ -1,0 +1,64 @@
+@import 'function';
+
+::ng-deep nz-modal-container {
+  .ant-modal-content .ant-modal-body {
+    .list-form-container {
+      display: flex;
+      flex-direction: column;
+      row-gap: 16px;
+
+      .form-item {
+        .form-item-label {
+          margin-bottom: 6px;
+          @include fontSetup(
+            var(--fg-neutral-strongest),
+            14px,
+            20px,
+            normal,
+            600
+          );
+        }
+      }
+    }
+    trudi-form-control
+      trudi-single-select
+      .ng-select.ng-select-focused:not(.ng-select-opened)
+      > .ng-select-container {
+      background: var(--bg-base) !important;
+      box-shadow: var(--shadow-brand) !important;
+      border-radius: 8px;
+    }
+  }
+}
+
+::ng-deep
+  nz-modal-container
+  .published-task.published-task-form
+  .ant-modal-body {
+  overflow-y: auto;
+  max-height: calc(100vh - 543px);
+}
+
+.btn-comfirm-task {
+  width: 100px;
+  height: 40px;
+  padding: 0px 16px;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--bg-brand-solid-normal, #00aa9f);
+  border: none;
+  @include fontSetup(var(--fg-neutral-base, #fff), 14px, 20px, normal, 600);
+
+  &:hover {
+    background: var(--bg-brand-solid-stronger, #33bbb2);
+  }
+
+  &:active {
+    background: var(--bg-brand-solid-strongest, #0aa095);
+  }
+
+  &:disabled {
+    background: var(--bg-brand-tonal-strongest, #b9e8e4);
+    cursor: not-allowed;
+  }
+}

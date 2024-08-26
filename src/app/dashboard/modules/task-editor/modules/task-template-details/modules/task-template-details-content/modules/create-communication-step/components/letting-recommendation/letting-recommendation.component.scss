@@ -1,0 +1,75 @@
+@import 'function';
+
+:host ::ng-deep {
+  .letting-form-wrapper {
+    display: flex;
+    flex-direction: column;
+
+    .form-label__wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+
+      .label__text {
+        @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 600);
+      }
+    }
+
+    .form-content__wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border-neutral-dark);
+
+      .letting-type {
+        display: flex;
+        flex-direction: column;
+        .letter-title {
+          margin-bottom: 8px;
+          @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 400);
+        }
+
+        trudi-radio-button {
+          .radio-label span {
+            @include fontSetup(
+              var(--fg-neutral-weaker),
+              14px,
+              20px,
+              normal,
+              500
+            );
+          }
+        }
+      }
+
+      .rental-amount-wrapper,
+      .lease-duration-wrapper {
+        display: flex;
+        flex-direction: column;
+
+        .rental-title,
+        .lease-title {
+          margin-bottom: 6px;
+          @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 400);
+        }
+
+        .rental-control,
+        .period-control {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          width: 100%;
+        }
+      }
+
+      trudi-text-field {
+        .trudi-ui-text-field-label {
+          @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 400);
+        }
+      }
+    }
+  }
+}

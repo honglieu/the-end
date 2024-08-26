@@ -1,0 +1,16 @@
+::ng-deep {
+  .wrap-email-signature {
+    img {
+      max-width: none !important;
+      cursor: default !important;
+    }
+    span {
+      cursor: default !important;
+    }
+    a {
+      &:focus {
+        border: 1px solid var(--brand-500);
+      }
+    }
+  }
+}

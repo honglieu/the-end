@@ -1,0 +1,26 @@
+<div
+  class="switch-checkbox-container"
+  [class.switch-checkbox-reminder]="reminderToggle"
+  [ngClass]="customClass"
+  [style.flexDirection]="reverse ? 'row-reverse' : 'row'">
+  <input
+    type="checkbox"
+    hidden="hidden"
+    [id]="internalId"
+    [(ngModel)]="isChecked"
+    (ngModelChange)="onCheckboxChange($event)"
+    #changeInput
+    [disabled]="disabled" />
+  <label
+    class="switch"
+    [appE2E]="dataE2E || ''"
+    [for]="internalId"
+    [tabindex]="disabled ? -1 : 0"
+    (keydown.enter)="onCheckboxChange(!isChecked, true)"></label>
+  <ng-container *ngIf="labelTemplate; else labelDefault">
+    <ng-container *ngTemplateOutlet="labelTemplate"></ng-container>
+  </ng-container>
+  <ng-template #labelDefault>
+    <div class="checkbox-label cpn-label break-word" [innerHTML]="label"></div>
+  </ng-template>
+</div>

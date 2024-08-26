@@ -1,0 +1,26 @@
+<div class="no-my-item" [ngClass]="{'remider-inbox': remiderSetting}">
+  <img src="assets/images/box.png" alt="no item" />
+  <p class="no-my-item__title">{{ message }}</p>
+  <p class="no-my-item__description mt-8">
+    {{ subMessage }}
+    <strong
+      id="focusViewSetting"
+      *ngIf="message && subMessage && remiderSetting"
+      (click)="handleRemiderSetting()">
+      reminder settings
+    </strong>
+    <strong
+      *ngIf="((message || subMessage) && !remiderSetting) && !noFocusView && isMessageReminder"
+      (click)="handleTurnOffFocusView()">
+      turn off focused view
+    </strong>
+  </p>
+
+  <p class="no-my-item__description">
+    <strong
+      *ngIf="((message || subMessage) && !remiderSetting) && !noFocusView && !isMessageReminder"
+      (click)="handleTurnOffFocusView()">
+      turn off focused view
+    </strong>
+  </p>
+</div>

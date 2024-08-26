@@ -1,0 +1,11 @@
+@import 'function';
+
+.property-item {
+  height: 44px;
+  width: 100%;
+  padding: 12px;
+  border-bottom: 1px solid var(--border-neutral-dark);
+  .property-name {
+    @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+  }
+}

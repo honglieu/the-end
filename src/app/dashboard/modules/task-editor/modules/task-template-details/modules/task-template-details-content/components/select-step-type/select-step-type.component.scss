@@ -1,0 +1,59 @@
+@import 'function';
+
+.trudi-drawer-header {
+  padding: 20px 24px;
+  @include fontSetup(var(--gray-700), 20px, 32px, normal, 600);
+}
+
+.trudi-drawer-content {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  .trudi-drawer-content-item {
+    cursor: pointer;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border: 1px solid var(--border-neutral-dark);
+    border-radius: 8px;
+    background-color: unset;
+    width: 100%;
+    text-align: left;
+    .item-detail-step {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      .item-detail-step-title {
+        @include fontSetup(var(--fg-neutral-stronger), 16px, 24px, normal, 600);
+      }
+      .item-detail-step-desc {
+        @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 400);
+      }
+    }
+  }
+  .trudi-drawer-content-item:hover {
+    background-color: var(--bg-brand-tonal-normal);
+    border: 1px solid var(--border-brand);
+  }
+  // TODO: remove when apply logic for this step type
+  .trudi-drawer-content-item.disabled {
+    cursor: not-allowed;
+    background-color: var(--bg-neutral-tonal-stronger);
+    .item-detail-step {
+      .item-detail-step-title,
+      .item-detail-step-desc {
+        color: var(--fg-neutral-weakest);
+      }
+    }
+    .item-icon {
+      ::ng-deep trudi-icon svg {
+        color: var(--fg-neutral-weakest);
+      }
+    }
+    &:hover {
+      border: 1px solid var(--border-neutral-dark);
+    }
+  }
+}

@@ -1,0 +1,24 @@
+<div class="events-provider__container">
+  <div class="events-provider__events_sync">
+    <div class="events-provider__title">
+      {{ title }}
+      <trudi-icon [icon]="icon" alt="logo"></trudi-icon>
+    </div>
+    <div [formGroup]="form" class="events-provider__items">
+      <div
+        class="list_items"
+        *ngFor="let item of events; let index = i; trackBy: itemTrackBy">
+        <button>
+          <trudi-switch
+            class="mr-auto addon-item"
+            [index]="item.key"
+            [reverse]="true"
+            [disabled]="status === EIntegrationsStatus.DISCONNECTED"
+            [formControlName]="item.key">
+          </trudi-switch>
+        </button>
+        <div class="events_name">{{ item.eventsName }}</div>
+      </div>
+    </div>
+  </div>
+</div>

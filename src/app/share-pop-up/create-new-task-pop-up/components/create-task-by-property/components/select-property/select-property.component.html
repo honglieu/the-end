@@ -1,0 +1,35 @@
+<div class="position-relative property-wrapper">
+  <trudi-select-dropdown-v2
+    [roundClearIcon]="true"
+    [items]="listProperties"
+    [searchable]="true"
+    placeholder="Search property"
+    bindLabel="streetline"
+    [clearable]="false"
+    [dropdownWidth]="400"
+    [dropdownHeight]="300"
+    [isClearSelectedItemWhenClickTwice]="true"
+    [(ngModel)]="currentPropertyId"
+    (ngModelChange)="onModelChange($event)">
+    <ng-template trudi-select-dropdown-title-tmp>
+      <div class="properties-item trudi-select-dropdown-title">
+        {{currentProperty?.streetline ?? 'Select property'}}
+      </div>
+    </ng-template>
+    <ng-template
+      trudi-select-dropdown-option-tmp
+      let-item="item"
+      let-search="searchTerm">
+      <div
+        class="property-option"
+        [class.selected]="item?.id === currentPropertyId">
+        <div
+          class="property-option__info"
+          [ngOptionHighlight]="search ? ( search | nzTrim) : ''">
+          {{ item?.streetline }}
+        </div>
+        <trudi-icon class="checked-icon" icon="checkCurrentColor"></trudi-icon>
+      </div>
+    </ng-template>
+  </trudi-select-dropdown-v2>
+</div>

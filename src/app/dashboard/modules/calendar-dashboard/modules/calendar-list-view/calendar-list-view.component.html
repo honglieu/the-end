@@ -1,0 +1,170 @@
+<div class="calendar-wrapper">
+  <ng-container *ngIf="isLoading; else calendarList">
+    <div class="week-wrapper">
+      <div
+        class="week-wrapper_header d-flex align-items-center justify-content-between">
+        <trudi-checkbox
+          *ngIf="!isConsole"
+          class="checkbox-frame"
+          [label]="isCheckAll ? 'Unselect all' : 'Select all'"></trudi-checkbox>
+        <span
+          *ngIf="'' | formatDateTimeAbbrev | async"
+          class="label-hint-skeleton">
+          *Times displayed in {{ '' | formatDateTimeAbbrev: false : true |
+          async}}
+        </span>
+      </div>
+      <div class="row-wrapper border-load"></div>
+      <div
+        class="event-skeleton overflow-hidden d-flex justify-content-between"
+        *ngFor="let _ of [].constructor(20); let i = index">
+        <div
+          class="item-action d-flex align-items-center justify-content-center">
+          <trudi-checkbox class=""></trudi-checkbox>
+        </div>
+        <div class="item-day">
+          <nz-skeleton
+            [nzParagraph]="{ rows: 0 }"
+            [nzActive]="true"
+            [style.width.px]="104"></nz-skeleton>
+        </div>
+        <div class="item-event d-flex flex-dir-column">
+          <div class="item-event-skeleton">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0}"
+              [nzActive]="true"
+              [style.width.px]="104"></nz-skeleton>
+          </div>
+          <div class="item-event-skeleton">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0 }"
+              [nzActive]="true"
+              [style.width.px]="166"></nz-skeleton>
+          </div>
+        </div>
+        <div class="item-address">
+          <nz-skeleton
+            [nzParagraph]="{ rows: 0 }"
+            [nzActive]="true"
+            [style.width.px]="267"></nz-skeleton>
+        </div>
+        <div class="item-task d-flex flex-dir-column">
+          <div class="item-event-skeleton">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0}"
+              [nzActive]="true"
+              [style.width.px]="66"></nz-skeleton>
+          </div>
+          <div class="item-event-skeleton">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0 }"
+              [nzActive]="true"
+              [style.width.px]="120"></nz-skeleton>
+          </div>
+        </div>
+        <div class="item-task-link item-event-skeleton">
+          <nz-skeleton
+            [nzParagraph]="{ rows: 0 }"
+            [nzActive]="true"
+            [style.width.px]="27"></nz-skeleton>
+        </div>
+        <div class="item-circle d-flex align-items-center">
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"
+            [nzSize]="'small'"
+            [nzShape]="'circle'"></nz-skeleton-element>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #calendarList>
+    <div
+      class="header-wrapper"
+      *ngIf="calendarEventsList?.length"
+      [ngClass]="{'none-border-bottom': isConsole}">
+      <div class="d-flex align-items-center justify-content-between">
+        <trudi-checkbox
+          *ngIf="!isConsole"
+          class="checkbox-frame"
+          [(ngModel)]="isCheckAll"
+          (keydown.enter)="toggleCheckAll()"
+          [isSelectedAll]="!((currentAllEvent$ | async).length === (eventSelectedList$ | async).length)"
+          [label]="isCheckAll ? 'Unselect all' : 'Select all'"
+          (ngModelChange)="handleCheckAllChange()"></trudi-checkbox>
+        <span *ngIf="'' | formatDateTimeAbbrev | async" class="label-hint">
+          *Times displayed in {{ '' | formatDateTimeAbbrev: false : true |
+          async}}
+        </span>
+      </div>
+    </div>
+    <ng-container *ngIf="calendarEventsList?.length; else noItems">
+      <cdk-virtual-scroll-viewport
+        #scrollContainer
+        class="d-flex flex-dir-column w-100 h-100"
+        [itemSize]="64"
+        (scrolledIndexChange)="onScrolledChange($event)"
+        (scroll)="onScroll($event)">
+        <date-row
+          *cdkVirtualFor="let calendar of calendarEventsList; index as i; first as isFirst; trackBy: trackByFunction"
+          [rowData]="calendar"
+          [isChecked]="calendar.isSelected"
+          (checkedChange)="handleCheckEventChange($event)"
+          [isFirst]="isFirst"
+          (linkedProperty)="handleOpenPropertyProfile($event)"
+          (linkedTaskClick)="handleOpenLinkTask($event)"
+          (eventIdEmit)="handleEmitEventId($event)"
+          [isActiveRow]="activeRowId === calendar.id "></date-row>
+      </cdk-virtual-scroll-viewport>
+    </ng-container>
+
+    <ng-template #noItems>
+      <div
+        class="list-wrapper background--white d-flex flex-dir-column justify-content-center">
+        @if (currentEventType && !searchText) {
+        <div class="no-task d-flex flex-dir-column align-items-center">
+          <trudi-icon icon="noTasks" svgClass="size-140"></trudi-icon>
+          <div class="text-center no-event-text">No events to display</div>
+        </div>
+        } @else if (!isFocusView || isFiltered) {
+        <div class="no-task d-flex flex-dir-column align-items-center">
+          <trudi-icon icon="noEventsFound" svgClass="size-140"></trudi-icon>
+          <div class="text-center no-event-text">No events found</div>
+        </div>
+        } @else {
+        <div class="d-flex flex-dir-column align-items-center gap-8">
+          <img
+            src="assets/icon/no-calendar-events.svg"
+            alt="no-calendar-events" />
+          <div>
+            <div class="text-center no-events-main-text">
+              No calendar events found for your portfolios.
+            </div>
+            <div class="text-center no-events-sub-text">
+              To see events for all portfolios,
+              <span
+                class="text-decoration-underline cursor-pointer focus-off-text"
+                (click)="turnOffFocusView()">
+                turn off focused view
+              </span>
+              .
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </ng-template>
+  </ng-template>
+</div>
+<calendar-toolbar></calendar-toolbar>
+<bulk-create-tasks
+  *ngIf="startBulkCreateTasks"
+  [listEvents]="eventSelectedList$ | async"
+  (onCompleteCreateTasks)="handleClearSelected()"
+  (onCompleteSendMessages)="handleCancelBulkCreateTasks()"
+  (onCancel)="handleCancelBulkCreateTasks()"></bulk-create-tasks>
+<property-profile-drawer
+  [visible]="visiblePropertyProfile"
+  (triggerCloseDrawer)="visiblePropertyProfile = false"
+  [propertyId]="propertyId">
+</property-profile-drawer>

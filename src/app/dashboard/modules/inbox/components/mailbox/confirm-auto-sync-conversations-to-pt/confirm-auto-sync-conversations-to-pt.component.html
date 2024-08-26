@@ -1,0 +1,42 @@
+<trudi-modal
+  className="confirm-auto-sync-conversations-to-pt"
+  [closable]="false"
+  [visible]="true"
+  [autoFocus]="null">
+  <ng-template #headerModal>
+    <div class="header-confirm-auto-sync-conversations-to-pt">
+      <trudi-icon icon="propertyTreeLogo" [style]="{height: 20}"></trudi-icon>
+      <div class="title">Save conversations to Property Tree</div>
+    </div>
+  </ng-template>
+  <div class="body-confirm-auto-sync-conversations-to-pt">
+    <div class="question">
+      Do you wish to automatically sync any resolved conversations from this
+      mailbox to Property Tree?
+    </div>
+    <div class="explain">
+      Each conversation thread will be exported as a PDF and saved into the
+      documents section of each property.
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div class="footer-confirm-auto-sync-conversations-to-pt">
+      <button
+        trudi-btn
+        size="large"
+        btnType="neutral"
+        variant="outlined"
+        (click)="onConfirmAutoSyncConversationsToPt(false)">
+        No, don’t sync
+      </button>
+      <button
+        trudi-btn
+        class="margin-left-12"
+        size="large"
+        variant="filled"
+        (click)="onConfirmAutoSyncConversationsToPt(true)">
+        Yes, please sync
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

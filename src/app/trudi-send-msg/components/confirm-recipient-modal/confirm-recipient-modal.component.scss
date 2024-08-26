@@ -1,0 +1,434 @@
+@import 'function';
+
+.label-infor {
+  padding: 12px 16px;
+  border-radius: 8px;
+  @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+  background-color: var(--bg-brand-tonal-stronger);
+}
+
+::ng-deep .ant-modal.trudi-modal.confirm-recipients-modal {
+  .ant-modal-body  {
+    padding: unset !important;
+    max-height: 460px;
+    overflow-y: auto;
+    .confirm-recipients-modal__content {
+      padding: 20px 24px;
+    }
+  }
+
+  .ng-dropdown-panel.trudi-single-select {
+    .ng-option-disabled {
+      box-shadow: unset;
+      &:not(:last-child) {
+        border-bottom: 1px solid var(--gray-50);
+      }
+      height: auto !important;
+      .trudi-select-label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .trudi-select-sublabel {
+        padding: 8px 10px !important;
+      }
+  
+      .item-sublabel {
+        display: block;
+        @include fontSetup(
+          var(--fg-neutral-stronger, #3d3d3d) !important,
+          12px,
+          16px,
+          normal,
+          400 !important
+        );
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+  
+        .highlighted {
+          background-color: var(--bg-tenant-solid-normal) !important;
+          font-weight: 500 !important;
+          font-size: 12px !important;
+        }
+      }
+    }
+
+    .ng-optgroup {
+      display: flex;
+      padding: 10px 12px !important;
+      height: 37px !important;
+      align-items: center;
+      gap: 8px;
+      flex: 1 0 0;
+      align-self: stretch;
+      box-shadow: none;
+      border-bottom: 1px solid var(--border-neutral-light, #f2f5f7) !important;
+      background: var(--bg-neutral-tonal-normal, #f2f5f7);
+      .ng-option-label {
+        @include fontSetup(
+          var(--fg-neutral-weaker, #999),
+          12px !important,
+          16px,
+          normal,
+          600
+        );
+      }
+    }
+    
+    .ng-option-disabled.ng-option {
+      background: unset !important;
+      cursor: not-allowed;
+      .highlighted {
+        background-color: var(--bg-tenant-solid-normal) !important;
+        font-weight: 500 !important;
+      }
+      .trudi-select-label {
+        .item-label {
+          color: var(--fg-neutral-weakest, #b9bec0) !important;
+          font-weight: 400 !important;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+        }
+      }
+    }
+  }
+
+
+  .ng-dropdown-panel.select-receiver {
+    .ng-option,
+    .ng-select-container {
+      .select-item {
+        &__from {
+          @include fontSetup(var(--gray-400), 14px, 20px, normal, 600);
+        }
+        &-remove {
+          padding: 5px 0 5px 5px;
+          display: flex;
+          align-items: center;
+        }
+        &__info {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          ::ng-deep app-circle-avatar {
+            .img-circle {
+              margin: 2px 0;
+              label,
+              div {
+                font-size: 60% !important;
+              }
+              &.supplier trudi-icon svg {
+                width: 8px !important;
+                height: 8px !important;
+              }
+            }
+          }
+          @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+          div {
+            margin-bottom: 8px;
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+          .avatar {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            margin-right: 4px;
+          }
+  
+          .avatar-trudi {
+            background: var(--white);
+          }
+  
+          .small-circle {
+            width: 3px;
+            height: 3px;
+            display: inline-block;
+            border-radius: 100%;
+            margin: 0 5px;
+            margin-bottom: 2px;
+            background-color: var(--gray-950);
+          }
+  
+          .select-item {
+            &__title {
+              @include fontSetup(
+                var(--fg-neutral-stronger),
+                12px,
+                16px,
+                normal,
+                500
+              );
+              &.item-checked {
+                color: var(--gray-700);
+              }
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 28%;
+            }
+            &__email-wrapper {
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 28%;
+            }
+            &__email {
+              @include fontSetup(
+                var(--fg-neutral-normal),
+                12px,
+                16px,
+                normal,
+                400
+              );
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 100%;
+            }
+            &__street-wrapper {
+              trudi-icon svg {
+                color: var(--fg-neutral-normal);
+                path {
+                  fill: var(--fg-neutral-normal) !important;
+                }
+              }
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              flex: 1;
+              &___title {
+                @include fontSetup(
+                  var(--fg-neutral-normal) !important,
+                  12px,
+                  16px,
+                  normal,
+                  400
+                );
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 100%;
+              }
+            }
+            &__type {
+              @include fontSetup(
+                var(--fg-neutral-stronger),
+                12px,
+                16px,
+                normal,
+                500
+              );
+            }
+          }
+  
+          &--invalid {
+            color: var(--fg-danger);
+          }
+        }
+      }
+    }
+  
+    .ng-option-disabled {
+      &.ng-optgroup {
+        .ng-option-label,
+        .header-group {
+          @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 500);
+        }
+      }
+    }
+  
+    .ng-dropdown-panel-items {
+      .ng-option {
+        &:has(.select-item-external-email) {
+          display: none;
+        }
+        &:hover {
+          box-shadow: unset;
+        }
+        & .highlighted {
+          background: var(--tenant-500);
+          color: inherit !important;
+          font-size: inherit !important;
+          font-weight: inherit !important;
+          text-decoration: inherit !important;
+        }
+        &:first-child {
+          border-radius: unset;
+        }
+      }
+      .overflow-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 580px;
+      }
+      
+      .ng-option:not(:last-child) {
+        box-shadow: inset 0px -1px 0px var(--gray-200);
+      }
+      .ng-option-disabled {
+        font-style: italic;
+      }
+    }
+
+    &.ng-select-bottom {
+      border-radius: 8px !important;
+      overflow: hidden;
+    }
+  
+    // .border-item.ng-select .ng-dropdown-panel .ng-dropdown-panel-items .ng-option,
+    .ng-optgroup {
+      box-shadow: unset;
+      background: var(--bg-neutral-tonal-normal, #f2f5f7);
+    }
+  
+    .header-group {
+      @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 500);
+      background-color: var(--bg-neutral-tonal-normal);
+      padding: 4px 12px;
+    }
+  
+    .select-header {
+      padding: 8px 12px;
+    }
+  
+    &.ng-select-multiple {
+      .ng-select-container {
+        .ng-value-container {
+          padding: 0;
+          gap: 8px;
+          max-height: 116px;
+          .ng-option:has(.bulk-send-option) {
+            padding: 0;
+            pointer-events: none;
+            .bulk-send-option {
+              padding: 8px 10px;
+            }
+          }
+          .select-item {
+            .overflow-text {
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 200px;
+            }
+            .select-item-remove {
+              display: flex;
+              align-items: center;
+            }
+          }
+          .select-item-label {
+            border: 1px solid var(--border-neutral-dark);
+            padding: 2px 8px;
+            border-radius: 6px;
+  
+            .select-item__info--invalid {
+              color: var( --fg-danger);
+            }
+          }
+  
+          .ng-placeholder {
+            top: 12px;
+            padding: 0;
+          }
+  
+          .ng-input {
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-left: 0;
+  
+            & > input {
+              @include fontSetup(
+                var(--gray-700) !important,
+                14px,
+                20px,
+                normal,
+                500
+              );
+            }
+          }
+        }
+      }
+      &.ng-valid,
+      &.ng-dirty,
+      &.ng-touched {
+        &.input-error-select {
+          .ng-select-container {
+            border-radius: 8px !important;
+            @include box-shadow-input-select(var(--shadow-danger));
+            margin-bottom: 0;
+          }
+        }
+      }
+  
+      & .clear-btn {
+        cursor: pointer;
+        border: none;
+        padding: 0;
+        &[focusable]:focus-visible {
+          border-radius: 8px;
+          border: 1px solid var(--brand-500);
+          box-shadow: 0px 0px 0px 1px var(--bg-brand-tonal-strongest) !important;
+        }
+        @include fontSetup(
+          var(--fg-neutral-stronger, #3d3d3d),
+          12px,
+          16px,
+          normal,
+          500
+        );
+        background-color: var(--white);
+      }
+  
+      & .count-text {
+        @include fontSetup(var(--fg-neutral-weaker), 12px, 16px, normal, 400);
+      }
+    }
+  }
+}
+
+::ng-deep .confirm-recipients-modal .ant-modal-content {
+  .ng-dropdown-panel {
+    margin-top: 10px;
+  }
+
+  &:has(select-step .ng-select-opened) {
+    .ng-dropdown-panel {
+      .ng-dropdown-panel-items {
+        .ng-option {
+          padding: 12px !important;
+        }
+      }
+    }
+  }
+}
+
+// has '.hide-last-child'
+::ng-deep .confirm-recipients-modal .ant-modal-content:has(.append-to__ant-modal-content .hide-last-child.ng-select-opened) {
+  .ng-dropdown-panel.select-receiver {
+    &.ng-select-bottom {
+      .ng-dropdown-panel-items {
+        .ng-option:last-child {
+          display: block;
+        }
+
+        &:has(.ng-option:first-child:nth-last-child(2)) {
+          .ng-option:last-child {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+// has '.hide-dropdown'
+::ng-deep .confirm-recipients-modal .ant-modal-content:has(.append-to__ant-modal-content .hide-dropdown.ng-select-opened) {
+  .ng-dropdown-panel.select-receiver {
+      display: none;
+  }
+}

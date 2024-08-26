@@ -1,0 +1,122 @@
+<div
+  class="bill-wrapper"
+  [ngClass]="{
+    'scrollAble': true,
+    'border-b': bills?.value?.length
+  }"
+  *ngIf="form"
+  [formGroup]="form"
+  (scroll)="updateDropdownDirection()">
+  <ng-container formArrayName="bills" *ngIf="bills?.value?.length">
+    <div class="bill-item" *ngFor="let bill of bills.controls; let i=index">
+      <div class="bill-group" [formGroupName]="i" (click)="handleClick(i)">
+        <div class="item">
+          <trudi-single-select
+            appendTo=".order-content"
+            [items]="jobList"
+            bindValue="id"
+            bindLabel="name"
+            formControlName="job"
+            [dropdownPosition]="dropdownPosition[i]"
+            #jobSelect>
+          </trudi-single-select>
+        </div>
+
+        <div class="item">
+          <trudi-form-control>
+            <trudi-single-select
+              appendTo=".order-content"
+              [items]="inventoryList"
+              bindValue="id"
+              bindLabel="name"
+              [dropdownPosition]="dropdownPosition[i]"
+              (triggerEventChange)="onInventoryItemChange($event, i)"
+              formControlName="item">
+            </trudi-single-select>
+          </trudi-form-control>
+        </div>
+
+        <div class="item">
+          <trudi-form-control>
+            <trudi-number-field
+              size="extra-large"
+              formControlName="quantity"
+              placeholder="0.00"
+              [checkSubmit]="!isSubmittedPurchaseOrderForm"
+              [maxCharacter]="13"
+              [maxLengthNumber]="13"
+              [maskLeadZero]="true"
+              [maskPattern]="maskPattern"
+              thousandSeparatorType=","
+              [formatOnBlur]="true">
+            </trudi-number-field>
+          </trudi-form-control>
+        </div>
+
+        <div class="item">
+          <trudi-form-control>
+            <trudi-number-field
+              size="extra-large"
+              formControlName="cost"
+              placeholder="0.00"
+              [checkSubmit]="!isSubmittedPurchaseOrderForm"
+              [maxCharacter]="13"
+              [maxLengthNumber]="13"
+              [maskLeadZero]="true"
+              [maskPattern]="maskPattern"
+              thousandSeparatorType=","
+              [formatOnBlur]="true">
+            </trudi-number-field>
+          </trudi-form-control>
+        </div>
+
+        <div class="item">
+          <trudi-text-field
+            formControlName="memo"
+            [showCounting]="false"
+            maxCharacter="255">
+          </trudi-text-field>
+        </div>
+
+        <div
+          class="d-flex align-items-center justify-content-between gap-32 item">
+          <span class="text-ellipsis"
+            >{{(getCost(i).value | totalCost: getQuantity(i).value)}}</span
+          >
+          <div class="btn-options" (click)="currentIndex = i">
+            <trudi-icon
+              nz-dropdown
+              [nzPlacement]="'bottomRight'"
+              [nzDropdownMenu]="menu"
+              [nzTrigger]="'click'"
+              [style]="{ 'width.px': 20, 'height.px': 20 }"
+              icon="verticalCustom"></trudi-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<div
+  *ngIf="!isLoadingPurchaseOrder && !bills?.value?.length"
+  class="d-flex align-items-center gap-4 no-item">
+  <trudi-icon icon="iconWarning" class="mt-2"></trudi-icon>
+  <span class="error-text">
+    At least one detail line must be filled out to save a purchase order.
+  </span>
+</div>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div class="options-wrapper" nz-menu>
+    <div
+      *ngFor="let item of optionsList"
+      nz-menu-item
+      class="item"
+      (click)="handleOption(item.type)">
+      <p class="text" [class.text-error]="item.type === EOPTIONS.DELETE">
+        {{item.text}}
+      </p>
+    </div>
+  </div>
+</nz-dropdown-menu>

@@ -1,0 +1,32 @@
+<div class="schedule-reminder-wrapper" [formGroup]="scheduleReminderForm">
+  <label class="reminder-label"> Suggested reminder </label>
+  <div class="remider-time d-flex gap-12">
+    <div class="remider-hour flex-1">
+      <trudi-select-reminder
+        formControlName="reminderTime"
+        [startHour]="0"
+        [endMinute]="45"
+        type="hours">
+      </trudi-select-reminder>
+    </div>
+    <div class="remider-date flex-1">
+      <trudi-select-reminder formControlName="day" type="date">
+      </trudi-select-reminder>
+    </div>
+    <div class="remider-timeline flex-1">
+      <trudi-select-reminder formControlName="timeline" type="timeline">
+      </trudi-select-reminder>
+    </div>
+  </div>
+  <div class="event-type">
+    <trudi-form-control>
+      <trudi-single-select
+        placeholder="Select event"
+        formControlName="event"
+        [items]="events"
+        bindValue="value"
+        bindLabel="label">
+      </trudi-single-select>
+    </trudi-form-control>
+  </div>
+</div>

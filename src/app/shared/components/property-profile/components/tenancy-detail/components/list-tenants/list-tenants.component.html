@@ -1,0 +1,35 @@
+<div class="tenants-wrapper">
+  <div class="item-owner-title">
+    <span class="item-title">TENANTS</span>
+  </div>
+  <div class="list-wrapper">
+    <ng-container
+      *ngFor="let userProperty of userTenancyList?.userProperties; let i = index">
+      <div
+        (click)="handleClickTenant(userProperty.id)"
+        class="item-tenant gap-8"
+        tabindex="0">
+        <div class="d-flex gap-8 align-items-center label-wrapper">
+          <span class="tenant-label"
+            >{{ {firstName: userProperty.user.firstName || '', lastName:
+            userProperty.user.lastName || ''} | formatFullname: true }}</span
+          >
+          <trudi-badge
+            size="small"
+            *ngIf="userProperty.isPrimary"
+            [text]="'Primary' + ' ' + (userProperty.type | lowercase)"
+            [variant]="'border'"></trudi-badge>
+        </div>
+        <trudi-icon class="action-icon pd-4" icon="chevronRight"></trudi-icon>
+      </div>
+      <div
+        class="border-bottom"
+        *ngIf="i !== userTenancyList?.userProperties?.length - 1"></div>
+    </ng-container>
+    <span
+      *ngIf="userTenancyList?.userProperties?.length === 0"
+      class="no-content"
+      >No tenants</span
+    >
+  </div>
+</div>

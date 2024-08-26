@@ -1,0 +1,57 @@
+@import 'function';
+:host ::ng-deep {
+  time-picker {
+    height: 44px;
+    min-width: 213px;
+    .dropdown-button {
+      max-width: 100% !important;
+      min-height: 44px !important;
+    }
+    dropdown-menu {
+      .dropdown-list {
+        min-width: 213px !important;
+      }
+    }
+  }
+}
+
+.popup {
+  &-header {
+    padding: 10px 14px 20px 14px;
+    .title {
+      @include fontSetup(var(--gray-950), 18px, 24px, normal, 600);
+    }
+  }
+  &-body {
+    padding: 32px 14px;
+    overflow-y: auto;
+    max-height: 350px;
+    .trudi-btn {
+      min-width: unset;
+    }
+  }
+  &-footer {
+    padding: 20px 14px;
+    .trudi-btn {
+      min-width: unset;
+    }
+  }
+}
+.divider {
+  height: 0.6px;
+  background: var(--bg-overlay-light);
+  margin: 0 -10px;
+}
+.title-text {
+  @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+}
+.warning-text {
+  @include fontSetup(var(--danger-500), 12px, 16px, normal, 400);
+}
+.relative {
+  .title-text {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}

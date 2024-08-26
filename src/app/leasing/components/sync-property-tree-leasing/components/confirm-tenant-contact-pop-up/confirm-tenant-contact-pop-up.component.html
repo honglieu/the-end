@@ -1,0 +1,58 @@
+<popup-component
+  [title]="'Select another primary tenant before deleting'"
+  [footer]="footer"
+  [disableClose]="true">
+  <div [formGroup]="" class="tenancy-name-form-group">
+    <div class="item" *ngFor="let tenant of listTenantContacts; let i = index">
+      <div class="tenancy-name-wrapper" *ngIf="!tenant.item.isPrimary">
+        <td-checkbox
+          class="d-flex align-items-center"
+          [size]="24"
+          [reverse]="true"
+          [isChecked]="tenant.isCheck"
+          (tdCheckboxChanged)="onCheckboxChange($event, i)"
+          [customCheckbox]="{ checked: 'checkboxCircleCheckedPrimary',
+                              uncheck: 'checkboxCircleEmpty'}">
+        </td-checkbox>
+        <p class="title">{{tenant.item.contact.familyName}}</p>
+      </div>
+    </div>
+    <hr class="divider" />
+    <ng-template #footer>
+      <div class="d-flex gap-12">
+        <button
+          data-e2e="button-next"
+          class="trudi-btn trudi-btn-large trudi-btn-tertiary"
+          (click)="closePopup()">
+          Cancel
+        </button>
+        <button
+          data-e2e="button-next"
+          class="btn-resolved btn-confirm"
+          (click)="confirmPopup()">
+          Confirm
+        </button>
+      </div>
+    </ng-template>
+    <ng-template #subTitle>
+      <div class="subTitle">Primary tenant</div>
+    </ng-template>
+  </div>
+
+  <ng-template
+    #errorMessage
+    let-error="error"
+    let-customMessage="customMessage">
+    <ng-container *ngIf="error || customMessage">
+      <div class="a1 error-wrapper d-flex align-items-center">
+        <trudi-icon icon="iconWarning"></trudi-icon>
+        <span *ngIf="error && !customMessage" class="text-warning">
+          Required field
+        </span>
+        <span *ngIf="customMessage" class="text-warning"
+          >{{ customMessage }}</span
+        >
+      </div>
+    </ng-container>
+  </ng-template>
+</popup-component>

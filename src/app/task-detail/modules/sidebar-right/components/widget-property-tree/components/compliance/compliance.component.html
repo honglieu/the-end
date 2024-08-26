@@ -1,0 +1,17 @@
+<create-select-update-compliance-popup
+  *ngIf="popupState.complianceItemPopup"
+  [complianceItems]="listCategoryByAgency"
+  [modalId]="modalId"
+  (close)="onCloseComplianceItemPopup()"
+  (getListCompliance)="getListCompliance()"
+  (clickNext)="onNextComplianceItemPopup($event)"></create-select-update-compliance-popup>
+
+<sync-compliance-popup
+  [modalId]="modalId"
+  [isShowPopupSync]="popupState.syncPopup"
+  [taskNameId]="taskNameId"
+  [isNextFromUpdateModal]="isNextFromUpdateModal"
+  [listCategoryByAgency]="listCategoryByAgency"
+  [accountOptions]="accountOptions"
+  (onCancel)="onCancel()">
+</sync-compliance-popup>

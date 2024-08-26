@@ -1,0 +1,177 @@
+<app-modal-popup
+  [show]="popupState.sendMessage"
+  [position]="ModalPopupPosition.center"
+  widthInPercent="50"
+  [appendBody]="appendBody"
+  [hasPadding]="false"
+  [isFullScreenModal]="isFullScreenModal"
+  class="modal-send-msg-wrapper">
+  <ng-container
+    *ngTemplateOutlet="headerTemplate; context: { header: configs.header }">
+  </ng-container>
+
+  <div [ngClass]="{'trudi-send-msg-body-v2-full-screen': isFullScreenModal}">
+    <trudi-send-msg-body-v2
+      [configs]="configs"
+      [rawMsg]="rawMsg"
+      [openFrom]="openFrom"
+      [listOfFiles]="listOfFiles"
+      [listContactCard]="listContactCard"
+      [prefillVariables]="prefillVariables"
+      [reiformData]="reiformData"
+      (template)="setTemplate($event)"
+      [listDynamicParams]="listDynamicParams"
+      [selectedTaskIds]="selectedTaskIds"
+      [prefillData]="prefillData"
+      [listUser]="listUser"
+      [listSenderMailBox]="listSenderMailBox"
+      [currentUser]="currentUser"
+      [currentMailBoxId]="currentMailBoxId"
+      [isDisableSendBtn]="isDisableNextBtn
+      || isConsole
+      || !hasAddAccount
+      || !listMailBoxs?.length
+      || isDisableSendBtn"
+      [defaultSelectedSendOption]="defaultOptionDropdown"
+      (onBack)="triggerNormalEvent(ETrudiSendMsgBtn.BACK)"
+      (submitToSendMsg)="triggerDropDownEvent($event)"
+      (typeSendMsg)="onChangeTypeSendMessage($event)">
+      <ng-container *ngIf="!isSyncedAttachment" attachment-loading>
+        <msg-attachment-load
+          class="attachment-load"
+          [(key)]="attachmentSync.attachmentLoadKey"
+          [threadIds]="threadId ? [threadId] : []"
+          [(attachmentSynced)]="isSyncedAttachment"></msg-attachment-load>
+      </ng-container>
+    </trudi-send-msg-body-v2>
+  </div>
+  <ng-container
+    *ngTemplateOutlet="footerTemplate; context: { footer: configs.footer }">
+  </ng-container>
+</app-modal-popup>
+
+<trudi-modal
+  [visible]="popupState.closeConfirm"
+  [autoFocus]="null"
+  className="trudi-modal-custom">
+  <app-document-request-quit-confirm
+    (isCloseModal)="onConfirmQuit($event)"
+    [attr.data-e2e]="'cancel-confirmation-modal'">
+  </app-document-request-quit-confirm>
+</trudi-modal>
+
+<trudi-add-contact-card
+  *ngIf="contactCardPopupState.addContactCard"
+  [visible]="contactCardPopupState.addContactCard"
+  [openFrom]="openFrom"
+  [configs]="attachmentTextEditorConfigs"
+  [listContactCard]="listContactCard"
+  [form]="sendMsgForm"
+  [selectedContactCard]="selectedContactCard"
+  (onTrigger)="onTriggerAddContactCard()"
+  (onClose)="onCloseAddContactCard()"></trudi-add-contact-card>
+
+<upload-from-crm
+  [configs]="attachmentTextEditorConfigs"
+  (onTrigger)="onTriggerAddFilesFromCrm()"
+  (onClose)="onCloseUploadFromCRM()"
+  *ngIf="uploadFileFromCRMPopupState.uploadFileFromCRM"></upload-from-crm>
+
+<schedule-message-popup
+  *ngIf="popupState.selectTimeSchedule"
+  [visible]="popupState.selectTimeSchedule"
+  (isCloseModal)="onBackSendMsg($event)"
+  (dateTime)="onDateTimeSelected($event)"
+  [scheduleDate]="scheduleDate"
+  [defaultValue]="selectTimeSchedule"
+  [additionalInfo]="additionalInfo"
+  [isDateUnknown]="isDateUnknown"
+  [dueDateTooltipText]="dueDateTooltipText"
+  [selectedEvent]="configs?.body?.otherConfigs?.calendarEvent"
+  [action]="configs.trudiButton?.action"></schedule-message-popup>
+
+<div
+  *ngIf="popupState.addReiForm"
+  [show]="popupState.addReiForm"
+  [position]="ModalPopupPosition.center">
+  <trudi-rei-form-card></trudi-rei-form-card>
+</div>
+
+<select-recipients-modal
+  *ngIf="shouldInitSelectRecipientsModal"
+  [visible]="popupState.selectRecipients"
+  [configs]="configs"
+  [listUser]="listUser"
+  [selectedTaskIds]="selectedTaskIds"
+  [openFrom]="openFrom"
+  [prefillData]="prefillData"
+  [listContactCard]="listContactCard"
+  (cancel)="onCloseSendMsg()"
+  (back)="handleBack()"></select-recipients-modal>
+
+<view-recipients-modal
+  *ngIf="configs.header.viewRecipients && !popupState.selectRecipients"
+  [configs]="configs"
+  [selectedTaskIds]="selectedTaskIds"
+  [isRmEnvironment]="isRmEnvironment"
+  [visible]="popupState.viewRecipients"
+  (close)="onCloseSendMsg()"></view-recipients-modal>
+
+<missing-data-modal
+  [(visible)]="isShowMissingDataModal"
+  [configs]="configs"
+  [data]="invalidParamsMap"
+  [isRmEnvironment]="isRmEnvironment"
+  (editMessage)="handleCloseWarningMissingDataModal()"
+  (keepSending)="handleKeepSending()"></missing-data-modal>
+
+<!-- Header section -->
+<ng-template #headerTemplate let-header="header">
+  <trudi-send-msg-header
+    [configs]="configs"
+    [expandable]="expandable"
+    [isFullScreenModal]="isFullScreenModal"
+    [isAppUser]="isAppUser"
+    [propertyId]="currentPropertyId"
+    [listProperties]="listProperties"
+    (closeSendMsg)="isConsole ? onCloseSendMsg() : (isShowConfirmDraft = true)"
+    (triggerExpandOrResizeModal)="triggerExpandOrResizeModal()">
+  </trudi-send-msg-header>
+</ng-template>
+<!-- Footer section -->
+<ng-template #footerTemplate let-footer="footer">
+  <div class="trudi-send-msg-footer">
+    <ng-container
+      *ngTemplateOutlet="toolbarTinyTemplate;context: toolbarTinyContext"></ng-container>
+  </div>
+</ng-template>
+<trudi-modal
+  [visible]="isShowConfirmDraft && !isConsole"
+  title="Save this message as a draft?"
+  className="trudi-modal"
+  (onCancel)="isShowConfirmDraft = false">
+  <div class="wrapper-body">
+    <p class="notice-message">
+      This message has not been sent and contains unsaved changes. You can save
+      it as draft to work on later.
+    </p>
+  </div>
+  <ng-template #footerModal>
+    <div class="d-flex gap-8">
+      <button
+        trudi-btn
+        [btnType]="'neutral'"
+        [disabled]="isSendingMsg"
+        class="trudi-btn trudi-btn-tertiary btn-cancel button-size"
+        (click)="onCloseSendMsg()">
+        Don’t save
+      </button>
+      <button
+        [disabled]="isSendingMsg"
+        trudi-btn
+        (click)="handleConfirmDraft()">
+        Save
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

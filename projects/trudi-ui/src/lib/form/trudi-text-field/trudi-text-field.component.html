@@ -1,0 +1,133 @@
+<label *ngIf="label?.length > 0" class="trudi-ui-text-field-label">
+  {{ label }}
+  <ng-container *ngTemplateOutlet="Counting"></ng-container>
+</label>
+<div
+  class="trudi-text-field-wrapper d-flex gap-8 align-items-center"
+  [class.not-check-submit]="!checkSubmit"
+  [ngClass]="[size, isDisabled]"
+  [ngClass]="{'input-sizer': dynamicWidth, 'block-event': isBlockEvent, 'disabled': disabled}">
+  <ng-container *ngIf="prefixText; else prefixIcon">
+    <div
+      (click)="this.triggerEventFocus.emit($event)"
+      class="prefix-text"
+      [ngClass]="{'prefix-text-disabled': disabled}">
+      {{ prefixText }}
+    </div>
+  </ng-container>
+  <ng-template #prefixIcon>
+    <div
+      *ngIf="prefixTemplate || iconLeft"
+      class="color-picker"
+      (mousedown)="$event.preventDefault()">
+      <ng-container
+        *ngIf="prefixTemplate"
+        [ngTemplateOutlet]="prefixTemplate"></ng-container>
+      <trudi-icon
+        *ngIf="iconLeft && !prefixTemplate"
+        [icon]="iconLeft"
+        [style]="{ 'width.px': 20, 'height.px': 20 }"></trudi-icon>
+    </div>
+  </ng-template>
+  <input
+    #input
+    #inputRef
+    appE2E
+    [e2eId]="e2eId"
+    [id]="uniqueId"
+    [placeholder]="placeholder"
+    [ngClass]="{
+      empty: value?.length === 0,
+      'ng-invalid': !checkSubmit && control?.invalid,
+      'ng-dirty': !checkSubmit && control?.dirty,
+      'ng-touched': !checkSubmit && control?.touched,
+      'not-check-submit': !checkSubmit
+    }"
+    [ngStyle]="{ width: dynamicWidth ? calculateInputWidth() + 'px' : '100%' }"
+    class="trudi-ui-text-field"
+    [type]="type"
+    [disabled]="disabled"
+    [(ngModel)]="value"
+    [maxlength]="maxCharacter"
+    [autocomplete]="autocomplete"
+    [appLettersOnly]="directive === EDirectives.LETTERS_ONLY"
+    (input)="this.triggerEventInput.emit($event)"
+    (focus)="this.triggerEventFocus.emit($event)"
+    (blur)="triggerEventBlur.emit($event)"
+    [readonly]="readonly" />
+  <div *ngIf="!label && showCounting">
+    <ng-container *ngTemplateOutlet="Counting"></ng-container>
+  </div>
+  <trudi-icon
+    *ngIf="hasIconEyePassword"
+    class="cursor-pointer"
+    [icon]="type === 'password' ? 'eye' : 'eyeShow'"
+    [style]="{'width.px': 17}"
+    (click)="changeTypeInput()"></trudi-icon>
+  <div *ngIf="isShowEmbedCodeFunction" [class.not-allowed]="disabled">
+    <trudi-icon
+      icon="code"
+      [class]="{
+        'cursor-pointer': !disabled,
+        'unClick': disabled
+      }"
+      nz-dropdown
+      [nzOverlayClassName]="'dropdown-pt'"
+      [nzDropdownMenu]="menu"
+      [nzPlacement]="'bottomRight'"
+      [nzTrigger]="'click'"
+      [style]="{ 'width.px': 20, 'height.px': 20 }"></trudi-icon>
+  </div>
+  <div
+    *ngIf="showClearable"
+    class="close-icon-wrapper"
+    (mousedown)="handleClear($event)">
+    <trudi-icon [icon]="clearIcon" [style]="clearIconStyle"></trudi-icon>
+  </div>
+</div>
+<ng-container>
+  <div class="dropdown-list absolute border-rad-8 align-items-center">
+    <ng-container>
+      <nz-dropdown-menu #menu="nzDropdownMenu">
+        <ul nz-menu class="dropdown-property-tree">
+          <div class="box-list">
+            <ng-container *ngFor="let codeOption of listCodeOptions">
+              <li
+                *ngIf="!codeOption.subMenu"
+                nz-menu-item
+                (click)="handleEmbedCodeOption(codeOption);$event.stopPropagation();"
+                class="dropdown-item-property-tree">
+                <span> {{ codeOption?.text }} </span>
+              </li>
+              <li
+                *ngIf="codeOption.subMenu"
+                nz-submenu
+                [nzMenuClassName]="'sub-menu-pt'"
+                [nzTitle]="codeOption.text"
+                class="dropdown-item-property-tree">
+                <ul class="box-sub-menu-pt">
+                  <li
+                    *ngFor="let subCodeOption of codeOption?.subMenu"
+                    class="d-flex gap-4 dropdown-sub-menu-property-tree"
+                    (click)="handleEmbedCodeOption($event, subCodeOption);$event.stopPropagation();"
+                    nz-menu-item>
+                    <span> {{ subCodeOption?.text }} </span>
+                  </li>
+                </ul>
+              </li>
+            </ng-container>
+          </div>
+        </ul>
+      </nz-dropdown-menu>
+    </ng-container>
+  </div>
+</ng-container>
+
+<ng-template #Counting>
+  <trudi-max-character
+    *ngIf="maxCharacter && showCounting"
+    [maxCharacter]="maxCharacter"
+    [onlyShowMaxCharacter]="onlyShowMaxCharacter"
+    [currentLength]="value?.length">
+  </trudi-max-character>
+</ng-template>

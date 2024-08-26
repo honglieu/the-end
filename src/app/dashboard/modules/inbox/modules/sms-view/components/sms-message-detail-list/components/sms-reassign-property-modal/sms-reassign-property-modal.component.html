@@ -1,0 +1,23 @@
+<trudi-modal
+  [visible]="showModal"
+  [autoFocus]="null"
+  [modelWidth]="624"
+  title="Select property"
+  [hiddenCancelBtn]="true"
+  (onOk)="handleConfirmUpdateProperty()"
+  (onCancel)="closeModal.emit()"
+  [disableOkBtn]="isPropertyUpdating"
+  [dataE2E]="{ okBtn: EDataE2EReassignModal.CONFIRM_BUTTON }">
+  <div [formGroup]="formSelectProperty">
+    <trudi-form-control>
+      <trudi-single-select
+        formControlName="propertyId"
+        [items]="propertyList"
+        bindLabel="streetline"
+        bindValue="id"
+        label="Assign a property"
+        [searchFn]="searchProperty">
+      </trudi-single-select>
+    </trudi-form-control>
+  </div>
+</trudi-modal>

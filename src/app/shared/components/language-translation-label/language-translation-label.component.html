@@ -1,0 +1,57 @@
+<div
+  nz-tooltip
+  [nzTooltipTitle]="isLanguageTranslationDisabled ? isOwnerOrAdmin ? upgradePlan : requestPlan : ''"
+  nzTooltipPlacement="bottom"
+  [nzTooltipTrigger]="isLanguageTranslationDisabled ? !messagesTranslate ? 'hover' : null : null"
+  class="language-translation-label"
+  [class.disabled]="isLanguageTranslationDisabled || !messagesTranslate">
+  <div class="language-translation-input">{{inputLanguage}}</div>
+  <trudi-icon icon="arrowRight1"></trudi-icon>
+  <div class="language-translation-output">{{outputLanguage}}</div>
+</div>
+
+<ng-template #upgradePlan>
+  <div class="d-flex flex-dir-column cursor-text text-left">
+    <div>To have AI translate,</div>
+    <div
+      (click)="handlePopupState({ plansSummary: true });"
+      class="text-decoration-underline cursor-pointer">
+      upgrade your plan
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #requestPlan>
+  <div class="d-flex flex-dir-column cursor-text text-left">
+    <div>To have AI translate,</div>
+    <div
+      (click)="handlePopupState({ requestSent: true, requestFromTab: true });"
+      class="text-decoration-underline cursor-pointer">
+      request plan upgrade
+    </div>
+  </div>
+</ng-template>
+
+<trudi-modal
+  [(visible)]="popupState.requestSent"
+  [modelWidth]="624"
+  [closable]="false"
+  [autoFocus]="null"
+  [hiddenCancelBtn]="true"
+  okText="Ok, got it"
+  className="task-editor-popup"
+  title="We’re on it"
+  subTitle=""
+  (onOk)="handlePopupState({ requestSent: false, requestFromTab: false })">
+  <div class="d-flex flex-dir-column gap-20 request-sent-text">
+    <div>We’re received your request to upgrade your subscription.</div>
+    <div>One of our Sales Team will be in contact shortly.</div>
+  </div>
+</trudi-modal>
+
+<plans-summary-pop-up
+  [isShowModal]="popupState.plansSummary"
+  [currentPlan]="currentPlan"
+  (onQuit)="handlePopupState({ plansSummary: false })"
+  (changePlan)="handlePopupState({ plansSummary: false, requestSent: true })">
+</plans-summary-pop-up>

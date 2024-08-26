@@ -1,0 +1,204 @@
+<div
+  class="msg-reminder-item-block"
+  style="padding-top: 5px; padding-bottom: 5px">
+  <div
+    class="msg-reminder-wrapper"
+    [ngClass]="{'msg-reminder-wrapper-ignore': message?.isIgnoreMessage}">
+    <div class="msg-reminder-items d-flex flex-dir-column gap-8">
+      <div class="info-wrapper">
+        <div class="d-flex flex-dir-column gap-2">
+          <div class="d-flex justify-content-between gap-8 pad-x-12">
+            <div class="d-flex gap-4 align-items-center">
+              <div
+                *ngIf="message?.group_data_index === 1"
+                class="trudi-btn trudi-btn-medium trudi-btn-medium-circle bell-reminder-me">
+                <trudi-icon icon="iconBellRanger"></trudi-icon>
+              </div>
+              <span class="msg-sender-items-title"
+                >{{queryParam['reminderType'] === ReminderMessageType.UNANSWERED
+                ? 'From:' : 'To:' }}</span
+              >
+              <div class="d-flex gap-4 msg-sender-items-info-wrapper">
+                <div
+                  *ngIf="!!message?.emailMetaData?.from?.length || !!listReceiver?.length"
+                  class="msg-sender-items-info"
+                  [style.max-width.px]="maxWidthInfo">
+                  <ng-container
+                    *ngIf="!!message?.emailMetaData?.from?.length && queryParam['reminderType'] === ReminderMessageType.UNANSWERED">
+                    <message-via-email-metadata
+                      class="max-width"
+                      [emailMetadataFiled]="message?.emailMetaData?.from"
+                      [showEmailTag]="false"
+                      [conversationProperty]="{ id: message?.conversationPropertyId, isTemporary: message?.isConversationPropertyTemporary }"
+                      [hasStyleName]="true">
+                    </message-via-email-metadata>
+                  </ng-container>
+                  <ng-container
+                    *ngIf="!!listReceiver?.length && queryParam['reminderType'] === ReminderMessageType.FOLLOW_UP">
+                    <message-via-email-metadata
+                      class="max-width"
+                      [emailMetadataFiled]="listReceiver?.[1] ? [listReceiver?.[0], listReceiver?.[1]] : [listReceiver?.[0]]"
+                      [showEmailTag]="false"
+                      [conversationProperty]="{ id: message?.conversationPropertyId, isTemporary: message?.isConversationPropertyTemporary }"
+                      [hasStyleName]="true">
+                    </message-via-email-metadata>
+                    <span
+                      *ngIf="listReceiver?.length > 2"
+                      class="count-sender-email">
+                      +{{listReceiver?.length > 2 ? listReceiver?.length - 2 :
+                      ''}}</span
+                    >
+                  </ng-container>
+                </div>
+                <span class="msg-sender-items-time"
+                  >• {{message.createdAt | dateCase:true | async }}</span
+                >
+              </div>
+            </div>
+            <div
+              class="d-flex align-items-center box-ignore"
+              [ngClass]="{'disabled': isConsole}">
+              <button
+                (click)="handleToggleIgnore()"
+                [ngClass]="{'button-ignore-disabled': isConsole, 'button-unignore': message.isIgnoreMessage }"
+                class="button-ignore"
+                [disabled]="isConsole">
+                <span
+                  [ngClass]="{'label-ignore-disabled': isConsole}"
+                  class="label-ignore"
+                  >{{message.isIgnoreMessage ? 'Unignore' : 'Ignore'}}</span
+                >
+              </button>
+              <div
+                *ngIf="!message.isIgnoreMessage"
+                class="chevron-down-ignore"
+                [ngClass]="{'active': isShowDropdown, 'disabled': isConsole}"
+                cdkOverlayOrigin
+                (click)="isShowDropdown = !isShowDropdown"
+                #triggerReminderMe="cdkOverlayOrigin">
+                <trudi-icon icon="grayChevronDown"></trudi-icon>
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex flex-dir-column gap-2 msg-content-wrapper"
+            [ngClass]="{'msg-content-wrapper-hover': isOpen}"
+            style="margin: auto; width: calc(100% - 18px)"
+            (mouseenter)="openPopoverMessage()"
+            (mouseleave)="maybeCloseOverlay()"
+            cdkOverlayOrigin
+            #trigger="cdkOverlayOrigin">
+            <div class="message-content">
+              <span
+                class="quote-message-reminder"
+                [innerHTML]="message?.title | highlight: search"></span>
+            </div>
+            <div class="d-flex gap-4">
+              <div class="message-content">
+                <span
+                  class="quote-message-reminder"
+                  [innerHTML]="message?.messagePreview | highlight: search"></span>
+              </div>
+              <div
+                class="d-flex align-items-center"
+                *ngIf="message?.propertyDocuments?.length">
+                <trudi-icon icon="attachments"></trudi-icon>
+                <span class="msg-sender-items-attachment"
+                  >{{message?.propertyDocuments?.length}}</span
+                >
+              </div>
+            </div>
+          </div>
+          <div
+            class="d-flex gap-2 align-items-center pad-x-12"
+            *ngIf="message?.taskType === TaskType.TASK && message?.taskTitle">
+            <span class="task-label">Task:</span>
+            <div
+              class="message-content d-flex"
+              (click)="navigateToMessageDetail()">
+              <span class="task-name">{{message?.taskTitle}}</span>
+            </div>
+          </div>
+          <div class="d-flex gap-2 align-items-center pad-x-12">
+            <trudi-icon class="size-16" icon="iconAddress"></trudi-icon>
+            <span
+              class="msg-sender-items-property"
+              [ngClass]="{
+              'strike-through': [EPropertyStatus.deleted, EPropertyStatus.archived].includes(message?.property?.status)
+            }"
+              >{{message?.property?.streetline || 'No property'}}</span
+            >
+          </div>
+        </div>
+        <div class="d-flex mt-8 pad-x-12">
+          <div class="d-flex gap-4 flex-1">
+            <button
+              (click)="navigateToMessageDetail()"
+              class="button-action-msg-reminder d-flex align-items-center gap-8">
+              <trudi-icon
+                class="icon-leading"
+                icon="iconArrowBack"></trudi-icon>
+              <span class="label-action">Go to message</span>
+            </button>
+            <button
+              disableOpenSendMsgModal
+              (click)="handleReplyMsg()"
+              class="button-action-msg-reminder d-flex align-items-center gap-4">
+              <trudi-icon
+                *ngIf="!isLoadingQuickReply"
+                icon="replyMessageIcon"></trudi-icon>
+              <div *ngIf="isLoadingQuickReply" class="loader"></div>
+              <div class="d-flex gap-4 align-items-center">
+                <span class="label-action">Quick reply</span>
+              </div>
+            </button>
+          </div>
+          <div
+            *ngIf="teamMembers > 1"
+            class="d-flex gap-8 align-items-center assign-agent-reminder">
+            <assign-to-agents
+              [displayText]="'Assign'"
+              [isReadOnly]="isConsole"
+              titleMode="avatar"
+              [maxDisplayAssignees]="2"
+              [avatarSize]="24"
+              [task]="message"
+              (onAssignUpdate)="updateUI()"
+              (onAssignAgentsSelectedClick)="handleAssignAgentsSelectedClick($event)">
+            </assign-to-agents>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template
+  #overlayTemplate
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="isOpen"
+  [cdkConnectedOverlayScrollStrategy]="scrollStrategy">
+  <popover-message-reminder
+    [draftUpdating]="draftUpdating"
+    [message]="message"
+    (mouseenter)="overlayEnter()"
+    (mouseleave)="overlayLeave()"
+    (destroy)="handleDestroyPopover()"
+    (updatePosition)="recalculatePosition()"
+    (onEditDraft)="handleReplyMsg()"></popover-message-reminder>
+</ng-template>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="triggerReminderMe"
+  [cdkConnectedOverlayOpen]="isShowDropdown"
+  (overlayOutsideClick)="overlayOutsideClick($event)">
+  <div class="list-item-time-container">
+    <ng-container *ngFor="let item of listReminderMe"
+      ><div class="item-time" (click)="handleToggleIgnore(item)">
+        {{item.value}}
+      </div></ng-container
+    >
+  </div>
+</ng-template>

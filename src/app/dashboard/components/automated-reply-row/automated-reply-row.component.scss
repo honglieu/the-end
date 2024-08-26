@@ -1,0 +1,56 @@
+@import 'function';
+
+.automated-reply-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  margin: 10px 0px;
+  &:hover {
+    background-color: var(--brand-100);
+  }
+
+  .automated-reply-checkbox {
+    width: 48px;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  .automated-reply-questions {
+    width: calc(100% - 48px);
+    padding: 12px;
+  }
+
+  .automated-reply-sample-answers {
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 400);
+    width: calc(100% - 48px);
+  }
+}
+.wrapper-skeleton {
+  padding: 0px 16px 16px;
+  border: 1px solid var(--gray-200);
+  border-radius: 10px;
+  margin-bottom: 10px;
+  .skeleton-checkbox-container {
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    justify-content: center;
+    height: 96px;
+    margin-top: 16px;
+
+    .skeleton-checkbox {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      border: 1px solid var(--gray-50);
+    }
+  }
+}
+
+.automated-reply-selected {
+  background-color: var(--brand-100);
+}

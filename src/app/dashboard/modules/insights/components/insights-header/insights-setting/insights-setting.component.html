@@ -1,0 +1,72 @@
+<nz-skeleton-element
+  *ngIf="isLoading; else settingBtn"
+  class="skeleton-element"
+  nzType="button"
+  [nzActive]="true"></nz-skeleton-element>
+<ng-template #settingBtn>
+  <button
+    (click)="handleClickSettingButton()"
+    trudi-btn
+    size="medium"
+    btnType="neutral"
+    variant="outlined">
+    <trudi-icon
+      icon="settingGrayOutlineIcon"
+      [style]="{ 'width.px': 20, 'height.px': 20 }">
+    </trudi-icon>
+    Settings
+  </button>
+</ng-template>
+<trudi-modal
+  *ngIf="isShowSettingModal"
+  [visible]="isShowSettingModal"
+  (onCancel)="handleCancelSettingModal()"
+  title="Settings">
+  <ng-template #headerModal>
+    <div class="modal-header-settings-insights">
+      <div class="modal-header-settings-insights-title">
+        <div class="title w-100 flex-1">
+          <span class="flex-1">Settings</span>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <div class="modal-body-settings-insights">
+    <p class="setting-instruction">
+      To make insights more relevant to your business, answer this quick
+      questionnaire to update your company baseline.
+    </p>
+    <div class="setting-options-wrapper">
+      <setting-option-item
+        *ngFor="let OPTION_SETTING of OPTION_SETTING_LIST; let idx = index"
+        [badge]="OPTION_SETTING.badge"
+        [unitOfMeasure]="OPTION_SETTING.unitOfMeasure"
+        [settingQuestion]="OPTION_SETTING.questionSetting"
+        [controlName]="listFormControlNames[idx]"
+        [checkSubmit]="!isSubmitForm"
+        [formGroup]="insightSettingsFormGroup">
+      </setting-option-item>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div
+      class="wrapper-btn-footer"
+      [ngClass]="{'btn-not-allow': isDisableButton}">
+      <button
+        trudi-btn
+        variant="ghost"
+        data-e2e="revert-btn"
+        [disabled]="isDisableButton"
+        (click)="handleRevertToDefaultBaseline()">
+        Revert to default baseline
+      </button>
+      <button
+        trudi-btn
+        data-e2e="save-btn"
+        (click)="handleSaveSettingModal()"
+        [disabled]="isDisableButton">
+        Save
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

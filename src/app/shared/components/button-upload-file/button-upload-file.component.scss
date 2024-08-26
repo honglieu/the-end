@@ -1,0 +1,27 @@
+@import 'function';
+
+.content-button {
+  .main-btn {
+    gap: 12px;
+    min-height: 44px;
+    padding: 12px;
+    background: var(--gray-200);
+    border-radius: 8px;
+    color: var(--gray-700);
+    @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+    border: none;
+
+    .btn-text {
+      flex-grow: 1;
+      text-align: left;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      &:hover {
+        @include fontSetup(var(--gray-500), 14px, 16px, normal, 600);
+      }
+    }
+  }
+}

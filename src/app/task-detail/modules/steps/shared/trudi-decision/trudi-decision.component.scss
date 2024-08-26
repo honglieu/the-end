@@ -1,0 +1,95 @@
+@mixin fontSetup($color, $fontSize, $lineHeight, $fontStyle, $fontWeight) {
+  color: $color;
+  font-size: $fontSize;
+  line-height: $lineHeight;
+  font-style: $fontStyle;
+  font-weight: $fontWeight;
+}
+
+.edit-button {
+  max-width: 100%;
+  margin-bottom: 12px;
+  position: relative;
+  padding: 4px 8px 4px 8px;
+  background-color: var(--bg-brand-tonal-normal, #E1F8F5);
+  width: fit-content;
+  border: 0;
+  .edit-title {
+    margin: 0;
+    @include fontSetup(var(--brand-500), 14px, 20px, normal, 600);
+  }
+
+  ::ng-deep .icon-chevron-down svg path {
+    fill: var(--fg-brand);
+  }
+}
+
+
+.decision-dropdown {
+  transform: translateY(-10px);
+  position: absolute;
+  max-width: 368px;
+  max-height: 260px;
+  overflow-y: auto;
+  min-width: max-content;
+  background: var(--white);
+  box-shadow: 0px 8px 28px rgba(0, 0, 0, 0.05), 0px 4px 12px var(--bg-overlay-light);
+  z-index: 10;
+  &.dropUp {
+    box-shadow: 0px 8px 28px rgba(0, 0, 0, 0.05), 0px -4px 12px var(--bg-overlay-light);
+    transform: translateY(calc(-100% - 42px));
+  }
+
+  .decision-item {
+    border-bottom: 1px solid var(--gray-50);
+    padding: 12px;
+    justify-content: space-between;
+
+    &:hover {
+      background-color: var(--bg-neutral-tonal-stronger, #f0f1f1) !important;
+    }
+
+    &:active {
+      background-color: var(--bg-neutral-tonal-strongest, #ececed) !important;
+    }
+
+    &:first-child {
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+
+    &:last-child {
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+  }
+
+  .decision-label {
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+    margin: 0;
+    max-width: 250px;
+    word-break: break-word;
+    margin-right: 30px;
+  }
+}
+:host {
+  display: block;
+  .option-to-procceed {
+    border-radius: 8px;
+    border: 1px solid var(--border-neutral-dark);
+    background-color: var(--bg-neutral-tonal-stronger);
+    .decision-name {
+      cursor: pointer;
+      border-radius: 6px;
+      padding: 6px 16px;
+      @include fontSetup(var(--fg-neutral-normal), 14px , 20px , normal , 600);
+      background-color: var(--bg-base);
+      &:hover {
+        background-color: var(--bg-neutral-tonal-normal);
+      }
+      &:active {
+        background-color: var(--bg-neutral-tonal-stronger);
+      } 
+    }
+  }
+}

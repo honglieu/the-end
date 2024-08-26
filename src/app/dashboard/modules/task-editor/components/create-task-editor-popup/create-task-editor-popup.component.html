@@ -1,0 +1,56 @@
+<ng-container *ngIf="popupState === typeCreateTaskEditor.CREATE_TASK_EDITOR">
+  <trudi-modal
+    [visible]="popupState === typeCreateTaskEditor.CREATE_TASK_EDITOR"
+    [modelWidth]="624"
+    (onCancel)="onCancel()"
+    className="task-editor-popup"
+    [title]="titleModal"
+    subTitle=""
+    [autoFocus]="null">
+    <ng-template #footerModal>
+      <div class="d-flex gap-8">
+        <button
+          *ngIf="taskEditorService.isConsoleSettings"
+          trudi-btn
+          btnType="neutral"
+          variant="outlined"
+          class="button-size"
+          (click)="handleBackCreateTaskEditor()">
+          Back
+        </button>
+        <button trudi-btn (click)="handleNextCreateTaskEditor()">Next</button>
+      </div>
+    </ng-template>
+    <div
+      class="container-create-task-editor d-flex justify-content-center gap-16">
+      <button
+        [ngClass]="{'active': active === typeCreateTaskEditor.CREATE_FROM_TEMPLATE}"
+        class="btn-create-task-editor"
+        (click)="handleActive(typeCreateTaskEditor.CREATE_FROM_TEMPLATE)">
+        Create from template
+      </button>
+      <button
+        class="btn-create-task-editor"
+        [ngClass]="{'active': active === typeCreateTaskEditor.CREATE_FROM_CRATCH}"
+        (click)="handleActive(typeCreateTaskEditor.CREATE_FROM_CRATCH)">
+        Create from scratch
+      </button>
+    </div>
+  </trudi-modal>
+</ng-container>
+
+<ng-container *ngIf="popupState === typeCreateTaskEditor.CREATE_FROM_CRATCH">
+  <create-from-scratch
+    [visible]="popupState === typeCreateTaskEditor.CREATE_FROM_CRATCH"
+    (onBack)="handleBack()"
+    (onCancel)="onCancel()">
+  </create-from-scratch>
+</ng-container>
+
+<ng-container *ngIf="popupState === typeCreateTaskEditor.CREATE_FROM_TEMPLATE">
+  <create-from-template
+    [visible]="popupState === typeCreateTaskEditor.CREATE_FROM_TEMPLATE"
+    (onBack)="handleBack()"
+    (onCancel)="onCancel()">
+  </create-from-template>
+</ng-container>

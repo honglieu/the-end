@@ -1,0 +1,188 @@
+<trudi-modal
+  [visible]="showModal"
+  [modelWidth]="624"
+  [autoFocus]="null"
+  [closable]="true"
+  (onCancel)="onQuit()"
+  className="save-conversation-to-pt"
+  [title]="title">
+  <ng-container *ngIf="!isRmEnvironment">
+    <ng-template #headerModal>
+      <div class="header-save-conversation-to-pt">
+        <trudi-icon icon="ptLogo" [style]="{height: 20}"></trudi-icon>
+        <div class="title">Assign property</div>
+      </div>
+    </ng-template>
+  </ng-container>
+  <div
+    #selectTaskAndProperty
+    [ngStyle]="{'overflow-y': calcHeight > 550 ? 'auto' : 'inherit'}"
+    class="properties__container">
+    <div class="badge-warning">
+      <trudi-icon [icon]="'iconWarningRed'" [svgClass]="'size-24'">
+      </trudi-icon>
+      <div class="badge-title">
+        <div class="box-title">
+          @if (titleWarning) {
+          <div class="title">{{titleWarning}}</div>
+          } @if (subTitleWarning) {
+          <div class="sub-title">{{subTitleWarning}}</div>
+          }
+        </div>
+      </div>
+    </div>
+    <div id="form" [formGroup]="userForm">
+      <div formArrayName="listConversationNotMove" class="card-info">
+        <div
+          *ngFor="let item of listConversation.listConversationNotMove; let i = index;"
+          [formGroupName]="i"
+          class="card-info-wrapper">
+          <div class="card-info-container">
+            <div class="user-info">
+              <div class="user-info__text-content">
+                <div *ngIf="item.isUrgent" class="urgent">Urgent</div>
+                @if (item.createdFrom === ECreatedFrom.VOICE_MAIL &&
+                !item.email) {
+                <div class="text-content">
+                  {{item.categoryName || item.title}} •
+                  {{item.participants?.[0]?.phoneNumber | phoneNumberFormat}}
+                </div>
+                } @else if ([EConversationType.SMS,
+                EConversationType.WHATSAPP].includes(item.conversationType) ) {
+                @if (userRaiseMsg?.showUserName) {
+                <div
+                  class="text-content"
+                  [innerHTML]="userRaiseMsg | contactTitleByConversationProperty: contactTitleVariable"></div>
+                } @else {
+                <div
+                  class="text-content"
+                  [innerHTML]="smsPhoneNumber | phoneNumberFormat"></div>
+                } } @else if (item.conversationType ===
+                EConversationType.MESSENGER) {
+                <div class="text-content">{{item?.name}}</div>
+                } @else {
+                <div class="text-content">
+                  {{item.categoryName || item.title}}
+                </div>
+                }
+                <div class="user-info__checkbox">
+                  <trudi-checkbox
+                    type="circle"
+                    (change)="handleCheckbox(i, $event)"
+                    formControlName="isChecked"></trudi-checkbox>
+                </div>
+              </div>
+            </div>
+            <div class="user-info">
+              <div class="user-info__message">
+                <trudi-icon
+                  *ngIf="!hideIconMessage"
+                  [icon]="item.messageComeFrom | inboxIcon"
+                  svgClass="size-20"></trudi-icon>
+                <div class="message-content">{{item.textContent}}</div>
+                <div
+                  *ngIf="!!item?.attachmentCount"
+                  class="icon-attachments"
+                  [ngClass]="{'msg': isConversationOfMsg}"
+                  nz-tooltip
+                  [nzTooltipTitle]="attachmentTooltipText[i]">
+                  <trudi-icon
+                    icon="attachments"
+                    class="d-flex align-items-center"></trudi-icon>
+                  <span> {{ item.attachmentCount }} </span>
+                </div>
+                <div
+                  *ngIf="!!item?.scheduleMessageCount"
+                  class="icon-attachments"
+                  [ngClass]="{'msg': isConversationOfMsg}"
+                  nz-tooltip
+                  [nzTooltipTitle]="scheduleMessageTooltipText[i]">
+                  <trudi-icon
+                    icon="timeIcon"
+                    class="d-flex align-items-center icon"></trudi-icon>
+                  {{ item.scheduleMessageCount }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="user-info">
+            <div class="search-box" id="property-select">
+              <label class="user-info__label">Select property</label>
+              <ng-select
+                formControlName="propertyId"
+                [class.ng-selected]="inputFocused"
+                id="property-list"
+                [items]="listOfPeopleInSelectBox"
+                bindValue="id"
+                [ngClass]="{'disabled-property': isDisabledProperty[i], 'red-border': isRequired(i) && submitted}"
+                [class.empty-value-search]="searchInputEmpty"
+                bindLabel="streetline"
+                [searchable]="true"
+                [clearable]="true"
+                [searchFn]="searchPeople"
+                [virtualScroll]="true"
+                [dropdownPosition]="dropdownPosition[i]"
+                (change)="onPeopleSelectChanged($event, i)"
+                (open)="isOpen()"
+                notFoundText="No results found"
+                data-e2e="select-property-dropdown"
+                [readonly]="isDisabledProperty[i]">
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-search="searchTerm">
+                  <div class="y-center justify-content-between flex-1">
+                    <div class="y-center gap-8">
+                      <span
+                        [ngOptionHighlight]="search || ''"
+                        [title]="item.streetline"
+                        class="white-space-normal"
+                        [ngClass]="{'selected-property': item.id === crtUser?.id}"
+                        >{{item.streetline}}</span
+                      >
+                      <div
+                        class="property-tree y-center gap-4"
+                        *ngIf="isRmEnvironment && item.manager">
+                        <span class="property-tree-name"
+                          >{{item?.manager?.firstName}}
+                          {{item?.manager?.lastName}}</span
+                        >
+                      </div>
+                    </div>
+                    <trudi-icon
+                      icon="checkSuccess"
+                      *ngIf="selectedProperty[i] && selectedProperty[i].propertyId === item.id"
+                      svgClass="size-16"></trudi-icon>
+                  </div>
+                </ng-template>
+              </ng-select>
+              <div
+                *ngIf="isRequired(i) && submitted"
+                class="wrap-error-des y-center gap-4">
+                <trudi-icon svgClass="size-12" icon="errorBgRed"></trudi-icon>
+                <span class="required-field">Required field</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="showRequired" class="required">
+      <trudi-icon svgClass="size-12" icon="errorBgRed"></trudi-icon>
+      <span class="required-field">Select at least an option to continue</span>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div class="d-flex justify-content-end gap-12">
+      <button
+        trudi-btn
+        size="large"
+        variant="filled"
+        [disabled]="false"
+        class="trudi-btn trudi-btn-large ml-auto"
+        (click)="onNext()">
+        {{actionButton}}
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

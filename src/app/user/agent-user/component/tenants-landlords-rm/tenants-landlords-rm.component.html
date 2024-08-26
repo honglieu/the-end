@@ -1,0 +1,20 @@
+<ng-container *ngIf="isRmEnvironment">
+  <div #tenantOwnerHeader>
+    <header-filter-agent-user
+      (selectedEventFilter)="handleItemsSelected($event)">
+    </header-filter-agent-user>
+  </div>
+</ng-container>
+
+<list-property-contact-view
+  (handleRefreshList)="handleRefreshData()"
+  [typePage]="typePage.TENANTS_LANLORDS_RM"
+  [listAgentUserProperties]="listAgentUserProperties"
+  [totalItems]="totalItems"
+  [pageIndex]="pageIndex"
+  [totalPages]="totalPages"
+  [isLoadingMore]="isLoadingMore"
+  [isLoading]="isLoading"
+  [agentListLength]="agentListLength"
+  [increaseHeaderHeight]="increaseHeaderHeight">
+</list-property-contact-view>

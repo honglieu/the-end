@@ -1,0 +1,30 @@
+<resizable-modal-popup
+  *ngIf="isShowSelectEventPopup"
+  [modalId]="modalId"
+  [show]="isShowSelectEventPopup"
+  [showTitle]="true"
+  [title]="'Select events'"
+  [subTitle]="subTitle"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="660"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [footerTemplate]="footer"
+  (onCancel)="closePopup()"
+  [isCustomMoveable]="true"
+  class="custom-event-modal-confirm-button">
+  <select-event-popup *ngIf="isShowSelectEventPopup"> </select-event-popup>
+  <ng-template #footer>
+    <div class="d-flex custom-event-modal-confirm-button-footer">
+      <button
+        data-e2e="task-details-events-widget-plus-button"
+        trudi-btn
+        [disabled]="isConsole || isArchiveMailbox"
+        (click)="handleSelectEvent()">
+        Confirm
+      </button>
+    </div>
+  </ng-template>
+</resizable-modal-popup>

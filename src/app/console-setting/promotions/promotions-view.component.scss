@@ -1,0 +1,28 @@
+@import 'function';
+@import 'function';
+.promotions-wrapper {
+  margin: 32px 32px 22px 32px;
+}
+
+:host ::ng-deep {
+  .rwd-table td,
+  th {
+    border: none !important;
+  }
+  .ant-table-thead {
+    tr {
+      th {
+        &::before {
+          position: relative !important;
+        }
+      }
+    }
+  }
+
+  .ant-table-column-sorters {
+    justify-content: left;
+    .ant-table-column-title {
+      flex: none;
+    }
+  }
+}

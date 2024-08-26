@@ -1,0 +1,90 @@
+<trudi-step
+  [model]="model"
+  (onProcess)="enableProcess()"
+  [showIconTitle]="true"
+  [buttonKey]="buttonKey"
+  icon="checklist"></trudi-step>
+
+<resizable-modal-popup
+  *ngIf="isShowChecklist"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [closable]="true"
+  [okText]="'Save'"
+  [title]="'To do'"
+  [hiddenCancelBtn]="true"
+  [show]="isShowChecklist"
+  [draggable]="true"
+  [resizable]="false"
+  [hasBackdrop]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [isShowFooter]="true"
+  (onCancel)="handleCloseModal()"
+  (onOk)="handleSave()"
+  (triggerEventScroll)="handleEventScroll()"
+  [dataE2E]="'checklist-note-modal-save-button'"
+  [isCustomMoveable]="true"
+  class="check-list-wrapper"
+  [disableOkBtn]="disableOkBtn || isUnSupportFile || isOverFileSize">
+  <div [formGroup]="checkListForm" class="check-list-item content">
+    <ng-container *ngIf="!model?.fields?.stepContent else hasNoteContent">
+      <div class="check-list-no-content">
+        <p class="step-name">{{model.name}}</p>
+      </div>
+    </ng-container>
+    <ng-template #hasNoteContent>
+      <div class="check-list-content">
+        <p class="step-name">{{model.name}}</p>
+        <p [innerHTML]="stepContent"></p>
+      </div>
+    </ng-template>
+    <div class="lease-note-todo">
+      <p class="title">Leave a note on this to-do</p>
+    </div>
+    <tiny-editor
+      [maxHeight]="500"
+      [minHeight]="80"
+      [disabled]="isDisabled"
+      [text]="prefillNote"
+      (value)="handleChangeValue($event)"
+      [fromCheckListStep]="true"
+      [fromCommunicationStep]="false"
+      [isShowPreviewAttachment]="true"
+      [isShowEmbedCodeOptionsFunction]="false"
+      [isShowEmailSignature]="false"
+      [listOfFiles]="listOfFiles"
+      (addFileCRM)="handleAddFileCrm()"
+      (addReiForm)="handleAddFileREIForm()"
+      (addContactCard)="handleAddContactCards()"
+      (dropFile)="handleRemoveFile($event)"
+      [showInsertLink]="false"
+      [maxRemainCharacter]="255"
+      [countCharacterUp]="true"
+      [scrolled]="scrolled"
+      [showAddPolicyPopover]="false"
+      [enableAiGenerateMsgCopy]="false"
+      #editorContainer></tiny-editor>
+  </div>
+</resizable-modal-popup>
+
+<trudi-add-contact-card
+  *ngIf="popupState === ENotePopup.ADD_CONTACT_CARD"
+  [visible]="popupState === ENotePopup.ADD_CONTACT_CARD"
+  [configs]="addContactCardConfig"
+  [form]="checkListForm"
+  [openFrom]="EContactCardOpenFrom.CHECK_LIST"
+  (addContactCard)="handleAddContactCards()"
+  (onClose)="setPopupState(null)"
+  (onTrigger)="handleCloseAddContactCard()">
+</trudi-add-contact-card>
+
+<upload-from-crm
+  *ngIf="popupState === ENotePopup.ADD_FILE_CRM"
+  [backFromCheckList]="true"
+  [configs]="addContactCardConfig"
+  (onTrigger)="onTriggerAddFilesFromCrm($event)"></upload-from-crm>
+
+<trudi-rei-form-card
+  *ngIf="popupState === ENotePopup.ADD_REI_FORM"></trudi-rei-form-card>

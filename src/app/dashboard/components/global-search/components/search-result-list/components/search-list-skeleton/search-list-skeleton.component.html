@@ -1,0 +1,30 @@
+<div
+  *ngFor="let _ of [].constructor(5)"
+  class="search-result-skeleton-row-wrapper">
+  <div
+    class="search-result-skeleton-row-container d-flex gap-2 flex-dir-column">
+    <div class="from-skeleton d-flex justify-content-between">
+      <div class="left w-100 d-flex gap-20">
+        <nz-skeleton [nzParagraph]="false" [nzActive]="true"></nz-skeleton>
+        <nz-skeleton [nzParagraph]="false" [nzActive]="true"></nz-skeleton>
+        <nz-skeleton [nzParagraph]="false" [nzActive]="true"></nz-skeleton>
+      </div>
+      <nz-skeleton
+        class="right"
+        [nzParagraph]="false"
+        [nzActive]="true"></nz-skeleton>
+    </div>
+    <div class="message-skeleton d-flex gap-10">
+      <nz-skeleton [nzParagraph]="false" [nzActive]="true"></nz-skeleton>
+      <nz-skeleton [nzParagraph]="false" [nzActive]="true"></nz-skeleton>
+      <nz-skeleton [nzParagraph]="false" [nzActive]="true"></nz-skeleton>
+    </div>
+    <div class="contact-file-skeleton d-flex">
+      <nz-skeleton [nzParagraph]="false" [nzActive]="true"></nz-skeleton>
+    </div>
+    <div class="task-skeleton d-flex gap-20">
+      <nz-skeleton [nzParagraph]="false" [nzActive]="true"></nz-skeleton>
+      <nz-skeleton [nzParagraph]="false" [nzActive]="true"></nz-skeleton>
+    </div>
+  </div>
+</div>

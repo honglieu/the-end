@@ -1,0 +1,48 @@
+<trudi-modal
+  className="modal-encourage-user"
+  [visible]="visible"
+  [modelWidth]="680"
+  [autoFocus]="null"
+  (onCancel)="handleCancel()"
+  title="Add account"
+  subTitle="">
+  <div class="modal-encourage">
+    <span>Let’s get started with adding your email account 👏. </span>
+    <span
+      >This process can take between 15 minutes and several hours, depending on
+      the number of emails in your inbox.
+    </span>
+    <span
+      >If you have a large inbox we recommend reducing your inbox size before
+      adding your account:
+    </span>
+  </div>
+  <div class="recommendations">
+    <span>
+      <trudi-icon icon="tickGreen"> </trudi-icon>
+      Archive any emails that are no longer relevant.
+    </span>
+    <span>
+      <trudi-icon icon="tickGreen"> </trudi-icon>
+      Move as many emails as possible into folders.
+    </span>
+    <span>
+      <trudi-icon icon="tickGreen"> </trudi-icon>
+      Aim for under 1,000 emails in your inbox.
+    </span>
+  </div>
+  <ng-template #footerModal>
+    <div class="d-flex justify-content-end gap-12">
+      <button
+        trudi-btn
+        [disabled]="isConsole"
+        size="large"
+        variant="filled"
+        class="trudi-btn trudi-btn-large ml-auto"
+        (click)="handleNext()"
+        data-e2e="add-account-get-started-button">
+        Get started
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

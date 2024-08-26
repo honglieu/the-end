@@ -1,0 +1,187 @@
+@import 'function';
+
+@mixin ant-picker-cell {
+  padding: 9px 0;
+  height: auto;
+
+  &-in-view {
+    &::before {
+      display: none;
+    }
+
+    .ant-picker-cell-inner {
+      height: auto;
+      width: auto;
+      padding: 6px 21.5px;
+      border-radius: 8px;
+      line-height: normal;
+      @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 600);
+      &:hover {
+        background: var(--gray-200);
+      }
+    }
+
+    &.ant-picker-cell-selected {
+      &::before {
+        display: none;
+      }
+
+      .ant-picker-cell-inner {
+        background: var(--bg-neutral-tonal-strongest);
+        color: var(--fg-neutral-normal);
+      }
+    }
+  }
+}
+
+@mixin ant-picker-super-icon($name) {
+  background-image: url('/assets/icon/#{$name}.svg');
+  background-repeat: no-repeat;
+  padding: 0.8rem;
+  &::after,
+  &::before {
+    display: none;
+  }
+}
+
+@mixin ant-picker-header {
+  border-bottom: none;
+  padding: 12px 12px 0;
+  display: flex;
+  align-items: center;
+  button {
+    line-height: unset;
+    &.ant-picker-header-super {
+      &-next-btn,
+      &-prev-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 4px 0;
+        min-height: 32px;
+        min-width: 32px;
+        &:hover {
+          background: var(--gray-200);
+          border-radius: 100%;
+        }
+        .ant-picker-super {
+          &-prev-icon {
+            transform: rotate(0deg);
+            @include ant-picker-super-icon('arrow-left');
+          }
+
+          &-next-icon {
+            transform: rotate(0deg);
+            @include ant-picker-super-icon('arrow-right');
+          }
+        }
+      }
+    }
+  }
+
+  .ant-picker-header-view {
+    @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 600);
+
+    button:hover {
+      color: var(--fg-neutral-normal);
+    }
+  }
+}
+
+:host ::ng-deep {
+  nz-date-picker {
+    .ant-picker-month-panel,
+    .ant-picker-year-panel {
+      width: 268px;
+      .ant-picker-body {
+        padding: 4px 12px 12px;
+      }
+
+      month-table,
+      year-table {
+        .ant-picker {
+          &-content {
+            height: auto;
+          }
+
+          &-cell {
+            @include ant-picker-cell();
+          }
+        }
+      }
+    }
+    decade-table {
+      .ant-picker-cell {
+        @include ant-picker-cell();
+        &-in-view {
+          .ant-picker-cell-inner {
+            padding: 6px;
+          }
+        }
+      }
+    }
+    month-header,
+    year-header,
+    decade-header {
+      .ant-picker-header {
+        @include ant-picker-header();
+      }
+    }
+  }
+}
+
+.wrapper-month-picker {
+  @include breakpoint-range(small, medium) {
+    min-width: 210px !important;
+  }
+  position: relative;
+  .wrapper-btn {
+    .btn-month-picker {
+      background: none;
+      border-radius: 8px;
+      @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 600);
+      border: none;
+      padding: 6px 16px;
+      margin: 0 4px;
+      &:hover {
+        background: var(--gray-200);
+      }
+      &.active,
+      &:active {
+        background: var(--bg-neutral-tonal-strongest);
+      }
+      &.btn-icon {
+        min-height: 32px;
+        min-width: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 100%;
+        padding: 0;
+      }
+    }
+
+    .date-range-btn {
+      border: 1px solid var(--border-neutral-dark);
+    }
+  }
+  .trudi-month-picker {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    z-index: 10;
+  }
+
+  .trudi-month-icon {
+    width: 20px;
+  }
+}
+
+:host ::ng-deep {
+  .ant-picker-panel {
+    border: none;
+    .ant-picker-footer {
+      border: none;
+    }
+  }
+}

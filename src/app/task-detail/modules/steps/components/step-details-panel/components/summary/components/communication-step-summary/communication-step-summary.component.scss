@@ -1,0 +1,39 @@
+:host {
+  .preview-email-btn {
+    color: var(--fg-brand);
+    cursor: pointer;
+  }
+
+  .recipient_wrapper {
+    cursor: pointer;
+    max-width: 100%;
+    .recipient {
+      width: fit-content;
+      max-width: 100%;
+      display: flex;
+      gap: 8px;
+      background-color: var(--bg-base);
+      padding: 4px 12px;
+      border: 1px solid var(--border-neutral-dark);
+      border-radius: 1px;
+
+      .to-cc-bcc {
+        display: flex;
+        min-width: 0;
+
+        .to {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .cc-bcc {
+          min-width: fit-content;
+        }
+      }
+    }
+    .schedule {
+      opacity: 0.75;
+    }
+  }
+}

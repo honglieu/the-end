@@ -1,0 +1,26 @@
+@import 'function';
+
+::ng-deep {
+  .trudi-btn-danger,
+  .trudi-btn-tertiary {
+    &:focus {
+      box-shadow: none !important;
+    }
+  }
+
+  nz-modal-container {
+    .ant-modal.confirm-delete {
+      .ant-modal-content {
+        .ant-modal-header {
+          .ant-modal-title {
+            .wrapper-title {
+              .title {
+                @include fontSetup(var(--gray-950), 2rem, 2.8rem, normal, 600);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

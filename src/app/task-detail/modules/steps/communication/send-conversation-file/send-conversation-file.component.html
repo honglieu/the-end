@@ -1,0 +1,29 @@
+<trudi-step
+  [model]="model"
+  [showIconTitle]="false"
+  [hideProcessLine]="false"
+  [propertyTreeStep]="false"
+  [buttonKey]="buttonKey"
+  (onProcess)="enableProcess()"></trudi-step>
+
+<check-box-pop-up
+  *ngIf="popupState.isSelectFiles"
+  [modalId]="modalId"
+  [checkBoxList]="listOfFile"
+  [text]="selectFileText"
+  [hasBack]="hasConfirmEssential"
+  [isMandatory]="false"
+  [isRequired]="isRequired"
+  (onClose)="onQuit()"
+  (getCheckedList)="onGetSelectedFile($event)"
+  (onBack)="onBack()"></check-box-pop-up>
+
+<!-- <trudi-send-msg-v2
+  *ngIf="popupState.isTrudiSendMessage"
+  [configs]="sendMessageConfigs"
+  [rawMsg]="model?.fields.msgBody"
+  [listOfFiles]="selectedFile"
+  (onBack)="onBackFromSendMsg()"
+  (onQuit)="onConfirmClose()"
+  (onSendMsg)="onSendMsg($event)">
+</trudi-send-msg-v2> -->

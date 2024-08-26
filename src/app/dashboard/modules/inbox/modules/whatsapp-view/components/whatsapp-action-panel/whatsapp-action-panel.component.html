@@ -1,0 +1,24 @@
+<div
+  [class.whatsapp-action-panel-expanded]="isExpanded"
+  class="whatsapp-action-panel"
+  [@collapseModal]="isExpanded ? 'expanded' : 'collapsed'">
+  <span class="white-overlay"></span>
+  <div class="whatsapp-action-panel-header" (click)="isExpanded = !isExpanded">
+    <div class="mr-4">
+      <trudi-icon svgClass="size-24" icon="aiSummaryStar"></trudi-icon>
+    </div>
+    <div class="whatsapp-action-panel-description">Conversation summary</div>
+    <button
+      trudi-btn
+      variant="ghost"
+      size="medium"
+      btnType="neutral"
+      shape="circle"
+      class="whatsapp-action-panel-arrow-btn">
+      <trudi-icon svgClass="size-20" icon="arrowDetail"></trudi-icon>
+    </button>
+  </div>
+  <div class="whatsapp-action-panel-body">
+    <!-- Content goes here -->
+  </div>
+</div>

@@ -1,0 +1,40 @@
+<ng-container appRendered>
+  <div class="tab-group">
+    <div class="scrollable-tabs-container">
+      <div class="left-arrow" #leftArrowContainer>
+        <trudi-icon
+          icon="arrowLeftV2"
+          svgClass="size-14"
+          class="icon"
+          viewBox="auto"></trudi-icon>
+      </div>
+      <div class="tab-group-header" #tabsList>
+        <ng-container *ngFor="let tab of tabPanels; index as idx">
+          <div
+            #btnCurrentTab
+            [tabIndex]="0"
+            (keyup.enter)="btnCurrentTab.click()"
+            class="tab-group-header-label text-ellipsis"
+            [ngClass]="{'focused': idx === currentTabIndex}"
+            (click)="setCurrentTabIndex($event, idx)">
+            {{ tab.tabTitle }}
+            <ng-container *ngIf="tab.isError">
+              <trudi-icon icon="errorInputIcon"></trudi-icon>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+      <div class="right-arrow" #rightArrowContainer>
+        <trudi-icon
+          icon="arrowRightV2"
+          svgClass="size-14"
+          class="icon"
+          viewBox="auto"></trudi-icon>
+      </div>
+    </div>
+
+    <div class="tab-group-header-content">
+      <ng-content> </ng-content>
+    </div>
+  </div>
+</ng-container>

@@ -1,0 +1,82 @@
+<trudi-modal
+  *ngIf="visible"
+  [(visible)]="visible"
+  [modelWidth]="472"
+  [autoFocus]="null"
+  (onCancel)="handleCancel()"
+  title="Create a holiday"
+  subTitle="">
+  <div class="component-wrapper big-size auto-height">
+    <div>
+      <div class="wrapper" #wrapper>
+        <div class="body">
+          <div [formGroup]="addHolidayForm">
+            <div class="title">Title</div>
+            <div class="input">
+              <input
+                [class.error]="isFieldValid('reason') || getReson.invalid && getReson.dirty"
+                type="text"
+                placeholder="Add reason"
+                formControlName="reason" />
+              <ng-container
+                *ngIf="isFieldValid('reason') || getReson.invalid && getReson.dirty">
+                <div class="content-require d-flex align-items-center">
+                  <img
+                    src="/assets/images/icons/error-bg-red.svg"
+                    class="sync-icon"
+                    alt=""
+                    srcset="" />
+                  <span class="require-text">Required field</span>
+                </div>
+              </ng-container>
+            </div>
+            <div class="group-field d-flex">
+              <div class="field-item mt-12">
+                <div class="title">Date</div>
+                <trudi-date-picker
+                  [defaultValue]="dateHoliday"
+                  [trudiStatus]="datePickerStatus?.status"
+                  (trudiOnOpenChange)="openDatePicker($event)"
+                  (trudiOnOk)="handleDateHoliday($event)">
+                </trudi-date-picker>
+                <div
+                  class="content-require d-flex align-items-center"
+                  *ngIf="datePickerStatus?.type === 'required'">
+                  <img
+                    src="/assets/images/icons/error-bg-red.svg"
+                    class="sync-icon"
+                    alt=""
+                    srcset="" />
+                  <span class="require-text"
+                    >{{datePickerStatus?.message}}</span
+                  >
+                </div>
+              </div>
+              <div class="field-item mt-12">
+                <div class="title">Repeat</div>
+                <div class="input">
+                  <ng-select
+                    class="share-ng-select-checked"
+                    #selectSender
+                    bindLabel="label"
+                    bindValue="value"
+                    [searchable]="false"
+                    [clearable]="true"
+                    [items]="repeatList"
+                    formControlName="repeat"
+                    notFoundText="No states found">
+                  </ng-select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #footerModal>
+      <button trudi-btn (click)="handleConfirm()">
+        <span class="btn-text">Confirm</span>
+      </button>
+    </ng-template>
+  </div>
+</trudi-modal>

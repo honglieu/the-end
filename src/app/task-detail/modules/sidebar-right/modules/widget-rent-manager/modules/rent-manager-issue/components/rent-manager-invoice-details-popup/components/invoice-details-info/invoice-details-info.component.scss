@@ -1,0 +1,118 @@
+@import 'function';
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-l, 16px);
+  padding: var(--spacing-l, 16px);
+  border-radius: 8px;
+  border: 1px solid var(--border-neutral-dark, #d8dcdf);
+
+  &__title {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      14px,
+      20px,
+      normal,
+      600
+    );
+    font-variant-numeric: lining-nums tabular-nums;
+    /* 142.857% */
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl, 20px);
+
+    .invoice-type {
+      max-width: 168px;
+    }
+  }
+
+  table,
+  tbody,
+  tr {
+    width: 100%;
+  }
+
+  table.summary {
+    td {
+      @include fontSetup(
+        var(--fg-neutral-stronger, #3d3d3d),
+        14px,
+        20px,
+        normal,
+        500
+      );
+      /* 142.857% */
+      width: 50%;
+      height: 48px;
+
+      &:last-child {
+        text-align: right;
+      }
+    }
+
+    td:last-child:not(.balance-title, .balance-due) {
+      @include fontSetup(
+        var(--fg-neutral-stronger, #3d3d3d),
+        14px,
+        20px,
+        normal,
+        400
+      );
+      text-align: right;
+
+      /* 142.857% */
+    }
+
+    td.balance-due {
+      @include fontSetup(
+        var(--fg-neutral-strongest, #202020),
+        18px,
+        28px,
+        normal,
+        600
+      );
+      text-align: right;
+      /* 155.556% */
+    }
+  }
+}
+
+.form-label {
+  @include fontSetup(
+    var(--fg-neutral-normal, #646464),
+    14px,
+    16px,
+    normal,
+    400
+  );
+  /* 133.333% */
+  margin-bottom: 6px;
+}
+
+:host {
+  .trudi-picker {
+    height: 40px !important;
+    max-width: none;
+  }
+
+  ::ng-deep trudi-number-field {
+    display: flex;
+    flex-direction: column;
+  }
+
+  ::ng-deep .trudi-textarea-wrapper {
+    height: 76px !important;
+
+    textarea {
+      height: 100% !important;
+    }
+  }
+
+  ::ng-deep label.trudi-checkbox {
+    justify-content: center;
+  }
+}

@@ -1,0 +1,128 @@
+@import 'function';
+
+.picture-profile-wrapper {
+  margin: 20px;
+  .header {
+    position: relative;
+    margin: unset;
+
+    .title-text {
+      margin: 30px 0;
+      @include fontSetup(var(--gray-700), 16px, 24px, normal, 600);
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      cursor: pointer;
+      background: var(--gray-200);
+      text-align: center;
+      border: none;
+      border-radius: 50%;
+    }
+  }
+
+  .body {
+    margin: 11px auto 0px auto;
+    padding-bottom: 91px;
+    .picture-wrapper {
+      position: relative;
+      width: 310px;
+      height: 260px;
+      background-color: var(--white);
+      .upload-button {
+        position: absolute;
+        top: 34px;
+        right: 68px;
+        padding: 11px;
+        cursor: pointer;
+        z-index: 9999;
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background-color: var(--white);
+      }
+
+      .drag-button {
+        position: absolute;
+        bottom: 6px;
+        right: 80px;
+        z-index: 9999;
+        cursor: default;
+        padding: 4px 12px;
+        background: var(--white);
+        border-radius: 8px;
+        .drag-text {
+          margin-left: 7px;
+          @include fontSetup(var(--brand-500), 12px, 20px, normal, 600);
+        }
+      }
+
+      .slider-wrapper {
+        gap: 14px;
+        margin-top: 34px;
+        .minus-button,
+        .plus-button {
+          cursor: pointer;
+          background-color: initial !important;
+          border: none;
+        }
+
+        input {
+          visibility: hidden;
+        }
+      }
+    }
+  }
+
+  .button-wrapper {
+    margin-bottom: 30px;
+
+    .button-save {
+      border: none;
+      cursor: pointer;
+      width: 388px;
+      height: 48px;
+      border-radius: 12px;
+      padding: 8px 71px;
+      background-color: var(--brand-500);
+      @include fontSetup(var(--white), 14px, 20px, normal, 600);
+    }
+  }
+}
+
+image-cropper::ng-deep {
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  .ngx-ic-overlay,
+  .ngx-ic-cropper {
+    pointer-events: none;
+    top: 30px !important;
+    left: 60px !important;
+    margin-left: 0 !important;
+    &::after {
+      border: none !important;
+    }
+  }
+  .ngx-ic-source-image {
+    object-fit: inherit;
+    visibility: visible !important;
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+#croppie {
+  width: 310px;
+  height: 260px;
+  margin: 0 auto;
+}
+
+#profileAvatar {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1/1;
+}

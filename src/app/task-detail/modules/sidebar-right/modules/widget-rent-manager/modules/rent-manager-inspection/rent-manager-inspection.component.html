@@ -1,0 +1,52 @@
+<trudi-modal
+  [visible]="inspectionPopupState === EInspectionPopupState.INSPECTION_RM_POPUP"
+  [autoFocus]="false"
+  [modelWidth]="1000"
+  [hiddenCancelBtn]="true"
+  (onCancel)="handleAfterClose()">
+  <ng-template #headerModal>
+    <div class="d-flex align-items-center">
+      <div class="flex-1">
+        <img src="assets/images/rent-manager-icon.png" class="size-icon" />
+      </div>
+      <div class="title flex-1 w-100">
+        <span>Inspection</span>
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="rent-manager-inspection-popup-body" cdkScrollable>
+    <inspection-rm-form></inspection-rm-form>
+  </div>
+
+  <ng-template #footerModal>
+    <div class="d-flex align-items-center justify-content-between w-100">
+      <div class="d-flex align-items-center">
+        <sync-status
+          [syncStatus]="(syncStatus$ | push)?.syncStatus"
+          [lastTimeSynced]="(syncStatus$ | push)?.syncDate"></sync-status>
+      </div>
+      <div class="d-flex" [style.gap.px]="12">
+        <button
+          *ngIf="isOpenFormUpdateStep"
+          trudi-btn
+          size="large"
+          variant="outlined"
+          btnType="neutral"
+          class="btn-cancel"
+          (click)="handleBack()">
+          <span class="text-btn-back">Back</span>
+        </button>
+        <button
+          trudi-btn
+          size="large"
+          variant="filled"
+          btnType="primary"
+          [disabled]="isDisabled || isConsole || isLoading|| isArchiveMailbox"
+          (click)="handleSyncRM()">
+          <span class="btn-text">Sync to Rent Manager</span>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</trudi-modal>

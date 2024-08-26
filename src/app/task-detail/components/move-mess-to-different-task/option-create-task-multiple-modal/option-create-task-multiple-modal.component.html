@@ -1,0 +1,59 @@
+<ng-container *ngIf="openModal">
+  <trudi-modal
+    [(visible)]="openModal"
+    [modelWidth]="624"
+    (onCancel)="onCancel()"
+    className="task-option-popup"
+    [title]="'Select an option to continue'"
+    subTitle=""
+    [autoFocus]="null">
+    <ng-template #footerModal>
+      <div class="d-flex gap-8">
+        <button
+          trudi-btn
+          btnType="neutral"
+          variant="outlined"
+          class="trudi-btn trudi-btn-tertiary btn-cancel button-size"
+          (click)="handleBackOptionCreateTask()">
+          Back
+        </button>
+        <button
+          trudi-btn
+          [disabled]="!!!option"
+          class="btn-next-task d-flex align-items-center gap-8"
+          (click)="handleNextOptionCreateTask()">
+          Next
+        </button>
+      </div>
+    </ng-template>
+    <div class="select_option--task">
+      <button
+        class="btn-create-task-option"
+        [ngClass]="{'active': option === typeCreateTaskOption.CREATE_NEW_TASK}"
+        (click)="handleChangeOption(typeCreateTaskOption.CREATE_NEW_TASK)">
+        <div class="content_btn_task">
+          <trudi-icon class="item-icon" icon="createNewTask"></trudi-icon>
+          <div>
+            <p>Create new task</p>
+            <span>Create a new task and add messages to this task</span>
+          </div>
+        </div>
+      </button>
+      <button
+        class="btn-create-task-option"
+        [ngClass]="{'active': option === typeCreateTaskOption.BULK_CREATE_TASKS}"
+        (click)="handleChangeOption(typeCreateTaskOption.BULK_CREATE_TASKS)">
+        <div class="content_btn_task">
+          <trudi-icon class="item-icon" icon="bulkMessage"></trudi-icon>
+          <div>
+            <p>Bulk create tasks</p>
+            <span
+              >Create multiple tasks at once - one task for each message
+              selected</span
+            >
+          </div>
+        </div>
+      </button>
+    </div>
+  </trudi-modal>
+</ng-container>

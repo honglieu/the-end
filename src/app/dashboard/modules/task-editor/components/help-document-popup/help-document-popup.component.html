@@ -1,0 +1,44 @@
+<trudi-modal
+  [(visible)]="visible"
+  [modelWidth]="850"
+  (onCancel)="handleCancel()"
+  className="task-editor-help-popup"
+  [title]="helpDocumentTitle"
+  subTitle=""
+  [autoFocus]="null">
+  <div class="help__container">
+    <div
+      class="help__sidebar"
+      [style.overflow-y]="helpDocumentTitle === EHelpDocumentTitle.PROPERTY_TREE_ACTIONS ? 'hidden' : 'auto'"
+      #helpSidebar>
+      <div class="help__sidebar--group" *ngFor="let group of helpDocument">
+        <div *ngIf="group.groupStepsTitle" class="help__sidebar--title">
+          {{group.groupStepsTitle | uppercase}}
+        </div>
+        <div *ngFor="let step of group?.steps" class="help__sidebar--item">
+          <button
+            [ngClass]="{ active: step.title === currentStep.title }"
+            (click)="selectCurrentStep(step)">
+            {{step.title}}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="help__content" #helpContent>
+      <div class="help__content--title">{{currentStep.title}}</div>
+      <div
+        class="help__content--subtitle"
+        [innerHTML]="currentStep.description"></div>
+      <div *ngIf="currentStep.alertText" class="help__content--alert">
+        <trudi-icon icon="blueAlert"></trudi-icon>
+        <div>{{currentStep.alertText}}</div>
+      </div>
+      <img
+        [src]="'/assets/images/illustrations/' + currentStep.illustration"
+        [alt]="currentStep.title" />
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div class="footer-modal-help"></div>
+  </ng-template>
+</trudi-modal>

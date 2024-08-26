@@ -1,0 +1,250 @@
+<div
+  class="info-user-content"
+  [class.task-detail]="openFrom === ETypePage.TASK_DETAIL">
+  <div *ngIf="currentDataUser?.role" class="list-info gap-6 align-items-star">
+    <div class="align-content normal-icon">
+      <trudi-icon icon="userIcon" svgClass="size-16"></trudi-icon>
+    </div>
+    <div class="align-content gap-4">
+      <div class="has-value white-space-nowrap">
+        <span>{{currentDataUser?.role}}</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="currentDataUser?.streetline" class="list-info gap-6">
+    <div class="align-items-start normal-icon">
+      <trudi-icon
+        [icon]="openFrom === ETypePage.TENANTS_PROSPECT ? 'iconBookMark' : 'iconMap'"
+        svgClass="size-16"></trudi-icon>
+    </div>
+    <div class="align-content gap-4">
+      <div class="has-value">{{currentDataUser.streetline}}</div>
+    </div>
+  </div>
+
+  <div class="list-info gap-6 align-items-start">
+    <div class="align-items-start normal-icon">
+      <trudi-icon icon="iconPhoneGray" svgClass="size-16"></trudi-icon>
+    </div>
+    <div class="align-content flex-dir-column">
+      <ng-container
+        *ngIf="!currentDataUser?.phoneNumber && !currentDataUser?.phoneNumbers?.length  && !isExistSecondaryPhones; else hasPhone">
+        <span class="no-value w-100">no phone number</span>
+      </ng-container>
+      <ng-template #hasPhone>
+        <div class="d-flex flex-dir-column gap-4">
+          <ng-container
+            *ngIf="openFrom === ETypePage.TENANTS_PROSPECT || openFrom === ETypePage.LANLORDS_PROSPECT ;else phoneNumber">
+            <ng-container *ngFor="let number of currentDataUser?.phoneNumbers">
+              <div class="align-content gap-4">
+                <div class="has-value white-space-nowrap">
+                  {{number | phoneNumberFormat}}
+                </div>
+              </div>
+            </ng-container>
+          </ng-container>
+          <ng-template #phoneNumber>
+            <div
+              *ngIf="currentDataUser?.phoneNumber"
+              class="has-value white-space-nowrap">
+              {{currentDataUser.phoneNumber | phoneNumberFormat}}
+            </div>
+            <ng-container *ngIf="openFrom === ETypePage.TASK_DETAIL">
+              <div *ngFor="let number of currentDataUser?.mobileNumber">
+                <div class="has-value white-space-nowrap">
+                  {{number | phoneNumberFormat}}
+                </div>
+              </div>
+            </ng-container>
+          </ng-template>
+          <ng-container
+            *ngFor="let secondaryPhone of currentDataUser?.secondaryPhones; let SEIdx = index">
+            <div
+              *ngIf="secondaryPhone.phoneNumber"
+              class="d-inline has-value gap-4 secondary-email relative"
+              [class.cursor-pointer]="!selectUserProperty?.pmNameClick"
+              (click)="$event.stopPropagation()">
+              {{secondaryPhone.phoneNumber | phoneNumberFormat}}
+              <button
+                *ngIf="!selectUserProperty?.pmNameClick"
+                (click)="onDeletePhoneNumber(secondaryPhone)"
+                class="btn-action delete-email"
+                [disabled]="isNotDetectedContact">
+                <trudi-icon
+                  icon="circleDeleteGrey"
+                  [style]="{ 'width.px': 18, 'height.px': 18}"></trudi-icon>
+              </button>
+            </div>
+          </ng-container>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+
+  <div class="list-info gap-6 align-items-start">
+    <div class="align-items-start normal-icon">
+      <trudi-icon icon="mailThin" svgClass="size-16"></trudi-icon>
+    </div>
+    <div class="align-content flex-dir-column">
+      <ng-container
+        *ngIf="!currentDataUser?.email && !isExistSecondaryEmails; else hasEmail">
+        <span class="no-value w-100">no email address</span>
+      </ng-container>
+      <ng-template #hasEmail>
+        <div class="d-flex flex-dir-column gap-4">
+          <div
+            *ngIf="currentDataUser?.email"
+            class="break-all has-value d-inline gap-4 primary-email"
+            [class.cursor-pointer]="openFrom !== ETypePage.TASK_DETAIL">
+            {{currentDataUser?.email}}
+            <ng-container *ngIf="openFrom !== ETypePage.TASK_DETAIL">
+              <button
+                class="add-email btn-action"
+                (click)="onAddEmail(currentDataUser)">
+                <trudi-icon
+                  icon="circlePlusGrey"
+                  [style]="{ 'width.px': 18, 'height.px': 18}"></trudi-icon>
+              </button>
+            </ng-container>
+          </div>
+          <ng-container
+            *ngFor="let secondaryEmail of currentDataUser?.secondaryEmails; let SEIdx = index">
+            <div
+              *ngIf="secondaryEmail?.email"
+              class="break-all d-inline has-value gap-4 secondary-email relative"
+              [class.cursor-pointer]="!selectUserProperty?.pmNameClick"
+              (click)="$event.stopPropagation()">
+              {{secondaryEmail.email}}
+              <button
+                *ngIf="!selectUserProperty?.pmNameClick"
+                PreventButton
+                [attr.data-button-key]="EButtonTask.DELETE_SECONDARY_EMAIL"
+                [attr.data-button-type]="EButtonType.TASK"
+                (leftClick)="onDeleteEmail(secondaryEmail)"
+                class="btn-action delete-email"
+                [disabled]="isNotDetectedContact">
+                <trudi-icon
+                  icon="circleDeleteGrey"
+                  [style]="{ 'width.px': 18, 'height.px': 18}"></trudi-icon>
+              </button>
+            </div>
+          </ng-container>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <div *ngIf="currentDataUser?.landingPage" class="list-info gap-6">
+    <div class="align-content normal-icon">
+      <trudi-icon icon="iconGlobe" svgClass="size-16"></trudi-icon>
+    </div>
+    <div class="d-flex flex-wrap">
+      <div class="align-content gap-4">
+        <a
+          href="{{currentDataUser.landingPage}}"
+          target="_blank"
+          class="globe white-space-nowrap"
+          >{{currentDataUser.landingPage}}</a
+        >
+      </div>
+    </div>
+  </div>
+  <div
+    *ngIf="
+      [ETypePage.TENANTS_LANLORDS, ETypePage.TASK_DETAIL].includes(openFrom) &&
+      (currentDataUser?.inviteStatus || currentDataUser?.iviteSent) &&
+      ![EUserPropertyType.SUPPLIER, EUserPropertyType.OTHER].includes(currentDataUser?.type)
+    "
+    class="list-info gap-6">
+    <div class="align-content">
+      <trudi-icon
+        [icon]="'trudiLogoBorder'"
+        [style]="{ 'width.px': 16, 'height.px': 16}"></trudi-icon>
+    </div>
+    <div class="align-content gap-4">
+      <div
+        class="has-value white-space-nowrap cursor-pointer"
+        nz-tooltip
+        nzTooltipPlacement="top"
+        [nzTooltipTitle]="'Trudi® App invite status'">
+        <ng-container [ngSwitch]="currentDataUser?.inviteStatus">
+          <span *ngSwitchCase="EInviteStatus.ACTIVE"
+            >Last active {{currentDataUser?.lastActivity | formatDate |
+            async}}</span
+          >
+          <span *ngSwitchCase="EInviteStatus.INVITED"
+            >Invited {{currentDataUser?.iviteSent | formatDate | async}}</span
+          >
+          <span *ngSwitchCase="EInviteStatus.UNINVITED">Uninvited</span>
+          <span *ngSwitchCase="EInviteStatus.OFFBOARDED">Offboarded</span>
+          <span *ngSwitchDefault
+            >Invited {{currentDataUser?.iviteSent | formatDate | async}}</span
+          >
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="openFrom === ETypePage.LANLORDS_PROSPECT" class="list-info gap-6">
+    <div class="align-content normal-icon">
+      <trudi-icon
+        [icon]="'homeUnit'"
+        [style]="{ 'width.px': 16, 'height.px': 16}"></trudi-icon>
+    </div>
+    <div class="align-content gap-4">
+      <div class="has-value white-space-nowrap">
+        {{currentDataUser?.numUnit}} {{currentDataUser?.numUnit > 1 ||
+        currentDataUser?.numUnit === '0' ? 'units' : 'unit'}}
+      </div>
+    </div>
+  </div>
+  <ng-container *ngIf="currentDataUser?.userMessengers?.length">
+    <ng-container
+      *ngTemplateOutlet="contactListChannels; context: { contacts: currentDataUser.userMessengers, icon: 'messengerLogo', label: 'name' }">
+    </ng-container>
+  </ng-container>
+  <ng-container *ngIf="currentDataUser?.userWhatsApps?.length">
+    <ng-container
+      *ngTemplateOutlet="contactListChannels; context: { contacts: currentDataUser.userWhatsApps, icon: 'whatsappLogo', label: 'externalId' }">
+    </ng-container>
+  </ng-container>
+</div>
+
+<ng-template
+  #contactListChannels
+  let-contacts="contacts"
+  let-icon="icon"
+  let-label="label">
+  <div class="list-info gap-6">
+    <div class="align-content">
+      <trudi-icon svgClass="size-16" [icon]="icon"></trudi-icon>
+    </div>
+    <div class="align-content flex-dir-column align-items-start gap-4">
+      <ng-container *ngFor="let contact of contacts">
+        <div *ngIf="contact?.[label]" class="has-value white-space-nowrap">
+          <span>{{ contact?.[label] }}</span>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<trudi-modal
+  *ngIf="isShowQuitConfirm"
+  [visible]="isShowQuitConfirm"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  className="trudi-modal-custom">
+  <app-quit-confirm
+    (targetOpenForm)="onTargetOpenForm($event)"
+    (isCloseModal)="showQuitConfirm()"
+    [disable]="isConsole || isArchiveMailbox || isDisconnectedMailbox"
+    (delete)="onDeleteConfirm($event)"></app-quit-confirm>
+</trudi-modal>
+
+<add-email-pop-up
+  [isShowModal]="isShowAddEmail"
+  [APIerr]="addEmailErr"
+  [addEmailTitle]="addEmailTitle"
+  (onCancel)="handleCloseModal()"
+  (onConfirm)="onAddEmailConfirm($event)">
+</add-email-pop-up>

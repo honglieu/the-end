@@ -1,0 +1,20 @@
+<nz-collapse nzAccordion [nzGhost]="true" style="background: #f2f5f7">
+  <nz-collapse-panel
+    *ngFor="let panel of folders"
+    [nzHeader]="panel.name"
+    [nzExpandedIcon]="extraTpl">
+    <ng-container *ngIf="panel.children?.length > 0">
+      <div style="margin-left: 5px">
+        <folder-sidebar-item [folders]="panel.children"> </folder-sidebar-item>
+      </div>
+    </ng-container>
+  </nz-collapse-panel>
+</nz-collapse>
+<ng-template #extraTpl>
+  <div class="wrapper-icon" nz-icon nzType="caret-right">
+    <trudi-icon
+      class="icon-1"
+      icon="iconFolder"
+      [style]="{'width.px': 18, 'height.px': 18}"></trudi-icon>
+  </div>
+</ng-template>

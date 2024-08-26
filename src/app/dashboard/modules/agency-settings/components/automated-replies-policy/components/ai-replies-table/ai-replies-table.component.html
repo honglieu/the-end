@@ -1,0 +1,149 @@
+<div
+  #tableContainer
+  class="ai-replies-table"
+  (scroll)="onEndScroll($event)"
+  [ngClass]="{'table-border': aiReplies?.length}">
+  <div #policiesTable>
+    <nz-table
+      #sortTable
+      [nzData]="aiReplies"
+      nzTableLayout="fixed"
+      [nzFrontPagination]="false"
+      [nzShowPagination]="false">
+      <thead>
+        <tr class="tr-policy">
+          <th
+            *ngFor="let column of listOfColumn"
+            [ngStyle]="{'width': column.width, 'min-width': column.width, 'max-width': column.key === 'questions' ? column.width + 'px' : '100%'}">
+            <div class="d-flex thead-title">
+              {{ column.title }}
+              <trudi-icon
+                class="icon-sort"
+                nz-tooltip
+                [nzTooltipTitle]="column.tooltip"
+                [nzTooltipOverlayClassName]="'icon-sort-policy'"
+                [icon]="column.icon"
+                (click)="column.click(data)"
+                (keydown.enter)="column.click(data)"
+                [tabindex]="column.click ? '0' : '-1'"
+                [style]="{'with.px': 20, 'height.px':20}">
+              </trudi-icon>
+            </div>
+          </th>
+        </tr>
+      </thead>
+      @if(aiReplies.length || isFiltering) {
+      <tbody class="tbody-policy">
+        @if(isFiltering) {
+        <ng-container *ngFor="let _ of [].constructor(10)">
+          <ng-container *ngTemplateOutlet="skeletonRow"></ng-container>
+        </ng-container>
+        } @else { @for ( aiReply of aiReplies; track aiReply; let index =
+        $index) {
+        <tr
+          class="has-data"
+          [ngClass]="{'ai-reply-selected': aiReply?.selected || (selectedAIReply?.id === aiReply?.id && !isDeselectAIReply)}"
+          [tabindex]="'0'"
+          (keydown.enter)="onClickRow($event, aiReply)"
+          (click)="onClickRow($event, aiReply)">
+          <td class="ai-reply-policy">
+            <span
+              class="ai-reply-content"
+              [innerHTML]="aiReply?.name | highlight : searchValue : '' : true"></span>
+          </td>
+
+          <td
+            #replyQuestions
+            class="ai-reply-questions"
+            [ngStyle]="{'width': tableContainer.offsetWidth - 522 + 'px'}">
+            <question-tag
+              [listQuestions]="aiReply.policyQuestions"
+              [canSearching]="true"
+              [widthReplyQuestions]="replyQuestions.offsetWidth - 24"
+              [ngStyle]="{'max-width': tableContainer.offsetWidth - 522 + 'px'}">
+            </question-tag>
+          </td>
+          <td class="ai-reply-created-date">
+            {{aiReply?.createdAt | date : pipeDateFormat }}
+          </td>
+          <td class="ai-reply-created-date">
+            {{aiReply?.updatedAt | date : pipeDateFormat }}
+          </td>
+        </tr>
+        }
+        <ng-container *ngIf="isLoadingNew">
+          <ng-container *ngFor="let _ of rowsSkeletonMoreLoading">
+            <ng-container *ngTemplateOutlet="skeletonRow"></ng-container>
+          </ng-container>
+        </ng-container>
+        }
+      </tbody>
+      } @else {
+      <tbody class="d-flex full-size tbody-empty">
+        <div
+          class="empty-list d-flex flex-dir-column justify-content-center"
+          [ngClass]="{'empty-icon': !search, 'empty-text': search}">
+          <trudi-icon
+            *ngIf="!search"
+            icon="emptyPolicy"
+            [style]="{'width': '140px', 'height': '140px'}"></trudi-icon>
+          <div *ngIf="!search && !isNoPolices" class="empty-description">
+            No result to display
+          </div>
+          <div *ngIf="isNoPolices" class="empty-description">
+            No policies to display
+          </div>
+        </div>
+      </tbody>
+      }
+    </nz-table>
+  </div>
+
+  <ng-template #skeletonRow>
+    <tr class="ai-reply-skeleton">
+      <td class="skeleton-multi-row-container">
+        <div class="skeleton-multi-row">
+          <nz-skeleton
+            [nzActive]="true"
+            [nzRound]="true"
+            [nzParagraph]="{rows: 3, width: ['100%', '70%', '50%']}"
+            [nzTitle]="false"></nz-skeleton>
+        </div>
+      </td>
+      <td class="skeleton-multi-row-container">
+        <div class="skeleton-multi-row d-flex gap-20">
+          <nz-skeleton
+            [ngStyle]="{'flex': 60}"
+            [nzActive]="true"
+            [nzRound]="true"
+            [nzParagraph]="{rows: 2, width: ['100%', '50%']}"
+            [nzTitle]="false"></nz-skeleton>
+          <nz-skeleton
+            [ngStyle]="{'flex': 40}"
+            [nzActive]="true"
+            [nzRound]="true"
+            [nzParagraph]="{rows: 1, width: ['100%']}"
+            [nzTitle]="false"></nz-skeleton>
+        </div>
+      </td>
+      <td class="skeleton-single-row-container">
+        <div class="skeleton-single-row">
+          <nz-skeleton
+            [nzActive]="true"
+            [nzRound]="true"
+            [nzParagraph]="{rows: 3, width: ['100%', '85%', '70%']}"
+            [nzTitle]="false"></nz-skeleton>
+        </div>
+      </td>
+      <td class="skeleton-single-row-container">
+        <div class="skeleton-single-row">
+          <nz-skeleton
+            [nzActive]="true"
+            [nzRound]="true"
+            [nzParagraph]="{rows: 3, width: ['100%', '85%', '70%']}"
+            [nzTitle]="false"></nz-skeleton>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</div>

@@ -1,0 +1,244 @@
+<div class="agent-container">
+  <div class="head-wrapper">
+    <div class="search-wrapper">
+      <trudi-text-field
+        [formControl]="searchField"
+        [size]="'medium'"
+        iconLeft="iconSearch"
+        [placeholder]="'Search'"
+        [clearable]="true">
+      </trudi-text-field>
+    </div>
+
+    <ng-select
+      #selectRoleFilter
+      class="filter-select"
+      [items]="listOfFilterRole"
+      (change)="rolesChanged($event)"
+      [placeholder]="placeholderText"
+      (open)="closeOtherSelects(selectRoleFilter)"
+      (close)="closeSelect()"
+      bindLabel="text"
+      bindValue="id"
+      [searchable]="false"
+      [clearable]="true"
+      [(ngModel)]="selectedRoleFilter">
+      <ng-template ng-label-tmp let-item="item">
+        <span>{{item.text | titlecase}}</span>
+      </ng-template>
+      <ng-template ng-option-tmp let-item="item" let-index="index">
+        <div class="d-flex align-items-center justify-content-between">
+          <span
+            [ngClass]="{'clear-text-color': index === listOfFilterRole?.length - 1}"
+            >{{item.text | titlecase}}</span
+          >
+          <trudi-icon
+            *ngIf="item.id === filterRoleValue?.id && index !== listOfFilterRole?.length - 1"
+            svgClass="size-20"
+            [icon]="'check'"></trudi-icon>
+        </div>
+      </ng-template>
+    </ng-select>
+  </div>
+  <div class="agent-wrapper">
+    <div
+      #agentTable
+      class="agent-table overflow-y-auto scroll-small table-setting-all">
+      <table>
+        <thead>
+          <tr [ngClass]="{'skeleton': loading && isAdmin}">
+            <th class="text-left">Name</th>
+            <th class="text-left">Phone</th>
+            <th class="text-left">Title</th>
+            <th class="text-left">Role</th>
+            <th *ngIf="isAdmin"></th>
+          </tr>
+        </thead>
+        <ng-container *ngIf="loading; else data">
+          <tbody>
+            <tr
+              class="white-row gray-border skeleton"
+              *ngFor="let _ of [].constructor(10)">
+              <td *ngFor="let _ of [].constructor(4)">
+                <nz-skeleton
+                  [nzActive]="true"
+                  [nzRound]="true"
+                  [nzParagraph]="false"></nz-skeleton>
+              </td>
+              <td *ngIf="isAdmin">
+                <trudi-icon
+                  [style]="{ 'width.px': 20, 'height.px': 20}"
+                  class="cursor-pointer"
+                  icon="editIcon">
+                </trudi-icon>
+              </td>
+            </tr>
+          </tbody>
+        </ng-container>
+        <ng-template #data>
+          <tbody [class]="!listOfAgent.length ? 'empty-block' : ''">
+            <ng-container *ngIf="!listOfAgent.length; else notEmptyBlock">
+              <tr class="no-result-text">
+                <div class="header-text">No results found</div>
+                <div class="content-text">
+                  You may want to try using different keywords, check for
+                  correct spelling or adjust your filters.
+                </div>
+              </tr>
+            </ng-container>
+            <ng-template #notEmptyBlock>
+              <ng-container *ngFor="let agent of listOfAgent; let i = index">
+                <tr class="white-row gray-border" [formGroup]="agentEditForm">
+                  <td data-title="Name" class="name-td">
+                    <div class="name-wrapper">
+                      <div class="agency-logo">
+                        <app-user-avatar
+                          [avatar]="agent.googleAvatar"
+                          [user]="agent"
+                          [style]="'width: 32px; height: 32px; font-size: 16px;'"></app-user-avatar>
+                      </div>
+                      <div class="name-email">
+                        <span
+                          class="name"
+                          [innerHTML]="(agent.firstName ? agent.firstName + ' ' + (agent.lastName || '') : agent.lastName) | highlight: searchValue">
+                          {{agent.firstName}} {{agent.lastName}}
+                        </span>
+                        <span class="email"> {{agent.email}} </span>
+                      </div>
+                    </div>
+                  </td>
+                  <td
+                    [ngClass]="{'padding-left-0' : isAdmin && isEditing && rowIndexEditing === i}"
+                    data-title="Phone">
+                    <div class="phone-wrapper">
+                      <ng-container
+                        *ngIf="isAdmin && isEditing && rowIndexEditing === i; else notEditPhoneRow">
+                        <!--<span class="prefix-phone">+</span>-->
+                        <input
+                          [mask]="maskPattern"
+                          appDigitOnly
+                          formControlName="phone"
+                          class="phone-input"
+                          type="text"
+                          maxlength="12"
+                          [ngClass]="{'warning-border': phoneValue.invalid && phoneValue.dirty}" />
+                      </ng-container>
+                      <ng-template #notEditPhoneRow>
+                        {{agent.phoneNumber | phoneNumberFormat}}
+                      </ng-template>
+                    </div>
+                  </td>
+                  <td
+                    [ngClass]="{'padding-left-0' : isAdmin && isEditing && rowIndexEditing === i}"
+                    data-title="Title">
+                    <div class="title-wrapper">
+                      <ng-container
+                        *ngIf="isAdmin && isEditing && rowIndexEditing === i; else notEditTitleRow">
+                        <input
+                          formControlName="title"
+                          class="title-input"
+                          type="text"
+                          maxlength="30"
+                          [ngClass]="{'warning-border': titleValue.invalid && titleValue.dirty}" />
+                      </ng-container>
+                      <ng-template #notEditTitleRow>
+                        <span [innerHTML]="agent.title | highlight: searchValue"
+                          >{{agent.title}}</span
+                        >
+                      </ng-template>
+                    </div>
+                  </td>
+                  <td
+                    data-title="Role"
+                    class="admin"
+                    [ngClass]="{'not-allowed': (isAdmin && isEditingCurrentUser(i))}">
+                    <div class="role-wrapper">
+                      <ng-container
+                        *ngIf="!isAdmin || !(isEditing && rowIndexEditing === i)">
+                        {{ getAgentType(agent.type) }}
+                      </ng-container>
+                      <ng-select
+                        *ngIf="isAdmin && isEditing && rowIndexEditing === i "
+                        #selectRoleFilter
+                        class="share-ng-select filter-select underline-filter"
+                        [ngClass]="(isAdmin && isEditingCurrentUser(i)) ? 'avoid-clicking': ''"
+                        [items]="listOfRole"
+                        (change)="onRoleChanged($event)"
+                        placeholder="{{getAgentType(agent.type)}}"
+                        (open)="closeOtherSelects(selectRoleFilter)"
+                        bindLabel="text"
+                        bindValue="id"
+                        [searchable]="false"
+                        [clearable]="false">
+                        <ng-template ng-label-tmp let-item="item">
+                          <span>{{item.text | titlecase}}</span>
+                        </ng-template>
+                        <ng-template
+                          ng-option-tmp
+                          let-item="item"
+                          let-index="index">
+                          <div
+                            class="d-flex align-items-center justify-content-between">
+                            <span>{{item.text | titlecase}}</span>
+                            <trudi-icon
+                              *ngIf="item.id === roleValue?.value"
+                              svgClass="size-20"
+                              [icon]="'check'"></trudi-icon>
+                          </div>
+                        </ng-template>
+                      </ng-select>
+                    </div>
+                  </td>
+                  <td class="action" *ngIf="isAdmin">
+                    <div class="admin-wrapper">
+                      <ng-container
+                        *ngIf="isEditing && rowIndexEditing === i; else notEdit">
+                        <div class="is-editing d-flex align-items-center gap-8">
+                          <button
+                            (click)="onSaveEdit()"
+                            trudi-btn
+                            variant="tonal"
+                            size="medium"
+                            shape="circle"
+                            [disabled]="!agentEditForm.valid">
+                            <trudi-icon
+                              [style]="{ 'width.px': 20, 'height.px': 20}"
+                              icon="iconDonePrimary"></trudi-icon>
+                          </button>
+                          <button
+                            (click)="onCancelEdit()"
+                            trudi-btn
+                            variant="tonal"
+                            btnType="danger"
+                            size="medium"
+                            shape="circle">
+                            <trudi-icon
+                              [style]="{ 'width.px': 10, 'height.px': 10}"
+                              icon="iconCancelRed"></trudi-icon>
+                          </button>
+                        </div>
+                      </ng-container>
+                    </div>
+                    <ng-template #notEdit>
+                      <button
+                        (click)="onOpenEditMode(i)"
+                        trudi-btn
+                        variant="ghost"
+                        btnType="neutral"
+                        size="medium"
+                        shape="circle">
+                        <trudi-icon
+                          [style]="{ 'width.px': 20, 'height.px': 20}"
+                          icon="editIcon"></trudi-icon>
+                      </button>
+                    </ng-template>
+                  </td>
+                </tr>
+              </ng-container>
+            </ng-template>
+          </tbody>
+        </ng-template>
+      </table>
+    </div>
+  </div>
+</div>

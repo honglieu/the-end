@@ -1,0 +1,203 @@
+<div
+  #sendMsg
+  class="trudi-send-msg-body"
+  cdkScrollable
+  (scroll)="onScroll($event)">
+  <div
+    class="d-flex gap-4 scheduled-wrapper"
+    *ngIf="configs.body.typeSendMsg === 'Schedule for send' && configs.body.timeSchedule">
+    <trudi-icon class="item-checked-icon" icon="send"></trudi-icon>
+    Scheduled at
+    <div class="time-text">
+      {{ configs.body.timeSchedule | formatDateTime:true:true | async |
+      uppercase }}
+    </div>
+  </div>
+  <ng-container
+    *ngFor="let file of listOfFilesReiFormSignRemote; let i = index">
+    <ng-container
+      *ngTemplateOutlet="reiformInfoTemplate; context: { currentReiFormData: file, DATE_FORMAT: (dateFormatPipe$ | async), TIME_FORMAT: TIME_FORMAT }"></ng-container>
+  </ng-container>
+  <div [formGroup]="sendMsgForm">
+    <trudi-form-control>
+      <ng-select
+        class="selected-sender"
+        #ngSelectSender
+        [items]="listSender$ | async"
+        [searchable]="false"
+        [clearable]="true"
+        formControlName="selectedSender"
+        appOutsideClickListener
+        (clickOutside)="handleClickOutsideSender()"
+        [class]="{'input-error-select': selectedSender.invalid && selectedSender.touched}">
+        <ng-template ng-label-tmp let-item="item">
+          <div class="select-item d-flex align-items-center gap-8">
+            <span class="select-item__from">FROM:</span>
+            <ng-container
+              *ngTemplateOutlet="
+              senderTemplate;
+              context: { item: item, item$: item$ }
+            "></ng-container>
+          </div>
+        </ng-template>
+
+        <ng-template
+          ng-option-tmp
+          let-item="item"
+          let-item$="item$"
+          let-index="index">
+          <div class="select-item d-flex align-items-center gap-8">
+            <ng-container
+              *ngTemplateOutlet="
+                senderTemplate;
+                context: { item: item, item$: item$ }
+              "></ng-container>
+          </div>
+        </ng-template>
+      </ng-select>
+    </trudi-form-control>
+
+    <trudi-form-control
+      *ngIf="configs.footer.buttons.sendType !== ISendMsgType.EXTERNAL"
+      [errors]="[{errorName: 'emailInvalid', errorMessage: 'Please remove invalid email'}]">
+      <trudi-select-receiver
+        [configs]="configs"
+        [extraCls]="{'input-error-select': selectedReceivers.invalid && selectedReceivers.touched}"
+        [placeholder]="isOpenFromCalendar? 'Select contact type' : null"
+        [items]="listReceiver"
+        [listContactTypes]="listContactTypes"
+        [isAddItem]="true"
+        [lazyLoad]="true"
+        formControlName="selectedReceivers"
+        [compareWith]="compareWith"
+        [loading]="userListLoading$ | async"
+        [disabled]="configs.otherConfigs.disabledReceivers"
+        (nextPage)="getNextPage()"
+        (search)="searchUser($event)"
+        [sendMsgType]="configs.footer.buttons.sendType"
+        [totalReceiver]="trudiSendMsgUserService.totalUser"
+        (clearAll)="selectedReceivers.setValue([])"
+        [isShowContactType]="configs?.body?.receiver?.isShowContactType"
+        [isPrefillSelected]="configs?.body?.receiver?.prefillSelectedTypeItem"
+        [prefillData]="prefillData"
+        [listUser]="listUser"></trudi-select-receiver>
+    </trudi-form-control>
+
+    <trudi-form-control
+      *ngIf="configs.footer.buttons.sendType === ISendMsgType.EXTERNAL"
+      [errors]="[{errorName: 'emailInvalid', errorMessage: 'Please remove invalid email'}]">
+      <trudi-text-field
+        prefixText="TO:"
+        formControlName="externalSendTo"></trudi-text-field>
+    </trudi-form-control>
+
+    <trudi-form-control *ngIf="!configs.body.isFromInlineMsg">
+      <trudi-text-field
+        [maxCharacter]="configs?.body?.title?.maxCharacter"
+        prefixText="TITLE:"
+        formControlName="msgTitle"></trudi-text-field>
+    </trudi-form-control>
+
+    <trudi-form-control [control]="msgContent">
+      <tiny-editor
+        [text]="prefillMsg"
+        [toFieldLength]="selectedReceivers?.value?.length"
+        [isShowNegative]="configs.body.isShowNegative"
+        [isForwardConversation]="configs?.otherConfigs?.isForwardConversation"
+        [isScheduleForSend]="configs?.otherConfigs?.isScheduleForSend"
+        [from]="'SendMessage'"
+        [attachBtnConfig]="configs.body.tinyEditor.attachBtn"
+        [enableAiGenerateMsgCopy]="true"
+        [hasError]="msgContent.touched && msgContent.invalid"
+        [listOfFiles]="listOfFilesControl.value"
+        [currentProperty]="currentProperty"
+        (addFileComputer)="editorAddFileComputer()"
+        (addContactCard)="editorAddContactCard()"
+        (addFileCRM)="editorAddFileFromCrm()"
+        (addReiForm)="addReiForm()"
+        (value)="handleValueChange($event)"
+        (originContent)="handleChangeOriginContent($event)"
+        (dropFile)="dropFile($event)"
+        [allowTextColor]="true"
+        [allowTextBackgroundColor]="true"
+        [isShowEmbedCodeOptionsFunction]="configs.body.tinyEditor.isShowDynamicFieldFunction"
+        [listCodeOptions]="listDynamicParams"
+        #editorContainer></tiny-editor>
+      <ng-content select="[attachment-loading]"></ng-content>
+    </trudi-form-control>
+
+    <trudi-send-msg-file
+      [isPrefillMediaFiles]="configs.body.prefillMediaFiles"></trudi-send-msg-file>
+
+    <trudi-form-control
+      [control]="selectedContactCardControl"
+      [errors]="[{errorName: 'requiredContactCard', errorMessage: 'Please add contact card to continue'}]">
+      <div
+        class="mt-16 d-flex gap-16 flex-wrap"
+        *ngIf="selectedContactCardControl.valid">
+        <ng-container
+          *ngFor="let contact of selectedContactCardControl.value; let i = index">
+          <trudi-contact-card
+            [contact]="contact"
+            (onClose)="onClearContact(contact, i)"></trudi-contact-card>
+        </ng-container>
+      </div>
+    </trudi-form-control>
+  </div>
+</div>
+
+<ng-template #senderTemplate let-item="item" let-item$="item$">
+  <div class="select-item__info flex-grow-1">
+    <app-user-avatar
+      [avatar]="item.avatar"
+      [user]="item"
+      [style]="'width: 20px; height: 20px; font-size: 10px; display: inline-block;'"></app-user-avatar>
+    <span class="user-name">{{ item.name }}</span>
+    <span class="small-circle"></span>
+    <span>{{ item.title }}</span>
+  </div>
+</ng-template>
+
+<ng-template
+  #reiformInfoTemplate
+  let-currentReiFormData="currentReiFormData"
+  let-DATE_FORMAT="DATE_FORMAT"
+  let-TIME_FORMAT="TIME_FORMAT">
+  <div
+    *ngIf="currentReiFormData?.formDetail?.isSigned"
+    class="sign-all-wrapper">
+    <div class="sign-all-title">
+      Sent via DocuSign
+      {{currentReiFormData?.formDetail?.signers?.[0]?.sentDateTime | formatDate
+      | async}} {{currentReiFormData?.formDetail?.signers?.[0]?.sentDateTime |
+      formatTime: true | async}}
+    </div>
+    <ng-container *ngIf="currentReiFormData?.formFileInfo">
+      <div class="file-item d-flex align-items-center">
+        <img
+          class="logo"
+          [src]="'/assets/images/icons/'+currentReiFormData.formFileInfo.fileIcon"
+          [ngClass]="{'not-found-icon' : currentReiFormData.formFileInfo.fileIcon === ''}" />
+        <div class="file-name">
+          {{currentReiFormData?.formFileInfo?.shortName}}
+        </div>
+      </div>
+    </ng-container>
+    <ng-container
+      *ngFor="let item of currentReiFormData?.formDetail?.formFiles; index as i">
+      <div class="file-item d-flex align-items-center">
+        <img
+          *ngIf="item.fileIcon; else notFound"
+          class="logo"
+          [src]="'/assets/images/icons/'+item.fileIcon" />
+        <ng-template #notFound>
+          <img
+            class="logo"
+            src="/assets/icon/question-mark.svg"
+            alt="not found img" />
+        </ng-template>
+        <div class="file-name">{{item.shortName}}</div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>

@@ -1,0 +1,72 @@
+<div [formGroup]="form" class="letting-form-wrapper">
+  <div class="form-label__wrapper">
+    <span class="label__text">Pre-screen</span>
+    <trudi-checkbox label="Required" formControlName="isRequired">
+    </trudi-checkbox>
+  </div>
+
+  <div class="form-content__wrapper">
+    <trudi-form-control [checkSubmit]="!isSubmittedCommunicationForm">
+      <trudi-text-field
+        [checkSubmit]="!isSubmittedCommunicationForm"
+        formControlName="lettingTitle"
+        label="Title"
+        [showCounting]="true"
+        maxCharacter="100"></trudi-text-field>
+    </trudi-form-control>
+    <div class="letting-type">
+      <span class="letter-title">Is this a new letting or relet?</span>
+      <trudi-form-control>
+        <trudi-radio-button
+          [disabled]="isDisabled"
+          classType="ROW"
+          [options]="options"
+          formControlName="type">
+        </trudi-radio-button>
+      </trudi-form-control>
+    </div>
+    <div class="rental-amount-wrapper">
+      <span class="rental-title">
+        Recommended rental amount for advertising?
+      </span>
+      <div class="rental-control">
+        <trudi-form-control class="flex-1">
+          <trudi-number-field
+            size="extra-large"
+            formControlName="amount"
+            prefixText="$">
+          </trudi-number-field>
+        </trudi-form-control>
+        <trudi-form-control class="flex-1">
+          <trudi-text-field
+            formControlName="paymentPeriod"
+            placeholder="Payment period"
+            [showCounting]="false"
+            maxCharacter="100">
+          </trudi-text-field>
+        </trudi-form-control>
+      </div>
+    </div>
+
+    <div class="lease-duration-wrapper">
+      <span class="lease-title"> Recommended lease duration? </span>
+      <div class="period-control">
+        <trudi-form-control class="flex-1">
+          <trudi-number-field
+            size="extra-large"
+            placeholder="Period"
+            formControlName="period">
+          </trudi-number-field>
+        </trudi-form-control>
+        <trudi-form-control class="flex-1">
+          <trudi-text-field
+            formControlName="periodType"
+            placeholder="Period type"
+            [showCounting]="false"
+            maxCharacter="100">
+          </trudi-text-field>
+        </trudi-form-control>
+      </div>
+    </div>
+  </div>
+</div>

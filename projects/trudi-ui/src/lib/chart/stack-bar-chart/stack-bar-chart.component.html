@@ -1,0 +1,21 @@
+<div class="chart-body">
+  <div class="chart-content w-100"></div>
+  <div class="annotation">
+    <div *ngFor="let item of config?.annotation" class="annotation-item">
+      <div class="annotation-item">
+        <div
+          class="annotation-item__color"
+          [style]="{backgroundColor: item.color}"></div>
+        <div class="annotation-item__title">{{item.title}}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #defaultTooltipTemplate>
+  <div class="default-tooltip">
+    <div class="default-tooltip__header">tooltip_header</div>
+    <div class="default-tooltip__body">tooltip_body</div>
+    <div class="default-tooltip__footer">tooltip_footer</div>
+  </div>
+</ng-template>

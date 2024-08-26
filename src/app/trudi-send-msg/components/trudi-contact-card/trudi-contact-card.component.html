@@ -1,0 +1,97 @@
+<div class="contact-card gap-8">
+  <div class="contact-card__header d-flex justify-content-between">
+    <div class="header-content gap-4 w-100">
+      <div class="d-flex justify-content-between">
+        <div class="overflow-text">
+          {{ contact | formatDisplayFullName : false}}
+        </div>
+        <div
+          data-e2e="close-btn"
+          class="cursor-pointer contact-card-remove"
+          (click)="onClose.emit()">
+          <trudi-icon
+            [style]="{ 'width.px': 16, 'height.px': 16, color: '#646464' }"
+            icon="closeIcon"></trudi-icon>
+        </div>
+      </div>
+      <trudi-badge
+        [text]="contact?.displayContactType | userTypeInPT : isPTEnvironment :
+          {
+            contactType: contact?.userPropertyContactType?.type,
+            type: contact?.type,
+            isPrimary: contact?.isPrimary
+          } :
+          true"
+        [allowTruncated]="true"
+        [size]="'small'"
+        [variant]="getVariant(contact?.type)"></trudi-badge>
+    </div>
+  </div>
+  <div class="contact-card__content">
+    <div class="content-item d-flex gap-4">
+      <div class="d-flex align-items-start mt-2">
+        <trudi-icon icon="phoneThin"></trudi-icon>
+      </div>
+      <div
+        class="d-flex align-items-center"
+        [ngClass]="{ 'unknown-information': !contact?.phoneNumber }">
+        <div class="overflow-text">
+          {{ contact?.phoneNumber ? (contact.phoneNumber | phoneNumberFormat) :
+          "(no phone number)" }}
+        </div>
+      </div>
+    </div>
+    <div
+      *ngIf="contact?.type !== EUserPropertyType.SUPPLIER && contact?.type !== EUserPropertyType.LEAD"
+      class="content-item d-flex gap-4">
+      <div class="d-flex align-items-start mt-2">
+        <trudi-icon icon="locationDotThin"></trudi-icon>
+      </div>
+      <div
+        class="d-flex align-items-center"
+        [ngClass]="{ 'unknown-information': !contact?.streetLine || !contact?.address }">
+        <div
+          class="overflow-text"
+          nz-tooltip
+          [nzTooltipTitle]="contact?.streetLine || contact?.address ? contact?.streetLine ||
+          contact?.address : 'no property'"
+          [nzTooltipOverlayClassName]="'tool-tip-streetLine'"
+          nzTooltipPlacement="top">
+          {{ contact?.streetLine || contact?.address ? contact?.streetLine ||
+          contact?.address : "(no property)" }}
+        </div>
+      </div>
+    </div>
+    <div class="content-item d-flex gap-4">
+      <div class="d-flex align-items-start mt-2">
+        <trudi-icon icon="mailThin" svgClass="size-16"></trudi-icon>
+      </div>
+      <div
+        class="d-flex align-items-center"
+        [ngClass]="{ 'unknown-information': !contact?.email }">
+        <div class="overflow-text">
+          {{ contact?.email ? contact?.email : "(no email)" }}
+        </div>
+      </div>
+    </div>
+    <div
+      *ngIf="contact?.type === EUserPropertyType.SUPPLIER"
+      class="content-item d-flex gap-4">
+      <div class="d-flex align-items-start mt-2">
+        <trudi-icon icon="globeThin"></trudi-icon>
+      </div>
+      <div
+        class="d-flex align-items-center flex-1 gap-4"
+        [ngClass]="{ 'unknown-information' :!contact?.landingPage, 'website': contact?.landingPage }">
+        <ng-container *ngIf="contact?.landingPage; else noWebsite">
+          <p class="text-ellipsis">{{ contact?.landingPage }}</p>
+          <trudi-icon
+            class="cursor-pointer"
+            (click)="handleClick(contact?.landingPage)"
+            icon="moveIcon"></trudi-icon>
+        </ng-container>
+        <ng-template #noWebsite>(no website)</ng-template>
+      </div>
+    </div>
+  </div>
+</div>

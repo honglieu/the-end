@@ -1,0 +1,9 @@
+export enum SyncMaintenanceType {
+  COMPLETED = 'COMPLETED',
+  INPROGRESS = 'INPROGRESS',
+  FAILED = 'FAILED',
+  UN_SYNC = 'UNSYNC',
+  PENDING = 'PENDING',
+  NOT_SYNC = 'NOT_SYNC',
+  SUCCESS = 'SUCCESS'
+}

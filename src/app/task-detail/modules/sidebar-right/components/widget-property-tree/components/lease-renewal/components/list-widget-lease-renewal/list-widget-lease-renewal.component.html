@@ -1,0 +1,8 @@
+<ng-container *ngIf="listWidgetLeases && listWidgetLeases?.length">
+  <ng-container *ngFor="let item of listWidgetLeases; trackBy: widgetPTTrackBy">
+    <div class="mt-4">
+      <card-widget-lease-renewal [widgetItem]="item">
+      </card-widget-lease-renewal>
+    </div>
+  </ng-container>
+</ng-container>

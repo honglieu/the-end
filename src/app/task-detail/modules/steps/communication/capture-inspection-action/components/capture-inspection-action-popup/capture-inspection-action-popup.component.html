@@ -1,0 +1,71 @@
+<resizable-modal-popup
+  *ngIf="visible"
+  [show]="visible"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [title]="title"
+  [footerTemplate]="footerModal"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="660"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  (onCancel)="handleClose()"
+  [isCustomMoveable]="true">
+  <ng-template #footerModal>
+    <div class="d-flex gap-8 capture-inspection-action-form-footer">
+      <button
+        *ngIf="hasBackButton"
+        trudi-btn
+        variant="outlined"
+        btnType="neutral"
+        (click)="handleBack()">
+        Back
+      </button>
+      <button trudi-btn (click)="handleNext()">Next</button>
+    </div>
+  </ng-template>
+  <div [formGroup]="form" class="capture-inspection-action-form-wrapper">
+    <div class="d-flex flex-dir-column gap-16">
+      <div class="tenant-note-section w-100">
+        <trudi-form-control>
+          <trudi-textarea
+            label="Tenant notes"
+            [trim]="false"
+            formControlName="tenantNote"
+            [maxCharacter]="750"></trudi-textarea>
+        </trudi-form-control>
+      </div>
+      <div class="tenant-action-section w-100">
+        <trudi-form-control>
+          <trudi-textarea
+            label="Tenant actions"
+            [trim]="false"
+            formControlName="tenantAction"
+            [maxCharacter]="750"></trudi-textarea>
+        </trudi-form-control>
+      </div>
+      <div class="landlord-note w-100">
+        <trudi-form-control>
+          <trudi-textarea
+            label="Owner notes"
+            [trim]="false"
+            formControlName="ownerNote"
+            [maxCharacter]="750">
+          </trudi-textarea>
+        </trudi-form-control>
+      </div>
+      <div class="landlord-follow-up-section w-100">
+        <trudi-form-control>
+          <trudi-textarea
+            label="Owner follow-up items"
+            [trim]="false"
+            formControlName="ownerFollowUp"
+            [maxCharacter]="750">
+          </trudi-textarea>
+        </trudi-form-control>
+      </div>
+    </div>
+  </div>
+</resizable-modal-popup>

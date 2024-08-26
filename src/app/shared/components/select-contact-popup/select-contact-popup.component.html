@@ -1,0 +1,110 @@
+<div
+  class="detail-item"
+  (mouseenter)="showPopup = true"
+  (mouseleave)="showPopup = false">
+  <ng-container *ngIf="isUnHappyPath; else notUnHappyPath">
+    <ng-container *ngIf="appChatHeader; else NotAppChatHeader">
+      <div class="d-flex">
+        <div
+          class="unidentified d-flex assign-contact-header"
+          style="padding: 0; align-items: center">
+          <div
+            class="info"
+            (click)="handleNzPopover()"
+            nz-tooltip
+            nzTooltipPlacement="top"
+            nzTooltipTitle="Unidentified contact, click to identify">
+            {{email}}
+          </div>
+        </div>
+        <div
+          nz-popover
+          [disabled]="isConsole"
+          [nzPopoverPlacement]="'bottomLeft'"
+          [nzPopoverContent]="contentTemplate"
+          nzPopoverTrigger="click"
+          [nzPopoverVisible]="showPopover"
+          (nzPopoverVisibleChange)="showPopover = $event"
+          nzPopoverOverlayClassName="assign-contact-overlay"></div>
+      </div>
+    </ng-container>
+    <ng-template #NotAppChatHeader>
+      <div class="not-app-chat-header d-flex">
+        <div class="detail-child">
+          <img src="assets/icon/email-icon-border.svg" />
+        </div>
+        <div class="unidentified">
+          <div
+            class="info"
+            nz-tooltip
+            nzTooltipPlacement="top"
+            nzTooltipTitle="Unidentified contact, click to identify">
+            {{email}}
+          </div>
+          <div class="detail-label">
+            <span> Unidentified email </span>
+            <div class="position-relative">
+              <button
+                *ngIf="showPopover"
+                [disabled]="isConsole"
+                class="assign-to-contact"
+                [style.zIndex]="1">
+                Assign to contact
+              </button>
+              <button
+                class="assign-to-contact"
+                [disabled]="isConsole"
+                nz-popover
+                [nzPopoverPlacement]="'bottomLeft'"
+                [nzPopoverContent]="contentTemplate"
+                nzPopoverTrigger="click"
+                [nzPopoverVisible]="showPopover"
+                (nzPopoverVisibleChange)="showPopover = $event"
+                nzPopoverOverlayClassName="assign-contact-overlay">
+                Assign to contact
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-template #contentTemplate>
+      <!-- unhappyPathLoading -->
+      <div class="box-contact border-rad-8 d-block">
+        <div class="section-trudi">
+          <ng-container>
+            <header-trudi-page
+              [isSelectContact]="true"
+              [isHideLogo]="false"
+              [size]="36"
+              [text]="trudiResponse?.data[0]?.header?.text"
+              [email]="trudiResponse?.data[0]?.header?.email"
+              [isUnindentifiedEmail]="isUnindentifiedEmail">
+            </header-trudi-page>
+          </ng-container>
+          <app-unhappy-path-trudi
+            [overlayDropdown]="overlayDropdown"
+            [taskId]="currentTask?.id"
+            [title]="'Select contact'"
+            [items]="contactList"
+            [propertyList]="propertyList"
+            [taskNameList]="taskNameList"
+            [isUnHappyPath]="isUnHappyPath"
+            [isUnidentifiedEmail]="isUnindentifiedEmail"
+            [isUnindentifiedProperty]="isUnindentifiedProperty"
+            [unhappyStatus]="unhappyStatus"
+            [placeholder]="placeHolderTrudiUnhappy"
+            [loading]="unhappyPathLoading"
+            (onConfirm)="handleConfirmSelectContact($event)"
+            (onSearch)="handleOnSearchUnHappyPath($event)"
+            (onSetEmptyContactList)="setEmptyContactList()">
+          </app-unhappy-path-trudi>
+        </div>
+      </div>
+    </ng-template>
+  </ng-container>
+  <ng-template #notUnHappyPath>
+    <div class="info task-email">{{' • ' + email}}</div>
+  </ng-template>
+</div>

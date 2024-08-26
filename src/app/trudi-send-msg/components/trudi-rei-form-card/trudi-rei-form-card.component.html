@@ -1,0 +1,27 @@
+<div>
+  <app-select-document
+    [modalId]="modalId"
+    [showSelectDocumentPopup]="popupState.selectDocument"
+    [showBackBtn]="popupState.addReiForm"
+    [title]="titleAttachNote"
+    [closable]="closable"
+    [showPropertyAddress]="!showPropertyAddress"
+    [isResizableModal]="isResizableModal"
+    (onBackAttachModal)="onBackAttachModal()"
+    (onCloseDocumentModal)="handleClose()"
+    (onNext)="getSelectDocumentValue($event)"></app-select-document>
+
+  <review-attachment-popup
+    [currentTaskId]="currentTaskId"
+    [modalId]="modalId"
+    [showReviewAttachPopup]="popupState.reviewAttachment"
+    [showAttachDaftFormPopup]="popupState.attachDraftForm"
+    [reiFormLink]="reiFormLink"
+    [isHideBottomWrapper]="isHideReviewAttachmentBottomWrapper"
+    [isResizableModal]="isResizableModal"
+    (onHandleClose)="handleClose()"
+    (onHandleBack)="handleChangeStatePopup(popupName.selectDocument)"
+    (onHandleBackDraftForm)="handleChangeStatePopup(popupName.reviewAttachment)"
+    (onHandleContinue)="onConfirmFromReviewAttachment($event)"
+    (onHandleContinueDraftForm)="handleChangeStatePopup(popupName.attachDraftForm)"></review-attachment-popup>
+</div>

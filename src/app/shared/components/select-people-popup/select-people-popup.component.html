@@ -1,0 +1,333 @@
+<trudi-modal [visible]="show" [autoFocus]="null" className="trudi-modal-custom">
+  <div class="invite-wrapper">
+    <div class="header">
+      <div class="detail-invite d-flex justify-content-between">
+        <div class="send-invite-icon">
+          <div
+            class="background-icon d-flex align-items-center justify-content-around size-48">
+            <trudi-icon
+              data-e2e="trudi-logo"
+              [style]="{'width.px': 48, 'height.px': 48}"
+              icon="trudiAvt"></trudi-icon>
+          </div>
+        </div>
+        <div class="send-invite-text d-flex align-items-center">
+          <p data-e2e="'title'">{{headerName}}</p>
+          <ng-container
+            *ngIf="isOpenFrom === selectPeoplePopupOpenFrom.file || isOpenFrom === selectPeoplePopupOpenFrom.tic">
+            <div>{{propertyAddress}}</div>
+          </ng-container>
+        </div>
+        <trudi-icon
+          class="close-modal-btn cursor-pointer"
+          data-e2e="exit-btn"
+          icon="closeBtn"
+          (click)="isOpenModal(false)"></trudi-icon>
+      </div>
+    </div>
+    <hr class="hr-top" />
+    <div class="body" [class.ng-selected]="inputFocused">
+      <div
+        *ngIf="isOpenFrom === selectPeoplePopupOpenFrom.conv || isOpenFrom === selectPeoplePopupOpenFrom.email || enableSelectTab"
+        class="conversation-tab d-flex">
+        <div
+          class="item-tab"
+          data-e2e="tenant-landlord-tab"
+          (click)="changeConversationTab(selectPeopleTab.own_ten)"
+          [ngClass]="selectedTab === selectPeopleTab.own_ten ? 'item-selected' : ''">
+          {{selectPeopleTab.own_ten}}
+        </div>
+        <div
+          class="item-tab"
+          data-e2e="supplier"
+          (click)="changeConversationTab(selectPeopleTab.supp)"
+          [ngClass]="selectedTab === selectPeopleTab.supp ? 'item-selected' : ''">
+          {{selectPeopleTab.supp}}
+        </div>
+        <div
+          class="item-tab"
+          data-e2e="ex-email-address-tab"
+          (click)="changeConversationTab(selectPeopleTab.external)"
+          [ngClass]="selectedTab === selectPeopleTab.external ? 'item-selected' : ''">
+          {{selectPeopleTab.external}}
+        </div>
+      </div>
+      <div
+        class="table-user"
+        *ngIf="onlyOwnerTenant || (listofUser && ((isOpenFrom === 'task' && currentSelectedUser.length) || isOpenFrom !== 'task') && (selectedTab === selectPeopleTab.own_ten && enableSelectTab) && !inputFocused && isOpenFrom !=='index' && isOpenFrom !==selectPeoplePopupOpenFrom.file) ; else noProperty">
+        <div class="wrap-users supplier-tab">
+          <ng-container *ngIf="!inputFocused">
+            <ng-template
+              [ngIf]="isOpenFrom === selectPeoplePopupOpenFrom.trudi && (mode === forwardButtonAction.tkLandlord || mode === forwardButtonAction.sendQuoteLandlord) || isOpenFrom !== selectPeoplePopupOpenFrom.trudi">
+              <list-item-select-people
+                [listItemUsers]="listofUser.ownerships"
+                [selectedUser]="selectedUser"
+                (onCheckboxChange)="handleChangeCheckbox($event)"
+                [srcImg]="'/assets/icon/ownership.svg'"
+                [srcImgCheck]="'/assets/icon/ownership-check.svg'"
+                [srcImgUnCheck]="'/assets/icon/select-people-uncheck.svg'"
+                [peopleE2e]="'ownership'">
+              </list-item-select-people>
+            </ng-template>
+            <ng-template
+              [ngIf]="(isOpenFrom === selectPeoplePopupOpenFrom.trudi && mode === forwardButtonAction.tkTenant || isOpenFrom !== selectPeoplePopupOpenFrom.trudi) && mode !== forwardButtonAction.sendQuoteLandlord">
+              <list-item-select-people
+                [listItemUsers]="listofUser.tenancies"
+                [selectedUser]="selectedUser"
+                (onCheckboxChange)="handleChangeCheckbox($event)"
+                [srcImg]="'/assets/icon/tenancy.svg'"
+                [srcImgCheck]="'/assets/icon/tenancy-check.svg'"
+                [srcImgUnCheck]="'/assets/icon/select-people-uncheck.svg'"
+                [peopleE2e]="'tenancy'">
+              </list-item-select-people>
+            </ng-template>
+          </ng-container>
+        </div>
+      </div>
+      <div
+        class="table-user property-select"
+        *ngIf="(isOpenFrom === selectPeoplePopupOpenFrom.index || isOpenFrom === selectPeoplePopupOpenFrom.file) && selectedTab === selectPeopleTab.own_ten">
+        <div
+          *ngIf="isOpenFrom === selectPeoplePopupOpenFrom.index || isOpenFrom === selectPeoplePopupOpenFrom.file">
+          <div
+            class="search-box"
+            id="property-select"
+            *ngIf="showSelectPropertyForMessage">
+            <ng-select
+              [ngClass]="(isPropertyEmpty && confirmed)? 'ng-error':''"
+              [items]="listOfPeopleInSelectBox"
+              [(ngModel)]="currentSelectedUser"
+              (ngModelChange)="onSelectProperyChange($event)"
+              [class.empty-value-search]="searchInputEmpty"
+              class="supplier-dropdown supplier-select"
+              bindValue="id"
+              bindLabel="streetline"
+              [searchable]="true"
+              [clearable]="false"
+              [searchFn]="searchPeople"
+              [virtualScroll]="true"
+              placeholder="Select property"
+              (open)="onOpenSelect('property-select', 'focus')"
+              [notFoundText]="'No results found'"
+              (close)="ngSelectBlur()"
+              (change)="onPeopleSelectChanged($event)"
+              (search)="onSearchProperty($event)">
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-search="searchTerm">
+                <trudi-icon
+                  [style]="{'width.px': 16, 'height.px': 16}"
+                  icon="mapPin"></trudi-icon>
+                <span
+                  [ngOptionHighlight]="search ? search : ''"
+                  [title]="item?.streetline"
+                  >{{item?.streetline}}</span
+                >
+              </ng-template>
+            </ng-select>
+            <div
+              class="error-wrapper d-flex align-items-center"
+              *ngIf="isPropertyEmpty">
+              <img
+                class="icon-warning"
+                src="/assets/icon/icon-warning-red-fit.svg"
+                alt="icon-warning" />
+              <span class="text-warning">Required field</span>
+            </div>
+          </div>
+          <div
+            class="wrap-users"
+            [ngStyle]="{'display': currentSelectedUser ? '' : 'none'}">
+            <ng-container>
+              <ng-template
+                [ngIf]="isOpenFrom === selectPeoplePopupOpenFrom.trudi && (mode === forwardButtonAction.tkLandlord || mode === forwardButtonAction.sendQuoteLandlord) || isOpenFrom !== selectPeoplePopupOpenFrom.trudi">
+                <list-item-select-people
+                  [listItemUsers]="listofUser?.ownerships"
+                  [selectedUser]="selectedUser"
+                  (onCheckboxChange)="handleChangeCheckbox($event)"
+                  [srcImg]="'/assets/icon/ownership.svg'"
+                  [srcImgCheck]="'/assets/icon/ownership-check.svg'"
+                  [srcImgUnCheck]="'/assets/icon/select-people-uncheck.svg'">
+                </list-item-select-people>
+              </ng-template>
+              <ng-template
+                [ngIf]="(isOpenFrom === selectPeoplePopupOpenFrom.trudi && mode === forwardButtonAction.tkTenant || isOpenFrom !== selectPeoplePopupOpenFrom.trudi) && mode !== forwardButtonAction.sendQuoteLandlord">
+                <list-item-select-people
+                  [listItemUsers]="listofUser.tenancies"
+                  [selectedUser]="selectedUser"
+                  (onCheckboxChange)="handleChangeCheckbox($event)"
+                  [srcImg]="'/assets/icon/tenancy.svg'"
+                  [srcImgCheck]="'/assets/icon/tenancy-check.svg'"
+                  [srcImgUnCheck]="'/assets/icon/select-people-uncheck.svg'">
+                </list-item-select-people>
+              </ng-template>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <ng-template #noProperty></ng-template>
+      <div
+        class="supplier-tab"
+        *ngIf="((selectedTab === selectPeopleTab.supp && enableSelectTab) || onlySupplier)">
+        <div class="search-box">
+          <ng-select
+            [id]="onlySupplier ? 'ask-suppliers-to-quote' : null"
+            data-e2e="supplier-dropdown"
+            [items]="listSupplierSelect"
+            [(ngModel)]="selectedSupplier"
+            (ngModelChange)="onSelectedSupplierChange($event)"
+            [ngClass]="{'ng-error': isNoSupplierSelected}"
+            class="supplier-select supplier-dropdown"
+            bindLabel="label"
+            bindValue="value"
+            placeholder="Enter name or email address"
+            [multiple]="multiple"
+            [clearable]="false"
+            [searchable]="true"
+            [searchFn]="searchSupplier"
+            [compareWith]="compareFnSupplier"
+            [notFoundText]="'No results found'"
+            (change)="changeSelectedSupplier($event)"
+            (focus)="onFocusSearchBar()">
+            <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+              <span
+                data-e2e="label"
+                [ngOptionHighlight]="search ? search : ''"
+                class="supplier-name-item"
+                >{{item.label}}</span
+              >
+              <img
+                class="supplier-favourite"
+                *ngIf="item.isFavourite"
+                src="/assets/icon/gold_star.svg"
+                alt="star-icon" />
+              <span
+                [ngOptionHighlight]="search ? search : ''"
+                class="supplier-email-item"
+                >({{item.value.email}})</span
+              >
+            </ng-template>
+          </ng-select>
+        </div>
+        <div
+          *ngIf="isNoSupplierSelected"
+          class="validate-wrapper d-flex items-center">
+          <img
+            class="ng-select-alert alert-icon"
+            src="/assets/icon/icon-warning-red-fit.svg"
+            alt="icon" />
+          <span class="text-danger">Required field</span>
+        </div>
+      </div>
+
+      <div
+        class="external-tab"
+        *ngIf="(selectedTab === selectPeopleTab.external)">
+        <p class="email-label" data-e2e="email-address-label">Email address</p>
+        <ng-select
+          #selectEmail
+          data-e2e="email-address-textbox"
+          [items]="emailList"
+          [(ngModel)]="selectedExternalEmail"
+          id="external-select"
+          (ngModelChange)="selectEmail.items = $event; onSelectedExternalEmailChange($event)"
+          class="supplier-dropdown supplier-select"
+          [ngClass]="(isNoEmailSelected || emailInvalid && confirmed) ? 'ng-error':''"
+          bindLabel="personUserEmail"
+          placeholder="Enter email addresses, separated by commas"
+          [typeahead]="inputEmail$"
+          (focusout)="addChoice($event)"
+          (keydown)="addChoice($event)"
+          [multiple]="true"
+          [clearable]="false"
+          [addTag]="addEmail"
+          [isOpen]="false"
+          [selectOnTab]="true">
+          <ng-template ng-label-tmp let-item="item" let-index="index">
+            <div
+              class="selected-email"
+              [ngClass]="item.isValid ? '': 'ng-value-warning'">
+              <img
+                [ngClass]="{'d-none':item.isValid}"
+                class="ng-select-alert"
+                src="/assets/icon/icon-warning-red-fit.svg"
+                alt="icon" />
+              <div class="ng-value-label">{{item.personUserEmail}}</div>
+              <img
+                class="ng-value-icon"
+                (click)="removeEmail(item.id)"
+                src="/assets/icon/close-btn.svg"
+                alt="icon" />
+            </div>
+          </ng-template>
+        </ng-select>
+        <div
+          class="validate-message"
+          *ngIf="emailInvalid && confirmed || isNoEmailSelected">
+          <img
+            class="alert-icon"
+            src="/assets/icon/icon-warning-red-fit.svg"
+            alt="icon" />
+          <span class="text-danger">
+            {{ isNoEmailSelected ? 'Required field' : 'Please remove all items
+            with errors' }}
+          </span>
+        </div>
+      </div>
+    </div>
+    <ng-container
+      *ngIf="isExistPendingOrUninvitedStatus && isOpenFrom !== selectPeoplePopupOpenFrom.trudi && selectedTab === selectPeopleTab.own_ten && mode !== forwardButtonAction.sendQuoteLandlord">
+      <div class="alert-wrapper d-flex">
+        <img
+          src="/assets/images/icons/error-outline-gray.svg"
+          alt="icon"
+          class="alert-icon"
+          data-e2e="tooltip-icon" />
+        <span class="alert-text" data-e2e="tooltip"
+          >Some people you have selected do not have the app. Your message will
+          be sent as a plain text email, with attachments.</span
+        >
+      </div>
+    </ng-container>
+    <div class="btn-wrapper d-flex gap-12">
+      <button
+        *ngIf="backButton"
+        type="button"
+        class="trudi-btn trudi-btn-semi-large trudi-btn-tertiary"
+        (click)="handleBack()">
+        {{ backButton }}
+      </button>
+      <button
+        *ngIf="headerName !== 'Create New Task' && !(isOpenFrom == selectPeoplePopupOpenFrom.index); else defaultType"
+        type="button"
+        class="trudi-btn trudi-btn-primary trudi-btn-semi-large"
+        (click)="openSendMessageModal()"
+        [disabled]="!checkListChecked()"
+        data-e2e="confirm-btn">
+        {{isNextButton ? 'Next' : 'Confirm'}}
+      </button>
+      <button
+        *ngIf="(isOpenFrom == selectPeoplePopupOpenFrom.index)"
+        type="button"
+        class="trudi-btn trudi-btn-primary trudi-btn-semi-large"
+        (click)="openSendMessageModal()"
+        [disabled]="
+        (selectedTab == selectPeopleTab.own_ten && isNoOwnTenSelected)"
+        [attr.data-e2e]="onlySupplier ? 'confirm-btn' : 'Confirm'">
+        Confirm
+      </button>
+      <ng-template #defaultType>
+        <!--button for create new task-->
+        <button
+          *ngIf="!(isOpenFrom == selectPeoplePopupOpenFrom.index)"
+          type="button"
+          class="trudi-btn trudi-btn-semi-large trudi-btn-primary"
+          (click)="createTask()"
+          [disabled]="!countCheckNewTask || !currentSelectedUser.length">
+          Confirm
+        </button>
+      </ng-template>
+    </div>
+  </div>
+</trudi-modal>

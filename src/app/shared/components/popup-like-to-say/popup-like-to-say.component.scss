@@ -1,0 +1,60 @@
+@import 'function';
+
+:host ::ng-deep {
+  .popup {
+    &__container {
+      background: var(--white);
+      height: auto;
+      color: var(--gray-950);
+      border-radius: 8px;
+    }
+
+    &__body {
+      font-size: 14px;
+      margin-bottom: 30px;
+      font-weight: 500;
+      color: var(--gray-950);
+      text-align: left;
+
+      &__item {
+        padding: 16px 0;
+        box-shadow: inset 0px -0.8px 0px rgba(0, 0, 0, 0.08);
+
+        &__text {
+          @include fontSetup(var(--gray-700), 16px, 24px, normal, 600);
+        }
+      }
+    }
+    &__footer {
+      display: flex;
+      justify-content: flex-end;
+      position: relative;
+
+      button {
+        @include fontSetup(inherit, 14px, 16px, normal, 600);
+        // font-weight: 600;
+        // font-size: 12px;
+        padding: 12px 22px;
+        border-radius: 12px;
+        border: 0;
+      }
+
+      .btn-cancel {
+        background: var(--gray-200);
+        color: var(--gray-700);
+        margin-right: 23px;
+      }
+      .btn-resolved {
+        color: var(--white);
+        background: var(--brand-500);
+
+        &:disabled {
+          background: var(--brand-200);
+        }
+      }
+    }
+  }
+  hr.divider {
+    margin: 20px -22px 0;
+  }
+}

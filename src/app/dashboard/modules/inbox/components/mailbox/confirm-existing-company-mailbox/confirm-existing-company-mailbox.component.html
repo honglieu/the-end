@@ -1,0 +1,47 @@
+<trudi-modal
+  [visible]="visible"
+  iconName="iconWarningRed"
+  [closable]="true"
+  [modelWidth]="613"
+  title="Are you sure you want to replace the company mailbox?"
+  subTitle=""
+  className="custom-modal-confirm-existing"
+  [autoFocus]="null"
+  (onCancel)="handleCancel()">
+  <div class="content-text">
+    <p>
+      By adding a new company mailbox, your existing company mailbox will be
+      archived.
+    </p>
+    <p>
+      You can access archived mailboxes but are unable to send or receive emails
+      from this mailbox.
+    </p>
+    <p>
+      If applicable, Tenant App and Voicemail enquiries will be directed to your
+      new company mailbox.
+    </p>
+  </div>
+  <ng-template #footerModal>
+    <div class="d-flex justify-content-end gap-12">
+      <button
+        trudi-btn
+        size="large"
+        btnType="neutral"
+        variant="outlined"
+        class="trudi-btn trudi-btn-large ml-auto"
+        (click)="handleBack()">
+        Back
+      </button>
+      <button
+        trudi-btn
+        size="large"
+        btnType="danger"
+        variant="filled"
+        class="trudi-btn trudi-btn-large ml-auto"
+        (click)="handleNext()">
+        Yes, continue
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

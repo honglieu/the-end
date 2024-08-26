@@ -1,0 +1,136 @@
+<trudi-modal
+  *ngIf="isShowRecordVideoPopup"
+  [visible]="isShowRecordVideoPopup"
+  [autoFocus]="null"
+  className="trudi-modal-custom">
+  <app-popup-ask-record-call
+    (isStartRecord)="onStartRecord($event)"></app-popup-ask-record-call>
+</trudi-modal>
+
+<ng-container *ngIf="isConnecting">
+  <div class="connecting position-center-w d-flex flex-dir-column">
+    <trudi-icon class="m-auto" icon="trudiLogoText"></trudi-icon>
+    <div #localTrack class="progress-bar">
+      <div class="progress-item"></div>
+    </div>
+    <p class="text">Connecting...</p>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="!isConnecting && isShowDisclaimAnnouce">
+  <div class="disclaim-annouce d-flex">
+    <div class="disclaim-annouce-text d-flex flex-dir-column">
+      <span
+        >Please read this statement to the recipient at the beginning of the
+        call:
+      </span>
+      <span
+        >This call will be recorded for our records. If you do not wish to have
+        this call recorded please let me know.</span
+      >
+    </div>
+    <button class="size-24" (click)="handleHideDisclaimAnnouce()">
+      <trudi-icon icon="closeBtn"></trudi-icon>
+    </button>
+  </div>
+</ng-container>
+
+<div [ngClass]="{'hide' : !isWaiting && !isCalling}">
+  <div class="call">
+    <!-- time recording announce -->
+    <div
+      *ngIf="timeRecorded"
+      class="time-recording"
+      [ngClass]="{'hide': !isRecord, 'remain-15s': remain15sRecord}">
+      <span class="remote-name">Remaining</span>
+      <span>{{timeRecorded}}</span>
+    </div>
+
+    <!-- change mic status annouce -->
+    <div
+      class="local-audio position-center-w d-flex flex-dir-column align-items-center"
+      [ngClass]="{'hide': !isMicChange, 'mouse-moving': !isMouseMoving}">
+      <trudi-icon [icon]="isMicLocalUserOff ? 'micOff' : 'micOn'"></trudi-icon>
+      <span class="local-text">
+        {{isMicLocalUserOff ? 'Microphone off' : 'Microphone on'}}
+      </span>
+    </div>
+
+    <div class="call-header">
+      <span>
+        {{receiverFullName}} • {{(isDefaultType ? receiverTypeOrPrimary :
+        receiverTypeOrPrimary | titlecase) | userTypeInPT : isPTEnvironment : {
+        contactType: receiver?.userPropertyContactType?.type, type:
+        receiver?.type, isPrimary: receiver?.isPrimary} }}
+      </span>
+    </div>
+
+    <div class="call-body">
+      <div
+        class="audio-call-wrapper d-flex align-items-center justify-content-center">
+        <div
+          class="user-card participant"
+          id="lastSpeakerSID"
+          [ngClass]="{'talking': participantTalking}">
+          <trudi-icon
+            class="audio-call-mute-icon size-24"
+            *ngIf="isMicParticipantOff"
+            icon="muteIcon"></trudi-icon>
+          <div
+            class="user-avatar position-center-w"
+            [ngClass]="{'disabled': isWaiting}">
+            <ng-container *ngIf="!receiver?.googleAvatar; else receiverAvtElse">
+              <div [class]="'img-circle ' + receiverType ">
+                <label
+                  >{{ { firstName: receiver?.firstName || '', lastName:
+                  receiver?.lastName || '' } | formatFullname }}</label
+                >
+              </div>
+            </ng-container>
+            <ng-template #receiverAvtElse>
+              <img
+                [src]="receiver?.googleAvatar"
+                alt="logo"
+                class="user-avatar" />
+            </ng-template>
+          </div>
+          <span class="username">{{receiverFullName}}</span>
+        </div>
+
+        <div
+          class="user-card local-user"
+          id="lastSpeakerSID"
+          [ngClass]="{'talking': localUserTalking}">
+          <trudi-icon
+            class="audio-call-mute-icon"
+            *ngIf="isMicLocalUserOff"
+            icon="muteIcon"></trudi-icon>
+          <div class="position-center-w">
+            <app-user-avatar
+              [avatar]="localAvt"
+              [user]="{firstName: localFirstName, lastName: localLastName}"
+              [style]="'width: 120px; height: 120px; font-size: 6rem;'"></app-user-avatar>
+          </div>
+          <span class="username">You</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="call-footer">
+      <!-- record button -->
+      <button ripple (click)="showPopupRecord()" [disabled]="disableRecord">
+        <trudi-icon
+          [icon]="isRecord ? 'recordRedIcon': 'recordIcon'"></trudi-icon>
+      </button>
+      <!-- mute button -->
+      <button id="btnChangeMic" ripple (click)="onChangeLocalUserMic()">
+        <trudi-icon
+          [icon]="isMicLocalUserOff ? 'muteRedIcon' : 'micOnCircle'"></trudi-icon>
+      </button>
+      <!-- end call button -->
+      <button ripple (click)="onEndCall()">
+        <trudi-icon icon="endCall"></trudi-icon>
+      </button>
+    </div>
+  </div>
+</div>

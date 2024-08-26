@@ -1,0 +1,139 @@
+<div [formGroup]="depositForm">
+  <ng-container *ngIf="isLoading else hasContent">
+    <div class="deposit-form-wrapper">
+      <nz-skeleton
+        [nzParagraph]="{ rows: 1 }"
+        [style.width.px]="85"
+        [nzTitle]="false"
+        [nzActive]="true"></nz-skeleton>
+      <div class="deposit-form-group">
+        <nz-skeleton
+          [nzParagraph]="{ rows: 1 }"
+          [style.width.px]="75"
+          [nzTitle]="false"
+          [nzActive]="true"></nz-skeleton>
+        <div class="deposit-form-group_select">
+          <nz-skeleton
+            [nzParagraph]="{ rows: 1 }"
+            [style.width.px]="368"
+            class="skeleton-item"
+            [nzTitle]="false"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </div>
+      <div class="deposit-form-group">
+        <div class="deposit-form-group">
+          <nz-skeleton
+            [nzParagraph]="{ rows: 1 }"
+            [style.width.px]="75"
+            [nzTitle]="false"
+            [nzActive]="true"></nz-skeleton>
+          <div class="deposit-form-group_select">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 1 }"
+              [style.width.px]="368"
+              class="skeleton-item"
+              [nzTitle]="false"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </div>
+      </div>
+      <div class="deposit-form-group_title">
+        <div class="deposit-form-group">
+          <nz-skeleton
+            [nzParagraph]="{ rows: 1 }"
+            [style.width.px]="75"
+            [nzTitle]="false"
+            [nzActive]="true"></nz-skeleton>
+          <div class="deposit-form-group_select">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 1 }"
+              [style.width.px]="368"
+              class="skeleton-item"
+              [nzTitle]="false"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </div>
+      </div>
+      <div class="deposit-form-group">
+        <div class="deposit-form-group_select">
+          <div class="d-flex pb-18">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 1 }"
+              [style.width.px]="25"
+              [nzTitle]="false"
+              [nzActive]="true"></nz-skeleton>
+            <nz-skeleton
+              [nzParagraph]="{ rows: 1 }"
+              [style.width.px]="400"
+              [nzTitle]="false"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #hasContent>
+    <div class="deposit-form-wrapper">
+      <div class="deposit-title cursor-default">Deposit</div>
+      <div class="deposit-form-group">
+        <span class="deposit-form-group_title"> Deposit type </span>
+        <div class="deposit-form-group_select">
+          <trudi-form-control>
+            <trudi-single-select
+              [items]="depositTypeList"
+              bindLabel="label"
+              bindValue="value"
+              formControlName="type">
+            </trudi-single-select>
+          </trudi-form-control>
+        </div>
+      </div>
+      <div class="deposit-form-group mt-20">
+        <span class="deposit-form-group_title"> Deposit amount </span>
+        <div class="deposit-form-group_select">
+          <trudi-form-control
+            [errors]="[{errorName: 'invalidAmount', errorMessage: 'Deposit amount must be greater than 0'}]"
+            [checkSubmit]="!isSubmitted">
+            <trudi-number-field
+              size="large"
+              [maxCharacter]="9"
+              [maskPattern]="maskPattern"
+              [separatorLimit]="MAX_6_DIGIT_BEFORE_DECIMAL"
+              [checkSubmit]="!isSubmitted"
+              [maskLeadZero]="true"
+              thousandSeparatorType=","
+              [prefixText]="'$'"
+              (onChangeData)="handleChangeAmount($event)"
+              formControlName="amount">
+            </trudi-number-field>
+          </trudi-form-control>
+        </div>
+      </div>
+      <div class="deposit-form-group mt-20">
+        <span class="deposit-form-group_title"> Deposit date </span>
+        <div class="deposit-form-group_select">
+          <trudi-form-control [checkSubmit]="!isSubmitted">
+            <trudi-date-picker
+              [breakNochange]="true"
+              [trudiPlaceHolder]="(dateFormatPipe$ | push)"
+              [trudiDisabled]="disableDepositDate"
+              [class.trudi-picker-error]="isSubmitted && dateControl.invalid"
+              formControlName="date"></trudi-date-picker>
+          </trudi-form-control>
+        </div>
+      </div>
+      <div class="deposit-form-group mt-20">
+        <div class="deposit-form-group_select">
+          <trudi-form-control>
+            <trudi-checkbox
+              (change)="handleChangeCheckbox($event)"
+              class="deposit-checkbox"
+              label="Deposit prior to GL Start date"
+              formControlName="isDepositPrior"></trudi-checkbox>
+          </trudi-form-control>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

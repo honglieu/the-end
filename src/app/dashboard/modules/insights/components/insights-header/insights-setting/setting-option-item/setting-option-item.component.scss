@@ -1,0 +1,45 @@
+@import 'function';
+@mixin typography {
+  @include fontSetup(
+    var(--fg-neutral-stronger, #3d3d3d),
+    14px,
+    20px,
+    normal,
+    500
+  );
+}
+
+.setting-option-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  .setting-question {
+    @include typography;
+    margin: 0;
+    width: 386px;
+    display: flex;
+    align-items: center;
+    .wrapper-badge {
+      display: inline-block;
+      trudi-badge {
+        color: var(--white);
+      }
+    }
+  }
+}
+
+.wrapper-input-time {
+  width: 180px;
+  display: flex;
+  gap: 10px;
+  align-self: flex-start;
+  align-items: center;
+  .unit-measure {
+    @include typography;
+    color: var(--fg-neutral-strongest, #202020);
+    font-weight: 400;
+  }
+  trudi-number-field {
+    width: 54px;
+  }
+}

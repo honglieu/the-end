@@ -1,0 +1,45 @@
+@import 'function';
+
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: white;
+  padding: 4px;
+  width: 20px;
+  height: 20px;
+}
+
+button:focus {
+  background: var(--gray-200);
+  border-radius: 60px;
+}
+img {
+  max-width: -webkit-fill-available;
+}
+.trudi-menu {
+  width: auto;
+  border-radius: 8px;
+  max-height: 664px;
+  overflow-y: auto;
+
+  .items-menu {
+    padding: 12px;
+    border-bottom: 1px solid var(--gray-200);
+    gap: 8px;
+
+    .task-open-status {
+      @include fontSetup(var(--gray-400), 14px, 20px, normal, 500);
+    }
+
+    .detail-item {
+      .text {
+        @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+      }
+    }
+  }
+  .items-menu:hover {
+    background-color: var(--brand-50);
+  }
+}

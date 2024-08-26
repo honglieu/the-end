@@ -1,0 +1,31 @@
+<div [formGroup]="formData">
+  <div class="d-flex justify-content-between align-items-center label-wrapper">
+    <label class="capture-conditions-for-request-approval-label">
+      Pre-screen
+    </label>
+    <div class="required-checkbox mb-4">
+      <trudi-checkbox formControlName="isRequired" label="Required">
+      </trudi-checkbox>
+    </div>
+  </div>
+  <div class="capture-conditions-for-request-approval-form">
+    <div class="w-100">
+      <trudi-form-control [checkSubmit]="!isSubmittedCommunicationForm">
+        <trudi-text-field
+          [checkSubmit]="!isSubmittedCommunicationForm"
+          formControlName="title"
+          label="Title"
+          [maxCharacter]="100">
+        </trudi-text-field>
+      </trudi-form-control>
+    </div>
+
+    <div class="w-100">
+      <trudi-text-field
+        label="Condition"
+        formControlName="condition"
+        placeholder="Free text field">
+      </trudi-text-field>
+    </div>
+  </div>
+</div>

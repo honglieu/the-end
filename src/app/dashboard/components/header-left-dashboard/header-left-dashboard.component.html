@@ -1,0 +1,53 @@
+<div class="left-header">
+  <li
+    (keydown.enter)="isDropdownVisible = !isDropdownVisible"
+    (click)="isDropdownVisible = !isDropdownVisible"
+    cdkOverlayOrigin
+    #trigger="cdkOverlayOrigin"
+    nzMatchRouter
+    *ngIf="currentCompanyId && currentCompany; else agencySkeleton"
+    class="container-header-item"
+    menuKeyboard
+    [visibleMenu]="isDropdownVisible"
+    [menuType]="EMenuDropdownType.CompanySettingGroup">
+    <div class="d-flex align-items-center gap-4">
+      <header-item
+        tabindex="-1"
+        className="avatar"
+        [logoLink]="
+            currentCompany.useDefaultLogo ? currentCompany.defaultLogo : currentCompany.logo
+          "
+        [titleName]="currentCompany.name"
+        [companySelect]="true"
+        [isSelected]="isDropdownVisible"></header-item>
+    </div>
+  </li>
+  <li nzMatchRouter>
+    <header-item-sync></header-item-sync>
+  </li>
+  @if(!isConsole) {
+  <li nzMatchRouter>
+    <header-focus-view></header-focus-view>
+  </li>
+  }
+</div>
+
+<ng-template #agencySkeleton>
+  <li nzMatchRouter class="skeleton-agency">
+    <nz-skeleton-element
+      nzType="avatar"
+      [nzActive]="true"
+      [nzSize]="48"
+      [nzShape]="'square'">
+    </nz-skeleton-element>
+  </li>
+</ng-template>
+
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="isDropdownVisible"
+  (overlayOutsideClick)="overlayOutsideClick($event)">
+  <company-settings
+    (hiddenDropdownSelect)="hiddenDropdownSelect($event)"></company-settings>
+</ng-template>

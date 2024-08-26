@@ -1,0 +1,14 @@
+::ng-deep .rent-manager-vacate-detail-form {
+  .trudi-picker {
+    max-width: 100%;
+  }
+  .trudi-form-group {
+    gap: 20px;
+  }
+}
+
+.rent-manager-vacate-detail-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}

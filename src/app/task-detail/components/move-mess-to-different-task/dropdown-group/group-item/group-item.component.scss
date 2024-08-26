@@ -1,0 +1,89 @@
+@import 'function';
+
+.group {
+  &-name {
+    padding: 10px 12px;
+    background-color: var(--gray-200);
+    @include fontSetup(var(--gray-400), 14px, 20px, normal, 600);
+  }
+
+  &-item {
+    padding: 8px 12px;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .item-title {
+      max-width: 420px;
+    }
+
+    &-selected {
+      .item {
+        &-title {
+          @include fontSetup(
+            var(--gray-700) !important,
+            14px,
+            20px,
+            normal,
+            600
+          );
+        }
+
+        &-option {
+          @include fontSetup(
+            var(--gray-700) !important,
+            12px,
+            20px,
+            normal,
+            500
+          );
+        }
+      }
+
+      img {
+        margin: 0 2px 0 auto;
+      }
+    }
+
+    &:hover {
+      background-color: var(--brand-100);
+      .item-title {
+        @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+      }
+
+      .item-option {
+        margin-left: 4px;
+        @include fontSetup(var(--gray-500), 12px, 20px, normal, 400);
+      }
+    }
+
+    .item {
+      &-title {
+        @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+      }
+
+      &-option {
+        @include fontSetup(var(--gray-500), 12px, 20px, normal, 400);
+      }
+
+      &-address {
+        @include fontSetup(var(--gray-500), 14px, 20px, normal, 400);
+      }
+    }
+
+    .task__item-label {
+      @include fontSetup(var(--gray-400), 12px, 18px, normal, 600);
+      padding: 3px 6px;
+      border-radius: 12px;
+      background-color: var(--gray-200);
+      margin-left: 4px;
+    }
+    .item-option {
+      margin-left: 4px;
+    }
+  }
+
+  &--box-shadow {
+    box-shadow: inset 0px -1px 0px var(--gray-200);
+  }
+}

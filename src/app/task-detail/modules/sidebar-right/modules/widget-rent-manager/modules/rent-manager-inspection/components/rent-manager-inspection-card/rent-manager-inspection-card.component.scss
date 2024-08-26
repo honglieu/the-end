@@ -1,0 +1,25 @@
+@import 'function';
+
+:host {
+  .card-widget-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .card-widget-item {
+      display: flex;
+      align-items: center;
+      span {
+        &:first-child {
+          width: 80px;
+          @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 400);
+        }
+        @include fontSetup(var(--fg-neutral-stronger), 12px, 16px, normal, 400);
+      }
+
+      .tenant-name {
+        font-weight: 500;
+      }
+    }
+  }
+}

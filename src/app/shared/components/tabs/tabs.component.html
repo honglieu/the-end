@@ -1,0 +1,19 @@
+<div class="tab-list">
+  <ul
+    [style.margin]="margin"
+    [ngClass]="{'border-bottom': tabs && tabs.length == 1}">
+    <li
+      *ngFor="let tab of tabs; index as i"
+      [ngClass]="{active: tab.isActive}"
+      (click)="selectTab(tab, i)"
+      ripple>
+      <div class="d-flex gap-4 align-items-center">
+        {{tab.tabTitle}}
+        <div
+          *ngIf="isReadConversation && tab.tabTitle === controlPanelTab.conversations"
+          class="red-dot"></div>
+      </div>
+    </li>
+  </ul>
+</div>
+<ng-content></ng-content>

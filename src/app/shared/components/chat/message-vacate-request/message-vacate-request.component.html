@@ -1,0 +1,203 @@
+<div
+  class="message-box"
+  [class]="{
+    'ai-assistant__block': isAiAsistantPage || isAppMessageLog,
+    'ml-18': !isAiAsistantPage && !isAppMessageLog
+  }">
+  <span
+    *ngIf="!isAiAsistantPage && !isAppMessageLog"
+    class="message-box__avatar"
+    (click)="handleClickAvatar($event)">
+    <ng-container *ngIf="!!message.emailMetadata?.from?.length">
+      <app-circle-avatar
+        [firstName]="[EUserPropertyType.MAILBOX, EUserPropertyType.LEAD].includes(senderOfMessage?.userType) ? senderOfMessage?.pmName : excludedUserRole.includes(senderOfMessage?.senderRole) ? null : senderOfMessage?.firstName"
+        [lastName]="[EUserPropertyType.MAILBOX, EUserPropertyType.LEAD].includes(senderOfMessage?.userType) ? '' : excludedUserRole.includes(senderOfMessage?.senderRole) ? null : senderOfMessage?.lastName"
+        [size]="24"
+        [userType]="![EUserPropertyType.MAILBOX, EUserPropertyType.LEAD].includes(senderOfMessage?.userType) && (excludedUserRole.includes(senderOfMessage?.senderRole)) ? EUserPropertyType.EXTERNAL : senderOfMessage?.userPropertyType || senderOfMessage?.userType"
+        [avatar]="[EUserPropertyType.MAILBOX].includes(senderOfMessage?.userType) ? message.googleAvatar : senderOfMessage?.googleAvatar"
+        [userId]="[EUserPropertyType.MAILBOX].includes(senderOfMessage?.userType) ? message.userId : senderOfMessage?.userId">
+      </app-circle-avatar>
+    </ng-container>
+    <ng-container *ngIf="!message.emailMetadata?.from?.length">
+      <app-circle-avatar
+        [firstName]="(message.userPropertyType || message.userType) ? message.firstName : null"
+        [lastName]="(message.userPropertyType || message.userType) ? message.lastName : null"
+        [size]="24"
+        [userType]="message.userPropertyType || message.userType"
+        [avatar]="message.googleAvatar"
+        [userId]="message.userId">
+      </app-circle-avatar>
+    </ng-container>
+  </span>
+  <ng-container
+    *ngIf="!isAiAsistantPage && !isAppMessageLog; else aiAsistantTicket">
+    <div
+      *ngIf="(ticket.ticketLanguageCode && ticket.ticketLanguageCode !== 'en' && ticket.ticketLanguageCode !== 'und')"
+      class="translation-label mb-10">
+      <language-translation-label
+        [messagesTranslate]="ticket?.ticketTrans"
+        (languageTranslationDisabled)="updateNote($event)"
+        [inputLanguage]="ticket?.ticketLanguageCode"></language-translation-label>
+    </div>
+    <div class="d-flex align-items-center gap-8 mb-8">
+      <trudi-icon
+        icon="vacateV2"
+        svgClass="size-24"
+        viewBox="auto"></trudi-icon>
+      <div class="header-text">Vacate request</div>
+    </div>
+    <div class="d-flex flex-dir-column gap-8 mb-4 break-word">
+      <div class="body-content" *ngIf="type">
+        <div class="title">Type</div>
+        <div class="text">{{type}}</div>
+      </div>
+      <div class="body-content" *ngIf="moveOutDate">
+        <div class="title">Intended move out date</div>
+        <div class="text">{{moveOutDate}}</div>
+      </div>
+      <div class="body-content" *ngIf="note">
+        <div class="title">Note</div>
+        <div class="text">
+          {{(updatedNote || note) | uppercaseFirstLetter: true}}
+        </div>
+      </div>
+    </div>
+    <div
+      class="original-content mb-10"
+      *ngIf="updatedNote && (ticket.ticketTrans && ticket.ticketLanguageCode && ticket.ticketLanguageCode !== 'en' && ticket.ticketLanguageCode !== 'und')">
+      <language-original-content [content]="note"></language-original-content>
+    </div>
+    <div class="d-flex flex-dir-column gap-4">
+      <div class="submit-text">
+        Submitted via {{createdFrom | lowercase}} {{updatedAt |
+        formatDateTime:true | async}}
+      </div>
+      <div
+        *ngIf="!isReadonly"
+        class="view-conversation"
+        (click)="(createdFrom !== EMessageComeFromType.APP ? (sessionEnded || !message?.conversationLogId) : true) && handleViewConversation()"
+        (keyup.enter)="viewConversation.click()"
+        [class.view-conversation-disabled]="createdFrom !== EMessageComeFromType.APP && (!sessionEnded && !!message?.conversationLogId)">
+        <span #viewConversation class="view-conversation-text"
+          >View conversation</span
+        >
+      </div>
+    </div>
+  </ng-container>
+  <!-- <div
+    *ngIf="!isAiAsistantPage && !isDraftPage && !isAppMessageLog"
+    class="wraper-button"
+    [ngClass]="{'justify-content-center': isUnidentifiedProperty}">
+    <button-action
+      [ngClass]="{'full-width': !isUnidentifiedProperty}"
+      *ngIf="message?.status !== taskStatusType.deleted && message?.status !== taskStatusType.completed && message?.status !== taskStatusType.resolved && message?.status !== taskStatusType.cancelled"
+      [countMetaData]="countMetaDataLength"
+      (showModal)="handleButton($event)"
+      [isUnidentifiedProperty]="isUnidentifiedProperty"
+      [isFullWidth]="!isUnidentifiedProperty"></button-action>
+  </div> -->
+</div>
+
+<ng-template #aiAsistantTicket>
+  <div class="d-flex justify-content-between align-items-start">
+    <div class="d-flex gap-16">
+      <trudi-icon
+        icon="vacateV2"
+        svgClass="size-32"
+        class="logo"
+        viewBox="auto"></trudi-icon>
+      <div class="d-flex flex-dir-column break-word">
+        <div class="d-flex align-items-center gap-4">
+          <div class="header-text">Vacate request</div>
+          <div *ngIf="isUrgent">
+            <trudi-badge
+              text="Urgent"
+              size="extra-small"
+              variant="error"
+              badgeType="filled"
+              [rounded]="true">
+            </trudi-badge>
+          </div>
+        </div>
+        <div class="date">{{submitText}}</div>
+        <div
+          class="body-content-wrapper"
+          [class.mt-8]="isOpenDescription"
+          [@collapseMotion]="isOpenDescription ? 'expanded' : 'collapsed'">
+          <div class="body-content" *ngIf="type">
+            <div class="title">Type</div>
+            <div class="text">{{type}}</div>
+          </div>
+          <div class="body-content" *ngIf="moveOutDate">
+            <div class="title">Intended move out date</div>
+            <div class="text">{{moveOutDate}}</div>
+          </div>
+          <div class="body-content" *ngIf="note">
+            <div class="d-flex align-items-center gap-4">
+              <div class="title">Note</div>
+              <div
+                class="translation-label"
+                [@collapseMotion]="isOpenDescription && (ticket.ticketLanguageCode && ticket.ticketLanguageCode !== 'en' && ticket.ticketLanguageCode !== 'und') && status !== EStatusTicket.SUBMIT ? 'expanded' : 'collapsed'">
+                <language-translation-label
+                  [isFromAIAssistant]="true"
+                  (languageTranslationDisabled)="updateNote($event)"
+                  [messagesTranslate]="ticket?.ticketTrans"
+                  [inputLanguage]="ticket?.ticketLanguageCode"></language-translation-label>
+              </div>
+            </div>
+            <div class="text">
+              {{(updatedNote || note) | uppercaseFirstLetter: true}}
+            </div>
+          </div>
+          <div
+            *ngIf="updatedNote && (ticket.ticketTrans && ticket.ticketLanguageCode && ticket.ticketLanguageCode !== 'en' && ticket.ticketLanguageCode !== 'und') && status !== EStatusTicket.SUBMIT">
+            <language-original-content
+              [isOpenDescription]="isOpenDescription"
+              [content]="note"></language-original-content>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      *ngIf="status === EStatusTicket.SUBMIT"
+      trudi-btn
+      variant="ghost"
+      btnType="neutral"
+      size="medium"
+      shape="circle"
+      (click)="handleNavigateToTask()"
+      class="mt-8">
+      <trudi-icon
+        icon="arrowRight"
+        svgClass="icon-svg"
+        viewBox="auto"></trudi-icon>
+    </button>
+    <button
+      *ngIf="status !== EStatusTicket.SUBMIT && !(!type && !moveOutDate && !note)"
+      trudi-btn
+      variant="ghost"
+      btnType="neutral"
+      size="medium"
+      shape="circle"
+      (click)="handleViewTicket()">
+      <trudi-icon
+        icon="chevronDown"
+        svgClass="size-24"
+        [class.rotation]="isOpenDescription"
+        viewBox="auto"></trudi-icon>
+    </button>
+  </div>
+</ng-template>
+
+<!-- <trudi-send-msg-v2
+  *ngIf="isShowSendMsgModal"
+  [selectedTasks]="selectedTasks"
+  [configs]="sendMsgModalConfig"
+  [openFrom]="TaskType.MESSAGE"
+  (onQuit)="handleQuit()"
+  [rawMsg]="rawMsg"
+  [typeMessage]="typeMessage.SCRATCH"
+  [listOfFiles]="listOfFiles"
+  [listContactCard]="contactsList"
+  (onSendMsg)="onSendMsg($event)">
+</trudi-send-msg-v2> -->

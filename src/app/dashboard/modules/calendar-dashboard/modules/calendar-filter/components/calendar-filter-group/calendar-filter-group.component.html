@@ -1,0 +1,140 @@
+<ng-container *ngIf="titleGroupTask.length > 1 ; else singleAgency">
+  <button
+    #buttonMore
+    size="small"
+    variant="neutral"
+    class="filter-button"
+    nz-popover
+    menuKeyboard
+    nzPopoverPlacement="bottomRight"
+    nzPopoverOverlayClassName="filter-container"
+    [nzPopoverContent]="menu"
+    [nzPopoverTrigger]="'click'"
+    [menuType]="EMenuDropdownType.Popover"
+    [visibleMenu]="visibleDropdown"
+    [(nzPopoverVisible)]="visibleDropdown"
+    (nzPopoverVisibleChange)="onDropdownMenuVisibleChange($event)">
+    <ng-container>
+      <div class="cursor-pointer d-flex align-items-center">
+        <ng-container>
+          <div class="td-icon-circle-btn">
+            <div class="text-agent-detail d-flex align-items-center">
+              <trudi-icon
+                svgClass="size-20 filter-icon"
+                viewBox="auto"
+                icon="filterTask"></trudi-icon>
+              <span
+                *ngIf="(selectedAgencyIds.length > 0 || selectedPortfolios.length > 0) && !visibleDropdown"
+                class="text-agent">
+                {{ selectedPortfolios.length + selectedAgencyIds.length}}</span
+              >
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+  </button>
+
+  <ng-template #menu>
+    <div nz-menu>
+      <div tabindex="-1" class="filter-container__selection">
+        <!-- <ng-container > -->
+        <trudi-select-dropdown-v2
+          placeholder="Search"
+          bindValue="agencyAgentId"
+          bindLabel="label"
+          placement="rightTop"
+          [overlayClassName]="'filter-event'"
+          [clearable]="false"
+          [searchable]="true"
+          [items]="sortedPortfolios"
+          [groupBy]="'agencyName'"
+          [groupOrders]="titleGroupTask"
+          [alwaysShowTitleGroup]="true"
+          [multi]="true"
+          [trudiTrigger]="'hover'"
+          [prioritizeSelectingItems]="false"
+          [prioritizeSelectedIntoGroupBy]="true"
+          [virtualScroll]="true"
+          [showClearIcon]="false"
+          [(ngModel)]="selectedPortfolios"
+          (visibleChange)="onPortfolioVisibleChange($event)">
+          <ng-template trudi-select-dropdown-title-tmp>
+            <div
+              class="td-icon-circle-btn d-flex w-100 justify-content-between gap-8">
+              <div class="text-agent-detail d-flex align-items-center">
+                <span class="info">Portfolio</span>
+                <span *ngIf="selectedPortfolios.length > 0" class="text-agent">
+                  {{ selectedPortfolios.length}}</span
+                >
+              </div>
+              <trudi-icon
+                class="icon-left"
+                svgClass="size-20"
+                viewBox="auto"
+                icon="chevronRight"></trudi-icon>
+            </div>
+          </ng-template>
+        </trudi-select-dropdown-v2>
+        <trudi-select-dropdown-v2
+          *ngIf="filteredAgencies.length > 1"
+          placeholder="CRM subscription"
+          placement="rightTop"
+          [bindLabel]="'name'"
+          [overlayClassName]="'filter-event'"
+          [clearable]="false"
+          [searchable]="false"
+          [items]="filteredAgencies"
+          [prioritizeSelectingItems]="true"
+          [multi]="true"
+          [trudiTrigger]="'hover'"
+          [virtualScroll]="true"
+          [showClearIcon]="false"
+          [(ngModel)]="selectedAgencyIds"
+          (visibleChange)="onSubscriptionVisibleChange($event)">
+          <ng-template trudi-select-dropdown-title-tmp>
+            <div
+              class="td-icon-circle-btn d-flex w-100 justify-content-between gap-8">
+              <div class="text-agent-detail d-flex align-items-center">
+                <span class="info subscription">CRM subscription</span>
+                <span *ngIf="selectedAgencyIds.length > 0" class="text-agent">
+                  {{ selectedAgencyIds.length}}</span
+                >
+              </div>
+              <trudi-icon
+                class="icon-left"
+                svgClass="size-20"
+                viewBox="auto"
+                icon="chevronRight"></trudi-icon>
+            </div>
+          </ng-template>
+        </trudi-select-dropdown-v2>
+      </div>
+    </div>
+  </ng-template>
+</ng-container>
+<ng-template #singleAgency>
+  <trudi-select-dropdown-v2
+    placeholder="Search"
+    bindValue="agencyAgentId"
+    bindLabel="label"
+    [clearable]="false"
+    [searchable]="true"
+    [items]="sortedPortfolios"
+    [alwaysShowTitleGroup]="true"
+    [multi]="true"
+    [virtualScroll]="true"
+    [(ngModel)]="selectedPortfolios"
+    (visibleChange)="onPortfolioVisibleChange($event)">
+    <ng-template trudi-select-dropdown-title-tmp>
+      <div class="td-icon-circle-btn">
+        <div class="text-agent-detail d-flex align-items-center">
+          <span class="info">Portfolio</span>
+          <span *ngIf="selectedPortfolios?.length" class="text-agent">
+            {{selectedPortfolios?.length}}
+          </span>
+        </div>
+      </div>
+    </ng-template>
+  </trudi-select-dropdown-v2>
+</ng-template>

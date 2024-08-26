@@ -1,0 +1,13 @@
+<div
+  *ngIf="badgeForPropertyUser else moreBadge"
+  class="cls-badge text-white"
+  [ngClass]="type === 'TENANCY' ? 'userpro-badge-warning' : 'userpro-badge-success'">
+  {{sharedService.getUserPropertyStatus(text) | lowercase}}
+</div>
+<ng-template #moreBadge>
+  <div
+    class="cls-badge"
+    [ngClass]="type === 'TENANCY' ? 'cls-badge-warning' : 'cls-badge-success'">
+    {{sharedService.getUserPropertyStatus(text) | lowercase}}
+  </div>
+</ng-template>

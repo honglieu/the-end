@@ -1,0 +1,23 @@
+@if (!(isResolved && isVoicemail)) {
+<div class="join-conversation-wrapper">
+  <span class="d-flex align-items-center gap-4 ai-text text-ellipsis">
+    @if(isVoicemail) { Your AI Assistant needs you to
+    <p class="bold-text">review</p>
+    this conversation } @else { {{textContent}} }
+  </span>
+  @if (!isVoicemail) {
+  <button
+    (click)="handleJoinConversation()"
+    trudi-btn
+    trudi-tooltip
+    nzTooltipPlacement="top"
+    [nzTooltipTitle]="disableJoinBtn && !isResolved ? disabledTooltipText : ''"
+    nzTooltipOverlayClassName="join-conversation-tooltip"
+    [disabled]="disableJoinBtn"
+    size="medium"
+    variant="filled">
+    Join now
+  </button>
+  }
+</div>
+}

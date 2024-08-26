@@ -1,0 +1,152 @@
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div nz-menu>
+    <div class="menu-wrapper menu-wrapper-message border-rad-8">
+      <div
+        *ngIf="menuDropDown.resolve"
+        nz-dropdown
+        [position]="menuPosition"
+        nzTrigger="click"
+        [nzDropdownMenu]="folderMenu"
+        class="item d-flex align-items-center gap-8"
+        ripple>
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          icon="iconMoveV3"></trudi-icon>
+        <p class="text">Move to</p>
+      </div>
+      <div
+        *ngIf="menuDropDown.exportTaskActivity"
+        nz-dropdown
+        [nzPlacement]="'rightBottom'"
+        nzTrigger="click"
+        [nzDropdownMenu]="exportTaskActivity"
+        class="item d-flex align-items-center gap-8"
+        ripple>
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          icon="conversationExport"></trudi-icon>
+        <p class="text">Export task activity</p>
+      </div>
+      <nz-dropdown-menu #folderMenu="nzDropdownMenu">
+        <ul class="menu-folder" nz-menu>
+          <ng-container *ngIf="taskFolders?.length; else noFolder">
+            <div class="menu-header">
+              <div class="menu-header__title">CHOOSE FOLDER</div>
+            </div>
+            <div class="list-wrapper list-wrapper-folder">
+              <li
+                class="menu-item menu-item gap-8"
+                *ngFor="let taskFolder of taskFolders"
+                nz-submenu
+                nz-button
+                nz-dropdown
+                [nzDropdownMenu]="groupMenu"
+                [nzPlacement]="'topLeft'"
+                [nzTitle]="folderTemplate"
+                [nzTrigger]="'click'">
+                <ul class="menu-group" nz-menu>
+                  <div class="menu-header">
+                    <div class="menu-title">CHOOSE GROUP</div>
+                  </div>
+                  <div class="list-wrapper list-wrapper-group">
+                    <ng-container
+                      *ngFor="let taskGroup of taskFolder?.taskGroups">
+                      <li
+                        class="menu-item pd-12 gap-8"
+                        nz-menu-item
+                        (click)="handleMenu(ETaskMenuOption.MOVE_TO_FOLDER, taskFolder, taskGroup)">
+                        <div
+                          [ngStyle]="{backgroundColor: taskGroup?.color}"
+                          class="group-color"></div>
+                        <span class="menu-item__name">
+                          {{taskGroup?.name}}
+                        </span>
+                      </li>
+                    </ng-container>
+                  </div>
+                </ul>
+                <ng-template #folderTemplate>
+                  <trudi-icon
+                    class="folder-icon"
+                    [style]="{ 'width.px': 14, 'height.px': 14 }"
+                    [icon]="taskFolder?.icon">
+                  </trudi-icon>
+                  <span class="menu-item__name"> {{taskFolder?.name}} </span>
+                </ng-template>
+              </li>
+            </div>
+          </ng-container>
+        </ul>
+      </nz-dropdown-menu>
+      <ng-template #noFolder
+        ><div nz-menu class="menu-header no-folder">
+          <i>No folder to display</i>
+        </div></ng-template
+      >
+      <ng-container *ngIf="taskItem?.status === TaskStatusType.inprogress">
+        <div
+          *ngIf="menuDropDown.resolve"
+          disableOpenSendMsgModal
+          (click)="handleMenu(ETaskMenuOption.SEND_MESSAGE)"
+          class="item d-flex align-items-center gap-8"
+          [ngClass]="{'disabled' : isConsole}"
+          ripple>
+          <trudi-icon
+            svgClass="size-20"
+            viewBox="auto"
+            icon="mailThin"></trudi-icon>
+          <p class="text">Send email</p>
+        </div>
+        <div
+          *ngIf="menuDropDown.resolve"
+          (click)="handleMenu(ETaskMenuOption.RESOLVE)"
+          [appE2E]="EDataE2EConversation.MARK_AS_RESOLVED"
+          class="item d-flex align-items-center gap-8"
+          [ngClass]="{'disabled' : isConsole}"
+          ripple>
+          <trudi-icon
+            class="no-pointer-event"
+            svgClass="size-20"
+            viewBox="auto"
+            icon="iconCheckCircleV2"></trudi-icon>
+          <p class="text no-pointer-event">Mark as completed</p>
+        </div>
+      </ng-container>
+      <div
+        *ngIf="menuDropDown.resolve"
+        (click)="handleMenu(ETaskMenuOption.DELETE)"
+        [appE2E]="EDataE2EConversation.PERMANENTLY_DELETE"
+        class="item d-flex align-items-center gap-8"
+        [ngClass]="{'disabled' : isConsole}"
+        ripple>
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          class="no-pointer-event"
+          icon="deleteIconOutline"></trudi-icon>
+        <p class="text no-pointer-event">Permanently delete</p>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #exportTaskActivity>
+  <div class="export-task" nz-menu [nzMode]="'horizontal'">
+    <button
+      nz-menu-item
+      class="export-task-item"
+      (click)="handleMenu(ETaskMenuOption.SAVE_TASK_ACTIVITY_TO_PT)">
+      <trudi-icon svgClass="size-20" viewBox="auto" icon="archive"></trudi-icon>
+      <p class="no-margin">Save to Property Tree</p>
+    </button>
+    <button *ngIf="disablePDF" nz-menu-item disabled class="export-task-item">
+      <trudi-icon
+        svgClass="size-16"
+        viewBox="auto"
+        icon="TrudiDownload"></trudi-icon>
+      <p class="no-margin">Download as PDF</p>
+    </button>
+  </div>
+</nz-dropdown-menu>

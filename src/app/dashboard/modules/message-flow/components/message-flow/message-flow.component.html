@@ -1,0 +1,16 @@
+<ng-container *ngIf="isProcessing$ | async">
+  <trudi-send-msg-v3
+    *ngIf="(currentModal$ | async )=== EModalID.SendMsg"
+    [configs]="config$ | async"
+    (back)="handleBack(EModalID.SendMsg)"
+    (quit)="handleCloseSendMsgModal()"
+    (sendMsg)="onSendMsg($event)"></trudi-send-msg-v3>
+
+  <trudi-bulk-send-msg
+    *ngIf="(currentModal$ | async )=== EModalID.BulkSendMsg"
+    [configs]="config$ | async"
+    (onBack)="handleBack($event)"
+    (onQuit)="handleCloseSendMsgModal()"
+    (onSendMsg)="onSendMsg($event)">
+  </trudi-bulk-send-msg>
+</ng-container>

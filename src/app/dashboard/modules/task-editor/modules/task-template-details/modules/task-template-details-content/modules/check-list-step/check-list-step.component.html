@@ -1,0 +1,59 @@
+<trudi-drawer
+  *ngIf="showDrawer"
+  [(visible)]="showDrawer"
+  [wrapClassName]="isJiggling ? 'shaking-task-editor-drawer' : ''"
+  [okText]="editStep ? 'Update' : 'Add'"
+  (onOk)="handleOk()"
+  (onBack)="handleBack()"
+  (onDelete)="handleDelete()"
+  (onCancel)="handleCancel()"
+  (onClose)="handleCancel(true)"
+  [enableBackBtn]="!editStep || isDisableForm"
+  [enableDeleteBtn]="editStep && !isDisableForm"
+  [enableOkBtn]="!isDisableForm"
+  [enableCancel]="!isDisableForm"
+  [headerTpl]="headerTpl"
+  [nzClosable]="true">
+  <div class="drawer-content" [formGroup]="stepFormGroup">
+    <div class="step-content-wrapper">
+      <p class="step-content-title">To complete this step...</p>
+      <tiny-editor
+        [text]="prefillStepName"
+        (value)="handleChangeValue($event)"
+        (onFocus)="isFocusedTextEditor = true"
+        (onBlur)="isFocusedTextEditor = false"
+        [maxRemainCharacter]="255"
+        [countCharacterUp]="false"
+        [minHeight]="80"
+        [disabled]="isDisableForm"
+        [placeholder]="'Write some instructions for your team member to complete this step'"
+        [enableAiGenerateMsgCopy]="false"
+        [isShowEmbedCodeOptionsFunction]="false"
+        [isShowUploadAttachments]="false"
+        [fromCommunicationStep]="false"
+        [fromCheckListStep]="true"
+        [isShowEmailSignature]="false"
+        [showAddPolicyPopover]="false"
+        #editorContainer></tiny-editor>
+    </div>
+  </div>
+</trudi-drawer>
+
+<ng-template #headerTpl>
+  <div
+    [formGroup]="stepFormGroup"
+    class="calendar-step-header d-flex flex-dir-column gap-4">
+    <trudi-badge
+      text="Checklist step"
+      size="small"
+      *ngIf="canEdit"></trudi-badge>
+    <trudi-text-field
+      [checkSubmit]="isSubmit"
+      class="step-name-field"
+      formControlName="stepName"
+      [disabled]="isDisableForm"
+      [maxCharacter]="100"
+      [showCounting]="false"
+      placeholder="Add your step name here"></trudi-text-field>
+  </div>
+</ng-template>

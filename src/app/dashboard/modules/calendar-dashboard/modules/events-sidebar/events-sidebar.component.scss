@@ -1,0 +1,116 @@
+@import 'function';
+
+.sidebar-left {
+  padding: 16px 12px;
+}
+.menu-container {
+  .single-item {
+    border-radius: 4px;
+    padding: 0 !important;
+    height: 32px !important;
+    background-color: var(--bg-base);
+    cursor: pointer;
+
+    &::after {
+      opacity: 0;
+    }
+
+    .drag-icon {
+      visibility: hidden;
+    }
+
+    &:hover {
+      color: var(--fg-neutral-strongest) !important;
+      background: var(--bg-neutral-tonal-stronger) !important;
+      .drag-icon {
+        visibility: visible;
+      }
+    }
+
+    &:active {
+      background: var(--bg-neutral-tonal-stronger) !important;
+    }
+
+    &:focus-visible {
+      border: 1px solid var(--brand-500) !important;
+    }
+
+    &:not(:hover) {
+      .item-icon {
+        color: var(--fg-neutral-normal);
+        display: block;
+      }
+
+      .icon-more-wrapper {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    &--link {
+      padding: 0 8px;
+      height: 32px;
+
+      .item {
+        position: relative;
+
+        .icon-wrapper {
+          padding: 4px;
+          border-radius: 6px;
+        }
+
+        &:hover {
+          color: var(--fg-neutral-strongest) !important;
+        }
+
+        .item-name {
+          @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 500);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    &:has(focus-visible) {
+      border: 1px solid var(--brand-500) !important;
+    }
+
+    .item-name {
+      @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+    }
+  }
+  .item-selected {
+    background: var(--bg-neutral-tonal-stronger);
+
+    .item-name {
+      color: var(--gray-700) !important;
+      font-weight: 600;
+    }
+  }
+}
+
+:host {
+  .cdk-placeholder {
+    border-radius: 4px;
+    background: var(--bg-neutral-tonal-stronger, #e7eaed);
+    min-height: 36px;
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  .cdk-drag-placeholder {
+    opacity: 1;
+  }
+}
+
+.preview-wrapper {
+  padding: 8px !important;
+  border-radius: 4px;
+  background: var(--bg-base);
+  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.1),
+    0px 8px 28px 0px rgba(0, 0, 0, 0.05);
+  cursor: grabbing;
+
+  .item-name {
+    @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 500);
+  }
+}

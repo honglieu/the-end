@@ -1,0 +1,89 @@
+<trudi-modal
+  [visible]="showModal"
+  title="Forward to mailbox"
+  [autoFocus]="false"
+  (onCancel)="handleClose()"
+  className="forward-inbox-wrapper">
+  <div class="content-modal" *ngIf="showModal">
+    <ng-container *ngIf="!isSyncedAttachment && attachmentCount > 0">
+      <msg-attachment-load
+        class="attachment-load"
+        [threadIds]="threadIds"
+        [(attachmentSynced)]="isSyncedAttachment"></msg-attachment-load>
+    </ng-container>
+    <trudi-form-control *ngIf="radioListMailBox.length > 0;else noMailBox">
+      <nz-radio-group
+        [(ngModel)]="selectedValue"
+        class="radio-group-forward-mailbox">
+        <ng-container *ngFor="let itemMailBox of radioListMailBox">
+          <div nz-radio [nzValue]="itemMailBox.id" [nzDisabled]="disabled">
+            <div class="avatar">
+              <ng-template
+                *ngTemplateOutlet="itemMailBox.picture ? hasPicture: noPicture;
+                                  context: { picture: itemMailBox.picture, name: itemMailBox.name }"></ng-template>
+              <trudi-icon
+                *ngIf="itemMailBox.type === mailBoxType.COMPANY"
+                [icon]="'mailboxTypeCompany'"
+                [style]="{ 'width.px': 18, 'height.px': 18 }">
+              </trudi-icon>
+            </div>
+            <div>
+              <div class="mailbox-name d-flex gap-4 align-items-center">
+                <span> {{itemMailBox.name}}</span>
+                <trudi-icon
+                  *ngIf="itemMailBox?.status === EMailBoxStatus.DISCONNECT || itemMailBox?.status === EMailBoxStatus.FAIL"
+                  nz-tooltip
+                  [tooltipMaxWidth]="196"
+                  [nzTooltipTitle]="itemMailBox?.status ===  EMailBoxStatus.FAIL ? titleTemplate  : textTooltip"
+                  nzTooltipPlacement="bottom"
+                  [icon]="itemMailBox?.status ===  EMailBoxStatus.FAIL ? 'alertWarningIcon' : 'alertOctagonIcon'"
+                  svgClass="size-20">
+                </trudi-icon>
+              </div>
+              <ng-template #titleTemplate>
+                <div class="d-flex flex-dir-column text-left">
+                  <span>Fail to connect</span>
+                  <span
+                    >{{itemMailBox.lastTimeSync | formatDateTime | async}}</span
+                  >
+                </div>
+              </ng-template>
+              <span
+                #activeMailboxMail
+                nz-tooltip
+                nzTooltipPlacement="bottom"
+                [nzTooltipTitle]="itemMailBox?.emailAddress"
+                [nzTooltipOverlayStyle]="{ 'max-width': '266px', 'padding-top': '5px' }"
+                [nzTooltipTrigger]="activeMailboxMail?.offsetWidth < activeMailboxMail?.scrollWidth ? 'hover' : null"
+                class="mailbox-email text-ellipsis d-block"
+                [ngClass]="{'error-text': itemMailBox?.status === EMailBoxStatus.DISCONNECT}"
+                >{{itemMailBox?.emailAddress}}</span
+              >
+            </div>
+          </div>
+        </ng-container>
+      </nz-radio-group>
+    </trudi-form-control>
+    <ng-template #hasPicture let-picture="picture">
+      <img [src]="picture"
+    /></ng-template>
+    <ng-template #noPicture let-name="name">
+      <nz-avatar-group>
+        <nz-avatar [nzText]="name | shortenName" nzShape="square"></nz-avatar>
+      </nz-avatar-group>
+    </ng-template>
+    <ng-template #noMailBox>
+      <div class="no-mail-box">No mailboxes found</div>
+    </ng-template>
+  </div>
+  <ng-template #footerModal>
+    <div class="footer-modal">
+      <button
+        trudi-btn
+        [disabled]="!selectedValue || !isSyncedAttachment"
+        (click)="handleConfirmForward()">
+        Confirm
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

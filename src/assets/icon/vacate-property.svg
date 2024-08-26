@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="19px" viewBox="0 0 20 19" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 54.1 (76490) - https://sketchapp.com -->
+    <title>icon-vacate-property</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Screens-for-Sprint-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="vacate-property" transform="translate(-9.000000, -10.000000)" fill="#F9F9F9">
+            <path d="M16.9824561,16.3157895 L21.6315789,16.3157895 C25.7010455,16.3157895 29,19.6147439 29,23.6842105 L29,26.8421053 C29,28.00481 28.0574416,28.9473684 26.8947368,28.9473684 C25.7320321,28.9473684 24.7894737,28.00481 24.7894737,26.8421053 L24.7894737,23.6842105 C24.7894737,21.9401534 23.3756361,20.5263158 21.6315789,20.5263158 L16.9824561,20.5263158 L16.9824561,25.9649123 L9.20467836,18.1871345 L16.9824561,10.4093567 L16.9824561,16.3157895 Z" id="icon-vacate-property"></path>
+        </g>
+    </g>
+</svg>

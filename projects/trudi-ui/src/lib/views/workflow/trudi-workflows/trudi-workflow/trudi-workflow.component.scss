@@ -1,0 +1,125 @@
+:host {
+  &.trudi_workflow--disabled {
+    opacity: 0.3;
+    pointer-events: none;
+    .trudi_workflow--input .trudi_workflow--line {
+      background: var(--gray-500);
+    }
+    .trudi_workflow--input .trudi_workflow--mark .mark_default {
+      background: var(--gray-500);
+    }
+    .trudi_workflow--mark .mark_checked {
+      width: 10px;
+      display: none;
+    }
+    .trudi_workflow--mark .mark_uncheck {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: white;
+    }
+    .trudi_workflow--input input:checked ~ .trudi_workflow--mark .mark_uncheck {
+      display: none;
+    }
+    .trudi_workflow--input input:checked ~ .trudi_workflow--mark .mark_checked {
+      display: block;
+    }
+  }
+  &.line_disabled .trudi_workflow--input .trudi_workflow--line {
+    background: var(--gray-500);
+    opacity: 0.3;
+  }
+  &.line_hidden .trudi_workflow--line {
+    display: none;
+  }
+  &.direction_vertical .trudi_workflow{
+    grid-template-columns: min-content auto;
+  }
+  &.direction_vertical .trudi_workflow .trudi_workflow--line {
+    min-width: 0;
+    width: 4px;
+    min-height: 70px;
+    height: 100%;
+    margin: 0 0 4px 0;
+  }
+  &.direction_vertical .trudi_workflow .trudi_workflow--input {
+    flex-direction: column;
+  }
+}
+
+.trudi_workflow {
+  display: grid;
+  gap: 0 16px;
+
+  &--content {
+    width: 100%;
+    padding: 0 16px 10px 0;
+    & label {
+      margin: 0;
+      color: var(--fg-neutral-normal, #646464);
+      font-size: 14px;
+      font-weight: 600;
+      padding: 0;
+      cursor: pointer;
+    }
+  }
+
+  &--input {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px 4px;
+    flex-direction: row;
+
+    & input {
+      position: absolute;
+      opacity: 0;
+      margin: 0;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 3;
+    }
+
+    & .trudi_workflow--line {
+      min-width: 70px;
+      width: 100%;
+      min-height: 0;
+      height: 4px;
+      margin: 0 4px 0 0;
+      background: var(--bg-success-solid-normal, #40c174);
+    }
+
+    .trudi_workflow--mark .mark_checked {
+      width: 10px;
+      display: none;
+    }
+    .trudi_workflow--mark .mark_uncheck {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: white;
+    }
+
+    & input:checked ~ .trudi_workflow--mark .mark_uncheck {
+      display: none;
+    }
+    & input:checked ~ .trudi_workflow--mark .mark_checked {
+      display: block;
+    }
+  }
+}
+.mark_default {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  border-radius: 8333.333px;
+  background: var(--bg-success-solid-normal, #40c174);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

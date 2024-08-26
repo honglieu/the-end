@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 59.1 (101010) - https://sketch.com -->
+    <title>AF77B946-DCA7-4D9E-85ED-850E6A9C5B7F</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <polygon id="path-1" points="8.8 15.9 4.6 11.7 3.2 13.1 8.8 18.7 20.8 6.7 19.4 5.3"></polygon>
+    </defs>
+    <g id="Cards" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Cards-Action-LInks" transform="translate(-560.000000, -637.000000)">
+            <g id="Cards-/-Action-Links-/-completed" transform="translate(455.000000, 529.000000)">
+                <g id="Group-11-Copy-2" transform="translate(0.000000, 94.000000)">
+                    <g id="Group-14-Copy">
+                        <g id="Group-10">
+                            <g id="Group-13" transform="translate(105.000000, 14.000000)">
+                                <g id="Icons-/-successful">
+                                    <mask id="mask-2" fill="white">
+                                        <use xlink:href="#path-1"></use>
+                                    </mask>
+                                    <use id="Mask" fill="#141414" xlink:href="#path-1"></use>
+                                    <g id="Colours-/--Primary-/-Green" mask="url(#mask-2)" fill="#00A99F">
+                                        <polygon id="Rectangle-2" points="0 0 24 0 24 24 0 24"></polygon>
+                                    </g>
+                                </g>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

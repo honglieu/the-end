@@ -1,0 +1,134 @@
+@import 'function';
+
+.btn-skip-assign {
+  width: 100px;
+  height: 40px;
+  padding: 0px 16px;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--bg-neutral-base-default, #fff);
+  border: 1px solid var(--border-brand, #00aa9f);
+  @include fontSetup(var(--fg-brand, #00aa9f), 14px, 20px, normal, 600);
+
+  &:hover {
+    background: var(--bg-brand-tonal-stronger, #d1f0ed);
+  }
+
+  &:active {
+    background: var(--bg-brand-tonal-strongest, #b9e8e4);
+  }
+
+  &:disabled {
+    border: 1px solid var(--border-neutral-dark, #d8dcdf);
+    color: var(--fg-neutral-weakest, #b9bec0);
+    cursor: not-allowed;
+    background: none;
+  }
+}
+
+.btn-try-again {
+  width: 100px;
+  height: 40px;
+  padding: 0px 16px;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--bg-brand-solid-normal, #00aa9f);
+  border: none;
+  @include fontSetup(var(--fg-neutral-base, #fff), 14px, 20px, normal, 600);
+
+  &:hover {
+    background: var(--bg-brand-solid-stronger, #33bbb2);
+  }
+
+  &:active {
+    background: var(--bg-brand-solid-strongest, #0aa095);
+  }
+
+  &:disabled {
+    background: var(--bg-brand-tonal-strongest, #b9e8e4);
+    cursor: not-allowed;
+  }
+}
+
+.box-content {
+}
+
+.banner {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  gap: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-danger, #e1024f);
+  background: var(--bg-danger-tonal-normal, #ffe1e7);
+}
+
+.text-failed {
+  @include fontSetup(
+    var(--fg-neutral-stronger, #3d3d3d),
+    12px,
+    16px,
+    normal,
+    600
+  );
+}
+
+.list-task {
+  display: flex;
+  padding: 16px 16px 16px 12px;
+  align-items: flex-start;
+  gap: var(--spacing-md, 8px);
+
+  flex: 1 0 0;
+  border-radius: 8px;
+  border: 1px solid var(--border-neutral-dark, #d8dcdf);
+  background: var(--bg-base, #fff);
+}
+
+.task-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  @include fontSetup(
+    var(--fg-neutral-stronger, #3d3d3d),
+    14px,
+    20px,
+    normal,
+    600
+  );
+}
+
+.task-urgent {
+  display: flex;
+  padding: 0px 4px;
+  align-items: flex-start;
+  border-radius: 2px;
+  background: var(--bg-danger-solid-normal, #e1024f);
+
+  @include fontSetup(var(--fg-base, #fff), 12px, 16px, normal, 400);
+}
+
+.property-name {
+  @include fontSetup(
+    var(--fg-neutral-strongest, #202020),
+    14px,
+    20px,
+    normal,
+    400
+  );
+}
+
+.message {
+  @include fontSetup(
+    var(--fg-neutral-normal, #646464),
+    14px,
+    20px,
+    normal,
+    400
+  );
+}
+
+::ng-deep nz-modal-container .create-task-failed .ant-modal-body {
+  overflow-y: auto;
+  max-height: 500px;
+}

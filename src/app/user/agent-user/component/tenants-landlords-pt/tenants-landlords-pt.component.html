@@ -1,0 +1,148 @@
+<div class="user-wrapper" #tenantOwnerHeader>
+  <ng-container #filterWrapper>
+    <div *ngIf="loadingFilter" class="d-flex gap-16 skeleton-wrapper">
+      <nz-skeleton
+        class="size-200"
+        [nzParagraph]="{ rows: 0 }"
+        [nzActive]="true"></nz-skeleton>
+      <nz-skeleton
+        class="skelenton-size-90"
+        [nzParagraph]="{ rows: 0 }"
+        [nzActive]="true"></nz-skeleton>
+      <nz-skeleton
+        class="skelenton-size-70"
+        [nzParagraph]="{ rows: 0 }"
+        [nzActive]="true"></nz-skeleton>
+      <nz-skeleton
+        class="size-200"
+        [nzParagraph]="{ rows: 0 }"
+        [nzActive]="true"></nz-skeleton>
+      <nz-skeleton
+        class="skelenton-size-70"
+        [nzParagraph]="{ rows: 0 }"
+        [nzActive]="true"></nz-skeleton>
+      <nz-skeleton
+        class="size-200"
+        [nzParagraph]="{ rows: 0 }"
+        [nzActive]="true"></nz-skeleton>
+    </div>
+  </ng-container>
+  <div *ngIf="!loadingFilter" class="head-wrapper" #filterWrapper>
+    <dropdown-menu-contacts
+      [listItem]="crmStatus"
+      [defaultListValues]="prevListCrm"
+      [label]="'CRM status'"
+      [type]="filterType.CRM"
+      [noResetListItem]="true"
+      (itemsSelected)="handleItemsSelected($event)"></dropdown-menu-contacts>
+    <ng-container *ngIf="titleGroupTask.length > 1 ; else singleAgency">
+      <trudi-select-dropdown-v2
+        placeholder="Search"
+        bindValue="agencyAgentId"
+        bindLabel="label"
+        [clearable]="true"
+        [searchable]="true"
+        [items]="sortedPortfolios"
+        [groupBy]="'agencyName'"
+        [groupOrders]="titleGroupTask"
+        [alwaysShowTitleGroup]="true"
+        [prioritizeSelectingItems]="false"
+        [multi]="true"
+        [prioritizeSelectedIntoGroupBy]="true"
+        [virtualScroll]="true"
+        [prioritizeSelectingItems]="false"
+        [prioritizeSelectedIntoGroupBy]="true"
+        [(ngModel)]="selectedPortfolios"
+        (valueChange)="handleItemsSelected($event)">
+        <ng-template trudi-select-dropdown-title-tmp>
+          <div class="td-icon-circle-btn">
+            <div class="text-agent-detail d-flex align-items-center">
+              <span class="info">Portfolio</span>
+              <span *ngIf="selectedPortfolios?.length" class="text-agent">
+                {{selectedPortfolios?.length}}
+              </span>
+            </div>
+          </div>
+        </ng-template>
+      </trudi-select-dropdown-v2>
+    </ng-container>
+    <ng-template #singleAgency>
+      <trudi-select-dropdown-v2
+        placeholder="Search"
+        bindValue="agencyAgentId"
+        bindLabel="label"
+        [clearable]="true"
+        [searchable]="true"
+        [items]="sortedPortfolios"
+        [alwaysShowTitleGroup]="true"
+        [multi]="true"
+        [virtualScroll]="true"
+        [(ngModel)]="selectedPortfolios"
+        (valueChange)="handleItemsSelected($event)">
+        <ng-template trudi-select-dropdown-title-tmp>
+          <div class="td-icon-circle-btn">
+            <div class="text-agent-detail d-flex align-items-center">
+              <span class="info">Portfolio</span>
+              <span *ngIf="selectedPortfolios?.length" class="text-agent">
+                {{selectedPortfolios?.length}}
+              </span>
+            </div>
+          </div>
+        </ng-template>
+      </trudi-select-dropdown-v2>
+    </ng-template>
+    <dropdown-menu-contacts
+      [defaultListValues]="prevListRoles"
+      [listItem]="dataSelect?.roleType"
+      [label]="'Roles'"
+      [type]="filterType.ROLES"
+      (itemsSelected)="handleItemsSelected($event)"
+      [formDropdown]="'single selection'"></dropdown-menu-contacts>
+
+    <dropdown-menu-contacts
+      [defaultListValues]="prevListPropertyStatus"
+      [listItem]="propertyStatus"
+      [label]="'Property status'"
+      [type]="filterType.PROPERTY_STATUS"
+      [noResetListItem]="true"
+      (itemsSelected)="handleItemsSelected($event)"></dropdown-menu-contacts>
+
+    <dropdown-menu-contacts
+      [defaultListValues]="prevListListInviteStatus"
+      [listItem]="inviteStatus"
+      [label]="'Tenant app'"
+      [type]="filterType.STATUS"
+      [noResetListItem]="true"
+      (itemsSelected)="handleItemsSelected($event)"></dropdown-menu-contacts>
+
+    <dropdown-menu-contacts
+      [defaultListValues]="prevListLastTime"
+      [listItem]="listDateFilter"
+      [label]="'Last imported'"
+      [type]="filterType.LAST_IMPORT"
+      (itemsSelected)="handleItemsSelected($event)"
+      [formDropdown]="'single selection'"></dropdown-menu-contacts>
+
+    <dropdown-menu-contacts
+      *ngIf="agencies.length > 1"
+      [defaultListValues]="prevListAgencies"
+      [listItem]="agencies"
+      [label]="'CRM subscription'"
+      [type]="filterType.AGENCIES"
+      [noResetListItem]="true"
+      (itemsSelected)="handleItemsSelected($event)"></dropdown-menu-contacts>
+  </div>
+</div>
+
+<list-property-contact-view
+  (handleRefreshList)="handleRefreshData($event)"
+  [typePage]="typePage.TENANTS_LANLORDS_PT"
+  [listAgentUserProperties]="propertyContacts"
+  [totalItems]="totalItems"
+  [pageIndex]="pageIndex"
+  [totalPages]="totalPages"
+  [isLoadingMore]="isLoadingMore"
+  [isLoading]="isLoading"
+  [agentListLength]="agentListLength"
+  [increaseHeaderHeight]="increaseHeaderHeight">
+</list-property-contact-view>

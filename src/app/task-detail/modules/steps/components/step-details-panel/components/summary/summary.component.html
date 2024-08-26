@@ -1,0 +1,31 @@
+<div
+  class="summary-container"
+  [ngClass]="{
+    'bg-success-summary': currentStep.status && currentStep.status !== EStepStatus.PENDING, 
+    'summary-border': !currentStep.status || currentStep.status === EStepStatus.PENDING
+  }">
+  <div class="summary-content">
+    <ng-container [ngSwitch]="currentStep.stepType">
+      <ng-container *ngSwitchCase="EStepType.COMMUNICATE">
+        <communication-step-summary
+          [currentStep]="currentStep"
+          [buttonKey]="buttonKey"></communication-step-summary>
+      </ng-container>
+      <ng-container *ngSwitchCase="EStepType.CHECK_LIST">
+        <checklist-step-summary
+          [currentStep]="currentStep"></checklist-step-summary>
+      </ng-container>
+      <ng-container *ngSwitchCase="EStepType.NEW_TASK">
+        <new-task-step-summary
+          [currentStep]="currentStep"></new-task-step-summary>
+      </ng-container>
+      <ng-container *ngSwitchCase="EStepType.CALENDAR_EVENT">
+        <calendar-step-summary
+          [currentStep]="currentStep"></calendar-step-summary>
+      </ng-container>
+      <ng-container *ngSwitchCase="EStepType.PROPERTY_TREE">
+        <crm-step-summary [currentStep]="currentStep"></crm-step-summary>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>

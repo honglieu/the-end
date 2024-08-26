@@ -1,0 +1,28 @@
+<create-new-task-pop-up
+  *ngIf="isShowCreateTaskModal"
+  [taskNameList]="listTaskName"
+  [configs]="configs"
+  [openFrom]="CreateTaskByCateOpenFrom.CONVERT_TO_TASK"
+  [selectedTaskNameRegionId]="
+    selectedTaskToConvert?.taskNameRegion?.taskNameRegionId
+  "
+  [selectedTaskToConvert]="selectedTaskToConvert"
+  [activeProperty]="activeProperty"
+  (stopProcessCreateNewTask)="isShowCreateTaskModal = false"></create-new-task-pop-up>
+
+<div class="convert-to-task-container d-flex gap-12 w-100 relative">
+  <convert-to-task-dropdown
+    [listTaskName]="listTaskName"
+    [isShowCreateTaskBtn]="isShowCreateTaskBtn"
+    [isError]="isError"
+    [noPrefill]="noPrefill"
+    (getSelectedTask)="getSelectedTask($event)"
+    class="w-100"></convert-to-task-dropdown>
+
+  <button
+    [disabled]="isArchiveMailbox || isConsole || taskStatus === TaskStatusType.deleted"
+    class="trudi-btn trudi-btn-large trudi-btn-detail w-100"
+    (click)="onOpenCreateNewTaskPopUp()">
+    Create
+  </button>
+</div>

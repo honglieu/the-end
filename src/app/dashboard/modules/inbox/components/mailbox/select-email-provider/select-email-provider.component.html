@@ -1,0 +1,201 @@
+<trudi-modal
+  [className]="!isOwner ? 'hidden-footer modal-select-email-provider' : 'modal-select-email-provider'"
+  [visible]="visible"
+  [modelWidth]="736"
+  [autoFocus]="null"
+  [isHideFooter]="!isOwner"
+  (onCancel)="handleCancel()"
+  title="Select email provider"
+  subTitle="">
+  <div class="email-provider__container gap-16">
+    <div class="email-provider__content">
+      <button
+        class="email-provider__button padding-gmail d-flex flex-dir-column align-items-center"
+        (keydown.enter)="onOpenPopupModal(emailProvider.GMAIL)"
+        (click)="onOpenPopupModal(emailProvider.GMAIL)"
+        [disabled]="isConsole">
+        <img
+          class="gmail-logo"
+          src="assets/images/login-gmail-logo.png"
+          alt="outlook-logo" />
+        <div
+          class="gsi-material-button h-40"
+          [ngClass]="{'selected': selectedEmailProvider === emailProvider.GMAIL}">
+          <div
+            class="gsi-material-button-content-wrapper gap-10"
+            data-e2e="add-account-google">
+            <span
+              class="gsi-material-button-contents gsi-material-font-family no-pointer-event"
+              >Sign in with Google</span
+            >
+          </div>
+        </div>
+      </button>
+      <button
+        class="email-provider__button padding-outlook d-flex flex-dir-column align-items-center"
+        (keydown.enter)="onOpenPopupModal(emailProvider.OUTLOOK)"
+        (click)="onOpenPopupModal(emailProvider.OUTLOOK)"
+        [disabled]="isConsole">
+        <img
+          class="outlook-logo"
+          src="assets/images/login-outlook-logo.png"
+          alt="outlook-logo" />
+        <div
+          class="msi-material-button"
+          [ngClass]="{'selected': selectedEmailProvider === emailProvider.OUTLOOK}">
+          <div
+            class="msi-material-button-content-wrapper gap-12"
+            data-e2e="add-account-outlook">
+            <trudi-icon
+              class="no-pointer-event"
+              svgClass="size-20"
+              [icon]="'iconLoginMicrosoft'">
+            </trudi-icon>
+            <span class="msi-material-button-contents no-pointer-event"
+              >Sign in with Microsoft</span
+            >
+          </div>
+        </div>
+      </button>
+      <button
+        class="email-provider__button padding-gmail d-flex flex-dir-column align-items-center"
+        (keydown.enter)="onSelectEmailProvider(emailProvider.OTHER)"
+        (click)="onSelectEmailProvider(emailProvider.OTHER)"
+        [disabled]="isConsole">
+        <trudi-icon
+          svgClass="size-24 color-icon"
+          [icon]="'iconInboxFillV2'"></trudi-icon>
+        <div
+          class="gsi-material-button"
+          [ngClass]="{'selected': selectedEmailProvider === emailProvider.OTHER}"
+          data-e2e="add-account-other-provider">
+          <div class="gsi-material-button-content-wrapper no-pointer-event">
+            <span
+              class="gsi-material-button-contents gsi-material-font-family-basic no-pointer-event"
+              >Set up manually</span
+            >
+          </div>
+        </div>
+      </button>
+    </div>
+    <div *ngIf="isErrorSelect" class="error-no-select">
+      <trudi-icon icon="errorInputIcon" svgClass="size-16"></trudi-icon>
+      <span>You must select email provider</span>
+    </div>
+  </div>
+
+  <ng-template #footerModal>
+    <div class="d-flex justify-content-end gap-12">
+      <button
+        *ngIf="isOwner"
+        trudi-btn
+        size="large"
+        btnType="neutral"
+        variant="outlined"
+        class="trudi-btn trudi-btn-large ml-auto"
+        (click)="handleBack()">
+        Back
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>
+
+<trudi-modal
+  [visible]="visibleTermsModal"
+  [modelWidth]="624"
+  [autoFocus]="null"
+  [closable]="false"
+  (onCancel)="handleCancel()"
+  title="Accept terms"
+  subTitle="">
+  <div class="term-container gap-16">
+    <span class="term-container__text">
+      Before adding your {{googleProvider ? 'Google' : 'Microsoft'}} account,
+      please take a moment to understand how your data can be shared with
+      third-party tools.
+    </span>
+    <div class="d-flex gap-4 mt-16 align-items-center term-container">
+      <trudi-checkbox
+        [formControl]="termForm.get('trudiTerm')"></trudi-checkbox>
+      <span
+        class="term-container__text"
+        (click)="handleChangeConfirm($event, 'trudiTerm')"
+        >I have read the Trudi®
+        <a
+          (click)="handleClickLink($event)"
+          class="term-container__link"
+          target="_blank"
+          href="https://legal.trudi.ai/?tab=term_of_service">
+          terms</a
+        >
+        and
+        <a
+          (click)="handleClickLink($event)"
+          class="term-container__link"
+          target="_blank"
+          href="https://legal.trudi.ai/?tab=privacy_policy">
+          privacy policy</a
+        >.</span
+      >
+    </div>
+    <div class="d-flex gap-4 mt-16 term-container">
+      <trudi-checkbox
+        [formControl]="termForm.get('thirdPartyTerm')"></trudi-checkbox>
+      <span
+        class="term-container__text"
+        (click)="handleChangeConfirm($event, 'thirdPartyTerm')"
+        >I consent to sharing my data (name, email address, email messages,
+        calendar events and calendar availability) with third-party tools,
+        including AI models.</span
+      >
+    </div>
+    <div class="d-flex gap-4 mt-16 term-container">
+      <trudi-checkbox
+        [formControl]="termForm.get('googleTerm')"></trudi-checkbox>
+      <span
+        class="term-container__text"
+        (click)="handleChangeConfirm($event, 'googleTerm')"
+        >I understand that Trudi®'s use and transfer of information will adhere
+        to
+        <a
+          *ngIf="googleProvider"
+          (click)="handleClickLink($event)"
+          class="term-container__link"
+          target="_blank"
+          href="https://developers.google.com/terms/api-services-user-data-policy">
+          Google API Services Use Data Policy</a
+        >
+        <a
+          *ngIf="!googleProvider"
+          (click)="handleClickLink($event)"
+          class="term-container__link"
+          target="_blank"
+          href="https://learn.microsoft.com/en-us/legal/microsoft-apis/terms-of-use">
+          Microsoft API Services Use Data Policy</a
+        >.
+      </span>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div class="d-flex align-items-center gap-12">
+      <ng-container>
+        <button
+          trudi-btn
+          btnType="neutral"
+          variant="outlined"
+          (click)="handleBackSelectEmailProvider()"
+          class="btn-back-assign d-flex align-items-center gap-8">
+          Back
+        </button>
+      </ng-container>
+      <button
+        trudi-btn
+        [disabled]="isDisableSave"
+        (click)="onSelectEmailProvider(selectedEmailProvider, true)"
+        class="btn-save-assign d-flex align-items-center gap-8"
+        data-e2e="add-account-provider-next-button">
+        Next
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

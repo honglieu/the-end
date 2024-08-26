@@ -1,0 +1,380 @@
+<div class="user-wrapper">
+  <div
+    (scroll)="onScrollDown()"
+    class="table-fix-feader scroll-bar-margin-top-10"
+    #table
+    [ngClass]="[isLoading ? 'overflow-hidden' : 'auto-hide-scroll']">
+    <table
+      data-e2e="contact-list"
+      class="table-property"
+      data-console="supplier-table">
+      <colgroup>
+        <col style="width: 25%" />
+        <col style="width: 25%" />
+        <col style="width: 15%" />
+        <col style="width: 15%" />
+        <col style="width: 15%" />
+        <col style="width: 5%" />
+      </colgroup>
+      <thead>
+        <tr>
+          <th data-console="send-from-title">Send from</th>
+          <th data-console="email-title">Email</th>
+          <th data-console="phone-number-title">Phone number</th>
+          <th data-console="contact-type-title">Contact type</th>
+          <th data-console="account-title">Account</th>
+          <th></th>
+        </tr>
+      </thead>
+      <ng-container *ngIf="isLoading;else loadingContent">
+        <tbody>
+          <ng-container *ngFor="let _ of [].constructor(30); let i = index">
+            <tr [attr.data-e2e]="'contacts-item-' + i">
+              <td class="add-secondary-email" data-title="SendFrom">
+                <div class="td-text">
+                  <nz-skeleton
+                    [nzParagraph]="{ rows: 0 }"
+                    [nzActive]="true"></nz-skeleton>
+                </div>
+              </td>
+              <td data-title="Email">
+                <div class="td-text">
+                  <nz-skeleton
+                    [nzParagraph]="{ rows: 0 }"
+                    [nzActive]="true"></nz-skeleton>
+                </div>
+              </td>
+              <td data-title="phone-number-title">
+                <div class="td-text">
+                  <nz-skeleton
+                    [nzParagraph]="{ rows: 0 }"
+                    [nzActive]="true"></nz-skeleton>
+                </div>
+              </td>
+              <td data-title="ContactType" class="contact-type">
+                <div class="td-text">
+                  <nz-skeleton
+                    [nzParagraph]="{ rows: 0 }"
+                    [nzActive]="true"></nz-skeleton>
+                </div>
+              </td>
+              <td data-title="" class="first-check-box">
+                <div class="td-text">
+                  <nz-skeleton
+                    [nzParagraph]="{ rows: 0 }"
+                    [nzActive]="true"
+                    class="size-12"></nz-skeleton>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </ng-container>
+
+      <ng-template #loadingContent>
+        <tbody
+          [class]=" !(dataTable | async).items.length ?  'empty-block' : ''">
+          <ng-container
+            *ngIf="!(dataTable | async).items.length; else notEmptyBlock">
+            <tr class="no-result-text">
+              <div class="header-text">No results found</div>
+              <div class="content-text">
+                You may want to try using different keywords, check for correct
+                spelling or adjust your filters.
+              </div>
+            </tr>
+          </ng-container>
+          <ng-template #notEmptyBlock>
+            <ng-container
+              *ngFor="let item of (dataTable | async).items; let i = index">
+              <tr
+                [attr.data-e2e]="'contacts-item-' + i"
+                (click)="handleClickUser(item)"
+                tabindex="0"
+                class="contact-item"
+                [id]="i">
+                <td
+                  class="add-secondary-email send-from cursor-pointer"
+                  data-title="SendFrom"
+                  [ngClass]="{'vertical-top' : (item.email ? item.secondaryEmails?.length : item.secondaryEmails?.length > 1)}">
+                  <div class="d-flex flex-dir-column h-100 td-text">
+                    {{item.sendFrom}}
+                  </div>
+                </td>
+                <td data-title="Email">
+                  <div class="d-flex flex-dir-column h-100">
+                    <ng-container
+                      *ngIf="(item.email || !item.secondaryEmails?.length); else firstSecondaryEmail">
+                      <div
+                        class="d-flex align-items-center secondary-email cursor-pointer action">
+                        <div
+                          nz-tooltip
+                          nzTooltipPlacement="top"
+                          [nzTooltipTitle]="'Primary email'"
+                          class="add-secondary-email"
+                          [innerHTML]="(item.email) | highlight: searchValue"></div>
+                        <button
+                          *ngIf="item.email"
+                          trudi-btn
+                          size="extra-small"
+                          variant="outlined"
+                          btnType="neutral"
+                          shape="circle"
+                          [disabled]="isConsole"
+                          class="action-function email-function"
+                          data-e2e="plus-icon"
+                          (click)="$event.stopPropagation();handleClickAddEmail(item)">
+                          <div>
+                            <trudi-icon icon="iconPlus2"></trudi-icon>
+                          </div>
+                        </button>
+                      </div>
+                    </ng-container>
+                    <div
+                      class="d-flex flex-dir-column gap-4 list-secondary-email">
+                      <ng-container
+                        *ngFor="let secondaryEmail of item.secondaryEmails"
+                        #firstSecondaryEmail>
+                        <div
+                          class="secondary-email d-flex align-items-center cursor-pointer action">
+                          <div
+                            [innerHTML]="secondaryEmail?.email | highlight: searchValue"></div>
+                          <button
+                            *ngIf="secondaryEmail?.email"
+                            trudi-btn
+                            size="extra-small"
+                            variant="outlined"
+                            btnType="neutral"
+                            shape="circle"
+                            [disabled]="isConsole"
+                            class="action-function email-function"
+                            data-e2e="delete-option"
+                            (click)="$event.stopPropagation();onDeleteEmail(secondaryEmail)">
+                            <div>
+                              <trudi-icon icon="deleteIconOutline"></trudi-icon>
+                            </div>
+                          </button>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </div>
+                </td>
+                <td
+                  data-title="phone-number-title vertical-top"
+                  class="contact-type cursor-pointer">
+                  <div class="d-flex flex-dir-column h-100">
+                    <ng-container
+                      *ngIf="(item.phoneNumber || !item.secondaryPhones?.length); else firstSecondaryPhone">
+                      <div class="d-flex align-items-center cursor-pointer">
+                        <div
+                          [innerHTML]="item.phoneNumber | phoneNumberFormat"></div>
+                      </div>
+                    </ng-container>
+                    <div
+                      class="d-flex flex-dir-column gap-4 list-secondary-phone">
+                      <ng-template #firstSecondaryPhone>
+                        <div class="mt-20"></div>
+                      </ng-template>
+                      <ng-container
+                        *ngFor="let secondaryPhone of item.secondaryPhones">
+                        <div
+                          class="secondary-phone d-flex align-items-center cursor-pointer action">
+                          <div
+                            [innerHTML]="secondaryPhone.phoneNumber | phoneNumberFormat"></div>
+                          <button
+                            *ngIf="secondaryPhone?.phoneNumber"
+                            trudi-btn
+                            size="extra-small"
+                            variant="outlined"
+                            btnType="neutral"
+                            shape="circle"
+                            [disabled]="isConsole"
+                            class="action-function phone-function"
+                            data-e2e="delete-option"
+                            (click)="$event.stopPropagation();onDeletePhoneNumber(secondaryPhone)">
+                            <span>
+                              <trudi-icon icon="deleteIconOutline"></trudi-icon>
+                            </span>
+                          </button>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </div>
+                </td>
+                <td
+                  data-title="ContactType"
+                  class="contact-type cursor-pointer"
+                  [ngClass]="{'vertical-top' : (item.email ? item.secondaryEmails?.length : item.secondaryEmails?.length > 1)}">
+                  <div class="d-flex flex-dir-column h-100 td-text">
+                    {{item.contactType | titleCasePipe }}
+                  </div>
+                </td>
+                <td class="cursor-pointer" data-title="Account">
+                  <ng-container *ngIf="item?.userMessengers?.length">
+                    <ng-container
+                      *ngTemplateOutlet="
+                        contactListChannels;
+                        context: {
+                          contacts: item.userMessengers,
+                          icon: 'messengerLogo',
+                          label: 'name'
+                        }
+                      "></ng-container>
+                  </ng-container>
+
+                  <ng-container *ngIf="item?.userWhatsApps?.length">
+                    <ng-container
+                      *ngTemplateOutlet="
+                        contactListChannels;
+                        context: {
+                          contacts: item.userWhatsApps,
+                          icon: 'whatsappLogo',
+                          label: 'externalId'
+                        }
+                      "></ng-container>
+                  </ng-container>
+                </td>
+                <td
+                  data-title=""
+                  class="first-check-box"
+                  [ngClass]="{'vertical-top' : (item.email ? item.secondaryEmails?.length : item.secondaryEmails?.length > 1)}">
+                  <button
+                    class="d-flex flex-dir-column h-100 td-text"
+                    (click)="$event.stopPropagation();onCheckboxItem(item.id)">
+                    <trudi-icon
+                      [svgClass]="'size-24 cursor-pointer'"
+                      [icon]="item.checked ? 'checkboxOn' : 'checkboxOff'"></trudi-icon>
+                  </button>
+                </td>
+              </tr>
+            </ng-container>
+          </ng-template>
+          <ng-container *ngIf="isLoadingMore">
+            <ng-container *ngFor="let _ of [].constructor(2); let i = index">
+              <tr>
+                <td class="add-secondary-email" data-title="SendFrom">
+                  <div class="td-text">
+                    <nz-skeleton
+                      [nzParagraph]="{ rows: 0 }"
+                      [nzActive]="true"></nz-skeleton>
+                  </div>
+                </td>
+                <td data-title="Email">
+                  <div class="td-text">
+                    <nz-skeleton
+                      [nzParagraph]="{ rows: 0 }"
+                      [nzActive]="true"></nz-skeleton>
+                  </div>
+                </td>
+                <td data-title="phone-number-title">
+                  <div class="td-text">
+                    <nz-skeleton
+                      [nzParagraph]="{ rows: 0 }"
+                      [nzActive]="true"></nz-skeleton>
+                  </div>
+                </td>
+                <td data-title="ContactType" class="contact-type">
+                  <div class="td-text">
+                    <nz-skeleton
+                      [nzParagraph]="{ rows: 0 }"
+                      [nzActive]="true"></nz-skeleton>
+                  </div>
+                </td>
+                <td data-title="" class="first-check-box">
+                  <div class="td-text">
+                    <nz-skeleton
+                      [nzParagraph]="{ rows: 0 }"
+                      [nzActive]="true"
+                      class="size-12"></nz-skeleton>
+                  </div>
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
+        </tbody>
+      </ng-template>
+    </table>
+  </div>
+</div>
+
+<ng-template
+  #contactListChannels
+  let-contacts="contacts"
+  let-icon="icon"
+  let-label="label">
+  <div class="d-flex gap-4 align-items-top h-100 py-4">
+    <trudi-icon svgClass="size-16" [icon]="icon" class="mt-2"></trudi-icon>
+    <div class="d-flex flex-dir-column gap-4 wrapper-list-messenger">
+      <ng-container *ngFor="let contact of contacts">
+        <span
+          disableTooltipOnWidth
+          nz-tooltip
+          [nzTooltipTitle]="contact?.[label]"
+          nzTooltipPlacement="top"
+          *ngIf="contact?.[label]"
+          class="text-ellipsis">
+          {{ contact?.[label] }}
+        </span>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<add-email-pop-up
+  [APIerr]="addEmailErr"
+  [isShowModal]="popupState.showAddEmail"
+  [addEmailTitle]="addEmailTitle"
+  (onCancel)="handleCloseModal()"
+  (onConfirm)="handleAddNewEmail($event)">
+</add-email-pop-up>
+
+<trudi-modal
+  [visible]="showPopupDelete"
+  iconName="iconWarningRed"
+  [modelWidth]="510"
+  [closable]="false"
+  colorBtn="danger"
+  type="confirm"
+  title="Are you sure you want to delete?"
+  okText="Delete"
+  cancelText="Cancel"
+  [isHideBody]="true"
+  [disableOkBtn]="disableDeleteModal"
+  (onCancel)="showDeletePopup(false)"
+  (onOk)="handleDeleteItems()">
+</trudi-modal>
+
+<trudi-modal
+  *ngIf="isShowQuitConfirm"
+  [visible]="isShowQuitConfirm"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  className="trudi-modal-custom">
+  <app-quit-confirm
+    (isCloseModal)="showQuitConfirm($event)"
+    (targetOpenForm)="onTargetOpenForm($event)"
+    (delete)="onDeleteConfirm($event)"></app-quit-confirm>
+</trudi-modal>
+
+<trudi-modal
+  *ngIf="showDeleteEmailError"
+  [visible]="showDeleteEmailError"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  className="trudi-modal-custom">
+  <confirm-popup
+    [titleText]="deleteEmailErrorText.title"
+    [subTexts]="[deleteEmailErrorText.subText]"
+    [buttonRight]="deleteEmailErrorText.btnText"
+    btnType="danger"
+    (onButtonRightClick)="showDeleteEmailError = false">
+  </confirm-popup>
+</trudi-modal>
+
+<task-editor-toolbar></task-editor-toolbar>
+
+<user-info-drawer
+  [visible]="visible"
+  [currentDataUser]="currentDataUser"
+  [openFrom]="ETypePage.OTHER"
+  (triggerCloseDrawer)="visible = false"></user-info-drawer>

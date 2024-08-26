@@ -1,0 +1,201 @@
+<div class="recurring-charges">
+  <trudi-collapse [titleHeader]="headerRecurringCollapse" [activeExpand]="true">
+    <table class="table-property">
+      <thead>
+        <tr>
+          <th>
+            <trudi-checkbox
+              [disabled]="recurringChargeList?.length === 0 || isDisabledCheckAll || isSyncing"
+              [ngModel]="selectedRecurringCharges?.length"
+              [isSelectedAll]="recurringChargeExceptTenant?.length !== selectedRecurringCharges?.length"
+              (ngModelChange)="handleCheckAll()">
+            </trudi-checkbox>
+          </th>
+          <th>Charge</th>
+          <th>Charge type</th>
+          <th>Frequency</th>
+          <th>From date</th>
+          <th>To date</th>
+          <th>Amount</th>
+          <th></th>
+        </tr>
+      </thead>
+      <ng-container *ngIf="!loading; else loadingSkeleton">
+        <tbody [class]="recurringChargeList?.length === 0 ? 'empty-block' : ''">
+          <ng-container *ngIf="recurringChargeList?.length === 0">
+            <tr class="no-result-text">
+              <div class="content-text">No recurring charges found</div>
+            </tr>
+          </ng-container>
+          <tr *ngFor="let item of recurringChargeList; index as i">
+            <td [ngStyle]="{'width.px': 52}">
+              <trudi-checkbox
+                *ngIf="item.charge !== entityType.TENANT"
+                [disabled]="isSyncing"
+                [ngModel]="!item.isException"
+                (change)="handleCheckbox(item, i)"></trudi-checkbox>
+            </td>
+            <td [ngStyle]="{'width.px': 100}">
+              {{item.charge | formatEntityType}}
+            </td>
+            <td>{{item.chargeType?.name || item.chargeType}}</td>
+            <td class="text-center" [ngStyle]="{'width.px': 88}">
+              {{item.frequency}}
+            </td>
+            <td>{{item.fromDate | formatDate | push}}</td>
+            <td>{{item.toDate | formatDate | push}}</td>
+            <td class="text-center" [ngStyle]="{'width.px': 80}">
+              {{item.amount | formatAmount}}
+            </td>
+            <td [ngStyle]="{'width.px': 64}">
+              <div *ngIf="!hiddenBtn">
+                <button
+                  nz-dropdown
+                  [nzDropdownMenu]="menu"
+                  [nzTrigger]="'click'"
+                  [nzVisible]="visibleDropdown"
+                  (nzVisibleChange)="handleVisibleDropdown($event)"
+                  class="icon-more pointer">
+                  <trudi-icon
+                    icon="verticalMore"
+                    [style]="{ 'width.px': 20, 'height.px': 20 }"></trudi-icon>
+                </button>
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                  <div nz-menu class="team-menu-options">
+                    <button
+                      *ngIf="item.charge !== entityType.TENANT; else tenant"
+                      nz-menu-item
+                      (click)="onOpenRecurringCharges(i)"
+                      class="item">
+                      <trudi-icon
+                        [style]="{ 'width.px': 20, 'height.px': 20 }"
+                        icon="eyeShow"></trudi-icon>
+                      <span>View details</span>
+                    </button>
+                    <ng-template #tenant>
+                      <button
+                        nz-menu-item
+                        (click)="onOpenRecurringCharges(i)"
+                        class="item">
+                        <trudi-icon icon="editIconOutline"></trudi-icon>
+                        <span>Edit</span>
+                      </button>
+                      <button
+                        nz-menu-item
+                        (mouseenter)="handleMouseEnter(item)"
+                        (mouseleave)="handleMouseLeave()"
+                        (click)="!item?.id ? handleDeleteRecurringCharge(i) : itemSelected=null"
+                        [ngClass]="{'disabled': item?.id}"
+                        class="item"
+                        nz-tooltip
+                        [nzTooltipVisible]="itemSelected === item"
+                        [nzTooltipTitle]="item?.id ? titleTooltip : ''"
+                        [nzTooltipOverlayStyle]="{'max-width': '172px'}">
+                        <trudi-icon icon="deleteIconOutline"></trudi-icon>
+                        <span>Delete</span>
+                      </button>
+                    </ng-template>
+                  </div>
+                </nz-dropdown-menu>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </ng-container>
+
+      <tfoot>
+        <tr>
+          <td colspan="8">
+            <div
+              class="container-btn"
+              nz-tooltip
+              nzTooltipPlacement="right"
+              [nzTooltipOverlayClassName]="'tooltip-disabled-btn'"
+              [nzTooltipTitle]="disabled ? titleButtonAddNotSync : ''">
+              <button
+                [ngClass]="{'disabled-btn': disabled || loading}"
+                (click)="(disabled || loading) ? null : onOpenRecurringCharges()"
+                class="d-flex pointer gap-8 align-items-center btn-add button-tab">
+                <trudi-icon
+                  icon="plusGray"
+                  [style]="{'width.px': 16, 'height.px': 16}"></trudi-icon>
+                <span>Add</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </trudi-collapse>
+</div>
+<ng-template #headerRecurringCollapse>
+  <span>Recurring charges</span>
+</ng-template>
+
+<ng-template #loadingSkeleton>
+  <tbody class="skeleton-wrapper">
+    <ng-container>
+      <tr *ngFor="let item of [].constructor(2)">
+        <td class="property" [ngStyle]="{'width.px': 52}">
+          <div class="d-flex">
+            <nz-skeleton
+              class="w-2"
+              [nzParagraph]="{ rows: 0 }"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </td>
+        <td class="property">
+          <div class="d-flex flex-dir-column gap-2">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0 }"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </td>
+        <td class="property">
+          <div class="data-item">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0 }"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </td>
+        <td class="property">
+          <div class="data-item">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0 }"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </td>
+        <td class="property">
+          <div class="data-item">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0 }"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </td>
+        <td class="property">
+          <div class="data-item">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0 }"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </td>
+        <td class="property">
+          <div class="data-item">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0 }"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </td>
+        <td class="property" [ngStyle]="{'width.px': 64}">
+          <div class="data-item">
+            <nz-skeleton-element
+              class="ant-skeleton-circle"
+              nzType="avatar"
+              [nzSize]="32"
+              [nzActive]="true"></nz-skeleton-element>
+          </div>
+        </td>
+      </tr>
+    </ng-container>
+  </tbody>
+</ng-template>

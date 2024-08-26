@@ -1,0 +1,13 @@
+<div
+  class="trudi-tag"
+  [ngClass]="{
+    'disabled': disabled
+  }">
+  <img *ngIf="imgUrl" [src]="imgUrl" class="trudi-tag-image" alt="" />
+  <trudi-icon
+    *ngIf="icon"
+    [icon]="icon"
+    [style]="{'width.px': 16, 'height.px': 16}"></trudi-icon>
+  <div class="trudi-tag-content">{{title}}</div>
+  <trudi-icon icon="closeTransparentBg" (click)="handleClose()"></trudi-icon>
+</div>

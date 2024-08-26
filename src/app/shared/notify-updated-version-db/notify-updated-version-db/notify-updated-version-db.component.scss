@@ -1,0 +1,73 @@
+@import 'function';
+
+.notify-box {
+  max-width: 360px;
+  height: 272px;
+  background-color: var(--white);
+  position: fixed;
+  bottom: 66px;
+  right: 64px;
+  z-index: 99999;
+  box-shadow: 0px 8px 12px 5px rgba(0, 0, 0, 0.15),
+    0px 4px 6px rgba(0, 0, 0, 0.3);
+
+  &-detail {
+    padding: 26px 24px 20px;
+
+    &-text {
+      padding-top: 18px;
+      @include fontSetup(var(--gray-950), 20px, 24px, normal, 600);
+    }
+
+    &-descr {
+      @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+    }
+
+    .divider {
+      margin: 0 -24px 0 -24px;
+    }
+
+    .btn-wrapper {
+      margin-top: 19px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .border-btn {
+        border: 1px solid var(--gray-200);
+      }
+    }
+
+    .text-later {
+      color: var(--gray-600);
+    }
+  }
+  .button-reload.loading {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+  .spin-arrow {
+    -webkit-animation: spin 4s linear infinite;
+    -moz-animation: spin 4s linear infinite;
+    animation: spin 4s linear infinite;
+  }
+
+  @-moz-keyframes spin {
+    100% {
+      -moz-transform: rotate(360deg);
+    }
+  }
+
+  @-webkit-keyframes spin {
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spin {
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+}

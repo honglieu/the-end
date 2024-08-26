@@ -1,0 +1,451 @@
+<ng-container *ngIf="isLoading; else mailBox">
+  <div class="mailbox__skeleton">
+    <div class="d-flex align-items-center gap-12">
+      <nz-skeleton-element
+        class="skeleton-avatar"
+        nzType="avatar"
+        [nzShape]="'Square'"
+        [nzSize]="36"
+        [nzActive]="true"></nz-skeleton-element>
+      <div>
+        <nz-skeleton
+          [nzParagraph]="{ rows: 1 }"
+          [style.width.px]="80"
+          [nzTitle]="false"
+          [nzActive]="true"></nz-skeleton>
+        <nz-skeleton
+          [nzParagraph]="{ rows: 1 }"
+          [style.width.px]="130"
+          [nzTitle]="false"
+          [nzActive]="true"></nz-skeleton>
+      </div>
+    </div>
+    <nz-skeleton
+      [nzParagraph]="{ rows: 1 }"
+      [style.width.px]="20"
+      [nzTitle]="false"
+      [nzActive]="true"></nz-skeleton>
+  </div>
+</ng-container>
+
+<ng-template #mailBox>
+  <ng-container *ngIf="!listMailBoxs?.length; else hasAccount">
+    <ng-container *ngTemplateOutlet="addAccount"> </ng-container>
+    <div class="bottom-add"></div>
+  </ng-container>
+</ng-template>
+
+<ng-template #hasAccount>
+  <div class="mailbox-user">
+    <div
+      class="mailbox-user__container"
+      #hasAccountContent
+      [ngClass]="{'isShowDropdown': isShowDropdown,
+      'isSyncFail': [EMailBoxStatus.DISCONNECT, EMailBoxStatus.FAIL].includes(listMailBoxs[0]?.status) && isOwnerMailBox}">
+      <div
+        [class.selected-mailbox-archived]="listMailBoxs[0]?.status === EMailBoxStatus.ARCHIVE"
+        class="d-flex align-items-center justify-content-between w-100 selected-mailbox">
+        <div
+          class="d-flex align-items-center gap-12 cursor-pointer mailbox-container"
+          (click)="handleOpenDropdown()"
+          tabindex="0"
+          (keydown.enter)="handleOpenDropdown()">
+          <div class="avatar">
+            <div
+              *ngIf="listMailBoxs?.[0]?.picture; else noneAvt"
+              class="mailbox-avatar">
+              <img [src]="listMailBoxs?.[0]?.picture" alt="Mailbox avatar" />
+            </div>
+            <ng-template #noneAvt>
+              <div class="custom-avatar">
+                {{listMailBoxs[0]?.name | shortenName}}
+              </div>
+            </ng-template>
+            <trudi-icon
+              *ngIf="listMailBoxs?.[0]?.type === mailBoxType.COMPANY"
+              [icon]="'mailboxTypeCompany'"
+              [style]="{ 'width.px': 18, 'height.px': 18 }">
+            </trudi-icon>
+          </div>
+          <div class="mailBox-info d-flex flex-dir-column">
+            <div class="d-flex align-items-center gap-4">
+              <span
+                nz-tooltip
+                nzTooltipPlacement="bottom"
+                [nzTooltipTitle]="listMailBoxs[0]?.name"
+                [nzTooltipOverlayStyle]="{ 'max-width': '266px', 'padding-top': '5px' }"
+                class="mailbox-user__name text-ellipsis"
+                >{{listMailBoxs[0]?.name}}</span
+              >
+              <trudi-icon *ngIf="isUnread" icon="redDotUnreadMessage">
+              </trudi-icon>
+              <trudi-icon
+                *ngIf="[EMailBoxStatus.DISCONNECT, EMailBoxStatus.FAIL].includes(listMailBoxs[0]?.status)"
+                class="pointer"
+                nz-tooltip
+                nzTooltipPlacement="bottom"
+                [nzTooltipTitle]="
+                  syncGmailStatus === EMailBoxStatus.FAIL
+                    ? titleTemplate1
+                    : isOwnerMailBox
+                    ? textTooltip
+                    : textTooltip + ' Please contact mailbox owner.'
+                "
+                [icon]="syncGmailStatus === EMailBoxStatus.FAIL ? 'alertWarningIcon' : 'alertOctagonIcon'"
+                [nzTooltipOverlayClassName]="'tool-tip-mailbox'"
+                svgClass="size-20">
+              </trudi-icon>
+              <ng-template #titleTemplate1>
+                <div class="d-flex flex-dir-column text-left">
+                  <span>Fail to connect</span>
+                  <span
+                    >{{listMailBoxs[0]?.lastTimeSync |formatDateTime |
+                    async}}</span
+                  >
+                </div>
+              </ng-template>
+              <div
+                class="icon-expand no-padding cursor-pointer"
+                [ngClass]="{'icon-rotate': isShowDropdown,'spin': syncGmailStatus === EMailBoxStatus.SYNCING}">
+                <trudi-icon
+                  [icon]="syncGmailStatus === EMailBoxStatus.SYNCING ? 'syncingV3': 'chevronDown'">
+                </trudi-icon>
+              </div>
+            </div>
+            <span
+              nz-tooltip
+              nzTooltipPlacement="bottom"
+              [nzTooltipTitle]="listMailBoxs[0]?.emailAddress"
+              [nzTooltipOverlayStyle]="{ 'max-width': '266px', 'padding-top': '5px' }"
+              [ngClass]="{'error-text': [EMailBoxStatus.DISCONNECT].includes(syncGmailStatus)}"
+              class="mailbox-user__email text-ellipsis"
+              >{{listMailBoxs[0]?.emailAddress}}</span
+            >
+          </div>
+        </div>
+        <a
+          *ngIf="isAccountAdded"
+          (click)="navigateToMailboxSetting()"
+          class="icon-expand cursor-pointer"
+          nz-tooltip
+          nzTooltipPlacement="bottom"
+          [nzTooltipTitle]="'Mailbox settings'"
+          tabindex="0"
+          (keydown.enter)="navigateToMailboxSetting()">
+          <trudi-icon [icon]="'settings'"> </trudi-icon>
+        </a>
+      </div>
+      <ng-container
+        *ngIf="listMailBoxs[0]?.status === EMailBoxStatus.DISCONNECT && !isShowDropdown && isOwnerMailBox">
+        <button class="btn-connect" (click)="connectAgain()">
+          <span>Connect again</span>
+        </button>
+      </ng-container>
+      <ng-container
+        *ngIf="syncGmailStatus === EMailBoxStatus.FAIL && !isShowDropdown && isOwnerMailBox">
+        <button class="btn-connect" (click)="handleRetrySync()">
+          <span>Reconnect</span>
+        </button>
+      </ng-container>
+      <ng-container *ngIf="syncGmailStatus === EMailBoxStatus.SYNCING">
+        <div
+          class="loading-bar"
+          nz-tooltip
+          [nzTooltipTitle]="totalMessageSynced + '/' + totalItemCount + ' messages'"
+          nzTooltipPlacement="right">
+          <div
+            class="progress-bar"
+            [style.width.%]="totalMessageSynced > 5 ? (totalMessageSynced / totalItemCount || 1) * 100 : 5"></div>
+        </div>
+      </ng-container>
+    </div>
+    <ng-container>
+      <div
+        *ngIf="isShowDropdown"
+        [@collapseMotion]="isShowDropdown ? 'expanded' : 'collapsed'"
+        class="multiple-user">
+        <div
+          class="multiple-user__container"
+          tabindex="0"
+          focusElement
+          [isFocus]="isShowDropdown">
+          <div class="p-0-20">
+            <div class="bottom-add"></div>
+          </div>
+          <div
+            *ngFor="let item of listMailBoxs | slice:1"
+            [ngClass]="{'background-mailbox-syncing': item.status === EMailBoxStatus.SYNCING}">
+            <div
+              *ngIf="item.status !== EMailBoxStatus.ARCHIVE"
+              class="multiple-user__item"
+              (click)="handleSelectAccount(item)"
+              tabindex="0"
+              (keydown.enter)="handleSelectAccount(item)">
+              <ng-container
+                *ngTemplateOutlet="avatarTemplate; context: {$implicit:item}"></ng-container>
+              <div class="d-flex flex-dir-column">
+                <div class="d-flex gap-4 align-items-center">
+                  <span
+                    #activeMailboxName
+                    nz-tooltip
+                    nzTooltipPlacement="bottom"
+                    [nzTooltipTitle]="item?.name"
+                    [nzTooltipOverlayStyle]="{ 'max-width': '266px', 'padding-top': '5px' }"
+                    class="text-ellipsis"
+                    [ngClass]="{'multiple-user__name': item?.status !== EMailBoxStatus.SYNCING, 'multiple-user__name-syncing': item?.status === EMailBoxStatus.SYNCING}"
+                    >{{item?.name}}</span
+                  >
+                  <trudi-icon
+                    *ngIf="unreadList[item.id]"
+                    icon="redDotUnreadMessage">
+                  </trudi-icon>
+                  <trudi-icon
+                    *ngIf="item?.status === EMailBoxStatus.DISCONNECT || item?.status === EMailBoxStatus.FAIL"
+                    nz-tooltip
+                    [nzTooltipTitle]="
+                      item?.status === EMailBoxStatus.FAIL
+                        ? titleTemplate
+                        : item?.role.includes(EUserMailboxRole.OWNER)
+                        ? textTooltip
+                        : textTooltip + ' Please contact mailbox owner.'
+                    "
+                    [nzTooltipOverlayClassName]="'tool-tip-mailbox'"
+                    nzTooltipPlacement="bottom"
+                    [icon]="item?.status === EMailBoxStatus.FAIL ? 'alertWarningIcon' : 'alertOctagonIcon'"
+                    svgClass="size-20">
+                  </trudi-icon>
+                  <ng-template #titleTemplate>
+                    <div class="d-flex flex-dir-column text-left">
+                      <span>Fail to connect</span>
+                      <span
+                        >{{item?.lastTimeSync | formatDateTime| async}}</span
+                      >
+                    </div>
+                  </ng-template>
+                </div>
+                <span
+                  nz-tooltip
+                  nzTooltipPlacement="bottom"
+                  [nzTooltipTitle]="item?.emailAddress"
+                  [nzTooltipOverlayStyle]="{ 'max-width': '266px', 'padding-top': '5px' }"
+                  [ngClass]="{'error-text': item?.status === EMailBoxStatus.DISCONNECT}"
+                  class="text-ellipsis"
+                  [ngClass]="{'multiple-user__email': item?.status !== EMailBoxStatus.SYNCING, 'multiple-user__email-syncing': item?.status === EMailBoxStatus.SYNCING}"
+                  >{{item?.emailAddress}}</span
+                >
+              </div>
+              <ng-container *ngIf="item?.status === EMailBoxStatus.SYNCING">
+                <div
+                  class="icon-expand cursor-pointer"
+                  [ngClass]="{'spin': item?.status === EMailBoxStatus.SYNCING}">
+                  <trudi-icon [icon]="'syncingV3'"> </trudi-icon>
+                </div>
+              </ng-container>
+            </div>
+            <ng-container *ngIf="item.status === EMailBoxStatus.SYNCING">
+              <div
+                class="loading-bar-item"
+                nz-tooltip
+                [nzTooltipTitle]="(item?.totalItem?.totalMessageSynced || 0) + '/' + item?.totalItem?.totalItemCount + ' messages'"
+                nzTooltipPlacement="right">
+                <div
+                  class="progress-bar"
+                  *ngIf="item?.totalItem?.totalMessageSynced"
+                  [style.width.%]="item?.totalItem?.totalMessageSynced > 5
+                  ? (item?.totalItem?.totalMessageSynced / item?.totalItem?.totalItemCount || 1) * 100
+                  : 5"></div>
+              </div>
+            </ng-container>
+          </div>
+          <hr class="break-line" />
+          <div
+            class="d-flex align-items-center justify-content-between archived-mailbox">
+            <div class="archived-mailbox-text">Archived mailbox</div>
+            <div
+              class="icon-expand cursor-pointer"
+              [ngClass]="{'icon-rotate': isExpandArchivedMailbox}"
+              (click)="toggleArchivedMailboxDropdown(); $event.stopPropagation()"
+              tabindex="0"
+              (keydown.enter)="toggleArchivedMailboxDropdown(); $event.stopPropagation()">
+              <trudi-icon icon="chevronDown"> </trudi-icon>
+            </div>
+          </div>
+          <div
+            [@expandCollapse]="isExpandArchivedMailbox ? 'expanded' : 'collapsed'">
+            <ng-container
+              *ngIf="hasArchivedMailboxes; else noArchivedMailboxes">
+              <div *ngFor="let item of listMailBoxs | slice:1">
+                <div
+                  *ngIf="item.status === EMailBoxStatus.ARCHIVE"
+                  class="multiple-user__item archived"
+                  (click)="handleSelectAccount(item)"
+                  tabindex="0"
+                  (keydown.enter)="handleSelectAccount(item)">
+                  <ng-container
+                    *ngTemplateOutlet="avatarTemplate; context: {$implicit:item}"></ng-container>
+                  <div class="d-flex flex-dir-column">
+                    <div class="d-flex gap-4 align-items-center">
+                      <span
+                        nz-tooltip
+                        nzTooltipPlacement="bottom"
+                        [nzTooltipTitle]="item?.name"
+                        [nzTooltipOverlayStyle]="{ 'max-width': '266px', 'padding-top': '5px' }"
+                        class="multiple-user__name text-ellipsis"
+                        >{{item?.name}}</span
+                      >
+                      <trudi-icon
+                        *ngIf="unreadList[item.id]"
+                        icon="redDotUnreadMessage">
+                      </trudi-icon>
+                      <trudi-icon
+                        *ngIf="item?.status === EMailBoxStatus.DISCONNECT || item?.status === EMailBoxStatus.FAIL"
+                        nz-tooltip
+                        [tooltipMaxWidth]="196"
+                        [nzTooltipTitle]="item?.status ===  EMailBoxStatus.FAIL ? titleTemplate  : textTooltip"
+                        nzTooltipPlacement="bottom"
+                        [icon]="item?.status === EMailBoxStatus.FAIL ? 'alertWarningIcon' : 'alertOctagonIcon'"
+                        svgClass="size-20">
+                      </trudi-icon>
+                      <ng-template #titleTemplate>
+                        <div class="d-flex flex-dir-column text-left">
+                          <span>Fail to connect</span>
+                          <span
+                            >{{item?.lastTimeSync | formatDateTime |
+                            async}}</span
+                          >
+                        </div>
+                      </ng-template>
+                    </div>
+                    <span
+                      nz-tooltip
+                      nzTooltipPlacement="bottom"
+                      [nzTooltipTitle]="item?.emailAddress"
+                      [nzTooltipOverlayStyle]="{ 'max-width': '266px', 'padding-top': '5px' }"
+                      [ngClass]="{'error-text': item?.status === EMailBoxStatus.DISCONNECT || item?.status ===  EMailBoxStatus.FAIL}"
+                      class="multiple-user__email text-ellipsis"
+                      >{{item?.emailAddress}}</span
+                    >
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+          <div class="p-0-20">
+            <div class="bottom-add"></div>
+          </div>
+        </div>
+        <ng-container *ngTemplateOutlet="addAccount"> </ng-container>
+        <ng-container *ngIf="isOwnerOutlook">
+          <div
+            class="mailbox__container d-flex align-items-center gap-12 cursor-pointer"
+            (click)="handleSharedMailbox(); $event.stopPropagation()">
+            <div class="wrapper-icon">
+              <trudi-icon
+                icon="iconPlus2"
+                [style]="{ 'width.px': 20, 'height.px': 20, 'color':'#646464' }"></trudi-icon>
+              <div class="wrapper-icon-shared">
+                <trudi-icon
+                  icon="iconOutlookCalendar"
+                  [style]="{ 'width.px': 14, 'height.px': 14}">
+                </trudi-icon>
+              </div>
+            </div>
+            <span class="text-add-account">Add shared mailbox</span>
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+
+<!-- todo: hide add account -->
+<ng-template #addAccount>
+  <div
+    class="mailbox__container d-flex align-items-center gap-12 cursor-pointer"
+    (click)="handleEncourageUser(); $event.stopPropagation()"
+    data-e2e="mailbox-add-account-button"
+    #addAccountContent
+    tabindex="0"
+    (keydown.enter)="handleEncourageUser(); $event.stopPropagation()">
+    <div class="wrapper-icon">
+      <trudi-icon
+        icon="iconPlus2"
+        [style]="{ 'width.px': 20, 'height.px': 20, 'color':'#646464' }"></trudi-icon>
+    </div>
+    <span class="text-add-account">Add account</span>
+  </div>
+</ng-template>
+
+<encourage-user
+  *ngIf="onStepBeforeIntegrateMailbox"
+  [visible]="popupState === EPopupState.ENCOURAGE_USER"
+  (onNext)="handleAddAcount()"
+  (onCancel)="handleCancel()">
+</encourage-user>
+
+<select-mailbox-type
+  *ngIf="onStepBeforeIntegrateMailbox"
+  [visible]="popupState === EPopupState.MAILBOX_TYPE"
+  (onNext)="onNextSelectMailboxType($event)"
+  (onCancel)="handleCancel()"></select-mailbox-type>
+
+<confirm-existing-company-mailbox
+  *ngIf="onStepBeforeIntegrateMailbox"
+  [visible]="popupState === EPopupState.CONFIRM_EXISTING_COMPANY"
+  (onCancel)="handleCancel()"></confirm-existing-company-mailbox>
+
+<select-email-provider
+  *ngIf="onStepBeforeIntegrateMailbox"
+  [visible]="popupState === EPopupState.EMAIL_PROVIDER"
+  [isConsole]="isConsole"
+  [isOwner]="isOwner"
+  (onCancel)="handleCancel()"
+  (onNext)="onNextEmailProvider($event)"></select-email-provider>
+
+<integrate-imap-smtp-server
+  *ngIf="popupState === EPopupState.INTEGRATE_IMAP_SMTP_SERVER"
+  [visible]="popupState === EPopupState.INTEGRATE_IMAP_SMTP_SERVER"
+  [disableForm]="disableFormIntegrateIMAP"
+  [isConnectAgain]="isConnectAgainIMAP"
+  [idMailBox]="idMailBox"
+  (onCancel)="handleCancel()"
+  (onSave)="integrateIMAP($event)"></integrate-imap-smtp-server>
+
+<assign-team
+  *ngIf="popupState === EPopupState.ASSIGN_TEAM || popupState === EPopupState.ASSIGN_DEFAULT || popupState === EPopupState.SAVE_CONVERSATION_TO_NOTE"
+  [isCompanyMailbox]="selectedmailboxType === mailBoxType.COMPANY"
+  (onCancel)="handleCancel()"
+  (onSaveAssignDefault)="onSaveAssignDefault()"></assign-team>
+
+<save-mailbox-activity-popup
+  *ngIf="popupState === EPopupState.SAVE_MAILBOX_ACTIVITY_TO_PT && !isRm">
+</save-mailbox-activity-popup>
+
+<shared-mailbox
+  *ngIf="popupState === EPopupState.SHARED_MAILBOX"
+  [visible]="popupState === EPopupState.SHARED_MAILBOX"
+  (onCancel)="handleCancel()"
+  (onSave)="handleAddSharedMailbox($event)">
+</shared-mailbox>
+
+<ng-template #headerTemplate>
+  <div class="archived-mailbox-text">Archived mailbox</div>
+</ng-template>
+
+<ng-template #noArchivedMailboxes>
+  <div class="no-archived-mailboxes">No archived mailboxes</div>
+</ng-template>
+
+<ng-template #avatarTemplate let-item>
+  <div class="avatar">
+    <img *ngIf="item.picture; else noneAvt" [src]="item.picture" alt="avatar" />
+    <ng-template #noneAvt>
+      <div class="custom-avatar">{{item?.name | shortenName}}</div>
+    </ng-template>
+    <trudi-icon
+      *ngIf="item.type === mailBoxType.COMPANY"
+      [icon]="'mailboxTypeCompany'"
+      [style]="{ 'width.px': 18, 'height.px': 18 }">
+    </trudi-icon>
+  </div>
+</ng-template>

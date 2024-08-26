@@ -1,0 +1,10 @@
+<app-splash-screen *ngIf="visibleSplashScreen$ | async"></app-splash-screen>
+<router-outlet></router-outlet>
+<ng-template [ngIf]="showRefreshAppPopUp">
+  <notify-new-version-popup
+    (onShow)="handleShowRefreshAppPopup($event)"></notify-new-version-popup>
+</ng-template>
+<ng-template [ngIf]="showUpdateVersionApp">
+  <update-version-popup [visible]="showUpdateVersionApp"></update-version-popup>
+</ng-template>
+<notify-updated-version-db></notify-updated-version-db>

@@ -1,0 +1,115 @@
+@import 'function';
+
+/**
+ * The internal mention styles can be disabled using the configuration setting leading to these
+ * possible states:
+ *
+ *   bootstrap not present; disableStyle false; (new default - use internal styles)
+ *   bootstrap not present; disableStyle true;  (no style - so user can add their own styles)
+ *   bootstrap present;     disableStyle true;  (original behavior - use bs styles)
+ *   bootstrap present;     disableStyle false; (mixes internal style with bs)
+ **/
+
+.mention-menu {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  z-index: 1000;
+  display: block;
+  float: left;
+  max-width: 360px;
+  font-size: 1em;
+  text-align: left;
+  list-style: none;
+  background-color: var(--white);
+  background-clip: padding-box;
+  border: 0;
+  border-radius: 8px;
+  padding: 0;
+  //max height = 6 items
+  max-height: calc(44px * 6);
+  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.1),
+    0px 8px 28px 0px rgba(0, 0, 0, 0.05);
+
+  li:has(.mention-item) {
+    max-height: 44px;
+    height: 44px;
+    border-bottom: 1px solid var(--gray-50);
+    &:last-child {
+      border-bottom-color: transparent;
+    }
+    &:hover:not(:has(.disabled)) {
+      background-color: var(--bg-neutral-tonal-stronger, #f0f1f1) !important;
+    }
+    &:active:not(:has(.disabled)) {
+      background-color: var(--bg-neutral-tonal-strongest, #ececed) !important;
+    }
+  }
+}
+.mention-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  &-text {
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+  }
+
+  .user-avatar {
+    .text {
+      font-weight: 600 !important;
+      border-radius: 50% !important;
+      color: var(--white) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      background-color: var(--brand-500) !important;
+      height: 100% !important;
+      width: 100% !important;
+      font-style: normal !important;
+    }
+
+    img {
+      width: 100% !important;
+      height: 100% !important;
+      border-radius: 50% !important;
+    }
+  }
+
+  .not-in-mailbox {
+    padding: 2px 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-radius: 24px;
+    max-width: fit-content;
+    background-color: var(--bg-neutral-tonal-normal);
+    @include fontSetup(var(--gray-400), 12px, 16px, normal, 500 !important);
+  }
+}
+.mention-active > a {
+  text-decoration: none;
+  background-color: var(--white);
+  outline: 0;
+
+  &:hover {
+    background-color: var(--bg-neutral-tonal-stronger, #f0f1f1) !important;
+  }
+
+  &:active {
+    background-color: var(--bg-neutral-tonal-strongest, #ececed) !important;
+  }
+}
+
+[hidden] {
+  display: none;
+}

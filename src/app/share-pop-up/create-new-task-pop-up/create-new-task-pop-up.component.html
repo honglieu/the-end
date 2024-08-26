@@ -1,0 +1,110 @@
+<create-task-by-property
+  *ngIf="showPopup"
+  [taskList]="taskNameList"
+  [selectedPropertyId]="selectedPropertyId"
+  [hiddenSelectProperty]="injectFrom === InjectFrom.VOICE_MAIL ? hiddenSelectProperty : isCreateMultipleTasks"
+  [injectFrom]="injectFrom"
+  [disableSelectProperty]="disableSelectProperty"
+  [defaultMailBoxId]="defaultMailBoxId"
+  [selectedTaskToConvert]="selectedTaskToConvert"
+  [hasUserInMessage]="hasUserInMessage"
+  [assignedUserIds]="assignedUserIds"
+  [attr.data-e2e]="'create-new-task-modal'"
+  [taskNameList]="taskNameList"
+  [taskNameRegionId]="selectedTaskNameRegionId"
+  [selectedTaskNameId]="selectedTaskNameId"
+  [isShowSelectMailBox]="configs.header?.showDropdown"
+  [appearanceState]="showPopup === EPopupShow.CREATE_TASK_POPUP"
+  [selectedTenancyId]="selectedTenancyId"
+  [conversationType]="conversationType"
+  [openFrom]="openFrom"
+  [taskNameTitle]="chatGptGenerate?.subcategory"
+  [emailTitle]="chatGptGenerate?.emailTitle"
+  [selectedComplianceId]="selectedComplianceId"
+  [createMultiple]="createMultiple"
+  [listEventBulkCreateTask]="listEventBulkCreateTask"
+  [showBackBtn]="showBackBtn"
+  [numberOfMessage]="dataConvert?.length"
+  [selectedFolderId]="selectedFolderId"
+  [dataConvert]="dataConvert"
+  [isFromTrudiApp]="isFromTrudiApp"
+  [isFromVoiceMail]="isFromVoiceMail"
+  [isStepPrescreen]="isStepPrescreen"
+  (onTaskNameChange)="onTaskNameChange($event)"
+  (onNext)="createTask($event)"
+  (onBack)="handleBack()"
+  (isCloseModal)="stopProcess($event)"
+  (createFolder)="createFolder($event)"
+  (resetValueSummary)="handleValueSummary()">
+</create-task-by-property>
+
+<!-- <select-task-and-property
+  #createTaskAndProperty
+  *ngIf="showPopup && !isModalTaskV2"
+  [defaultMailBoxId]="defaultMailBoxId"
+  [selectedTaskToConvert]="selectedTaskToConvert"
+  [hasUserInMessage]="hasUserInMessage"
+  [assignedUserIds]="assignedUserIds"
+  [attr.data-e2e]="'create-new-task-modal'"
+  [taskNameList]="taskNameList"
+  [taskNameRegionId]="selectedTaskNameRegionId"
+  [selectedTaskNameId]="selectedTaskNameId"
+  [isShowSelectMailBox]="configs.header?.showDropdown"
+  [appearanceState]="showPopup === EPopupShow.CREATE_TASK_POPUP"
+  [activeProperty]="activeProperty"
+  [selectedTenancyId]="selectedTenancyId"
+  [openFrom]="openFrom"
+  [taskNameTitle]="chatGptGenerate?.subcategory"
+  [emailTitle]="chatGptGenerate?.emailTitle"
+  [selectedComplianceId]="selectedComplianceId"
+  [createMultiple]="createMultiple"
+  [listEventBulkCreateTask]="listEventBulkCreateTask"
+  [showBackBtn]="showBackBtn"
+  [numberOfMessage]="dataConvert?.length"
+  [selectedFolderId]="selectedFolderId"
+  [dataConvert]="dataConvert"
+  (onTaskNameChange)="onTaskNameChange($event)"
+  (onNext)="createTask($event)"
+  (onBack)="handleBack()"
+  (isCloseModal)="stopProcess($event)"
+  (createFolder)="createFolder($event)"
+  (resetValueSummary)="handleValueSummary()">
+</select-task-and-property> -->
+
+<!-- create-task-by-property -->
+<trudi-modal
+  [(visible)]="isSending"
+  [isHideHeader]="true"
+  [isHideFooter]="true"
+  [modelWidth]="479">
+  <div class="wrapper-progress">
+    <div class="title w-100 flex-1">
+      <span class="flex-1">Bulk tasks are creating</span>
+      <div class="d-flex gap-8 align-items-center">
+        <div class="loading-bar">
+          <div
+            class="progress-bar"
+            [style.width.%]="(currentEvent / totalEvents) * 100"></div>
+        </div>
+        <div class="task-percent">{{ currentEvent }} / {{ totalEvents }}</div>
+      </div>
+    </div>
+  </div>
+</trudi-modal>
+
+<create-multiple-task-failed
+  [isShowTaskFailed]="isShowTaskFailed"
+  [conversationFaileds]="conversationFaileds"
+  (onTryAgain)="onTryAgainToTask($event)"
+  (onSkip)="onSkipToTask($event)">
+</create-multiple-task-failed>
+
+<create-edit-task-folder-pop-up
+  *ngIf="showPopup === EPopupShow.CREATE_FOLDER_POPUP"
+  [showPopup]="true"
+  [mailBoxId]="selectedMailBoxId"
+  [inCreateTask]="true"
+  [hasBackButton]="true"
+  (closePopup)="closePopupCreateFolder($event)"
+  (backPopup)="backPopupCreateTask($event)"
+  (createFolderConfirm)="addNewFolderConfirm($event)"></create-edit-task-folder-pop-up>

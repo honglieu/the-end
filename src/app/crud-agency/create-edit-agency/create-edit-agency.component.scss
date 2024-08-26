@@ -1,0 +1,123 @@
+.header {
+  display: flex;
+  padding: 14px 14px 0 14px;
+  justify-content: space-between;
+  align-items: center;
+
+  .close-btn {
+    cursor: pointer;
+    display: flex;
+    align-items: baseline;
+  }
+
+  .detail-invite {
+    display: flex;
+    align-items: center;
+
+    .send-invite-icon {
+      margin-right: 2.4rem;
+
+      .background-icon {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        border-radius: 29px;
+        height: 48px;
+        width: 48px;
+        background-color: var(--brand-500);
+      }
+    }
+
+    .send-invite-text {
+      font-weight: 500;
+      font-size: 20px;
+      line-height: 24px;
+      margin: 0;
+      color: var(--gray-700);
+    }
+  }
+}
+
+.body {
+  padding: 14px;
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+
+    .form-group-item {
+      display: flex;
+      flex-direction: column;
+
+      input {
+        margin-bottom: 3px;
+        padding: 1.4rem 1.2rem 1.2rem 1.2rem;
+        font-size: 1.2rem;
+        line-height: 1.5rem;
+        min-height: 4rem;
+        border-radius: 0.8rem;
+        border: var(--gray-200) solid 1px;
+        background-color: var(--white);
+        font-weight: 600;
+        caret-color: var(--brand-500);
+
+        &:focus {
+          background: var(--white);
+          border: var(--brand-500) solid 1px;
+        }
+
+        &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+          color: var(--gray-500);
+          opacity: 1; /* Firefox */
+        }
+
+        &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+          color: var(--gray-500);
+        }
+
+        &::-ms-input-placeholder { /* Microsoft Edge */
+          color: var(--gray-500);
+        }
+      }
+    }
+
+    .btn-wrapper {
+      margin-top: 20px;
+      padding: 0 14px 14px 14px;
+      display: flex;
+      justify-content: flex-end;
+
+      .confirm-btn {
+        display: flex;
+        padding: 0.9rem 2.2rem;
+        font-size: 1.4rem;
+        background-color: var(--brand-500);
+        border-radius: 0.7rem;
+        border: 0;
+        color: var(--white);
+        align-items: center;
+
+        .btn-text {
+          font-size: 14px;
+        }
+      }
+
+      .cancel-btn {
+        display: flex;
+        padding: 0.9rem 2.2rem;
+        font-size: 1.4rem;
+        margin-right: 2rem;
+        background-color: var(--white);
+        border-radius: 0.7rem;
+        border: 0;
+        color: var(--brand-500);
+        align-items: center;
+
+        .btn-text {
+          font-weight: 500;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+<div class="trudi-tabs-wrapper">
+  <nz-tabset [nzType]="type" nzLinkRouter nzLinkExact="false">
+    <nz-tab
+      class="trudi-tab-link"
+      [nzDisabled]="tab?.disabled"
+      *ngFor="let tab of tabs">
+      <a
+        class="trudi-tab-link-text"
+        *nzTabLink
+        nz-tab-link
+        nz-tooltip
+        nzTooltipPlacement="bottom"
+        [nzTooltipTrigger]="tab?.disabled ? 'hover' : null"
+        routerLinkActive="active"
+        [routerLink]="[tab?.link]"
+        [queryParams]="tab?.queryParam"
+        [queryParamsHandling]="queryParamsHandling"
+        (click)="handleClick()">
+        {{tab.title}}
+        <trudi-icon
+          *ngIf="tab.unread"
+          class="check-unread"
+          icon="redDotUnreadMessage"></trudi-icon>
+      </a>
+    </nz-tab>
+  </nz-tabset>
+</div>
+
+<ng-template #upgradePlan>
+  <div class="d-flex flex-dir-column cursor-text text-left">
+    <div>To use voicemail,</div>
+    <div
+      (click)="handlePopupState({ plansSummary: true });"
+      class="text-decoration-underline cursor-pointer">
+      upgrade your plan
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #requestPlan>
+  <div class="d-flex flex-dir-column cursor-text text-left">
+    <div>To use voicemail,</div>
+    <div
+      (click)="handlePopupState({ requestSent: true, requestFromTab: true });"
+      class="text-decoration-underline cursor-pointer">
+      request plan upgrade
+    </div>
+  </div>
+</ng-template>

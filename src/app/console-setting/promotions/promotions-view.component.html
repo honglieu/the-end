@@ -1,0 +1,9 @@
+<div class="promotions-wrapper">
+  <div *ngIf="currentUserType === userType.ADMIN">
+    <button size="medium" trudi-btn (click)="handleClickAddPromotion($event)">
+      Add promotions
+    </button>
+  </div>
+  <list-view-promotions></list-view-promotions>
+  <promotions-info></promotions-info>
+</div>

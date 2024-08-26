@@ -1,0 +1,31 @@
+<div class="group-name group--box-shadow" *ngIf="items && items.length">
+  {{groupName}}
+</div>
+<div
+  *ngFor="let item of items"
+  (click)="onClick.emit(item)"
+  class="d-flex align-items-center group-item"
+  [ngClass]="selectedId === item.id ? 'group-item-selected' : ''">
+  <div>
+    <div class="d-flex align-items-center">
+      <span
+        class="item-title text-ellipsis"
+        [title]="item.title"
+        [innerHTML]="item.title | highlight: search"></span>
+      <span class="task__item-label" *ngIf="item?.regionName"
+        >{{item.regionName}}</span
+      >
+      <i class="item-option">
+        • Opened {{ item.createdAt | dateCase | async }}</i
+      >
+    </div>
+    <div
+      class="item-address white-space-brakes"
+      *ngIf="isSupplierOrOtherOrExternal || isShowAddress"
+      [innerHTML]="item.property.streetline | highlight: search"></div>
+  </div>
+  <img
+    *ngIf="selectedId === item.id"
+    src="/assets/icon/check-success.svg"
+    alt="selected-icon" />
+</div>

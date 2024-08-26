@@ -1,0 +1,36 @@
+.trudi-tabs {
+  overflow: visible;
+  .ant-tabs-content {
+    transition: none !important;
+  }
+
+  .ant-tabs-tab {
+    color: var(--gray-400);
+    font-weight: 600;
+    padding: 4px 0;
+    font-size: 14px;
+  }
+
+  .ant-tabs-tab + .ant-tabs-tab {
+    margin: 0 0 0 16px;
+  }
+
+  &.ant-tabs-top > .ant-tabs-nav,
+  &.ant-tabs-bottom > .ant-tabs-nav,
+  &.ant-tabs-top > div > .ant-tabs-nav,
+  &.ant-tabs-bottom > div > .ant-tabs-nav {
+    margin: 0;
+  }
+
+  &.ant-tabs-top > .ant-tabs-nav::before,
+  &.ant-tabs-bottom > .ant-tabs-nav::before,
+  &.ant-tabs-top > div > .ant-tabs-nav::before,
+  &.ant-tabs-bottom > div > .ant-tabs-nav::before {
+    border-bottom: none;
+  }
+
+  &.ant-tabs-top > .ant-tabs-nav .ant-tabs-ink-bar,
+  &.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-ink-bar {
+    height: 3px;
+  }
+}

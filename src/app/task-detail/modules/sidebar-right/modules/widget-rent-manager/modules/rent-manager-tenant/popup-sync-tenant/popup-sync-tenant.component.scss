@@ -1,0 +1,50 @@
+@import 'function';
+
+::ng-deep {
+  .cdk-overlay-container:has(.rent-manager-popup-sync-tenant.hidden) {
+    .cdk-overlay-backdrop {
+      visibility: hidden;
+    }
+  }
+  .rent-manager-popup-sync-tenant {
+    .ant-modal-body {
+      height: 536px;
+      padding: 0 !important;
+    }
+
+    &-content {
+      height: 100%;
+
+      .deposit-form {
+        display: flex;
+        align-items: flex-start;
+        gap: 0 16px;
+
+        &-right {
+          width: 55%;
+          border: 1px solid var(--gray-200);
+          padding: 16px;
+          border-radius: 8px;
+          min-height: 356px;
+        }
+
+        &-left {
+          width: 45%;
+          border: 1px solid var(--gray-200);
+          padding: 16px;
+          border-radius: 8px;
+        }
+      }
+    }
+  }
+
+  .new-tenant-header-wrap {
+    margin-right: 50px;
+
+    &-title {
+      display: flex;
+      justify-content: center;
+      @include fontSetup(var(--gray-700), 14px, 20px, normal, 600);
+    }
+  }
+}

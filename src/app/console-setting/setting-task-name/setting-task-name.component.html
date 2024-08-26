@@ -1,0 +1,177 @@
+<app-modal-popup
+  *ngIf="isShowModalDeleteTaskName"
+  [show]="isShowModalDeleteTaskName"
+  [position]="popupModalPosition.center"
+  [specificWidth]="510">
+  <app-confirm-delete-taskname
+    [taskId]="taskDeletingId"
+    (isCloseModal)="onDeleteTaskName($event)"></app-confirm-delete-taskname>
+</app-modal-popup>
+
+<div class="taskname-wrapper">
+  <div
+    class="table-fix-header auto-hide-scroll scroll-small table-setting-all"
+    #table>
+    <div [formGroup]="addForm">
+      <table class="table-taskname">
+        <colgroup>
+          <col style="width: 10%" />
+          <col style="width: 30%" />
+          <col style="width: 60%" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Topic</th>
+            <th>Intent</th>
+            <th>Task name</th>
+          </tr>
+        </thead>
+        <tbody [class]="taskNameList?.length === 0 ? 'empty-block' : ''">
+          <ng-container *ngIf="taskNameList?.length === 0; else notEmptyBlock">
+            <tr class="no-result-text">
+              <div class="header-text">No task names found</div>
+            </tr>
+          </ng-container>
+          <ng-template #notEmptyBlock>
+            <ng-container *ngFor="let item of taskNameList; let i = index">
+              <tr>
+                <td data-title="topic-col" class="border-right">
+                  <div class="topic-item">{{item.name}}</div>
+                </td>
+                <td>
+                  <ng-container
+                    *ngFor="let task of item.taskNames; trackBy: identify let idx = index">
+                    <div
+                      class="topic-item"
+                      [ngClass]="{'underline-row': idx !== item.taskNames.length - 1}">
+                      {{task.conversationCategoryName}}
+                    </div>
+                  </ng-container>
+                </td>
+                <td data-title="task-col" class="task-name-col">
+                  <ng-container
+                    *ngFor="let task of item.taskNames; trackBy: identify; let idx = index">
+                    <div
+                      class="task-item-wrapper"
+                      [ngClass]="{'underline-row': idx !== item.taskNames.length - 1}">
+                      <div
+                        class="task-item d-flex border-rad-8"
+                        [ngClass]="{
+                        'is-editing': isClickEdit && rowEditingIndex === i && itemEditingIndex === idx,
+                        'error-duplicate': (isAddOrEditDuplicate || checkInvalidInput()) && isClickEdit && rowEditingIndex === i && itemEditingIndex === idx
+                      }">
+                        <ng-container
+                          *ngIf="isClickEdit && rowEditingIndex === i && itemEditingIndex === idx; else notEditOrNotEditThisRow">
+                          <input
+                            id="edit-task-input-{{i}}"
+                            class="text-ellipsis"
+                            type="text"
+                            maxlength="30"
+                            autocomplete="off"
+                            formControlName="taskName"
+                            (keyup.enter)="onSaveEdit(i, idx)"
+                            (input)="onChangeInput($event)" />
+                          <div
+                            *ngIf="isAddOrEditDuplicate && isClickEdit && rowEditingIndex === i && itemEditingIndex === idx"
+                            class="duplicate-noti d-flex align-items-center">
+                            <img
+                              src="/assets/images/icons/error-bg-red.svg"
+                              alt="error" />
+                            <span>The task name has existed</span>
+                          </div>
+                          <div
+                            *ngIf="checkInvalidInput() && isClickEdit && rowEditingIndex === i && itemEditingIndex === idx"
+                            class="duplicate-noti d-flex align-items-center">
+                            <img
+                              src="/assets/images/icons/error-bg-red.svg"
+                              alt="error" />
+                            <span>Required field</span>
+                          </div>
+                          <div class="action-btn">
+                            <img
+                              src="/assets/icon/icon_done_gray_small.svg"
+                              alt="save"
+                              #saveBtn
+                              class="icon-save"
+                              [ngClass]="{'disabled-btn': checkInvalidInput() || isAddOrEditDuplicate}" />
+                            <img
+                              src="/assets/icon/icon_cancel_gray_small.svg"
+                              alt="cancel"
+                              #cancelBtn
+                              class="icon-cancel"
+                              (click)="onCancel()" />
+                          </div>
+                        </ng-container>
+                        <ng-template #notEditOrNotEditThisRow>
+                          <span class="text-ellipsis">{{task.name || ''}}</span>
+                          <div *ngIf="canEdit" class="group-btn">
+                            <img
+                              src="/assets/icon/edit-task.svg"
+                              alt="edit"
+                              class="edit-btn"
+                              (click)="onClickEdit(i, idx)" />
+                            <img
+                              src="/assets/icon/trash-bin.svg"
+                              alt="delete"
+                              class="delete-btn d-none"
+                              (click)="onShowDeletePopup(i, idx)" />
+                          </div>
+                        </ng-template>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <ng-container
+                    *ngIf="isClickAdd && rowAddingIndex === i; else notAddOrNotAddThisRow">
+                    <div
+                      class="add-task d-flex cursor-pointer"
+                      [ngClass]="{
+                        'error-duplicate': isAddOrEditDuplicate && isClickAdd && rowAddingIndex === i
+                      }">
+                      <input
+                        type="text"
+                        id="add-task-input-{{i}}"
+                        autocomplete="off"
+                        formControlName="taskName"
+                        maxlength="30"
+                        (keyup.enter)="onSaveAdd(i)"
+                        (input)="onChangeInput($event)" />
+                      <div
+                        *ngIf="isAddOrEditDuplicate && isClickAdd && rowAddingIndex === i"
+                        class="duplicate-noti d-flex align-items-center">
+                        <img
+                          src="/assets/images/icons/error-bg-red.svg"
+                          alt="error" />
+                        <span>The task name has existed</span>
+                      </div>
+                      <div class="action-btn">
+                        <img
+                          src="/assets/icon/icon_done_gray_small.svg"
+                          alt="save"
+                          #saveBtn
+                          class="icon-save"
+                          [ngClass]="{'disabled-btn': checkInvalidInput() || isAddOrEditDuplicate}" />
+                        <img
+                          src="/assets/icon/icon_cancel_gray_small.svg"
+                          alt="cancel"
+                          #cancelBtn
+                          class="icon-cancel"
+                          (click)="onCancel()" />
+                      </div>
+                    </div>
+                  </ng-container>
+                  <ng-template #notAddOrNotAddThisRow>
+                    <div
+                      class="add-task-icon d-flex cursor-pointer d-none"
+                      (click)="onClickAdd(i)">
+                      +
+                    </div>
+                  </ng-template>
+                </td>
+              </tr>
+            </ng-container>
+          </ng-template>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

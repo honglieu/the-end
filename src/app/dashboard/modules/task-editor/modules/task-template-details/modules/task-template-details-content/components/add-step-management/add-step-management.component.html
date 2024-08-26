@@ -1,0 +1,14 @@
+<select-step-type></select-step-type>
+
+<create-communication-step></create-communication-step>
+
+<div [ngSwitch]="currentCompanyCRMSystemName">
+  <div *ngSwitchCase="CRMSystemName.PROPERTY_TREE">
+    <property-tree-step></property-tree-step>
+  </div>
+</div>
+
+<calendar-event-step></calendar-event-step>
+
+<new-task-step></new-task-step>
+<check-list-step></check-list-step>

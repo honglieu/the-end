@@ -1,0 +1,17 @@
+<svg width="62" height="59" viewBox="0 0 62 59" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="message-circle" clip-path="url(#clip0_5459_28028)">
+<path id="Union" d="M34.3881 43.126C34.9104 42.2962 35.7282 41.7076 36.6375 41.3407C42.1697 39.1083 46.0736 33.6884 46.0736 27.3566C46.0736 19.0317 39.3249 12.283 30.9999 12.283C22.675 12.283 15.9263 19.0317 15.9263 27.3566C15.9263 33.6285 19.7567 39.0057 25.2058 41.2765C26.0628 41.6336 26.8355 42.1885 27.3463 42.9638L30.9999 48.509L34.3881 43.126Z" fill="url(#paint0_linear_5459_28028)"/>
+<circle id="Ellipse 36" cx="24.5998" cy="28.4725" r="2.22629" fill="white"/>
+<circle id="Ellipse 37" cx="31.2785" cy="28.4725" r="2.22629" fill="white"/>
+<circle id="Ellipse 38" cx="37.9572" cy="28.4725" r="2.22629" fill="white"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_5459_28028" x1="53.2493" y1="33.4292" x2="42.9622" y2="12.4216" gradientUnits="userSpaceOnUse">
+<stop stop-color="#5E6063"/>
+<stop offset="1" stop-color="#8E9197"/>
+</linearGradient>
+<clipPath id="clip0_5459_28028">
+<rect width="42.6349" height="42.6349" fill="white" transform="translate(0.852539 28.194) rotate(-45)"/>
+</clipPath>
+</defs>
+</svg>

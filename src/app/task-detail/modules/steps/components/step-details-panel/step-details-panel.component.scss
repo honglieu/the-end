@@ -1,0 +1,110 @@
+@import 'function';
+
+::ng-deep {
+  .ant-dropdown:has(.step-details-panel-menu-wrapper) {
+    .step-details-panel-menu-wrapper {
+      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+
+      .item {
+        padding: 8px;
+        @include fontSetup(
+          var(--fg-neutral-stronger) !important,
+          14px,
+          20px,
+          normal,
+          500
+        );
+        min-width: 160px;
+
+        &:hover {
+          background-color: var(--bg-neutral-tonal-stronger, #f0f1f1);
+
+          &:first-child {
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+          }
+
+          &:last-child {
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+          }
+        }
+      }
+    }
+  }
+}
+
+:host {
+  .step-details-panel-container {
+    .step-details-panel-content {
+      .step-details-panel {
+        &-header {
+          .step-details-panel-name {
+            @include fontSetup(
+              var(--fg-neutral-stronger) !important,
+              16px,
+              24px,
+              normal,
+              600
+            );
+          }
+
+          .disabled-step-msg {
+            @include fontSetup(
+              var(--fg-neutral-weaker) !important,
+              12px,
+              16px,
+              normal,
+              400
+            );
+          }
+        }
+
+        &-body {
+          .summary,
+          .comments {
+            ::ng-deep .ant-menu {
+              &.ant-menu-inline {
+                border: unset;
+              }
+
+              .ant-menu-submenu {
+                .ant-menu-submenu-title {
+                  display: none;
+                }
+
+                .ant-menu-sub {
+                  background-color: unset;
+                }
+              }
+            }
+          }
+
+          .section-title {
+            @include fontSetup(
+              var(--fg-neutral-normal) !important,
+              12px,
+              16px,
+              normal,
+              600
+            );
+
+            &.arrow-icon {
+              ::ng-deep trudi-icon {
+                transform: rotate(270deg);
+                &.expand-section {
+                  transform: rotate(360deg);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .step-details-panel-header-btn {
+      top: -8px;
+      right: 0;
+    }
+  }
+}

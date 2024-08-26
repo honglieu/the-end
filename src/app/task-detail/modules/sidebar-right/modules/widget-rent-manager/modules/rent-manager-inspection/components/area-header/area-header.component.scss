@@ -1,0 +1,122 @@
+@import 'function';
+::ng-deep {
+  .area-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .size-icon {
+      width: 106px;
+      height: 20px;
+    }
+    .area-name-wrapper {
+      position: relative;
+      width: 100%;
+
+      .area-name {
+        padding: 6px 8px;
+        width: calc(100% - 117px);
+        @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 600);
+        text-transform: none;
+        &:hover:not(.cursor-not-allowed) {
+          border-radius: 8px;
+          border: 1px solid var(--border-neutral-dark, #d8dcdf);
+          background: var(--bg-neutral-tonal-stronger, #e7eaed);
+        }
+      }
+
+      .area-name-editing {
+        width: calc(100% - 117px);
+        position: absolute;
+        background-color: transparent;
+        opacity: 0;
+        z-index: -1;
+
+        &.editing {
+          opacity: 1;
+          z-index: unset;
+        }
+
+        ::ng-deep trudi-text-field {
+          .trudi-text-field-wrapper {
+            height: 32px;
+            &:has(.trudi-ui-text-field:focus:not(.ng-invalid)) {
+              background: var(--bg-base) !important;
+              &::-webkit-input-placeholder {
+                opacity: 0;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .more-icon {
+    padding: 2px;
+    border-radius: 80px;
+    &:hover:not(.cursor-not-allowed) {
+      background: var(--bg-neutral-tonal-strongest);
+    }
+  }
+}
+::ng-deep {
+  .options-wrapper {
+    width: 161px;
+    background-color: var(--white);
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    border-radius: 8px;
+
+    .item {
+      padding: 12px;
+      background: var(--bg-base);
+      pointer-events: unset !important;
+      @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+      &:not(:first-child) {
+        border-bottom: 1px solid var(--border-neutral-light);
+      }
+
+      &.disabled {
+        .text {
+          color: var(--fg-neutral-weakest) !important;
+        }
+
+        .size-20 {
+          opacity: 0.3;
+        }
+
+        &:hover {
+          background-color: var(--bg-base) !important;
+          color: var(--fg-neutral-weakest) !important;
+        }
+      }
+
+      &:not(:first-child) {
+        border-top: 1px var(--border-neutral-light) solid;
+      }
+
+      &:hover {
+        background-color: var(--brand-200) !important;
+        color: var(--gray-700) !important;
+
+        &:first-child {
+          border-top-left-radius: 8px;
+          border-top-right-radius: 8px;
+        }
+
+        &:last-child {
+          border-bottom-left-radius: 8px;
+          border-bottom-right-radius: 8px;
+        }
+      }
+
+      &:active {
+        background-color: var(--brand-300) !important;
+      }
+
+      .text {
+        margin: 0;
+        white-space: nowrap;
+        @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+      }
+    }
+  }
+}

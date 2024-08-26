@@ -1,0 +1,36 @@
+@import 'function';
+
+.select-task-template {
+  .field-wrapper {
+    overflow: hidden;
+  }
+  .field-label {
+    @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+    width: 100%;
+  }
+}
+
+.item-label {
+  @include fontSetup(
+    var(--fg-neutral-stronger, #3d3d3d) !important,
+    14px !important,
+    20px !important,
+    normal !important,
+    500 !important
+  );
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-right: 10px;
+  display: flex;
+  align-items: center;
+
+  .task-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  trudi-badge {
+    z-index: 100;
+  }
+}

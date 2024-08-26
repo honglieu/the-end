@@ -1,0 +1,75 @@
+@import 'function';
+
+:host::ng-deep {
+  trudi-badge .trudi-badge.trudi-badge-medium {
+    white-space: nowrap;
+    @include fontSetup(var(--gray-600), 12px, 16px, normal, 500);
+  }
+}
+
+.tenants-wrapper {
+  margin-bottom: 12px;
+  padding: 12px 0;
+
+  .item-owner-title {
+    padding: 0 16px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    .item-title {
+      @include fontSetup(var(--fg-neutral-normal), 14px, 24px, normal, 600);
+    }
+  }
+
+  .list-wrapper {
+    padding-top: 12px;
+
+    .no-content {
+      @include fontSetup(var(--gray-500), 14px, 20px, normal, 400);
+      font-style: italic;
+      padding: 16px;
+    }
+
+    .border-bottom {
+      border-bottom: solid 1px var(--border-color-base);
+      margin: 0 16px;
+    }
+
+    .item-tenant {
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+
+      &:hover {
+        background: var(--bg-neutral-tonal-normal);
+      }
+
+      &:active {
+        background: var(--bg-neutral-tonal-strongest) !important;
+      }
+
+      &:focus-visible {
+        background: var(--bg-neutral-tonal-normal);
+      }
+
+      .label-wrapper {
+        max-width: calc(100% - 44px);
+
+        .tenant-label {
+          max-width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+        }
+      }
+
+      .action-icon {
+        color: var(--gray-500);
+      }
+    }
+  }
+}

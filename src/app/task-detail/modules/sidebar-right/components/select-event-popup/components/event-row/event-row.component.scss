@@ -1,0 +1,52 @@
+@import 'function';
+
+:host .event-wrapper {
+  .event-item {
+    display: grid;
+    grid-template-columns: 3.2fr 4fr 9fr 0fr;
+    grid-gap: 10px;
+    padding: 12px;
+    height: 44px;
+    .item {
+      @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 500);
+    }
+
+    .item-day {
+      @include fontSetup(var(--gray-700), 14px, 20px, normal, 600);
+    }
+
+    .item-address {
+      text-align: start;
+      @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+    }
+
+    .item-checkbox {
+      margin-left: auto;
+    }
+    .checkbox-frame {
+      height: 24px;
+      width: 24px;
+      display: flex;
+      justify-content: center;
+    }
+    ::ng-deep .item-checkbox trudi-checkbox span,
+    label {
+      width: 20px;
+      height: 20px;
+    }
+    ::ng-deep .item-checkbox trudi-checkbox trudi-icon {
+      color: var(--fg-brand);
+    }
+    ::ng-deep .item-checkbox trudi-checkbox trudi-icon rect {
+      stroke: none;
+      fill: var(--fg-brand);
+    }
+  }
+  .separator-event {
+    margin: 16px 0px;
+    border: none;
+    &.last-event-date-group {
+      border-top: 1px solid var(--border-neutral-dark);
+    }
+  }
+}

@@ -1,0 +1,71 @@
+<div>
+  <div class="header">
+    <div class="detail-invite">
+      <div class="send-invite-icon">
+        <div class="background-icon">
+          <img src="/assets/icon/icon-email.svg" />
+        </div>
+      </div>
+      <div class="send-invite-text">{{title}}</div>
+    </div>
+    <div class="close-btn close-btn-fs" (click)="isOpenModal(false)">
+      <img src="/assets/icon/close-modal.png" alt="" />
+    </div>
+  </div>
+  <div class="body">
+    <div [formGroup]="companyForm" class="form-group">
+      <div class="form-group-item">
+        <label>Sync Token*</label>
+        <input placeholder="Sync Token..." formControlName="syncToken" />
+      </div>
+      <div class="form-group-item">
+        <label>Primary color*</label>
+        <input formControlName="primaryColor" />
+      </div>
+      <div class="form-group-item">
+        <label>Secondary color*</label>
+        <input formControlName="secondaryColor" />
+      </div>
+      <div class="form-group-item">
+        <label>Third color*</label>
+        <input formControlName="thirdColor" />
+      </div>
+      <div class="form-group-item">
+        <label>Splash color*</label>
+        <input formControlName="splashColor" />
+      </div>
+      <div class="form-group-item">
+        <label>Agency Name*</label>
+        <input formControlName="agencyName" />
+      </div>
+      <div class="form-group-item">
+        <label>Splash Url*</label>
+        <input formControlName="splashUrl" />
+      </div>
+      <div class="form-group-item">
+        <label>Trudi Logo*</label>
+        <input formControlName="trudiLogo" />
+      </div>
+      <div class="form-group-item">
+        <label>Agency Logo*</label>
+        <input formControlName="agencyLogo" />
+      </div>
+      <div class="btn-wrapper">
+        <button
+          data-e2e="button-cancel"
+          type="button"
+          class="cancel-btn"
+          (click)="isOpenModal(false)">
+          <span class="btn-text">Cancel</span>
+        </button>
+        <button
+          data-e2e="button-confirm"
+          type="button"
+          class="confirm-btn"
+          (click)="saveCompany()">
+          <span class="btn-text">Confirm</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

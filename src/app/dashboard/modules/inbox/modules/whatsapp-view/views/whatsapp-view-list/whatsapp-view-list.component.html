@@ -1,0 +1,237 @@
+<div class="whatsapp-inbox">
+  <div class="whatsapp-inbox__index-section">
+    <whatsapp-filter [isHidden]="isHiddenFilter || isConsole"></whatsapp-filter>
+
+    <ng-container
+      *rxLet="
+          whatsapp$;
+          suspense: skeletonTemplate;
+          suspenseTrigger: whatsappService.suspenseTrigger$;
+          strategy: renderStrategy;
+          let list
+      ">
+      @if (!list.fetching && !!list.tasks.length && !isWhatsappDisconnect) {
+      <ng-container
+        *ngTemplateOutlet="whatsappTemplate; context: {tasks: list.tasks, total: list.totalTasks}"></ng-container>
+      } @else {
+      <ng-container *ngTemplateOutlet="noItemTemplate"></ng-container>
+      }
+    </ng-container>
+  </div>
+
+  <div class="whatsapp-inbox__detail-section">
+    @if (showDetail$ | async) {
+    <ng-container *ngTemplateOutlet=" whatsappDetailTemplate"></ng-container>
+    } @else {
+    <ng-container *ngTemplateOutlet=" noItemSelectedTemplate"></ng-container>
+    }
+  </div>
+</div>
+
+@if(isConnectWhatsAppScreen && isWhatsappDisconnect) {
+<whatsapp-view-connect
+  (completeConnect)="handleCompleteConnect()"></whatsapp-view-connect>
+}
+
+<ng-template #whatsappTemplate let-tasks="tasks" let-total="total">
+  <div
+    cdkDropList
+    cdkDropListSortingDisabled
+    [cdkDropListData]="whatsapps"
+    (cdkDropListDropped)="dragDroppedHandler($event)">
+    <div
+      class="whatsapp-inbox__index-section--container"
+      infiniteScroll
+      [scrollWindow]="false"
+      [infiniteScrollUp]="true"
+      [infiniteScrollUpDistance]="0"
+      [infiniteScrollDistance]="0"
+      [infiniteScrollThrottle]="300"
+      [immediateCheck]="true"
+      [alwaysCallback]="true"
+      (scrolledUp)="onScrollUp()"
+      (scrolled)="onScrollDown()"
+      #infiniteScrollContainer>
+      <div>
+        <app-message-groups
+          [items]="tasks"
+          [listItemsTemplate]="whatsappGroupsOutlet"
+          [totalItems]="total"
+          groupField="messageDate">
+        </app-message-groups>
+        <ng-template #whatsappGroupsOutlet let-itemsInGroup="itemsInGroup">
+          <div
+            id="auto-scroll-item"
+            [attr.data-conversation-id]="item.conversations?.[0]?.id ?? item.conversationId"
+            [attr.data-task-id]="item.id"
+            *rxFor="
+                let item of itemsInGroup;
+                trackBy: trackWhatsapp;
+                patchZone: false;
+                strategy: renderStrategy;
+                let first = first;
+                let last = last;
+            "
+            dragCursor
+            cdkDrag
+            [cdkDragData]="isSelectedMove ? inboxList : item"
+            [cdkDragDisabled]="isConsole || item.taskType === TaskType.TASK"
+            (cdkDragMoved)="dragMovedHandler($event)">
+            <ng-container
+              *ngTemplateOutlet="
+                  whatsappRowTemplate;
+                  context: {
+                    item: item,
+                    first: first,
+                    last: last,
+                    index: item.originIndex
+                  }"></ng-container>
+            <div *cdkDragPlaceholder>
+              <ng-container
+                *ngTemplateOutlet="
+                    whatsappRowTemplate;
+                    context: {
+                      item: item,
+                      first: first,
+                      last: last,
+                      index: item.originIndex
+                    }"></ng-container>
+            </div>
+            <div *cdkDragPreview class="drag_preview">
+              @if (currentDraggingToFolderName) {
+              <p class="tooltip-for-drag">
+                <span class="tooltip-content"
+                  >{{currentDraggingToFolderName}}</span
+                >
+                <span class="tooltip-arrow"></span>
+              </p>
+              }
+              <span class="message-count"
+                >{{ (isSelectedMove ? inboxList.length : 1) | pluralize:
+                'message' }}</span
+              >
+            </div>
+          </div>
+        </ng-template>
+
+        @if ( showSpinnerBottom && !isError ) {
+        <div class="message-row loading-spinner">
+          <img lazy="true" src="assets/images/loading-spinner.gif" />
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template
+  #whatsappRowTemplate
+  let-item="item"
+  let-first="first"
+  let-last="last"
+  let-index="index">
+  <whatsapp-view-row
+    [item]="item"
+    [first]="first"
+    [last]="last"
+    [index]="index"
+    [search]="searchText"
+    [queryTaskId]="queryTaskId"
+    [queryConversationId]="queryConversationId"
+    [listMsgActive]="listMsgActive"
+    [isRmEnvironment]="isRmEnvironment"
+    (handleSelectedMsg)="handleSelectedMsg($event)"
+    (removeActiveMsg)="handleRemoveActiveMsg($event)"
+    (addSelectedMsg)="handleAddSelectedMsg($event)"
+    (pressShiftClick)="handleSelectedMsg($event)"
+    (navigateToNextMessage)="onNextMessage()"
+    (navigateToPreviousMessage)="onPrevMessage()"></whatsapp-view-row>
+</ng-template>
+
+<ng-template #whatsappDetailTemplate>
+  <whatsapp-view-detail
+    [currentSyncStatus]="currentSyncStatus"
+    [isLoadingIndex]="isLoadingIndex"></whatsapp-view-detail>
+</ng-template>
+
+<ng-template #noItemSelectedTemplate>
+  <div
+    class="whatsapp-inbox__detail-section--no-select"
+    [class.d-none]="showTaskDetail">
+    <img
+      [src]="hasSelectedInbox ? 'assets/images/item-selected.png' :'assets/images/no-item.png'"
+      [alt]="hasSelectedInbox ? 'Items Selected' : 'No item'"
+      [class.selected-item]="hasSelectedInbox"
+      alt="no data" />
+    @if(!hasSelectedInbox && whatsapps.length) {
+    <p>Select an item to read</p>
+    }
+  </div>
+</ng-template>
+
+<ng-template #noItemTemplate>
+  <div class="whatsapp-inbox__index-section--no-item">
+    <ng-container
+      [ngTemplateOutlet]="isFocusView && !isFilter
+    ? noMyMessageTemplate
+    : noTeamMessageTemplate"></ng-container>
+
+    <ng-template #noTeamMessageTemplate>
+      @if(searchText || isFilter){
+      <div class="whatsapp-inbox__index-section--no-message">
+        <trudi-icon icon="noConversationsV2"></trudi-icon>
+        <span>None to display</span>
+      </div>
+      }@else{
+      <container-element>
+        <empty-focused-view-page
+          [message]="textNoResult?.[+isResolved]"
+          [noFocusView]="true"
+          subMessage=""></empty-focused-view-page>
+      </container-element>
+      }
+    </ng-template>
+
+    <ng-template #noMyMessageTemplate>
+      <container-element>
+        <empty-focused-view-page
+          [message]="textMessage?.[+isResolved]"
+          [subMessage]="subTextMessage?.[+isResolved]"></empty-focused-view-page>
+      </container-element>
+    </ng-template>
+  </div>
+</ng-template>
+
+<ng-template #skeletonTemplate>
+  <div
+    *rxFor="let _ of [].constructor(20); strategy: renderStrategy; let i = index">
+    <div class="whatsapp-skeleton d-flex">
+      <div class="d-flex flex-dir-column gap-8">
+        <div>
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"
+            [style.width.px]="113"></nz-skeleton>
+        </div>
+        <div>
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"
+            class="w-100"></nz-skeleton>
+        </div>
+        <div>
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"
+            class="w-100"></nz-skeleton>
+        </div>
+        <div>
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"
+            class="w-100"></nz-skeleton>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

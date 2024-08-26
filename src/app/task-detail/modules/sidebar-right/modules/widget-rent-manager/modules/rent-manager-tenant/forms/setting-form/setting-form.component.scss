@@ -1,0 +1,122 @@
+@import 'function';
+.setting-form-wrapper {
+  .setting-title {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      14px,
+      20px,
+      normal,
+      600
+    );
+  }
+  .setting-form-group {
+    &_title {
+      cursor: default;
+      @include fontSetup(
+        var(--fg-neutral-normal, #646464),
+        12px,
+        16px,
+        normal,
+        400
+      );
+    }
+    &_select {
+      padding-top: 6px;
+      ::ng-deep trudi-checkbox.setting-checkbox {
+        label.trudi-checkbox {
+          width: fit-content !important;
+          .label-text {
+            @include fontSetup(
+              var(--gray-800, #23262f),
+              14px,
+              24px,
+              normal,
+              400
+            );
+          }
+        }
+      }
+      .row-checkbox {
+        flex-wrap: wrap;
+        row-gap: 16px;
+        .col-6 {
+          &:last-child {
+            ::ng-deep trudi-checkbox.setting-checkbox {
+              label.trudi-checkbox {
+                align-items: flex-start !important;
+                span:first-child {
+                  flex-basis: 21px !important;
+                  margin-top: 4px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+::ng-deep {
+  trudi-multi-select.subsidies-select {
+    .trudi-select-label,
+    .select-label {
+      @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+    }
+    .select-label {
+      font-weight: 600;
+    }
+    .ng-select.ng-select-multiple
+      .ng-select-container
+      .ng-value-container
+      .ng-value
+      .trudi-label-wrapper {
+      max-width: 225px !important;
+    }
+    .ng-select.ng-select-multiple
+      ng-dropdown-panel
+      .ng-dropdown-panel-items
+      .ng-option.ng-option-selected:not(.ng-option-marked).ng-option-disabled {
+      background-color: unset !important;
+      span {
+        @include fontSetup(
+          var(--fg-neutral-stronger) !important,
+          14px,
+          20px,
+          normal,
+          500
+        );
+      }
+    }
+  }
+}
+::ng-deep {
+  .tooltip-checkbox-subsidies-deposit {
+    &.ant-tooltip {
+      max-width: none !important;
+    }
+    & .ant-tooltip-inner {
+      position: absolute;
+      bottom: 0;
+      right: -10px;
+      min-width: max-content;
+    }
+    & .ant-tooltip-arrow {
+      right: 0 !important;
+    }
+  }
+}
+
+::ng-deep nz-skeleton.skeleton-item .ant-skeleton-content ul li {
+  width: 100% !important;
+  height: 40px !important;
+  border-radius: 8px;
+}
+
+::ng-deep
+  trudi-single-select.rent-select
+  ng-select.ng-select.ng-select-single
+  ng-dropdown-panel
+  .ng-dropdown-panel-items {
+  overflow-y: hidden !important;
+}

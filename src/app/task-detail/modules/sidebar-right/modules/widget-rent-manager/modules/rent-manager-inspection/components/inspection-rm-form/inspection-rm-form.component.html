@@ -1,0 +1,262 @@
+<div class="inspection-rm-wrapper">
+  <div class="inspection-rm-form" [formGroup]="inspectionRmForm">
+    <div class="inspection-details">
+      <span class="inspection-title">Details</span>
+      <trudi-form-control class="w-100">
+        <trudi-single-select
+          label="Select tenant"
+          [items]="tenanciesOptions"
+          [searchFn]="customSearchFn"
+          bindValue="idUserPropertyGroup"
+          bindLabel="name"
+          formControlName="idUserPropertyGroup">
+          <ng-template
+            trudi-option-tmp
+            let-item="item"
+            let-item$="item$"
+            let-searchTerm="searchTerm">
+            <div class="tenants_list">
+              <div [ngOptionHighlight]="searchTerm ? searchTerm : ''">
+                {{ (item.firstName ? item.firstName : '')+' '+(item.lastName ?
+                item.lastName : '') }}
+              </div>
+              <div *ngIf="item$.selected" class="d-flex align-items-center">
+                <trudi-icon icon="checkSuccess"></trudi-icon>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template
+            trudi-label-tmp
+            let-item="item"
+            let-searchTerm="searchTerm">
+            <div class="tenants_preview">
+              {{ (item.firstName ? item.firstName : '') +' '+ (item.lastName ?
+              item.lastName : '') }}
+            </div>
+          </ng-template>
+        </trudi-single-select>
+      </trudi-form-control>
+
+      <div class="d-flex align-items-start gap-20">
+        <trudi-form-control class="flex-1">
+          <trudi-single-select
+            label="Type"
+            [items]="typeOptions"
+            bindValue="id"
+            bindLabel="name"
+            formControlName="inspectionTypeID">
+          </trudi-single-select>
+        </trudi-form-control>
+
+        <trudi-form-control class="flex-1">
+          <trudi-single-select
+            label="Status"
+            [items]="statusOptions"
+            bindValue="id"
+            bindLabel="name"
+            formControlName="inspectionStatusID">
+          </trudi-single-select>
+        </trudi-form-control>
+
+        <div class="inspection-date-wrapper flex-1">
+          <span class="date-title">Inspection date</span>
+          <trudi-form-control [control]="inspectionDate">
+            <trudi-date-picker
+              formControlName="inspectionDate"
+              [defaultValue]="inspectionDate?.value"
+              [class.trudi-picker-error]="inspectionDate?.invalid && inspectionDate?.touched && inspectionDate?.errors">
+            </trudi-date-picker>
+          </trudi-form-control>
+        </div>
+        <div class="inspection-date-wrapper flex-1">
+          <span class="date-title">Scheduled date (optional)</span>
+          <trudi-date-picker
+            formControlName="scheduledDate"
+            [defaultValue]="scheduledDate?.value">
+          </trudi-date-picker>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center gap-20">
+        <trudi-textarea
+          class="w-100"
+          [resizable]="false"
+          [showCounting]="false"
+          [rows]="2"
+          maxCharacter="255"
+          formControlName="description"
+          label="Description (optional)"></trudi-textarea>
+
+        <trudi-textarea
+          class="w-100"
+          [resizable]="false"
+          [showCounting]="false"
+          [rows]="2"
+          maxCharacter="2000"
+          formControlName="notes"
+          label="Notes (optional)"></trudi-textarea>
+      </div>
+    </div>
+
+    <div class="inspection-areas">
+      <div class="area-header">
+        <span class="inspection-title">Areas</span>
+      </div>
+      <div
+        *ngIf="inspectionAreas.value?.length"
+        class="area-content"
+        formArrayName="areas">
+        <div
+          class="area-item"
+          *ngFor="let area of inspectionAreas.controls; let areasIdx = index">
+          <div class="area-item-group" [formGroupName]="areasIdx">
+            <trudi-collapse-widget
+              [disabled]="isDisabled"
+              [activeExpand]="!isSyncedToRm(areasIdx)?.value || areasIdx === 0"
+              [expandText]="{
+                open: 'Show details',
+                close: 'Hide details'
+              }"
+              [titleHeader]="headerLeft">
+              <div class="group-list" formArrayName="inspectionAreaItems">
+                <div class="group-list-header d-flex align-items-center">
+                  <span class="header-item-col">Item name</span>
+                  <span class="header-item-col">Status</span>
+                  <span class="header-item-col">Note</span>
+                  <span class="header-item-col">File attachments</span>
+                </div>
+                <div
+                  class="group-item-wrapper"
+                  *ngFor="let itemControl of inspectionArea(areasIdx).controls; let areaIdx = index">
+                  <div class="group-item" [formGroupName]="areaIdx">
+                    <div class="item-col">
+                      <trudi-form-control [checkSubmit]="checkSubmitted">
+                        <trudi-text-field
+                          [checkSubmit]="checkSubmitted"
+                          formControlName="name"
+                          [maxCharacter]="100"
+                          [showCounting]="false"></trudi-text-field>
+                      </trudi-form-control>
+                    </div>
+                    <div class="item-col status-col">
+                      <trudi-form-control>
+                        <trudi-text-field
+                          formControlName="status"
+                          [maxCharacter]="100"
+                          [showCounting]="false"></trudi-text-field>
+                      </trudi-form-control>
+                      <div
+                        class="d-flex flex-dir-column gap-4 align-items-starts">
+                        <trudi-form-control>
+                          <trudi-checkbox
+                            formControlName="isActionItem"
+                            label="Action item"></trudi-checkbox>
+                        </trudi-form-control>
+
+                        <trudi-form-control>
+                          <trudi-checkbox
+                            formControlName="isReviewNeeded"
+                            label="Needs review"></trudi-checkbox>
+                        </trudi-form-control>
+
+                        <trudi-form-control>
+                          <trudi-checkbox
+                            formControlName="isSevere"
+                            label="Severe"></trudi-checkbox>
+                        </trudi-form-control>
+                      </div>
+                    </div>
+                    <div class="item-col">
+                      <trudi-form-control>
+                        <trudi-textarea
+                          formControlName="note"
+                          [resizable]="false"
+                          [showCounting]="false"
+                          [rows]="5"
+                          [maxCharacter]="255"></trudi-textarea>
+                      </trudi-form-control>
+                    </div>
+                    <div class="item-col file-col">
+                      <upload-file-button
+                        formArrayName="files"
+                        [listFileData]="itemControl?.value?.files"
+                        (getListFile)="getListFile($event, itemControl)"
+                        label="Upload photo"
+                        buttonTheme="neutral"
+                        icon="iconUploadV2"
+                        [showLoading]="true"
+                        [multipleFile]="true"
+                        [enableToast]="true"
+                        [ngClass]="{'cursor-not-allowed' : isDisabled}"
+                        [disableRemoveButton]="isDisabled"
+                        [disable]="isDisabled"
+                        [acceptTypeFile]="AREA_IMAGE_VALID_TYPE"
+                        [disableTooltipText]="'Cannot delete files has been synced to RM'">
+                        ></upload-file-button
+                      >
+                    </div>
+                    <div class="item-col icon-deleted">
+                      <trudi-icon
+                        trudi-tooltip
+                        nzTooltipPlacement="topRight"
+                        [nzTooltipOverlayStyle]="{ 'left': '2px' }"
+                        [nzTooltipOverlayClassName]="'tool-tip-area-item'"
+                        [nzTooltipTitle]="isItemSyncedToRm(areasIdx, areaIdx)?.value && 'Item can only be deleted directly from Rent Manager'"
+                        [class.disabled]="isItemSyncedToRm(areasIdx, areaIdx)?.value || isDisabled"
+                        [class]="(isItemSyncedToRm(areasIdx, areaIdx)?.value || isDisabled) ? 'cursor-not-allowed-unset' : 'cursor-pointer'"
+                        (click)="handleDeleteAreaItem(areasIdx, areaIdx, (isItemSyncedToRm(areasIdx, areaIdx)?.value || isDisabled))"
+                        icon="deleted"></trudi-icon>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="group-list-footer">
+                  <button
+                    trudi-btn
+                    (click)="addAreaItem(areasIdx)"
+                    variant="outlined"
+                    btnType="neutral"
+                    [disabled]="isDisabled"
+                    size="medium">
+                    <span class="add-area">Add item</span>
+                    <ng-template iconPrefix>
+                      <div>
+                        <trudi-icon
+                          icon="iconPlus2"
+                          class="size-20"></trudi-icon>
+                      </div>
+                    </ng-template>
+                  </button>
+                </div>
+              </div>
+            </trudi-collapse-widget>
+            <ng-template #headerLeft>
+              <div class="area-header-title-wrapper">
+                <area-header
+                  [inspectionArea]="area"
+                  [areasIdx]="areasIdx"
+                  [isDisabled]="isDisabled"></area-header>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+      <div>
+        <button
+          class="add-area"
+          (click)="handleAddNewArea()"
+          trudi-btn
+          [disabled]="isDisabled"
+          variant="outlined"
+          size="medium">
+          <span class="add-area-text">Add area</span>
+          <ng-template iconPrefix>
+            <div>
+              <trudi-icon icon="iconPlus2" class="size-20"></trudi-icon>
+            </div>
+          </ng-template>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

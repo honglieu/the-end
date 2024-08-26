@@ -1,0 +1,10 @@
+<ng-container>
+  <div
+    class="overlay"
+    [class.d-none]="!((loadingService.isLoading | async) || (loadingService.isReLoading | async))"
+    [style.opacity]="(loadingService.isReLoading | async) ? '1' : '0.7'">
+    <div class="gif">
+      <img width="100" src="/assets/images/loading.gif" />
+    </div>
+  </div>
+</ng-container>

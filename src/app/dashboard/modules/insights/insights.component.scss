@@ -1,0 +1,50 @@
+@import 'function';
+
+:host {
+  .insights {
+    padding: 24px 0 0 0;
+    height: 100%;
+    .insights-container {
+      padding: 32px 32px 24px 32px;
+      height: calc(100% - 52px);
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+    &-section {
+      display: flex;
+      gap: 0 80px;
+    }
+  }
+  .insights-container {
+    display: flex;
+    flex-direction: column;
+    gap: 60px;
+  }
+}
+
+.confirm-request-body {
+  p {
+    margin: 0;
+    @include fontSetup(var(--fg-neutral-stronger), 16px, 24px, normal, 400);
+    &:nth-child(2) {
+      margin-top: 24px;
+    }
+  }
+}
+
+@media only screen and (max-width: 1440px) {
+  :host {
+    .insights-section {
+      flex-direction: column;
+      gap: 60px 0 !important;
+    }
+  }
+}
+
+@media only screen and (max-width: 1500px) {
+  :host {
+    .insights-section {
+      gap: 0 30px;
+    }
+  }
+}

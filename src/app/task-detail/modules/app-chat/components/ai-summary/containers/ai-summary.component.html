@@ -1,0 +1,264 @@
+<!-- content -->
+<button
+  nz-tooltip
+  nzTooltipTitle="Message summary"
+  [nzTooltipTrigger]="isActive ? null : 'hover'"
+  [nzTooltipPlacement]="'top'"
+  [nzTooltipVisible]="!isActive && isTooltipVisible"
+  (nzTooltipVisibleChange)="handleShowTooltip($event)"
+  [appE2E]="'conversation-details-ai-summary-button'"
+  class="ai-summary-button"
+  appOutsideClickListener
+  [whiteList]="whiteListInAISummary"
+  [class.disabled]="canUseAISummary && isConsoleUser && (noData$ | push)"
+  nz-popover
+  [nzPopoverTitle]="titleAITemplate"
+  nzPopoverPlacement="bottomRight"
+  [nzPopoverOverlayClassName]="taskDetailViewMode === EViewDetailMode.MESSAGE ? 'ai-sumary-popover' : 'ai-sumary-popover task-view'"
+  [(nzPopoverVisible)]="visibleAITemplate"
+  [nzPopoverTrigger]="null"
+  [class.ai-summary-button-active]="isActive && !isConsoleUser"
+  [nzPopoverContent]="contentAITemplate"
+  (click)="handleClick($event)"
+  (clickOutside)="handleClickOutSide()">
+  <trudi-icon
+    *ngIf="!(canUseAISummary && isConsoleUser && (noData$ | push))"
+    class="no-pointer-event"
+    svgClass="size-20"
+    icon="aiSummaryStar"></trudi-icon>
+  <trudi-icon
+    *ngIf="canUseAISummary && isConsoleUser && (noData$ | push)"
+    icon="frameUnactive"
+    class="no-pointer-event"
+    svgClass="size-20"></trudi-icon>
+</button>
+
+<ng-template #titleAITemplate>
+  <div class="d-flex align-items-center gap-8 title-wrapper">
+    <trudi-icon
+      [icon]="'aiSummaryStar'"
+      [style]="{'width.px': 24, 'height.px': 24}"></trudi-icon>
+    <span class="widget-title cursor-default">Message summary</span>
+  </div>
+</ng-template>
+
+<ng-template #contentAITemplate>
+  <div class="ai-summary-container">
+    <ng-container *ngIf="taskType$ | push as inboxType">
+      <ng-container
+        *ngIf="(isLoading$ | push) === false; else skeletonLoadingTemplate">
+        <ng-container
+          *ngTemplateOutlet="messageSummaryContentTemplate"></ng-container>
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #upSellAISummaryPopoverTemplate>
+  <div class="upsell-message-overlay">
+    <div>
+      <span>To generate summary, </span>
+      <span
+        class="text-decoration-underline cursor-pointer upgrade-message-text"
+        PreventButton
+        [attr.data-button-key]="EButtonTask.UPGRADE_AI"
+        [attr.data-button-type]="EButtonType.TASK"
+        (leftClick)="upgradeAIFeature()">
+        {{ upSellAISummaryMessage }}
+      </span>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #upSellAISummaryTooltipTemplate>
+  <div class="d-flex flex-dir-column gap-4 cursor-default text-left">
+    <div>To have our AI write summary,</div>
+    <div
+      class="text-decoration-underline cursor-pointer"
+      PreventButton
+      [attr.data-button-key]="EButtonTask.UPGRADE_AI"
+      [attr.data-button-type]="EButtonType.TASK"
+      (leftClick)="upgradeAIFeature()">
+      {{ upSellAISummaryMessage }}
+    </div>
+  </div>
+</ng-template>
+
+<popup-select-file
+  *ngIf="popupState.selectFile"
+  [files]="files$ | push"
+  [selectedFiles]="selectedFiles$ | push"
+  (onClose)="closeSelectFilePopup()"
+  (onConfirm)="handleSelectedFiles($event)">
+</popup-select-file>
+
+<!-- <trudi-send-msg-v2
+  *ngIf="popupState.sendMessage"
+  [configs]="widgetAiSummaryConfigs"
+  [rawMsg]="prefillMessage$ | push"
+  [selectedTasks]="selectedTasks"
+  [listOfFiles]="prefillFiles$ | push"
+  [openFrom]="(taskType$ | push) === taskType.MESSAGE ? taskType.MESSAGE : ''"
+  (onQuit)="handlePopupState({sendMessage: false})"
+  (onSendMsg)="handlePopupState({sendMessage: false})">
+</trudi-send-msg-v2> -->
+
+<plans-summary-pop-up
+  [isShowModal]="popupState.planSummary"
+  [currentPlan]="agencyPlan"
+  (onQuit)="handlePopupState({planSummary: false})"
+  (changePlan)="handlePopupState({requestUpgradeSent: true, planSummary: true})">
+</plans-summary-pop-up>
+
+<trudi-modal
+  [(visible)]="popupState.requestUpgradeSent"
+  [modelWidth]="624"
+  [closable]="false"
+  [autoFocus]="null"
+  [hiddenCancelBtn]="true"
+  okText="Ok, got it"
+  className="task-editor-popup"
+  title="We’re on it"
+  subTitle=""
+  (onOk)="handlePopupState({requestUpgradeSent: false})">
+  <div class="d-flex flex-dir-column gap-20 request-sent-text">
+    <div>We’ve received your request to upgrade your subscription.</div>
+    <div>One of our Sales team will be in contact shortly.</div>
+  </div>
+</trudi-modal>
+
+<ng-template #taskSummaryContentTemplate>
+  <ng-container *ngTemplateOutlet="baseContentTemplate"></ng-container>
+</ng-template>
+
+<ng-template #messageSummaryContentTemplate>
+  <ng-container
+    *ngIf="noMessages$ | push;
+      then noMessageTemplate;
+      else hasMessageTemplate">
+  </ng-container>
+
+  <ng-template #hasMessageTemplate>
+    <ng-container
+      *ngIf="(noData$ | push) && !canUseAISummary;
+        then upSellAISummaryPopoverTemplate;
+        else baseContentTemplate">
+    </ng-container>
+  </ng-template>
+</ng-template>
+
+<ng-template #baseContentTemplate>
+  <div
+    class="summary-content"
+    *ngIf="(summaryContent$ | push) || (prefillFiles$ | push)?.length; else noMessageTextTemplate">
+    <ng-container *ngIf="(selectedConversationId$ | push)">
+      <ng-container
+        *ngIf="summaryContent$ | push as summaryContent; else noMessageTextTemplate">
+        <div class="d-flex gap-12 align-items-center">
+          <div class="summary-content-text cursor-default">
+            {{ summaryContent }}
+          </div>
+          <button
+            trudi-btn
+            size="extra-small"
+            [disabled]="(isConsoleUser$ | push)"
+            variant="outlined"
+            btnType="neutral"
+            nz-tooltip
+            [nzTooltipTitle]="isCopy ? 'Copied' : 'Copy'"
+            [nzTooltipPlacement]="'top'"
+            class="trudi-icon close-btn cursor-pointer copy-icon trudi-ui-btn-circle"
+            (click)="copyToClipboard(summaryContent)">
+            <trudi-icon
+              class="trudi-icon"
+              [style]="{ 'width.px': 20, 'height.px': 20, color: '#646464'}"
+              icon="copy"></trudi-icon>
+          </button>
+        </div>
+      </ng-container>
+      <div
+        class="media-cards"
+        [class.flex-wrap]="inputTaskType === taskType.MESSAGE">
+        <ng-container *ngFor="let file of selectedFiles$ | push">
+          <media-card
+            [file]="file"
+            [disabled]="(isConsoleUser$ | push) || (isArchiveMailbox$ | push)"
+            (onClick)="handleClickCardMedia()"
+            (onRemoveFile)="handleUnSelectFile($event)">
+          </media-card>
+        </ng-container>
+      </div>
+
+      <ng-container *ngTemplateOutlet="useAISummary"></ng-container>
+      <ng-container *ngTemplateOutlet="buttonSendTemplate"></ng-container>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #useAISummary>
+  <ng-container
+    *ngIf="canUseAISummary
+     then canRegenerate
+     else upSellAISummaryPopoverTemplate"></ng-container>
+</ng-template>
+
+<ng-template #canRegenerate>
+  <button
+    [disabled]="(isConsoleUser$ | push)"
+    class="regenerate-btn-wrapper d-flex align-items-center gap-4"
+    (click)="generateSummaryByAI($event)">
+    <trudi-icon
+      class="trudi-icon"
+      [style]="{ 'width.px': 16, 'height.px': 16, color: '#00AA9F'}"
+      icon="refreshCcw"></trudi-icon>
+    <div class="regenerate-btn-text">Regenerate</div>
+  </button>
+</ng-template>
+
+<ng-template #buttonSendTemplate>
+  <button
+    trudi-btn
+    class="button-send"
+    [disabled]="isFetchTaskData || (isGenerating$ | push) || (isConsoleUser$ | push) || (isArchiveMailbox$ | push)"
+    [size]="'large'"
+    [appE2E]="'message-summary-send-button'"
+    disableOpenSendMsgModal
+    PreventButton
+    [attr.data-button-key]="EButtonTask.SEND_MESSAGE"
+    [attr.data-button-type]="EButtonType.TASK"
+    (leftClick)="openPopupSendMessage($event)">
+    <trudi-icon
+      class="no-pointer-event"
+      [style]="{ 'width.px': 16, 'height.px': 16, fill: '#FFFFFF'}"
+      [icon]="'plane'">
+    </trudi-icon>
+    Send
+  </button>
+</ng-template>
+
+<ng-template #noSummaryTemplate>
+  <ng-container *ngIf="canUseAI$ | push; else upSellAISummaryPopoverTemplate">
+    <div class="no-summary-text">No summary</div>
+  </ng-container>
+</ng-template>
+
+<ng-template #noMessageTemplate>
+  <ng-container *ngIf="canUseAI$ | push; else upSellAISummaryPopoverTemplate">
+    <ng-container *ngTemplateOutlet="noMessageTextTemplate"> </ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #noMessageTextTemplate>
+  <div class="no-summary-text cursor-default">No messages to summarize</div>
+</ng-template>
+
+<ng-template #skeletonLoadingTemplate>
+  <div class="summary-content">
+    <div class="loading-wrapper d-flex align-items-center">
+      <div class="loading-icon">
+        <img src="assets/images/loading-spinner.gif" />
+      </div>
+      <div *ngIf="isGenerating$ | push" class="loading-text">Generating...</div>
+    </div>
+  </div>
+</ng-template>

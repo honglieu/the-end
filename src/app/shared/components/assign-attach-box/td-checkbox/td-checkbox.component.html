@@ -1,0 +1,46 @@
+<div
+  [class]="(disableCheckbox) ? 'not-allowed content' : 'content'"
+  #content
+  [style.flexDirection]="reverse ? 'row-reverse' : 'row'"
+  [style.justify-content]="spaceBetween && 'space-between'"
+  [style.justify-content]="(!spaceBetween && reverse) && 'flex-end'">
+  <ng-container *ngIf="labelTemplate; else labelDefault">
+    <ng-container *ngTemplateOutlet="labelTemplate"></ng-container>
+  </ng-container>
+  <ng-template #labelDefault>
+    <div
+      [ngClass]="{'checkbox-label': true, 'cpn-label': true, 'change-color': isSMS}"
+      [innerHTML]="label"
+      [attr.data-e2e]="dataE2e ? dataE2e.inputLabel : 'upload-invoice-text'"></div>
+  </ng-template>
+  <input
+    id="cb-second"
+    class="def-checkbox"
+    type="checkbox"
+    [readonly]="disableCheckbox"
+    [(ngModel)]="isChecked"
+    (ngModelChange)="onCheckboxChange($event)" />
+  <ng-container
+    *ngIf="inviteStatus === listInviteStatus.ACTIVE || isChecked; else disableCheckboxTemplate">
+    <trudi-icon
+      [attr.data-e2e]="dataE2e ? dataE2e.inputCheck : 'checkbox'"
+      [style]="{'width.px': size, 'height.px': size}"
+      [style.min-height.px]="size"
+      [style.min-width.px]="size"
+      class="user-checkbox checkbox-head"
+      [class.disable-field]="disableCheckbox"
+      [icon]="isChecked ? customCheckbox.checked : customCheckbox.uncheck"></trudi-icon>
+  </ng-container>
+</div>
+<hr *ngIf="divider" class="divider" />
+
+<!-- Because "path" of svg has a difference in width and height, it must be customized -->
+<ng-template #disableCheckboxTemplate>
+  <trudi-icon
+    [attr.data-e2e]="dataE2e ? dataE2e.inputCheck : 'checkbox'"
+    [style]="{'width.px': 19, 'height.px': 19}"
+    [style.min-height.px]="19"
+    [style.min-width.px]="19"
+    class="user-checkbox checkbox-head disable"
+    [icon]="disableCheckbox ? customCheckbox.disable : customCheckbox.deactived"></trudi-icon>
+</ng-template>

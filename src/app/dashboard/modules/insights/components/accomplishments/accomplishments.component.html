@@ -1,0 +1,12 @@
+<div class="d-flex flex-wrap accomplish-wrappper">
+  <div class="d-flex gap-20 align-items-center accomplish-title">
+    <span class="text-title">Accomplishments</span>
+  </div>
+
+  <div class="accomplish-box">
+    <accomplishments-box-data
+      *ngFor="let item of data"
+      [dataBoxAccomplishment]="item"
+      (clickViewDetails)="handleClickViewDetails(item?.dataType)"></accomplishments-box-data>
+  </div>
+</div>

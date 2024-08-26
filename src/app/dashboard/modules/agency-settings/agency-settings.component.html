@@ -1,0 +1,60 @@
+<div class="agency-page d-flex">
+  <sidebar-wrapper class="sidebar-wrapper">
+    <ng-container leftContent>
+      <div class="wrapper-left">
+        <div class="header">
+          <button
+            trudi-btn
+            variant="outlined"
+            btnType="neutral"
+            size="medium"
+            shape="circle"
+            (click)="handleClick()">
+            <trudi-icon
+              class="exit-btn"
+              icon="closeV2"
+              [style]="{ 'width.px': 16, 'height.px': 16 }"></trudi-icon>
+          </button>
+          <div class="mt-12">
+            <span class="header_title mt-12">Account settings</span>
+          </div>
+        </div>
+        <div class="sidebar-group">
+          <sidebar-item-shared
+            *ngFor="let item of agencyLogoTabs"
+            class="sidebar-background"
+            [label]="item.label"
+            (changePopupState)="handlePopupState($event)"
+            [listItem]="item.tabs"></sidebar-item-shared>
+        </div>
+      </div>
+    </ng-container>
+    <ng-container rightContent>
+      <router-outlet></router-outlet>
+    </ng-container>
+  </sidebar-wrapper>
+</div>
+
+<trudi-modal
+  [(visible)]="popupState.requestSent"
+  [modelWidth]="624"
+  [closable]="false"
+  [autoFocus]="null"
+  [hiddenCancelBtn]="true"
+  okText="Ok, got it"
+  className="task-editor-popup"
+  title="We’re on it"
+  subTitle=""
+  (onOk)="handlePopupState({ requestSent: false, requestFromTab: false })">
+  <div class="d-flex flex-dir-column gap-20 request-sent-text">
+    <div>We’re received your request to upgrade your subscription.</div>
+    <div>One of our Sales Team will be in contact shortly.</div>
+  </div>
+</trudi-modal>
+
+<plans-summary-pop-up
+  [isShowModal]="popupState.plansSummary"
+  [currentPlan]="agencyPlans"
+  (onQuit)="handlePopupState({ plansSummary: false })"
+  (changePlan)="handlePopupState({ plansSummary: false, requestSent: true })">
+</plans-summary-pop-up>

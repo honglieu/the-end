@@ -1,0 +1,47 @@
+<div class="suggestion-btn">
+  @if ((showSkeleton | async)) {
+  <div class="skeleton-btn"></div>
+  <div class="skeleton-btn"></div>
+  } @else { @for (button of suggestionButtons; track button.id) {
+  <button
+    trudi-btn
+    tabindex="0"
+    class="suggestion-button"
+    size="extra-small"
+    variant="outlined"
+    btnType="neutral"
+    [disabled]="isGeneratingText$ | push"
+    (click)="onChangeSuggestion(button)">
+    {{button.label}}
+  </button>
+  }
+  <button
+    *ngIf="suggestionList?.length"
+    trudi-btn
+    tabindex="0"
+    [disabled]="isGeneratingText$ | push"
+    (keydown.tab)="onTab($event)"
+    size="small"
+    variant="link"
+    nz-dropdown
+    nzPlacement="topRight"
+    nzTrigger="click"
+    [nzOverlayClassName]="'dropdown-more'"
+    [nzDropdownMenu]="menu">
+    More ideas
+  </button>
+  }
+</div>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <ul class="suggestion-list ai-interactive-suggestion-list" nz-menu>
+    @for (suggestion of suggestionList; track suggestion.id) {
+    <li
+      class="suggestion-item"
+      nz-menu-item
+      (click)="onChangeSuggestion(suggestion)">
+      {{suggestion.label}}
+    </li>
+    }
+  </ul>
+</nz-dropdown-menu>

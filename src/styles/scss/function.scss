@@ -1,0 +1,55 @@
+@mixin FlbMiddleAll {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+@mixin scrollbar {
+  &::-webkit-scrollbar {
+    height: 6px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--gray-500);
+  }
+}
+@mixin ResponsiveWidthTo1440 {
+  @media screen and (max-width: 1440px) {
+    width: 400px;
+  }
+}
+
+@mixin fontSetup($color, $fontSize, $lineHeight, $fontStyle, $fontWeight) {
+  color: $color;
+  font-size: $fontSize;
+  line-height: $lineHeight;
+  font-style: $fontStyle;
+  font-weight: $fontWeight;
+}
+
+$breakpointsAlias: ("small" : 834px, "medium" : 1127px, "large": 1301px);
+
+@mixin breakpoint-down($size) {
+  @media (max-width: map-get($breakpointsAlias, $size)) {
+    @content;
+  }
+}
+
+@mixin breakpoint-range($from, $to) {
+  @media (min-width: map-get($breakpointsAlias, $from)) and (max-width: map-get($breakpointsAlias, $to)) {
+    @content;
+  }
+}
+
+@mixin breakpoint-up($size) {
+  @media (min-width: map-get($breakpointsAlias, $size)) {
+    @content;
+  }
+}
+
+@mixin box-shadow-input-select($params) {
+  -webkit-box-shadow: $params;
+  -moz-box-shadow: $params;
+  box-shadow: $params;
+}

@@ -1,0 +1,147 @@
+<div
+  #wrapper
+  class="wrapper"
+  [ngClass]="{'policy-table' : !isClosable,'has-search-value': searchValue, 'edit': isClosable}">
+  <ng-container *ngIf="currentListQuestions?.length && isClosable">
+    <div
+      class="question-container"
+      [ngClass]="{'d-flex flex-wrap': isClosable}">
+      <ng-container
+        *ngFor="let item of currentListQuestions; let index = index">
+        <ng-container *ngIf="!item?.editQuestions; else inputEditQuestion">
+          <div
+            *ngIf="item?.rawMessage || item?.rawQuestion || item.question"
+            (keyup.enter)="handleEnterQuestion(item)"
+            class="question-tag cursor-pointer d-flex align-items-center"
+            [ngClass]="{'warning' : item.similarPolicies?.length && item?.isInvalidSimilarPolicies, 'disabled-click': editQuestion.invalid && !item?.editQuestions}">
+            <div
+              class="label-question"
+              (click)="handleEditQuestion($event, item)"
+              [innerHTML]="canSearching ? (isCurrentQuestion ? item?.rawQuestion : (item?.rawMessage || item.question) | highlight : searchValue : '' : true) : isCurrentQuestion ? item?.rawQuestion : (item?.rawMessage || item.question)"></div>
+            <trudi-icon
+              class="close-icon cursor-pointer"
+              [icon]="'closeIcon'"
+              [style]="{ 'width.px': 20, 'height.px': 20}"
+              (click)="onCloseTag($event, item)"></trudi-icon>
+          </div>
+        </ng-container>
+        <ng-template #inputEditQuestion>
+          <div
+            [formGroup]="questionForm"
+            class="question-editing"
+            [class.editing]="item?.editQuestions">
+            <trudi-form-control
+              [control]="editQuestion"
+              [errors]="[{errorName: 'questionInvalid', errorMessage: 'Question already exists'}]">
+              <trudi-textarea
+                appTextareaAutoresize
+                [resizeWidth]="true"
+                [maxWidth]="600"
+                [isShowCountingOutSide]="true"
+                [autoFocus]="true"
+                [rows]="1"
+                [cols]="1"
+                [isPressEnter]="true"
+                [maxCharacter]="150"
+                (triggerEventBlur)="onBlurEditQuestion($event, item)"
+                [suffixIcon]="'closeIcon'"
+                formControlName="editQuestion"
+                [showCounting]="true"
+                [resizable]="false">
+              </trudi-textarea>
+            </trudi-form-control>
+          </div>
+        </ng-template>
+      </ng-container>
+    </div>
+    <ng-container *ngIf="listSimilarQuestion?.length">
+      <ng-container *ngFor="let item of listSimilarQuestion">
+        <span class="d-flex align-items-center"
+          ><trudi-icon icon="iconWarning"></trudi-icon>
+          <p class="warning-question" [innerHTML]="item.messageInvalid"></p
+        ></span>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+  @if (currentListQuestions?.length && !isClosable) { @for (item of
+  currentListQuestions; track item; let index = $index) {
+  <div
+    class="d-flex question-tag-wrapper"
+    [ngStyle]="{
+      maxWidth: index === lastVisibleTagIndex ? maxWidthLastIndex : (widthReplyQuestions > 0 ? (widthReplyQuestions + 'px') : 'auto'),
+      width: index === lastVisibleTagIndex ? maxWidthLastIndex : 'auto'
+    }">
+    @if (item?.rawMessage || item?.rawQuestion || item.question) {
+    <div class="question-tag d-flex align-items-center gap-8">
+      <div
+        class="label-question text-ellipsis"
+        [ngClass]="{'text-ellipsis' : !searchValue}"
+        [innerHTML]="item.question | highlight : searchValue : '' : true"></div>
+      @if (isClosable && !isArchivedMailbox) {
+      <trudi-icon
+        svgStyle="size-20"
+        class="cursor-pointer"
+        icon="closeGray64"
+        (click)="onCloseTag($event, item)"></trudi-icon>
+      }
+    </div>
+    } @if (hiddenTagsCount > 0 && index === lastVisibleTagIndex && !searchValue)
+    {
+    <div class="hidden-tags-count white-space-nowrap">
+      +{{ hiddenTagsCount }} more
+    </div>
+    }
+  </div>
+  } }
+
+  <ng-container *ngIf="isShowError">
+    <div class="no-question d-flex align-items-center">
+      <trudi-icon
+        class="icon-warning close-icon cursor-pointer"
+        [icon]="'iconWarningRedFit'"></trudi-icon>
+      <div class="text">Please add at least an enquiry</div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="isShowHiddenQuestions">
+    <div class="show-more cursor-pointer" (click)="handleShowMore($event)">
+      {{countHiddenQuestions}}
+    </div>
+  </ng-container>
+</div>
+
+<ng-container *ngIf="isShowMore">
+  <div class="show-more cursor-pointer">{{countHiddenQuestions}}</div>
+</ng-container>
+
+<ng-container *ngIf="isAddQuestion">
+  <div [formGroup]="questionForm" class="question">
+    <trudi-form-control
+      [control]="question"
+      [errors]="[{errorName: 'questionInvalid', errorMessage: 'Question already exists'}]">
+      <trudi-textarea
+        autosize
+        formControlName="question"
+        [autoFocus]="true"
+        [rows]="1"
+        [cols]="1"
+        [placeholder]="'e.g. Can I get a poodle?'"
+        (keydown.enter)="onEnterAddQuestion($event)"
+        (triggerEventBlur)="onBlur($event)"
+        [maxCharacter]="150"
+        [showCounting]="true"
+        [isShowCountingOutSide]="true"
+        [resizable]="false"></trudi-textarea>
+    </trudi-form-control>
+  </div>
+</ng-container>
+<ng-container *ngIf="isShowAddButton">
+  <button
+    class="mt-8"
+    trudi-btn
+    variant="outlined"
+    [disabled]="isArchivedMailbox"
+    (click)="handleAddQuestion($event)">
+    <trudi-icon icon="iconPlus2"></trudi-icon>
+    <div class="button-question">Add question</div>
+  </button>
+</ng-container>

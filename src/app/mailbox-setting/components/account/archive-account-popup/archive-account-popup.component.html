@@ -1,0 +1,42 @@
+<trudi-modal
+  *ngIf="visible"
+  [modelWidth]="510"
+  [(visible)]="visible"
+  [autoFocus]="null"
+  (onCancel)="handleCancel()"
+  className="modal-delete-account">
+  <div class="confirm-container">
+    <div class="d-flex gap-16">
+      <trudi-icon
+        class="warning-icon"
+        svgClass="size-48"
+        icon="iconWarningRed"
+        data-e2e="warning-icon"></trudi-icon>
+      <div class="confirm-text">
+        <p class="text-sure">Are you sure you wish to archive this account?</p>
+        <p class="cannot-text">
+          Anyone assigned to this mailbox will lose access and your data will be
+          lost.
+        </p>
+      </div>
+    </div>
+    <div class="btn-wrapper gap-12">
+      <button
+        trudi-btn
+        btnType="neutral"
+        variant="outlined"
+        (click)="handleCancel()"
+        data-e2e="go-back-btn">
+        <span class="btn-text">No, keep it</span>
+      </button>
+      <button
+        [disabled]="isArchivingMailbox"
+        trudi-btn
+        btnType="danger"
+        (click)="archiveMailbox()"
+        data-e2e="yes-cancel-btn">
+        <span class="btn-text">Yes, archive</span>
+      </button>
+    </div>
+  </div>
+</trudi-modal>

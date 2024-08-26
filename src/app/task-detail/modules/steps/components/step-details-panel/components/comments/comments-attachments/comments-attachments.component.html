@@ -1,0 +1,15 @@
+<div class="list-attachment">
+  <ng-content></ng-content>
+  <div class="d-flex flex-dir-column m-b-5">
+    <div *ngIf="invalidFile.overFileSize" class="y-center gap-6 mt-4">
+      <img src="/assets/icon/icon_warning.svg" alt="" />
+      <span class="warning-content"
+        >Your file is larger than 25MB. Please upload a smaller file.
+      </span>
+    </div>
+    <div *ngIf="invalidFile.unSupportFile" class="y-center gap-6">
+      <img src="/assets/icon/icon_warning.svg" alt="" />
+      <span class="warning-content">Unsupported file type.</span>
+    </div>
+  </div>
+</div>

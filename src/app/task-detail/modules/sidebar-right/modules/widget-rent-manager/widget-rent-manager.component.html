@@ -1,0 +1,159 @@
+<ng-container *ngIf="loadingService.isLoading$ | push; else detailPTWidget">
+  <div class="wrapper-skeleton-pt-tree">
+    <div
+      class="justify-content-between align-items-center files-item pd-12 skeleton-bg">
+      <div class="skeleton-rectangle">
+        <nz-skeleton
+          [nzParagraph]="paragraph"
+          [nzActive]="true"
+          class="w-100"></nz-skeleton>
+      </div>
+      <div class="w-25">
+        <nz-skeleton-element
+          class="skeleton-circle"
+          nzType="avatar"
+          [nzActive]="true"
+          [nzSize]="'small'"></nz-skeleton-element>
+      </div>
+      <div class="d-flex justify-content-end w-25">
+        <nz-skeleton-element
+          class="skeleton-circle"
+          nzType="avatar"
+          [nzActive]="true"
+          [nzSize]="'small'"></nz-skeleton-element>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-template #detailPTWidget>
+  <div class="widget">
+    <trudi-collapse-widget
+      [titleHeader]="headerTextTemplates"
+      [activeExpand]="isExpandAttachments"
+      [isShowItemsCount]="true"
+      [itemsCount]="itemsCounts"
+      (activeChange)="isExpandAttachments=$event"
+      [hidden]="false"
+      class="widget-attachments">
+      <ng-container *ngIf="!noData; else emptyList">
+        <issue-rm-widget></issue-rm-widget>
+        <notes-rm-widget></notes-rm-widget>
+        <inspection-rm-widget></inspection-rm-widget>
+        <lease-renewal-rm-widget></lease-renewal-rm-widget>
+        <vacate-detail-rm-widget></vacate-detail-rm-widget>
+        <widget-tenant></widget-tenant>
+      </ng-container>
+    </trudi-collapse-widget>
+    <ng-template #headerTextTemplates>
+      <div
+        class="d-flex gap-8 align-items-center trudi-collapse-header-content">
+        <trudi-icon icon="rentManager"></trudi-icon>
+        <button
+          (click)="handleCreateNew($event)"
+          [disabled]="isNoPropertyTask"
+          nz-dropdown
+          [nzOverlayClassName]="'dropdown-pt'"
+          [nzDropdownMenu]="menu"
+          [nzPlacement]="'bottomRight'"
+          [nzTrigger]="!isNoPropertyTask && 'click'"
+          class="cursor-pointer icon-plus size-24 rm-create-new">
+          <trudi-icon [icon]="'iconPlus2'" viewBox="auto"> </trudi-icon>
+        </button>
+      </div>
+      <ng-container>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul nz-menu class="dropdown-property-tree">
+            <div class="box-list">
+              <ng-container *ngFor="let menuItem of menuItems">
+                <li
+                  *ngIf="!menuItem.subMenu"
+                  nz-menu-item
+                  class="dropdown-item-property-tree"
+                  [ngClass]="getMenuClass(menuItem.type)"
+                  [nzDisabled]="isMenuDisable(menuItem.type)"
+                  (click)="trigerRentManager(menuItem?.type)">
+                  <span [ngClass]="getMenuClass(menuItem.type)">
+                    {{ menuItem.label }}
+                  </span>
+                  <trudi-icon
+                    *ngIf="isMenuDisable(menuItem.type)"
+                    class="size-16 ml-4"
+                    viewBox="auto"
+                    icon="circleInfo"
+                    nz-tooltip
+                    [nzTooltipTitle]="getTooltipText(menuItem.type)"
+                    nzTooltipPlacement="topRight"
+                    nzTooltipOverlayClassName="menu-tooltip-base"
+                    #visibleTrigger>
+                  </trudi-icon>
+                </li>
+                <li
+                  *ngIf="menuItem.subMenu"
+                  nz-submenu
+                  [nzMenuClassName]="'sub-menu-pt'"
+                  [nzTitle]="menuItem.label"
+                  class="dropdown-item-property-tree">
+                  <ul class="box-sub-menu-pt">
+                    <li
+                      *ngFor="let subMenuItem of menuItem.subMenu"
+                      class="d-flex gap-4 dropdown-sub-menu-property-tree"
+                      nz-menu-item
+                      [ngClass]="getMenuClass(subMenuItem.type)"
+                      [nzDisabled]="isMenuDisable(subMenuItem.type)"
+                      (click)="trigerRentManager(subMenuItem?.type)">
+                      <span
+                        [class.disabled-tenancy-text]="isMenuDisable(subMenuItem.type)">
+                        {{ subMenuItem.label }}
+                      </span>
+                      <span
+                        class="trudi-icon"
+                        nz-tooltip
+                        [nzTooltipTitle]="getTooltipText(subMenuItem.type)"
+                        nzTooltipPlacement="topRight"
+                        nzTooltipOverlayClassName="sub-menu-tooltip-base"
+                        #visibleTrigger>
+                        <trudi-icon
+                          *ngIf="isMenuDisable(subMenuItem.type)"
+                          class="size-16"
+                          viewBox="auto"
+                          icon="circleInfo">
+                        </trudi-icon>
+                      </span>
+                    </li>
+                  </ul>
+                </li>
+              </ng-container>
+            </div>
+          </ul>
+        </nz-dropdown-menu>
+      </ng-container>
+    </ng-template>
+  </div>
+</ng-template>
+
+<ng-template #emptyList>
+  <div class="title-empty">
+    {{!isNoPropertyTask ? WIDGET_DESCRIPTION.NO_LINKED_COMPONENTS :
+    WIDGET_DESCRIPTION.NO_PROPERTY_TASK[EWidgetSectionType.RENT_MANAGER]}}
+  </div>
+</ng-template>
+
+<ng-container [ngSwitch]="typePopup">
+  <ng-container *ngSwitchCase="typeRentManager.LEASE_RENEWAL">
+    <rent-manager-lease-renewal></rent-manager-lease-renewal>
+  </ng-container>
+  <ng-container *ngSwitchCase="typeRentManager.NOTES">
+    <rent-manager-notes></rent-manager-notes>
+  </ng-container>
+  <ng-container *ngSwitchCase="typeRentManager.INSPECTION">
+    <rent-manager-inspection></rent-manager-inspection>
+  </ng-container>
+  <ng-container *ngSwitchCase="typeRentManager.VACATE_DETAIL">
+    <rent-manager-vacate-detail></rent-manager-vacate-detail>
+  </ng-container>
+  <ng-container *ngSwitchCase="typeRentManager.NEW_TENANT">
+    <rent-manager-tenant></rent-manager-tenant>
+  </ng-container>
+</ng-container>
+
+<rent-manager-issue></rent-manager-issue>

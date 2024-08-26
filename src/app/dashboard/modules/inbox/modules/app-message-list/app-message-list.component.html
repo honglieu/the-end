@@ -1,0 +1,27 @@
+<div class="message-view-container">
+  <div class="message-view-container__index">
+    <app-message-view-index
+      [activeMobileApp]="activeMobileApp"></app-message-view-index>
+  </div>
+  <div class="message-view-container__detail">
+    <div
+      *ngIf="!showTaskDetail && !isCreateNewMessage"
+      class="message-view-container__detail-no-select"
+      [class.d-none]="showTaskDetail">
+      <img
+        [src]="hasSelectedInbox ? 'assets/images/item-selected.png' :'assets/images/no-item.png'"
+        [alt]="hasSelectedInbox ? 'Items Selected' : 'No item'"
+        [class.selected-item]="hasSelectedInbox"
+        alt="no data" />
+      <p *ngIf="!hasSelectedInbox">Select an item to read</p>
+    </div>
+    <ng-container *ngIf="showTaskDetail">
+      <app-message-detail
+        [activeMobileApp]="activeMobileApp"
+        [isBlockSetMailbox]="true"
+        [taskDetailViewMode]="EViewDetailMode.MESSAGE "></app-message-detail>
+    </ng-container>
+    <message-detail-skeleton
+      *ngIf="!!(isCreateMessageAppLoading$ | async)"></message-detail-skeleton>
+  </div>
+</div>

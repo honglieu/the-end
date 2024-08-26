@@ -1,0 +1,11 @@
+:host {
+  &.trudi-select-reminder-error {
+    ::ng-deep trudi-single-select .trudi-single-select .ng-select-container {
+      box-shadow: var(--shadow-danger);
+      background-color: var(--white);
+    }
+    ::ng-deep .ng-select:hover:not(.ng-select-focused):not(.ng-select-disabled) > .ng-select-container {
+      box-shadow: var(--shadow-danger);
+    }
+  }
+}

@@ -1,0 +1,86 @@
+:host .search-result-skeleton-row-wrapper {
+  padding: 12px 0;
+  margin: 0 16px;
+
+  &:first-of-type {
+    .search-result-skeleton-row-container {
+      .from-skeleton {
+        ::ng-deep nz-skeleton {
+          .ant-skeleton-content {
+            .ant-skeleton-title {
+              margin-top: 0 !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--bg-neutral-tonal-stronger);
+  }
+
+  .search-result-skeleton-row-container {
+    .from-skeleton,
+    .message-skeleton,
+    .contact-file-skeleton,
+    .task-skeleton {
+      ::ng-deep nz-skeleton {
+        .ant-skeleton-content {
+          .ant-skeleton-title {
+            margin-top: 10px !important;
+          }
+        }
+      }
+    }
+    .from-skeleton {
+      .left {
+        nz-skeleton:nth-child(1) {
+          width: 8%;
+        }
+
+        nz-skeleton:nth-child(2) {
+          width: 20%;
+        }
+
+        nz-skeleton:nth-child(3) {
+          width: 50%;
+        }
+      }
+
+      .right {
+        width: 10%;
+      }
+    }
+
+    .message-skeleton {
+      nz-skeleton:nth-child(1) {
+        width: 32%;
+      }
+
+      nz-skeleton:nth-child(2) {
+        width: 3%;
+      }
+
+      nz-skeleton:nth-child(3) {
+        width: 48%;
+      }
+    }
+
+    .contact-file-skeleton {
+      nz-skeleton:nth-child(1) {
+        width: 90%;
+      }
+    }
+
+    .task-skeleton {
+      nz-skeleton:nth-child(1) {
+        width: 8%;
+      }
+
+      nz-skeleton:nth-child(2) {
+        width: 40%;
+      }
+    }
+  }
+}

@@ -1,0 +1,29 @@
+@import 'function';
+
+.export-conversation-history-modal {
+  .ant-modal-content {
+    border-radius: 16px !important;
+    .ant-modal-header {
+      border-bottom: 1px solid var(--gray-200) !important;
+    }
+    .ant-modal-title .title {
+      color: var(--gray-600) !important;
+    }
+    .ant-modal-body {
+      padding: 12px 32px !important;
+    }
+    .ant-modal-footer {
+      border-top: 1px solid var(--gray-200) !important;
+    }
+  }
+
+  .export-conversation-history-content {
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    p {
+      margin: 0;
+    }
+  }
+}

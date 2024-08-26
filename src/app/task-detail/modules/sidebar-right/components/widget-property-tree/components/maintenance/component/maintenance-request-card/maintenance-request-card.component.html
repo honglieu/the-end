@@ -1,0 +1,31 @@
+<widget-common
+  title="MAINTENANCE REQUEST"
+  [buttonKey]="EButtonStepKey.MAINTENANCE_REQUEST"
+  [type]="syncStatus"
+  [firstTimeSyncSuccess]="firstTimeSyncSuccess"
+  (showModal)="handleClickCard()"
+  (remove)="handleRemoveCard()"
+  (retry)="handleRetryCard()"
+  [isDislayBtnCancel]="maintenanceRequest?.ptData?.isSuccessful">
+  <div class="card-widget-wrapper">
+    <div class="card-widget-items d-flex flex-dir-column gap-4">
+      <div class="card-widget-items d-flex">
+        <div class="card-widget-items-title widget-title w-80">Summary</div>
+        <div class="card-widget-items-info text-ellipsis widget-info">
+          {{summary}}
+        </div>
+      </div>
+      <div class="card-widget-items d-flex" *ngIf="isShowStatus">
+        <div class="card-widget-items-title widget-title w-80">Status</div>
+        <div class="card-widget-items-info widget-info" [ngClass]="statusClass">
+          {{status}}
+        </div>
+      </div>
+    </div>
+    <property-tree-widget-notes
+      *ngIf="expenditureLimit || maintenanceNotes"
+      [type]="eTypeNote.MAINTENANCE"
+      [expenditure]="expenditureLimit"
+      [notes]="maintenanceNotes"></property-tree-widget-notes>
+  </div>
+</widget-common>

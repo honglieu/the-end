@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="58px" height="55px" viewBox="0 0 58 55" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Fill 1068 Copy</title>
+    <defs>
+        <path d="M471.430109,192.812047 L445.851498,167.233436 C444.74025,166.122188 442.944063,166.122188 441.832814,167.233436 L416.254203,192.812047 C415.441372,193.624879 415.196954,194.846968 415.637475,195.909901 C416.077995,196.972835 417.11535,197.663457 418.263545,197.663457 L423.947681,197.663457 L423.947681,220.4 L438.158021,220.4 L438.158021,206.189661 L449.526292,206.189661 L449.526292,220.4 L463.736631,220.4 L463.736631,197.663457 L469.420767,197.663457 C470.568962,197.663457 471.606317,196.972835 472.046838,195.909901 C472.487358,194.846968 472.24294,193.624879 471.430109,192.812047" id="path-1"></path>
+    </defs>
+    <g id="New-Property-Menu" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Pre-defined-Topic-Icons" transform="translate(-415.000000, -166.000000)">
+            <mask id="mask-2" fill="white">
+                <use xlink:href="#path-1"></use>
+            </mask>
+            <use id="Fill-1068-Copy" fill="#FFFFFF" xlink:href="#path-1"></use>
+        </g>
+    </g>
+</svg>

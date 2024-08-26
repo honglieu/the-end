@@ -1,0 +1,62 @@
+@import 'function';
+
+.select-update-rm-wrapper {
+  .header {
+    .detail-invite {
+      .send-invite-icon {
+        .background-icon {
+          background-color: var(--white);
+        }
+      }
+
+      .send-invite-text {
+        p {
+          @include fontSetup(var(--gray-950), 18px, 24px, normal, 600);
+          margin: 0;
+        }
+
+        div {
+          display: flex;
+          margin-top: 8px;
+          @include fontSetup(var(--gray-500), 14px, 16px, normal, 500);
+        }
+      }
+
+      .close-btn {
+        min-width: 28px;
+      }
+    }
+  }
+  hr {
+    margin-bottom: 0;
+    border-top: 1px solid var(--bg-overlay-light);
+    margin-left: -10px;
+    margin-right: -10px;
+    margin-top: unset;
+
+    &.hr-bottom {
+      margin-top: 16px;
+    }
+  }
+}
+
+.select-note-body {
+  max-height: 60vh;
+  .text-container {
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      12px,
+      16px,
+      normal,
+      400
+    );
+  }
+
+  .select-form-wrapper {
+    &:has(trudi-single-select ng-select.ng-select-focused) {
+      ::ng-deep trudi-form-control .error-container {
+        display: none;
+      }
+    }
+  }
+}

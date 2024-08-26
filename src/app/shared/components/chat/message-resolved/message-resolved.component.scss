@@ -1,0 +1,33 @@
+@import 'function';
+
+.message {
+  &-resolved {
+    position: relative;
+    width: 100%;
+    margin: 16px auto;
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      12px,
+      20px,
+      normal,
+      500
+    );
+    .resolved-wrapper {
+      white-space: nowrap;
+    }
+    .resolved {
+      &-mark {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        .name-clickable:hover {
+          cursor: pointer;
+          text-decoration: underline;
+        }
+      }
+      &-summary {
+        margin-top: 3px;
+      }
+    }
+  }
+}

@@ -1,0 +1,105 @@
+@import 'function';
+
+.content {
+  padding: 20px 14px;
+
+  & > *:not(:last-child) {
+    margin-bottom: 16px;
+  }
+
+  #summaryArea {
+    .summary-label {
+      @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+      margin-bottom: 6px;
+
+      &-bottom {
+        margin-bottom: unset;
+        margin-top: 6px;
+      }
+    }
+
+    .summary-textarea {
+      textarea {
+        width: 100%;
+        background: var(--gray-200);
+        overflow: hidden;
+        resize: none;
+        white-space: pre-wrap;
+        padding: 12px;
+        padding-bottom: 24px; //changing this will cause bug on console and portal
+        border-radius: 8px;
+        border: 1px solid var(--gray-200);
+        @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+
+        &::-webkit-scrollbar {
+          width: 0;
+        }
+
+        &:focus {
+          margin: 0 2px;
+          padding: 12px 10px;
+          border: 1px solid var(--brand-500) !important;
+          outline: 2px solid rgba(var(--brand-500-rgb), 0.6) !important;
+          background-color: var(--white) !important;
+        }
+
+        &:hover:not(:focus) {
+          background: var(--gray-100) !important;
+        }
+
+        &::placeholder {
+          @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+        }
+
+        &.has-error {
+          margin: 0 2px;
+          padding: 12px 10px;
+          border: 1px solid var(--danger-500) !important;
+          box-shadow: none !important;
+          outline: 2px solid rgba(var(--danger-500-rgb), 0.6) !important;
+        }
+      }
+
+      .textarea-bottom-text {
+        position: absolute;
+        right: 12px;
+        bottom: 12px;
+      }
+    }
+  }
+
+  #photoArea {
+    .summary-label {
+      @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+      margin-bottom: 6px;
+
+      &-bottom {
+        margin-bottom: unset;
+        margin-top: 6px;
+      }
+    }
+
+    .img-wrapper {
+      margin-top: 6px;
+    }
+
+    .file-label {
+      margin: unset;
+      background-image: url('/assets/icon/square-uploader.svg');
+      background-position: center;
+      cursor: pointer;
+    }
+
+    .photo-found-text {
+      margin-top: 8px;
+      @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+    }
+  }
+}
+
+.error-container {
+  margin-top: 6px;
+  .error-text {
+    @include fontSetup(var(--danger-500), 12px, 16px, normal, 400);
+  }
+}

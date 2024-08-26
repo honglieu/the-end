@@ -1,0 +1,134 @@
+<trudi-collapse-widget
+  [titleHeader]="headerTextTemplates"
+  [activeExpand]="true"
+  [isShowItemsCount]="true"
+  [itemsCount]="linkedAction?.length"
+  class="widget-linked">
+  <ng-container>
+    @if(linkedAction?.length) {
+    <div class="widget__linked--card">
+      <div class="widget__linked--header">
+        <div>
+          <p class="widget__linked--request">
+            {{ticketLinked?.conversationTopic}} @if(ticketLinked.isUrgent) {
+            <trudi-badge
+              text="Urgent"
+              size="extra-small"
+              variant="error"
+              badgeType="filled"
+              [rounded]="true">
+            </trudi-badge>
+            }
+          </p>
+          <p class="widget__linked--time">
+            {{ticketLinked?.createdAt | formatTime: true | async}},
+            {{ticketLinked?.createdAt | formatDate | async}} via
+            {{messageType[ticketLinked?.createdFrom]}}
+          </p>
+        </div>
+        <button
+          trudi-btn
+          variant="outlined"
+          [ngClass]="{'widget__linked--menu': !isOpenMenuAction}"
+          size="small"
+          btnType="neutral"
+          shape="circle"
+          [selected]="isOpenMenuAction"
+          nzPlacement="topLeft"
+          [nzDropdownMenu]="threeDotsMenu"
+          (nzVisibleChange)="isOpenMenuAction = $event"
+          nz-dropdown
+          [nzTrigger]="'click'">
+          <trudi-icon icon="verticalCustom"></trudi-icon>
+        </button>
+      </div>
+      <div class="widget__linked--description">
+        <widget-linked-content
+          [requestItem]="linkedAction[0]?.options?.response"></widget-linked-content>
+      </div>
+      @if(ticketFiles?.length) {
+      <div class="widget__linked--attachment">
+        @for( file of ticketFiles; track file.id) { @if(file.isFileUnsupported)
+        {
+        <img
+          class="file_unsupported"
+          src="assets/images/icons/question-mark.svg" />
+        } @else {
+        <app-message-file
+          (click)="loadFile(file?.propertyDocument || file)"
+          [showBoxShadow]="false"
+          [grayBorder]="true"
+          [widthInPercent]="40"
+          [messageFile]="file?.propertyDocument || file"
+          [size]="60"
+          [isTicketRequest]="true"></app-message-file>
+        } }
+      </div>
+      }
+    </div>
+    }@else{
+    <div class="no-requests-text">No requests to display</div>
+    }
+  </ng-container>
+</trudi-collapse-widget>
+
+<ng-template #headerTextTemplates>
+  <span>REQUEST</span>
+</ng-template>
+
+<nz-dropdown-menu #threeDotsMenu>
+  <div nz-menu>
+    <button
+      PreventButton
+      [attr.data-button-key]="EButtonTask.NAVIGATE_TO_LINKED_EMAIL"
+      [attr.data-button-type]="EButtonType.TASK"
+      (leftClick)="handleNavigateMessage()"
+      nz-menu-item
+      [disabled]="isConsole"
+      class="action-item action_navigate--thread">
+      <trudi-icon
+        [style]="{'width.px': 20, 'height.px': 20,'color':'#61646C' }"
+        icon="navigateLinkedTask"></trudi-icon>
+      <p>Go to thread</p>
+    </button>
+    <button
+      PreventButton
+      [attr.data-button-key]="EButtonTask.TASK_CREATE_MESSAGE"
+      [attr.data-button-type]="EButtonType.TASK"
+      nz-menu-item
+      *ngIf="!isActionItemReplied"
+      [disabled]="isDisabledReply"
+      class="action-item action-item-reply"
+      (leftClick)="handleReply()">
+      <trudi-icon
+        [style]="{'width.px': 20, 'height.px': 20}"
+        icon="cornerUpLeft"></trudi-icon>
+      <p>Reply via email</p>
+    </button>
+    <button
+      PreventButton
+      [attr.data-button-key]="EButtonTask.TASK_CREATE_MESSAGE"
+      [attr.data-button-type]="EButtonType.TASK"
+      [disabled]="isConsole"
+      nz-menu-item
+      class="action-item"
+      (leftClick)="handleForward()">
+      <trudi-icon
+        [style]="{'width.px': 20, 'height.px': 20, 'transform': 'scaleX(-1)'}"
+        icon="cornerUpLeft"></trudi-icon>
+      <p>Forward</p>
+    </button>
+    <button
+      class="action-item"
+      nz-menu-item
+      [disabled]="isConsole"
+      (click)="handleUnlinkTask()">
+      <trudi-icon
+        [style]="{'width.px': 20, 'height.px': 20}"
+        icon="iconUnlink"></trudi-icon>
+      <p>Unlink</p>
+    </button>
+  </div>
+</nz-dropdown-menu>
+
+<widget-linked-file [currentConversation]="linkedAction?.[0]?.conversation" />

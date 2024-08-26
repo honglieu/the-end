@@ -1,0 +1,19 @@
+<trudi-step
+  [model]="model"
+  [showIconTitle]="false"
+  [hideProcessLine]="false"
+  [propertyTreeStep]="false"
+  (onProcess)="enableProcess()"
+  [buttonKey]="buttonKey"></trudi-step>
+
+<lease-terms-popup
+  *ngIf="popupState.isPopupCaptureLease"
+  [modalId]="modalId"
+  [leaseTermsForm]="leaseTermsForm"
+  [model]="model"
+  [title]="title"
+  [visible]="popupState.isPopupCaptureLease"
+  (nextModal)="nextModal()"
+  (closeModal)="cancelModal()"
+  [hasBackButton]="hasConfirmEssential"
+  (onBack)="onBack()"></lease-terms-popup>

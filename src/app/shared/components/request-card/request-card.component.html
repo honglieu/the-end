@@ -1,0 +1,244 @@
+<div class="request-card">
+  <div class="request-card-header">
+    <ng-container *ngTemplateOutlet="requestHeaderTemplate"></ng-container>
+  </div>
+  @if(requestItemToDisplay.status === EStatusTicket.SUBMIT &&
+  requestItemToDisplay.hasContent) {
+  <div class="request-card-body mt-8">
+    <ng-container *ngTemplateOutlet="requestBodyTemplate"></ng-container>
+  </div>
+  } @else {
+  <div
+    [class.mt-8]="isOpenDescription"
+    [@collapseMotion]="isOpenDescription ? 'expanded' : 'collapsed'"
+    class="request-card-body">
+    <ng-container *ngTemplateOutlet="requestBodyTemplate"></ng-container>
+  </div>
+  }
+</div>
+
+<ng-template #requestHeaderTemplate>
+  <div class="request-card-header-info">
+    <div class="request-card-header-info-title">
+      {{requestItemToDisplay.title}} @if(requestItemToDisplay.isUrgent) {
+      <trudi-badge
+        text="Urgent"
+        size="extra-small"
+        variant="error"
+        badgeType="filled"
+        [rounded]="true">
+      </trudi-badge>
+      }
+    </div>
+    <div class="request-card-header-info-status">
+      {{requestItemToDisplay.status}} at {{requestItemToDisplay.timestamp |
+      formatTime: true | async}}, {{requestItemToDisplay.timestamp | formatDate
+      | async}}
+    </div>
+  </div>
+  @if(requestItemToDisplay.status === EStatusTicket.CANCEL &&
+  requestItemToDisplay.hasContent) {
+  <div class="request-card-header-button">
+    <button
+      (click)="isOpenDescription = !isOpenDescription"
+      class="rotate-icon"
+      trudi-btn
+      size="medium"
+      btnType="neutral"
+      variant="ghost"
+      shape="circle"
+      [selected]="isOpenDescription">
+      <trudi-icon svgClass="size-20" icon="chevronDown"></trudi-icon>
+    </button>
+  </div>
+  }
+</ng-template>
+
+<ng-template #requestBodyTemplate>
+  <div class="request-card-body-detail">
+    @switch (requestItemToDisplay.type) { @case
+    (ERequestType.RESCHEDULE_INSPECTION) {
+    <ng-container
+      *ngTemplateOutlet="rescheduleInspectionTemplate"></ng-container>
+    } @case (ERequestType.VACATE_REQUEST) {
+    <ng-container *ngTemplateOutlet="vacateRequestTemplate"></ng-container>}
+    @case (ERequestType.FINAL_INSPECTION) {
+    <ng-container *ngTemplateOutlet="finalInspectionTemplate"></ng-container>
+    } @default {
+    <ng-container *ngTemplateOutlet="defaultRequestTemplate"></ng-container> } }
+  </div>
+  <ng-container *ngTemplateOutlet="requestImagesTemplate"></ng-container>
+  <ng-container *ngTemplateOutlet="translationTemplate"></ng-container>
+  <ng-container
+    *ngTemplateOutlet="rescheduleInspectionActionTemplate"></ng-container>
+</ng-template>
+
+<ng-template #requestImagesTemplate>
+  @if(!!requestItemToDisplay.ticketFile.length &&
+  requestItemToDisplay.showRequestImages) {
+  <div class="request-card-body-detail-row-images">
+    @for(file of message.ticketFile | slice: 0: 3; track file) {
+    <app-message-file
+      (click)="loadFile(file.propertyDocument)"
+      [showBoxShadow]="false"
+      [grayBorder]="true"
+      [widthInPercent]="40"
+      [messageFile]="file.propertyDocument"
+      [size]="60"></app-message-file>
+    }
+  </div>
+  }
+</ng-template>
+
+<ng-template #rescheduleInspectionTemplate
+  >@if(requestItemToDisplay.rescheduleInfo.suggestedDate) {
+  <div class="request-card-body-detail-row">
+    <span class="request-card-body-detail-row-label"
+      >Suggested date:&nbsp;</span
+    >
+    <span class="request-card-body-detail-row-content"
+      >{{requestItemToDisplay.rescheduleInfo.suggestedDate}}</span
+    >
+  </div>
+  } @if(requestItemToDisplay.rescheduleInfo.suggestedTime) {
+  <div class="request-card-body-detail-row">
+    <span class="request-card-body-detail-row-label"
+      >Suggested time:&nbsp;</span
+    >
+    <span class="request-card-body-detail-row-content"
+      >{{requestItemToDisplay.rescheduleInfo.suggestedTime}}
+    </span>
+  </div>
+  } @if(requestItemToDisplay.originalContent) {
+  <div class="request-card-body-detail-row">
+    <span class="request-card-body-detail-row-label">Reason:&nbsp;</span>
+    <span class="request-card-body-detail-row-content"
+      >{{requestItemToDisplay.translatedContent ||
+      requestItemToDisplay.originalContent}}</span
+    >
+  </div>
+  }</ng-template
+>
+
+<ng-template #vacateRequestTemplate
+  >@if(requestItemToDisplay.vacateInfo.type) {
+  <div class="request-card-body-detail-row">
+    <span class="request-card-body-detail-row-label">Type:&nbsp;</span>
+    <span class="request-card-body-detail-row-content"
+      >{{requestItemToDisplay.vacateInfo.type}}</span
+    >
+  </div>
+  } @if(requestItemToDisplay.vacateInfo.intendedDate) {
+  <div class="request-card-body-detail-row">
+    <span class="request-card-body-detail-row-label"
+      >Intended move out date:&nbsp;</span
+    >
+    <span class="request-card-body-detail-row-content"
+      >{{requestItemToDisplay.vacateInfo.intendedDate}}
+    </span>
+  </div>
+  } @if(requestItemToDisplay.originalContent) {
+  <div class="request-card-body-detail-row">
+    <span class="request-card-body-detail-row-label">Note:&nbsp;</span>
+    <span class="request-card-body-detail-row-content"
+      >{{requestItemToDisplay.translatedContent ||
+      requestItemToDisplay.originalContent}}</span
+    >
+  </div>
+  }</ng-template
+>
+
+<ng-template #finalInspectionTemplate>
+  @if(requestItemToDisplay.originalContent) {
+  <div class="request-card-body-detail-row">
+    <span class="request-card-body-detail-row-label"
+      >Available date:&nbsp;</span
+    >
+    <span class="request-card-body-detail-row-content"
+      >{{requestItemToDisplay.translatedContent ||
+      requestItemToDisplay.originalContent}}</span
+    >
+  </div>
+  }
+</ng-template>
+
+<ng-template #defaultRequestTemplate>
+  @if(requestItemToDisplay.originalContent) {
+  <div class="request-card-body-detail-row">
+    <span class="request-card-body-detail-row-description"
+      >{{requestItemToDisplay.translatedContent ||
+      requestItemToDisplay.originalContent}}</span
+    >
+  </div>
+  }
+</ng-template>
+
+<ng-template #translationTemplate>
+  @if(requestItemToDisplay.showTranslation) {
+  <div class="translation-label">
+    <language-translation-label
+      [messagesTranslate]="requestItemToDisplay?.ticketTrans"
+      [inputLanguage]="requestItemToDisplay?.ticketLanguageCode"></language-translation-label>
+  </div>
+  } @if(requestItemToDisplay.translatedContent &&
+  requestItemToDisplay.showTranslation) {
+  <div class="translation-original-content">
+    <language-original-content
+      [isOpenDescription]="isOpenDescription"
+      [content]="requestItemToDisplay.originalContent"></language-original-content>
+  </div>
+  }
+</ng-template>
+
+<ng-template #rescheduleInspectionActionTemplate>
+  @if(requestItemToDisplay.showRescheduleInspectionActionDetail) { @switch
+  (requestOuterStatus | uppercase) { @case (EScheduledStatus.APPROVED) {
+  <trudi-badge
+    extraClass="trudi-badge-unset"
+    text="Approved"
+    icon="checkSuccess"
+    variant="success"
+    size="large"
+    fillIcon="true"
+    customIconSize="16">
+  </trudi-badge>
+  } @case (EScheduledStatus.DECLINED) {
+  <trudi-badge
+    extraClass="trudi-badge-unset"
+    text="Declined"
+    icon="closeOutlineDark"
+    variant="role"
+    size="large"
+    fillIcon="true"
+    customIconSize="16">
+  </trudi-badge>
+  } @case (EScheduledStatus.CANCELLED) {
+  <trudi-badge
+    extraClass="trudi-badge-unset"
+    text="Cancelled"
+    variant="role"
+    size="large">
+  </trudi-badge>
+  } @default {
+  <div class="request-card-body-action-buttons">
+    <button
+      (click)="changeStatusRescheduleRequestHandler(EScheduledStatus.DECLINED)"
+      trudi-btn
+      variant="outlined"
+      size="medium"
+      btnType="danger"
+      [disabled]="isActionInProgress">
+      Decline
+    </button>
+    <button
+      (click)="changeStatusRescheduleRequestHandler(EScheduledStatus.APPROVED)"
+      trudi-btn
+      variant="outlined"
+      size="medium"
+      btnType="primary"
+      [disabled]="isActionInProgress">
+      Approve
+    </button>
+  </div>
+  }} }
+</ng-template>

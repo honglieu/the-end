@@ -1,0 +1,58 @@
+@import 'function';
+
+.container {
+  width: 100%;
+  background-color: white;
+  border-radius: 8px;
+
+  .header {
+    width: 100%;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+
+    .current-year-container {
+      column-gap: 16px;
+
+      .current-year {
+        display: block;
+        text-align: center;
+        min-width: 60px;
+        @include fontSetup(var(--gray-500), 20px, 24px, normal, 600);
+      }
+    }
+
+    .glossary {
+      margin-left: 6px;
+      column-gap: 16px;
+
+      &-item {
+        column-gap: 10px;
+        @include fontSetup(var(--gray-500), 12px, 14px, normal, 400);
+
+        .glossary-today-icon {
+          width: 8px;
+          height: 8px;
+          background-color: var(--brand-500);
+        }
+
+        .glossary-dayoff-icon {
+          width: 8px;
+          height: 8px;
+          background-color: var(--danger-500);
+        }
+      }
+    }
+  }
+
+  .year-calendar {
+    width: 100%;
+    flex-wrap: wrap;
+    flex-direction: row;
+    height: calc(100% - 50px);
+    &-item {
+      width: calc(100% / 4);
+      min-width: 277px;
+    }
+  }
+}

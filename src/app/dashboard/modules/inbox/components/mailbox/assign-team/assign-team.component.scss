@@ -1,0 +1,284 @@
+@import 'function';
+
+.list-team-member {
+  height: 500px;
+  display: flex;
+  margin: -4px -24px;
+  justify-content: space-between;
+  flex-direction: column;
+
+  &__header {
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    padding: 0 32px;
+    justify-content: space-between;
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      16px,
+      20px,
+      normal,
+      600
+    );
+  }
+
+  &__content {
+    height: 470px;
+    overflow: auto;
+    padding: 0 20px;
+  }
+
+  .team-member {
+    display: flex;
+    padding: 12px;
+    align-items: center;
+    gap: var(--spacing-s, 8px);
+    align-self: stretch;
+    border-bottom: 1px solid var(--border-neutral-light, #f2f5f7);
+    justify-content: space-between;
+    cursor: pointer;
+
+    & img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+    }
+
+    &:hover {
+      background-color: var(--brand-100);
+    }
+
+    @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+  }
+}
+
+.no-result {
+  height: 302px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+
+  @include fontSetup(var(--fg-neutral-weaker, #999), 14px, 20px, normal, 500);
+}
+
+.btn-save-assign {
+  width: 100px;
+  height: 40px;
+  padding: 0px 16px;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--bg-brand-solid-normal, #00aa9f);
+  border: none;
+  @include fontSetup(var(--fg-neutral-base, #fff), 14px, 20px, normal, 600);
+
+  &:hover {
+    background: var(--bg-brand-solid-stronger, #33bbb2);
+  }
+
+  &:active {
+    background: var(--bg-brand-solid-strongest, #0aa095);
+  }
+
+  &:disabled {
+    background: var(--bg-brand-tonal-strongest, #b9e8e4);
+    cursor: not-allowed;
+  }
+}
+
+.skeleton-wrapper {
+  height: 492px;
+
+  .skeleton-row-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+
+    ::ng-deep .ant-skeleton-content {
+      .ant-skeleton-title {
+        margin-top: 0;
+      }
+
+      .ant-skeleton-paragraph {
+        margin-top: 10px;
+      }
+    }
+  }
+}
+
+.assign-default {
+  &__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    min-height: 174px;
+
+    ::ng-deep ng-select.trudi-single-select {
+      .ng-select-container .ng-value-container {
+        gap: 4px !important;
+
+        .ng-value {
+          @include fontSetup(
+            var(--fg-neutral-stronger, #3d3d3d) !important,
+            14px,
+            20px,
+            normal,
+            500
+          );
+          border-radius: 8px;
+          border: 1px solid var(--border-neutral-dark, #d8dcdf);
+          background: var(--bg-base, #fff) !important;
+          padding: 4px 8px;
+          margin-bottom: 3px;
+          min-width: 59px;
+          justify-content: center;
+
+          & img {
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+          }
+        }
+      }
+
+      .ng-dropdown-panel-items .ng-option {
+        border-radius: 0;
+      }
+    }
+
+    ::ng-deep ng-select trudi-multi-select {
+      .ng-select-container .ng-value-container {
+        gap: 4px !important;
+        min-height: 44px !important;
+        border-radius: 8px;
+        background-color: var(--gray-200);
+        border: none;
+        padding: 3px 12px;
+      }
+    }
+
+    ::ng-deep
+      ng-select.trudi-single-select
+      .ng-dropdown-panel
+      .ng-dropdown-panel-items
+      .ng-option {
+      border-bottom: 1px solid var(--border-neutral-light, #f2f5f7);
+    }
+  }
+
+  &__title {
+    align-self: stretch;
+    color: var(--fg-neutral-normal, #646464);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    @include fontSetup(
+      var(--fg-neutral-strongest, #202020),
+      14px,
+      20px,
+      normal,
+      400
+    );
+
+    & span :nth-child(1) {
+      color: var(--fg-brand, #00aa9f);
+      font-weight: 600;
+      cursor: pointer;
+    }
+  }
+}
+
+.btn-skip {
+  text-align: center;
+  font-variant-numeric: lining-nums tabular-nums;
+  background-color: var(--bg-base, #fff);
+  height: 40px;
+  width: 100px;
+  border-radius: 8px;
+  border: 1px solid var(--border-brand, #00aa9f);
+  @include fontSetup(var(--fg-brand, #00aa9f), 14px, 20px, normal, 600);
+
+  &:hover {
+    background: var(--bg-brand-tonal-stronger, #d1f0ed);
+  }
+}
+
+.btn-back-assign {
+  width: 100px;
+  height: 40px;
+  padding: 0px 16px;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--bg-neutral-base-default, #fff);
+  border: 1px solid var(--border-neutral-dark, #d8dcdf);
+  @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 600);
+
+  &:hover {
+    background-color: var(--bg-neutral-tonal-stronger);
+  }
+
+  &:disabled {
+    border: 1px solid var(--border-neutral-dark, #d8dcdf);
+    color: var(--fg-neutral-weakest, #b9bec0);
+    cursor: not-allowed;
+    background: none;
+  }
+}
+
+.avatar-select {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.mw-160 {
+  max-width: 160px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+::ng-deep
+  trudi-checkboxbox-shadow
+  .checkbox-input:checked:disabled
+  + .trudi-checkbox
+  span:first-child {
+  background: var(--brand-300) !important;
+  border-color: var(--brand-300) !important;
+}
+
+.required-field {
+  @include fontSetup(var(--fg-danger), 12px, 16px, normal, 400);
+}
+
+::ng-deep .error-filed .ng-select .ng-select-container {
+  outline: none;
+  box-shadow: 0px 0px 0px 1px var(--border-danger),
+    0px 0px 0px 3px var(--danger-300) !important;
+  border-radius: 8px;
+  &:hover {
+    outline: none !important;
+    box-shadow: 0px 0px 0px 1px var(--border-danger),
+      0px 0px 0px 3px var(--danger-300) !important;
+  }
+  &:focus {
+    outline: none !important;
+    box-shadow: 0px 0px 0px 1px var(--border-danger),
+      0px 0px 0px 3px var(--danger-300) !important;
+  }
+}

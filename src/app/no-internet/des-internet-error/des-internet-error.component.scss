@@ -1,0 +1,39 @@
+@import 'function';
+
+.wrapNoInternet {
+  height: 100vh;
+  background: white;
+  .noInternet {
+    .wrapNoInternetContent {
+      margin: 28px 0 32px 0;
+      &-title {
+        @include fontSetup(var(--fg-neutral-stronger), 20px, 32px, normal, 600);
+        margin-bottom: 12px;
+      }
+      &-sub {
+        margin-bottom: 0;
+        @include fontSetup(var(--fg-neutral-stronger), 16px, 16px, normal, 500);
+        span {
+          font-weight: 600;
+        }
+      }
+    }
+
+    .refreshBtn {
+      padding: 0 16px;
+      background-color: var(--bg-neutral-tonal-normal);
+      border: none;
+      border-radius: 8px;
+      width: 125px;
+      height: 40px;
+
+      ::ng-deep trudi-icon svg path {
+        fill: var(--gray-500);
+      }
+
+      .refreshContent {
+        @include fontSetup(var(--fg-neutral-normal), 16px, 16px, normal, 600);
+      }
+    }
+  }
+}

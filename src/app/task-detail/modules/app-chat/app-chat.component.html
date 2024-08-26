@@ -1,0 +1,1846 @@
+<!-- <trudi-send-msg-v2
+  *ngIf="isShowTrudiSendMsg"
+  [configs]="createNewConversationConfigs"
+  [listOfFiles]="selectedFiles"
+  [selectedTasks]="selectedTasks"
+  [rawMsg]="contentText"
+  (onQuit)="isShowTrudiSendMsg = false"
+  [openFrom]="!isTaskType ? taskType.MESSAGE : ''"
+  (onSendMsg)="onSendMsg($event)"></trudi-send-msg-v2> -->
+
+<app-modal-popup
+  *ngIf="isShowCarousel"
+  [transparent]="true"
+  [show]="isShowCarousel"
+  [position]="popupModalPosition.full_screen">
+  <app-images-carousel
+    *ngIf="isShowCarousel"
+    [open]="isShowCarousel"
+    [isSyncing]="isSyncing"
+    [imageUrlList]="viewSyncFile ? arrayImageCarousel2 : arrayImageCarousel"
+    [initialIndex]="initialIndex"
+    (showCarousel)="manageCarouselState($event)"
+    (showSelectPeoplePopup)="handleShowTrudiSendMsg($event); onForwardBtn('Select People')"
+    (fileEmit)="handleFileEmit($event)"></app-images-carousel>
+</app-modal-popup>
+
+<app-modal-popup
+  *ngIf="isImageDetail"
+  [transparent]="isImageDetail"
+  [show]="isImageDetail"
+  [position]="popupModalPosition.full_screen">
+  <app-image-detail
+    *ngIf="isImageDetail"
+    [open]="isImageDetail"
+    [imageUrl]="imageDetailUrl"
+    (onClose)="handleCloseImageDetail()"></app-image-detail>
+</app-modal-popup>
+
+<app-modal-popup
+  *ngIf="showSendActionLink"
+  [show]="showSendActionLink"
+  [position]="popupModalPosition.full_screen">
+  <app-send-action-link
+    [show]="showSendActionLink"
+    (close)="onCloseSendActionLink($event)"></app-send-action-link>
+</app-modal-popup>
+
+<app-select-people-popup
+  *ngIf="isShowSelectPeopleModal"
+  (isCloseModal)="showSelectPeople($event)"
+  (isOpenSendMessageModal)="showAppSendMessage($event)"
+  (listSelectedUser)="getSelectedUser($event)"
+  [isOpenFrom]="'file'"
+  [show]="isShowSelectPeopleModal"
+  [onlyOwnerTenant]="isOnlyOwnerTenant"
+  [onlySupplier]="isOnlySupplier"
+  [enableSelectTab]="showOwnerTenantAndSupplier"
+  [mode]="selectedMode"
+  (isOpenLikeToSay)="openSendMessageFromSendQuote($event)"></app-select-people-popup>
+
+<app-modal-popup
+  *ngIf="isShowQuitConfirmModal"
+  [show]="isShowQuitConfirmModal"
+  [position]="popupModalPosition.center">
+  <app-quit-confirm
+    (isCloseModal)="showQuitConfirm($event)"
+    (isOpenSendMessageModal)="showAppSendMessage($event)"
+    (isOpenFileModal)="showAddFiles($event)"></app-quit-confirm>
+</app-modal-popup>
+
+<app-modal-popup
+  *ngIf="showSendInvoicePt"
+  [show]="showSendInvoicePt"
+  [position]="popupModalPosition.center"
+  [widthInPercent]="65">
+  <send-invoice-pt
+    [show]="showSendInvoicePt"
+    (onClose)="handleOnCloseSendInvoice()">
+  </send-invoice-pt>
+</app-modal-popup>
+
+<div
+  *ngIf="popupState.addReiFormOutside"
+  [show]="popupState.addReiFormOutside"
+  [position]="popupModalPosition.center">
+  <trudi-rei-form-card></trudi-rei-form-card>
+</div>
+
+<app-modal-popup
+  *ngIf="isShowSendMessageModal"
+  [bigSize]="true"
+  [show]="isShowSendMessageModal"
+  [position]="popupModalPosition.center">
+  <app-send-message
+    [listOfUser]="selectedUsersFromPopup"
+    [noAddFile]="true"
+    [showTextForward]="true"
+    [isFileTab]="true"
+    (isCloseModal)="isShowSendMessageModal = !$event"
+    [title]="currentTaskTitle"
+    [hasTitle]="true"
+    [notEditTopicTitle]="isSendEmail"
+    [sendEmail]="isSendEmail"
+    [conversationTitle]="currentConversation?.categoryName"
+    [conversationTopicId]="currentConversation?.categoryId"
+    [show]="isShowSendMessageModal || isShowFromFile"
+    [openFrom]="'file'"
+    [isReset]="isResetModal"
+    [listOfFiles]="selectedFiles"
+    [listOfUser]="selectedUsersFromPopup"
+    [ticket]="selectedTicket"
+    [forwardAction]="buttonAction?.action"
+    [forwardButtons]="forwardButtons"
+    [dataMessageTrudi]="messageSendQuote"
+    [isBackSendQuote]="isBackSendQuote"
+    [maintenanceFromAppChat]="maintenanceFromAppChat"
+    [trudiStep]="0"
+    [sendQuotetoLandlordFromAppChat]="sendQuotetoLandlordFromAppChat"
+    (isOpenQuitConfirmModal)="showQuitConfirm($event)"
+    (isOpenSelectPeople)="showSelectPeople($event)"
+    (isOpenSuccessModal)="showSuccessMessageModal($event)"
+    (isOpenFile)="showAddFiles($event)"
+    [listConversationForwardLandlord]="listConversationForwardLandlord"
+    [showTextForward]="showTextForward"
+    [typeViaEmail]="typeFormViaEmail"
+    (removeFileItem)="handleRemoveFileItem($event)"
+    [noBackBtn]="noSendMessageBackBtn"
+    [isForward]="isForward"
+    (isCloseModal)="isShowSendMessageModal = false"
+    (isBackModalSendQuote)="showSelectLandLord($event)"></app-send-message>
+</app-modal-popup>
+
+<app-add-files-popup
+  [show]="isShowAddFilesModal"
+  (isOpenQuitConfirmModal)="showQuitConfirm($event)"
+  (isOpenSendMessageModal)="showAppSendMessage($event)"
+  (outSelectedFile)="getSelectedFile($event)"
+  [fileTypeSelect]="fileTypeQuote"></app-add-files-popup>
+
+<app-modal-popup
+  *ngIf="isModalDialogVisible"
+  [specificWidth]="510"
+  [show]="isModalDialogVisible"
+  [position]="popupModalPosition.center">
+  <app-message-dialog (isConfirmed)="closeModal($event)"></app-message-dialog>
+</app-modal-popup>
+
+<trudi-add-contact-card
+  *ngIf="contactCardPopupState.addContactCardOutside"
+  [visible]="contactCardPopupState.addContactCardOutside"
+  [configs]="attachmentTextEditorConfigs"
+  [form]="sendMsgForm"
+  (onTrigger)="onTriggerAddContactCard()"
+  (onClose)="onCloseAddContactCard()"></trudi-add-contact-card>
+
+<upload-from-crm
+  [configs]="attachmentTextEditorConfigs"
+  (onTrigger)="onTriggerAddFilesFromCrm()"
+  (onClose)="onCloseUploadFromCRM()"
+  *ngIf="uploadFileFromCRMPopupState.uploadFileFromCRMOutside"></upload-from-crm>
+
+<trudi-scheduled-msg
+  [hasConversationHistory]="!!groupMessage.length"
+  (onQuit)="closeModalScheduleMsg()"
+  *ngIf="isShowTrudiScheduledMsg"></trudi-scheduled-msg>
+
+<schedule-message-popup
+  *ngIf="popupScheduleState.rescheduleMsgInline"
+  [visible]="popupScheduleState.rescheduleMsgInline"
+  (isCloseModal)="handleOnBackScheduleMessage()"
+  [isShowBackBtn]="false"
+  (dateTime)="handleSelectDate($event)"
+  [defaultValue]="scheduledDate">
+</schedule-message-popup>
+<div
+  class="box-drop-files"
+  [class.message-view]="taskDetailViewMode === EViewDetailMode.MESSAGE"
+  cdkDropList
+  #todoList="cdkDropList"
+  [cdkDropListData]="fileList"
+  [cdkDropListConnectedTo]="connectedChild"
+  (cdkDropListDropped)="drop($event)"
+  [class.d-none]="visibleSkeletonLoading$ | push"
+  #boxChat>
+  <div class="chat d-flex flex-dir-column">
+    <div #chatHeader id="app-chat-header">
+      <linked-task
+        *ngIf="showLinkedTask && !router.url.includes(hiddenLinkedTask.TASK_DETAIL)"
+        [taskItem]="currentTask"
+        [currentConversationId]="currentConversationId"></linked-task>
+      <app-chat-header
+        *ngIf="currentConversation && (groupMessage.length || currentConversation?.status === conversationStatus.SCHEDULE)"
+        [taskDetailViewMode]="taskDetailViewMode"
+        [currentConversation]="currentConversation"
+        [currentProperty]="currentProperty"
+        [currentPropertyType]="currentPropertyType"
+        [inviteDeactive]="inviteDeactive"
+        [showVideoCallBtn]="showVideoCallBtn"
+        [isTaskType]="isTaskType"
+        [chatDetailWidth]="chatDetailWidth"
+        [selectedUser]="selectedUser"
+        [listNonAppUserPhoneNumber]="listNonAppUserPhoneNumber"
+        [selectedRole]="selectedRole"
+        [isShowConfirmCallModal]="isShowConfirmCallModal"
+        (onShowAgentJoin)="showDialog()"
+        [statusModalMessage]="statusModalMessage"
+        (onActiveCall)="statusModalMessage = true"
+        (toggleSidebarRight)="isShowSidebarRight = $event"
+        [prefillToCcBccReceiversList]="prefillToCcBccReceiversList"
+        [messageInTask]="showLinkedTask"></app-chat-header>
+    </div>
+    <div
+      #messageEmailDetail
+      *ngIf="taskDetailViewMode === EViewDetailMode.TASK"
+      class="chat-section overflow-hidden flex-1"
+      [style.height]="groupMessage.length ? chatSectionHeight : '100%'"
+      (dragenter)="onDragEnter($event)"
+      (dragover)="onDragOver($event)"
+      (drop)="onDrop($event)">
+      <!-- 69 is min height of re-open-footer -->
+      <div
+        class="container-wrapper"
+        [style.height]="currentConversation?.status === conversationType.resolved ||
+        currentConversation?.status === 'SOLVED' ?
+        'calc(100% - '+ ((footerContainer?.offsetHeight) + 'px)') :
+        'calc(100% - '+ ((textareaContainer?.offsetHeight) + 'px)')"
+        *ngIf="groupMessage.length && currentProperty">
+        <div
+          class="chat-container scroll-container-wrapper"
+          data-e2e="message-thread"
+          infiniteScroll
+          [scrollWindow]="false"
+          [infiniteScrollDistance]="2"
+          [infiniteScrollThrottle]="300"
+          [immediateCheck]="true"
+          (scrolledUp)="loadHistory(currentConversation.id, true, createdTimeOfFirstMsg)"
+          (scroll)="checkScroll()"
+          #scrollDown>
+          <div
+            class="message-wrapper"
+            [ngStyle]="{
+              'padding-bottom': (fileList.length > 0 && actionLinkList.length < 1) ? (textareaContainer?.offsetHeight + 12 + 'px' ) : (fileList.length < 1 && actionLinkList.length > 0) ? (textareaContainer?.offsetHeight + 70 + 'px' ) : (fileList.length > 0 && actionLinkList.length > 0) ? (textareaContainer?.offsetHeight + 130 + 'px' ) : '0'
+            }">
+            <!-- <app-invitation-message
+              *ngIf="!isProgressCall && isHideNotiBanner && activeMobileApp && currentConversation"
+              [conversationType]="currentConversationStatus"
+              [userId]="currentConversation.userId"
+              [propertyId]="currentConversation.propertyId"
+              [propertyType]="currentConversation.propertyType"
+              [inviteStatus]="currentConversation.inviteStatus"
+              [canInviteViaConversation]="currentConversation.canInviteViaConversation"
+              [inviteViaConversation]="currentConversation.inviteViaConversation">
+            </app-invitation-message> -->
+
+            <app-call-inprogress-notify-v2
+              [isShow]="isProgressCall"
+              [message]="startedCallMessage"
+              [lastCall]="lastCall"></app-call-inprogress-notify-v2>
+            <div
+              *ngFor="let parentMsg of groupMessage; let lastMsgTask = last ; trackBy: dateTrackby">
+              <div
+                *ngIf="hasMessageFromApp && !parentMsg?.messages?.[0]?.isDraft"
+                class="timestamp-badge wrap-order-day y-center">
+                <div class="divider flex-1 hideDivider"></div>
+                <div class="order-day timeStamp">
+                  {{parentMsg?.timeStamp | dateTimeString | push |
+                  uppercaseFirstLetter}}
+                </div>
+                <div class="divider flex-1 hideDivider"></div>
+              </div>
+              <div
+                class="message"
+                *ngFor="let message of parentMsg?.messages;let idx = index ;let last = last; trackBy: messageTrackBy"
+                [class.flex-dir-column]="message.isLastReadMessage && isHasNewMessage"
+                [class.align-items-end]="message.isLastReadMessage && message.senderType !== 'user' && isHasNewMessage"
+                [ngClass]="message.messageType === messagesType.ticket && (message?.options?.type !== 'contact' && !message?.options?.contacts) ? '' : message.senderType | lowercase">
+                <ng-container *ngIf="message.messageType">
+                  <ng-container [ngSwitch]="message.messageType">
+                    <ng-container *ngSwitchCase="messagesType.actionLink">
+                      <div class="message-body">
+                        <div class="al-border">
+                          <app-message-action-link
+                            [reBorderAtChatApp]="true"
+                            [messageActionLink]="message.actionLink"
+                            [propertyId]="currentProperty.id"
+                            [linkBackground]="message.color"
+                            [imgLink]="message.svg">
+                          </app-message-action-link>
+                        </div>
+                        <ng-container *ngIf="!currentConversation.isFrozen">
+                          <app-message-footer
+                            [senderType]="message.senderType"
+                            [createdAt]="message.createdAt"
+                            [isRead]="message.isRead"></app-message-footer>
+                        </ng-container>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="messagesType.file">
+                      <div class="message-body">
+                        <ng-container
+                          *ngIf="!currentConversation.isFrozen && !message.isSendFromEmail && !message.isSendFromVoiceMail">
+                          <app-message-header
+                            [firstName]="message.firstName"
+                            [lastName]="message.lastName"
+                            class="header-message-file"></app-message-header>
+                        </ng-container>
+                        <app-message-file
+                          *ngIf="!message.isSendFromVoiceMail"
+                          [message]="message"
+                          [isSending]="message?.isSending || message?.isError"
+                          [messageFile]="message.isShowFile ? message.file : null"
+                          [isShowActionButton]="isShowActionButton"
+                          [isShowFile]="message.isShowFile"
+                          (isVideoLoaded)="scrollToBottom()"
+                          (fileOnClicked)="manageCarouselState($event)"
+                          (showSelectPeople)="showSelectPeople($event); onForwardBtn('Select People')"
+                          (fileEmit)="handleFileEmit($event)"
+                          class="message-file"></app-message-file>
+                        <ng-container *ngIf="!currentConversation.isFrozen">
+                          <app-message-footer
+                            *ngIf="!message.isSendFromVoiceMail"
+                            [isError]="message?.isError"
+                            [isSending]="message?.isSending"
+                            [senderType]="message.senderType"
+                            [createdAt]="message.createdAt"
+                            [isRead]="message.isRead"></app-message-footer>
+                        </ng-container>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="messagesType.call">
+                      <div class="message-body call" style="width: fit-content">
+                        <app-message-call
+                          [userId]="currentConversation.userId"
+                          [message]="message"
+                          [currentConversationId]="currentConversation.id"></app-message-call>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="messagesType.solved">
+                      <div
+                        class="message-body full-width no-padding"
+                        [ngClass]="message.classForMarker">
+                        <app-message-resolved
+                          [message]="message"
+                          [attr.data-e2e]="'message-resolved'"></app-message-resolved>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="messagesType.deleted">
+                      <div
+                        class="message-body no-transform full-width no-padding"
+                        [ngClass]="message.classForMarker">
+                        <app-message-deleted
+                          [message]="message"></app-message-deleted>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="messagesType.reopened">
+                      <div
+                        class="message-body no-transform full-width no-padding"
+                        [ngClass]="message.classForMarker">
+                        <app-message-reopened
+                          [message]="message"></app-message-reopened>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="messagesType.agentExpectation">
+                      <div
+                        class="message-body full-width no-padding"
+                        [ngClass]="message.classForMarker"
+                        *ngIf="isFirstJoined">
+                        <app-message-agent-expectation></app-message-agent-expectation>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="messagesType.agentJoin">
+                      <div
+                        class="message-body full-width no-padding"
+                        [ngClass]="message.classForMarker">
+                        <app-message-agent-join
+                          [message]="message"
+                          [title]="message.userTitle">
+                        </app-message-agent-join>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="messagesType.changeProperty">
+                      <div
+                        class="message-body full-width no-padding"
+                        [ngClass]="message.classForMarker">
+                        <message-change-property
+                          [message]="message"
+                          [listProperty]="propertyService.listPropertyAllStatus | push"></message-change-property>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="messagesType.syncConversation">
+                      <div
+                        class="message-body full-width no-padding"
+                        [ngClass]="{'mt-16': parentMsg.messages?.[idx - 1]?.messageType === messagesType.defaultText,'mb-16':parentMsg.messages?.[idx + 1]?.messageType === messagesType.defaultText}">
+                        <message-synced-conversation
+                          [message]="message"></message-synced-conversation>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="messagesType.moveToTask">
+                      <div
+                        class="message-body full-width no-padding"
+                        [ngClass]="message.classForMarker">
+                        <app-message-conversation-moved [message]="message">
+                        </app-message-conversation-moved>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="messageType.moveOutOfTask">
+                      <div
+                        class="message-body full-width no-padding"
+                        [ngClass]="message.classForMarker">
+                        <app-message-conversation-moved [message]="message">
+                        </app-message-conversation-moved>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="messagesType.ticket">
+                      <div
+                        [ngClass]="(!message.isSendFromEmail) ? 'message-body':'d-flex flex-dir-column w-100'">
+                        <ng-container
+                          [ngSwitch]="message.options?.response?.type">
+                          <ng-container
+                            *ngSwitchCase="EOptionType.VACATE_REQUEST">
+                            <div
+                              class="flex-dir-column"
+                              style="margin-top: 12px">
+                              <vacate-request-ticket
+                                [createdFrom]="message?.options?.response?.payload?.ticket?.createdFrom"
+                                [message]="message"
+                                [draftMsg]="message.draftMsg"
+                                (updateDraftMsg)="handleUpdateDraftMsg(message)"
+                                [data]="message.options"
+                                [sessionEnded]="!!currentConversation?.endSessionConversationLog">
+                              </vacate-request-ticket>
+                            </div>
+                          </ng-container>
+                          <ng-container
+                            *ngSwitchCase="EOptionType.MAINTENANCE_REQUEST"
+                            class="ticket-wrapper">
+                            <app-chat-ticket
+                              class="with-message"
+                              (viewConversation)="handleOpenLinkTask()"
+                              [createdFrom]="message?.options?.response?.payload?.ticket?.createdFrom"
+                              [conversationLogId]="message.conversationLogId"
+                              [subtitle]="message?.options?.response?.payload?.ticket?.maintenance_object"
+                              [status]="message?.options?.response?.payload?.ticket?.status"
+                              [ticketCategoryInfo]="message?.options?.response?.payload?.ticket"
+                              [timeCreated]="message?.options?.response?.payload?.ticket?.createdAt || message.createdAt"
+                              [fileList]="message?.ticketFile"
+                              [isUrgent]="message?.options?.response?.payload?.ticket?.isUrgent"
+                              (fileOnClicked)="manageCarouselState($event)"
+                              [sessionEnded]="!!currentConversation?.endSessionConversationLog"
+                              [draftMsg]="message.draftMsg"
+                              (updateDraftMsg)="handleUpdateDraftMsg(message)"
+                              [message]="message">
+                            </app-chat-ticket>
+                          </ng-container>
+                          <ng-container
+                            *ngSwitchCase="EOptionType.GENERAL_ENQUIRY"
+                            class="ticket-wrapper">
+                            <app-chat-ticket
+                              class="with-message"
+                              (viewConversation)="handleOpenLinkTask()"
+                              [createdFrom]="message?.options?.response?.payload?.ticket?.createdFrom"
+                              [conversationLogId]="message.conversationLogId"
+                              [subtitle]="message?.options?.response?.payload?.ticket?.general_inquiry"
+                              [status]="message?.options?.response?.payload?.ticket?.status"
+                              [ticketCategoryInfo]="message?.options?.response?.payload?.ticket"
+                              [timeCreated]="message?.options?.response?.payload?.ticket?.createdAt || message.createdAt"
+                              [fileList]="message?.ticketFile"
+                              [isUrgent]="message?.options?.response?.payload?.ticket?.isUrgent"
+                              (fileOnClicked)="manageCarouselState($event)"
+                              [sessionEnded]="!!currentConversation?.endSessionConversationLog"
+                              [draftMsg]="message.draftMsg"
+                              (updateDraftMsg)="handleUpdateDraftMsg(message)"
+                              [message]="message">
+                            </app-chat-ticket>
+                          </ng-container>
+                          <ng-container *ngSwitchDefault>
+                            <ng-container
+                              *ngIf="message.options?.type === EOptionType.RESCHEDULE_REQUEST || message.options?.response?.type === EOptionType.RESCHEDULE_INSPECTION_REQUEST; else NOT_RESCHEDULE_REQUEST">
+                              <div
+                                class="flex-dir-column"
+                                style="margin-top: 12px">
+                                <app-message-rescheduled-request
+                                  [isCreatedViaLink]="message.options?.type === EOptionType.RESCHEDULE_REQUEST"
+                                  (viewConversation)="handleOpenLinkTask()"
+                                  [createdFrom]="message?.options?.response?.payload?.ticket?.createdFrom"
+                                  [listRoutineInspection]="listRoutineInspection"
+                                  (triggerTicket)="updateStatusTicket($event)"
+                                  [message]="message"
+                                  [draftMsg]="message.draftMsg"
+                                  (updateDraftMsg)="handleUpdateDraftMsg(message)"
+                                  [sessionEnded]="!!currentConversation?.endSessionConversationLog"></app-message-rescheduled-request>
+                              </div>
+                            </ng-container>
+                            <ng-template #NOT_RESCHEDULE_REQUEST>
+                              <div
+                                *ngIf="!message.isSendFromEmail && !message.isSendFromVoiceMail"
+                                [ngClass]="(message?.options?.type !== 'contact' && !message?.options?.contacts) ? 'message-body' : ''">
+                                <div
+                                  class="message-container"
+                                  [ngClass]="{'row-reverse': message.senderType !== 'user'}">
+                                  <div class="message-box">
+                                    <app-message-header
+                                      [firstName]="message.firstName"
+                                      [lastName]="message.lastName"></app-message-header>
+                                    <app-message-default
+                                      class="message-text-box"
+                                      [isSending]="message?.isSending || message?.isError"
+                                      [ngClass]="{
+                                        'message-text-box-ticket-contact': message?.options?.type === 'contact'
+                                      }"
+                                      [message]="message"></app-message-default>
+                                    <app-message-footer
+                                      [isSending]="message?.isSending"
+                                      [isError]="message?.isError"
+                                      [senderType]="message.senderType"
+                                      [createdAt]="message.createdAt"
+                                      [isRead]="message.isRead"></app-message-footer>
+                                  </div>
+                                </div>
+                                <div
+                                  class="ticket-wrapper"
+                                  *ngIf="message.ticketCategoryInfo">
+                                  <app-chat-ticket
+                                    class="with-message"
+                                    [createdFrom]="message?.options?.response?.payload?.ticket?.createdFrom"
+                                    [conversationLogId]="message.conversationLogId"
+                                    [ticketCreator]="message?.options?.firstName ? message?.options : currentConversation"
+                                    [subtitle]="message.options.text"
+                                    [status]="message.options.status"
+                                    [ticketCategoryInfo]="message.ticketCategoryInfo"
+                                    [timeCreated]="message?.options?.createdAt ? message?.options?.createdAt : message.createdAt"
+                                    [fileList]="message.ticketFile"
+                                    (fileOnClicked)="manageCarouselState($event)"
+                                    [isUrgent]="message?.isUrgent"
+                                    [sessionEnded]="!!currentConversation?.endSessionConversationLog"
+                                    [draftMsg]="message.draftMsg"
+                                    (updateDraftMsg)="handleUpdateDraftMsg(message)"
+                                    [message]="message">
+                                  </app-chat-ticket>
+                                </div>
+                              </div>
+                              <div
+                                *ngIf="message.isSendFromEmail || message.isSendFromVoiceMail"
+                                [ngClass]="{
+                                  'unread-message': message.isMarkUnRead
+                                }"
+                                class="message-body full-width no-transform">
+                                <app-message-via-email
+                                  [isSending]="message?.isSending"
+                                  [isError]="message?.isError"
+                                  [message]="message"
+                                  (fileOnClicked)="manageCarouselState($event)"
+                                  (removeDraftMsg)="handleRemoveDraftMsg($event)"
+                                  (updateDraftMsg)="handleUpdateDraftMsg(message)"
+                                  (fileEmit)="handleFileEmit($event)"
+                                  (reSendEmitter)="onResendTheMessage(message.id)"
+                                  [draftMsg]="message.draftMsg"
+                                  data-e2e="message-textarea"
+                                  [lastItem]="message?.id === lastMessagesTypeText?.id"
+                                  [needToExpand]="message.isMarkUnRead || (lastReadMessageIndex >= 0 && message.originIndex > lastReadMessageIndex)"
+                                  (showSelectPeople)="handleShowTrudiSendMsgFromViaEmail($event)"
+                                  (onSent)="handleSent($event)"></app-message-via-email>
+                              </div>
+                            </ng-template>
+                          </ng-container>
+                        </ng-container>
+                        <div
+                          *ngIf="last && isFirstJoined && (message?.options?.type !== 'contact' && !message?.options?.contacts) && this.currentConversation?.createdFrom === 'APP'"
+                          class="message-body full-width no-padding">
+                          <app-message-agent-expectation></app-message-agent-expectation>
+                        </div>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="messagesType.buttons">
+                      <div class="message-body-wrapper d-flex">
+                        <div class="message-body">
+                          <ng-container *ngIf="message.message">
+                            <app-message-header
+                              [firstName]="message.firstName"
+                              [lastName]="message.lastName"></app-message-header>
+                            <app-message-default
+                              [isSending]="message?.isSending || message?.isError"
+                              [message]="message"></app-message-default>
+                            <app-message-footer
+                              [isSending]="message?.isSending || message?.isError"
+                              [isError]="message?.isError"
+                              [senderType]="message.senderType"
+                              [createdAt]="message.createdAt"
+                              [isRead]="message.isRead"></app-message-footer>
+                          </ng-container>
+                        </div>
+                        <div class="message-options">
+                          <ng-container *ngFor="let item of message.options">
+                            <app-trudi-default-actions
+                              [userMessage]="item"></app-trudi-default-actions>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="messagesType.navigationUrl">
+                      <div class="message-body__nav">
+                        <div class="message-body">
+                          <app-message-default
+                            [isSending]="message?.isSending || message?.isError"
+                            [message]="message"></app-message-default>
+                        </div>
+                        <div
+                          *ngFor="let link of message.options"
+                          class="message-body message-body_nav-link">
+                          <app-trudi-nav-links
+                            [linkType]="link"></app-trudi-nav-links>
+                        </div>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="messagesType.url">
+                      <div
+                        class="message-body"
+                        [ngClass]="{'not-message': !message?.message}">
+                        <ng-container *ngIf="!!message?.message?.trim()">
+                          <ng-container *ngIf="!currentConversation.isFrozen">
+                            <app-message-header
+                              [firstName]="message.firstName"
+                              [lastName]="message.lastName"></app-message-header>
+                          </ng-container>
+                          <app-message-default
+                            [isSending]="message?.isSending || message?.isError"
+                            [message]="message"></app-message-default>
+                          <ng-container *ngIf="!currentConversation.isFrozen">
+                            <app-message-footer
+                              [isSending]="message?.isSending"
+                              [isError]="message?.isError"
+                              [senderType]="message.senderType"
+                              [createdAt]="message.createdAt"
+                              [isRead]="message.isRead"></app-message-footer>
+                          </ng-container>
+                        </ng-container>
+                        <ng-container *ngFor="let url of message.options">
+                          <app-trudi-url
+                            class="trudi-url"
+                            [url]="url"></app-trudi-url>
+                        </ng-container>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="messagesType.defaultText">
+                      <ng-container
+                        *ngIf="message.options?.type !== 'RESCHEDULE_REQUEST'; else RESCHEDULE_REQUEST">
+                        <div
+                          *ngIf="!message.isSendFromEmail && !message.isSendFromVoiceMail"
+                          class="message-body no-transform ml-8">
+                          <div
+                            class="message-container"
+                            [ngClass]="{'row-reverse': message.senderType !== 'user'}">
+                            <div class="message-box">
+                              <app-message-header
+                                [firstName]="message.firstName"
+                                [lastName]="message.lastName"></app-message-header>
+                              <app-message-default
+                                [ngClass]="{'text-black' : message.messageType==='TEXT'}"
+                                [isSending]="message?.isSending || message?.isError"
+                                [message]="message"></app-message-default>
+                              <div
+                                *ngIf="!currentConversation.isFrozen && !message.isSendFromEmail && !message.isSendFromVoiceMail"
+                                class="time-stamp-wrapper"
+                                [ngClass]="message.senderType">
+                                <app-message-footer
+                                  [senderType]="message.senderType"
+                                  [isError]="message?.isError"
+                                  [isSending]="message?.isSending"
+                                  [createdAt]="message.createdAt"
+                                  (reSendEmitter)="onResendTheMessage(message.id)"
+                                  [isRead]="message.senderType === 'user' ? null : message.isRead">
+                                </app-message-footer>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          *ngIf="message.isSendFromEmail || message.isSendFromVoiceMail"
+                          [ngClass]="{
+                            'unread-message': message.isMarkUnRead
+                          }"
+                          class="message-body full-width no-transform">
+                          <!-- CASE Task Detail -->
+                          <app-message-via-email
+                            [message]="message"
+                            [isError]="message?.isError"
+                            [isSending]="message?.isSending"
+                            [draftMsg]="message.draftMsg"
+                            (fileOnClicked)="manageCarouselState($event)"
+                            (onSendQuoteLandlordClicked)="handleSendQuoteLandlordClicked()"
+                            (showSelectPeople)="handleShowTrudiSendMsgFromViaEmail($event)"
+                            (listQuoteSelected)="getLisQuoteSelected($event)"
+                            (removeDraftMsg)="handleRemoveDraftMsg($event)"
+                            (updateDraftMsg)="handleUpdateDraftMsg(message)"
+                            (onSendInvoicePTClicked)="handleSendInvoicePTClicked()"
+                            (reSendEmitter)="onResendTheMessage(message.id)"
+                            [lastItem]="message?.id === lastMessagesTypeText?.id"
+                            [needToExpand]="message.isMarkUnRead || (lastReadMessageIndex >= 0 && message.originIndex > lastReadMessageIndex)"
+                            (fileEmit)="handleFileEmit($event)"
+                            (onSent)="handleSent($event)"></app-message-via-email>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+                <div
+                  *ngIf="message.isLastReadMessage && message.originIndex === lastReadMessageIndex && isHasNewMessage && !isHideRedLineNew"
+                  class="d-flex flex-dir-row align-items-center red-line"
+                  #redLineNew>
+                  <hr />
+                  <trudi-icon icon="newMessageTag"> </trudi-icon>
+                </div>
+              </div>
+            </div>
+            <div class="typing-block">
+              <app-typing-animation></app-typing-animation>
+            </div>
+          </div>
+          <ng-container
+            *ngTemplateOutlet="scheduledMessageButton"></ng-container>
+        </div>
+        <div
+          class="view-most-recent-container"
+          [ngStyle]="{'bottom': (currentConversation?.status === conversationType.resolved || currentConversation?.status === conversationType.deleted) ? '110px' : '52px'}">
+          <button
+            *ngIf="showScrollToBottomButton && scrollDown && scrollDown?.scrollHeight > scrollDown?.clientHeight"
+            class="view-most-recent d-flex align-items-center gap-4"
+            (click)="handleViewMostRecent(EBehaviorScroll.SMOOTH)">
+            <trudi-icon icon="chevronDown" svgClass="size-16"> </trudi-icon>
+            <span>View most recent</span>
+          </button>
+        </div>
+        <div
+          *ngIf="!currentConversation?.isScratchDraft && currentConversation?.conversationType === EConversationType.EMAIL && taskDetailViewMode === EViewDetailMode.TASK && isMessageText"
+          class="summary-message-dialog"
+          [ngStyle]="{'bottom': '0', width: isExpandMessageSummary ? '100%' : 'fit-content'}">
+          <conversation-summary
+            [currentConversation]="currentConversation"
+            [elementRefHeight]="heightMessageEmailDetail"
+            [currentTask]="currentTask"
+            (triggerCurrentConversation)="triggerCurrentConversation($event)"></conversation-summary>
+        </div>
+        <div
+          *ngIf="!currentConversation?.isScratchDraft && currentConversation?.conversationType === EConversationType.EMAIL && !isMessageText && !currentConversation?.lastSummaryUpdatedAt && !isLoadingSummary"
+          class="summary-message-dialog"
+          [ngStyle]="{'bottom': '0', width: isExpandMessageSummary ? '100%' : 'fit-content'}">
+          <conversation-summary
+            [currentConversation]="currentConversation"
+            [currentTask]="currentTask"
+            [elementRefHeight]="heightMessageEmailDetail"
+            [isNoMessage]="true"
+            (triggerCurrentConversation)="triggerCurrentConversation($event)"></conversation-summary>
+        </div>
+      </div>
+      <ng-container *ngIf="!groupMessage.length">
+        <ng-container
+          *ngIf="isTaskType && !currentConversation?.id; else emptyMessage">
+          <div class="empty-task-chat-container">
+            <div class="no-data-icon">
+              <div class="position-center-w">
+                <trudi-icon
+                  icon="noConversationsV2"
+                  class="size-140"></trudi-icon>
+                <p>No conversations to display</p>
+              </div>
+            </div>
+            <ng-container
+              *ngTemplateOutlet="scheduledMessageButton"></ng-container>
+          </div>
+        </ng-container>
+        <ng-template #emptyMessage>
+          <div
+            class="empty-message-chat-container"
+            [style.height]="'calc(100% - 12px - '+ ((textareaContainer?.offsetHeight) + 'px)')">
+            <ng-container
+              *ngTemplateOutlet="scheduledMessageButton"></ng-container>
+          </div>
+        </ng-template>
+        <div
+          *ngIf="!currentConversation?.isScratchDraft && currentConversation?.conversationType === EConversationType.EMAIL && !currentConversation?.lastSummaryUpdatedAt && !(visibleSkeletonLoading$ | push)"
+          class="summary-message-dialog"
+          [ngStyle]="{'bottom': '0', width: isExpandMessageSummary ? '100%' : 'fit-content'}">
+          <conversation-summary
+            [currentConversation]="currentConversation"
+            [currentTask]="currentTask"
+            [elementRefHeight]="heightMessageEmailDetail"
+            [isNoMessage]="true"
+            (triggerCurrentConversation)="triggerCurrentConversation($event)"></conversation-summary>
+        </div>
+      </ng-container>
+      <div
+        [ngClass]="{'hide': !currentConversation, 'height-58': (currentConversation?.status === conversationType.locked)}">
+        <div
+          [ngClass]="{'hide': currentConversation?.status === messagesType.resolved
+          || currentConversation?.status === messagesType.solved
+          || currentConversation?.status === messagesType.deleted}">
+          <div
+            *ngIf="currentConversation?.status === conversationType.locked"
+            class="locked-placeholder">
+            <div class="locked-placeholder-container">
+              <div class="locked-placeholder-logo">
+                <img src="assets/icon/trudi-logo.svg" />
+              </div>
+              <div class="locked-placeholder-text">
+                Trudi has control of this conversation right now
+              </div>
+            </div>
+            <div>
+              <button class="btn save-btn" (click)="showDialog()">Join</button>
+            </div>
+          </div>
+          <div
+            class="drop-list-from-files"
+            [style.bottom]="(textareaContainer?.offsetHeight + 20) + 'px'">
+            <div
+              class="d-flex files-box file-list"
+              [ngStyle]="{ 'padding': fileList.length > 0 ? '12px 0 8px 0' : '0' }">
+              <div
+                *ngFor="let ix of fileList; index as i; count as l"
+                [className]="ix.fileTypeDot !== fileType.file ? 'short-thumb' : '' + 'item-file-box'"
+                [ngStyle]="{
+                'margin-left': i === 0 ? '12px' : '0px',
+                'padding': ix.fileTypeDot === fileType.file && '11px 12px'
+              }">
+                <div class="file-prop" *ngIf="ix.fileTypeDot !== fileType.file">
+                  <div
+                    class="is-video-thumb"
+                    *ngIf="ix.fileTypeDot === fileType.video">
+                    <img
+                      [src]="ix.thumbMediaLink || 'assets/images/icons/video.svg'"
+                      alt="" />
+                    <img
+                      *ngIf="ix.thumbMediaLink"
+                      class="play-overlay position-center-w"
+                      src="assets/icon/play.svg"
+                      alt="" />
+                  </div>
+                  <div *ngIf="ix.fileTypeDot === fileType.audio">
+                    <img
+                      [src]="ix.thumbMediaLink || 'assets/images/icons/audio.svg'"
+                      alt="" />
+                    <!-- <img *ngIf="ix.thumbMediaLink" class="play-overlay position-center-w" src="assets/icon/audio.svg" alt=""> -->
+                  </div>
+                  <img
+                    *ngIf="ix.fileTypeDot === fileType.photo"
+                    [src]="ix.mediaLink"
+                    alt=""
+                    class="file-thumbnail" />
+                  <div
+                    class="x-btn"
+                    (click)="removeOneItemFromList(fileList, i)">
+                    <img src="assets/images/icons/close-df.svg" alt="" />
+                  </div>
+                </div>
+                <div
+                  class="file-prop d-flex align-items-center"
+                  *ngIf="ix.fileTypeDot === fileType.file">
+                  <div class="pdf-thumb">
+                    <img
+                      [src]="ix.fileTypeDot === fileType.file ? 'assets/images/icons/pdf.svg' : 'assets/images/icons/video.svg'"
+                      alt="" />
+                  </div>
+                  <div class="content pdf-box">
+                    <div class="pdf-title">{{ix.title}}</div>
+                    <div class="pdf-time">
+                      {{ix.createdAt | formatDate | push}}
+                    </div>
+                  </div>
+                  <div
+                    class="x-btn dnd-x-close x-pdf-button"
+                    (click)="removeOneItemFromList(fileList, i)">
+                    <img src="assets/images/icons/close-df.svg" alt="" />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="d-flex files-box"
+              [ngStyle]="{ 'padding': actionLinkList.length > 0 ? '12px 0 8px 0' : '0' }">
+              <div
+                *ngFor="let item of actionLinkList; index as i; first as f, last as l"
+                class="al-draft-item"
+                [ngStyle]="{ 'margin-left': f ? '10px' : '12px', 'margin-right': l ? '16px' : '12px'}">
+                <app-message-action-link
+                  [radiusConfig]="true"
+                  [messageActionLink]="item.actionLink"
+                  [linkBackground]="item.actionLink.color"
+                  [imgLink]="item.actionLink.svg">
+                </app-message-action-link>
+                <div
+                  class="x-btn al-x-close"
+                  (click)="removeOneItemFromList(actionLinkList, i)">
+                  <img src="assets/images/icons/close-df.svg" alt="" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- //Hide in ticket TDI-11533
+        <div
+          [hidden]="!( currentConversation?.status === messagesType.solved
+          || currentConversation?.status === messagesType.deleted)">
+          <div
+            class="re-open-footer"
+            #footerContainer
+            [style.justify-content]="footerContainer.offsetWidth < 500 ? 'space-evenly' : 'space-between'">
+            <div
+              class="re-open-footer-left d-flex align-items-center gap-12"
+              data-e2e="conversation-resolved-text">
+              <trudi-icon
+                *ngIf="currentConversation?.lastUser?.id === trudiUserId; else userAvatar"
+                icon="trudiLogo"
+                class="re-open-footer-avt"
+                svgClass="size-32"></trudi-icon>
+              <ng-template #userAvatar>
+                <app-user-avatar
+                  [avatar]="currentConversation?.originLastUser?.avatar || currentConversation?.lastUser?.avatar"
+                  [user]="currentConversation?.lastUser"
+                  [style]="'width: 32px; height: 32px; font-size: 16px;'"></app-user-avatar>
+              </ng-template>
+              <span class="re-open-footer-text">
+                This conversation has been {{ currentConversation?.status ===
+                messagesType.deleted ? 'deleted' : 'resolved' }}.
+              </span>
+            </div>
+            <button
+              class="trudi-btn trudi-btn-semi-large trudi-btn-primary"
+              (click)="changeConversationStatus(messagesType.reopened)"
+              [disabled]="isConsole"
+              data-e2e="re-open-btn">
+              Re-open
+            </button>
+          </div>
+        </div> -->
+      </div>
+    </div>
+    <ng-container *ngIf="taskDetailViewMode === EViewDetailMode.MESSAGE">
+      <div
+        #messageEmailDetail
+        class="message-detail-wrapper"
+        [style.height]="'calc(100% - '+ ((chatHeader?.offsetHeight) + 'px)')">
+        <div
+          class="chat-section flex-1"
+          [style.height]="groupMessage.length ? chatSectionHeight : '100%'"
+          (dragenter)="onDragEnter($event)"
+          (dragover)="onDragOver($event)"
+          (drop)="onDrop($event)">
+          <!-- 69 is min height of re-open-footer -->
+          <div
+            class="container-wrapper"
+            [style.height]="currentConversation?.status === conversationType.resolved ||
+          currentConversation?.status === 'SOLVED' ?
+          'calc(100% - '+ ((footerContainer?.offsetHeight) + 'px)') : (currentConversation?.status === conversationType.open && currentConversation?.isDraft) ? '100%' :
+          'calc(100% - '+ ((textareaContainer?.offsetHeight) + 'px)')"
+            *ngIf="groupMessage.length && currentProperty">
+            <div
+              class="chat-container scroll-container-wrapper"
+              data-e2e="message-thread"
+              infiniteScroll
+              [scrollWindow]="false"
+              [infiniteScrollDistance]="2"
+              [infiniteScrollThrottle]="300"
+              [immediateCheck]="true"
+              (scrolledUp)="loadHistory(currentConversation.id, true, createdTimeOfFirstMsg)"
+              (scroll)="checkScroll()"
+              #scrollDown>
+              <div
+                class="message-wrapper"
+                [ngStyle]="{
+                'padding-bottom': (fileList.length > 0 && actionLinkList.length < 1) ? (textareaContainer?.offsetHeight + 12 + 'px' ) : (fileList.length < 1 && actionLinkList.length > 0) ? (textareaContainer?.offsetHeight + 70 + 'px' ) : (fileList.length > 0 && actionLinkList.length > 0) ? (textareaContainer?.offsetHeight + 130 + 'px' ) : '0'
+              }">
+                <!-- <app-invitation-message
+                  *ngIf="!isProgressCall && isHideNotiBanner && activeMobileApp && currentConversation"
+                  [conversationType]="currentConversationStatus"
+                  [userId]="currentConversation.userId"
+                  [propertyId]="currentConversation.propertyId"
+                  [propertyType]="currentConversation.propertyType"
+                  [inviteStatus]="currentConversation.inviteStatus"
+                  [canInviteViaConversation]="currentConversation.canInviteViaConversation"
+                  [inviteViaConversation]="currentConversation.inviteViaConversation">
+                </app-invitation-message> -->
+
+                <app-call-inprogress-notify-v2
+                  [isShow]="isProgressCall"
+                  [message]="startedCallMessage"
+                  [lastCall]="lastCall"></app-call-inprogress-notify-v2>
+                <div
+                  *ngFor="let parentMsg of groupMessage; let lastMsgInline = last; trackBy: dateTrackby">
+                  <div
+                    *ngIf="hasMessageFromApp && !parentMsg?.messages?.[0]?.isDraft"
+                    class="timestamp-badge wrap-order-day y-center">
+                    <div class="divider flex-1 hideDivider"></div>
+                    <div class="order-day timeStamp">
+                      {{parentMsg?.timeStamp | dateTimeString | push |
+                      uppercaseFirstLetter}}
+                    </div>
+                    <div class="divider flex-1 hideDivider"></div>
+                  </div>
+                  <div
+                    class="message"
+                    *ngFor="let message of parentMsg?.messages; let idx = index ;let last = last; trackBy: messageTrackBy"
+                    [class.flex-dir-column]="message.isLastReadMessage && isHasNewMessage"
+                    [class.align-items-end]="message.isLastReadMessage && message.senderType !== 'user' && isHasNewMessage"
+                    [ngClass]="message.messageType === messagesType.ticket && (message?.options?.type !== 'contact' && !message?.options?.contacts) ? '' : message.senderType | lowercase">
+                    <ng-container *ngIf="message.messageType">
+                      <ng-container [ngSwitch]="message.messageType">
+                        <ng-container *ngSwitchCase="messagesType.actionLink">
+                          <div class="message-body">
+                            <div class="al-border">
+                              <app-message-action-link
+                                [reBorderAtChatApp]="true"
+                                [messageActionLink]="message.actionLink"
+                                [propertyId]="currentProperty.id"
+                                [linkBackground]="message.color"
+                                [imgLink]="message.svg">
+                              </app-message-action-link>
+                            </div>
+                            <ng-container *ngIf="!currentConversation.isFrozen">
+                              <app-message-footer
+                                [senderType]="message.senderType"
+                                [createdAt]="message.createdAt"
+                                [isRead]="message.isRead"></app-message-footer>
+                            </ng-container>
+                          </div>
+                        </ng-container>
+
+                        <ng-container *ngSwitchCase="messagesType.file">
+                          <ng-container *ngIf="!showFileType">
+                            <div class="message-body">
+                              <ng-container
+                                *ngIf="!currentConversation.isFrozen && !message.isSendFromEmail && !message.isSendFromVoiceMail">
+                                <app-message-header
+                                  [firstName]="message.firstName"
+                                  [lastName]="message.lastName"
+                                  class="header-message-file"></app-message-header>
+                              </ng-container>
+                              <app-message-file
+                                *ngIf="!message.isSendFromVoiceMail"
+                                [message]="message"
+                                [isSending]="message?.isSending || message?.isError"
+                                [messageFile]="message.isShowFile ? message.file : null"
+                                [isShowActionButton]="isShowActionButton"
+                                [isShowFile]="message.isShowFile"
+                                (isVideoLoaded)="scrollToBottom()"
+                                (fileOnClicked)="manageCarouselState($event)"
+                                (showSelectPeople)="showSelectPeople($event); onForwardBtn('Select People')"
+                                (fileEmit)="handleFileEmit($event)"
+                                class="message-file"></app-message-file>
+                              <ng-container
+                                *ngIf="!currentConversation.isFrozen">
+                                <app-message-footer
+                                  *ngIf="!message.isSendFromVoiceMail"
+                                  [isError]="message?.isError"
+                                  [isSending]="message?.isSending"
+                                  [senderType]="message.senderType"
+                                  [createdAt]="message.createdAt"
+                                  [isRead]="message.isRead"></app-message-footer>
+                              </ng-container>
+                            </div>
+                          </ng-container>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="messagesType.call">
+                          <div
+                            class="message-body call"
+                            style="width: fit-content">
+                            <app-message-call
+                              [userId]="currentConversation.userId"
+                              [message]="message"
+                              [currentConversationId]="currentConversation.id"></app-message-call>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="messagesType.solved">
+                          <div
+                            class="message-body full-width no-padding"
+                            [ngClass]="message.classForMarker">
+                            <app-message-resolved
+                              [message]="message"
+                              [attr.data-e2e]="'message-resolved'">
+                            </app-message-resolved>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="messagesType.deleted">
+                          <div
+                            class="message-body no-transform full-width no-padding"
+                            [ngClass]="message.classForMarker">
+                            <app-message-deleted
+                              [message]="message"></app-message-deleted>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="messagesType.reopened">
+                          <div
+                            class="message-body no-transform full-width no-padding"
+                            [ngClass]="message.classForMarker">
+                            <app-message-reopened [message]="message">
+                            </app-message-reopened>
+                          </div>
+                        </ng-container>
+                        <ng-container
+                          *ngSwitchCase="messagesType.agentExpectation">
+                          <div
+                            class="message-body full-width no-padding"
+                            [ngClass]="message.classForMarker"
+                            *ngIf="isFirstJoined">
+                            <app-message-agent-expectation></app-message-agent-expectation>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="messagesType.agentJoin">
+                          <div
+                            class="message-body full-width no-padding"
+                            [ngClass]="message.classForMarker">
+                            <app-message-agent-join
+                              [message]="message"
+                              [title]="message.userTitle">
+                            </app-message-agent-join>
+                          </div>
+                        </ng-container>
+                        <ng-container
+                          *ngSwitchCase="messagesType.changeProperty">
+                          <div
+                            class="message-body full-width no-padding"
+                            [ngClass]="message.classForMarker">
+                            <message-change-property
+                              [message]="message"
+                              [listProperty]="propertyService.listPropertyAllStatus | push"></message-change-property>
+                          </div>
+                        </ng-container>
+                        <ng-container
+                          *ngSwitchCase="messagesType.syncConversation">
+                          <div
+                            class="message-body full-width no-padding"
+                            [ngClass]="{'mt-16': parentMsg.messages?.[idx - 1]?.messageType === messagesType.defaultText,'mb-16':parentMsg.messages?.[idx + 1]?.messageType === messagesType.defaultText}">
+                            <message-synced-conversation
+                              [message]="message"></message-synced-conversation>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="messagesType.moveToTask">
+                          <div
+                            class="message-body full-width no-padding"
+                            [ngClass]="message.classForMarker">
+                            <app-message-conversation-moved [message]="message">
+                            </app-message-conversation-moved>
+                          </div>
+                        </ng-container>
+                        <ng-container
+                          *ngSwitchCase="messagesType.moveOutOfTask">
+                          <div
+                            class="message-body full-width no-padding"
+                            [ngClass]="message.classForMarker">
+                            <app-message-conversation-moved [message]="message">
+                            </app-message-conversation-moved>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="messagesType.ticket">
+                          <div
+                            [ngClass]="(!message.isSendFromEmail) ? 'message-body':'d-flex flex-dir-column w-100'">
+                            <ng-container
+                              [ngSwitch]="message.options?.response?.type">
+                              <ng-container
+                                *ngSwitchCase="EOptionType.VACATE_REQUEST">
+                                <div
+                                  class="flex-dir-column"
+                                  style="margin-top: 12px">
+                                  <vacate-request-ticket
+                                    [createdFrom]="message?.options?.response?.payload?.ticket?.createdFrom"
+                                    [message]="message"
+                                    [draftMsg]="message.draftMsg"
+                                    (updateDraftMsg)="handleUpdateDraftMsg(message)"
+                                    [data]="message.options"
+                                    [sessionEnded]="!!currentConversation?.endSessionConversationLog">
+                                  </vacate-request-ticket>
+                                </div>
+                              </ng-container>
+                              <ng-container
+                                *ngSwitchCase="EOptionType.MAINTENANCE_REQUEST"
+                                class="ticket-wrapper">
+                                <app-chat-ticket
+                                  class="with-message"
+                                  (viewConversation)="handleOpenLinkTask()"
+                                  [createdFrom]="message?.options?.response?.payload?.ticket?.createdFrom"
+                                  [conversationLogId]="message.conversationLogId"
+                                  [subtitle]="message?.options?.response?.payload?.ticket?.maintenance_object"
+                                  [status]="message?.options?.response?.payload?.ticket?.status"
+                                  [ticketCategoryInfo]="message?.options?.response?.payload?.ticket"
+                                  [timeCreated]="message?.options?.response?.payload?.ticket?.createdAt || message.createdAt"
+                                  [fileList]="message?.ticketFile"
+                                  [isUrgent]="message?.options?.response?.payload?.ticket?.isUrgent"
+                                  (fileOnClicked)="manageCarouselState($event)"
+                                  [sessionEnded]="!!currentConversation?.endSessionConversationLog"
+                                  [draftMsg]="message.draftMsg"
+                                  (updateDraftMsg)="handleUpdateDraftMsg(message)"
+                                  [message]="message">
+                                </app-chat-ticket>
+                              </ng-container>
+                              <ng-container
+                                *ngSwitchCase="EOptionType.GENERAL_ENQUIRY"
+                                class="ticket-wrapper">
+                                <app-chat-ticket
+                                  class="with-message"
+                                  (viewConversation)="handleOpenLinkTask()"
+                                  [createdFrom]="message?.options?.response?.payload?.ticket?.createdFrom"
+                                  [conversationLogId]="message.conversationLogId"
+                                  [subtitle]="message?.options?.response?.payload?.ticket?.general_inquiry"
+                                  [status]="message?.options?.response?.payload?.ticket?.status"
+                                  [ticketCategoryInfo]="message?.options?.response?.payload?.ticket"
+                                  [timeCreated]="message?.options?.response?.payload?.ticket?.createdAt || message.createdAt"
+                                  [fileList]="message?.ticketFile"
+                                  [isUrgent]="message?.options?.response?.payload?.ticket?.isUrgent"
+                                  (fileOnClicked)="manageCarouselState($event)"
+                                  [sessionEnded]="!!currentConversation?.endSessionConversationLog"
+                                  [draftMsg]="message.draftMsg"
+                                  (updateDraftMsg)="handleUpdateDraftMsg(message)"
+                                  [message]="message">
+                                </app-chat-ticket>
+                              </ng-container>
+                              <ng-container *ngSwitchDefault>
+                                <ng-container
+                                  *ngIf="message.options?.type === EOptionType.RESCHEDULE_REQUEST || message.options?.response?.type === EOptionType.RESCHEDULE_INSPECTION_REQUEST; else NOT_RESCHEDULE_REQUEST">
+                                  <div
+                                    class="flex-dir-column"
+                                    style="margin-top: 12px">
+                                    <app-message-rescheduled-request
+                                      [isCreatedViaLink]="message.options?.type === EOptionType.RESCHEDULE_REQUEST"
+                                      (viewConversation)="handleOpenLinkTask()"
+                                      [createdFrom]="message?.options?.response?.payload?.ticket?.createdFrom"
+                                      [listRoutineInspection]="listRoutineInspection"
+                                      (triggerTicket)="updateStatusTicket($event)"
+                                      [draftMsg]="message.draftMsg"
+                                      (updateDraftMsg)="handleUpdateDraftMsg(message)"
+                                      [message]="message"
+                                      [sessionEnded]="!!currentConversation?.endSessionConversationLog"></app-message-rescheduled-request>
+                                  </div>
+                                </ng-container>
+                                <ng-template #NOT_RESCHEDULE_REQUEST>
+                                  <div
+                                    *ngIf="!message.isSendFromEmail && !message.isSendFromVoiceMail"
+                                    [ngClass]="(message?.options?.type !== 'contact' && !message?.options?.contacts) ? 'message-body' : ''">
+                                    <div
+                                      class="message-container"
+                                      [ngClass]="{'row-reverse': message.senderType !== 'user'}">
+                                      <div class="message-box">
+                                        <app-message-header
+                                          [firstName]="message.firstName"
+                                          [lastName]="message.lastName"></app-message-header>
+                                        <app-message-default
+                                          class="message-text-box"
+                                          [isSending]="message?.isSending || message?.isError"
+                                          [ngClass]="{
+                                          'message-text-box-ticket-contact': message?.options?.type === 'contact'
+                                        }"
+                                          [message]="message"></app-message-default>
+                                        <app-message-footer
+                                          [isSending]="message?.isSending"
+                                          [isError]="message?.isError"
+                                          [senderType]="message.senderType"
+                                          [createdAt]="message.createdAt"
+                                          [isRead]="message.isRead"></app-message-footer>
+                                      </div>
+                                    </div>
+                                    <div
+                                      class="ticket-wrapper"
+                                      *ngIf="message.ticketCategoryInfo">
+                                      <app-chat-ticket
+                                        class="with-message"
+                                        [createdFrom]="message?.options?.response?.payload?.ticket?.createdFrom"
+                                        [conversationLogId]="message.conversationLogId"
+                                        [ticketCreator]="message?.options?.firstName ? message?.options : currentConversation"
+                                        [subtitle]="message.options.text"
+                                        [status]="message.options.status"
+                                        [ticketCategoryInfo]="message.ticketCategoryInfo"
+                                        [timeCreated]="message?.options?.createdAt ? message?.options?.createdAt : message.createdAt"
+                                        [fileList]="message.ticketFile"
+                                        (fileOnClicked)="manageCarouselState($event)"
+                                        [isUrgent]="message?.isUrgent"
+                                        [sessionEnded]="!!currentConversation?.endSessionConversationLog"
+                                        [draftMsg]="message.draftMsg"
+                                        (updateDraftMsg)="handleUpdateDraftMsg(message)"
+                                        [message]="message">
+                                      </app-chat-ticket>
+                                    </div>
+                                  </div>
+                                  <div
+                                    *ngIf="message.isSendFromEmail || message.isSendFromVoiceMail"
+                                    [ngClass]="{
+                                      'unread-message': message.isMarkUnRead
+                                    }"
+                                    class="message-body full-width no-transform">
+                                    <app-message-via-email
+                                      [isSending]="message?.isSending"
+                                      [isError]="message?.isError"
+                                      [message]="message"
+                                      [draftMsg]="message.draftMsg"
+                                      (fileOnClicked)="manageCarouselState($event)"
+                                      (fileEmit)="handleFileEmit($event)"
+                                      (reSendEmitter)="onResendTheMessage(message.id)"
+                                      (onCollapseMess)="showFile($event)"
+                                      (removeDraftMsg)="handleRemoveDraftMsg($event)"
+                                      (updateDraftMsg)="handleUpdateDraftMsg(message)"
+                                      data-e2e="message-textarea"
+                                      [lastItem]="message?.id === lastMessagesTypeText?.id"
+                                      [needToExpand]="message.isMarkUnRead || (lastReadMessageIndex >= 0 && message.originIndex > lastReadMessageIndex)"
+                                      (showSelectPeople)="handleShowTrudiSendMsgFromViaEmail($event)"
+                                      (onSent)="handleSent($event)"></app-message-via-email>
+                                  </div>
+                                </ng-template>
+                              </ng-container>
+                            </ng-container>
+                            <div
+                              *ngIf="last && isFirstJoined && (message?.options?.type !== 'contact' && !message?.options?.contacts) && this.currentConversation?.createdFrom === 'APP'"
+                              class="message-body full-width no-padding">
+                              <app-message-agent-expectation></app-message-agent-expectation>
+                            </div>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="messagesType.buttons">
+                          <div class="message-body-wrapper d-flex">
+                            <div class="message-body">
+                              <ng-container *ngIf="message.message">
+                                <app-message-header
+                                  [firstName]="message.firstName"
+                                  [lastName]="message.lastName"></app-message-header>
+                                <app-message-default
+                                  [isSending]="message?.isSending || message?.isError"
+                                  [message]="message"></app-message-default>
+                                <app-message-footer
+                                  [isSending]="message?.isSending || message?.isError"
+                                  [isError]="message?.isError"
+                                  [senderType]="message.senderType"
+                                  [createdAt]="message.createdAt"
+                                  [isRead]="message.isRead"></app-message-footer>
+                              </ng-container>
+                            </div>
+                            <div class="message-options">
+                              <ng-container
+                                *ngFor="let item of message.options">
+                                <app-trudi-default-actions
+                                  [userMessage]="item"></app-trudi-default-actions>
+                              </ng-container>
+                            </div>
+                          </div>
+                        </ng-container>
+                        <ng-container
+                          *ngSwitchCase="messagesType.navigationUrl">
+                          <div class="message-body__nav">
+                            <div class="message-body">
+                              <app-message-default
+                                [isSending]="message?.isSending || message?.isError"
+                                [message]="message"></app-message-default>
+                            </div>
+                            <div
+                              *ngFor="let link of message.options"
+                              class="message-body message-body_nav-link">
+                              <app-trudi-nav-links
+                                [linkType]="link"></app-trudi-nav-links>
+                            </div>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="messagesType.url">
+                          <div
+                            class="message-body"
+                            [ngClass]="{'not-message': !message?.message}">
+                            <ng-container *ngIf="!!message?.message?.trim()">
+                              <ng-container
+                                *ngIf="!currentConversation.isFrozen">
+                                <app-message-header
+                                  [firstName]="message.firstName"
+                                  [lastName]="message.lastName"></app-message-header>
+                              </ng-container>
+                              <app-message-default
+                                [isSending]="message?.isSending || message?.isError"
+                                [message]="message"></app-message-default>
+                              <ng-container
+                                *ngIf="!currentConversation.isFrozen">
+                                <app-message-footer
+                                  [isSending]="message?.isSending"
+                                  [isError]="message?.isError"
+                                  [senderType]="message.senderType"
+                                  [createdAt]="message.createdAt"
+                                  [isRead]="message.isRead"></app-message-footer>
+                              </ng-container>
+                            </ng-container>
+                            <ng-container *ngFor="let url of message.options">
+                              <app-trudi-url
+                                class="trudi-url"
+                                [url]="url"></app-trudi-url>
+                            </ng-container>
+                          </div>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="messagesType.defaultText">
+                          <ng-container
+                            *ngIf="message.options?.type !== 'RESCHEDULE_REQUEST'; else RESCHEDULE_REQUEST">
+                            <div
+                              *ngIf="!message.isSendFromEmail && !message.isSendFromVoiceMail"
+                              class="message-body no-transform ml-8">
+                              <div
+                                class="message-container"
+                                [ngClass]="{'row-reverse': message.senderType !== 'user'}">
+                                <div class="message-box">
+                                  <app-message-header
+                                    [firstName]="message.firstName"
+                                    [lastName]="message.lastName"></app-message-header>
+                                  <app-message-default
+                                    [ngClass]="{'text-black' : message.messageType==='TEXT'}"
+                                    [isSending]="message?.isSending || message?.isError"
+                                    [message]="message"></app-message-default>
+                                  <div
+                                    *ngIf="!currentConversation.isFrozen && !message.isSendFromEmail && !message.isSendFromVoiceMail"
+                                    class="time-stamp-wrapper"
+                                    [ngClass]="message.senderType">
+                                    <app-message-footer
+                                      [senderType]="message.senderType"
+                                      [isError]="message?.isError"
+                                      [isSending]="message?.isSending"
+                                      [createdAt]="message.createdAt"
+                                      (reSendEmitter)="onResendTheMessage(message.id)"
+                                      [isRead]="message.senderType === 'user' ? null : message.isRead">
+                                    </app-message-footer>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              *ngIf="message.isSendFromEmail || message.isSendFromVoiceMail"
+                              [ngClass]="{
+                                'unread-message': message.isMarkUnRead
+                              }"
+                              class="message-body full-width no-transform">
+                              <!-- //CASE MSG DETAIL -->
+                              <app-message-via-email
+                                [message]="message"
+                                [isError]="message?.isError"
+                                [isSending]="message?.isSending"
+                                [draftMsg]="message.draftMsg"
+                                (fileOnClicked)="manageCarouselState($event)"
+                                (onSendQuoteLandlordClicked)="handleSendQuoteLandlordClicked()"
+                                (showSelectPeople)="handleShowTrudiSendMsgFromViaEmail($event)"
+                                (listQuoteSelected)="getLisQuoteSelected($event)"
+                                (onSendInvoicePTClicked)="handleSendInvoicePTClicked()"
+                                (reSendEmitter)="onResendTheMessage(message.id)"
+                                (removeDraftMsg)="handleRemoveDraftMsg($event)"
+                                (updateDraftMsg)="handleUpdateDraftMsg(message)"
+                                [lastItem]="message?.id === lastMessagesTypeText?.id"
+                                [needToExpand]="message.isMarkUnRead || (lastReadMessageIndex >= 0 && message.originIndex > lastReadMessageIndex)"
+                                (fileEmit)="handleFileEmit($event)"
+                                (onSent)="handleSent($event)"></app-message-via-email>
+                            </div>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </ng-container>
+                    <div
+                      *ngIf="message.isLastReadMessage && message.originIndex === lastReadMessageIndex && isHasNewMessage && !isHideRedLineNew"
+                      class="d-flex flex-dir-row align-items-center red-line"
+                      #redLineNew>
+                      <hr />
+                      <trudi-icon icon="newMessageTag"> </trudi-icon>
+                    </div>
+                  </div>
+                </div>
+                <div class="typing-block">
+                  <app-typing-animation></app-typing-animation>
+                </div>
+              </div>
+              <ng-container
+                *ngTemplateOutlet="scheduledMessageButton"></ng-container>
+            </div>
+            <div
+              class="view-most-recent-container"
+              [ngStyle]="{'bottom': (currentConversation?.status === conversationType.resolved || currentConversation?.status === conversationType.deleted) ? '110px' : '52px'}">
+              <button
+                *ngIf="showScrollToBottomButton && scrollDown && scrollDown?.scrollHeight > scrollDown?.clientHeight"
+                class="view-most-recent d-flex align-items-center gap-4"
+                (click)="handleViewMostRecent(EBehaviorScroll.SMOOTH)">
+                <trudi-icon icon="chevronDown" svgClass="size-16"> </trudi-icon>
+                <span>View most recent</span>
+              </button>
+            </div>
+            <div
+              *ngIf="!currentConversation?.isScratchDraft && currentConversation?.conversationType === EConversationType.EMAIL && taskDetailViewMode === EViewDetailMode.MESSAGE && isMessageText"
+              class="summary-message-dialog"
+              [ngStyle]="{'bottom': '0', width: isExpandMessageSummary ? '100%' : 'fit-content'}">
+              <conversation-summary
+                [currentConversation]="currentConversation"
+                [currentTask]="currentTask"
+                [elementRefHeight]="heightMessageEmailDetail"
+                (triggerCurrentConversation)="triggerCurrentConversation($event)"></conversation-summary>
+            </div>
+            <div
+              *ngIf="!currentConversation?.isScratchDraft && currentConversation?.conversationType === EConversationType.EMAIL && !isMessageText && !currentConversation?.lastSummaryUpdatedAt && !isLoadingSummary"
+              class="summary-message-dialog"
+              [ngStyle]="{'bottom': '0', width: isExpandMessageSummary ? '100%' : 'fit-content'}">
+              <conversation-summary
+                [currentConversation]="currentConversation"
+                [currentTask]="currentTask"
+                [elementRefHeight]="heightMessageEmailDetail"
+                [isNoMessage]="true"
+                (triggerCurrentConversation)="triggerCurrentConversation($event)"></conversation-summary>
+            </div>
+          </div>
+          <ng-container *ngIf="!groupMessage.length">
+            <ng-container
+              *ngIf="isTaskType && !currentConversation; else emptyMessage">
+              <div class="empty-task-chat-container">
+                <div class="no-data-icon">
+                  <div class="position-center-w">
+                    <trudi-icon
+                      icon="noConversationsV2"
+                      class="size-140"></trudi-icon>
+                    <p>No conversations to display</p>
+                  </div>
+                </div>
+                <ng-container
+                  *ngTemplateOutlet="scheduledMessageButton"></ng-container>
+              </div>
+            </ng-container>
+            <ng-template #emptyMessage>
+              <div
+                class="empty-message-chat-container"
+                [style.height]="'calc(100% - 12px - '+ ((textareaContainer?.offsetHeight) + 'px)')">
+                <ng-container
+                  *ngTemplateOutlet="scheduledMessageButton"></ng-container>
+              </div>
+            </ng-template>
+            <div
+              *ngIf="!currentConversation?.isScratchDraft && currentConversation?.conversationType === EConversationType.EMAIL && !currentConversation?.lastSummaryUpdatedAt && !(visibleSkeletonLoading$ | push)"
+              class="summary-message-dialog"
+              [ngStyle]="{'bottom': '0', width: isExpandMessageSummary ? '100%' : 'fit-content'}">
+              <conversation-summary
+                [currentConversation]="currentConversation"
+                [currentTask]="currentTask"
+                [elementRefHeight]="heightMessageEmailDetail"
+                [isNoMessage]="true"
+                (triggerCurrentConversation)="triggerCurrentConversation($event)"></conversation-summary>
+            </div>
+          </ng-container>
+          <div
+            [ngClass]="{'hide': !currentConversation, 'height-58': (currentConversation?.status === conversationType.locked), 'h-0': !currentConversation?.email}">
+            <div
+              [ngClass]="{'hide':  (currentConversation?.status === conversationType.resolved || currentConversation?.status === 'SOLVED')}">
+              <div
+                *ngIf="currentConversation?.status === conversationType.locked"
+                class="locked-placeholder">
+                <div class="locked-placeholder-container">
+                  <div class="locked-placeholder-logo">
+                    <img src="assets/icon/trudi-logo.svg" />
+                  </div>
+                  <div class="locked-placeholder-text">
+                    Trudi has control of this conversation right now
+                  </div>
+                </div>
+                <div>
+                  <button class="btn save-btn" (click)="showDialog()">
+                    Join
+                  </button>
+                </div>
+              </div>
+              <div
+                class="drop-list-from-files"
+                [style.bottom]="(textareaContainer?.offsetHeight + 20) + 'px'">
+                <div
+                  class="d-flex files-box file-list"
+                  [ngStyle]="{ 'padding': fileList.length > 0 ? '12px 0 8px 0' : '0' }">
+                  <div
+                    *ngFor="let ix of fileList; index as i; count as l"
+                    [className]="ix.fileTypeDot !== fileType.file ? 'short-thumb' : '' + 'item-file-box'"
+                    [ngStyle]="{
+                  'margin-left': i === 0 ? '12px' : '0px',
+                  'padding': ix.fileTypeDot === fileType.file && '11px 12px'
+                }">
+                    <div
+                      class="file-prop"
+                      *ngIf="ix.fileTypeDot !== fileType.file">
+                      <div
+                        class="is-video-thumb"
+                        *ngIf="ix.fileTypeDot === fileType.video">
+                        <img
+                          [src]="ix.thumbMediaLink || 'assets/images/icons/video.svg'"
+                          alt="" />
+                        <img
+                          *ngIf="ix.thumbMediaLink"
+                          class="play-overlay position-center-w"
+                          src="assets/icon/play.svg"
+                          alt="" />
+                      </div>
+                      <div *ngIf="ix.fileTypeDot === fileType.audio">
+                        <img
+                          [src]="ix.thumbMediaLink || 'assets/images/icons/audio.svg'"
+                          alt="" />
+                        <!-- <img *ngIf="ix.thumbMediaLink" class="play-overlay position-center-w" src="assets/icon/audio.svg" alt=""> -->
+                      </div>
+                      <img
+                        *ngIf="ix.fileTypeDot === fileType.photo"
+                        [src]="ix.mediaLink"
+                        alt=""
+                        class="file-thumbnail" />
+                      <div
+                        class="x-btn"
+                        (click)="removeOneItemFromList(fileList, i)">
+                        <img src="assets/images/icons/close-df.svg" alt="" />
+                      </div>
+                    </div>
+                    <div
+                      class="file-prop d-flex align-items-center"
+                      *ngIf="ix.fileTypeDot === fileType.file">
+                      <div class="pdf-thumb">
+                        <img
+                          [src]="ix.fileTypeDot === fileType.file ? 'assets/images/icons/pdf.svg' : 'assets/images/icons/video.svg'"
+                          alt="" />
+                      </div>
+                      <div class="content pdf-box">
+                        <div class="pdf-title">{{ix.title}}</div>
+                        <div class="pdf-time">
+                          {{ix.createdAt | formatDate | push}}
+                        </div>
+                      </div>
+                      <div
+                        class="x-btn dnd-x-close x-pdf-button"
+                        (click)="removeOneItemFromList(fileList, i)">
+                        <img src="assets/images/icons/close-df.svg" alt="" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="d-flex files-box"
+                  [ngStyle]="{ 'padding': actionLinkList.length > 0 ? '12px 0 8px 0' : '0' }">
+                  <div
+                    *ngFor="let item of actionLinkList; index as i; first as f, last as l"
+                    class="al-draft-item"
+                    [ngStyle]="{ 'margin-left': f ? '10px' : '12px', 'margin-right': l ? '16px' : '12px'}">
+                    <app-message-action-link
+                      [radiusConfig]="true"
+                      [messageActionLink]="item.actionLink"
+                      [linkBackground]="item.actionLink.color"
+                      [imgLink]="item.actionLink.svg">
+                    </app-message-action-link>
+                    <div
+                      class="x-btn al-x-close"
+                      (click)="removeOneItemFromList(actionLinkList, i)">
+                      <img src="assets/images/icons/close-df.svg" alt="" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- //Hide in ticket TDI-11533
+            <div
+              [hidden]="!(currentConversation?.status === conversationType.resolved || currentConversation?.status === 'SOLVED')">
+              <div
+                class="re-open-footer"
+                #footerContainer
+                [style.justify-content]="footerContainer.offsetWidth < 500 ? 'space-evenly' : 'space-between'">
+                <div
+                  class="re-open-footer-left d-flex align-items-center gap-12"
+                  data-e2e="conversation-resolved-text">
+                  <trudi-icon
+                    *ngIf="currentConversation?.originLastUser?.id === trudiUserId; else userAvatar"
+                    icon="trudiLogo"
+                    class="re-open-footer-avt"
+                    svgClass="size-32"></trudi-icon>
+                  <ng-template #userAvatar>
+                    <app-user-avatar
+                      [avatar]="currentConversation?.originLastUser?.avatar"
+                      [user]="currentConversation?.originLastUser"
+                      [style]="'width: 32px; height: 32px; font-size: 16px;'"></app-user-avatar>
+                  </ng-template>
+                  <span class="re-open-footer-text"
+                    >This conversation has been {{ !isTaskType &&
+                    taskService.currentTask$?.getValue()?.status === 'DELETED' ?
+                    'deleted' : 'resolved' }}.</span
+                  >
+                </div>
+                <button
+                  class="trudi-btn trudi-btn-semi-large trudi-btn-primary"
+                  (click)="changeConversationStatus(messagesType.reopened)"
+                  [disabled]="isConsole"
+                  [appE2E]="currentConversation?.statusTask === 'DELETED' ? 'deleted-folder-reopen-button': 'resolved-folder-msg-details-reopen-button'">
+                  Re-open
+                </button>
+              </div>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<ng-container *ngIf="visibleSkeletonLoading$ | push">
+  <div class="wrapper-loading-message">
+    <ng-container *ngIf="typeLoadingTask; else loadingHeaderMsg">
+      <div class="skeleton-header-content">
+        <div class="d-flex">
+          <div class="d-flex flex-grow-1 m-0">
+            <div class="skeleton-left">
+              <div class="skeleton-content">
+                <nz-skeleton [nzParagraph]="paragraph" [nzActive]="true">
+                </nz-skeleton>
+              </div>
+              <div class="skeleton-content">
+                <nz-skeleton [nzParagraph]="paragraph" [nzActive]="true">
+                </nz-skeleton>
+              </div>
+            </div>
+          </div>
+          <div class="skeleton-right">
+            <nz-skeleton-element
+              class="skeleton-circle"
+              nzType="avatar"
+              [nzActive]="true">
+            </nz-skeleton-element>
+            <nz-skeleton-element
+              class="skeleton-circle"
+              nzType="avatar"
+              [nzActive]="true">
+            </nz-skeleton-element>
+            <nz-skeleton-element
+              class="skeleton-circle"
+              nzType="avatar"
+              [nzActive]="true">
+            </nz-skeleton-element>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #loadingHeaderMsg>
+      <div class="skeleton-header-content message-view">
+        <div class="d-flex">
+          <div class="d-flex flex-grow-1 m-0">
+            <div class="skeleton-left">
+              <div class="d-flex align-items-center gap-4">
+                <div class="map-icon">
+                  <nz-skeleton-element
+                    class="skeleton-circle"
+                    nzType="avatar"
+                    [nzActive]="true">
+                  </nz-skeleton-element>
+                </div>
+                <div class="skeleton-content property-address">
+                  <nz-skeleton [nzParagraph]="paragraph" [nzActive]="true">
+                  </nz-skeleton>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex align-items-end">
+          <div *ngFor="let _ of [].constructor(4); let i = index">
+            <nz-skeleton-element
+              class="skeleton-circle"
+              nzType="avatar"
+              [nzSize]="24"
+              [nzActive]="true">
+            </nz-skeleton-element>
+          </div>
+          <div class="ml-auto d-flex gap-12 align-items-center">
+            <ng-container *ngFor="let _ of [].constructor(5); let i = index">
+              <nz-skeleton-element
+                class="skeleton-circle"
+                nzType="avatar"
+                [nzActive]="true">
+              </nz-skeleton-element>
+            </ng-container>
+            <div class="vertical-line"></div>
+            <nz-skeleton-element
+              class="skeleton-circle"
+              nzType="avatar"
+              [nzActive]="true">
+            </nz-skeleton-element>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <div
+      class="skeleton-card-message"
+      *ngFor="let _ of [].constructor(2); let i = index">
+      <div class="d-flex header-card-skeleton border-bt">
+        <div class="d-flex flex-grow-1">
+          <div class="skeleton-circle">
+            <nz-skeleton-element
+              class="skeleton-circle"
+              nzType="avatar"
+              [nzActive]="true"></nz-skeleton-element>
+          </div>
+          <div class="skeleton-title-left">
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </div>
+        <div class="skeleton-title-right">
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </div>
+      <div class="d-flex flex-dir-column gap-4 mt-12">
+        <div class="skeleton-content">
+          <nz-skeleton
+            class="skeleton-sm"
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+        <div class="skeleton-content">
+          <nz-skeleton
+            class="skeleton-md"
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+        <div class="skeleton-content">
+          <nz-skeleton
+            class="skeleton-lg"
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+        <div class="skeleton-content">
+          <nz-skeleton
+            class="skeleton-lg"
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </div>
+    </div>
+    <div
+      class="bottom-section"
+      *ngIf="!currentConversation?.isScratchDraft && currentConversation?.conversationType === conversationType?.EMAIL && isLoadingSummary">
+      <nz-skeleton-element
+        class="button-skeleton"
+        nzType="button"
+        [nzActive]="true"></nz-skeleton-element>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #scheduledMessageButton>
+  <div class="full-width d-flex justify-content-center flex-dir-column">
+    <trudi-button-scheduled-msg
+      *ngIf="currentConversation"
+      (onOpenModal)="openModalScheduledMsg()"
+      [conversationId]="currentConversation?.id"></trudi-button-scheduled-msg>
+  </div>
+</ng-template>
+
+<conversation-summary-file
+  [currentConversation]="currentConversation"
+  [currentTask]="currentTask" />

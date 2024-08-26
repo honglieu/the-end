@@ -1,0 +1,107 @@
+<ng-container
+  *ngIf="userLeaseCard?.type === EUserPropertyType.OWNERSHIP && !isRmSystem ">
+  <div class="ownership">
+    <div class="wrapper-name-status">
+      <div class="ownership-name">
+        <span>{{userLeaseCard.type | titlecase}}:</span>
+        <p>{{userLeaseCard.name}}</p>
+      </div>
+      <text-badge
+        [text]="userLeaseCard.status"
+        [type]="userLeaseCard.type"
+        class="user-status"
+        [badgeForPropertyUser]="'true'"></text-badge>
+    </div>
+    <div class="start-date">
+      <p>Authority start date</p>
+      <p class="date" *ngIf="userProperty.property.authorityStartDate">
+        {{userProperty.property.authorityStartDate}}
+      </p>
+    </div>
+    <div class="end-date">
+      <p>Authority end date</p>
+      <p class="date" *ngIf="userProperty.property.authorityEndDate">
+        {{userProperty.property.authorityEndDate}}
+      </p>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="userLeaseCard?.type === EUserPropertyType.TENANCY">
+  <div class="tenancy">
+    <div *ngIf="!isRmSystem" class="wrapper-name-status">
+      <div class="tenancy-name">
+        <span> {{userLeaseCard.type | titlecase}}: </span>
+        <p>{{userLeaseCard.name}}</p>
+      </div>
+      <text-badge
+        class="user-status"
+        [text]="userLeaseCard.status"
+        [type]="userLeaseCard.type"
+        [badgeForPropertyUser]="'true'"></text-badge>
+    </div>
+    <ng-container
+      *ngIf="(isRmSystem && leaseGroup?.startDate) || (!isRmSystem && leaseGroup?.originalLeaseStartDat)">
+      <div class="tenant-since">
+        <p>Tenant since</p>
+        <div class="lease-start">
+          {{isRmSystem ? leaseGroup.formatLeaseStartDate :
+          leaseGroup.originalLeaseStartFormat}}
+        </div>
+        <div
+          class="rented-days"
+          *ngIf="(isRmSystem && isShowStartLease) || (!isRmSystem && isShowOriginLease)">
+          ({{isRmSystem ? leaseGroup.rentedStartDate : leaseGroup.rentedDate}})
+        </div>
+      </div>
+    </ng-container>
+    <div class="lease-box">
+      <div class="lease-duration-date">
+        <div class="date-start-end">
+          <div class="day">
+            {{leaseGroup.formatStartDate}}
+            <ng-container *ngIf="!isRmSystem">
+              <span *ngIf="leaseGroup?.dayRemaining > 0" class="days-remaining">
+                ({{ leaseGroup.dayRemaining }} {{ leaseGroup?.dayRemaining > 1 ?
+                'days' : 'day' }} remaining)
+              </span>
+              <span
+                *ngIf="!userProperty.userPropertyGroup.lease || (!leaseGroup.startDate && !leaseGroup.endDate) || (leaseGroup.startDate && !leaseGroup.endDate)  || leaseGroup.dayRemaining === 0 || !leaseGroup"
+                class="days-remaining">
+                (0 days remaining)
+              </span>
+            </ng-container>
+          </div>
+          <div class="day">{{leaseGroup.formatEndDate}}</div>
+        </div>
+        <nz-progress
+          [nzPercent]="leaseGroup.progress"
+          [nzStrokeColor]="leaseGroup?.progress === 100 ? 'var(--danger-500)' : 'var(--tenant-500)'"
+          [nzShowInfo]="false">
+        </nz-progress>
+        <div class="item-pay d-flex justify-content-between">
+          <ng-container *ngIf="isRmSystem else paidTo" class="d-flex gap-5">
+            <span *ngIf="leaseGroup?.dayRemaining > 0" class="days-remaining">
+              {{ leaseGroup.dayRemaining }} {{ leaseGroup?.dayRemaining > 1 ?
+              'days' : 'day' }} remaining
+            </span>
+            <span
+              *ngIf="!userProperty.userPropertyGroup.lease || (!leaseGroup.startDate && !leaseGroup.endDate) || (leaseGroup.startDate && !leaseGroup.endDate)  || leaseGroup.dayRemaining === 0 || !leaseGroup"
+              class="days-remaining">
+              0 days remaining
+            </span>
+          </ng-container>
+          <ng-template #paidTo>
+            <div class="d-flex gap-5">
+              <span class="paid-to">Paid to </span>
+              <p class="paid-to-name">{{leaseGroup.paidTo}}</p>
+            </div>
+          </ng-template>
+          <div class="content-pay" *ngIf="leaseGroup?.rentAmount">
+            ${{leaseGroup.rentAmount}}
+            <span class="content-date">{{leaseGroup.frequency}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

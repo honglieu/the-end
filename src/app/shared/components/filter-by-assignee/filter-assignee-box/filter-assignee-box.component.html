@@ -1,0 +1,137 @@
+<div class="leading messages-header" (click)="onClickPopup($event)">
+  <div
+    class="assign-search-bar d-flex border-rad-8 align-items-center background--gray">
+    <input
+      type="text"
+      tabindex="0"
+      focusable
+      class="search-property-input w-100 background--gray"
+      placeholder="Search"
+      onfocus="this.placeholder = ''"
+      onblur="this.placeholder = 'Search'"
+      [(ngModel)]="searchValue"
+      (input)="search()" />
+    <div class="clear-wrapper" *ngIf="searchValue" (click)="onClearSearch()">
+      <trudi-icon class="size-16" icon="clearFilterIcon"></trudi-icon>
+    </div>
+  </div>
+</div>
+<div class="count-container">
+  <div class="d-flex count-wrapper align-items-center">
+    <div class="count-text">
+      {{selectedList.length}}/{{assigneeList.length}}
+    </div>
+    <button
+      *ngIf="selectedList.length"
+      tabindex="0"
+      focusable
+      class="clear-btn clear-selection-btn"
+      (click)="onClearFilter()">
+      Clear selection
+    </button>
+  </div>
+</div>
+<ng-template #content>
+  <div class="assign-list-items auto-hide-scroll">
+    <div class="assign-list-items-info">
+      <div *ngIf="searchList.length > 0 else noResult">
+        <cdk-virtual-scroll-viewport
+          class="assign-list-items-list"
+          [ngStyle]="getStyle()"
+          itemSize="53"
+          minBufferPx="300"
+          maxBufferPx="326"
+          (scroll)="onScroll()">
+          <div
+            *cdkVirtualFor="let item of searchList; index as i"
+            tabindex="0"
+            focusable
+            (keydown.enter)="handleCheckbox(i)"
+            class="assign-item cursor-pointer"
+            [ngClass]="{'disable': item.isLastItem, 'active': item.selected}"
+            (click)="handleCheckbox(i)">
+            <div class="assign-item-content">
+              <div
+                class="assign-item-wrapper d-flex align-items-center justify-content-between">
+                <div class="assign-item-info">
+                  <app-user-avatar
+                    [avatar]="item?.googleAvatar"
+                    [user]="item"
+                    [style]="'width: 28px; height: 28px; font-size: 14px;'"></app-user-avatar>
+                  <div
+                    class="assign-name text-overflow"
+                    [ngClass]="{'active': item.selected}">
+                    {{(item?.firstName || '') + ' ' + (item?.lastName || '')}}
+                  </div>
+                </div>
+                <td-checkbox
+                  [size]="24"
+                  [isChecked]="item.selected"
+                  (tdCheckboxChanged)="handleCheckbox(i)"
+                  [currentUser]="item">
+                </td-checkbox>
+              </div>
+            </div>
+          </div>
+          <div
+            *ngIf="isScrolledToBottom"
+            class="grid-assignee d-flex align-items-center gap-16">
+            <div class="avatar-item">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"
+                class="ant-skeleton-custom"></nz-skeleton>
+            </div>
+            <div class="grid-item w-100">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"
+                class="ant-skeleton-custom"></nz-skeleton>
+            </div>
+            <div class="grid-checkbox">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"
+                class="ant-skeleton-custom"></nz-skeleton>
+            </div>
+          </div>
+        </cdk-virtual-scroll-viewport>
+      </div>
+      <ng-template #noResult>
+        <div class="no-result">No results found</div>
+      </ng-template>
+    </div>
+  </div>
+</ng-template>
+
+<ng-container *ngIf="isLoadingList; else content">
+  <ng-container
+    *ngTemplateOutlet="skeletonLoadingItem; context: {rowNumber: 7}">
+  </ng-container>
+</ng-container>
+<ng-template #skeletonLoadingItem let-row="rowNumber">
+  <div
+    *ngFor="let _ of [].constructor(row); let i = index"
+    class="d-flex flex-dir-column">
+    <div class="grid-assignee d-flex align-items-center gap-16">
+      <div class="avatar-item">
+        <nz-skeleton
+          [nzParagraph]="paragraph"
+          [nzActive]="true"
+          class="ant-skeleton-custom"></nz-skeleton>
+      </div>
+      <div class="grid-item w-100">
+        <nz-skeleton
+          [nzParagraph]="paragraph"
+          [nzActive]="true"
+          class="ant-skeleton-custom"></nz-skeleton>
+      </div>
+      <div class="grid-checkbox">
+        <nz-skeleton
+          [nzParagraph]="paragraph"
+          [nzActive]="true"
+          class="ant-skeleton-custom"></nz-skeleton>
+      </div>
+    </div>
+  </div>
+</ng-template>

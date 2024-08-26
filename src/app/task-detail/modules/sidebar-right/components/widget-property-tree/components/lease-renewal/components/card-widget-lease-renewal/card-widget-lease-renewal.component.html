@@ -1,0 +1,40 @@
+<ng-container *ngIf="widgetItem">
+  <widget-common
+    title="LEASE RENEWAL"
+    [buttonKey]="EButtonStepKey.LEASE_RENEWAL"
+    [type]="widgetItem.status"
+    [firstTimeSyncSuccess]="widgetItem?.firstTimeSyncSuccess"
+    [externalError]="widgetItem?.externalError"
+    (showModal)="handleOpenModal()"
+    (retry)="handleRetryWidget(widgetItem)"
+    (remove)="handleRemoveWidget(widgetItem)"
+    [isDislayBtnCancel]="widgetItem.isSuccessful">
+    <div class="card-widget-wrapper">
+      <div class="card-widget-items d-flex gap-20">
+        <div class="card-widget-items-title mt-2">
+          <div class="widget-title">Tenancy</div>
+          <div class="widget-title">Duration</div>
+          <div
+            class="widget-title"
+            *ngIf="itemLease?.rentAmount && itemLease?.frequencyType">
+            Rent
+          </div>
+          <div class="widget-title">Signed lease</div>
+        </div>
+        <div class="card-widget-items-info mt-2">
+          <div class="widget-tenancy">{{itemLease?.tenancyName}}</div>
+          <div class="widget-info">
+            {{itemLease.leaseStartFormatted}} {{itemLease.endDataFormatted}}
+          </div>
+          <div class="widget-info">
+            {{itemLease?.rentAmount}} {{itemLease?.frequencyType}}
+          </div>
+          <div class="widget-info d-flex align-items-center">
+            {{itemLease?.leaseSign}}
+            <trudi-icon icon="attachV2" svgClass="size-16"></trudi-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </widget-common>
+</ng-container>

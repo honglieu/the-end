@@ -1,0 +1,98 @@
+@import 'function';
+
+.header-wrap {
+  margin-right: 58px;
+
+  &-title {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+.warning-border {
+  border: 0.5px solid var(--danger-500) !important;
+}
+
+::ng-deep {
+  .recurringChargePopup .trudi-modal-footer__button--default .trudi-ui-btn {
+    min-width: 100px;
+  }
+}
+
+.recurring-charge-form {
+  ::ng-deep ng-select.ng-select-disabled .ng-select-container {
+    color: var(--bg-overlay-light) !important;
+    background-color: var(--bg-neutral-tonal-strongest) !important;
+    cursor: not-allowed !important;
+  }
+
+  ::ng-deep .trudi-form-control {
+    .trudi-picker {
+      height: 40px !important;
+
+      .trudi-picker-disabled {
+        background: var(--gray-50) !important;
+        border-color: var(--gray-200) !important;
+        cursor: not-allowed;
+      }
+    }
+    ::ng-deep {
+      .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+        padding: 10px 12px !important;
+        border-top: 1px solid var(--gray-200);
+      }
+
+      .ng-dropdown-panel .ng-dropdown-panel-items .ng-option:not(:last-child) {
+        box-shadow: inset 0px -1px 0px var(--bg-overlay-light);
+      }
+      ng-select.trudi-single-select
+        .ng-dropdown-panel
+        .ng-dropdown-panel-items
+        .ng-option:not(.ng-optgroup):has(*) {
+        padding: 10px 12px !important;
+      }
+
+      .ng-select .ng-select-container .ng-value-container .ng-input > input {
+        padding: 10px;
+      }
+
+      ng-select.trudi-single-select
+        .ng-dropdown-panel
+        .ng-dropdown-panel-items
+        .label-data {
+        width: 100%;
+        & {
+          height: auto !important;
+
+          .option-name {
+            @include fontSetup(
+              var(--fg-neutral-stronger),
+              14px,
+              20px,
+              normal,
+              500
+            );
+          }
+
+          .option-description {
+            @include fontSetup(
+              var(--fg-neutral-stronger),
+              12px,
+              16px,
+              normal,
+              400
+            );
+          }
+        }
+      }
+    }
+  }
+
+  .trudi-form-group {
+    gap: 12px;
+  }
+
+  .trudi-picker {
+    max-width: 100%;
+  }
+}

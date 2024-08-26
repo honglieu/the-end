@@ -1,0 +1,56 @@
+<resizable-modal-popup
+  *ngIf="show"
+  [show]="show"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [title]="headerText"
+  [footerTemplate]="footerModal"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  (onCancel)="onClose()"
+  [isCustomMoveable]="true">
+  <div class="layout-box">
+    <div class="box-body">
+      <div [formGroup]="dateForm" class="date-form">
+        <div class="date-form-label">Select time</div>
+        <div class="form-input mt-6 trudi-date">
+          <trudi-date-picker
+            [trudiDisabledDate]="disabledDate"
+            formControlName="returnDueDate"
+            [class.trudi-picker-full]="true"
+            [class.trudi-picker-error]="showErrorMsg && returnDueDate.invalid && (returnDueDate.dirty || returnDueDate.touched) && returnDueDate.errors['required']">
+          </trudi-date-picker>
+          <div
+            *ngIf="showErrorMsg && returnDueDate.invalid && (returnDueDate.dirty || returnDueDate.touched) && returnDueDate.errors['required']"
+            class="error-container d-flex align-items-center gap-4">
+            <trudi-icon icon="iconWarning"></trudi-icon>
+            <div class="error-text">Required field</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #footerModal>
+      <div class="box-footer d-flex gap-12">
+        <button
+          *ngIf="hasBackButton"
+          trudi-btn
+          variant="outlined"
+          btnType="neutral"
+          (click)="handleBack()">
+          Back
+        </button>
+        <button
+          data-e2e="next-btn"
+          (click)="onNext()"
+          trudi-btn
+          [disabled]="disabledNextButton">
+          <span class="btn-text">Next</span>
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</resizable-modal-popup>

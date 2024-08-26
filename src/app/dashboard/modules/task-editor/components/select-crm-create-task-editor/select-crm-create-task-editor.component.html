@@ -1,0 +1,30 @@
+<ng-container *ngIf="popupState === typeCreateTaskEditor.SELECT_CRM">
+  <trudi-modal
+    [visible]="popupState === typeCreateTaskEditor.SELECT_CRM"
+    [modelWidth]="624"
+    (onCancel)="onCancel()"
+    className="task-editor-popup"
+    [title]="'Create task template'"
+    subTitle=""
+    [autoFocus]="null">
+    <ng-template #footerModal>
+      <button
+        [disabled]=""
+        class="btn-next-task d-flex align-items-center gap-8"
+        (click)="handleNextCreateTaskEditor()">
+        Next
+      </button>
+    </ng-template>
+    <div
+      class="container-create-task-editor d-flex justify-content-center gap-16">
+      <ng-container *ngFor="let item of listCrmSystem">
+        <button
+          [ngClass]="{'active': crmSystemId === item.id}"
+          class="btn-create-task-editor"
+          (click)="handleActive(item.id)">
+          <img class="logo-crm" [src]="item.mediaLink" />
+        </button>
+      </ng-container>
+    </div>
+  </trudi-modal>
+</ng-container>

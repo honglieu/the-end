@@ -1,0 +1,21 @@
+<div class="popup">
+  <div class="popup__container">
+    <div class="popup__header">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        width="48"
+        height="48"
+        viewBox="0 0 18 18">
+        <path
+          id="c"
+          d="M9.891 7.83l-.21 2.562H8.319l-.21-2.561V4.86h1.782v2.97zM9 11.235c.322 0 .577.086.767.26.19.173.285.404.285.693 0 .288-.095.52-.285.693-.19.173-.445.26-.767.26s-.577-.087-.767-.26c-.19-.174-.285-.405-.285-.693 0-.29.095-.52.285-.693.19-.174.445-.26.767-.26z" />
+      </svg>
+      <div class="text">{{popupTitleText}}</div>
+    </div>
+    <div class="popup__body">{{popupBodyText}}</div>
+    <div class="popup__footer">
+      <button (click)="refreshPage()">{{popupButtonText}}</button>
+    </div>
+  </div>
+</div>

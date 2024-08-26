@@ -1,0 +1,14 @@
+.linked_task {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--fg-neutral-normal, #61646c);
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    &--button {
+      font-weight: 500;
+      color: var(--fg-brand, #28ad99);
+      cursor: pointer;
+    }
+  }
+  

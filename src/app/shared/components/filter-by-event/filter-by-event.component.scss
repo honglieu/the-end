@@ -1,0 +1,151 @@
+@import 'function';
+.calendar_title {
+  display: flex;
+  align-items: center;
+  gap: 0 4px;
+  @include fontSetup(
+    var(--fg-neutral-normal, #646464),
+    14px,
+    20px,
+    normal,
+    400
+  );
+}
+.calendar_count {
+  height: 16px;
+  display: flex;
+  padding: 0 4px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: var(--bg-brand-solid-normal, #00aa9f);
+  @include fontSetup(var(--white), 12px, 18px, normal, 600);
+}
+:host ::ng-deep {
+  .trudi-ui-btn {
+    color: var(--fg-neutral-normal, #646464);
+    gap: 0 4px !important;
+    border-radius: 6px !important;
+    justify-content: unset !important;
+
+    &:focus-visible {
+      box-shadow: none !important;
+      border: 2px solid var(--brand-500) !important;
+      border-radius: 6px !important;
+    }
+  }
+}
+
+::ng-deep .calendar_filter-event{
+  margin: 0px;
+  .trudi-select-dropdown__header {
+    display: none;
+}
+}
+
+.count-container {
+  height: 32px;
+  border-bottom: 1px solid var(--border-neutral-light, #f2f5f7);
+  .count-wrapper {
+    height: 32px;
+    justify-content: space-between;
+    padding: 12px;
+    .count-text {
+      @include fontSetup(
+        var(--fg-neutral-weaker, #999),
+        12px,
+        16px,
+        normal,
+        400
+      );
+    }
+    .clear-btn {
+      border: none;
+      padding: 0;
+      @include fontSetup(
+        var(--fg-neutral-stronger, #3d3d3d),
+        12px,
+        16px,
+        normal,
+        500
+      );
+      background-color: var(--white);
+    }
+  }
+}
+
+.calendar_filter--footer {
+  padding: 0 12px 12px 12px;
+  ::ng-deep .ant-picker-not-inline .date-input-wrapper {
+    column-gap: 12px;
+  }
+}
+
+.calendar_filter--line {
+  width: 6.468px;
+  min-width: 6.468px;
+  height: 0.9px;
+  background-color: var(--fg-neutral-stronger, #3d3d3d);
+}
+
+.calendar_filter--title {
+  margin-bottom: 8px;
+  @include fontSetup(
+    var(--fg-neutral-normal, #646464),
+    12px,
+    16px,
+    normal,
+    400
+  );
+}
+
+.calendar_filter--date {
+  margin-top: 6px;
+  align-items: center;
+  gap: 0 11px;
+  display: flex;
+}
+
+::ng-deep
+  .calendar_filter-event
+  .trudi-select-dropdown-container
+  .trudi-select-dropdown-scroll
+  .trudi-select-dropdown-item__group-title {
+  color: var(--fg-neutral-normal, #646464) !important;
+  font-weight: 400 !important;
+  text-transform: lowercase !important;
+  background-color: white !important;
+  padding: 12px 0 0 12px !important;
+}
+
+::ng-deep
+  .calendar_filter-event
+  .trudi-select-dropdown-container
+  .trudi-select-dropdown-scroll {
+  max-height: 270px !important;
+  max-width: 282px !important;
+  overflow: hidden !important;
+  &:hover {
+    overflow: auto !important;
+  }
+}
+
+::ng-deep
+  .calendar_filter-event
+  .trudi-select-dropdown-container
+  .trudi-select-dropdown-scroll
+  .trudi-select-dropdown-item {
+  padding: 12px 24px !important;
+}
+
+::ng-deep
+  .calendar_filter-event
+  .trudi-select-dropdown-container
+  .trudi-select-dropdown-scroll
+  .trudi-select-dropdown-item__group-title:first-letter {
+  text-transform: uppercase;
+}
+
+::ng-deep .calendar_filter-date--picker .off {
+  display: none;
+}

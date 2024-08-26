@@ -1,0 +1,24 @@
+<div class="sms-title">SMS number</div>
+
+<ng-container *ngIf="isLoading; else phoneNumberTpl">
+  <nz-skeleton
+    class="voicemail-number-skeleton"
+    [nzParagraph]="{ rows: 1 }"
+    [nzTitle]="false"
+    [nzActive]="true"></nz-skeleton>
+</ng-container>
+
+<ng-template #phoneNumberTpl>
+  <div class="sms-number">
+    <div>{{phoneNumber | phoneNumberFormat}}</div>
+    <button
+      trudi-btn
+      btnType="neutral"
+      variant="tonal"
+      size="extra-small"
+      shape="circle"
+      (click)="copyToClipboard()">
+      <trudi-icon icon="iconCopy"></trudi-icon>
+    </button>
+  </div>
+</ng-template>

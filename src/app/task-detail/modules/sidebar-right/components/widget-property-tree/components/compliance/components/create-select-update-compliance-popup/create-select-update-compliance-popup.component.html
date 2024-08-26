@@ -1,0 +1,76 @@
+<resizable-modal-popup
+  [modalId]="buttonKey"
+  *ngIf="typePopup"
+  [show]="typePopup"
+  [showTitle]="true"
+  [iconName]="'ptLogo'"
+  [styleIcon]="null"
+  [classIconTitle]="null"
+  [title]="typePopup === selectOpenPopup.CREATE_COMPLIANCE ? 'Compliance item'
+  :'Update compliance register'"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [footerTemplate]="footerModal"
+  (onCancel)="closePopup()"
+  [isCustomMoveable]="true"
+  class="create-update-compliance-popup">
+  <ng-container>
+    <div class="body-popup">
+      <ng-container
+        *ngIf="typePopup === selectOpenPopup.CREATE_COMPLIANCE; then newCompliance  else updateCompliance">
+      </ng-container>
+      <ng-template #newCompliance>
+        <div class="radio-button">
+          <trudi-radio-button
+            [options]="radioOptions"
+            (ngModelChange)="changeRadioOption($event)"
+            [(ngModel)]="selectedRadio"></trudi-radio-button>
+        </div>
+      </ng-template>
+      <ng-template #updateCompliance>
+        <div class="select-label">Select compliance</div>
+      </ng-template>
+      <div
+        class="select-option"
+        *ngIf="selectedRadio === selectRadio.SELECT_EXISTING || typePopup === selectOpenPopup.UPDATE_COMPLIANCE"
+        [style.margin-left.px]="typePopup === selectOpenPopup.CREATE_COMPLIANCE? 32 : 0">
+        <ng-select
+          class="share-ng-select"
+          notFoundText="No results found"
+          [ngClass]="{'input-error-select': isNullSelect}"
+          [(ngModel)]="selectedComplianceItem"
+          [items]="complianceItems"
+          [virtualScroll]="false"
+          [clearable]="true"
+          (blur)="onBlurSelectOption()"
+          (focus)="onFocusSelectOption()"
+          (change)="changeSelectOption($event)"
+          [editableSearchTerm]="true">
+          <ng-template ng-option-tmp let-item="item">
+            <span class="item-text-selected"
+              >{{typePopup === selectOpenPopup.CREATE_COMPLIANCE ? item.name :
+              item.complianceCategory?.name}}</span
+            >
+            <trudi-icon
+              *ngIf="item?.id === selectedComplianceItem?.id"
+              [icon]="'checkSuccess'"
+              [style.width.px]="20"></trudi-icon>
+          </ng-template>
+        </ng-select>
+        <div *ngIf="isNullSelect" class="required-field">
+          <trudi-icon icon="iconWarning"></trudi-icon>
+          <span class="required-text">Required field</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #footerModal>
+    <div class="footer-popup">
+      <button trudi-btn (click)="onNext()">Next</button>
+    </div>
+  </ng-template>
+</resizable-modal-popup>

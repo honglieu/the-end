@@ -1,0 +1,272 @@
+<!-- SKELETON START -->
+<ng-container *ngIf="loadingService.multiLoading$ | async; else content">
+  <div class="wrapper-detail-skeleton">
+    <div class="detail-user-header">
+      <div class="detail-user">
+        <div class="ava-user">
+          <nz-skeleton-element
+            nzType="avatar"
+            [nzActive]="true"
+            [nzSize]="48"
+            [style.width.px]="72"></nz-skeleton-element>
+        </div>
+        <div class="info-user">
+          <nz-skeleton
+            [nzActive]="true"
+            [nzParagraph]="{ rows: 1, width: '200px' }"></nz-skeleton>
+        </div>
+      </div>
+      <div class="close-btn" (click)="isOpenModal(false)">
+        <trudi-icon icon="closeModal"></trudi-icon>
+      </div>
+    </div>
+    <hr />
+    <div class="detail-user-content d-flex">
+      <div class="detail-user-content-info skeleton-container">
+        <ng-container *ngFor="let property of [].constructor(3);">
+          <div class="info-user info-user-skeleton">
+            <nz-skeleton
+              [nzActive]="true"
+              [nzParagraph]="{ rows: 3 }"></nz-skeleton>
+          </div>
+        </ng-container>
+      </div>
+      <hr />
+      <div class="property-file skeleton-container">
+        <nz-skeleton
+          [nzActive]="true"
+          [nzTitle]="false"
+          [nzParagraph]="{ rows: 1, width: '120px' }"></nz-skeleton>
+        <div
+          class="item justify-content-between align-center files-item"
+          *ngFor="let item of [].constructor(5);">
+          <div class="item-thumbnail rounded-corners">
+            <nz-skeleton-element
+              nzType="avatar"
+              [nzActive]="true"
+              [nzSize]="32"></nz-skeleton-element>
+          </div>
+          <div class="item-detail-property d-flex flex-dir-column gap-4">
+            <nz-skeleton
+              [nzTitle]="false"
+              [nzActive]="true"
+              [nzParagraph]="{ rows: 1, width: '180px' }"></nz-skeleton>
+            <nz-skeleton
+              [nzTitle]="false"
+              [nzActive]="true"
+              [nzParagraph]="{ rows: 1, width: '60px' }"></nz-skeleton>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<!-- SKELETON END -->
+
+<ng-template #content>
+  <div class="detail-user-wrapper">
+    <div class="detail-user-header">
+      <div class="detail-user" *ngFor="let user of userDetail">
+        <div class="ava-user">
+          <div class="default-stat-icon">
+            <label>{{initials}}</label>
+          </div>
+        </div>
+        <div class="info-user">
+          <!-- <div class="name-user">{{user.firstName}} {{user.lastName}}</div> -->
+          <div class="contact-user">
+            <div class="email-user">{{user.email}}</div>
+            <span
+              class="small-circle"
+              *ngIf="arrMobileNumber?.length && user.email"></span>
+            <div
+              class="phone-user"
+              *ngFor="let item of arrMobileNumber; let isLast=last">
+              <span class="span-mobile">{{ item | phoneNumberFormat}}</span>
+              <ng-container *ngIf="!isLast">
+                <span class="ml-5">/</span>
+              </ng-container>
+            </div>
+          </div>
+          <div class="first-active-date">{{user.firstActive}}</div>
+        </div>
+      </div>
+      <button
+        trudi-btn
+        variant="text"
+        class="close-modal-btn"
+        (click)="isOpenModal(false)">
+        <trudi-icon icon="closeBtn"></trudi-icon>
+      </button>
+    </div>
+    <hr />
+    <div class="detail-user-content d-flex">
+      <div class="detail-user-content-info col-left">
+        <ng-container *ngFor="let property of properties; let i = index">
+          <div
+            #infoUser
+            [tabIndex]="0"
+            class="info-user overflow-hidden"
+            (keyup.enter)="infoUser.click()"
+            (click)="handleGetFileProperty(property)"
+            [ngClass]="{
+              'info-landlord': property?.type === eUserPropertyType.LANDLORD,
+              'info-tenant': property?.type === eUserPropertyType.TENANT || property?.type === 'TENANT (UNIT)' || property?.type === 'TENANT (PROPERTY)',
+              'active': property === selectedProperty
+              }">
+            <div class="info-user-header d-flex justify-content-between">
+              <div class="info-username">
+                <p class="name break-word">
+                  {{property?.firstName}} {{property?.lastName}}
+                </p>
+                <p class="role firstLetterUppercase">
+                  <ng-container *ngIf="property?.isPrimary">
+                    Primary
+                  </ng-container>
+                  <ng-container>
+                    {{property?.type === eUserPropertyType.LANDLORD ?
+                    eUserPropertyType.OWNER : property?.type | titlecase}}
+                  </ng-container>
+                </p>
+              </div>
+              <text-badge
+                [text]="property?.userPropertyStatus"
+                [badgeForPropertyUser]="true"
+                [type]="property?.type === eUserPropertyType.LANDLORD ? 'OWNERSHIP' : 'TENANCY'"></text-badge>
+            </div>
+            <div class="info-user-content">
+              <ul class="list-info">
+                <li class="display-content">
+                  <div class="align-content">
+                    <trudi-icon
+                      [icon]="property?.type === eUserPropertyType.LANDLORD ? 'addressTenantUserLandlord' : 'addressTenantUserProfile'"
+                      [style]="{ 'width.px': 14, 'height.px': 14}"></trudi-icon>
+                  </div>
+                  <div class="align-content">
+                    <span class="has-value" *ngIf="property?.streetline"
+                      >{{property?.streetline}}</span
+                    >
+                    <span *ngIf="!property?.streetline" class="no-value"
+                      >No property address</span
+                    >
+                  </div>
+                </li>
+                <li class="display-content">
+                  <div class="align-content">
+                    <trudi-icon
+                      [icon]="property?.type === eUserPropertyType.LANDLORD ? 'phoneTenantUserLandlord' : 'phoneTenantUserProfile'"
+                      [style]="{ 'width.px': 14, 'height.px': 14}"></trudi-icon>
+                  </div>
+                  <ng-container
+                    *ngIf="property.mobileNumber.length; else mobileNumber">
+                    <div class="d-flex flex-wrap">
+                      <div
+                        *ngFor="let item of property.mobileNumber; let isLast=last"
+                        class="align-content gap-4">
+                        <span class="has-value white-space-nowrap"
+                          >{{item | phoneNumberFormat: isRmEnvironment}}</span
+                        >
+                        <span *ngIf="!isLast" class="has-value">/</span>
+                      </div>
+                    </div>
+                  </ng-container>
+                  <ng-template #mobileNumber>
+                    <div class="align-content">
+                      <span class="no-value">no phone number</span>
+                    </div>
+                  </ng-template>
+                </li>
+                <li class="display-content">
+                  <div class="align-content">
+                    <trudi-icon
+                      [icon]="property?.type === eUserPropertyType.LANDLORD ? 'emailTenantUserLandlord' : 'emailTenantUserProfile'"
+                      [style]="{ 'width.px': 14, 'height.px': 14}"></trudi-icon>
+                  </div>
+                  <div class="align-content">
+                    <span *ngIf="property?.email" class="has-value"
+                      >{{property?.email}}</span
+                    >
+                    <span *ngIf="!property?.email" class="no-value"
+                      >no email address</span
+                    >
+                  </div>
+                </li>
+                <li class="display-content">
+                  <div class="align-content">
+                    <trudi-icon
+                      [icon]="property?.type === eUserPropertyType.LANDLORD ? 'timeTenantUserLandlord' : 'timeTenantUserProfile'"
+                      [style]="{ 'width.px': 14, 'height.px': 14}"></trudi-icon>
+                  </div>
+                  <div class="align-content">
+                    <ng-container [ngSwitch]="property?.inviteStatus">
+                      <span *ngSwitchCase="'ACTIVE'" class="has-value"
+                        >Last active {{property?.lastActivity | formatDate |
+                        async}}</span
+                      >
+                      <span *ngSwitchCase="'INVITED'" class="has-value"
+                        >Invited {{property?.iviteSent | formatDate |
+                        async}}</span
+                      >
+                      <span *ngSwitchCase="'UNINVITED'" class="has-value"
+                        >Uninvited</span
+                      >
+                      <span *ngSwitchCase="'OFFBOARDED'" class="has-value"
+                        >Offboarded</span
+                      >
+                    </ng-container>
+                  </div>
+                </li>
+                <li
+                  #exportConversation
+                  class="display-content margin-top-8"
+                  (click)="isShowHistory(property?.userPropertyId)">
+                  <div class="align-content">
+                    <trudi-icon icon="exportIcon"></trudi-icon>
+                  </div>
+                  <div class="align-content">
+                    <span
+                      class="export-history"
+                      (keyup.enter)="exportConversation.click()"
+                      [tabIndex]="0"
+                      >Export conversation history</span
+                    >
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <hr />
+      <div class="property-file col-right">
+        <p class="property-header">Property files</p>
+        <div
+          class="item justify-content-between align-center files-item"
+          *ngFor="let item of fileProperties; let idx = index">
+          <div class="item-thumbnail">
+            <img [src]="item.thumbnail" />
+            <div *ngIf="item.fileTypeDot === 'video'" class="play-button">
+              <img
+                class="play-icon position-center-w"
+                src="/assets/icon/play.svg"
+                alt="" />
+            </div>
+          </div>
+          <div class="item-detail-property item-detail-property-text">
+            <div class="file-name">{{item.name}}</div>
+            <div class="date-creator">
+              <span class="date-text"
+                >{{item.createdAt | formatDate | async}}</span
+              >
+            </div>
+          </div>
+          <div
+            class="item-action-button files-item-action-button"
+            (click)="filesService.downloadResource(item.mediaLink, item.name)">
+            <trudi-icon icon="downloadBg"></trudi-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

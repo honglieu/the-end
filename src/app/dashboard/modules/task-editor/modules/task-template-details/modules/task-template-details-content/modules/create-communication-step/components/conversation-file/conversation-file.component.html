@@ -1,0 +1,22 @@
+<div [formGroup]="conversationFileForm" class="conversation-wrapper">
+  <div class="d-flex justify-content-between align-items-center label-wrapper">
+    <label class="conversation-label"> Pre-screen: Select file </label>
+    <div class="required-checkbox mb-4">
+      <trudi-checkbox formControlName="isRequired" label="Required">
+      </trudi-checkbox>
+    </div>
+  </div>
+  <div class="conversation-form">
+    <div class="w-100">
+      <trudi-form-control [checkSubmit]="!isSubmittedCommunicationForm">
+        <trudi-text-field
+          [checkSubmit]="!isSubmittedCommunicationForm"
+          formControlName="file"
+          label="Title"
+          placeholder="Enter pre-screen title"
+          [maxCharacter]="100">
+        </trudi-text-field>
+      </trudi-form-control>
+    </div>
+  </div>
+</div>

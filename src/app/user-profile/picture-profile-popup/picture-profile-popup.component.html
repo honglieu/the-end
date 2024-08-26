@@ -1,0 +1,63 @@
+<div class="picture-profile-wrapper">
+  <div class="header">
+    <div class="title-text">Please edit your profile photo</div>
+
+    <div
+      data-e2e="button-close"
+      class="close-btn close-modal-btn"
+      (click)="handleCloseModal()">
+      <trudi-icon
+        [style]="{ 'width.px': 14, 'height.px': 14, color: '#646464' }"
+        icon="closeBtn"
+        class="trudi-icon"></trudi-icon>
+    </div>
+  </div>
+  <input
+    style="display: none"
+    name="uploader"
+    id="uploader"
+    #uploader
+    type="file"
+    [accept]="acceptImageType"
+    (change)="fileChangeEvent($event)" />
+  <div class="body d-flex justify-content-center">
+    <div class="picture-wrapper">
+      <div id="croppie" [hidden]="!hasAvatar">
+        <img id="profileAvatar" #profileAvatar src="" alt="profileAvatar" />
+      </div>
+      <div class="slider-wrapper d-flex align-items-center">
+        <button
+          class="minus-button"
+          (click)="handleZoomInOut(sliderType.MINUS)">
+          <trudi-icon icon="minus"></trudi-icon>
+        </button>
+        <input step="0.0001" type="range" min="0.8036" class="cr-slider" />
+        <canvas #canvas hidden></canvas>
+        <button class="plus-button" (click)="handleZoomInOut(sliderType.PLUS)">
+          <trudi-icon icon="plus"></trudi-icon>
+        </button>
+      </div>
+      <div
+        (click)="uploader.click()"
+        class="upload-button d-flex align-items-center justify-content-between">
+        <trudi-icon
+          icon="addFileImg"
+          [style]="{'width.px': 18, 'height.px': 18}"></trudi-icon>
+      </div>
+      <div class="drag-button d-flex align-items-center">
+        <trudi-icon icon="dragicon" class="drag-icon"></trudi-icon>
+        <span class="drag-text">Drag to reposition</span>
+      </div>
+    </div>
+    <div class="slider"></div>
+  </div>
+  <div class="button-wrapper d-flex justify-content-center">
+    <button
+      (click)="handleUploadPicture()"
+      trudi-btn
+      size="extra-large"
+      class="flex-1">
+      Save change
+    </button>
+  </div>
+</div>

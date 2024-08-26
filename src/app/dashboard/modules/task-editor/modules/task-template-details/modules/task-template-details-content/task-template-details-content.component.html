@@ -1,0 +1,15 @@
+<div class="task-template-details-content-wrapper">
+  <div class="task-template-details-tree-steps">
+    <ng-container *ngIf="loadingService.isLoading$ | async; else detailContent">
+      <skeleton-details-content></skeleton-details-content>
+    </ng-container>
+    <ng-template #detailContent>
+      <trudi-decision-tree
+        [dataSource]="currentTemplateTree"
+        [currentCrmLogo]="currentCrmLogo"
+        [disabled]="disabled"
+        [canEdit]="canEdit"></trudi-decision-tree>
+      <add-step-management></add-step-management>
+    </ng-template>
+  </div>
+</div>

@@ -1,0 +1,56 @@
+<div class="search-filter-skeleton-wrapper">
+  <div class="search-filter-skeleton-container d-flex flex-dir-column">
+    <div
+      class="mailbox-filter-skeleton d-flex align-items-center justify-content-center gap-20">
+      <nz-skeleton
+        class="left"
+        [nzParagraph]="false"
+        [nzActive]="true"></nz-skeleton>
+      <div class="right">
+        <nz-skeleton
+          class="w-50"
+          [nzParagraph]="false"
+          [nzActive]="true"></nz-skeleton>
+        <nz-skeleton [nzParagraph]="false" [nzActive]="true"></nz-skeleton>
+      </div>
+    </div>
+    <div class="assignee-filter-skeleton d-flex justify-content-between">
+      <div class="left w-50">
+        <nz-skeleton [nzParagraph]="false" [nzActive]="true"></nz-skeleton>
+        <nz-skeleton
+          class="w-75"
+          [nzParagraph]="false"
+          [nzActive]="true"></nz-skeleton>
+      </div>
+      <nz-skeleton
+        class="right"
+        [nzParagraph]="false"
+        [nzActive]="true"></nz-skeleton>
+    </div>
+    <div class="portfolio-filter-skeleton d-flex justify-content-between">
+      <div class="left w-75">
+        <nz-skeleton [nzParagraph]="false" [nzActive]="true"></nz-skeleton>
+        <nz-skeleton
+          class="w-50"
+          [nzParagraph]="false"
+          [nzActive]="true"></nz-skeleton>
+      </div>
+      <nz-skeleton
+        class="right"
+        [nzParagraph]="false"
+        [nzActive]="true"></nz-skeleton>
+    </div>
+    <div
+      *ngFor="let _ of [].constructor(3)"
+      class="message-filter-skeleton d-flex justify-content-between">
+      <nz-skeleton
+        class="left"
+        [nzParagraph]="false"
+        [nzActive]="true"></nz-skeleton>
+      <nz-skeleton
+        class="right"
+        [nzParagraph]="false"
+        [nzActive]="true"></nz-skeleton>
+    </div>
+  </div>
+</div>

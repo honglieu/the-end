@@ -1,0 +1,13 @@
+@import 'function';
+
+hr {
+  margin: 32px 0;
+}
+
+.marketing-email-title {
+  margin-bottom: 20px;
+  @include fontSetup(var(--gray-700), 20px, 32px, normal, 600);
+}
+.checkbox-label {
+  @include fontSetup(var(--gray-800), 1.2rem, 2rem, normal, 500);
+}

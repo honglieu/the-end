@@ -1,0 +1,52 @@
+<div class="popup-container">
+  <div class="header" [style.border]="type === popupType.warn &&  'none'">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex">
+        <div class="header-icon">
+          <div
+            class="background-icon d-flex align-items-center justify-content-around">
+            <trudi-icon
+              svgClass="size-48"
+              [icon]="popupIcons[type]"></trudi-icon>
+          </div>
+        </div>
+        <div class="header-title d-flex align-items-center">
+          <div class="text-title-content d-flex">
+            <span class="header-title-text"> {{title}} </span>
+            <span class="header-subtitle-text"> {{subTitle}} </span>
+          </div>
+        </div>
+      </div>
+
+      <trudi-icon
+        class="close-modal-btn"
+        data-e2e="button-close"
+        *ngIf="!hasCancelButton"
+        icon="closeBtn"
+        (click)="handleClosePopup(true)"></trudi-icon>
+    </div>
+  </div>
+
+  <div>
+    <ng-content select=".popup-body-content"></ng-content>
+  </div>
+
+  <div class="button-control">
+    <div class="btn-wrapper d-flex">
+      <button
+        *ngIf="hasCancelButton || hasBackButton"
+        class="trudi-btn trudi-btn-tertiary trudi-btn-large"
+        (click)="handleClosePopup()">
+        {{cancelBtnText}}
+      </button>
+
+      <button
+        class="trudi-btn trudi-btn-large"
+        [style.background]="type === popupType.infor ? '#00AA9F' : '#E1024F'"
+        [disabled]="disabledConfirmButton"
+        (click)="handleConfirm()">
+        {{confirmBtnText}}
+      </button>
+    </div>
+  </div>
+</div>

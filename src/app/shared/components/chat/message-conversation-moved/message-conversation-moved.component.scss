@@ -1,0 +1,7 @@
+@import 'function';
+
+.message-conversation-moved {
+  width: fit-content;
+  margin: 16px auto;
+  @include fontSetup(var(--gray-500), 12px, 20px, normal, 500);
+}

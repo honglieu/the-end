@@ -1,0 +1,39 @@
+<div
+  class="d-flex align-items-center"
+  *ngIf="selectedItem && dropdownList.length">
+  <button
+    [disabled]="disabled"
+    class="trudi-btn trudi-btn-large trudi-btn-primary d-flex gap-4 align-items-center custom-trudi-btn"
+    (click)="handleClickBtn()">
+    <img
+      class="icon-20"
+      [src]="dropdownList[selectedItem.id].buttonIcon"
+      alt="action-icon" />
+    {{ dropdownList[selectedItem.id].action }}
+  </button>
+  <button
+    [disabled]="disabled"
+    class="open-dropdown-icon"
+    [dropdownTriggerFor]="dropdownMenu">
+    <trudi-icon icon="whiteChevronDown"></trudi-icon>
+  </button>
+</div>
+
+<dropdown-menu #dropdownMenu>
+  <div
+    class="dropdown-container"
+    [ngStyle]="{'top.px': dropdownList.length < 3 ? -138 : -182}">
+    <div
+      class="item d-flex align-items-center gap-8"
+      *ngFor="let item of dropdownList"
+      (click)="onGetSelectedItem(item)"
+      [ngClass]="{'selected': item.id === selectedItem?.id}">
+      <img class="item-icon" [src]="item.icon" />
+      <p class="item-text">{{item.action}}</p>
+      <trudi-icon
+        class="item-checked-icon"
+        icon="check"
+        *ngIf="item.id === selectedItem?.id"></trudi-icon>
+    </div>
+  </div>
+</dropdown-menu>

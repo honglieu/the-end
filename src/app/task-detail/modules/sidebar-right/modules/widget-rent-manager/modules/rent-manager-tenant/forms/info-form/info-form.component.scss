@@ -1,0 +1,108 @@
+@import 'function';
+
+::ng-deep {
+  .skeleton {
+    &-wrapper {
+      .skeleton-label {
+        width: 10%;
+        h3.ant-skeleton-title {
+          height: 16px;
+          margin: 0;
+        }
+      }
+    }
+    &-input {
+      width: 100%;
+    }
+    &-section-name {
+      width: 20%;
+      h3.ant-skeleton-title {
+        height: 20px;
+        margin: 0;
+      }
+    }
+    &-checkbox {
+      width: 100%;
+      .checkbox-btn {
+        width: 15px;
+        border-radius: 50%;
+        h3.ant-skeleton-title {
+          margin: 0;
+        }
+      }
+    }
+    &-tab {
+      width: 100%;
+      &-item {
+        width: 40%;
+        h3.ant-skeleton-title {
+          height: 32px;
+          margin: 0;
+        }
+      }
+    }
+    &-bg {
+      width: 100%;
+      border-radius: 8px;
+      height: 40px;
+      background: var(--bg-neutral-tonal-normal);
+      padding: 12px;
+      margin-top: 6px !important;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      h3.ant-skeleton-title {
+        margin: 0;
+      }
+      .content {
+        h3.ant-skeleton-title {
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+
+.tenant-info-wrapper {
+  width: 100%;
+}
+
+.section-wrapper {
+  width: 50%;
+  padding: 16px;
+  gap: 8px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border: 1px solid var(--border-neutral-dark);
+  .title {
+    @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 600);
+  }
+}
+
+.addresses-section {
+  width: calc(50% - 12px);
+
+  ::ng-deep addresses-tab {
+    width: 100%;
+
+    .tenant-tab-group-header {
+      padding: 0 0 16px 2px;
+    }
+
+    .tenant-tab-group-header-content {
+      padding: 0;
+      overflow: unset;
+    }
+
+    trudi-checkbox label {
+      margin-top: 12px !important;
+      width: fit-content;
+    }
+  }
+}
+
+.w-100 {
+  width: 100%;
+}

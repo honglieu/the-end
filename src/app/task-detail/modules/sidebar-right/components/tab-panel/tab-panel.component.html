@@ -1,0 +1,99 @@
+<app-modal-popup
+  *ngIf="isShowQuitConfirmModal"
+  [show]="isShowQuitConfirmModal"
+  [appendBody]="true"
+  [position]="popupModalPosition.center"
+  [specificWidth]="510">
+  <app-quit-confirm
+    (isCloseModal)="showQuitConfirm($event)"
+    (delete)="deleteTask($event)"></app-quit-confirm>
+</app-modal-popup>
+
+<div class="tab-side-bar" id="tab-side-bar">
+  <div *ngIf="loadingService.isLoading$ | push">
+    <div class="files-list-wrapper-animation pd-12 mt-20">
+      <div
+        class="justify-content-between align-center files-item sleleton-item">
+        <div class="item-detail files-item-detail">
+          <div class="file-name">
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="w-50"></nz-skeleton>
+          </div>
+        </div>
+        <div class="item-detail files-item-detail">
+          <div class="file-name sleleton-title">
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="w-50"></nz-skeleton>
+          </div>
+        </div>
+        <div class="item-thumbnail">
+          <nz-skeleton-element
+            nzType="avatar"
+            [nzActive]="true"></nz-skeleton-element>
+        </div>
+      </div>
+      <div
+        class="justify-content-between align-center files-item"
+        *ngFor="let _ of [].constructor(2); let i = index">
+        <div>
+          <nz-skeleton-element
+            class="skeleton-circle"
+            nzType="avatar"
+            [nzActive]="true"
+            [nzSize]="small"></nz-skeleton-element>
+        </div>
+        <div class="item-detail files-item-detail">
+          <div class="skeleton-container">
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="w-50"></nz-skeleton>
+          </div>
+          <div class="skeleton-container">
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="w-100"></nz-skeleton>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="side-bar-content relative">
+    <app-tabs
+      [hidden]="(loadingService.isLoading$ | push)"
+      [isReadConversation]="isReadConversation"
+      [checkConversation]="true">
+      <ng-container>
+        <app-tab
+          tabTitle="{{controlPanelTab.conversations}}"
+          [isActive]="(controlPanelService.currentTab === controlPanelTab.conversations)">
+          <div class="tab-content padding-file auto-hide-scroll">
+            <app-conversation
+              (isReadEvent)="receiveData($event)"></app-conversation>
+          </div>
+        </app-tab>
+      </ng-container>
+      <app-tab
+        tabTitle="{{controlPanelTab.files}}"
+        [isActive]="(controlPanelService.currentTab === controlPanelTab.files)">
+        <div class="tab-content padding-file auto-hide-scroll">
+          <file-panel
+            *ngIf="controlPanelService.currentTab === controlPanelTab.files"
+            [class.d-none]="!(controlPanelService.currentTab === controlPanelTab.files)">
+          </file-panel>
+        </div>
+      </app-tab>
+    </app-tabs>
+  </div>
+</div>
+
+<trudi-send-msg
+  *ngIf="isShowTrudiSendMsg"
+  [configs]="createNewConversationConfigs"
+  (onQuit)="isShowTrudiSendMsg = false"
+  (onSendMsg)="onSendMsg($event)"></trudi-send-msg>

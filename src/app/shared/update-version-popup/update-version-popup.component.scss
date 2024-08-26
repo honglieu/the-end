@@ -1,0 +1,52 @@
+@import 'function';
+::ng-deep {
+  .update-version {
+    .ant-modal-content {
+      border-bottom: 2px;
+      .ant-modal-header {
+        border-bottom: none !important;
+        padding: 40px 0px 0px 40px !important;
+      }
+    }
+
+    .ant-modal-body {
+      padding: 25px 40px 40px 40px !important;
+    }
+    .container {
+      padding: 0px;
+      margin: 0px;
+      p {
+        margin: 0 0 25px;
+      }
+      .title {
+        @include fontSetup(var(--gray-700), 20px, 32px, normal, 600);
+      }
+      .content {
+        @include fontSetup(var(--gray-600), 16px, 24px, normal, 400);
+      }
+    }
+    .btn-app {
+      width: 456px;
+      height: 56px !important;
+      background-color: var(--gray-700);
+      &.trudi-ui-btn-filled-primary {
+        box-shadow: none;
+        background-color: var(--gray-700);
+        &:hover {
+          background-color: var(--gray-700);
+          opacity: 0.8;
+        }
+      }
+      &:hover {
+        background-color: var(--gray-700);
+        opacity: 0.8;
+      }
+      span {
+        @include fontSetup(var(--white), 16px, 16px, normal, 400);
+      }
+      .app-store {
+        @include fontSetup(var(--white), 18px, 16px, normal, 600);
+      }
+    }
+  }
+}

@@ -1,0 +1,58 @@
+<trudi-modal
+  *ngIf="visible"
+  [(visible)]="visible"
+  (onCancel)="onClose()"
+  [autoFocus]="null"
+  [title]="headerText"
+  subTitle="">
+  <div class="layout-box">
+    <div class="box-body">
+      <div class="supplier-conducting-container">
+        <div class="supplier-conducting-list">
+          <ng-container *ngIf="supplierList?.length; else emptySup">
+            <div
+              class="supplier-conducting-item"
+              *ngFor="let supplier of supplierList; let i = index">
+              <td-checkbox
+                class="d-flex align-items-center"
+                [isChecked]="supplier.checked"
+                [label]="(supplier.firstName || '') + ' ' + (supplier.lastName || '')"
+                (tdCheckboxChanged)="onCheckboxChange($event, i)"
+                [customCheckbox]="{ checked: 'ownershipCheck',
+																		uncheck: 'selectPeopleUncheck'}"
+                [divider]="i !== supplierList.length - 1"
+                [attr.data-e2e]="'item-supplier-list'"
+                [size]="24">
+              </td-checkbox>
+            </div>
+          </ng-container>
+          <ng-template #emptySup>
+            <div
+              data-e2e="no-supplier-text"
+              class="supplier-conducting-empty text-center">
+              No suppliers found.
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+    <ng-template #footerModal>
+      <div class="box-footer gap-12">
+        <button
+          *ngIf="hasBackBtn"
+          data-e2e="next-btn"
+          (click)="handleBack()"
+          class="trudi-btn trudi-btn-large trudi-btn-tertiary">
+          <span class="btn-text">Back</span>
+        </button>
+        <button
+          data-e2e="next-btn"
+          (click)="onNext()"
+          class="trudi-btn trudi-btn-large trudi-btn-primary"
+          [ngClass]="{'unclick': disabledNextButton}">
+          <span class="btn-text">Next</span>
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</trudi-modal>

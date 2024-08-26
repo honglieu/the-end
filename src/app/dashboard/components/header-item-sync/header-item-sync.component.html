@@ -1,0 +1,121 @@
+<div *ngIf="firstLoadingStatus; else sync" class="sidebar-item-skeleton">
+  <nz-skeleton-element
+    nzType="avatar"
+    [nzActive]="true"
+    [nzSize]="'base'"
+    [nzShape]="'circle'">
+  </nz-skeleton-element>
+</div>
+<ng-template #sync class="wrapper-sync">
+  <header-item
+    cdkOverlayOrigin
+    #trigger="cdkOverlayOrigin"
+    (click)="onFocusSync()"
+    *ngIf="iconName && className && title"
+    (keydown.enter)="onFocusSync()"
+    [iconName]="iconName"
+    [className]="className"
+    nz-tooltip
+    nzTooltipPlacement="bottom"
+    [nzTooltipTitle]="'Sync'"
+    [isSelected]="isDropdownSync"
+    class="trudi-btn trudi-btn-tertiary trudi-btn-medium trudi-btn-medium-circle no-pointer-event"></header-item>
+</ng-template>
+<ng-template
+  cdkConnectedOverlay
+  [cdkConnectedOverlayOrigin]="trigger"
+  [cdkConnectedOverlayOpen]="isDropdownSync"
+  (overlayOutsideClick)="overlayOutsideClick($event)">
+  <ng-container *ngIf="subscriptionsList?.length > 1; else onlySync">
+    <div class="header-sync-container">
+      <div class="box-header d-flex flex-dir-column gap-4 pd-16">
+        <trudi-icon
+          [icon]="isRmEnvironment ? 'rentManager': 'propertyTreeLogo'"></trudi-icon>
+      </div>
+      <div
+        class="header-list-sync-multiple"
+        *ngFor="let item of subscriptionsList; let i = index">
+        <div class="subscription-sync">
+          <div class="d-flex gap-16 justify-content-between">
+            <div class="subscription-sync-name">{{item?.subscriptionName}}</div>
+            <button
+              class="btn-mul-sync d-flex gap-4 align-items-center"
+              [appE2E]="EActionSyncType.SYNC_MULTIPLE"
+              (click)="onSync(item?.agencyId)"
+              [ngClass]="{'failed': item?.lastStatusSync === StatusSync.FAIL, 'completed': item?.lastStatusSync === StatusSync.COMPLETE, 'syncing': [StatusSync.PENDING, StatusSync.INPROGRESS].includes(item?.lastStatusSync), 'disabled': item?.disabled}"
+              [disabled]="item?.disabled">
+              <trudi-icon
+                [icon]="item?.iconName"
+                class="no-pointer-event"
+                [className]="item?.className"
+                [svgClass]="[StatusSync.FAIL, StatusSync.PENDING, StatusSync.INPROGRESS].includes(item?.lastStatusSync) ? 'size-20' : 'size-16'"></trudi-icon>
+              <div class="sync-name-item no-pointer-event">
+                {{item?.lastStatusSync === StatusSync.FAIL ? 'Try again':
+                item?.lastStatusSync === null ? 'Sync' : ''}}
+              </div>
+            </button>
+          </div>
+          <div
+            *ngIf="item?.lastTimeSync &&(![StatusSync.FAIL, StatusSync.PENDING, StatusSync.INPROGRESS].includes(item?.lastStatusSync))"
+            class="subscription-sync-lastSync">
+            <span class="fW-600">Last sync:</span>
+            {{item?.lastTimeSyncFormatted}}
+          </div>
+          <div
+            *ngIf="item?.lastStatusSync === StatusSync.FAIL"
+            class="text-sync-failed fontW-400">
+            Failed to sync
+          </div>
+          <div
+            *ngIf="[StatusSync.PENDING, StatusSync.INPROGRESS].includes(item?.lastStatusSync)"
+            class="subscription-sync-lastSync completed">
+            Syncing
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #onlySync>
+    <div class="header-sync-container pd-16 gap-16">
+      <trudi-icon
+        [icon]="isRmEnvironment ? 'rentManager': 'propertyTreeLogo'"></trudi-icon>
+      <div class="header-list-sync only-sync">
+        <div
+          class="time-sync"
+          *ngIf="[FlagTypeSync.SYNCING, FlagTypeSync.SYNC_ABLE, FlagTypeSync.SYNC_SUCCESS].includes(typeSync) && lastTimeSyncCompleteFormatted">
+          <span class="fW-600">Last sync time:</span>
+          {{lastTimeSyncCompleteFormatted}}
+        </div>
+        <div
+          *ngIf="typeSync === FlagTypeSync.SYNC_FAIL"
+          class="text-sync-failed">
+          Failed to sync
+        </div>
+        <button
+          *ngIf="[FlagTypeSync.SYNCING, FlagTypeSync.SYNC_ABLE, FlagTypeSync.SYNC_FAIL].includes(typeSync)"
+          class="d-flex gap-8 align-items-center btn-sync"
+          [disabled]="typeSync === FlagTypeSync.SYNCING || !subscriptionsList?.length"
+          [appE2E]="EActionSyncType.SYNC_SINGLE"
+          [ngClass]="{'disabled': typeSync === FlagTypeSync.SYNCING, 'bg-danger': typeSync === FlagTypeSync.SYNC_FAIL}"
+          (click)="onSync(subscriptionsList[0]?.agencyId)"
+          trudi-btn
+          nz-tooltip
+          [nzTooltipTitle]="'Please select portfolio to start syncing'"
+          [nzTooltipOverlayStyle]="{ 'max-width': '152px' }"
+          [nzTooltipTrigger]="!subscriptionsList?.length ? 'hover' : null"
+          nzTooltipPlacement="right">
+          <trudi-icon
+            class="no-pointer-event"
+            [icon]="'iconSyncWhite'"
+            svgClass="size-20"></trudi-icon>
+          {{typeSync === FlagTypeSync.SYNC_FAIL ? 'Try again' : typeSync ===
+          FlagTypeSync.SYNCING ? 'Syncing' : 'Sync'}}
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</ng-template>
+<!-- fake load svg -->
+<ng-container *ngFor="let icon of iconsSync">
+  <trudi-icon class="d-none" [icon]="icon"> </trudi-icon>
+</ng-container>

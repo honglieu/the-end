@@ -1,0 +1,72 @@
+<div id="emergency-contacts">
+  <ng-container *ngIf="!isLoading; else skeletonTemplate">
+    <div *ngIf="readonly" class="warning-notice">
+      <trudi-icon icon="circleInfoTooltip" svgClass="size-12"></trudi-icon>
+      <div class="white-space-nowrap notice-text">
+        You need to be an account administrator to edit this page.
+      </div>
+    </div>
+    <div class="emergency-contacts-content">
+      <default-emergency-contacts
+        [readonly]="readonly"
+        [suppliersList]="suppliersList"
+        [typesList]="typesList"></default-emergency-contacts>
+      <custom-emergency-contacts
+        [readonly]="readonly"
+        [suppliersList]="suppliersList"
+        [typesList]="typesList"
+        [isRMEnvironment]="isRMEnvironment">
+      </custom-emergency-contacts>
+    </div>
+  </ng-container>
+</div>
+
+<ng-template #skeletonTemplate>
+  <div class="d-flex flex-dir-column gap-40">
+    <div *rxFor="let _ of [].constructor(2)">
+      <nz-skeleton
+        class="emergency-contacts-title"
+        [nzParagraph]="{ rows: 1 }"
+        [nzTitle]="false"
+        [nzActive]="true"></nz-skeleton>
+      <nz-skeleton
+        class="emergency-contacts-subtitle"
+        [nzParagraph]="{ rows: 1 }"
+        [nzTitle]="false"
+        [nzActive]="true"></nz-skeleton>
+      <nz-table
+        class="emergency-contacts-table emergency-contacts-table-skeleton"
+        nzOuterBordered
+        [nzShowPagination]="false">
+        <thead>
+          <tr>
+            <th nzWidth="240px">&nbsp;</th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            [class.last-item]="last"
+            *rxFor="let _ of [].constructor(2); let last = last">
+            <td>
+              <nz-skeleton
+                [nzParagraph]="{ rows: 1 }"
+                [nzTitle]="false"
+                [nzActive]="true"></nz-skeleton>
+            </td>
+            <td>
+              <div class="d-flex align-items-center">
+                <ng-container *rxFor="let _ of [].constructor(4)">
+                  <nz-skeleton
+                    [nzParagraph]="{ rows: 1 }"
+                    [nzTitle]="false"
+                    [nzActive]="true"></nz-skeleton
+                ></ng-container>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </nz-table>
+    </div>
+  </div>
+</ng-template>

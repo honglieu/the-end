@@ -1,0 +1,22 @@
+<ng-container>
+  <div
+    class="mail-box-list"
+    id="mail-box-list"
+    cdkDropList
+    (cdkDropListDropped)="drop($event)">
+    @for (item of listMailBoxs; track item.id; let i = $index; let last = $last)
+    {
+    <span style="display: none"></span>
+    <div cdkDrag (cdkDragStarted)="handleStartDrag()">
+      <mailbox-item
+        [item]="item"
+        [isUnderItemOpen]="listMailBoxs[(i+1 > listMailBoxs.length) ? listMailBoxs.length : i+1]?.isOpen"
+        [unreadList]="unreadList"
+        [isLastItem]="last"
+        (expandMailbox)="handleExpandMailbox($event)"
+        (selectMailbox)="handleSelectMailboxActive($event)"></mailbox-item>
+      <div *cdkDragPlaceholder class="mailbox-place-holder"></div>
+    </div>
+    }
+  </div>
+</ng-container>

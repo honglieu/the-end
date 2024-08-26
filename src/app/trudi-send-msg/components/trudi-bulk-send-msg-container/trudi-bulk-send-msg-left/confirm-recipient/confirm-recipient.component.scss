@@ -1,0 +1,453 @@
+@import 'function';
+
+:host {
+  .confirm-recipient {
+    position: relative;
+    .recipient-list-text-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 10px;
+
+      .recipient-list-text {
+        padding: 12px 8px;
+        border-radius: 8px;
+        @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+        background-color: var(--bg-brand-tonal-stronger);
+
+        ::ng-deep trudi-select-receiver-preview {
+          .receivers-info-wrapper {
+            .separate-el,
+            .number-more {
+              color: var(--fg-neutral-stronger, #1f242f);
+              font-weight: 500;
+            }
+          }
+        }
+      }
+    }
+
+    .no-recipients {
+      @include fontSetup(var(--fg-neutral-weaker), 14px, 20px, italic, 400);
+    }
+
+    .recipient-edit {
+      cursor: pointer;
+      @include fontSetup(var(--fg-brand), 14px, 20px, normal, 500);
+
+      ::ng-deep trudi-icon svg-icon svg path {
+        fill: var(--fg-brand);
+      }
+    }
+  }
+  .confirm-recipient-list-skeleton {
+    background-color: var(--bg-neutral-tonal-normal);
+  }
+
+  ::ng-deep {
+    .confirm-recipient-list-skeleton {
+      nz-skeleton {
+        .ant-skeleton-content {
+          .ant-skeleton-paragraph {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+    .ng-dropdown-panel {
+      margin-top: 5px;
+
+      .ng-dropdown-header {
+        border-bottom: 1px solid var(--border-neutral-light);
+        padding: 0;
+      }
+
+      .ng-option,
+      .ng-select-container {
+        .select-item {
+          &__info {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            ::ng-deep app-circle-avatar {
+              .img-circle {
+                margin: 2px 0;
+
+                label,
+                div {
+                  font-size: 60% !important;
+                }
+
+                &.supplier trudi-icon svg {
+                  width: 8px !important;
+                  height: 8px !important;
+                }
+              }
+            }
+
+            @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+
+            div {
+              margin-bottom: 8px;
+
+              &:last-child {
+                margin-bottom: 0;
+              }
+            }
+
+            .select-item {
+              &__title {
+                @include fontSetup(
+                  var(--fg-neutral-stronger),
+                  12px,
+                  16px,
+                  normal,
+                  500
+                );
+
+                &.item-checked {
+                  color: var(--gray-700);
+                }
+
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 28%;
+              }
+
+              &__email-wrapper {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 28%;
+              }
+
+              &__email {
+                @include fontSetup(
+                  var(--fg-neutral-normal),
+                  12px,
+                  16px,
+                  normal,
+                  400
+                );
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 100%;
+              }
+
+              &__street-wrapper {
+                trudi-icon svg {
+                  color: var(--fg-neutral-normal);
+
+                  path {
+                    fill: var(--fg-neutral-normal) !important;
+                  }
+                }
+
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                // max-width: 28%;
+                flex: 1;
+
+                &___title {
+                  @include fontSetup(
+                    var(--fg-neutral-normal) !important,
+                    12px,
+                    16px,
+                    normal,
+                    400
+                  );
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  max-width: 100%;
+                }
+              }
+
+              &__type {
+                @include fontSetup(
+                  var(--fg-neutral-stronger),
+                  12px,
+                  16px,
+                  normal,
+                  500
+                );
+              }
+            }
+
+            &--invalid {
+              color: var(--fg-danger);
+            }
+          }
+        }
+      }
+
+      .ng-dropdown-panel-items .ng-option:first-child {
+        border-radius: 0;
+      }
+
+      .ng-dropdown-panel-items .ng-option:not(:last-child) {
+        box-shadow: inset 0px -1px 0px var(--border-neutral-dark);
+      }
+
+      .ng-dropdown-panel-items .ng-option.ng-option-selected {
+        background-color: var(--bg-base) !important;
+      }
+
+      .ng-option:has(.disable-field) {
+        pointer-events: none !important;
+      }
+
+      .clear-btn {
+        cursor: pointer;
+        border: none;
+        padding: 0;
+
+        &[focusable]:focus-visible {
+          border-radius: 8px;
+          border: 1px solid var(--brand-500);
+          box-shadow: 0px 0px 0px 1px var(--bg-brand-tonal-strongest) !important;
+        }
+
+        @include fontSetup(
+          var(--fg-neutral-stronger, #3d3d3d),
+          12px,
+          16px,
+          normal,
+          500
+        );
+        background-color: var(--white);
+      }
+
+      .ng-option-disabled {
+        &.ng-optgroup {
+          .header-group {
+            @include fontSetup(
+              var(--fg-neutral-normal),
+              12px,
+              16px,
+              normal,
+              500
+            );
+          }
+        }
+      }
+
+      .ng-dropdown-panel-items {
+        .ng-option {
+          .highlighted {
+            background: var(--tenant-500);
+            color: inherit !important;
+            font-size: inherit !important;
+            font-weight: inherit !important;
+            text-decoration: inherit !important;
+          }
+        }
+
+        .overflow-text {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 580px;
+        }
+      }
+
+      &.ng-select-bottom {
+        border-radius: 8px !important;
+        overflow: hidden;
+      }
+
+      .border-item.ng-select
+        .ng-dropdown-panel
+        .ng-dropdown-panel-items
+        .ng-option,
+      .ng-optgroup {
+        box-shadow: unset;
+        background: var(--bg-neutral-tonal-normal, #f2f5f7);
+      }
+
+      .ng-dropdown-panel-items {
+        .ng-option-disabled {
+          font-style: italic;
+        }
+      }
+
+      .header-group {
+        @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 500);
+        background-color: var(--bg-neutral-tonal-normal);
+        padding: 4px 12px;
+      }
+
+      .select-header {
+        padding: 8px 12px;
+      }
+    }
+  }
+
+  .select-field-label {
+    margin-bottom: 6px;
+    @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 600);
+  }
+
+  .receiver-wrapper {
+    display: block;
+    padding: 8px 12px;
+  }
+
+  .recipient-error {
+    margin-bottom: 6px;
+    @include fontSetup(
+      var(--fg-danger, #e1024f) !important,
+      12px,
+      16px,
+      normal,
+      400
+    );
+  }
+
+  .invalid-contact {
+    color: var(--fg-danger, #e1024f) !important;
+  }
+
+  ::ng-deep ng-select.add-recipients .ng-select-container {
+    background-color: var(--bg-neutral-tonal-normal);
+    padding: 10px 4px !important;
+    border-radius: 8px !important;
+    overflow-y: auto;
+    border: unset;
+    align-items: flex-start;
+  }
+}
+
+.confirm-recipient {
+  position: relative;
+}
+
+.confirm-recipient-wrapper {
+  @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 400);
+
+  .confirm-recipient-list {
+    .contact-item {
+      background-color: var(--bg-neutral-tonal-normal);
+      .contact-row {
+        gap: 4px;
+        position: relative;
+
+        &.no-border-bottom {
+          border-bottom: unset;
+        }
+
+        ::ng-deep trudi-icon svg {
+          color: var(--fg-neutral-weaker);
+        }
+
+        ::ng-deep trudi-icon.invalid-contact svg {
+          color: var(--fg-danger, #e1024f) !important;
+        }
+
+        .contact-info-container {
+          .contact-index {
+            @include fontSetup(normal, 12px, 16px, normal, 500);
+            .contact-index-text {
+              border-radius: 4px;
+              padding: 2px 4px;
+              background-color: var(--bg-base);
+            }
+          }
+
+          .contact-info-content {
+            @include fontSetup(
+              var(--fg-neutral-stronger, #1f242f),
+              14px,
+              20px,
+              normal,
+              400
+            );
+
+            ::ng-deep trudi-select-receiver-preview {
+              .receivers-info-wrapper {
+                .separate-el {
+                  color: var(--fg-neutral-stronger, #1f242f);
+                }
+              }
+            }
+
+            .task-property,
+            .task-info-with-icon .task-title {
+              @include fontSetup(normal, 12px, 16px, normal, 400);
+            }
+
+            .no-property {
+              font-style: italic;
+            }
+          }
+
+          .contact-index,
+          .task-property,
+          .task-info-with-icon .task-title {
+            color: var(--fg-neutral-normal, #61646c);
+          }
+        }
+
+        .contact-email {
+          @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 400);
+        }
+
+        .extenal-email {
+          @include fontSetup(
+            var(--fg-neutral-strongest),
+            14px,
+            20px,
+            normal,
+            400
+          );
+        }
+      }
+
+      .remove-contact-icon {
+        position: absolute;
+        right: 0;
+      }
+
+      &:hover {
+        .remove-contact-icon {
+          display: flex !important;
+          justify-content: center;
+          align-items: center;
+          ::ng-deep trudi-icon svg {
+            color: var(--fg-neutral-normal);
+          }
+        }
+      }
+    }
+
+    .add-contact {
+      max-width: 123px;
+      &:focus-visible {
+        background-color: var(--bg-neutral-tonal-stronger);
+      }
+    }
+  }
+
+  ::ng-deep ng-select {
+    .ng-select-container {
+      padding: 6px 9px !important;
+      min-height: auto !important;
+    }
+    .ng-placeholder {
+      top: 5px !important;
+    }
+    .ng-spinner-loader {
+      top: 2px !important;
+    }
+  }
+}
+
+:host ::ng-deep {
+  .ng-dropdown-panel {
+    margin-top: 5px;
+  }
+}

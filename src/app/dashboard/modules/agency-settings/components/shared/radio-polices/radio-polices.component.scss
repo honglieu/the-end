@@ -1,0 +1,20 @@
+:host ::ng-deep {
+  .ant-radio-checked.ant-radio-disabled .ant-radio-inner::after {
+    background-color: var(--brand-300) !important;
+}
+  .ant-radio-checked.ant-radio-disabled .ant-radio-inner {
+    border-color: var(--brand-300) !important;
+    background-color: var(--white) !important;
+}
+  .ant-radio-disabled .ant-radio-inner::after {
+    border-color: var(--gray-200) !important;
+    background-color: var(--gray-300) !important;
+  }
+}
+:host ::ng-deep {
+  nz-radio-group {
+    label {
+      width: fit-content;
+    }
+  }
+}

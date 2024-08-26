@@ -1,0 +1,56 @@
+<trudi-step
+  [model]="model"
+  [showIconTitle]="false"
+  [hideProcessLine]="false"
+  [propertyTreeStep]="false"
+  (onProcess)="enableProcess()"
+  [buttonKey]="buttonKey"></trudi-step>
+
+<resizable-modal-popup
+  *ngIf="popupState.isPopupConditions"
+  [show]="popupState.isPopupConditions"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [title]="customControlValues.title"
+  [footerTemplate]="footerModal"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [stopPropagation]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{backgroundColor: '#FFFFFF', border: 0}"
+  (onCancel)="onClose()"
+  [isCustomMoveable]="true">
+  <ng-template #footerModal>
+    <div class="d-flex gap-12 capture-condition-for-request-approval-footer">
+      <button
+        *ngIf="hasConfirmEssential"
+        trudi-btn
+        variant="outlined"
+        btnType="neutral"
+        (click)="onBack()">
+        Back
+      </button>
+      <button trudi-btn (click)="handleNextCondition()">Next</button>
+    </div>
+  </ng-template>
+  <div class="capture-condition-for-request-approval-body">
+    <trudi-form-control>
+      <trudi-textarea
+        label="Condition"
+        [maxCharacter]="1000"
+        [formControl]="conditionsControl"
+        [rows]="3"></trudi-textarea>
+    </trudi-form-control>
+  </div>
+</resizable-modal-popup>
+
+<!-- <trudi-send-msg-v2
+  *ngIf="popupState.isTrudiSendMessage"
+  [rawMsg]="textForwardMessg"
+  [configs]="sendMessageConfigs"
+  [listOfFiles]="model?.fields?.files || []"
+  (onBack)="handleBack()"
+  (onQuit)="handlePopupState({ isTrudiSendMessage: false });"
+  (onSendMsg)="onSendMsg($event)"></trudi-send-msg-v2> -->

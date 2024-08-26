@@ -1,0 +1,13 @@
+@import 'function';
+
+.time-reminder {
+  @include fontSetup(var(--gray-500), 12px, 18px, normal, 400);
+  flex-wrap: nowrap;
+  width: 100%;
+
+  ::ng-deep {
+    trudi-badge {
+      word-break: unset;
+    }
+  }
+}

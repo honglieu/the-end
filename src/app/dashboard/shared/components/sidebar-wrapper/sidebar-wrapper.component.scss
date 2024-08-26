@@ -1,0 +1,17 @@
+@import 'function';
+
+.sidebar-wrapper {
+  height: 100%;
+
+  .left-content {
+    width: 188px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .right-content {
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}

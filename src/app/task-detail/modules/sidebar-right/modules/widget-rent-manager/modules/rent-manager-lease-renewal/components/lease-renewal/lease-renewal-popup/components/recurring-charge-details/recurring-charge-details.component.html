@@ -1,0 +1,154 @@
+<trudi-modal
+  [className]="'recurringChargePopup'"
+  [visible]="true"
+  type="default"
+  [closable]="true"
+  [modelWidth]="760"
+  (onCancel)="cancel()"
+  (onOk)="onSave()"
+  [autoFocus]="false"
+  [okText]="'Save'"
+  [hiddenOkBtn]="recurringCharge?.entityType === EEntityType.PROPERTY || recurringCharge?.entityType === EEntityType.UNIT"
+  [cancelText]="'Back'">
+  <ng-template #headerModal>
+    <div class="header-wrap d-flex align-items-center">
+      <trudi-icon
+        [style]="{ 'width.px': 106, 'height.px': 20 }"
+        [icon]="'rentManager'"></trudi-icon>
+      <div class="title w-100 header-wrap-title">
+        <span>Recurring charge details</span>
+      </div>
+    </div>
+  </ng-template>
+  <div class="recurring-charge-form" [formGroup]="recurringChargeForm">
+    <div class="trudi-form-group mb-12">
+      <div class="trudi-form-control">
+        <div class="trudi-input-label">Charge type (required)</div>
+        <trudi-form-control
+          [checkSubmit]="!submitted"
+          [control]="chargeTypeControl">
+          <ng-select
+            [items]="chargeTypeOption"
+            formControlName="chargeType"
+            [ngClass]="{'input-error-select': chargeTypeControl.invalid && (chargeTypeControl.dirty || chargeTypeControl.touched) && submitted }"
+            class="share-ng-select"
+            bindValue="id"
+            bindLabel="name"
+            [clearable]="true"
+            [virtualScroll]="true"
+            [searchable]="true"
+            [searchFn]="customListSearchFn"
+            [editableSearchTerm]="true">
+            <ng-template
+              ng-option-tmp
+              let-item="item"
+              let-index="index"
+              let-search="searchTerm">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex flex-dir-column">
+                  <span class="flex-1 option-name">{{item.name}}</span>
+                  <span class="flex-1 option-description"
+                    >{{item.description}}</span
+                  >
+                </div>
+                <trudi-icon
+                  icon="checkSuccess"
+                  *ngIf="item.id === chargeTypeControl.value"
+                  [style]="{'width.px': 16, 'height.px': 20}"></trudi-icon>
+              </div>
+            </ng-template>
+          </ng-select>
+        </trudi-form-control>
+      </div>
+      <div class="trudi-form-control">
+        <div class="trudi-input-label">Amount</div>
+        <trudi-form-control
+          nz-tooltip
+          [nzTooltipTitle]="amountControl?.disabled ? messageTooltip: ''"
+          [nzTooltipOverlayStyle]="{'max-width': '208px'}"
+          [checkSubmit]="!submitted"
+          [control]="amountControl">
+          <trudi-number-field
+            [checkSubmit]="!submitted"
+            [separatorLimit]="separatorLimitAmount"
+            [maskPattern]="maskPattern"
+            thousandSeparatorType=","
+            amountFormat
+            [formControl]="amountControl"
+            prefixText="$"
+            size="large">
+          </trudi-number-field>
+        </trudi-form-control>
+      </div>
+    </div>
+    <div class="trudi-form-group mb-12">
+      <div class="trudi-form-control">
+        <div class="trudi-input-label">Calculation</div>
+        <trudi-form-control
+          nz-tooltip
+          [nzTooltipTitle]="calculationControl?.disabled ? messageTooltip: ''"
+          [nzTooltipOverlayStyle]="{'max-width': '208px'}"
+          [checkSubmit]="!submitted"
+          [control]="calculationControl">
+          <trudi-textarea
+            [formControl]="calculationControl"
+            [rows]="2"
+            [maxCharacter]="2000"
+            [showCounting]="false"></trudi-textarea>
+        </trudi-form-control>
+      </div>
+    </div>
+    <div class="trudi-form-group mb-12">
+      <div class="trudi-form-control">
+        <div class="trudi-input-label">Frequency</div>
+        <trudi-form-control
+          [checkSubmit]="!submitted"
+          [control]="frequencyControl">
+          <trudi-number-field
+            [checkSubmit]="!submitted"
+            [maxCharacter]="4"
+            [formControl]="frequencyControl"
+            [maskPattern]="maskPatternFrequency"
+            size="large">
+          </trudi-number-field>
+        </trudi-form-control>
+      </div>
+      <div class="trudi-form-control">
+        <div class="trudi-input-label">From</div>
+        <trudi-form-control [checkSubmit]="!submitted" [control]="fromControl">
+          <trudi-date-picker
+            [class.trudi-picker-error]="fromControl.invalid && (fromControl.dirty || fromControl.touched) && submitted"
+            formControlName="from"
+            [defaultValue]="fromControl.value"
+            class="pointer">
+          </trudi-date-picker>
+        </trudi-form-control>
+      </div>
+      <div class="trudi-form-control">
+        <div class="trudi-input-label">To</div>
+        <trudi-form-control [checkSubmit]="!submitted" [control]="toControl">
+          <trudi-date-picker
+            [class.trudi-picker-error]="toControl.invalid && (toControl.dirty || toControl.touched) && submitted"
+            [defaultValue]="toControl.value"
+            formControlName="to"
+            class="pointer">
+          </trudi-date-picker>
+        </trudi-form-control>
+      </div>
+    </div>
+    <div class="trudi-form-group mb-12">
+      <div class="trudi-form-control">
+        <div class="trudi-input-label">Comment</div>
+        <trudi-form-control
+          [checkSubmit]="!submitted"
+          [control]="commentControl">
+          <trudi-textarea
+            [formControl]="commentControl"
+            [rows]="2"
+            [maxCharacter]="2000"
+            [showCounting]="false"></trudi-textarea>
+        </trudi-form-control>
+      </div>
+    </div>
+  </div>
+</trudi-modal>

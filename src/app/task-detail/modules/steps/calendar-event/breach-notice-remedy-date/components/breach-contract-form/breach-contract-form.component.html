@@ -1,0 +1,83 @@
+<resizable-modal-popup
+  *ngIf="visible && isStep"
+  [show]="visible"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [title]="'Breach of contract'"
+  [footerTemplate]="footerTemplate"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [stopPropagation]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  (onCancel)="onClose()"
+  [isCustomMoveable]="true">
+  <div class="layout-box">
+    <ng-container [ngTemplateOutlet]="breachContractForm"></ng-container>
+  </div>
+</resizable-modal-popup>
+
+<trudi-modal
+  *ngIf="visible && !isStep"
+  [(visible)]="visible"
+  [autoFocus]="null"
+  (onCancel)="onClose()"
+  title="Breach of contract"
+  subTitle="">
+  <ng-container [ngTemplateOutlet]="breachContractForm"> </ng-container>
+  <ng-template #footerModal>
+    <ng-container [ngTemplateOutlet]="footerTemplate"></ng-container>
+  </ng-template>
+</trudi-modal>
+
+<ng-template #breachContractForm>
+  <div class="box-body" [ngStyle]="{ 'padding': isStep ? '20px 24px' : 0 }">
+    <div class="form mb-40">
+      <div class="mb-10 form-title">Why is the tenant in breach?</div>
+      <trudi-radio-button
+        [options]="radioListData"
+        [(ngModel)]="radioValue"
+        (ngModelChange)="onValueChange($event)"></trudi-radio-button>
+      <trudi-form-control *ngIf="isShowTextInput" [control]="reason">
+        <trudi-text-field
+          size="extra-large"
+          [formControl]="reason"
+          [maxCharacter]="50"
+          [placeholder]="'Type reason'"></trudi-text-field>
+      </trudi-form-control>
+      <div
+        *ngIf="radioValue === null && isConfirmed"
+        class="error-container error-container-options d-flex align-items-center gap-4 mt-12">
+        <trudi-icon icon="iconWarning"></trudi-icon>
+        <div class="error-text">{{errorText}}</div>
+      </div>
+    </div>
+    <div [formGroup]="breachForm" class="form">
+      <div class="form-title">Date the breach must be remedied by:</div>
+      <div class="form-input mt-6 trudi-date">
+        <trudi-form-control [control]="remedyDate">
+          <trudi-date-picker
+            [trudiDisabledDate]="disabledDate"
+            formControlName="remedyDate"
+            [class.trudi-picker-full]="true"
+            [class.trudi-picker-error]="remedyDate.invalid && (remedyDate.dirty || remedyDate.touched) && remedyDate.errors['required']">
+          </trudi-date-picker>
+        </trudi-form-control>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #footerTemplate>
+  <div [ngClass]="{'breach-contract-footer': isStep}">
+    <button
+      data-e2e="confirm-btn"
+      (click)="onConfirm()"
+      class="trudi-btn trudi-btn-large trudi-btn-primary"
+      [disabled]="disableConfirmButton">
+      <span class="btn-text">Confirm</span>
+    </button>
+  </div>
+</ng-template>

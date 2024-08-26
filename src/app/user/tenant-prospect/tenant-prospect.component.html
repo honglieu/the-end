@@ -1,0 +1,28 @@
+<table-user-shared
+  [dataTableDataSource]="dataTableDataSource"
+  [dataTableColumns]="dataTableColumn"
+  [totalItems]="totalItems"
+  [totalPages]="totalPages"
+  [isLoading]="isLoading"
+  [typePage]="typePage.TENANTS_PROSPECT"
+  [searchValue]="searchValue"
+  [pageIndex]="pageIndex"
+  [isLoadingMore]="isLoadingMore"
+  (handleEventRow)="handleEventClickRow($event)">
+</table-user-shared>
+<app-common-agent-user-component (refreshListData)="handleRefreshList($event)">
+</app-common-agent-user-component>
+
+<user-info-drawer
+  [visible]="visible"
+  [currentDataUser]="currentDataUser"
+  [openFrom]="typePage.TENANTS_PROSPECT"
+  (triggerCloseDrawer)="visible = false"></user-info-drawer>
+
+<property-profile-drawer
+  [visible]="visiblePropertyProfile"
+  [openFrom]="ETypePage.TENANTS_PROSPECT"
+  [currentDataUser]="currentDataUser"
+  (triggerCloseDrawer)="visiblePropertyProfile = false"
+  [propertyId]="currentDataUser?.propertyId">
+</property-profile-drawer>

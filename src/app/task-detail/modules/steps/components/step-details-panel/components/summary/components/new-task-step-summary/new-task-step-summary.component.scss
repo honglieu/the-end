@@ -1,0 +1,54 @@
+:host {
+  .opacity-60 {
+    opacity: 0.6;
+  }
+
+  .icon-wrapper {
+    background-color: var(--bg-brand-solid-normal);
+
+    ::ng-deep trudi-icon svg-icon svg path {
+      fill: var(--fg-base);
+    }
+  }
+
+  .card-container {
+    background-color: var(--bg-base);
+
+    &:hover {
+      .icon-link-task {
+        display: flex !important;
+      }
+    }
+
+    .icon-wrapper {
+      width: 28px;
+      height: 28px;
+    }
+
+    .icon-link-task {
+      width: 32px;
+      height: 32px;
+      right: 0;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 1px solid var(--border-neutral-dark);
+      box-shadow: 0px 4px 8px -2px #1018281a;
+
+      ::ng-deep trudi-icon svg-icon svg path {
+        fill: var(--fg-neutral-normal);
+      }
+    }
+
+    .card-icon-wrapper {
+      width: 52px;
+      background-color: var(--bg-info-tonal-stronger);
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+    }
+
+    .card-infor {
+      padding: 12px;
+    }
+  }
+}

@@ -1,0 +1,37 @@
+<trudi-step
+  [model]="model"
+  [showIconTitle]="false"
+  [hideProcessLine]="false"
+  [propertyTreeStep]="false"
+  [buttonKey]="buttonKey"
+  (onProcess)="enableProcess()"></trudi-step>
+
+<resizable-modal-popup
+  *ngIf="stepPopupState.eventSelect"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [closable]="true"
+  [okText]="'Next'"
+  [title]="'Select events'"
+  [hiddenCancelBtn]="true"
+  [show]="stepPopupState.eventSelect"
+  [draggable]="true"
+  [resizable]="false"
+  [hasBackdrop]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="660"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [isShowFooter]="true"
+  [showBackBtn]="hasConfirmEssential"
+  (onCancel)="handleCloseEventModal()"
+  (onBack)="onBack()"
+  (onOk)="handleConfirmEventModal()"
+  [isCustomMoveable]="true">
+  <div style="padding: 20px 24px">
+    <select-event-popup
+      [listEvents]="listEvents"
+      [isRequired]="isRequired && isSubmit"
+      (onChangeOption)="handleEventChangeOption($event)">
+    </select-event-popup>
+  </div>
+</resizable-modal-popup>

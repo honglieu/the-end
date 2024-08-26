@@ -1,0 +1,48 @@
+<trudi-modal
+  [(visible)]="visible"
+  [modelWidth]="624"
+  (onCancel)="handleCancel()"
+  [autoFocus]="null"
+  className="task-editor-popup"
+  [title]="titleModal"
+  subTitle="">
+  <ng-template #footerModal>
+    <div class="d-flex align-items-center gap-12">
+      <button
+        trudi-btn
+        btnType="neutral"
+        variant="outlined"
+        [disabled]="isDisabled"
+        (click)="handleBack()"
+        class="btn-back-task d-flex align-items-center gap-8">
+        Back
+      </button>
+      <button
+        trudi-btn
+        [disabled]="isDisabled"
+        (click)="handleNext()"
+        class="btn-next-task d-flex align-items-center gap-8">
+        Confirm
+      </button>
+    </div>
+  </ng-template>
+  <div class="form-scratch-container">
+    <div class="trudi-form-control">
+      <div class="form-scratch-label">Task name</div>
+      <input
+        type="text"
+        [maxlength]="maxInputLength"
+        class="trudi-input title-text"
+        [formControl]="taskName"
+        [ngClass]="{'has-error': isSubmited && taskName.invalid}" />
+      <div
+        *ngIf=" isSubmited && taskName.invalid"
+        class="error-container d-flex align-items-center gap-4">
+        <trudi-icon
+          icon="iconWarningRed"
+          [style]="{ 'width.px': 15, 'height.px': 15}"></trudi-icon>
+        <div class="error-text">Required field</div>
+      </div>
+    </div>
+  </div>
+</trudi-modal>

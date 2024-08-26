@@ -1,0 +1,73 @@
+<div class="reminder-page">
+  <div class="reminder-wrapper">
+    <div class="reminder-header y-center">
+      <div class="reminder-header-title d-flex align-items-center">
+        <h3 class="send-reminder">Portfolio reminders</h3>
+        <trudi-icon
+          [icon]="integartionContent?.icon?.name"
+          [style]="integartionContent?.icon?.styles"></trudi-icon>
+      </div>
+      <div class="d-flex gap-5">
+        <span class="notiTitle">App notification</span>
+      </div>
+    </div>
+    <div
+      class="wrap-group"
+      *ngFor="let reminder of listReminder; let i = index">
+      <h4 class="reminder-title">{{reminder.groupName | titleCasePipe}}</h4>
+      <div class="d-flex flex-dir-column gap-4">
+        <div
+          class="wrap-reminder y-center"
+          *ngFor="let reminderInfo of reminder.values;">
+          <div class="wrap-date-select y-center gap-8">
+            <span class="date-select-label"
+              >{{reminderInfo.name | titleCasePipe}}</span
+            >
+            <ng-select
+              class="share-ng-select"
+              bindValue="value"
+              bindLabel="value"
+              [items]="reminder.listDays"
+              [(ngModel)]="reminderInfo.valueString"
+              [searchable]="true"
+              [clearable]="false"
+              [virtualScroll]="true"
+              [editableSearchTerm]="true"
+              (change)="changeReminder($event, i, reminderInfo.key)">
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-search="searchTerm">
+                <div class="y-center justify-content-between">
+                  <span>{{item.value}}</span>
+                  <trudi-icon
+                    *ngIf="reminderInfo?.valueString === item.value"
+                    icon="checkSuccess"></trudi-icon>
+                </div>
+              </ng-template>
+            </ng-select>
+          </div>
+          <div class="wrap-toggle y-center">
+            <div class="reminder-toggle d-flex justify-content-center">
+              <switch-checkbox
+                [isChecked]="reminderInfo.enableDesktop"
+                [index]="reminderInfo.key + kindOfNoti.desktop"
+                [reminderToggle]="true"
+                (tdCheckboxChanged)="onCheckboxChange($event, i, reminderInfo?.key, kindOfNoti.desktop)">
+              </switch-checkbox>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="wrap-froup mb-24">
+      <h4 class="reminder-title">Event changes</h4>
+      <div class="d-flex">
+        <notifications-layout
+          [notifications]="portalReminders"
+          [showHeader]="false"
+          (onCheckboxChange)="handleEventChanges($event)"></notifications-layout>
+      </div>
+    </div>
+  </div>
+</div>

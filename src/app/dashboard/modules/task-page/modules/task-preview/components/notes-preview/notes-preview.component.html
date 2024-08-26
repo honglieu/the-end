@@ -1,0 +1,59 @@
+<div class="note-preview">
+  <div
+    class="note-header d-flex justify-content-start align-items-center gap-4">
+    <h3 class="title-note">NOTES</h3>
+    <span
+      *ngIf="taskPreview?.internalNotes?.unReadData?.unreadCount > 0"
+      class="unread-count"
+      >{{ taskPreview?.internalNotes?.unReadData?.unreadCount }}</span
+    >
+  </div>
+  <ng-container
+    [ngTemplateOutlet]="taskPreview?.internalNotes?.latestNoteData ? listNoteTemplate : noNoteTemplate">
+  </ng-container>
+</div>
+
+<ng-template #listNoteTemplate>
+  <div class="notes-list">
+    <div
+      (click)="handleNavigateTaskDetail()"
+      [class.unreadBackground]="taskPreview?.internalNotes?.unReadData?.hasUnreadNote"
+      class="note-box overflow-hidden d-flex flex-direction-column gap-2">
+      <div
+        class="note-infor w-100 d-flex justify-content-between align-items-center gap-8">
+        <h4
+          class="receiver-name"
+          [class.unread]="taskPreview?.internalNotes?.unReadData?.hasUnreadNote">
+          {{joinedPmNames}}
+        </h4>
+        <span class="send-time"
+          >{{taskPreview?.internalNotes?.internalNote?.createdAt |
+          formatTimeString}}</span
+        >
+      </div>
+
+      <div class="note-message">
+        <div class="d-flex align-items-center notes-content-box-info-box">
+          <div
+            class="d-flex align-items-center notes-content-box-info-note overflow-hidden">
+            <trudi-icon
+              *ngIf="taskPreview?.internalNotes?.latestNoteData?.type === ENoteType.CARD"
+              class="mr-4"
+              icon="contactCard"></trudi-icon>
+            <h4 [innerHTML]="noteMessage"></h4>
+          </div>
+          <div
+            *ngIf="!!taskPreview?.internalNotes?.totalAttachments"
+            class="attachments d-flex align-items-center">
+            <trudi-icon class="ml-4" icon="attachments"></trudi-icon>
+            <span>{{taskPreview?.internalNotes?.totalAttachments}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #noNoteTemplate>
+  <p class="no-note">No notes to display</p>
+</ng-template>

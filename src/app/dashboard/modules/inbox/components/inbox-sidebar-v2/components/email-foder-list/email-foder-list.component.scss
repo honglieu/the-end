@@ -1,0 +1,50 @@
+@import 'function';
+
+.wrapper-email-folder {
+  display: flex;
+  flex-direction: column;
+  padding: 12px 12px 0 12px;
+  background: var(--white);
+  border-bottom: 1px solid #ececed;
+}
+
+.email-folder-title {
+  color: var(--fg-neutral-weaker, #85888e);
+  font-size: 12px;
+  line-height: 16px;
+  font-style: normal;
+  font-weight: 600;
+  padding-left: 4px;
+}
+
+::ng-deep body:has(#email-foder-list .cdk-drop-list-dragging) {
+  #mail-box-list,
+  #archived-mailbox-list {
+    opacity: 50%;
+    pointer-events: none;
+  }
+
+  #focus-out-mailbox {
+    pointer-events: none;
+    display: flex;
+  }
+
+  #inbox-messages {
+    pointer-events: none;
+    display: none;
+  }
+}
+
+:host {
+  .cdk-placeholder {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  .cdk-drag-placeholder {
+    opacity: 1;
+  }
+  .email-place-holder {
+    width: 100%;
+    height: 32px;
+    background-color: #f0f1f1;
+  }
+}

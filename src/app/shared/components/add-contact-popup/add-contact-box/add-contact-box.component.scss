@@ -1,0 +1,197 @@
+@import 'function';
+
+:host {
+  display: block;
+  width: 400px;
+  left: 100%;
+  top: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--white);
+
+  .badge {
+    @include fontSetup(var(--gray-500), 12px, 16px, normal, 500);
+
+    background-color: var(--gray-100);
+    border-radius: 24px;
+    margin-left: 8px;
+    padding: 2px, 6px, 2px, 6px;
+    font-size: 12px !important;
+    line-height: 16px !important;
+    text-transform: none !important;
+  }
+
+  .leading {
+    padding: 8px;
+  }
+
+  .header {
+    @include fontSetup(var(--gray-600), 12px, 20px, normal, 500);
+  }
+
+  .contact-list-items {
+    height: fit-content;
+    max-height: calc(400px - 76px);
+
+    .cdk-virtual-scroll-contact {
+      overflow: auto;
+    }
+  }
+
+  .no-result {
+    @include fontSetup(var(--fg-neutral-weaker), 14px, 20px, normal, 400);
+    text-align: center;
+    padding: 10px 12px 18px;
+  }
+
+  .contact-search-bar {
+    padding: 8px;
+    border: 1px solid var(--border-neutral-dark, #e4e4e7);
+    background: var(--gray-50, #f5f5f6);
+
+    &:focus-within {
+      border: 1px solid var(--brand-500);
+      background: var(--white);
+      .search-contact-input {
+        background: var(--white);
+      }
+    }
+
+    .search-contact-input {
+      background: var(--bg-neutral-tonal-default, #f2f5f7);
+      border: none;
+      outline: none;
+      width: 100%;
+      @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 400);
+      padding-right: 24px;
+    }
+
+    &:not(:focus-within):hover {
+      background: var(--gray-100, #f0f1f1);
+      box-shadow: inset 0px 0px 1px var(--border-neutral-dark);
+      border: 1px solid var(--border-neutral-dark, #e4e4e7);
+
+      .search-contact-input {
+        background: var(--gray-100, #f0f1f1);
+      }
+    }
+
+    .clear-wrapper {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      border-radius: 50%;
+      border: 1px solid var(--border-neutral-dark, #d8dcdf);
+
+      & .clear-icon ::ng-deep svg-icon svg {
+        width: fit-content;
+        height: 12px;
+      }
+
+      &:hover {
+        background: var(--gray-100) !important;
+      }
+
+      &:active {
+        background: var(--gray-200) !important;
+      }
+    }
+  }
+
+  .item-contact {
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--gray-50);
+    cursor: default;
+
+    &:hover {
+      background-color: var(--bg-brand-tonal-normal);
+    }
+
+    &--item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      :nth-child(1) {
+        @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+      }
+
+      :nth-child(2) {
+        @include fontSetup(var(--text-subtitle), 12px, 16px, normal, 500);
+      }
+    }
+
+    &--action {
+      height: 24px;
+      padding: 0 8px;
+      border-radius: 6px;
+      border: 0;
+      margin-left: auto;
+      background: var(--bg-brand-tonal-normal, #e1f8f5);
+
+      @include fontSetup(var(--brand-500), 14px, 20px, normal, 600);
+
+      &:hover {
+        background: var(--bg-brand-tonal-stronger);
+      }
+
+      &:active {
+        background: var(--bg-brand-tonal-strongest);
+      }
+    }
+
+    ::ng-deep mark.highlight {
+      color: unset !important;
+      background-color: var(--bg-tenant-solid-normal) !important;
+    }
+  }
+
+  .add-new-contact {
+    padding: 12px;
+    min-height: 44px;
+    border-top: 1px solid var(--gray-50);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    @include fontSetup(var(--brand-500), 14px, 20px, normal, 500);
+
+    &:hover,
+    &:active {
+      text-decoration: underline;
+    }
+
+    &:hover {
+      color: var(--brand-400);
+    }
+
+    &:active {
+      color: var(--brand-600);
+    }
+  }
+}
+
+.grid-contact {
+  border-bottom: 1px solid var(--gray-200);
+  padding: 12px;
+  height: 44px;
+
+  .grid-item {
+    ::ng-deep .ant-skeleton-custom {
+      h3.ant-skeleton-title {
+        width: 100% !important;
+        height: 16px !important;
+        max-width: 150px !important;
+        margin: 0;
+      }
+
+      .ant-skeleton-paragraph {
+        display: none;
+      }
+    }
+  }
+}

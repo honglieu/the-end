@@ -1,0 +1,536 @@
+<div class="d-flex gap-2">
+  <ng-container>
+    <task-sidebar />
+  </ng-container>
+
+  <div class="d-flex w-100">
+    @if (taskFolderList?.length) {
+    <div class="flex-1 d-flex flex-dir-column">
+      <div class="task-list-header">
+        <inbox-filter [isEnableTooltip]="false"></inbox-filter>
+        <div class="d-flex align-items-center gap-8 task-list-filters">
+          <trudi-select-dropdown-v2
+            class="sort-select-dropdown"
+            [clearable]="false"
+            [showArrowIcon]="false"
+            [showClearIcon]="false"
+            [ngModel]="currentSortTaskType"
+            (ngModelChange)="changeSortTaskType($event)"
+            [items]="listSortTaskType">
+            <ng-template trudi-select-dropdown-title-tmp>
+              <div class="d-flex align-items-center gap-8">
+                <trudi-icon
+                  [icon]="currentSortTaskType === ESortTaskType.NEWEST_TO_OLDEST ? 'sortAscending' : 'sortDescending'"
+                  class="size-20"></trudi-icon>
+                <span
+                  >{{MAP_SORT_TASK_TYPE_TO_LABEL[currentSortTaskType]}}</span
+                >
+              </div>
+            </ng-template>
+            <ng-template trudi-select-dropdown-option-tmp let-item="item">
+              <div class="sort-select-dropdown-option">
+                <trudi-icon [icon]="item.icon" class="size-20"></trudi-icon>
+                <p>{{ item.label }}</p>
+              </div>
+            </ng-template>
+          </trudi-select-dropdown-v2>
+          <div class="view-settings-container relative">
+            <trudi-select-dropdown-v2
+              class="view-settings-select-dropdown"
+              [ngClass]="{'showing-introduction-popup': isShowIntroduction}"
+              [clearable]="false"
+              [showArrowIcon]="false"
+              [showClearIcon]="false"
+              [items]="listTaskViewSettings">
+              <ng-template trudi-select-dropdown-title-tmp>
+                <div class="d-flex align-items-center gap-8">
+                  <img
+                    class="settings-icon"
+                    src="assets/images/folder-images/trudi-fi-sr-settings-sliders.png"
+                    alt="icon" />
+                  <span>View settings</span>
+                </div>
+              </ng-template>
+              <ng-template trudi-select-dropdown-option-tmp let-item="item">
+                <div
+                  (click)="$event.stopPropagation()"
+                  class="view-settings-select-dropdown-option d-flex justify-content-between align-items-center gap-8">
+                  <p>{{ item.label }}</p>
+                  <switch-checkbox
+                    class="switch-item"
+                    [reverse]="true"
+                    [isChecked]="item.isChecked"
+                    (tdCheckboxChanged)="onChangeToggleViewSetting($event, item)">
+                  </switch-checkbox>
+                </div>
+              </ng-template>
+            </trudi-select-dropdown-v2>
+            <ng-container *ngTemplateOutlet="introductionPopup"></ng-container>
+          </div>
+          <button
+            class="add-group-btn"
+            trudi-btn
+            size="medium"
+            variant="outlined"
+            btnType="neutral"
+            [disabled]="disableAddButton"
+            (click)="handleAddGroup()">
+            <div class="no-pointer-event d-flex align-items-center gap-8">
+              <trudi-icon icon="iconPlus2" class="size-20"></trudi-icon>
+              <span>Group</span>
+            </div>
+          </button>
+        </div>
+      </div>
+      <ng-container
+        *rxLet="
+          taskGroups$;
+          suspense: skeletonLoading;
+          error: noTaskGroupTemplate;
+          contextTrigger: contextTrigger$;
+          strategy: 'immediate';
+          let taskGroups;
+        ">
+        <div class="flex-1">
+          <ng-container
+            *rxIf="noResult; then noTaskGroupTemplate"></ng-container>
+          <ng-container *rxIf="!noResult">
+            <div
+              cdkDropList
+              [cdkDropListData]="taskGroups"
+              cdkDropListSortingDisabled
+              cdkScrollable
+              #taskGroupContainer
+              (scroll)="handleScroll()"
+              class="task-group-container">
+              <!-- inprogress task -->
+              <div
+                *rxFor="
+                  let taskGroup of taskGroups | slice:0:-1;
+                  trackBy: trackTaskGroup;
+                  strategy: 'immediate';
+                  patchZone: false;
+                  let index = index;
+                  let first = first;
+                "
+                cdkDrag
+                class="draggable-task-group"
+                [cdkDragData]="taskGroup"
+                (cdkDragDropped)="handleTaskGroupDropped($event, taskGroups)"
+                (cdkDragMoved)="taskGroupMoved($event)"
+                (cdkDragStarted)="dragStarted($event, taskGroupRef)"
+                (onDrag)="dragStarted($event)"
+                [cdkDragDisabled]="disableDragging"
+                [attr.drag-index]="taskGroup.taskGroup.order"
+                [attr.group-id]="taskGroup?.taskGroup?.id">
+                <task-group
+                  #taskGroupRef
+                  [attr.drag-index]="taskGroup.taskGroup.order"
+                  [taskGroupData]="taskGroup"
+                  [taskCompletedGroup]="taskGroups | slice:-1"
+                  [hasFilter]="hasFilter"
+                  [taskViewSettings]="taskViewSettings"
+                  [innerWidth]="innerWidth"
+                  (changeTaskGroupAction)="handleTaskGroupAction($event)"
+                  (addTask)="openCreateNewTask(taskGroup.taskGroup.id)"
+                  (taskDropped)="handleTaskDropped($event)"
+                  (taskDragStart)="handleTaskDragStart()"
+                  (handleChangeTitleTask)="changeCurrentTitleTask($event)"
+                  (openDrawer)="handleOpenTaskPreview($event)">
+                </task-group>
+                <div *cdkDragPlaceholder class="group-drag-placeholder"></div>
+                <div *cdkDragPreview class="group-drag-preview">
+                  <task-group [taskGroupData]="taskGroup"> </task-group>
+                </div>
+              </div>
+
+              <!-- completed task -->
+              <ng-container
+                *rxFor="
+                  let completedGroupData of taskGroups | slice:-1;
+                  let index = index;
+                  patchZone: false;
+                  strategy: 'low';
+                  trackBy: trackTaskGroup;
+                ">
+                <div
+                  id="completedGroupDataRef"
+                  cdkDrag
+                  class="draggable-task-group completed-group-data-wrapper"
+                  (cdkDragDropped)="handleTaskGroupDropped($event, taskGroups)"
+                  [cdkDragData]="completedGroupData"
+                  [cdkDragDisabled]="true"
+                  [attr.drag-index]="completedGroupData?.taskGroup.order"
+                  [attr.group-id]="completedGroupData?.taskGroup?.id">
+                  <completed-group
+                    taskGroupRef
+                    [currentQueryParams]="currentQueryParams"
+                    [isLoading]="isCompletedGroupLoading"
+                    [isLoadingMore]="isLoadingMore"
+                    [isAllTaskFetched]="isAllCompletedTaskFetched"
+                    [pageIndex]="pageIndex"
+                    [taskViewSettings]="taskViewSettings"
+                    [taskGroupData]="completedGroupData"
+                    [innerWidth]="innerWidth"
+                    (handleLoadingMore)="handleLoadingMore($event)"
+                    (taskDropped)="handleTaskDropped($event)"
+                    (taskDragStart)="handleTaskDragStart()"
+                    (handleChangeTitleTask)="changeCurrentTitleTask($event)"
+                    (openDrawer)="handleOpenTaskPreview($event)">
+                  </completed-group>
+                  <div *cdkDragPlaceholder class="group-drag-placeholder"></div>
+                  <div *cdkDragPreview class="group-drag-preview">
+                    <completed-group [taskGroupData]="completedGroupData">
+                    </completed-group>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+    } @else {
+    <ng-container [ngTemplateOutlet]="noTaskFolder"></ng-container>
+    }
+  </div>
+</div>
+
+<ng-template #skeletonLoading>
+  <ng-container
+    *ngTemplateOutlet="skeletonLoadingItem; context: {rowNumber: 30}">
+  </ng-container>
+</ng-template>
+
+<ng-template #skeletonLoadingItem let-row="rowNumber">
+  <div class="flex-1 task-groups-skeleton">
+    <div class="task-group-expand-skeleton">
+      <div class="task-group-header-skeleton">
+        <nz-skeleton-element
+          nzType="avatar"
+          [nzActive]="true"
+          [nzSize]="20"></nz-skeleton-element>
+        <div>
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+        <div>
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </div>
+      <div class="task-group-table-skeleton">
+        <div class="task-group-table-body-skeleton">
+          <div
+            *ngFor="let _ of [].constructor(3)"
+            class="task-row-wrapper d-flex gap-8">
+            <nz-skeleton
+              class="ant-skeleton-checkbox size-16"
+              [nzParagraph]="paragraph"
+              [nzActive]="true"></nz-skeleton>
+            <div
+              class="d-flex flex-1 align-items-center gap-16 justify-content-between">
+              <div class="task-row-title-skeleton flex-4">
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"></nz-skeleton>
+                <nz-skeleton
+                  class="mt-10"
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"></nz-skeleton>
+              </div>
+              <div>
+                <nz-skeleton-element
+                  nzType="avatar"
+                  [nzActive]="true"
+                  [nzSize]="24"></nz-skeleton-element>
+                <nz-skeleton-element
+                  nzType="avatar"
+                  [nzActive]="true"
+                  [nzSize]="24"></nz-skeleton-element>
+                <nz-skeleton-element
+                  nzType="avatar"
+                  [nzActive]="true"
+                  [nzSize]="24"></nz-skeleton-element>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="task-group-expand-skeleton">
+      <div class="task-group-header-skeleton">
+        <nz-skeleton-element
+          nzType="avatar"
+          [nzActive]="true"
+          [nzSize]="20"></nz-skeleton-element>
+        <div>
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+        <div>
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </div>
+      <div class="task-group-table-skeleton">
+        <div class="task-group-table-body-skeleton">
+          <div
+            *ngFor="let _ of [].constructor(3)"
+            class="task-row-wrapper d-flex gap-8">
+            <nz-skeleton
+              class="ant-skeleton-checkbox size-16"
+              [nzParagraph]="paragraph"
+              [nzActive]="true"></nz-skeleton>
+            <div
+              class="d-flex flex-1 align-items-center gap-16 justify-content-between">
+              <div class="task-row-title-skeleton flex-4">
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"></nz-skeleton>
+                <nz-skeleton
+                  class="mt-10"
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"></nz-skeleton>
+              </div>
+              <div>
+                <nz-skeleton-element
+                  nzType="avatar"
+                  [nzActive]="true"
+                  [nzSize]="24"></nz-skeleton-element>
+                <nz-skeleton-element
+                  nzType="avatar"
+                  [nzActive]="true"
+                  [nzSize]="24"></nz-skeleton-element>
+                <nz-skeleton-element
+                  nzType="avatar"
+                  [nzActive]="true"
+                  [nzSize]="24"></nz-skeleton-element>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #noTaskGroupTemplate>
+  <div class="list-wrapper">
+    <div class="no-task">
+      <trudi-icon
+        icon="noTasks"
+        [style]="{ 'width.px': 206, 'height.px': 214.13 }"></trudi-icon>
+      <div class="no-task__text">None to display</div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #noTaskFolder>
+  <div class="no-task-folder">
+    <div class="no-task-folder--content">
+      <div class="icon-wrapper">
+        <trudi-icon
+          class="d-flex align-items-center justify-content-center"
+          icon="emptyMessage" />
+        <trudi-icon
+          class="d-flex align-items-center justify-content-center"
+          icon="emptyBox" />
+      </div>
+      <p class="empty-msg">Hi, you must be new here.</p>
+      <p class="empty-msg">Let's start by getting you organized.</p>
+      <button (click)="showCreateNewTask = true" class="add-task" trudi-btn>
+        <ng-template [iconPrefix]>
+          <trudi-icon class="plus-icon" svgClass="size-20" icon="taskNewIcon" />
+        </ng-template>
+        Add task
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<create-new-task-pop-up
+  *ngIf="showCreateNewTask"
+  [taskNameList]="listTaskName"
+  [configs]="createNewTaskConfigs"
+  [openFrom]="TaskType.TASK"
+  [selectedFolderId]="taskFolderId"
+  [selectedTaskGroupId]="selectedTaskGroupId"
+  (stopProcessCreateNewTask)="showCreateNewTask = false">
+</create-new-task-pop-up>
+
+<trudi-modal
+  *ngIf="isShowMoveFolder"
+  [visible]="isShowMoveFolder"
+  title="Select group"
+  okText="Move"
+  [hiddenCancelBtn]="true"
+  [disableOkBtn]="isMovingToFolder || moveToFolderFormGroup.invalid"
+  (onOk)="handleMoveToFolder()"
+  (onCancel)="handleCancelMoveToFolder()">
+  <div class="select-group-modal">
+    <div [formGroup]="moveToFolderFormGroup">
+      <p class="label-folder">Move task to a group</p>
+      <trudi-form-control>
+        <trudi-single-select
+          [items]="taskFolders[targetFolderId].groups"
+          placeholder="Search group"
+          bindLabel="name"
+          [clearable]="false"
+          [ngClass]="{required: moveToFolderFormGroup.invalid && moveToFolderFormGroup.touched}"
+          formControlName="targetGroup">
+          <ng-template
+            trudi-option-tmp
+            let-item="item"
+            let-searchTerm="searchTerm?.trim() || ''">
+            <div class="select-group-option-wrapper">
+              <div class="menu-item">
+                <div
+                  [ngStyle]="{backgroundColor: item.color}"
+                  class="group-color"></div>
+                <span class="menu-item__name" [ngOptionHighlight]="searchTerm">
+                  {{item.name}}
+                </span>
+              </div>
+              <trudi-icon
+                *ngIf="moveToFolderFormGroup.get('targetGroup').value === item.id"
+                class="selected-icon"
+                icon="checkSuccess"
+                [style]="{'width.px': 15, 'height.px': 15}"></trudi-icon>
+            </div>
+          </ng-template>
+        </trudi-single-select>
+      </trudi-form-control>
+    </div>
+  </div>
+</trudi-modal>
+
+<trudi-modal
+  *ngIf="isShowModalWarning"
+  [visible]="isShowModalWarning"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  className="trudi-modal-custom">
+  <warning-note-popup
+    [warningMessage]="errorMessage"
+    [timeToCloseModal]="3000"
+    (isCloseModal)="isShowModalWarning = $event">
+  </warning-note-popup>
+</trudi-modal>
+
+<ng-template #groupList>
+  <div
+    id="move-to-option"
+    class="toolbar-item"
+    menuTrigger
+    #menu="menu"
+    [position]="menuPosition"
+    (click)="menu"
+    (menuStateChanged)="visible = event"
+    [ngClass]="{'menu-button-active': visible}"
+    [appE2E]="'task-float-popup-move-to-button'"
+    (click)="openMenu($event)">
+    <trudi-icon
+      class="toolbar-icon no-pointer-event"
+      [ngClass]="{ 'mb-4': item?.label }"
+      icon="iconMoveV3"
+      [style]="{ 'width.px': 20, 'height.px': 20 }"></trudi-icon>
+    <div class="d-flex text-center no-pointer-event">Move to</div>
+  </div>
+</ng-template>
+
+<nz-dropdown-menu #folderMenu="nzDropdownMenu">
+  <ul class="menu-wrapper" nz-menu>
+    <ng-container *ngIf="taskFolderList?.length; else noFolder">
+      <div class="menu-header">
+        <div class="menu-header__title">CHOOSE FOLDER</div>
+        <div
+          *ngIf="activePath !== EInboxQueryParams.TASKS"
+          class="menu-header__action"
+          (click)="openMenu($event, moveOptionMenu.templateRef)">
+          Back
+        </div>
+      </div>
+      <div class="list-wrapper list-wrapper-folder">
+        <li
+          class="menu-item gap-8"
+          *ngFor="let taskFolder of taskFolderList | orderBy: 'order'"
+          nz-submenu
+          nz-button
+          nz-dropdown
+          [nzDropdownMenu]="groupMenu"
+          [nzPlacement]="'topLeft'"
+          [nzTitle]="folderTemplate"
+          [nzTrigger]="'click'">
+          <ul class="menu-wrapper" nz-menu>
+            <div class="menu-header">
+              <div class="menu-title">CHOOSE GROUP</div>
+            </div>
+            <div class="list-wrapper list-wrapper-group">
+              <ng-container
+                *ngFor="let taskGroup of taskFolder?.taskGroups | orderBy: sortTaskGroupByOrder">
+                <li
+                  class="menu-item pd-12 gap-8"
+                  nz-menu-item
+                  (click)="handleMoveTasksToGroup(taskFolder, taskGroup)">
+                  <div
+                    [ngStyle]="{backgroundColor: taskGroup?.color}"
+                    class="group-color"></div>
+                  <span class="menu-item__name"> {{taskGroup.name}} </span>
+                </li>
+              </ng-container>
+            </div>
+          </ul>
+          <ng-template #folderTemplate>
+            <trudi-icon
+              class="folder-icon"
+              [style]="{ 'width.px': 14, 'height.px': 14 }"
+              [icon]="taskFolder.icon">
+            </trudi-icon>
+            <span class="menu-item__name"> {{taskFolder.name}} </span>
+          </ng-template>
+        </li>
+      </div>
+    </ng-container>
+  </ul>
+</nz-dropdown-menu>
+
+<ng-template #noFolder
+  ><div nz-menu class="menu-header no-folder">
+    <i>No folder to display</i>
+  </div></ng-template
+>
+
+<ng-template #permanentlyDeleteConfirmModalContent>
+  <div class="d-flex justify-content-end">
+    <ul class="content pd-0">
+      <li>
+        <span>Any data or task history will be permanently deleted</span>
+      </li>
+      <li>
+        <span>
+          {{inboxItems?.length > 1 ? 'Any messages within these tasks will be
+          automatically marked as deleted' : 'Any messages within this task will
+          be automatically marked as deleted' }}
+        </span>
+      </li>
+    </ul>
+  </div>
+</ng-template>
+
+<ng-template #introductionPopup>
+  <div
+    *ngIf="isFirstTimeUser"
+    appOutsideClickListener
+    (clickOutside)="handleHideIntroductionPopup()"
+    class="introduction-popup d-flex flex-dir-column gap-8 border-rad-8">
+    <span class="introduction-popup-title">Customise your view</span>
+    <span class="introduction-popup-desc"
+      >Adjust what details you see on this page</span
+    >
+  </div>
+</ng-template>

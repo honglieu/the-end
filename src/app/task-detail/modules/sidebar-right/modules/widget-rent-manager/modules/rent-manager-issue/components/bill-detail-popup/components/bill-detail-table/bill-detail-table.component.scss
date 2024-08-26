@@ -1,0 +1,157 @@
+@import 'function';
+:host {
+  .bill-table-wrapper {
+    position: relative;
+  }
+
+  ::ng-deep ng-select.ng-select-opened.ng-select-top > .ng-select-container {
+    border-radius: 8px;
+  }
+
+  ::ng-deep .ant-table-body {
+    overflow-y: auto !important;
+    max-height: calc(100vh - 560px) !important;
+  }
+
+  ::ng-deep {
+    .ng-dropdown-panel.billableTo-select {
+      width: 544px !important;
+      left: unset !important;
+      right: 0 !important;
+    }
+  }
+
+  ::ng-deep {
+    .trudi-date-picker-label {
+      @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 400);
+      padding: 0 2px;
+      margin-bottom: 6px;
+    }
+    .icon-circle {
+      width: 16px;
+      height: 16px;
+    }
+    .task-tooltip {
+      width: 180px;
+      padding: 5px 6px;
+      text-align: left;
+      @include fontSetup(var(--white), 12px, 16px, normal, 400);
+    }
+  }
+
+  ::ng-deep
+    ng-select.trudi-single-select
+    .ng-dropdown-panel
+    .ng-option
+    .highlighted {
+    background-color: var(--bg-tenant-solid-normal) !important;
+    @include fontSetup(inherit !important, 14px, 20px, normal, 500);
+  }
+  ::ng-deep .ng-dropdown-panel {
+    margin: 8px 0;
+    .ng-dropdown-header {
+      border-bottom: 1px solid var(--bg-neutral-tonal-stronger);
+      padding: 10px 12px;
+    }
+    .ng-dropdown-panel-items {
+      .ng-option {
+        padding: 12px !important;
+      }
+      .ng-option:first-child {
+        border-radius: unset;
+      }
+    }
+  }
+  ::ng-deep nz-radio-group.radio-group {
+    .radio-label span {
+      @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+    }
+    .ant-radio-inner {
+      width: 16px !important;
+      height: 16px !important;
+      &::after {
+        width: 16px;
+        height: 16px;
+        margin-top: -8px;
+        margin-left: -8px;
+      }
+    }
+  }
+  ::ng-deep
+    .ng-dropdown-panel
+    .ng-dropdown-panel-items
+    .ng-option
+    span.select-item__title {
+    @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 500);
+  }
+  .select-item__contact {
+    justify-content: unset !important;
+  }
+  .content-center {
+    text-align: center;
+    ::ng-deep trudi-checkbox {
+      display: inline-block;
+    }
+  }
+  .option-icon {
+    cursor: pointer;
+    ::ng-deep svg-icon {
+      height: 32px;
+      width: 32px;
+      min-height: 32px;
+      min-width: 32px;
+      transform: rotate(90deg) !important;
+      svg {
+        height: 32px;
+        width: 32px;
+        min-height: 32px;
+        min-width: 32px;
+      }
+    }
+    &.disable-option {
+      cursor: not-allowed;
+      ::ng-deep svg-icon svg {
+        rect {
+          fill: var(--gray-200);
+        }
+      }
+    }
+  }
+  .list-wrapper {
+    height: 100%;
+    width: 100%;
+
+    .no-bill-data {
+      span {
+        padding-left: 4px;
+        @include fontSetup(
+          var(--bg-danger-solid-normal, #e1024f),
+          12px,
+          16px,
+          normal,
+          400
+        );
+      }
+    }
+  }
+}
+.bill-menu-option .bill-menu-item {
+  padding: 12px !important;
+  border-bottom: 1px solid var(--border-neutral-light, #f2f5f7);
+  @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+}
+
+.bill-delete-option.disabled {
+  cursor: not-allowed;
+  font-style: italic !important;
+  color: var(--fg-neutral-weakest) !important;
+}
+::ng-deep .bill-menu-option .bill-delete-option {
+  @include fontSetup(
+    var(--bg-danger-solid-normal, #e1024f) !important,
+    14px,
+    20px,
+    normal,
+    400 !important
+  );
+}

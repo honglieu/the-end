@@ -1,0 +1,27 @@
+<div
+  class="d-flex align-items-center gap-4 badge-attachment"
+  PreventButton
+  [attr.data-button-key]="EButtonTask.VIEW_FILE"
+  [attr.data-button-type]="EButtonType.TASK"
+  (leftClick)="$event.stopPropagation(); loadFile(file, file.id)">
+  @if(!file?.isUnsupportedFile){ @switch (file.fileType) { @case('photo') {
+  <img
+    src="{{
+                file?.mediaLink ? file?.mediaLink : ('assets/images/icons/' + file.fileType)
+              }}" />
+  } @case('video') {
+  <img [src]="file?.thumbMediaLink || '/assets/images/icons/video.svg'" />
+  } @case('file') {
+  <img src="assets/images/icons/{{ file.fileIcon || fileIcon }}" />
+  } @case('audio') {
+  <img src="assets/images/icons/{{ file.fileIcon || fileIcon }}" />
+  } @case('calendar') {
+  <img src="/assets/images/icons/calendar-round.svg" />
+  } } } @else{
+  <img src="/assets/images/icons/question-mark.svg" />
+  }
+  <div class="name-attachment d-flex align-items-center">
+    <span class="text-before">{{ getBeforeDot }}</span>.
+    <span class="text-after">{{ getAfterDot }}</span>
+  </div>
+</div>

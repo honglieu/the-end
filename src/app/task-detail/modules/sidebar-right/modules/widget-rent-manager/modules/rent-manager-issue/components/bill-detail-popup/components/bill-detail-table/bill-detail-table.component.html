@@ -1,0 +1,148 @@
+<div class="table bill-table-wrapper scrollable-box">
+  <div class="trudi-table-wrapper">
+    <nz-table
+      #nzTable
+      [nzNoResult]="noItem"
+      [nzData]="billTableForm?.value"
+      [nzShowPagination]="false"
+      class="nz-table-wrapper"
+      [nzFooter]="footer"
+      #editRowTable
+      [nzScroll]="{ y: 'calc(100vh - 560px)' }">
+      <thead>
+        <tr>
+          <th
+            [nzAlign]="item?.key === '1099' || item.key === 'billable' ? 'center':''"
+            [nzWidth]="item.width"
+            *ngFor="let item of trudiTableColumns">
+            {{item?.label}}
+          </th>
+        </tr>
+      </thead>
+      <tbody class="bill-table-body">
+        <tr
+          #trudiRow
+          nzAlign="center"
+          class="bill-detail-item"
+          *ngFor="let control of billTableForm?.controls; let index = index">
+          <td
+            *ngFor="let item of trudiTableColumns"
+            [formGroup]="control"
+            [ngClass]="{'d-flex  gap-8': item?.key === showAlertIconAtCol,'content-center': item.key==='1099' || item.key==='billable'}">
+            <trudi-single-select
+              appendTo=".scrollable-box"
+              [dropdownPosition]="dropdownPosition[index]"
+              [formControl]="control?.get('expenseAccount')"
+              formControlName="expenseAccount"
+              bindLabel="name"
+              [items]="expenseAccounts"
+              (isOpened)="isOpened()"
+              *ngIf="item?.key === 'expense_account'">
+            </trudi-single-select>
+            <trudi-checkbox
+              [formControl]="control?.get('is1099')"
+              *ngIf="item?.key === '1099'">
+            </trudi-checkbox>
+            <trudi-single-select
+              appendTo=".scrollable-box"
+              [dropdownPosition]="dropdownPosition[index]"
+              [formControl]="control?.get('job')"
+              formControlName="job"
+              bindLabel="name"
+              [items]="jobs"
+              (isOpened)="isOpened()"
+              *ngIf="item?.key === 'job'">
+            </trudi-single-select>
+            <trudi-text-field
+              [formControl]="control?.get('memo')"
+              *ngIf="item?.key === 'memo'">
+            </trudi-text-field>
+            <trudi-checkbox
+              [formControl]="control?.get('billable')"
+              (change)="handleChangeBillable(control)"
+              *ngIf="item?.key === 'billable'">
+            </trudi-checkbox>
+            <bill-billable-to-select
+              *ngIf="item?.key === 'billable_to'"
+              [listUser]="listUser"
+              [dropdownPosition]="dropdownPosition[index] || 'bottom'"
+              [control]="control"
+              (isOpened)="isOpened()">
+            </bill-billable-to-select>
+            <trudi-number-field
+              *ngIf="item?.key === 'markup'"
+              [maskLeadZero]="true"
+              [maskPattern]="maskPattern"
+              thousandSeparatorType=","
+              placeholder="0.00"
+              [formControl]="control?.get('markup')"
+              [maxCharacter]="19">
+            </trudi-number-field>
+            <trudi-number-field
+              *ngIf="item?.key === 'amount'"
+              prefixText="$"
+              placeholder="0.00"
+              [checkSubmit]="!isSubmittedBill"
+              [maskLeadZero]="true"
+              [maskPattern]="maskPattern"
+              thousandSeparatorType=","
+              [formControl]="control?.get('amount')"
+              (ngModelChange)="handleChangeAmount()"
+              [maxCharacter]="13">
+            </trudi-number-field>
+            <trudi-icon
+              *ngIf="item?.key ==='option'"
+              nz-dropdown
+              class="option-icon"
+              icon="threeDotPrimary"
+              nzTrigger="click"
+              nzPlacement="bottomLeft"
+              [nzDropdownMenu]="menu">
+            </trudi-icon>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+              <ul nz-menu class="bill-menu-option">
+                <li
+                  nz-menu-item
+                  (click)="addTableRow(control)"
+                  class="bill-menu-item">
+                  Duplicate
+                </li>
+                <li
+                  nz-menu-item
+                  (click)="!control?.get('externalId')?.value? deleteTableRow(index) : null"
+                  nz-tooltip
+                  [nzTooltipTitle]="control?.get('externalId')?.value ? 'Item can only be deleted directly from Rent Manager': ''"
+                  class="bill-delete-option bill-menu-item"
+                  [ngClass]="{disabled: control?.get('externalId')?.value}">
+                  <span>Delete</span>
+                </li>
+              </ul>
+            </nz-dropdown-menu>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+
+  <ng-template #footer>
+    <button
+      trudi-btn
+      btnType="neutral"
+      variant="outlined"
+      (click)="addTableRow()">
+      <trudi-icon svgClass="size-16" viewBox="auto" icon="plusGray"></trudi-icon
+      >Add
+    </button>
+  </ng-template>
+  <ng-template #noItem>
+    <div class="list-wrapper">
+      <div class="no-table-data d-flex align-items-center no-bill-data">
+        <trudi-icon svgClass="size-20" icon="iconWarningRed"> </trudi-icon>
+        <span
+          >At least one detail line must be filled out to save a vendor
+          bill</span
+        >
+      </div>
+    </div>
+  </ng-template>
+</div>

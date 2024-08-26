@@ -1,0 +1,24 @@
+<trudi-modal
+  *ngIf="visible"
+  [(visible)]="visible"
+  [closable]="false"
+  [modelWidth]="510"
+  [autoFocus]="null"
+  [title]="headerTitle"
+  subTitle=""
+  (onCancel)="visibleChange.emit()"
+  [disableOkBtn]="disableExportButton"
+  [okText]="okBtnText"
+  className="export-conversation-history-modal"
+  (onOk)="exportConversationHistory.emit()">
+  <div class="export-conversation-history-content">
+    <p>
+      The Trudi® conversation history for this contact will be saved as a PDF
+      and sent via email to {{pmEmail}}.
+    </p>
+    <p>
+      This can take anywhere from a few minutes to a few hours, depending on the
+      size.
+    </p>
+  </div>
+</trudi-modal>

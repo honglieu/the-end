@@ -1,0 +1,44 @@
+<ng-container
+  *rxLet="participantContext$; let context; strategy: renderStrategy">
+  <div
+    class="participants-container text-ellipsis"
+    [class.seen]="context.isReadMessage">
+    <div class="participants-list text-ellipsis">
+      @if(context.participants?.length) {
+      <div class="d-flex align-items-center">
+        <div
+          class="participants-item-wrapper"
+          trudi-tooltip
+          [hideWhenClick]="true"
+          [nzTooltipTitle]="tooltipTemplate"
+          [nzTooltipArrowPointAtCenter]="true"
+          [nzTooltipMouseEnterDelay]="1"
+          nzTooltipOverlayClassName="participants-tooltip-position participants-tooltip">
+          <ng-container
+            *rxFor="
+              let participant of context.participants; trackBy: 'email';
+              let last = last;
+          ">
+            <span class="participants-name">
+              @if(participant?.name){
+              <div
+                #titleElement
+                class="text-ellipsis"
+                [innerHTML]="participant?.name | highlight: context.search"></div>
+              } @if(!participant.isTemporary && context.isUserVerify) {
+              &nbsp;•&nbsp;
+              <div
+                #titleElement
+                [innerHTML]="participant?.title | highlight: context.search"></div>
+              }
+            </span>
+          </ng-container>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+  <ng-template #tooltipTemplate>
+    <div [innerHTML]="context.tooltipTitle"></div>
+  </ng-template>
+</ng-container>

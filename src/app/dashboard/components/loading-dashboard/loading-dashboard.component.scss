@@ -1,0 +1,84 @@
+::ng-deep .wrapper-skeleton-dashboard {
+    overflow-y: hidden;
+
+    .header-dashboard {
+        .header-left {
+            width: 429px;
+            padding-left: 20px;
+        }
+
+        .header-right {
+            width: calc(100vw - 555px);
+            display: flex;
+            flex-direction: row-reverse;
+
+            .ant-skeleton-avatar-circle {
+                width: 20px;
+                height: 20px;
+                margin-top: 14px;
+                margin-right: 10px;
+                margin-left: 10px;
+            }
+
+            .ant-skeleton-custom {
+                h3.ant-skeleton-title {
+                    width: 200px !important;
+                }
+            }
+        }
+    }
+
+    .container-dashboard {
+        .skeleton-inbox-sidebar {
+            width: 277px;
+            padding-left: 20px;
+
+            .ant-skeleton-avatar-circle {
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                margin-top: 14px;
+                margin-right: 10px;
+                margin-left: 10px;
+            }
+        }
+
+        .skeleton-inbox-content {
+            width: calc(100vw - 420px);
+            margin-top: 15px;
+            margin-left: 20px;
+
+            .message-row-wrapper {
+
+                .title-inbox {
+                    height: 0px;
+                }
+
+                .ant-skeleton-custom {
+                    width: calc(100% - 23px);
+                    height: 0px;
+
+                    h3.ant-skeleton-title {
+                        height: 28px;
+                        margin-left: 23px;
+                    }
+                }
+
+                .ant-skeleton-circle {
+                    width: 50px;
+
+                    h3.ant-skeleton-title {
+                        border-radius: 20px;
+                    }
+                }
+
+                .ant-skeleton-message-role {
+                    width: 100px;
+                    height: 20px;
+                    margin-left: -12px;
+                }
+            }
+        }
+    }
+
+}

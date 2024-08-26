@@ -1,0 +1,22 @@
+@import 'function';
+
+:host {
+  padding: 4px;
+  overflow: hidden auto;
+
+  .recipient-list-text {
+    padding: 12px 16px;
+    border-radius: 8px;
+    @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+    background-color: var(--bg-brand-tonal-stronger);
+  }
+
+  .recipient-edit {
+    cursor: pointer;
+    @include fontSetup(var(--fg-brand), 14px, 20px, normal, 500);
+
+    ::ng-deep trudi-icon svg-icon svg path {
+      fill: var(--fg-brand);
+    }
+  }
+}

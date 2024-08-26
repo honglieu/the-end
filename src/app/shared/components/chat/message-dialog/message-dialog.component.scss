@@ -1,0 +1,33 @@
+@import 'function';
+
+.container {
+  width: 100%;
+  padding: 14px;
+
+  .body {
+    width: 100%;
+    column-gap: 16px;
+    .modal-icon {
+      img {
+        width: 48px;
+        height: 48px;
+      }
+    }
+
+    .content {
+      &-title {
+        @include fontSetup(var(--gray-700), 20px, 28px, normal, 600);
+      }
+
+      &-subTitle {
+        @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+      }
+    }
+  }
+
+  .buttonGroup {
+    width: 100%;
+    margin-top: 20px;
+    column-gap: 12px;
+  }
+}

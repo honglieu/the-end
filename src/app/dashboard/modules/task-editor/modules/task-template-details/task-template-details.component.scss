@@ -1,0 +1,34 @@
+@import 'function';
+
+.detail-page {
+  // padding: 24px;
+  height: 100%;
+  .sidebar-wrapper {
+    width: 100%;
+    height: 100%;
+    .wrapper-left {
+      background-color: var(--gray-50);
+      .header {
+        padding: 12px;
+        &_title {
+          @include fontSetup(
+            var(--fg-neutral-strongest),
+            18px,
+            28px,
+            normal,
+            600
+          );
+        }
+      }
+    }
+  }
+}
+
+:host ::ng-deep sidebar-item-shared.sidebar-background {
+  ul {
+    background-color: var(--gray-50) !important;
+    li.single-item {
+      background-color: var(--gray-50);
+    }
+  }
+}

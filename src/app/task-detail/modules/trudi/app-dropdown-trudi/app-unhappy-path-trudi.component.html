@@ -1,0 +1,194 @@
+<app-modal-popup
+  [show]="showCreateNewContact"
+  [position]="ModalPopupPosition.center">
+  <create-new-contact-popup
+    (onClose)="handleOnCloseCreateContact($event)"></create-new-contact-popup>
+</app-modal-popup>
+
+<app-modal-popup
+  *ngIf="moveConversationState"
+  [show]="moveConversationState"
+  [position]="ModalPopupPosition.center">
+  <app-move-mess-to-different-task-v2
+    [propertyIds]="[propertyId]"
+    [show]="moveConversationState"
+    (isQuitModal)="stopMoveToTask()"
+    [isUnHappyPath]="isUnHappyPath"
+    [conversationId]="targetConvId"
+    (isQuitModal)="moveConversationState = false"></app-move-mess-to-different-task-v2>
+</app-modal-popup>
+
+<ng-container *ngIf="loading; else selectContact">
+  <div class="w-100 d-flex justify-content-center">
+    <img
+      class="m-auto"
+      width="110"
+      src="/assets/images/green-circle-loading.gif" />
+  </div>
+</ng-container>
+
+<ng-template #selectContact>
+  <div class="dropdown-title" data-e2e="dropdown-title">{{title}}</div>
+  <div
+    class="dropdown-wrapper"
+    appOutsideClickListener
+    (clickOutside)="isFocus = false; isFocusInput = false"
+    [ngClass]="{'border-active': isFocusInput}"
+    data-e2e="dropdown-list">
+    <div
+      class="display-box d-flex justify-content-between align-items-center cursor-pointer"
+      [ngClass]="{'active-warning': isWarningProperty}">
+      <input
+        type="text"
+        [ngStyle]="{ 'color': searchText$.value ? 'var(--gray-800)' : 'var(--gray-500)' }"
+        placeholder="{{placeholder}}"
+        (focus)="onFocusOnSearch()"
+        (blur)="onFocusOutSearch()"
+        [formControl]="searchText$" />
+      <ng-container
+        *ngIf="(currentStep === EnumCurrentStep.Contact && !isUnidentifiedEmail) || (currentStep === EnumCurrentStep.Property && !isUnindentifiedProperty) || currentStep === EnumCurrentStep.Task">
+        <svg
+          [ngClass]="isFocus ? 'rotate-180' : 'rotate-0'"
+          (click)="onCollapse($event)"
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M5 7.5L10 12.5L15 7.5"
+            [attr.stroke]="isFocus ? '#202020' : '#646464'"
+            stroke-width="1.2"
+            stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </ng-container>
+    </div>
+
+    <div
+      *ngIf="isFocus"
+      class="dropdown-box background--white"
+      [ngClass]="overlayDropdown ? 'overlay-dropdown' : 'fit-dropdown'">
+      <ng-container *ngIf="isHasResultFilter">
+        <ng-container *ngIf="currentStep === EnumCurrentStep.Contact">
+          <ng-container *ngFor="let item of items">
+            <div
+              data-e2e="dropdown-option"
+              [innerHTML]="item?.lastName + (item?.propertyTypeOrAddress ? ' • ' + item?.propertyTypeOrAddress : '') | highlight: searchText$.value"
+              *ngIf="item.userType === 'SUPPLIER'"
+              class="dropdown-box--item cursor-pointer"
+              (click)="onItemClick(item)">
+              {{item?.lastName + ' • ' + item?.propertyTypeOrAddress}}
+            </div>
+            <div
+              data-e2e="dropdown-option"
+              [innerHTML]="item?.fullName + (item?.propertyTypeOrAddress ? ' • ' + item?.propertyTypeOrAddress : '') | highlight: searchText$.value"
+              *ngIf="item.userType !== 'SUPPLIER'"
+              class="dropdown-box--item cursor-pointer"
+              (click)="onItemClick(item)">
+              {{item?.fullname + ' • ' + item?.propertyTypeOrAddress}}
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="currentStep === EnumCurrentStep.Property">
+          <div
+            data-e2e="dropdown-option"
+            [innerHTML]="(item?.streetline ? item?.streetline + ' | ' : '') + item.fullName | highlight: searchText$.value"
+            class="dropdown-box--item cursor-pointer"
+            *ngFor="let item of propertyList"
+            (click)="onItemClick(item)">
+            {{item?.streetline + ' | ' + item?.fullName}}
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="currentStep === EnumCurrentStep.Task">
+          <div
+            data-e2e="dropdown-option"
+            class="dropdown-box--group"
+            *ngFor="let item of taskNameList">
+            <div *ngIf="item.taskNames.length" class="dropdown-box--group-name">
+              {{item.name | uppercase}}
+            </div>
+            <div
+              [innerHTML]="(taskName.name | highlight: searchText$.value)"
+              class="dropdown-box--item cursor-pointer"
+              (click)="onItemClick(taskName)"
+              *ngFor="let taskName of item.taskNames">
+              {{taskName.name}}
+            </div>
+          </div>
+        </ng-container>
+
+        <div
+          *ngIf="currentStep === EnumCurrentStep.Contact && items?.length && (isUnidentifiedEmail || isUnindentifiedPhoneNumber)"
+          (click)="onAddNewContact()"
+          class="fix-new-contact-btn cursor-pointer d-flex align-items-center">
+          <img
+            style="margin-right: 8px"
+            src="/assets/icon/icon-plus.svg"
+            alt="icon plus" />
+          Add new contact
+        </div>
+
+        <div
+          *ngIf="currentStep === EnumCurrentStep.Task && taskNameList?.length"
+          (click)="onMoveExistingTask()"
+          class="new-contact-btn cursor-pointer d-flex align-items-center justify-content-center">
+          <img
+            style="margin-right: 8px"
+            src="/assets/icon/icon-plus.svg"
+            alt="icon plus" />
+          Move message to existing task
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!isHasResultFilter">
+        <div
+          *ngIf="searchText$.value"
+          class="notfound-item d-flex align-items-center justify-content-center">
+          No item found
+        </div>
+        <div
+          *ngIf="currentStep === EnumCurrentStep.Contact && isUnidentifiedEmail && searchText$.value"
+          (click)="onAddNewContact()"
+          class="fix-new-contact-btn cursor-pointer d-flex align-items-center">
+          <img
+            style="margin-right: 8px"
+            src="/assets/icon/icon-plus.svg"
+            alt="icon plus" />
+          Add new contact
+        </div>
+      </ng-container>
+    </div>
+  </div>
+
+  <div
+    *ngIf="isWarningProperty"
+    class="wrap-error-des y-center gap-4 align-items-start">
+    <img src="/assets/images/icons/error-bg-red.svg" alt="error" />
+    <span class="text-required"
+      >This contact does not match the property assigned to this task.<br />
+      To assign the email address to this contact, first remove their message
+      from the task</span
+    >
+  </div>
+
+  <ng-container *ngIf="currentStep === EnumCurrentStep.Task">
+    <td-checkbox
+      class="checkbox-task"
+      label="Send similar enquiries here next time"
+      [isChecked]="isSendSimilarEnquiries"
+      [reverse]="true"
+      [size]="24"
+      [spaceBetween]="false"
+      (tdCheckboxChanged)="onCheckboxChange($event)"></td-checkbox>
+  </ng-container>
+</ng-template>
+
+<button
+  data-e2e="button-confirm"
+  (click)="onConfirmSelectContact()"
+  class="button-section trudi-btn trudi-btn-large trudi-btn-primary w-100"
+  [disabled]="!selectedUserPropertyId || loading">
+  Confirm
+</button>

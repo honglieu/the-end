@@ -1,0 +1,111 @@
+<div
+  class="d-flex align-items-center justify-content-between quote-wrapper"
+  [ngClass]="{'quote-wrapper-conversation': isConversationOfMsg}">
+  <div class="role-color" [ngClass]="color" [class.opacity-50]="isRead"></div>
+  <div
+    class="quote-content d-flex align-items-center gap-4"
+    [class.w-100]="[EViewDetailMode.MESSAGE, EViewDetailMode.APP_MESSAGE, EViewDetailMode.SMS_MESSAGE].includes(taskDetailViewMode)">
+    <ng-container *ngIf="isLastMessageDraft">
+      <span class="tag-draft">Draft</span>
+    </ng-container>
+    <ng-container *ngIf="!isLastMessageDraft && iconName">
+      <div class="quote-icon">
+        <trudi-icon [icon]="iconName"></trudi-icon>
+      </div>
+    </ng-container>
+    <div class="d-flex wrapper-content">
+      <ng-container
+        *ngIf="content?.senderName && ![EViewDetailMode.MESSAGE, EViewDetailMode.EMAIL, EViewDetailMode.APP_MESSAGE, EViewDetailMode.SMS_MESSAGE].includes(taskDetailViewMode)">
+        <div
+          class="sender-name"
+          [ngClass]="{ 'un-seen': !isRead, 'seen-context': isConversationOfMsg}"
+          [innerHTML]="content?.senderName | highlight: searchText"></div>
+        <span>&nbsp;&nbsp;</span>
+      </ng-container>
+      <div
+        *ngIf="isPmJoined"
+        appE2E
+        e2eId="last-message"
+        class="latest-message text-ellipsis"
+        [ngClass]="{ 'un-seen': !isRead, 'empty-content': message.length === 0, 'un-seen-sms': hightLightLastMsgUnseen}"
+        [innerHTML]="message ? (message | highlight: searchText) : 'No preview is available'"></div>
+      <div
+        *ngIf="!isPmJoined"
+        appE2E
+        e2eId="last-message"
+        class="latest-message text-ellipsis"
+        [ngClass]="{ 'un-seen': !isRead, 'empty-content': message.length === 0, 'un-seen-sms': hightLightLastMsgUnseen}">
+        {{isHasTicketSession ? 'Your AI Assistant needs a human to join this
+        conversation' : 'Your AI Assistant is in control of this conversation'}}
+      </div>
+    </div>
+    <div
+      *ngIf="!!content?.attachmentCount"
+      class="icon-attachments"
+      [ngClass]="{'msg': isConversationOfMsg}"
+      nz-tooltip
+      [nzTooltipTitle]="attachmentTooltipText">
+      <trudi-icon
+        icon="attachments"
+        class="d-flex align-items-center mr-4"></trudi-icon>
+      <span> {{ content.attachmentCount | totalCountPipe: 99 }} </span>
+    </div>
+    <div
+      *ngIf="!!content?.scheduleMessageCount"
+      class="icon-attachments"
+      [ngClass]="{'msg': isConversationOfMsg}"
+      nz-tooltip
+      [nzTooltipTitle]="scheduleMessageTooltipText">
+      <trudi-icon
+        icon="timeIcon"
+        class="d-flex align-items-center icon mr-4"></trudi-icon>
+      {{ content.scheduleMessageCount }}
+    </div>
+    <div
+      *ngIf="iconSync"
+      [ngClass]="{'spin-syncing': iconSync === ICON_SYNC.SYNCING}">
+      <trudi-icon
+        [icon]="iconSync"
+        class="size-20 d-block"
+        [viewBox]="iconSync === ICON_SYNC.SYNCING ? 'auto' : ''"
+        alt="syncing"></trudi-icon>
+      <div class="quote-fail-icon" *ngIf="isDeliveryFail">
+        <trudi-icon
+          icon="syncFail"
+          nz-tooltip
+          [nzTooltipTitle]="'Delivery failed'"
+          class="d-flex align-items-center"></trudi-icon>
+      </div>
+    </div>
+    <div
+      *ngIf="content?.summaryCount"
+      class="ticket-count-wrapper"
+      [ngClass]="{'min-width-large-count': content?.summaryCount > 99}">
+      <div class="ticket-count-wrapper--box">
+        <div class="ticket-count-wrapper--box--count">
+          {{content?.summaryCount | totalCountPipe: 99: true}}
+        </div>
+      </div>
+    </div>
+    <div class="quote-fail-icon" *ngIf="isDeliveryFail">
+      <trudi-icon
+        icon="syncFail"
+        nz-tooltip
+        [nzTooltipTitle]="'Delivery failed'"
+        class="d-flex align-items-center"></trudi-icon>
+    </div>
+    <div class="ml-auto d-flex gap-4">
+      @if (content?.countUnreadTicket > 0) {
+      <div class="ticket-count-unread">
+        <trudi-badge
+          [text]="content.countUnreadTicket |
+              totalCountPipe: 99: true : '+'"
+          size="small"
+          variant="error"
+          badgeType="tonal">
+        </trudi-badge>
+      </div>
+      }
+    </div>
+  </div>
+</div>

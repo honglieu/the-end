@@ -1,0 +1,48 @@
+<widget-common
+  title="MAINTENANCE INVOICE"
+  [buttonKey]="EButtonStepKey.MAINTENANCE_INVOICE"
+  [type]="invoiceCard.syncStatus"
+  [hideStatusSection]="false"
+  (showModal)="handleClickCard()"
+  (remove)="handleRemove()"
+  (retry)="handleRetryCard(invoiceCard)"
+  [errorTitle]="errorTitle"
+  [isShowActionWhenInvoiceStatusUnPaid]="isStatusPaid"
+  [firstTimeSyncSuccess]="firstTimeSyncSuccess"
+  [isDislayBtnCancel]="invoiceCard.resultId ? true : false">
+  <div class="card-widget-wrapper card-widget-wrapper-maintenance-invoice">
+    <div class="card-widget-items d-flex flex-dir-column gap-4">
+      <div class="card-widget-items d-flex">
+        <div class="card-widget-items-title widget-title w-80">Invoice</div>
+        <div
+          class="card-widget-items-info widget-info widget-info-invoice text-ellipsis">
+          {{invoiceCard?.data?.invoice?.creditorInvoice?.invoiceDescription}}
+        </div>
+      </div>
+      <div class="card-widget-items d-flex">
+        <div class="card-widget-items-title widget-title w-80">Creditor</div>
+        <div class="card-widget-items-info widget-info">
+          {{invoiceCard?.supplier?.firstName}}
+          {{invoiceCard?.supplier?.lastName}}
+        </div>
+      </div>
+      <div class="card-widget-items d-flex">
+        <div class="card-widget-items-title widget-title w-80">Amount</div>
+        <div class="card-widget-items-info widget-info">
+          ${{invoiceCard?.data?.invoice?.creditorInvoice?.amount +
+          invoiceCard?.data?.invoice?.creditorInvoice?.gstAmount | roundDecimal:
+          2}}
+        </div>
+      </div>
+      <div
+        class="card-widget-items d-flex"
+        *ngIf="invoiceCard.status === EMaintenanceInvoiceStatus.CANCEL">
+        <div class="card-widget-items-title widget-title w-80">Status</div>
+        <div
+          class="card-widget-items-info widget-info widget-info-status-cancel">
+          Cancelled
+        </div>
+      </div>
+    </div>
+  </div>
+</widget-common>

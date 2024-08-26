@@ -1,0 +1,36 @@
+<div class="filter-assignee">
+  <div class="d-flex flex-dir-column gap-8 assignee-container">
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-4">
+        <span>Assignee</span>
+        <div
+          *ngIf="selectedList.length"
+          class="assignee-count d-flex justify-content-center">
+          <span>{{selectedList.length}}</span>
+        </div>
+      </div>
+      <trudi-select-dropdown-v2
+        #dropdown
+        overlayClassName="custom-select-dropdown-assignee"
+        placeholder="Search"
+        [clearable]="true"
+        [searchable]="true"
+        [items]="assigneeList"
+        [multi]="true"
+        itemImage="googleAvatar"
+        [virtualScroll]="true"
+        [prioritizeSelectingItems]="true"
+        [(ngModel)]="selectedList"
+        [showArrowIcon]="false"
+        [showClearIcon]="false"
+        (valueChange)="handleChangeSelectedList($event)">
+        <ng-template trudi-select-dropdown-title-tmp>
+          <trudi-icon
+            class="icon-expand"
+            [icon]="'chevronDown'"
+            [style]="{'width.px': 20, 'height.px': 20}"></trudi-icon>
+        </ng-template>
+      </trudi-select-dropdown-v2>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+<trudi-modal
+  *ngIf="isShowModal"
+  [visible]="isShowModal"
+  [autoFocus]="null"
+  (triggerAfterClose)="handleAfterClose()">
+  <ng-template #headerModal>
+    <div
+      class="rent-manager-purchase-order-popup-header d-flex align-items-center">
+      <img src="assets/images/rent-manager-icon.png" class="flex-1 size-icon" />
+      <div class="title">
+        <span>Purchase order</span>
+      </div>
+    </div>
+  </ng-template>
+
+  <purchase-order-detail
+    #purchaseOrder
+    [purchaseOrderData]="purchaseOrderData"></purchase-order-detail>
+
+  <ng-template #footerModal>
+    <div
+      class="rent-manager-issue-popup-footer d-flex align-items-center justify-content-between w-100">
+      <div class="info-status d-flex align-items-center">
+        <sync-status
+          [syncStatus]="syncStatus?.syncStatus"
+          [lastTimeSynced]="syncStatus?.lastTimeSynced"></sync-status>
+      </div>
+      <div class="footer-wrapper d-flex" [style.gap.px]="12">
+        <button
+          trudi-btn
+          size="large"
+          variant="outlined"
+          btnType="neutral"
+          class="btn-cancel"
+          (click)="handleBack()">
+          <span class="btn-text">Back</span>
+        </button>
+        <button
+          trudi-btn
+          size="large"
+          variant="filled"
+          btnType="primary"
+          [disabled]="isConsole || isDisabledSyncBtn || isArchiveMailbox"
+          (click)="handleSyncPT()">
+          <span class="btn-text">Sync to Rent Manager</span>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</trudi-modal>

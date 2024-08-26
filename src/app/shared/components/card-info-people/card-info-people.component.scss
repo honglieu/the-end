@@ -1,0 +1,119 @@
+@import 'function';
+
+:host ::ng-deep app-progress-bar .progress {
+  height: 8px;
+}
+:host ::ng-deep app-modal-popup .modal-window {
+  padding: 0px;
+}
+
+.list-people-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .item-people-skeleton {
+    background: var(--gray-200);
+    border-radius: 8px;
+    padding: 16px;
+    min-width: 315px;
+  }
+}
+
+.item-people-owner {
+  background: rgba(0, 170, 159, 0.06);
+  border-radius: 8px;
+  padding: 16px;
+  min-width: 315px;
+  margin-top: 12px;
+
+  .owner-name {
+    margin-bottom: 16px;
+
+    .owner-name-title {
+      @include fontSetup(var(--gray-700), 14px, 24px, normal, 600);
+    }
+
+    .owner-name-status {
+      top: 4px;
+      right: 0px;
+      box-sizing: border-box;
+      width: 46px;
+      height: 16px;
+      padding: 2px 8px;
+      background: var(--brand-500);
+      border-radius: 4px;
+      @include fontSetup(var(--white), 10px, 12px, normal, 600);
+    }
+  }
+
+  .owner-content {
+    .owner-content-title {
+      max-width: 140px;
+      @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+
+      img {
+        padding-bottom: 4px;
+      }
+
+      .owner-content-title-icon {
+        display: inline-block;
+        vertical-align: text-bottom;
+      }
+    }
+
+    .owner-content-status {
+      @include fontSetup(var(--gray-500), 12px, 20px, normal, 400);
+    }
+  }
+}
+
+.item-people-tenancy {
+  background: rgba(255, 191, 65, 0.08);
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 12px;
+  min-width: 315px;
+
+  .owner-name {
+    margin-bottom: 16px;
+
+    .owner-name-title {
+      @include fontSetup(var(--gray-700), 14px, 24px, normal, 600);
+    }
+
+    .owner-name-status {
+      top: 4px;
+      right: 0px;
+      box-sizing: border-box;
+      width: 46px;
+      height: 16px;
+      padding: 2px 8px;
+      background: var(--tenant-500);
+      border-radius: 4px;
+      @include fontSetup(var(--white), 10px, 12px, normal, 600);
+    }
+  }
+
+  .owner-content {
+    margin-bottom: 16px;
+
+    .owner-content-title {
+      max-width: 140px;
+      @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+
+      img {
+        padding-bottom: 4px;
+      }
+
+      .owner-content-title-icon {
+        display: inline-block;
+        vertical-align: text-bottom;
+      }
+    }
+
+    .owner-content-status {
+      @include fontSetup(var(--gray-500), 12px, 20px, normal, 400);
+    }
+  }
+}

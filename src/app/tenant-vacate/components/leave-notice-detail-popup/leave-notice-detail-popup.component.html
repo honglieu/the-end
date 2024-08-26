@@ -1,0 +1,71 @@
+<resizable-modal-popup
+  *ngIf="isShowLeaveNoticeDetail"
+  [show]="isShowLeaveNoticeDetail"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [title]="titleHeader"
+  [footerTemplate]="footerModal"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [stopPropagation]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  (onCancel)="handleClose()"
+  [isCustomMoveable]="true">
+  <div class="popup-body-content">
+    <div class="vacate-form-group" [formGroup]="leaveNoticeDetailForm">
+      <div class="vacate-wrapper">
+        <div class="vacate-form">
+          <div class="form-row mt-20">
+            <div class="form-title">Notice to leave issued for?</div>
+            <div class="form-input mt-6 notice-area">
+              <trudi-form-control [control]="notice">
+                <textarea
+                  [ngClass]="{'input-error-text': notice.invalid && (notice.dirty || notice.touched)}"
+                  autosize
+                  formControlName="notice"
+                  type="text"
+                  maxRows="4"
+                  minRows="4"
+                  [maxlength]="255"
+                  class="notice-input">
+                </textarea>
+              </trudi-form-control>
+            </div>
+          </div>
+          <div class="form-row mt-20">
+            <div class="form-title">
+              Tenant must vacate the property by midnight on
+            </div>
+            <div class="form-input mt-6 trudi-date">
+              <trudi-form-control [control]="beforeDate">
+                <trudi-date-picker
+                  class="date"
+                  formControlName="beforeDate"
+                  (trudiOnOk)="handleDate($event)"
+                  [class.trudi-picker-error]="(beforeDate.invalid && (beforeDate.dirty || beforeDate.touched)) || invalidBeforeDate"
+                  (trudiOnOpenChange)="triggerInputTouched($event, 'beforeDate')">
+                </trudi-date-picker>
+              </trudi-form-control>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div class="d-flex gap-12 leave-notice-detail-footer">
+      <button
+        *ngIf="hasBackButton"
+        trudi-btn
+        variant="outlined"
+        btnType="neutral"
+        (click)="handleCancel()">
+        Back
+      </button>
+      <button trudi-btn (click)="handleConfirm()">Next</button>
+    </div>
+  </ng-template>
+</resizable-modal-popup>

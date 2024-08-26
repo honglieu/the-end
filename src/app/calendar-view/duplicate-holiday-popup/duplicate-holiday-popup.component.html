@@ -1,0 +1,26 @@
+<div class="confirm-wrapper">
+  <div class="header">
+    <div class="warning-icon">
+      <img src="/assets/icon/icon-warning-red.svg" />
+    </div>
+    <div class="confirm-text">
+      <p class="text-sure">Change the holiday title</p>
+      <p class="cannot-text">
+        This date was already chosen for ‘{{nameChange}}’. Would you like to
+        change into ‘{{nameChosen}}’ ?
+      </p>
+    </div>
+  </div>
+  <div class="btn-wrapper">
+    <button
+      trudi-btn
+      variant="tonal"
+      btnType="neutral"
+      (click)="leftBtnClick()">
+      <span class="btn-text"> {{leftBtnText}} </span>
+    </button>
+    <button trudi-btn btnType="danger" (click)="rightBtnClick()">
+      <span class="btn-text"> {{rightBtnText}} </span>
+    </button>
+  </div>
+</div>

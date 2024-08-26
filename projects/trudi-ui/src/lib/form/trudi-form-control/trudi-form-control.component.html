@@ -1,0 +1,9 @@
+<div class="trudi-form-control-wrapper">
+  <ng-content></ng-content>
+  <div
+    *ngIf="!checkSubmit && control?.invalid && (checkDirty ? control?.dirty : control?.touched) && showErrorMessage"
+    class="error-container d-flex align-items-start gap-4">
+    <trudi-icon icon="iconWarning" class="mt-2"></trudi-icon>
+    <div class="error-text">{{ errorMessage }}</div>
+  </div>
+</div>

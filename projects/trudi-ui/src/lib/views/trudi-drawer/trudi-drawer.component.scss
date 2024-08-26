@@ -1,0 +1,40 @@
+
+::ng-deep .ant-drawer-content-wrapper.trudi-drawer-wrapper {
+  .ant-drawer-close {
+    display: none;
+  }
+
+  .ant-drawer-content {
+    .ant-drawer-wrapper-body {
+      .ant-drawer-header {
+        padding: 0;
+      }
+
+      .ant-drawer-body {
+        padding: 0;
+        overflow-y: auto !important;
+      }
+
+      .ant-drawer-footer {
+        padding: 20px 24px;
+        .trudi-drawer-footer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+
+          .trudi-drawer-footer-left {
+            display: flex;
+            align-items: center;
+            column-gap: 16px;
+          }
+
+          .trudi-drawer-footer-right {
+            display: flex;
+            align-items: center;
+            column-gap: 16px;
+          }
+        }
+      }
+    }
+  }
+}

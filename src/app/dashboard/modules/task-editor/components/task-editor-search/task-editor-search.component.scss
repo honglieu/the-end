@@ -1,0 +1,17 @@
+@import 'function';
+
+:host {
+  .search-wrapper {
+    ::ng-deep trudi-text-field {
+      .trudi-text-field-wrapper {
+        padding: 8px 12px;
+        .close-icon-wrapper {
+          cursor: pointer;
+        }
+      }
+    }
+    ::ng-deep .trudi-form-control-wrapper {
+      width: 320px;
+    }
+  }
+}

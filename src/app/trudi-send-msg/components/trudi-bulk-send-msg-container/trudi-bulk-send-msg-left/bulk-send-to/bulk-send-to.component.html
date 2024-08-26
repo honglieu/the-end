@@ -1,0 +1,107 @@
+<div class="form-container">
+  <p class="select-field-label">Bulk send to</p>
+  <trudi-form-control
+    [checkSubmit]="!isSubmitted"
+    [control]="bulkSendToControl"
+    [errors]="[{ errorName: 'emailInvalid', errorMessage: 'Invalid email' }]">
+    <trudi-multi-select
+      class="custom-select-options"
+      [ngClass]="{'custom-select-options-no-gap' : !isFocused}"
+      [items]="listBulkSendTo"
+      bindLabel="label"
+      bindValue="id"
+      [formControl]="bulkSendToControl"
+      [addTagFn]="selectedTasks ? addEmail : null"
+      placeholder="Select contact type or add external email"
+      [disabled]="configs.otherConfigs.disabledReceivers"
+      [searchFn]="searchBulkSendToFn"
+      (triggerAddTag)="handleAddExternalEmail($event)"
+      (visibleDropdownChange)="isFocused = $event"
+      #sendToSelect>
+      <ng-template trudi-header-tmp>
+        <div
+          class="d-flex trudi-multi-select-header align-items-center justify-content-between pd-12">
+          <div>
+            <span class="count-text">
+              {{ selectedContactTypeIds.length }}/{{listContactTypes.length}}
+            </span>
+          </div>
+          <span
+            class="clear-btn clear-selection-btn"
+            *ngIf="selectedContactTypeIds.length"
+            (click)="$event.stopPropagation(); handleClearSelection()"
+            >Clear selection</span
+          >
+        </div>
+      </ng-template>
+      <ng-template trudi-label-tmp let-items="items" let-clear="clear">
+        <ng-container
+          [ngTemplateOutlet]="isFocused ? focusTemplate : focusoutTemplate"></ng-container>
+        <ng-template #focusTemplate>
+          <div
+            class="ng-label-focused d-flex align-items-center"
+            *ngFor="let item of items; let last = last">
+            <div
+              class="select-item select-item-label d-flex align-items-center gap-8"
+              [ngClass]="{'select-item-label-invalid': !item.isValid}">
+              <app-circle-avatar
+                *ngIf="!item.isValid"
+                [size]="16"
+                [userType]="EUserPropertyType.EXTERNAL"
+                [isValid]="false">
+              </app-circle-avatar>
+              <span class="overflow-text"> {{item.label}} </span>
+              <trudi-icon
+                *ngIf="!item?.disabled"
+                class="cursor-pointer select-item-remove size-16"
+                icon="closeGray64"
+                (click)="$event.stopPropagation(); clear(item); handleRemoveItem(item)"></trudi-icon>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #focusoutTemplate>
+          <div
+            class="ng-label-focused d-flex align-items-center"
+            *ngFor="let item of items.slice(0, 4); let last = last">
+            <span
+              class="external-email-text"
+              [ngClass]="{'select-item-label-invalid': !item.isValid}">
+              {{item.label}}
+            </span>
+            <span *ngIf="!last">,&nbsp;</span>
+          </div>
+          <div
+            *ngIf="items?.length > 4"
+            class="ng-label-focused d-flex align-items-center">
+            <span class="external-email-text">
+              {{ ', +' + (items.length - 4) }}
+            </span>
+          </div>
+        </ng-template>
+      </ng-template>
+      <ng-template
+        trudi-option-tmp
+        let-item="item"
+        let-searchTerm="searchTerm"
+        let-item$="item$">
+        <div
+          class="bulk-send-to-option d-flex justify-content-between align-items-center w-100"
+          [ngClass]="{'external-email-option' : item.type === EUserPropertyType.UNIDENTIFIED}"
+          (click)="handleClickOption(item$)">
+          <div class="d-flex flex-dir-column gap-4">
+            <span class="sendTo-label"> {{item.label}} </span>
+            <span *ngIf="item?.subLabel" class="sendTo-subLabel">
+              {{item.subLabel}}
+            </span>
+          </div>
+          <div class="d-flex align-items-center">
+            <trudi-checkbox
+              [disabled]="item?.disabled"
+              [ngModel]="item$.selected"
+              [ngModelOptions]="{standalone: true}"></trudi-checkbox>
+          </div>
+        </div>
+      </ng-template>
+    </trudi-multi-select>
+  </trudi-form-control>
+</div>

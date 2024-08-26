@@ -1,0 +1,95 @@
+<div class="wrapper__ai--interactive">
+  <button
+    id="aiMutationBtn"
+    #aiReplyBtn
+    (click)="handleOpenInputBox()"
+    tabindex="0"
+    class="float-button primary"
+    [nzPopoverOverlayClassName]="'ai-reply-popover-overlay'"
+    nz-popover
+    #popoverView="nzPopover"
+    [nzPopoverOrigin]="parentElementRef"
+    [nzPopoverTrigger]="null"
+    [nzPopoverPlacement]="['bottomRight', 'bottomLeft', 'topRight', 'topLeft', 'leftTop', 'leftBottom', 'rightTop', 'rightBottom']"
+    [nzPopoverVisible]="aiWindowState === EAiWindowState.Mutation"
+    [class.primary--selected]="aiWindowState === EAiWindowState.Mutation"
+    [nzPopoverContent]="aiReplyTmpl">
+    <trudi-icon icon="lightOutline"></trudi-icon>
+  </button>
+
+  <ng-template #aiReplyTmpl>
+    <div
+      class="resize-wrapper ai-interactive-resize-wrapper"
+      nz-resizable
+      #aiView
+      [nzBounds]="'window'"
+      [nzMaxHeight]="maxHeight"
+      [nzMaxWidth]="maxWidth"
+      [style.height.px]="height"
+      [style.width.px]="width"
+      [nzMinHeight]="minHeight"
+      [nzMinWidth]="minWidth"
+      (nzResize)="handleResize($event)">
+      @for(direction of enabledResizeDirections; track direction) {
+      <nz-resize-handle
+        *ngIf="!((direction === 'bottom' || direction ==='top') && !this.listInteractiveAi?.length)"
+        [nzDirection]="direction"></nz-resize-handle>
+      }
+
+      <div class="ai__interactive">
+        <div
+          class="ai__interactive--body"
+          #bodyView
+          *ngIf="listInteractiveAi?.length"
+          [class.ai__interactive--bg]="listInteractiveAi?.length">
+          @for (interactiveAi of listInteractiveAi; track interactiveAi.id){
+          <div class="ai__interactive--content" [id]="interactiveAi.id">
+            <ai-generated-content
+              #aiContent
+              [interactiveAi]="interactiveAi"></ai-generated-content>
+          </div>
+
+          }
+        </div>
+        <div class="ai__interactive--footer">
+          <div class="ai__interactive--typing">
+            @if (prompt && listInteractiveAi?.length && !isFocusTextarea) {
+            <div (click)="handleFocus()" class="typing_fake">
+              <p class="typing_fake--text">{{prompt}}</p>
+            </div>
+            } @else {
+            <trudi-textarea
+              #trudiTextarea
+              trudiTextFieldResize
+              [(ngModel)]="prompt"
+              (keyup.enter)="handleSendAi()"
+              (triggerEventBlur)="handleBlur()"
+              (triggerEventFocus)="handleFocus()"
+              maxHeightResize="130"
+              [minHeightResize]="listInteractiveAi?.length ? 40 : 84"
+              [maxCharacter]="750"
+              [autoFocus]="listInteractiveAi?.length"
+              [showCounting]="false"
+              [disabled]="(isGenerating$ | async)"
+              [placeholder]="placeholderInputBox"
+              (resized)="handleTextAreaResize($event)">
+              ></trudi-textarea
+            >
+            }
+            <div
+              tabindex="0"
+              class="ai__interactive--send"
+              [ngClass]="!prompt?.length || (isGenerating$ | async)?'btn__send--disable':'btn__send--active'"
+              (click)="handleSendAi()">
+              <trudi-icon icon="sendAi"></trudi-icon>
+            </div>
+          </div>
+          <div #footerView class="ai__interactive--option">
+            <suggestion-button-container
+              (clickSuggestionBtn)="handleClickSuggestionBtn()" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

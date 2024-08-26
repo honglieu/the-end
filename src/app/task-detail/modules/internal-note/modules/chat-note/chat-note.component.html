@@ -1,0 +1,187 @@
+<div
+  #chatNoteContainer
+  class="chat-note-container"
+  data-e2e="chat-note-container">
+  <div
+    #resizeEditor
+    *ngIf="configEditNote.toolbar"
+    class="resize"
+    (mousedown)="onResize($event)"></div>
+
+  <internal-note-attachment
+    [listOfFiles]="listOfFiles"
+    [selectedContactCard]="selectedContactCard"
+    [noteId]="noteId"
+    [overFileSize]="overFileSize"
+    [unSupportFile]="unSupportFile">
+  </internal-note-attachment>
+
+  <div
+    class="note-container border-rad-8 {{styleEditNote}}"
+    [ngClass]="{
+      'focus': noteFocus
+    }">
+    <div
+      *ngIf="configEditNote.toolbar"
+      class="toolbar d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <div class="internal-text ml-8" data-e2e="chat-note-title">
+          Internal note
+        </div>
+        <div class="divider"></div>
+        <div class="list-btn d-flex gap-8">
+          <ng-container *ngFor="let btn of listToolbarButton; index as idx">
+            <div
+              #btnElements
+              [tabIndex]="0"
+              (keyup.enter)="btnElements.click()"
+              class="btn-item border-rad-4"
+              data-e2e="chat-note-user-select-button"
+              [ngClass]="{'selected': btn.selected}"
+              (click)="handleToolbarAction(btn)"
+              nz-tooltip
+              [nzTooltipTitle]="btn.selected ? '' : btn.tooltip"
+              nz-dropdown
+              nzTrigger="click"
+              [nzDropdownMenu]="btn.popup? actionPopup : null"
+              nzOverlayClassName="action-popup auto-hide-scroll"
+              [nzPlacement]="btn.popup?.position || ''"
+              [(nzVisible)]="btn.selected">
+              <trudi-icon
+                svgClass="size-24"
+                [icon]="btn.selected ? btn.selectedIcon : btn.defaultIcon">
+              </trudi-icon>
+            </div>
+            <nz-dropdown-menu #actionPopup="nzDropdownMenu">
+              <ul
+                class="border-rad-8 action-menu"
+                nz-menu
+                [nzMode]="'vertical'">
+                <ng-container [ngSwitch]="btn.action">
+                  <div *ngSwitchCase="ENoteToolbarAction.ATTACH">
+                    <ng-container *ngFor="let item of btn.popup.popupList">
+                      <li
+                        nz-menu-item
+                        class="d-flex gap-16 justify-content-between align-items-center"
+                        (click)="handleAttachAction(item.action)">
+                        <div class="item-text text-ellipsis">{{item.text}}</div>
+                      </li>
+                    </ng-container>
+                  </div>
+                  <div *ngSwitchDefault></div>
+                </ng-container>
+              </ul>
+            </nz-dropdown-menu>
+          </ng-container>
+        </div>
+      </div>
+
+      <div
+        class="send-btn pd-4 border-rad-6 cursor-pointer"
+        [appE2E]="'chat-note-send-button'"
+        [ngClass]="{
+          'disabled cursor-default': disabledSendBtn || isConsole || isUploadingAttachment
+        }"
+        (click)="sendNote()">
+        <trudi-icon class="no-pointer-event" icon="sendArrow"></trudi-icon>
+      </div>
+    </div>
+    <div
+      class="editor-container relative"
+      [style.height]="configEditNote.height"
+      [style.width]="configEditNote.width"
+      (dragenter)="onDragEnter($event)"
+      (dragover)="onDragOver($event)"
+      (drop)="onDrop($event)">
+      <div
+        [trudiMention]="mentionList"
+        [mentionConfig]="mentionConfig"
+        (clickOutside)="handleClickOutsideMention()"
+        (closed)="setToolbarSelected(ENoteToolbarAction.MENTION, false)"></div>
+      <div #editor class="editor">
+        <editor
+          #tinyEditor
+          allowedEvents="onFocus, onClick, onKeyDown, onPaste, onDrop, onBlur"
+          [(ngModel)]="value"
+          [disabled]="disabled"
+          [init]="TinyMCEConfig"
+          (onFocus)="onFocus(true, $event)"
+          (onClick)="onClick($event)"
+          (onKeyDown)="onKeyDown($event.event)"
+          (onPaste)="onPaste($event)"
+          (onDrop)="onDrop($event.event)"
+          (onBlur)="onBlur($event)"
+          data-e2e="chat-note-text-editor">
+        </editor>
+      </div>
+      <div
+        class="down-right-text"
+        *ngIf="!disabled && configEditNote.character">
+        <app-remaining-character
+          [showCurrentTextLength]="true"
+          [maxlength]="MAX_TEXT_MESS_LENGTH"
+          [currentTextLength]="rawText.trim().length"
+          data-e2e="chat-note-remaining-characters-title">
+        </app-remaining-character>
+      </div>
+    </div>
+
+    <input
+      *ngIf="configEditNote.toolbar"
+      id="upload-internal-note-{{ noteId }}"
+      [multiple]="true"
+      class="input-file d-none"
+      type="file"
+      accept="{{ACCEPT_ONLY_SUPPORTED_FILE}}"
+      (change)="fileBrowseHandler($event)" />
+  </div>
+</div>
+
+<trudi-modal
+  [visible]="popupState === ENotePopup.INVALID_FILE"
+  iconName="iconWarningRed"
+  [closable]="false"
+  [modelWidth]="510"
+  type="confirm"
+  colorBtn="danger"
+  okText="Ok, got it"
+  title="Cannot upload file"
+  [subTitleTemplate]="subTitle"
+  [hiddenCancelBtn]="true"
+  [autoFocus]="null"
+  (onOk)="setPopupState(null)"
+  className="modal-invalid-file">
+</trudi-modal>
+
+<ng-template #subTitle>
+  <div class="sub-title">
+    <div>• You cannot upload with files larger than 25 MB.</div>
+    <div>
+      • Only 'png', 'jpeg', 'webp', 'gif', 'jpg', 'mp4', '3gpp', 'wmv', 'avi',
+      'mov', '3gp', 'pdf', 'docx', 'doc', 'xls', 'xlsx', 'xlsm' are allowed.
+    </div>
+  </div>
+</ng-template>
+
+<trudi-add-contact-card
+  *ngIf="popupState === ENotePopup.ADD_CONTACT_CARD"
+  [visible]="popupState === ENotePopup.ADD_CONTACT_CARD"
+  [configs]="addContactCardConfig"
+  [form]="sendMsgForm"
+  [openFrom]="EContactCardOpenFrom.INTERNAL_NOTE"
+  (onTrigger)="onTriggerAddContactCard($event)"
+  (onClose)="setPopupState(null)">
+</trudi-add-contact-card>
+
+<upload-from-crm
+  [configs]="addContactCardConfig"
+  (onTrigger)="onTriggerAddFilesFromCrm()"
+  (onClose)="onCloseUploadFromCRM()"
+  *ngIf="uploadFileFromCRMPopupState.uploadFileFromCRMOutside"></upload-from-crm>
+
+<div
+  *ngIf="sendMsgPopupState.addReiFormOutside"
+  [show]="sendMsgPopupState.addReiFormOutside"
+  [position]="ModalPopupPosition.center">
+  <trudi-rei-form-card></trudi-rei-form-card>
+</div>

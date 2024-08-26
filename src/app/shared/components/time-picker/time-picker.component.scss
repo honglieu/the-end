@@ -1,0 +1,237 @@
+@import 'function';
+.date-time-picker {
+  label {
+    @include fontSetup(var(--gray-500), 12px, 18px, normal, 400);
+    margin-bottom: 6px;
+    margin-top: 0;
+  }
+
+  .input-wrapper {
+    @include fontSetup(var(--gray-500), 12px, 20px, normal, 500);
+    trudi-icon:not(.time-picker-v2) {
+      max-width: 12px;
+    }
+    .disabled-field {
+      @include fontSetup(var(--bg-overlay-light), 14px, 20px, normal, 500);
+    }
+    input {
+      @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+      background: var(--bg-neutral-tonal-normal, #f2f5f7);
+      border: none;
+      padding: 6px 8px;
+      padding-right: 30px;
+      cursor: pointer;
+
+      &:hover {
+        outline: 1px outline var(--border-neutral-dark, #d8dcdf);
+        background: var(--bg-neutral-tonal-stronger, #e7eaed);
+      }
+
+      &:focus:not(.input-error) {
+        line-height: 17px;
+        @include box-shadow-input-select(var(--shadow-brand));
+        background: var(--white) !important;
+      }
+
+      &:focus ~ span {
+        line-height: 17px;
+        background: var(--white) !important;
+      }
+
+      &.input-number {
+        margin-right: 20px;
+        width: 10rem;
+      }
+    }
+    .btn-group {
+      position: relative;
+      trudi-icon:not(.time-picker-v2),
+      span {
+        position: absolute;
+        top: 50%;
+      }
+      span {
+        @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+        left: 12px;
+        transform: translateY(-50%);
+      }
+
+      trudi-icon:not(.time-picker-v2) {
+        right: 12px;
+        max-width: 20px;
+        transition: all 0.2s;
+        transform: translateY(-50%) rotate(0deg);
+        cursor: pointer;
+      }
+
+      &.dropdown-show {
+        trudi-icon:not(.time-picker-v2) {
+          transform: translateY(-50%) rotate(180deg);
+          cursor: pointer;
+        }
+      }
+
+      .time-label {
+        @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+      }
+    }
+
+    .dropdown-button {
+      max-width: 112px;
+      min-height: 32px;
+    }
+
+    .disabled {
+      background-color: var(--gray-200);
+      color: var(--bg-overlay-light);
+    }
+
+    .calendar-icon {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+    }
+  }
+
+  input[type='date']::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: auto;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+    z-index: 10;
+  }
+
+  .input-relative {
+    position: relative;
+    width: 100%;
+
+    input {
+      width: 100%;
+    }
+    .value-format {
+      @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+      background: var(--gray-50);
+      border: none;
+      padding: 6px 6px;
+      position: absolute;
+      top: 2px;
+      left: 4px;
+      width: 75%;
+      height: 80%;
+    }
+  }
+
+  .validate-msg {
+    @include fontSetup(var(--danger-500), 1.2rem, 16px, normal, 400);
+    margin-left: 4px;
+  }
+  .input-error,
+  .input-error:focus {
+    @include box-shadow-input-select(var(--shadow-danger));
+  }
+
+  .input-error.input-error-hour:focus {
+    @include box-shadow-input-select(var(--shadow-danger));
+  }
+}
+.schedule-msg-inline {
+  top: unset !important;
+  bottom: 100% !important;
+  margin-top: 0 !important;
+  margin-bottom: 41px !important;
+  left: -16%;
+}
+
+.dropdown-list {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  white-space: nowrap;
+  padding: 0;
+  border-radius: 8px;
+  color: var(--gray-800);
+  background-color: var(--white);
+  box-shadow: 0 2px 5px 0 rgba(209, 206, 206, 0.26);
+  margin-top: 10px;
+  overflow: hidden;
+
+  ul {
+    overflow-x: hidden !important;
+    height: 100% !important;
+    max-height: 175px !important;
+  }
+
+  .tz-hint {
+    pointer-events: none;
+    padding: 12px 8px !important;
+    border-bottom: 1px solid var(--gray-200) !important;
+    .label-hint {
+      color: var(--fg-neutral-weaker, #999);
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 16px;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+  }
+
+  .item-active {
+    color: var(--gray-700) !important;
+  }
+
+  .item {
+    @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+    text-align: left;
+    user-select: none;
+    padding: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    height: 44px;
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      color: var(--gray-700);
+    }
+
+    &:focus {
+      background-color: red !important;
+      color: var(--gray-700);
+    }
+
+    .check-success {
+      margin-left: 10px;
+      width: 14px;
+    }
+  }
+
+  .item-disabled {
+    background-color: var(--gray-50);
+    cursor: default;
+    pointer-events: none;
+    color: var(--gray-500);
+  }
+
+  &:after {
+    display: block;
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid var(--white);
+    top: -10px;
+    right: 7px;
+  }
+}

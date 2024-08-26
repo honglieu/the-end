@@ -1,0 +1,147 @@
+:host .wrapper-email-notification-settings {
+  display: flex;
+  justify-content: center;
+
+  .logo-trudi {
+    width: 64px;
+    height: 64px;
+  }
+  .button-save-notification-email {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    align-self: stretch;
+
+    .button-inner {
+      display: flex;
+      padding: 16px;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      border-radius: 4px;
+      background: var(--brand-500);
+      border: 0;
+
+      .text {
+        color: var(--white);
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+      }
+    }
+  }
+  .wrapper-thanks {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 40px;
+
+    .thank-text {
+      color: var(--gray-800);
+      font-size: 32px;
+      font-weight: 600;
+      line-height: 36px;
+    }
+  }
+  .email-notification-thanks {
+    display: flex;
+    align-items: center;
+    height: 100vh;
+    padding: 0px 116px;
+  }
+  .wrapper-email-left-thanks {
+    padding-top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .image-email-settings-thanks {
+    padding-top: 0;
+  }
+
+  ::ng-deep {
+    .skeleton-text {
+      .ant-skeleton-content {
+        h3.ant-skeleton-title {
+          width: 80% !important;
+          margin-top: 0px;
+        }
+      }
+    }
+    .skeleton-image {
+      span.ant-skeleton-button {
+        width: 350px;
+        height: 250px;
+      }
+    }
+    .button-skeleton {
+      padding: 0px !important;
+      border: none !important;
+
+      span.ant-skeleton-button {
+        width: 300px;
+        height: 50px;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+      display: block;
+
+      .email-notification-thanks {
+        display: block;
+        padding: 32px 20px;
+      }
+      .wrapper-email-left {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 32px;
+        flex: 1 0 0;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        width: 100%;
+      }
+      .button-save-notification-email {
+        .button-inner {
+          width: 100%;
+          min-width: auto;
+        }
+      }
+      .image-email-settings-thanks {
+        display: none !important;
+      }
+      .wrapper-thanks {
+        .thank-text {
+          width: 100%;
+        }
+      }
+  }
+  @media (min-width: 768px) {
+    .img-notification-email-setting {
+      padding-left: 52px;
+      width: max-content;
+      height: max-content;
+    }
+
+    .button-save-notification-email {
+      min-width: 311px;
+    }
+  }
+  @media (min-width: 1440px) {
+    .email-notification-thanks {
+      margin: 0 auto;
+
+      .img-notification-email-setting {
+        padding-left: 52px;
+        width: max-content;
+        height: max-content;
+      }
+    }
+    .wrapper-thanks {
+      .thank-text {
+        width: 704px;
+      }
+    }
+  }
+}

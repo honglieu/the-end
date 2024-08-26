@@ -1,0 +1,246 @@
+<div class="inbox-sidebar-wrapper d-flex flex-dir-column h-100 border-r">
+  <div class="inbox-sidebar-header">
+    <mailbox></mailbox>
+  </div>
+  <ng-container *ngIf="!currentMailboxId; else loadingContent">
+    <div
+      class="inbox-sidebar-container d-flex flex-dir-column auto-hide-scroll">
+      <div class="wrapper-skeleton-msg">
+        <div class="message-block">
+          <div class="sidebar-title">
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="ant-skeleton-custom size-60"></nz-skeleton>
+          </div>
+          <div
+            class="d-flex flex-row"
+            *ngFor="let _ of [].constructor(3); let i = index">
+            <div>
+              <nz-skeleton-element
+                nzType="avatar"
+                [nzActive]="true"></nz-skeleton-element>
+            </div>
+            <div>
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"
+                class="ant-skeleton-custom size-60"></nz-skeleton>
+            </div>
+          </div>
+        </div>
+        <div class="task-block">
+          <div class="sidebar-title">
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="ant-skeleton-custom size-60"></nz-skeleton>
+          </div>
+          <div
+            class="d-flex flex-row"
+            *ngFor="let _ of [].constructor(5); let i = index">
+            <div class="size-44">
+              <nz-skeleton
+                *ngIf="i === 0"
+                [nzParagraph]="paragraph"
+                [nzActive]="true"
+                class="ant-skeleton-custom size-16"></nz-skeleton>
+            </div>
+            <div>
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"
+                class="size-60"></nz-skeleton>
+            </div>
+          </div>
+        </div>
+        <div class="ai-assistant-block">
+          <div class="sidebar-title">
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="ant-skeleton-custom size-60"></nz-skeleton>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="inbox-sidebar-skeleton-footer cursor-pointer">
+      <nz-skeleton
+        [nzParagraph]="paragraph"
+        [nzActive]="true"
+        class="ant-skeleton-custom size-60"></nz-skeleton>
+    </div>
+  </ng-container>
+</div>
+
+<ng-template #loadingContent>
+  <div
+    *ngIf="currentMailboxId"
+    class="inbox-sidebar-container d-flex flex-dir-column auto-hide-scroll">
+    <ng-container *ngIf="isTaskFolderLoading; else taskFolderContent">
+      <div
+        class="inbox-sidebar-container d-flex flex-dir-column auto-hide-scroll">
+        <div class="wrapper-skeleton-msg">
+          <div class="message-block">
+            <div class="sidebar-title">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"
+                class="ant-skeleton-custom size-60"></nz-skeleton>
+            </div>
+            <div
+              class="d-flex flex-row"
+              *ngFor="let _ of [].constructor(3); let i = index">
+              <div>
+                <nz-skeleton-element
+                  nzType="avatar"
+                  [nzActive]="true"></nz-skeleton-element>
+              </div>
+              <div>
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"
+                  class="ant-skeleton-custom size-60"></nz-skeleton>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #taskFolderContent>
+      <div
+        class="folder-wrapper"
+        [ngClass]="{'pd-top-12': !(!isAiAssistantFilter && teamMembers > 1 && !isConsole && ![ TaskStatusType.mailfolder].includes(statusParam))}">
+        <div class="message-block">
+          <message-sidebar-item [item]="messageInboxRoute">
+          </message-sidebar-item>
+        </div>
+        <div
+          *ngIf="isMailboxCompany && isShowAppMessageSection"
+          class="voice-mail-block">
+          <message-sidebar-item [item]="appMessageRoute">
+          </message-sidebar-item>
+        </div>
+        <div *ngIf="isShowVoiceMailSection" class="voice-mail-block">
+          <message-sidebar-item
+            [item]="voiceMailInboxRoute"></message-sidebar-item>
+        </div>
+        <div class="voice-mail-block">
+          <message-sidebar-item
+            [item]="facebookInboxRoute"></message-sidebar-item>
+        </div>
+      </div>
+    </ng-template>
+
+    <ng-container *ngIf="emailProvider.SENDGRID !== providerMailbox">
+      <ng-container *ngIf="isMailFolderLoading; else mailFolderContent">
+        <div
+          class="inbox-sidebar-container d-flex flex-dir-column auto-hide-scroll">
+          <div class="wrapper-skeleton-msg">
+            <div class="task-block">
+              <div class="sidebar-title">
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"
+                  class="ant-skeleton-custom size-60"></nz-skeleton>
+              </div>
+              <div
+                class="d-flex flex-row"
+                *ngFor="let _ of [].constructor(5); let i = index">
+                <div class="size-44">
+                  <nz-skeleton
+                    *ngIf="i === 0"
+                    [nzParagraph]="paragraph"
+                    [nzActive]="true"
+                    class="ant-skeleton-custom size-16"></nz-skeleton>
+                </div>
+                <div>
+                  <nz-skeleton
+                    [nzParagraph]="paragraph"
+                    [nzActive]="true"
+                    class="size-60"></nz-skeleton>
+                </div>
+              </div>
+            </div>
+            <div class="ai-assistant-block">
+              <div class="sidebar-title">
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"
+                  class="ant-skeleton-custom size-60"></nz-skeleton>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+
+    <ng-template #mailFolderContent>
+      <ng-container
+        *ngIf="
+          (!isConsole && (inboxService.syncMailBoxStatus$ | async) === EMailBoxStatus.ACTIVE &&
+          (inboxService?.isArchiveMailbox$ | async) === false) &&
+          !(
+            emailProvider.SENDGRID === providerMailbox ||
+            emailProvider.GMAIL === providerMailbox ||
+            emailProvider.OUTLOOK === providerMailbox ||
+            emailProvider.OTHER === providerMailbox
+          )
+          ">
+        <div
+          class="mail-block"
+          (click)="aiAssistantService.setIsStopAudioVoiceMail(true)">
+          <ul nz-menu nzMode="inline" class="border-r-none">
+            <li
+              nz-submenu
+              [nzTitle]="emailFolderTitle"
+              [(nzOpen)]="expandEmailFolder">
+              <ng-container *ngIf="expandEmailFolder">
+                <email-sidebar-item
+                  (click)="handleClickSidebarItem()"
+                  *ngFor="let routeData of emailRoutes; trackBy: trackByGmailRouteItem"
+                  [item]="routeData"></email-sidebar-item>
+              </ng-container>
+            </li>
+            <ng-template #emailFolderTitle>
+              <div class="mail-sidebar-title-wrapper">
+                <div class="mail-sidebar-title">{{ nameEmailFolder }}</div>
+                <div
+                  class="mail-sidebar-icon"
+                  (click)="$event.stopPropagation()">
+                  <trudi-icon
+                    icon="iconPlus2"
+                    [style]="{'width.px': 16, 'height.px': 16}"></trudi-icon>
+                </div>
+              </div>
+            </ng-template>
+          </ul>
+        </div>
+      </ng-container>
+      <div class="wrapper-email-folder">
+        <ng-container
+          *ngIf="(
+          ((inboxService.syncMailBoxStatus$ | async) === EMailBoxStatus.ACTIVE ||
+           (inboxService.syncMailBoxStatus$ | async) === EMailBoxStatus.SYNCING ||
+           (inboxService.syncMailBoxStatus$ | async) === EMailBoxStatus.FAIL ||
+           (inboxService.showFolders | async) === true
+          ) && (inboxService?.isArchiveMailbox$ | async) === false)
+            && ( emailProvider.GMAIL === providerMailbox ||
+                 emailProvider.OUTLOOK === providerMailbox ||
+                 emailProvider.OTHER === providerMailbox)">
+          <email-folder-sidebar
+            [item]="emailFolder"
+            [nestedFolders]="folderService.tree">
+          </email-folder-sidebar>
+        </ng-container>
+      </div>
+    </ng-template>
+  </div>
+</ng-template>
+
+<create-edit-task-folder-pop-up
+  *ngIf="showTaskFolderPopup"
+  [showPopup]="showTaskFolderPopup"
+  (closePopup)="handleCloseTaskFolder()">
+</create-edit-task-folder-pop-up>

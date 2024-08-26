@@ -1,0 +1,371 @@
+@import 'function';
+
+.form-scratch-container {
+  .trudi-form-control {
+    margin-bottom: 24px;
+
+    .form-scratch-label {
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 20px;
+      margin-bottom: 6px;
+      color: var(--fg-neutral-strongest, #202020);
+    }
+
+    input.trudi-input {
+      color: var(--fg-neutral-strongest, #202020);
+      font-size: 14px;
+      font-weight: 500;
+      max-height: 44px;
+    }
+
+    .trudi-input:hover {
+      border-color: var(--border-neutral-dark);
+    }
+
+    ::ng-deep
+      .ng-select.ng-select-multiple
+      .ng-select-container
+      .ng-value-container {
+      padding-top: 3px;
+      padding-left: 0;
+
+      .ng-placeholder {
+        padding-left: 1px;
+      }
+
+      .ng-input {
+        padding-top: 2px;
+        padding-bottom: 3px;
+        padding-left: 3px;
+      }
+
+      .ng-value {
+        border-radius: 8px;
+        border: 1px solid var(--border-neutral-dark, #d8dcdf);
+        background: var(--bg-base, #fff) !important;
+        padding: 4px 8px;
+        color: var(--fg-neutral-stronger, #3d3d3d) !important;
+        margin-bottom: 3px;
+        min-width: 59px;
+        justify-content: center;
+      }
+    }
+
+    ::ng-deep ng-select.scratch-ng-select {
+      .ng-select-container {
+        min-height: 44px !important;
+        border-radius: 8px;
+        background-color: var(--gray-200);
+        border: none;
+        padding: 3px 12px;
+
+        &:before {
+          content: '';
+          background: none !important;
+        }
+
+        .ng-value-container {
+          .ng-value {
+            color: var(--fg-neutral-stronger, #3d3d3d);
+            font-size: 14px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: 20px;
+          }
+
+          .ng-placeholder {
+            font-weight: 500;
+            line-height: 20px;
+            font-size: 14px;
+            top: 13px;
+          }
+        }
+
+        .ng-input > input {
+          font-weight: 500;
+          font-size: 14px;
+        }
+      }
+
+      &:hover {
+        border-color: var(--fg-base);
+      }
+      ::ng-deep {
+        .skeleton-rectangle {
+          h3.ant-skeleton-title {
+            margin-top: 0px;
+          }
+        }
+      }
+      .ng-arrow-wrapper {
+        padding-right: 0px;
+        padding-left: 5px;
+
+        .ng-arrow {
+          width: 12px;
+          height: 8px;
+          border: none;
+          background: url(/assets/images/arow.png);
+        }
+      }
+
+      .ng-dropdown-panel {
+        .ng-dropdown-header {
+          border-bottom: 1px solid var(--border-neutral-light, #f2f5f7);
+          background: var(--bg-neutral-tonal-normal, #f2f5f7);
+          padding: 8px 16px 8px 12px;
+        }
+
+        .ng-dropdown-panel-items .ng-option {
+          padding: 12px;
+          border-radius: 0;
+        }
+      }
+
+      &.input-error-select {
+        .ng-select-container {
+          border-radius: 8px !important;
+          @include box-shadow-input-select(var(--shadow-danger) !important);
+
+          &:hover,
+          &:active {
+            @include box-shadow-input-select(var(--shadow-danger) !important);
+          }
+        }
+      }
+
+      &.ng-select-opened {
+        .ng-arrow-wrapper {
+          padding-right: 0px;
+
+          .ng-arrow {
+            width: 100%;
+            height: 13px;
+            border: none;
+            background-size: cover;
+            padding-right: 0px;
+            background: url('/assets/images/chevron-up.png');
+          }
+        }
+      }
+
+      .ng-dropdown-panel.ng-select-top {
+        bottom: unset;
+        margin-top: 10px;
+      }
+
+      .ng-dropdown-panel .ng-dropdown-panel-items {
+        max-height: 220px;
+
+        .ng-option {
+          &:not(:last-child) {
+            border-bottom: 1px solid var(--border-neutral-light, #f2f5f7);
+            box-shadow: none;
+          }
+        }
+
+        .ng-option.ng-option-selected {
+          &:after {
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            background: url('/assets/icon/ownership-check.svg') no-repeat center;
+            border-radius: 50%;
+          }
+
+          .ng-option:not(:last-child) {
+            border-bottom: 1px solid var(--border-neutral-light, #f2f5f7);
+            box-shadow: none;
+          }
+          span {
+            font-weight: 500;
+          }
+        }
+      }
+
+      .ng-clear-wrapper {
+        width: 20px;
+        height: 20px;
+        border: 1px solid var(--gray-200, #d8dcdf);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 3px;
+      }
+    }
+
+    ::ng-deep .ng-select.ng-select-opened .ng-select-container {
+      background: var(--bg-base, #fff) !important;
+      box-shadow: 0px 0px 0px 1px var(--border-brand),
+        0px 0px 0px 3px var(--brand-300, #b9e8e4) !important;
+    }
+
+    ::ng-deep
+      .ng-select.ng-select-focused:not(.ng-select-opened)
+      > .ng-select-container {
+      background: var(--bg-base);
+      box-shadow: 0px 0px 0px 1px var(--border-brand),
+        0px 0px 0px 3px var(--brand-300, #b9e8e4) !important;
+    }
+
+    ::ng-deep .trudi-checkbox {
+      svg {
+        top: 2px !important;
+        left: 2px !important;
+      }
+    }
+
+    ::ng-deep mark.highlight {
+      background: var(--bg-tenant-solid-normal);
+      color: var(--fg-neutral-normal, #646464);
+      padding: 2px 0;
+    }
+
+    input.trudi-input:focus {
+      background: var(--bg-base, #fff) !important;
+      box-shadow: 0px 0px 0px 1px var(--border-brand),
+        0px 0px 0px 3px var(--brand-300, #b9e8e4) !important;
+    }
+  }
+
+  .count-text {
+    @include fontSetup(var(--fg-neutral-weaker), 12px, 16px, normal, 400);
+  }
+
+  .select-all-btn {
+    color: var(--fg-neutral-weaker, #999);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+  }
+
+  .request-summary {
+    &-label {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 20px;
+      color: var(--fg-neutral-strongest, #202020);
+    }
+
+    &-description {
+      font-size: 12px;
+      display: block;
+      font-weight: 400;
+      line-height: 16px;
+      color: var(--fg-neutral-normal, #646464);
+      margin-bottom: 12px;
+      max-width: 552px;
+    }
+
+    &-radio-button {
+      ::ng-deep trudi-radio-button {
+        span {
+          font-weight: 400 !important;
+        }
+      }
+
+      ::ng-deep .ant-radio-group {
+        gap: 8px !important;
+      }
+    }
+  }
+}
+
+::ng-deep .request-summary-overlay {
+  left: -10px;
+
+  .ant-popover-inner-content {
+    margin-top: -12px;
+    padding: 0;
+  }
+
+  .ant-popover-arrow {
+    display: none;
+  }
+}
+
+.popover {
+  &-container {
+    width: 330px;
+    height: 319px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-header {
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-label {
+    color: var(--fg-neutral-strongest, #202020);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+  }
+
+  &-description {
+    color: var(--fg-neutral-stronger, #3d3d3d);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+  }
+
+  &-content {
+    flex: 1;
+    background: var(--bg-neutral-tonal-stronger, #e7eaed);
+    padding: 16px;
+    border-radius: 0 0 8px 8px;
+    display: flex;
+  }
+}
+
+.btn-next-task {
+  width: 100px;
+  height: 40px;
+  padding: 0px 16px;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--bg-brand-solid-normal, #00aa9f);
+  border: none;
+  @include fontSetup(var(--fg-neutral-base, #fff), 14px, 20px, normal, 600);
+
+  &:hover {
+    background: var(--bg-brand-solid-stronger, #33bbb2);
+  }
+
+  &:active {
+    background: var(--bg-brand-solid-strongest, #0aa095);
+  }
+
+  &:disabled {
+    background: var(--bg-brand-tonal-strongest, #b9e8e4);
+    cursor: not-allowed;
+  }
+}
+
+.btn-back-task {
+  width: 100px;
+  height: 40px;
+  padding: 0px 16px;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--bg-neutral-base-default, #fff);
+  border: 1px solid var(--border-neutral-dark, #d8dcdf);
+  @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 600);
+  &:hover {
+    background-color: var(--bg-neutral-tonal-stronger);
+  }
+
+  &:disabled {
+    border: 1px solid var(--border-neutral-dark, #d8dcdf);
+    color: var(--fg-neutral-weakest, #b9bec0);
+    cursor: not-allowed;
+    background: none;
+  }
+}

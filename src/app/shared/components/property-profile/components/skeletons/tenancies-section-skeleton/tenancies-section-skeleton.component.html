@@ -1,0 +1,18 @@
+<div class="tenancies-section-skeleton">
+  <div class="heading" *ngIf="displayHeader">
+    <nz-skeleton-element
+      class="button-skeleton heading"
+      nzType="button"
+      [nzActive]="true"></nz-skeleton-element>
+  </div>
+  <div *ngFor="let _ of [].constructor(3)" class="info-row">
+    <nz-skeleton-element
+      class="button-skeleton"
+      nzType="button"
+      [nzActive]="true"></nz-skeleton-element>
+    <nz-skeleton-element
+      class="avatar-skeleton"
+      nzType="avatar"
+      [nzActive]="true"></nz-skeleton-element>
+  </div>
+</div>

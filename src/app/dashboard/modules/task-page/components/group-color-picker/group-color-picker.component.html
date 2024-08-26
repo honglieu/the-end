@@ -1,0 +1,22 @@
+<div
+  class="group-color-btn"
+  [ngStyle]="{ background: currentColor }"
+  nz-dropdown
+  [nzVisible]="showDropdown"
+  (nzVisibleChange)="changeDropdown($event)"
+  [nzTrigger]="'click'"
+  [nzClickHide]="false"
+  [nzPlacement]="'bottomLeft'"
+  [nzDropdownMenu]="menu"></div>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div class="color-picker-wrapper" nz-menu nzSelectable>
+    <div
+      *ngFor="let item of COLORS"
+      class="color-item"
+      [ngStyle]="{ background: item }"
+      [class.selected-color]="currentColor === item"
+      (mousedown)="$event.preventDefault()"
+      (click)="handleSelectColor(item);"></div>
+  </div>
+</nz-dropdown-menu>

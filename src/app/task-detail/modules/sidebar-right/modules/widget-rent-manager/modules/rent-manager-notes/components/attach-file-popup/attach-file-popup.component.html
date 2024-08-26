@@ -1,0 +1,153 @@
+<trudi-modal
+  [visible]="true"
+  [autoFocus]="false"
+  [hiddenCancelBtn]="true"
+  (onCancel)="handleAfterClose()"
+  okText="Next">
+  <ng-template #headerModal>
+    <div class="d-flex align-items-center">
+      <trudi-icon [icon]="'rentManager'" class="flex-1 size-icon"></trudi-icon>
+      <div class="title flex-1 w-100">
+        <span>Attach file</span>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #headerModal>
+    <div>
+      <div class="header">
+        <div
+          class="detail-invite d-flex justify-content-between align-items-center">
+          <div class="send-invite-icon">
+            <div
+              class="background-icon d-flex align-items-center justify-content-around">
+              <trudi-icon [icon]="'ptLogo'"></trudi-icon>
+            </div>
+          </div>
+          <div class="send-invite-text d-flex align-items-center">
+            <p>Attach file</p>
+          </div>
+          <div class="close-btn"></div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <div class="attach-file">
+    <div
+      class="d-flex align-items-center justify-content-between file"
+      *ngFor="let item of attachments; index as i">
+      <div class="file-item" *ngIf="item">
+        <div
+          class="file-logo"
+          [class.dim-brightness]="item?.localThumb && item?.isSupportedVideo">
+          <img
+            *ngIf="item?.localThumb"
+            [src]="(item.localThumb | safe: 'resourceUrl')" />
+          <img
+            *ngIf="!item?.localThumb"
+            [src]="(((item?.fileName || item?.name) | getFileIconType))" />
+          <div
+            *ngIf="item?.localThumb && item?.isSupportedVideo"
+            class="play-icon">
+            <trudi-icon icon="playSolid"></trudi-icon>
+          </div>
+        </div>
+        <div class="file-content">
+          <div class="file-name text-ellipsis">{{item?.name}}</div>
+          <div class="file-size">
+            <span> {{ item?.user | formatDisplayFullName }} </span>
+            <span class="small-circle"></span>
+            <span> {{ item?.createdAt | formatDate | push }} </span>
+          </div>
+        </div>
+      </div>
+      <trudi-checkbox
+        type="circle"
+        [ngModel]="item.isSelected"
+        (change)="handleCheckboxFileAttach(i)"></trudi-checkbox>
+    </div>
+    <div
+      class="d-flex align-items-center justify-content-between file"
+      *ngFor="let item of listFile; let i = index">
+      <div class="file-item">
+        <div
+          class="file-logo"
+          [class.dim-brightness]="item?.localThumb && item?.isSupportedVideo">
+          <img
+            *ngIf="item?.localThumb"
+            [src]="(item.localThumb | safe: 'resourceUrl')" />
+          <img
+            *ngIf="!item?.localThumb"
+            [src]="(((item?.fileName || item?.name) | getFileIconType))" />
+          <div
+            *ngIf="item?.localThumb && item?.isSupportedVideo"
+            class="play-icon">
+            <trudi-icon icon="playSolid"></trudi-icon>
+          </div>
+        </div>
+        <div class="file-content">
+          <div class="file-name text-ellipsis">
+            {{ item?.name || item?.fileName }}
+          </div>
+          <div class="file-size">
+            <span> {{ item?.user | formatDisplayFullName }} </span>
+            <span class="small-circle"></span>
+            <span> {{ item?.createdAt | formatDate | push }} </span>
+          </div>
+        </div>
+      </div>
+      <trudi-checkbox
+        type="circle"
+        [ngModel]="item.isSelected"
+        (change)="handleCheckboxFileLocal(i)"></trudi-checkbox>
+    </div>
+  </div>
+  <div class="upload-button">
+    <upload-file-button
+      [disable]="isRMSyncing"
+      [disableRemoveButton]="isRMSyncing"
+      [ngClass]="{'item-disabled': isRMSyncing}"
+      [listFileData]="listFile"
+      (getListFile)="getListFile($event)"
+      [showLoading]="true"
+      [showListFile]="false"
+      [useListFileData]="true"
+      [multipleFile]="true"
+      [enableToast]="true"
+      [acceptTypeFile]="FILE_VALID_TYPE"></upload-file-button>
+  </div>
+  <div *ngIf="!hasFileSelected" class="d-flex mt-12">
+    <trudi-icon
+      svgClass="size-16"
+      [icon]="'iconWarningRedFit'"
+      class="d-flex align-items-center"
+      alt="error"></trudi-icon>
+    <span class="error-text">Select at least an option to continue</span>
+  </div>
+  <div *ngIf="isInvalidNumberFiles" class="d-flex mt-12">
+    <trudi-icon
+      svgClass="size-16"
+      [icon]="'iconWarningRedFit'"
+      class="d-flex align-items-center"
+      alt="error"></trudi-icon>
+    <span class="error-text">You can only upload 5 files at maximum</span>
+  </div>
+  <ng-template #footerModal>
+    <div class="d-flex" [style.gap.px]="12">
+      <button
+        trudi-btn
+        size="large"
+        variant="outlined"
+        btnType="neutral"
+        class="btn-cancel"
+        (click)="handleBack()">
+        <span class="btn-text">Back</span>
+      </button>
+      <button
+        type="button"
+        (click)="handleAttachFile()"
+        class="btn-confirm trudi-btn trudi-btn-semi-large trudi-btn-primary">
+        <span class="btn-text">Attach</span>
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

@@ -1,0 +1,18 @@
+@import 'function';
+.warning-property-wrapper {
+  padding-top: 20px;
+
+  .warning-property-content {
+    border-radius: 8px;
+    padding: 12px;
+    border: 1px solid var(--fg-warning, #fa781a);
+    background: var(--warning-50);
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      14px,
+      20px,
+      normal,
+      600
+    );
+  }
+}

@@ -1,0 +1,176 @@
+<div
+  class="task_detail--wapper"
+  [ngStyle]="{'height': taskDetailViewMode === EViewDetailMode.TASK ? '100vh' : 'calc(100vh - 52px)'}">
+  <div
+    *ngIf="taskDetailViewMode === EViewDetailMode.TASK"
+    class="d-flex h-100 w-100">
+    <div class="d-flex flex-dir-column h-100 w-100">
+      <header-container></header-container>
+      <div class="task-detail content-block d-flex">
+        <div class="left-block" [class.expanded]="isExpanded">
+          <div class="d-flex flex-dir-column w-100">
+            <div class="d-flex">
+              <div class="page-content">
+                <app-control-panel
+                  id="task-detail-step-panel"></app-control-panel>
+
+                <ng-container
+                  *ngIf="taskSyncItem && [ESyncStatus.SUCCESS, ESyncStatus.FAILED].includes(taskSyncItem?.syncStatus)">
+                  <div class="task-detail-sync d-flex align-items-center">
+                    <div class="task-detail-sync-icon mr-12">
+                      <trudi-icon
+                        [icon]="taskSyncStatus[taskSyncItem?.syncStatus]?.icon"
+                        svgClass="size-20"></trudi-icon>
+                    </div>
+                    <div class="task-detail-sync-content">
+                      <div class="task-detail-sync-content__title">
+                        {{taskSyncStatus[taskSyncItem?.syncStatus]?.message}}
+                      </div>
+                      <div class="task-detail-sync-content__time">
+                        {{taskSyncItem?.syncedDate | formatDateTime | push}}
+                      </div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+              <div class="header-conversations">
+                <header-conversations
+                  [currentProperty]="currentProperty"
+                  [task]="taskService?.currentTask$?.value"
+                  [taskDetailViewMode]="taskDetailViewMode"
+                  (currentTabChanged)="closeAppMessageDetail()"
+                  (messageSent)="closeAppMessageDetail()"></header-conversations>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="center-block"
+          [ngClass]="{'auto-size': conversationType === EConversationType.APP || isCreateAppMessage}">
+          <div
+            class="center-block-content"
+            [ngClass]="{'auto-size': conversationType === EConversationType.APP || isCreateAppMessage}">
+            <ng-container *ngIf="!isInternalNote">
+              <ng-container [ngSwitch]="conversationType">
+                <ng-template [ngSwitchCase]="(EConversationType.VOICE_MAIL)">
+                  <voice-mail-inbox-detail></voice-mail-inbox-detail>
+                </ng-template>
+                <ng-template [ngSwitchCase]="(EConversationType.APP)">
+                  <app-message-detail-list
+                    [isConversationTypeApp]="isConversationTypeApp"></app-message-detail-list>
+                </ng-template>
+                <ng-template [ngSwitchCase]="(EConversationType.EMAIL)">
+                  <app-chat
+                    [taskDetailViewMode]="taskDetailViewMode"></app-chat>
+                </ng-template>
+                <ng-template [ngSwitchCase]="null">
+                  <div class="empty-task-chat-container" style="width: 100%">
+                    <div class="no-data-icon">
+                      <div class="position-center-w">
+                        <img src="assets/images/no-item.png" alt="no-item" />
+                      </div>
+                    </div>
+                  </div>
+                </ng-template>
+              </ng-container>
+              <ng-template #appMessageSkeletonTemplate>
+                <app-message-detail-skeleton></app-message-detail-skeleton>
+              </ng-template>
+            </ng-container>
+          </div>
+        </div>
+        <div
+          appOutsideClickListener
+          (clickOutside)="handleClickOutsideUserProfileDrawer()"
+          [whiteList]="whiteListMsgDetail"
+          class="right-block"
+          #rightBlock>
+          <user-info-drawer
+            [openFrom]="ETypePage.TASK_DETAIL"
+            [currentDataUser]="currentDataUserProfile"
+            [isAppMessage]="isConversationTypeApp"
+            [visible]="isUserProfileDrawerVisible"></user-info-drawer>
+        </div>
+      </div>
+    </div>
+    @defer {
+    <div
+      appOutsideClickListener
+      (clickOutside)="handleClickOutside()"
+      [whiteList]="whiteListTaskDetail"
+      class="right-block"
+      #rightBlock>
+      <app-sidebar-right
+        [hightLightCalendarEvent]="hightLightCalendarEvent"
+        [isShowSidebarRight]="isShowSidebarFromEvent || isShowSidebarRight"></app-sidebar-right>
+    </div>
+    }
+  </div>
+
+  <div
+    *ngIf="taskDetailViewMode === EViewDetailMode.MESSAGE"
+    class="content-block d-flex">
+    <div class="center-block">
+      <div class="center-block-content">
+        <header-conversations
+          [currentProperty]="currentProperty"
+          [task]="taskService?.currentTask$?.value"
+          [taskDetailViewMode]="taskDetailViewMode"></header-conversations>
+        <app-chat [taskDetailViewMode]="taskDetailViewMode"></app-chat>
+      </div>
+    </div>
+
+    <div
+      appOutsideClickListener
+      (clickOutside)="handleClickOutsideUserProfileDrawer()"
+      [whiteList]="whiteListMsgDetail"
+      class="right-block"
+      #rightBlock>
+      <user-info-drawer
+        [openFrom]="ETypePage.TASK_DETAIL"
+        [currentDataUser]="currentDataUserProfile"
+        [isAppMessage]="isConversationTypeApp"
+        [visible]="isUserProfileDrawerVisible"></user-info-drawer>
+    </div>
+  </div>
+
+  <div
+    class="w-100 container-reminder-view-list"
+    *ngIf="taskDetailViewMode === EViewDetailMode.REMINDER">
+    <remider-view-list></remider-view-list>
+  </div>
+
+  <div id="task_detail--overlay"></div>
+</div>
+
+<create-new-task-pop-up
+  *ngIf="addToTaskConfig && addToTaskConfig.isOpenCreateNewTask"
+  [taskNameList]="addToTaskConfig.taskNameList"
+  [openFrom]="addToTaskConfig.openFrom"
+  [propertyId]="addToTaskConfig.currentPropertyId"
+  [activeProperty]="addToTaskConfig.activeProperty"
+  [categoryID]="addToTaskConfig.categoryID"
+  [showBackBtn]="addToTaskConfig.isShowBackBtn"
+  [isFromTrudiApp]="addToTaskConfig.isFromTrudiApp"
+  [isFromVoiceMail]="addToTaskConfig.isFromVoiceMail"
+  [disableSelectProperty]="addToTaskConfig.isFromTrudiApp || addToTaskConfig.isFromVoiceMail"
+  (stopProcessCreateNewTask)="stopProcessAddToTask()">
+</create-new-task-pop-up>
+
+<trudi-modal
+  *ngIf="addToTaskConfig && addToTaskConfig.isOpenMoveToExistingTask"
+  [visible]="addToTaskConfig.isOpenMoveToExistingTask"
+  [autoFocus]="null"
+  className="trudi-modal-custom">
+  <app-move-mess-to-different-task-v2
+    [isFromTrudiApp]="addToTaskConfig.isFromTrudiApp"
+    [propertyIds]="[addToTaskConfig.propertyId]"
+    [show]="addToTaskConfig.isOpenMoveToExistingTask"
+    [isUnHappyPath]="addToTaskConfig.isUnHappyPath"
+    [isShowAddress]="addToTaskConfig.isShowAddress"
+    [isFromVoiceMail]="addToTaskConfig.isFromVoiceMail"
+    [conversationId]="addToTaskConfig.conversationId"
+    [taskIds]="[currentTaskId]"
+    (isQuitModal)="stopProcessAddToTask()">
+  </app-move-mess-to-different-task-v2>
+</trudi-modal>

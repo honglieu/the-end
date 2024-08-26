@@ -1,0 +1,26 @@
+<div class="console-setting">
+  <sidebar-wrapper>
+    <ng-container leftContent>
+      <div class="left-sidebar">
+        <button
+          trudi-btn
+          variant="outlined"
+          btnType="neutral"
+          size="medium"
+          shape="circle"
+          class="header_icon cursor-pointer"
+          (click)="handleExit()">
+          <trudi-icon
+            class="exit-btn"
+            icon="closeV2"
+            [style]="{ 'width.px': 16, 'height.px': 16 }"></trudi-icon>
+        </button>
+        <p class="sidebar-title">Console settings</p>
+        <sidebar-item-shared [listItem]="listItem"></sidebar-item-shared>
+      </div>
+    </ng-container>
+    <ng-container rightContent>
+      <router-outlet></router-outlet>
+    </ng-container>
+  </sidebar-wrapper>
+</div>

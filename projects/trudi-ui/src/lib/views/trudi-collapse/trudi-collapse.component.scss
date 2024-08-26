@@ -1,0 +1,97 @@
+@import 'function';
+
+.trudi-collapse-container {
+  min-height: 56px;
+  border-radius: 0;
+  .trudi-collapse-header-content {
+    position: relative;
+    @include fontSetup(var(--gray-700), 14px, 20px, normal, 600);
+  }
+  .trudi-collapse-content-box {
+    border-radius: 0;
+  }
+  .icon-plus {
+    margin: 0 8px;
+    border-radius: 50%;
+    padding: 3px;
+    border: 1px solid var(--gray-200, #d8dcdf);
+    background: var(--white, #fff);
+    min-width: fit-content;
+    height: fit-content;
+    &:focus-visible {
+      box-shadow: inset 0px 0px 0px 1px var(--brand-500),
+        0px 0px 0px 2px rgba(var(--brand-500-rgb), 0.6) !important;
+      border: none;
+    }
+    &:hover {
+      background: var(--bg-neutral-tonal-stronger, #e7eaed);
+    }
+    &:active {
+      background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+    }
+  }
+  .icon-expand {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: auto;
+    margin: 0;
+    transform: translate(120%, -50%) rotate(180deg);
+    transition-duration: 0.5s;
+    border-radius: 50%;
+    border: none;
+    background-color: transparent;
+    width: 24px;
+    height: 24px;
+    background-color: var(--bg-neutral-tonal-normal, #f2f5f7);
+    display: flex;
+    justify-content: center;
+    &:hover {
+      background-color: var(--bg-neutral-tonal-stronger, #e7eaed);
+    }
+    &:active {
+      background-color: var(--bg-neutral-tonal-strongest, #d8dcdf);
+    }
+  }
+  .icon-rotate {
+    transform: translate(120%, -50%) rotate(0);
+  }
+}
+
+:host ::ng-deep {
+  .trudi-collapse-content-box p.no-content {
+    color: var(--fg-neutral-weaker, #999);
+    font-size: 14px;
+    font-style: italic;
+    line-height: 20px;
+    margin: 0;
+  }
+
+  .trudi-collapse-content-box .ant-collapse-header {
+    padding: 0;
+    margin-bottom: 12px;
+    width: 160px;
+  }
+
+  .trudi-collapse-content-box
+    div.ant-collapse-content
+    .ant-collapse-content-box {
+    padding: 0;
+  }
+
+  .trudi-collapse-header {
+    display: flex;
+    align-items: center;
+    &:focus-visible {
+      box-shadow: inset 0px 0px 0px 1px var(--brand-500),
+        0px 0px 0px 2px rgba(var(--brand-500-rgb), 0.6) !important;
+    }
+  }
+
+  .trudi-collapse-header-content img.image-header {
+    max-height: 24px;
+  }
+  svg-icon svg path {
+    fill: var(--fg-neutral-normal);
+  }
+}

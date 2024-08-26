@@ -1,0 +1,64 @@
+<div class="audio-control">
+  <div
+    class="cropper-wrapper"
+    [ngClass]="{isCollapsed}"
+    (click)="onAction($event)">
+    <div [innerHTML]="audio?.innerHTML"></div>
+    <div class="audio-action mt-8">
+      <div class="button-play" (click)="onPlay($event)">
+        <trudi-icon
+          svgClass="size-16"
+          [icon]="audio?.paused ? 'playAudio' : 'pauseAudio'"></trudi-icon>
+      </div>
+      <div class="time">{{currentTime}} / {{duration}}</div>
+      <div class="time-line-progress" #timeLine>
+        <div class="progress" #progress></div>
+      </div>
+      <div class="control">
+        <div class="volume-container" #volumeControl>
+          <div class="volume-button" (click)="onVolume($event)">
+            <div class="volume icono-volumeMedium">
+              <trudi-icon
+                [icon]="audio?.volume ? 'volume' : 'mute'"></trudi-icon>
+            </div>
+          </div>
+          <div class="volume-slider">
+            <div class="volume-line" #volumeLine>
+              <div class="volume-percentage" #volumePercent></div>
+            </div>
+          </div>
+        </div>
+        <button
+          nz-dropdown
+          nz-button
+          [nzTrigger]="'click'"
+          class="play-back"
+          [nzDropdownMenu]="menu">
+          {{audio?.playbackRate}}x
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <nz-dropdown-menu #menu="nzDropdownMenu">
+    <div nz-menu class="dropdown-list" (click)="onAction($event)">
+      <div
+        *ngFor="let rate of listRate"
+        nz-menu-item
+        class="item item-audio"
+        (click)="onPlayback(rate)">
+        {{rate}}x
+        <trudi-icon
+          *ngIf="+rate === audio?.playbackRate"
+          class="ml-auto"
+          svgClass="size-20"
+          [icon]="'check'"></trudi-icon>
+      </div>
+    </div>
+  </nz-dropdown-menu>
+
+  <div class="tooltip" #tooltip>
+    <div class="content">{{toolTipTime}}</div>
+    <trudi-icon icon="arrowTooltip"></trudi-icon>
+  </div>
+</div>

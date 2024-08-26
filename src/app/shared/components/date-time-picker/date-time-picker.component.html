@@ -1,0 +1,78 @@
+<div class="date-time-picker">
+  <div *ngIf="picker === typePicker.pickBy" class="date-time-group option-type">
+    <label>{{label}}</label>
+    <div class="d-flex">
+      <div class="input-wrapper">
+        <input
+          placeholder="{{(pickBySubject | async).value}}"
+          class="input-number border-rad-8"
+          type="number"
+          min="1"
+          [ngClass]="{'input-error': error}"
+          (change)="setValuePickBy($event)" />
+      </div>
+      <div class="input-wrapper">
+        <div
+          class="btn-group"
+          (click)="toggleDropdown()"
+          [dropdownTriggerFor]="dropdown"
+          #dropdownBtn>
+          <input
+            class="dropdown-button d-flex justify-content-between border-rad-8"
+            type="button" />
+          <span>{{(pickBySubject | async).type | titlecase }}s</span>
+          <img src="/assets/icon/toggle-arrow.svg" alt="icon down" />
+        </div>
+        <dropdown-menu #dropdown>
+          <div class="dropdown-list">
+            <div>
+              <div class="item" (click)="setTypePickBy(typePicker.day)">
+                <span>Days</span>
+              </div>
+              <div class="item" (click)="setTypePickBy(typePicker.month)">
+                <span>Months</span>
+              </div>
+              <div class="item" (click)="setTypePickBy(typePicker.year)">
+                <span>Years</span>
+              </div>
+            </div>
+          </div>
+        </dropdown-menu>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="picker === typePicker.year" class="date-time-group dmy-type">
+    <div class="input-wrapper d-flex flex-dir-column justify-content-between">
+      <label>{{label}}</label>
+      <div class="input-relative">
+        <input
+          [value]="value"
+          type="date"
+          class="resize-none border-rad-8"
+          [ngClass]="{'input-error': error?.required}"
+          (change)="setValueYear($event)"
+          #yearInput
+          required />
+        <img
+          class="calendar-icon"
+          src="/assets/icon/calendar-black.svg"
+          alt="" />
+        <span
+          class="value-format"
+          [style]="styleText"
+          [ngClass]="(value | date) ? 'date' : ''"
+          >{{(value | formatDate | async) ?? 'dd/mm/yyyy'}}</span
+        >
+      </div>
+    </div>
+    <ng-container *ngIf="error?.required && !hideError">
+      <img
+        src="/assets/images/icons/error-bg-red.svg"
+        class="sync-icon"
+        alt=""
+        srcset="" />
+      <span class="validate-msg">Required field</span>
+    </ng-container>
+  </div>
+</div>

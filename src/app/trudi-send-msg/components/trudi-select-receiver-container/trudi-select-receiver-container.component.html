@@ -1,0 +1,129 @@
+<div class="select-receiver-container d-flex flex-dir-column">
+  <div class="toCcBccWrapper" [hidden]="!isShowPreview">
+    <div
+      class="to-preview pd-12"
+      tabindex="0"
+      (click)="onClickToField()"
+      (keydown.enter)="onClickToField()">
+      <trudi-select-receiver-preview
+        *ngIf="isShowPreview"
+        [selectedProperty]="selectedProperty?.value"
+        [toRawUsers]="selectedReceivers?.value"
+        [toRawCcUsers]="ccReceivers?.value"
+        [toRawBccUsers]="bccReceivers?.value"></trudi-select-receiver-preview>
+    </div>
+  </div>
+  <div
+    form="sendMsgForm"
+    [hidden]="isShowPreview"
+    [whiteList]="whiteListClickOutsideSelectReceiver"
+    appOutsideClickListener
+    (clickOutside)="handleClickOutSide()">
+    <trudi-form-control
+      *ngIf="configs.footer.buttons.sendType !== ISendMsgType.EXTERNAL &&
+      (configs.otherConfigs.createMessageFrom === ECreateMessageFrom.SCRATCH
+      || configs.otherConfigs.createMessageFrom === ECreateMessageFrom.TASK_HEADER) 
+      || (configs.otherConfigs.createMessageFrom === ECreateMessageFrom.TASK_STEP && isTaskStepSingleEmailSendType)"
+      [errors]="[{errorName: 'emailInvalid', errorMessage: 'Please remove invalid email'}]">
+      <trudi-select-receiver-v2
+        #toField
+        class="receiver-wrapper"
+        [formControl]="selectedReceivers"
+        prefixTemplate="To"
+        [suffixTemplate]="isShowCCBtnForTOField && isShowBCCBtnForTOField ? suffixForTOFieldTemplate : null"
+        [configs]="configs"
+        [extraCls]="{'input-error-select': selectedReceivers.invalid && selectedReceivers.touched}"
+        [isAddItem]="true"
+        [compareWith]="compareWith"
+        [isShowSuffix]="true"
+        [isShowBCCBtn]="isShowBCCBtnForTOField"
+        [isShowCCBtn]="isShowCCBtnForTOField"
+        (clearAll)="selectedReceivers.setValue([])"
+        (setPreviewLabel)="setPreviewLabel($event)"
+        [prefillReceivers]="prefillTOReceiversLists"
+        [recipientsFromConfigs]="configs.body.prefillToCcBccReceiversList?.to"
+        [isRmEnvironment]="isRmEnvironment"
+        [selectedProperty]="selectedProperty?.value"
+        (changeValue)="trackUserChangeValue()">
+      </trudi-select-receiver-v2>
+    </trudi-form-control>
+    <trudi-form-control
+      *ngIf="(configs.footer.buttons.sendType !== ISendMsgType.EXTERNAL && (!isShowCCBtnForTOField || !isShowCCBtnForBCCField)) || prefillCCReceiversLists?.length > 0"
+      [errors]="[{errorName: 'emailInvalid', errorMessage: 'Please remove invalid email'}]">
+      <trudi-select-receiver-v2
+        #ccField
+        class="cc-receiver-wrapper"
+        [formControl]="ccReceivers"
+        prefixTemplate="Cc"
+        [suffixTemplate]="isShowBCCBtnForCCField ? suffixForCCAndBCCFieldsTemplate : null"
+        [configs]="configs"
+        [extraCls]="{'input-error-select': ccReceivers.invalid && ccReceivers.touched}"
+        [isAddItem]="true"
+        [compareWith]="compareWith"
+        [isShowSuffix]="true"
+        [isShowBCCBtn]="isShowBCCBtnForCCField"
+        (clearAll)="ccReceivers.setValue([])"
+        (setPreviewLabel)="setPreviewLabel($event)"
+        [prefillReceivers]="prefillCCReceiversLists"
+        [recipientsFromConfigs]="configs.body.prefillToCcBccReceiversList?.cc"
+        [isRmEnvironment]="isRmEnvironment"
+        (changeValue)="trackUserChangeValue()"
+        [selectedProperty]="selectedProperty?.value"></trudi-select-receiver-v2>
+    </trudi-form-control>
+    <trudi-form-control
+      *ngIf="(configs.footer.buttons.sendType !== ISendMsgType.EXTERNAL && (!isShowBCCBtnForTOField || !isShowBCCBtnForCCField)) || prefillBCCReceiversLists?.length > 0"
+      [errors]="[{errorName: 'emailInvalid', errorMessage: 'Please remove invalid email'}]">
+      <trudi-select-receiver-v2
+        #bccField
+        class="bcc-receiver-wrapper"
+        [formControl]="bccReceivers"
+        prefixTemplate="Bcc"
+        [suffixTemplate]="isShowCCBtnForBCCField ? suffixForCCAndBCCFieldsTemplate : null"
+        [configs]="configs"
+        [extraCls]="{'input-error-select': bccReceivers.invalid && bccReceivers.touched}"
+        [isAddItem]="true"
+        [compareWith]="compareWith"
+        [isShowSuffix]="true"
+        [isShowCCBtn]="isShowCCBtnForBCCField"
+        (clearAll)="bccReceivers.setValue([])"
+        (setPreviewLabel)="setPreviewLabel($event)"
+        [prefillReceivers]="prefillBCCReceiversLists"
+        [recipientsFromConfigs]="configs.body.prefillToCcBccReceiversList?.bcc"
+        [isRmEnvironment]="isRmEnvironment"
+        (changeValue)="trackUserChangeValue()"
+        [selectedProperty]="selectedProperty?.value"></trudi-select-receiver-v2>
+    </trudi-form-control>
+  </div>
+</div>
+<ng-template #suffixForTOFieldTemplate>
+  <div
+    class="function-btn-wrapper d-flex gap-4"
+    *ngIf="!prefillBCCReceiversLists?.length && !prefillCCReceiversLists?.length">
+    <button
+      class="function-btn ccBtn"
+      (click)="isShowCCBtnForTOField = false; handleFocusCCAndBCC(EReceiverType.CC)">
+      Cc
+    </button>
+    <button
+      class="function-btn bccBtn"
+      (click)="isShowBCCBtnForTOField = false; handleFocusCCAndBCC(EReceiverType.BCC)">
+      Bcc
+    </button>
+  </div>
+</ng-template>
+<ng-template #suffixForCCAndBCCFieldsTemplate>
+  <div class="function-btn-wrapper d-flex gap-4">
+    <button
+      class="function-btn ccBtn"
+      *ngIf="isShowCCBtnForTOField && isShowCCBtnForBCCField && !prefillCCReceiversLists?.length > 0"
+      (click)="isShowCCBtnForBCCField = false; handleFocusCCAndBCC(EReceiverType.CC)">
+      Cc
+    </button>
+    <button
+      class="function-btn bccBtn"
+      *ngIf="isShowBCCBtnForTOField && isShowBCCBtnForCCField && !prefillBCCReceiversLists?.length > 0"
+      (click)="isShowBCCBtnForCCField = false; handleFocusCCAndBCC(EReceiverType.BCC)">
+      Bcc
+    </button>
+  </div>
+</ng-template>

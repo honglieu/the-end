@@ -1,0 +1,322 @@
+<div class="sms-message-detail-header-wrapper">
+  <div class="d-flex align-items-center gap-16">
+    <div class="d-flex align-items-center gap-4 app-message-header-container">
+      <ng-container
+        *ngIf="!isLoadingDetailHeader;else voicemailDetailSkeletonTop">
+        <div
+          class="d-flex gap-4 align-items-center text-ellipsis sms-message-role-btn"
+          (click)="handleOpenUserProfile($event)">
+          <div class="sms-message-title">
+            @if (userInfo?.showUserName) {
+            <span
+              class="text-ellipsis"
+              [innerHTML]="userInfo | contactTitleByConversationProperty: contactTitleVariable">
+            </span>
+            } @else {
+            <span class="text-ellipsis">
+              {{smsPhoneNumber | phoneNumberFormat}}
+              {{userInfo?.isBelongToOtherProperties ?
+              BelongToOtherPropertiesText : ''}}
+            </span>
+            }
+          </div>
+        </div>
+      </ng-container>
+
+      <div
+        class="badge-status"
+        *ngIf="(currentConversation?.status | conversationStatus)?.text">
+        <trudi-badge
+          size="small"
+          [text]="(currentConversation?.status | conversationStatus)?.text"
+          [variant]="(currentConversation?.status | conversationStatus)?.variant"></trudi-badge>
+      </div>
+    </div>
+    <div class="ml-auto d-flex align-items-center gap-4">
+      @if (showResolvedBtn) {
+      <button
+        trudi-btn
+        variant="outlined"
+        size="small"
+        btnType="neutral"
+        [attr.data-e2e]="'task-details-reopen-button'"
+        (click)="handleMenu(EMessageMenuOption.RESOLVE, $event)"
+        class="button-task-app-message"
+        [disabled]="isConsole">
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          class="no-pointer-event"
+          [icon]="'checkCircle'"></trudi-icon>
+        <span class="app-message-actions-btn-text">{{'Resolve'}}</span>
+      </button>
+      }
+
+      <!-- Rei form -->
+      @if (!isRmEnvironment) {
+      <rei-form
+        [crmStatusOfConversation]="currentConversation.crmStatus"
+        [isDisableActionByOffBoardStatus]="isDisableActionByOffBoardStatus">
+      </rei-form>
+      }
+
+      <!-- More icon -->
+      <button
+        trudi-btn
+        variant="outlined"
+        size="small"
+        btnType="neutral"
+        shape="square"
+        [selected]="isThreeDotsMenuVisible"
+        [tabIndex]="0"
+        nz-dropdown
+        [nzClickHide]="false"
+        [nzDropdownMenu]="threeDotsMenu"
+        [nzTrigger]="'click'"
+        [nzVisible]="isThreeDotsMenuVisible"
+        (nzVisibleChange)="isThreeDotsMenuVisible = $event"
+        class="btn-more">
+        <trudi-icon icon="verticalMore"></trudi-icon>
+      </button>
+    </div>
+  </div>
+  <div class="d-flex align-items-center mt-4 gap-8">
+    <ng-container
+      *ngIf="!isLoadingDetailHeader;else voicemailDetailSkeletonBottom">
+      <button
+        class="item border-b-1 y-center cs-more cs-move d-flex align-items-center gap-8 app-message-button-address"
+        [attr.data-button-key]="EButtonTask.VIEW_PROPERTY"
+        [attr.data-button-type]="EButtonType.TASK"
+        [class.no-property]="!currentConversation?.streetline"
+        PreventButton
+        (leftClick)="handleOpenPropertyProfile()"
+        nz-tooltip
+        nzTooltipPlacement="top"
+        [nzTooltipTitle]="(
+                      (taskService.currentTask$ | async)?.property?.status && toolTipProperty)">
+        <div
+          class="d-flex align-items-center cs-more cs-move cursor-pointer address-title gap-4">
+          <trudi-icon class="size-16" [icon]="'iconAddress'"></trudi-icon>
+          <p
+            class="cursor-pointer info-property-address"
+            [ngClass]="{
+                          'strike-through': [EPropertyStatus.deleted, EPropertyStatus.archived, EPropertyStatus.inactive].includes(currentConversation?.propertyStatus),
+                          'draft-folder-property': isDraftFolder
+                          }">
+            {{currentConversation?.streetline || "No property"}}
+          </p>
+        </div>
+      </button>
+    </ng-container>
+
+    <div
+      *ngIf="!currentConversation?.isScratchTicket"
+      class="ml-auto d-flex gap-8 flex-wrap assign-to-agent-app-message"
+      [ngClass]="{'disabled': isConsole}">
+      <ng-container *ngIf="isSyncInprogress else syncStatus">
+        <div class="y-center gap-4">
+          <trudi-icon
+            svgClass="size-20 spin-syncing-v2"
+            [icon]="'syncingV2'"
+            class="spin-syncing-v2"
+            viewBox="auto">
+          </trudi-icon>
+          <span class="sync">Syncing</span>
+        </div>
+      </ng-container>
+      <assign-to-agents
+        titleMode="avatar"
+        [isReadOnly]="isConsole"
+        [displayText]="'Assign'"
+        [task]="taskService.currentTask$ | async"
+        [showTrudiAgent]="true"
+        [isCustom]="true"
+        [maxDisplayAssignees]="3"
+        (onAssignUpdate)="updateUI()"
+        (onAssignAgentsSelectedClick)="handleAssignAgentsSelectedClick($event)">
+      </assign-to-agents>
+    </div>
+  </div>
+</div>
+
+<ng-template #syncStatus>
+  <div
+    *ngIf="currentConversation?.syncStatus || currentConversation?.conversationSyncDocumentStatus"
+    class="synced y-center gap-4"
+    nz-tooltip
+    nzTooltipOverlayClassName="sync-resolved"
+    [nzTooltipTitle]="(currentConversation?.updatedSyncAt || currentConversation?.conversationSyncDocumentAt | formatDateTime | async)"
+    nzTooltipPlacement="bottom">
+    <trudi-icon
+      svgClass="size-20"
+      [icon]="isSyncSuccess ? 'syncSuccessCloud' : 'syncFailCloud'">
+    </trudi-icon>
+    <span class="sync" [class]="isSyncSuccess ? 'sync-success' : 'sync-fail'">
+      {{isSyncSuccess ? 'Synced' : SYNC_PT_FAIL }}
+    </span>
+  </div>
+</ng-template>
+
+<nz-dropdown-menu #threeDotsMenu>
+  <div nz-menu>
+    <div class="app-message-menu-wrapper border-rad-8">
+      <div
+        [ngClass]="{'disabled': isConsole || !currentPMJoined}"
+        tabindex="0"
+        (leftClick)="onShowUpdatePropertyModal()"
+        PreventButton
+        class="item d-flex align-items-center gap-8 cursor-pointer">
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          class="no-pointer-event"
+          icon="locationReassign"></trudi-icon>
+        <p class="text no-pointer-event">Reassign property</p>
+      </div>
+      <div
+        (click)="handleMenu(currentConversation.isSeen ? EMessageMenuOption.UNREAD : EMessageMenuOption.READ, $event)"
+        class="item d-flex align-items-center gap-8"
+        [appE2E]="(isMessage ? isReadMsg : currentConversation?.isSeen) ? 'message-3-dots-mark-as-unread' : 'message-3-dots-mark-as-read'"
+        [ngClass]="{'disabled': isConsole}"
+        ripple>
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          class="no-pointer-event"
+          [icon]="(isMessage ? isReadMsg : currentConversation?.isSeen) ? 'unreadEmail' : 'markAsReadSms'"></trudi-icon>
+        <p class="text no-pointer-event">
+          {{ 'Mark as ' + ((isMessage ? isReadMsg : currentConversation?.isSeen)
+          ? 'unread' : 'read')}}
+        </p>
+      </div>
+
+      @if (showResolvedBtn) {
+      <div
+        [appE2E]="isUrgent ? EDataE2EConversation.CLICK_UNFLAG : EDataE2EConversation.CLICK_FLAG"
+        (click)="handleConversationAction($event, isUrgent ? EMessageMenuOption.UN_FLAG : EMessageMenuOption.FLAG)"
+        class="item d-flex align-items-center gap-8"
+        [ngClass]="{'disabled' : isConsole}"
+        ripple>
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          class="no-pointer-event"
+          [icon]="(isMessage ? isUrgent : currentConversation?.isUrgent) ? 'unFlag' : 'flag'"></trudi-icon>
+        <p class="text">
+          {{(isMessage ? isUrgent : currentConversation?.isUrgent) ? 'Unflag' :
+          'Mark as urgent'}}
+        </p>
+      </div>
+      } @if (!isRmEnvironment) {
+      <div
+        nz-submenu
+        nzMenuClassName="sub-menu-nongap"
+        [nzDisabled]="isConsole"
+        [nzTitle]="exportConversation">
+        <div
+          nz-menu-item
+          class="submenu-option-item"
+          appE2E="conversation-three-dots-save-to-pt"
+          [ngClass]="{'disabled': isConsole || isSyncInprogress}"
+          (click)="!(isArchiveMailbox || isConsole) && handleMenu(EMessageMenuOption.SAVE_TO_PROPERTY_TREE, $event)">
+          <trudi-icon
+            svgClass="size-20"
+            viewBox="auto"
+            icon="archive"
+            class="no-pointer-event"></trudi-icon>
+          <p class="no-margin no-pointer-event">Save to Property Tree</p>
+        </div>
+        <div
+          nz-menu-item
+          class="submenu-option-item"
+          [ngClass]="{'disabled': disabledDownloadPDF}"
+          (click)="!disabledDownloadPDF && handleMenu(EMessageMenuOption.DOWNLOAD_AS_PDF, $event)">
+          <trudi-icon
+            svgClass="size-20"
+            viewBox="auto"
+            icon="iconDownload"></trudi-icon>
+          <p class="no-margin">Download as PDF</p>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<ng-template #exportConversation>
+  <div class="d-flex justify-content-between align-items-center gap-8">
+    <div
+      class="item d-flex align-items-center gap-8 submenu-option"
+      [ngClass]="{'disabled': isConsole}"
+      ripple>
+      <trudi-icon
+        svgClass="size-20"
+        viewBox="auto"
+        icon="conversationExport"></trudi-icon>
+      <div class="text">Export conversation history</div>
+    </div>
+    <trudi-icon svgClass="size-20" icon="iconChevronRight"></trudi-icon>
+  </div>
+</ng-template>
+
+<ng-template #voicemailDetailSkeletonTop>
+  <div class="mr-8">
+    <nz-skeleton
+      [nzTitle]="true"
+      [nzParagraph]="false"
+      [style.width.px]="300"
+      [nzActive]="true"></nz-skeleton>
+  </div>
+  <nz-skeleton
+    [nzTitle]="true"
+    [nzParagraph]="false"
+    [style.width.px]="50"
+    [nzActive]="true"></nz-skeleton>
+</ng-template>
+<ng-template #voicemailDetailSkeletonBottom>
+  <nz-skeleton
+    [nzTitle]="true"
+    [nzParagraph]="false"
+    [style.width.px]="376"
+    [nzActive]="true"></nz-skeleton>
+</ng-template>
+
+<property-profile-drawer
+  [visible]="visiblePropertyProfile"
+  [openFrom]="ETypePage.TASK_DETAIL"
+  (triggerCloseDrawer)="visiblePropertyProfile = false"
+  [propertyId]="currentConversation?.propertyId">
+</property-profile-drawer>
+
+@if (showUpdatePropertyModal) {
+<sms-reassign-property-modal
+  [showModal]="showUpdatePropertyModal"
+  [propertyList]="listPropertyAllStatus"
+  [currentTask]="currentTask"
+  [currentUser]="currentUser"
+  [currentConversation]="currentConversation"
+  (closeModal)="showUpdatePropertyModal = false">
+</sms-reassign-property-modal>
+} @if (isShowModalConfirmProperties) {
+<confirm-properties-popup
+  [isInTaskOrMessageDetail]="true"
+  [showModal]="isShowModalConfirmProperties"
+  [listConversation]="conversationNotMove"
+  (selectedPropertyInDetail)="selectedPropertyInDetail($event)"
+  (quitModal)="handleCancelConfirmProperties($event)"
+  (onConfirm)="handleConfirmProperties()">
+</confirm-properties-popup>
+}
+
+<trudi-modal
+  *ngIf="confirmResolveSms"
+  [visible]="confirmResolveSms"
+  [autoFocus]="null"
+  [modelWidth]="470"
+  [closable]="false"
+  title="Are you sure you want to resolve this message?"
+  subTitle="To satisfy spam legislation, only the customer can re-open an SMS conversation once it has been resolved."
+  className="confirm-resolve-sms"
+  (onCancel)="handleCancelModal()"
+  (onOk)="handleConfirmResolveSms()">
+</trudi-modal>

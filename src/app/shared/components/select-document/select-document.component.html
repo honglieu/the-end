@@ -1,0 +1,224 @@
+<resizable-modal-popup
+  *ngIf="showSelectDocumentPopup && isResizableModal"
+  [modalId]="modalId || modalIdSelectDocument"
+  [show]="showSelectDocumentPopup"
+  [showTitle]="true"
+  [title]="title"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  (onCancel)="handleCloseModal()"
+  [isCustomMoveable]="true"
+  class="select-document-popup">
+  <ng-container [ngTemplateOutlet]="selectDocumentTemplate"></ng-container>
+</resizable-modal-popup>
+
+<ng-template #selectDocumentTemplate>
+  <div
+    class="select-document-wrapper"
+    [ngStyle]="{'padding': isResizableModal ? '20px 24px' : 0}">
+    <div class="select-document-body">
+      <div
+        class="document-checkbox d-flex align-items-center justify-content-start">
+        <trudi-radio-button
+          [options]="radioListData"
+          [(ngModel)]="radioValue"
+          (ngModelChange)="onValueRadioChange($event)"></trudi-radio-button>
+      </div>
+      <div
+        class="select-document-content"
+        [style]="(selectedForm.dirty && selectedForm.invalid) ? 'margin-bottom: 7px' : 'margin-bottom: 0px'">
+        <div class="select-form-wrapper">
+          <div class="select-title">{{selectLabel}}</div>
+          <div class="form-select-wrapper">
+            <trudi-form-control [control]="selectedForm" [checkDirty]="true">
+              <ng-container
+                *ngIf="selectedOption.id === SelectDocumentType.OPENEXIST">
+                <ng-select
+                  bindValue="id"
+                  bindLabel="name"
+                  [placeholder]="selectLabel"
+                  [formControl]="selectedForm"
+                  [items]="listReiForm$ | async"
+                  [clearable]="true"
+                  [clearOnBackspace]="true"
+                  [virtualScroll]="true"
+                  (scrollToEnd)="onScrollToEnd(event)"
+                  [loading]="isLoading$ | async"
+                  [notFoundText]="notFoundItemText"
+                  [editableSearchTerm]="true"
+                  [ngClass]="{'input-error': !isFocusOnSelectField && selectedForm.dirty && selectedForm.invalid}"
+                  (search)="ngSelectedSearch($event)"
+                  [searchFn]="searchFnFake"
+                  (close)="ngBlur($event)">
+                  <ng-template
+                    ng-label-tmp
+                    let-item="item"
+                    let-item$="item$"
+                    let-index="index">
+                    <p class="select-document item-text-selected">
+                      {{item?.name}}
+                    </p>
+                  </ng-template>
+
+                  <ng-template
+                    ng-option-tmp
+                    let-item="item"
+                    let-item$="item$"
+                    let-index="index"
+                    let-search="searchTerm"
+                    class="select-document">
+                    <p
+                      [ngOptionHighlight]="search ? (search | nzTrim) : ''"
+                      class="select-document item-name">
+                      {{item?.name}}
+                    </p>
+                    <div class="select-document d-flex align-items-center">
+                      <ng-container *ngIf="item?.status">
+                        <div class="item-text">{{item?.status}}</div>
+                      </ng-container>
+                      <ng-container *ngIf="item?.userName">
+                        <span class="small-circle"></span>
+                        <div class="item-text item-text-createdBy">
+                          Created by
+                        </div>
+                        <div class="item-text">{{item?.userName}}</div>
+                      </ng-container>
+                    </div>
+                  </ng-template>
+                </ng-select>
+              </ng-container>
+
+              <ng-container
+                *ngIf="selectedOption.id === SelectDocumentType.CREATENEW">
+                <ng-select
+                  bindValue="id"
+                  bindLabel="name"
+                  groupBy="type"
+                  [placeholder]="selectLabel"
+                  [formControl]="selectedForm"
+                  [items]="listReiForm$ | async"
+                  [clearable]="true"
+                  [clearOnBackspace]="true"
+                  [virtualScroll]="true"
+                  (scrollToEnd)="onScrollToEnd()"
+                  [loading]="isLoading$ | async"
+                  [notFoundText]="notFoundItemText"
+                  [editableSearchTerm]="true"
+                  [ngClass]="{'input-error': !isFocusOnSelectField && selectedForm.dirty && selectedForm.invalid}"
+                  [searchFn]="searchFnFake"
+                  (search)="ngSelectedSearch($event)"
+                  (close)="ngBlur($event)">
+                  <ng-template
+                    ng-label-tmp
+                    let-item="item"
+                    let-item$="item$"
+                    let-index="index">
+                    <p class="select-document item-text-selected">
+                      {{item?.name}}
+                    </p>
+                  </ng-template>
+
+                  <ng-template
+                    ng-option-tmp
+                    let-item="item"
+                    let-item$="item$"
+                    let-index="index"
+                    let-search="searchTerm">
+                    <p
+                      [ngOptionHighlight]="search ? (search | nzTrim) : ''"
+                      class="select-document item-name">
+                      {{item?.name}}
+                    </p>
+                  </ng-template>
+                  <ng-template ng-optgroup-tmp let-item="item">
+                    <span class="group-name">{{item.type}}</span>
+                  </ng-template>
+                </ng-select>
+              </ng-container>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div
+          *ngIf="selectedOption?.id === SelectDocumentType.CREATENEW"
+          class="form-name-wrapper">
+          <div class="form-name-title">Form name</div>
+          <div class="form-name-input">
+            <trudi-form-control [control]="formName">
+              <trudi-text-field
+                [id]="'text-field-'+ i"
+                [placeholder]="'Form name'"
+                [showCounting]="false"
+                [size]="'large'"
+                [maxCharacter]="250"
+                [formControl]="formName"></trudi-text-field>
+            </trudi-form-control>
+          </div>
+        </div>
+      </div>
+      <div
+        *ngIf="selectedOption?.id === SelectDocumentType.CREATENEW"
+        class="checkbox-private">
+        <td-checkbox
+          [spaceBetween]="false"
+          [isChecked]="isPrivate"
+          [reverse]="true"
+          label="Private"
+          [size]="24"
+          (tdCheckboxChanged)="onPrivateChange($event)">
+        </td-checkbox>
+      </div>
+
+      <div
+        *ngIf="reiFormError?.message[0].text"
+        class="rei-form-error d-flex align-items-start">
+        <trudi-icon icon="iconWarning"></trudi-icon>
+        <div class="flex align-items-center">
+          <span
+            class="text-warning"
+            [ngClass]="{'font-semi-bold text-decoration-underline cursor-pointer': message?.href}"
+            (click)="handleClickMsg(message?.href)"
+            *ngFor="let message of reiFormError?.message"
+            >{{message?.text}}</span
+          >
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="select-document-footer d-flex align-items-center justify-content-end">
+      <button
+        *ngIf="showBackBtn"
+        style="width: 100px"
+        class="trudi-btn trudi-btn-large trudi-btn-tertiary"
+        (click)="handleBackAttachModal()">
+        Back
+      </button>
+      <button
+        style="min-width: 100px"
+        class="trudi-btn trudi-btn-large trudi-btn-primary"
+        [disabled]="isLoading || isConsole"
+        (click)="handleOpen()">
+        {{this.selectedOption?.id === SelectDocumentType.CREATENEW ? 'Create
+        form' : 'Open'}}
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<trudi-modal
+  *ngIf="showSelectDocumentPopup && !isResizableModal"
+  [autoFocus]="null"
+  [title]="title"
+  [closable]="closable"
+  [subTitle]="''"
+  [visible]="showSelectDocumentPopup"
+  (visibleChange)="handleCloseModal()">
+  <ng-container [ngTemplateOutlet]="selectDocumentTemplate">
+    <ng-template #footerModal>
+      <div class="modal-footer-select-document"></div> </ng-template
+  ></ng-container>
+</trudi-modal>

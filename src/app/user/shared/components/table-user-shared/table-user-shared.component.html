@@ -1,0 +1,554 @@
+<div class="user-wrapper">
+  <div
+    class="overflow-hidden table-fix-header auto-hide-scroll scroll-bar-margin-top-10"
+    #table
+    infiniteScroll
+    (scroll)="onScrollDown()"
+    infiniteScrollContainer=".table-fix-header"
+    [fromRoot]="true">
+    <!-- SKELETON START -->
+    <table
+      class="table-property"
+      data-console="tenants-landlords-table"
+      *ngIf="isLoading">
+      <thead>
+        <tr>
+          <th *ngFor="let item of dataTableColumns">{{item.label}}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container
+          *ngTemplateOutlet="skeletonLoadingItem; context: { rowNumber: 20 }">
+        </ng-container>
+      </tbody>
+    </table>
+    <!-- SKELETON END -->
+
+    <ng-container *ngIf="!isLoading">
+      <div
+        class="d-flex flex-dir-column w-table h-100 table-property-wrapper"
+        [style.backgroundColor]="totalItems === 0 || !dataTableDataSource.length ? 'white' : 'initial'">
+        <table class="table-property table-property-block">
+          <thead>
+            <tr
+              [ngClass]="{
+                    'gridOwnerProspect': typePage === ETypePage.LANLORDS_PROSPECT,
+                    'gridTenantProspect': typePage ===  ETypePage.TENANTS_PROSPECT
+                  }">
+              <th
+                *ngFor="let item of dataTableColumns; let idx = index"
+                class="th-{{item.key}}"
+                [ngClass]="{
+                      'right-border': idx === 0 && haveRightBorder
+                    }">
+                <div class="header-{{item.key}}">{{item.label}}</div>
+              </th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody
+            [class]="totalItems === 0 || !dataTableDataSource.length ? 'empty-block' : ''">
+            <ng-container
+              *ngIf="totalItems === 0 || !dataTableDataSource.length ">
+              <tr class="no-result-text">
+                <div class="header-text">No results found</div>
+                <div class="content-text">
+                  You may want to try using different keywords, check for
+                  correct spelling or adjust your filters.
+                </div>
+              </tr>
+            </ng-container>
+            <ng-container *ngIf="dataTableDataSource.length">
+              <tr
+                [ngClass]="{
+                      'gridOwnerProspect': typePage === ETypePage.LANLORDS_PROSPECT,
+                      'gridTenantProspect': typePage ===  ETypePage.TENANTS_PROSPECT
+                    }"
+                *ngFor="let itemDependencies of tempDataTable; let idx = index; trackBy: identify">
+                <ng-container
+                  *ngFor="let column of dataTableColumns; trackBy: identify;">
+                  <ng-container [ngSwitch]="column.key">
+                    <ng-container *ngSwitchCase="'name'">
+                      <td
+                        (click)="handleActionBasedOnType(ACTION_TYPE.PEOPLE, itemDependencies)"
+                        [ngClass]="{
+                              'bottom-border': itemDependencies.isLastItem || typePage === TYPE_PAGE.LANLORDS_PROSPECT,
+                              'delete': itemDependencies.status === ERentPropertyStatus.DELETED,
+                              'right-border': haveRightBorder
+                            }"
+                        data-title="name"
+                        class="name cursor-pointer">
+                        <div class="prop-name" data-title="name">
+                          <span
+                            data-title="name"
+                            [innerHTML]="itemDependencies.firstName + ' ' +
+                                itemDependencies.lastName| highlight: searchValue">
+                            {{itemDependencies.firstName + ' ' +
+                            itemDependencies.lastName}}
+                          </span>
+                        </div>
+                      </td>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'property'">
+                      <td
+                        data-title="Property"
+                        [ngClass]="{
+                              'bottom-border': itemDependencies.isLastItem,
+                              'delete': itemDependencies.propertyDetail?.statusProperty === ERentPropertyStatus.DELETED,
+                              'right-border': haveRightBorder
+                            }"
+                        (click)="handleActionBasedOnType(ACTION_TYPE.PROPERTY, itemDependencies)"
+                        class="property cursor-pointer">
+                        <div class="prop-name" data-title="Property">
+                          <span
+                            class="text-overflow address"
+                            data-title="Property"
+                            [ngClass]="{'archived': itemDependencies.status === 'ARCHIVED', 'deleted': itemDependencies.propertyDetail?.statusProperty === ERentPropertyStatus.DELETED}"
+                            [innerHTML]="itemDependencies.propertyDetail?.streetline | highlight: searchValue">
+                            {{itemDependencies.propertyDetail?.streetline}}
+                          </span>
+                        </div>
+                      </td>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'role'">
+                      <td
+                        [ngClass]="{
+                            'bottom-border': itemDependencies.isLastItem,
+                            'cursor-pointer': typePage === ETypePage.TENANTS_LANLORDS,
+                            'delete': itemDependencies.status === ERentPropertyStatus.DELETED
+                            }"
+                        data-title="Role"
+                        class="role cursor-pointer">
+                        <div
+                          class="wrapper-text"
+                          (click)="handleActionBasedOnType(ACTION_TYPE.ROLE, itemDependencies)"
+                          data-title="Role">
+                          {{itemDependencies.role}}
+                        </div>
+                      </td>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'crmStatus'">
+                      <td
+                        [ngClass]="{
+                            'bottom-border': itemDependencies.isLastItem || typePage === TYPE_PAGE.LANLORDS_PROSPECT,
+                            'delete': itemDependencies.status === ERentPropertyStatus.DELETED
+                            }"
+                        data-title="CRM Status"
+                        class="crm-status cursor-pointer">
+                        <div
+                          class="wrapper-text"
+                          (click)="handleActionBasedOnType(ACTION_TYPE.CRM_STATUS, itemDependencies)">
+                          {{itemDependencies.displayStatus | landlordToOwner}}
+                          <!-- {{data.userProperties[0].status === 'PROSPECT' ?
+                              'Prospective' : data.userProperties[0].status |
+                              titlecase}} -->
+                        </div>
+                      </td>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'numUnit'">
+                      <td
+                        [ngClass]="{
+                              'bottom-border': itemDependencies.isLastItem || typePage === TYPE_PAGE.LANLORDS_PROSPECT,
+                              'delete': itemDependencies.status === ERentPropertyStatus.DELETED
+                            }"
+                        data-title="numUnit"
+                        class="numUnit cursor-pointer">
+                        <div
+                          class="prop-name"
+                          data-title="numUnit"
+                          (click)="handleActionBasedOnType(ACTION_TYPE.NUM_UNIT, itemDependencies)">
+                          <span
+                            class="text-overflow"
+                            data-title="numUnit"
+                            [innerHTML]="itemDependencies.numUnit | highlight: searchValue">
+                            {{itemDependencies.numUnit}}
+                          </span>
+                        </div>
+                      </td>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'people'">
+                      <td
+                        [ngClass]="{
+                            'bottom-border': itemDependencies.isLastItem,
+                            'delete': itemDependencies.status === ERentPropertyStatus.DELETED
+
+                            }"
+                        data-title="People"
+                        class="people-table cursor-pointer">
+                        <div
+                          (click)="handleActionBasedOnType(ACTION_TYPE.PEOPLE, itemDependencies)"
+                          class="wrapper-text"
+                          data-title="People"
+                          [innerHTML]="(itemDependencies.firstName + ' ' + itemDependencies.lastName) | highlight: searchValue"></div>
+                      </td>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'error'">
+                      <!-- Watting for check -->
+                      <td
+                        class="error-col cursor-pointer"
+                        data-title="People"
+                        [ngClass]="{
+                              'bottom-border': itemDependencies.isLastItem,
+                              'cursor-pointer': typePage === ETypePage.TENANTS_LANLORDS
+                            }">
+                        <div
+                          *ngIf="itemDependencies.unconfirmedChangeEmail"
+                          class="error-icon text-right">
+                          <trudi-icon icon="errorOutlineRed"> </trudi-icon>
+                          <div class="unverified-tooltip">
+                            <span class="unverified-text" data-title="People"
+                              >{{itemDependencies.unconfirmedChangeEmail}}
+                              (unverified)</span
+                            >
+                          </div>
+                        </div>
+                      </td>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'property_email'">
+                      <td
+                        [ngClass]="{
+                            'bottom-border': itemDependencies.isLastItem || typePage === TYPE_PAGE.LANLORDS_PROSPECT,
+                            'delete': itemDependencies.status === ERentPropertyStatus.DELETED
+                            }"
+                        data-title="Email"
+                        (click)="$event.stopPropagation();handleActionBasedOnType(ACTION_TYPE.EMAIL, itemDependencies)"
+                        class="property-mail-table cursor-pointer">
+                        <ng-container
+                          *ngIf="(itemDependencies.email || !itemDependencies.secondaryEmails?.length) ; else firstSecondaryEmail">
+                          <div
+                            class="d-flex gap align-items-center primary-email action">
+                            <div
+                              class="wrapper-email-data"
+                              nz-tooltip
+                              nzTooltipPlacement="top"
+                              [nzTooltipTitle]="itemDependencies.email"
+                              [innerHTML]="(itemDependencies.email) | highlight: searchValue"></div>
+                            <div
+                              *ngIf="itemDependencies.email"
+                              trudi-btn
+                              size="extra-small"
+                              variant="outlined"
+                              btnType="neutral"
+                              shape="circle"
+                              class="action-function email-function"
+                              (click)="$event.stopPropagation(); handleClickAddEmail(itemDependencies)">
+                              <trudi-icon icon="iconPlus2"></trudi-icon>
+                            </div>
+                          </div>
+                        </ng-container>
+                        <ng-template #firstSecondaryEmail>
+                          <div class="mt-20"></div>
+                        </ng-template>
+                        <ng-container
+                          *ngFor="let secondaryEmail of itemDependencies.secondaryEmails; trackBy: identify; let SEIdx = index">
+                          <div
+                            *ngIf="secondaryEmail?.email?.length ? (SEIdx >= 0) : (SEIdx >= 1)"
+                            class="secondary-email d-flex align-items-center action">
+                            <div
+                              [ngClass]="{'delete': itemDependencies.status === ERentPropertyStatus.DELETED}"
+                              nz-tooltip
+                              nzTooltipPlacement="top"
+                              [nzTooltipTitle]="secondaryEmail?.email"
+                              [innerHTML]="secondaryEmail?.email | highlight: searchValue"></div>
+                            <div
+                              *ngIf="secondaryEmail?.email"
+                              trudi-btn
+                              size="extra-small"
+                              variant="outlined"
+                              btnType="neutral"
+                              shape="circle"
+                              class="action-function email-function"
+                              data-e2e="delete-option"
+                              (click)="$event.stopPropagation(); handleActionBasedOnType(ACTION_TYPE.DELETE_SECONDARY_EMAIL, secondaryEmail)">
+                              <trudi-icon icon="deleteIconOutline"></trudi-icon>
+                            </div>
+                          </div>
+                        </ng-container>
+                      </td>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'trudi_app'">
+                      <td
+                        [ngClass]="{
+                            'bottom-border': itemDependencies.isLastItem,
+                            'cursor-pointer': typePage === ETypePage.TENANTS_LANLORDS
+                            }"
+                        class="last-active"
+                        data-title="Last active"
+                        (click)="handleActionBasedOnType(ACTION_TYPE.TRUDI_APP, itemDependencies)">
+                        {{itemDependencies.lastActivity ||
+                        itemDependencies.inviteStatus | titlecase}} {{
+                        itemDependencies.lastActivity ? "" :
+                        (itemDependencies.inviteSent ?? "") }}
+                      </td>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'phone_number'">
+                      <td
+                        (click)="handleActionBasedOnType(ACTION_TYPE.PHONE_NUMBER, itemDependencies)"
+                        [ngClass]="{
+                            'bottom-border': itemDependencies.isLastItem || typePage === TYPE_PAGE.LANLORDS_PROSPECT,
+                            'delete': itemDependencies.status === ERentPropertyStatus.DELETED
+                            }"
+                        class="phone-number cursor-pointer"
+                        data-title="Phone number">
+                        <div class="d-flex flex-dir-column gap-8">
+                          <ng-container
+                            *ngIf="(itemDependencies.phoneNumbers?.length || !itemDependencies.secondaryPhones?.length) ; else firstSecondaryPhones">
+                            <ng-container
+                              *ngFor="let number of itemDependencies?.phoneNumbers; trackBy: identify">
+                              <div
+                                class="primary-phone white-space-nowrap max-width-column">
+                                <div
+                                  class="wrapper-phone"
+                                  nz-tooltip
+                                  nzTooltipPlacement="top"
+                                  [nzTooltipTitle]="'Primary phone number'"
+                                  [innerHTML]="number | phoneNumberFormat | phoneNumberHighlight: searchValue"></div>
+                              </div>
+                            </ng-container>
+                          </ng-container>
+
+                          <ng-template #firstSecondaryPhones>
+                            <div
+                              class="secondary-phone d-flex align-items-center">
+                              <div
+                                (click)="handleActionBasedOnType(ACTION_TYPE.PHONE_NUMBER, itemDependencies)"
+                                ngClass="no-opacity"
+                                *ngIf="itemDependencies.secondaryPhones[0].phoneNumber">
+                                {{itemDependencies.secondaryPhones[0].phoneNumber}}
+                              </div>
+                            </div>
+                          </ng-template>
+                          <ng-container
+                            *ngFor="let secondary of itemDependencies?.secondaryPhones; trackBy: identify">
+                            <div
+                              class="secondary-phone table-phone-number white-space-nowrap max-width-column d-flex align-items-center action">
+                              <div
+                                (click)="handleActionBasedOnType(ACTION_TYPE.PHONE_NUMBER, itemDependencies)"
+                                [innerHTML]="secondary.phoneNumber | phoneNumberFormat | phoneNumberHighlight: searchValue"></div>
+                              <div
+                                *ngIf="secondary?.phoneNumber"
+                                trudi-btn
+                                size="extra-small"
+                                variant="outlined"
+                                btnType="neutral"
+                                shape="circle"
+                                class="action-function phone-function"
+                                data-e2e="delete-option"
+                                (click)="$event.stopPropagation(); handleActionBasedOnType(ACTION_TYPE.DELETE_SECONDARY_PHONE, secondary)">
+                                <trudi-icon
+                                  icon="deleteIconOutline"></trudi-icon>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </div>
+                      </td>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'account'">
+                      <td
+                        [ngClass]="{
+                            'bottom-border': itemDependencies.isLastItem || typePage === TYPE_PAGE.LANLORDS_PROSPECT,
+                            }"
+                        class="cursor-pointer"
+                        data-title="account"
+                        (click)="handleActionBasedOnType(ACTION_TYPE.TRUDI_APP, itemDependencies)">
+                        <ng-container
+                          *ngIf="itemDependencies?.userMessengers?.length">
+                          <ng-container
+                            *ngTemplateOutlet="contactListChannels; context: { contacts: itemDependencies.userMessengers, icon: 'messengerLogo', label: 'name' }">
+                          </ng-container>
+                        </ng-container>
+                        <ng-container
+                          *ngIf="itemDependencies?.userWhatsApps?.length">
+                          <ng-container
+                            *ngTemplateOutlet="contactListChannels; context: { contacts: itemDependencies.userWhatsApps, icon: 'whatsappLogo', label: 'externalId' }">
+                          </ng-container>
+                        </ng-container>
+                      </td>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+                <td
+                  [ngClass]="{
+                        'bottom-border': itemDependencies.isLastItem || typePage === TYPE_PAGE.LANLORDS_PROSPECT
+                      }"
+                  (click)="onCheckboxChildChange(itemDependencies);"
+                  data-title="last-check-box"
+                  class="first-check-box">
+                  <trudi-icon
+                    [icon]="itemDependencies.isChecked ? checkBoxIcon.USER_CHECKED : checkBoxIcon.USER_UNCHECK"
+                    class="d-flex justify-content-center cursor-pointer"
+                    svgClass="size-24"></trudi-icon>
+                </td>
+              </tr>
+              <ng-container *ngIf="isLoadingMore">
+                <ng-container
+                  *ngTemplateOutlet="skeletonLoadmore; context: { rowNumber: 2 }">
+                </ng-container>
+              </ng-container>
+            </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template
+  #contactListChannels
+  let-contacts="contacts"
+  let-icon="icon"
+  let-label="label">
+  <div class="d-flex gap-4 align-items-top cursor-pointer">
+    <trudi-icon svgClass="size-16" [icon]="icon" class="mt-2"></trudi-icon>
+    <div class="d-flex flex-dir-column gap-4 wrapper-list-messenger">
+      <ng-container *ngFor="let contact of contacts">
+        <span
+          *ngIf="contact?.[label]"
+          disableTooltipOnWidth
+          nz-tooltip
+          [nzTooltipTitle]="contact?.[label]"
+          nzTooltipPlacement="top"
+          class="text-ellipsis"
+          [innerHTML]="contact?.[label] | highlight: searchValue">
+        </span>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #skeletonLoadmore let-row="rowNumber">
+  <ng-container *ngFor="let _ of [].constructor(row); let i = index">
+    <tr
+      [ngClass]="{
+      'gridOwnerProspect': typePage === ETypePage.LANLORDS_PROSPECT,
+      'gridTenantOwner': typePage === ETypePage.TENANTS_LANLORDS,
+      'gridTenantProspect': typePage ===  ETypePage.TENANTS_PROSPECT
+      }">
+      <td>
+        <div class="prop-name prop-name-skeleton">
+          <span class="text-overflow">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0 }"
+              [nzActive]="true"></nz-skeleton>
+          </span>
+        </div>
+      </td>
+      <td>
+        <nz-skeleton
+          [nzParagraph]="{ rows: 0 }"
+          [nzActive]="true"
+          class="w-50"></nz-skeleton>
+      </td>
+      <td>
+        <nz-skeleton
+          [nzParagraph]="{ rows: 0 }"
+          [nzActive]="true"></nz-skeleton>
+      </td>
+      <td>
+        <nz-skeleton
+          [nzParagraph]="{ rows: 0 }"
+          [nzActive]="true"></nz-skeleton>
+      </td>
+      <td>
+        <div class="d-flex align-items-center">
+          <nz-skeleton
+            [nzParagraph]="{ rows: 0 }"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </td>
+      <td>
+        <ng-container>
+          <nz-skeleton
+            [nzParagraph]="{ rows: 0 }"
+            [nzActive]="true"></nz-skeleton>
+        </ng-container>
+      </td>
+      <td *ngIf="typePage === TYPE_PAGE.TENANTS_PROSPECT">
+        <nz-skeleton
+          [nzParagraph]="{ rows: 0 }"
+          [nzActive]="true"
+          class="size-12"></nz-skeleton>
+      </td>
+    </tr>
+  </ng-container>
+</ng-template>
+
+<ng-template #skeletonLoadingItem let-row="rowNumber">
+  <ng-container *ngFor="let _ of [].constructor(row); let i = index">
+    <tr>
+      <td data-title="Property" class="role">
+        <div class="prop-name prop-name-skeleton">
+          <span class="text-overflow">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0 }"
+              [nzActive]="true"></nz-skeleton>
+          </span>
+        </div>
+      </td>
+      <td data-title="Role" class="text-capitalize role">
+        <nz-skeleton
+          [nzParagraph]="{ rows: 0 }"
+          [nzActive]="true"
+          class="w-50"></nz-skeleton>
+      </td>
+      <td data-title="CRM Status" class="crmStatus">
+        <nz-skeleton
+          [nzParagraph]="{ rows: 0 }"
+          [nzActive]="true"></nz-skeleton>
+      </td>
+      <td data-title="People" class="people">
+        <nz-skeleton
+          [nzParagraph]="{ rows: 0 }"
+          [nzActive]="true"></nz-skeleton>
+      </td>
+      <td class="error-col bottom-border">
+        <ng-container *ngIf="typePage !== TYPE_PAGE.TENANTS_LANLORDS">
+          <nz-skeleton
+            [nzParagraph]="{ rows: 0 }"
+            [nzActive]="true"></nz-skeleton>
+        </ng-container>
+      </td>
+      <td data-title="Email" class="no-padding-left email">
+        <div class="d-flex align-items-center">
+          <nz-skeleton
+            [nzParagraph]="{ rows: 0 }"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </td>
+
+      <td
+        data-title="Last active"
+        *ngIf="typePage === TYPE_PAGE.TENANTS_LANLORDS"
+        class="last-active">
+        <nz-skeleton
+          [nzParagraph]="{ rows: 0 }"
+          [nzActive]="true"></nz-skeleton>
+      </td>
+
+      <td
+        data-title=""
+        *ngIf="typePage === TYPE_PAGE.TENANTS_LANLORDS"
+        class="bottom-border">
+        <div class="d-flex flex-dir-column gap-16">
+          <div class="white-space-nowrap">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0 }"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </div>
+      </td>
+
+      <td
+        data-title=""
+        *ngIf="typePage === TYPE_PAGE.TENANTS_LANLORDS || typePage === TYPE_PAGE.TENANTS_PROSPECT"
+        class="last-check-box">
+        <nz-skeleton
+          [nzParagraph]="{ rows: 0 }"
+          [nzActive]="true"
+          class="size-12"></nz-skeleton>
+      </td>
+    </tr>
+  </ng-container>
+</ng-template>
+<task-editor-toolbar></task-editor-toolbar>

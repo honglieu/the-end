@@ -1,0 +1,53 @@
+<div
+  class="toaster d-flex gap-12 align-items-center justify-content-between flex-1"
+  [ngClass]="{'toast-syncing-custom': toastPackage.toastType === EToastType.SYNCING_CUSTOM, 'toast-error-custom': toastPackage.toastType === EToastType.ERROR_CUSTOM, 'toast-warning-custom': toastPackage.toastType === EToastType.WARNING_CUSTOM}"
+  [attr.data-e2e]="toastDataE2e">
+  <div class="d-flex gap-12 align-items-center flex-1">
+    <div class="toast-icon size-24" data-e2e="toast-icon">
+      <img
+        [ngClass]="{'spin-syncing-v2': toastPackage.toastType === EToastType.SYNCING || toastPackage.toastType === EToastType.SYNCING_CUSTOM, 'check_white': toastPackage.toastType === EToastType.CHECK_WHITE}"
+        class="size-24"
+        [src]="getIcon(toastPackage.toastType)"
+        alt="icon" />
+    </div>
+    <div class="toast-details flex-1">
+      <div>
+        <div
+          *ngIf="title"
+          [class]="options.titleClass"
+          [attr.aria-label]="title"
+          class="custom-title">
+          {{ title }}
+        </div>
+        <div
+          *ngIf="message && options.enableHtml"
+          role="alert"
+          aria-live="polite"
+          class="custom-message text-left"
+          [class]="options.messageClass"
+          [innerHTML]="message"></div>
+        <div
+          *ngIf="message && !options.enableHtml"
+          role="alert"
+          aria-live="polite"
+          class="custom-message text-left"
+          [ngClass]="{'toast-warning-custom': toastPackage.toastType === 'toast-warning-custom__width'}"
+          [class]="options.messageClass"
+          [attr.aria-label]="message"
+          data-e2e="toast-message">
+          {{ message }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-3 text-right">
+    <trudi-icon
+      *ngIf="options.closeButton"
+      class="toast-custom__closebtn"
+      icon="closeToast"
+      (click)="handleRemove($event)"></trudi-icon>
+  </div>
+</div>
+<div *ngIf="options.progressBar">
+  <div class="toast-progress" [style.width]="width + '%'"></div>
+</div>

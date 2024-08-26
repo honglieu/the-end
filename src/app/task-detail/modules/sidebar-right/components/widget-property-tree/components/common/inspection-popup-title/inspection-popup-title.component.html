@@ -1,0 +1,82 @@
+<div class="mb-10">
+  <div class="d-flex align-items-center justify-content-between w-100">
+    <div class="d-flex gap-8 align-items-center">
+      <h4 class="title">Inspection details</h4>
+      <trudi-badge
+        *ngIf="status && inspectionData?.ptId"
+        size="small"
+        [variant]="(status === EInspectionStatus.CANCELLED|| status === EInspectionStatus.CLOSED) ? 'error' : 'primary'"
+        badgeType="tonal"
+        [text]="status | titlecase"></trudi-badge>
+    </div>
+    @if (inspectionData?.ptId && (status === EInspectionStatus.TENTATIVE ||
+    status === EInspectionStatus.SCHEDULED || status ===
+    EInspectionStatus.PROPOSED || status === EInspectionStatus.CONFIRMED)) {
+    <button
+      class="inspection-action-btn"
+      trudi-btn
+      size="small"
+      btnType="neutral"
+      variant="tonal"
+      [disabled]="disabled"
+      (click)="handleCancelInspection()">
+      Cancel inspection
+    </button>
+    } @else if (status === EInspectionStatus.CONDUCTED && inspectionData.ptId) {
+    <button
+      class="inspection-action-btn"
+      trudi-btn
+      nz-dropdown
+      size="small"
+      btnType="neutral"
+      variant="tonal"
+      nzTrigger="click"
+      [disabled]="disabled"
+      [(nzVisible)]="visibleDropdown"
+      [nzDropdownMenu]="menu"
+      [nzPlacement]="'bottomRight'"
+      (nzVisibleChange)="!$event && handleResetDefaultChargeFee()">
+      Close inspection
+    </button>
+    <nz-dropdown-menu #menu="nzDropdownMenu">
+      <div class="charge-default-fee-container">
+        <div class="charge-default-fee__form d-flex align-items-center gap-8">
+          <switch-checkbox
+            [isChecked]="defaultChargeFee"
+            label="Charge default fee"
+            (tdCheckboxChanged)="defaultChargeFee = $event"></switch-checkbox>
+        </div>
+        <div
+          class="charge-default-fee__actions d-flex align-items-center gap-8 justify-content-end">
+          <button
+            trudi-btn
+            size="medium"
+            btnType="neutral"
+            variant="tonal"
+            (click)="visibleDropdown = false; handleResetDefaultChargeFee()">
+            Cancel
+          </button>
+          <button
+            trudi-btn
+            size="medium"
+            btnType="primary"
+            (click)="$event.stopPropagation(); handleCloseInspection()">
+            Confirm
+          </button>
+        </div>
+      </div>
+    </nz-dropdown-menu>
+    }
+  </div>
+
+  @if (status === EInspectionStatus.CLOSED) {
+  <div class="d-flex align-items-center mt-16 charge-default-fee">
+    <span class="title no-pointer-event">
+      <switch-checkbox
+        [disabled]="true"
+        [isChecked]="inspectionData.defaultChargeFee"></switch-checkbox>
+    </span>
+    <span class="tenancy">Charge default fee</span>
+  </div>
+  }
+</div>

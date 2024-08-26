@@ -1,0 +1,148 @@
+@import 'function';
+
+.header-toolbar {
+  &:not(.task-detail) {
+    padding-bottom: 12px;
+  }
+
+  .toolbar-button {
+    padding: 6px;
+    border-radius: 50%;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--brand-100);
+    }
+
+    &:active {
+      background-color: var(--brand-200) !important;
+    }
+
+    &.disabled {
+      pointer-events: unset !important;
+      cursor: default;
+      &:hover,
+      &:active {
+        background-color: unset;
+      }
+    }
+  }
+
+  .user-info {
+    .info {
+      &-name {
+        @include fontSetup(var(--gray-700), 14px, 20px, normal, 600);
+      }
+
+      &-status {
+        .status {
+          @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+        }
+      }
+
+      & .contact-text-badge {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 16px;
+        padding: 0.5px 1px;
+        min-width: 75px;
+        height: 20px;
+        background-color: var(--gray-200);
+        @include fontSetup(var(--gray-600), 12px, 16px, normal, 500);
+      }
+    }
+
+    .info-type {
+      @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+      padding-right: 10px;
+    }
+
+    .border-right-type {
+      border-right: 1px solid var(--gray-100);
+    }
+
+    .wrapper-avatar {
+      position: relative;
+
+      .avatar-other {
+        width: 28px;
+        height: 28px;
+        background-color: var(--danger-500);
+        position: relative;
+        border-radius: 50%;
+
+        .icon-avatar {
+          position: absolute;
+        }
+      }
+
+      .avatar-supplier {
+        background-color: var(--supplier-500);
+
+        .icon-avatar {
+          left: 6px;
+          top: 6px;
+        }
+      }
+
+      .icon-sync {
+        position: absolute;
+        margin-top: -11px;
+        margin-left: 14px;
+      }
+    }
+  }
+}
+
+.menu-wrapper {
+  width: 164px;
+  height: 88px;
+  border-radius: 8px;
+  .item {
+    padding: 12px;
+    @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+    cursor: pointer;
+    &:first-child {
+      border-bottom: 1px solid var(--gray-200);
+    }
+  }
+}
+
+:host ::ng-deep .user-tenancy app-user-avatar .user-avatar .text {
+  background-color: var(--tenant-500) !important;
+}
+
+::ng-deep .header-toolbar .disabled-button {
+  pointer-events: none !important;
+  opacity: 0.5;
+  trudi-icon {
+    path {
+      fill: var(--gray-500);
+    }
+  }
+
+  &:hover {
+    background-color: var(--gray-100) !important;
+  }
+}
+
+::ng-deep {
+  .ant-tooltip.tooltip-action-button {
+    .ant-tooltip-arrow {
+      right: 5px;
+    }
+  }
+}
+
+.user-toolbar .offboard-disabled {
+  opacity: 0.5;
+  cursor: unset !important;
+  pointer-events: unset !important;
+  background: var(--white) !important;
+  &:active {
+    background: var(--white) !important;
+  }
+}

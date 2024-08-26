@@ -1,0 +1,33 @@
+<link rel="stylesheet" href="calendar-header.component.scss" />
+<div class="calendar-header d-flex justify-content-between">
+  <div class="calendar-header__picker d-flex gap-8">
+    <event-datetime-picker
+      [(ngModel)]="dateRange"
+      [customTime]="customTime"
+      (ngModelChange)="handlePick($event)"></event-datetime-picker>
+    <div class="d-flex align-items-center">
+      <switch-checkbox
+        class="show-event"
+        [isChecked]="isCheckedShowEventWithoutTasks"
+        [reverse]="true"
+        (tdCheckboxChanged)="onCheckboxChange($event)"></switch-checkbox>
+      <div class="title">Show events without tasks</div>
+    </div>
+  </div>
+  <div class="calendar-header__filter d-flex">
+    <!-- TODO should be enable in Calendar View US -->
+    <!-- <trudi-tabs
+     [tabs]="tabs">
+    </trudi-tabs> -->
+    <calendar-filter-group></calendar-filter-group>
+    <div class="calendar-header__search">
+      <trudi-text-field
+        iconLeft="searchLarge"
+        size="large"
+        placeholder="Search"
+        [(ngModel)]="searchText"
+        (triggerEventInput)="searchChange()"
+        [clearable]="true"></trudi-text-field>
+    </div>
+  </div>
+</div>

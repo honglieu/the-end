@@ -1,0 +1,80 @@
+<app-modal-popup
+  *ngIf="isShowCreateEditActionLinkModal"
+  [show]="isShowCreateEditActionLinkModal"
+  [position]="popupModalPosition.center">
+  <app-create-edit-action-link-popup
+    [formMode]="formMode"
+    [selectedActionLinkToEdit]="$any(selectedActionLinkToEdit)"
+    (isOpenQuitConfirmModal)="quit($event)"
+    (isCreateEditSucccessfully)="handleCreateEdit()"
+    (formValueChanged)="handleFormActionLinkChanged($event)"></app-create-edit-action-link-popup>
+</app-modal-popup>
+
+<app-modal-popup
+  *ngIf="isShowQuitConfirm"
+  [show]="isShowQuitConfirm"
+  [position]="popupModalPosition.center">
+  <app-quit-confirm
+    (isCloseModal)="showQuitConfirm($event)"
+    (isOpenActionLinkModal)="createNewActionLink($event)"></app-quit-confirm>
+</app-modal-popup>
+<app-modal-popup
+  *ngIf="isCreateActionLink"
+  [show]="isCreateActionLink"
+  [position]="popupModalPosition.center">
+  <app-create-edit-action-link-success
+    [isCreate]="isCreateLabel"></app-create-edit-action-link-success>
+</app-modal-popup>
+<div class="wrapper-background">
+  <div class="top-section">
+    <div class="center-block">
+      <div>Recent action links</div>
+    </div>
+    <a class="cancel-btn" (click)="cancel()">Cancel</a>
+  </div>
+
+  <div class="action-links-wrapper">
+    <div class="action-links-wrapper__header">
+      <header>Select from saved</header>
+
+      <!--<button class="new-btn" (click)="createNewActionLink()"> -->
+      <button
+        ripple
+        variant="#fff"
+        class="new-btn create-btn"
+        *ngIf="hasPermissionToCreateEdit"
+        (click)="open()">
+        <svg width="10" height="10" fill="#fff">
+          <use xlink:href="#cross" />
+        </svg>
+        <span>Create new</span>
+      </button>
+    </div>
+    <div class="action-links-wrapper__booking">
+      <div
+        *ngFor="let item of this.actionLinkList | async; index as i"
+        class="message-booking">
+        <div class="message-booking-inner">
+          <div class="message-booking-inner__hover">
+            <button
+              (click)="onLinkSelected($event, item.id, item)"
+              class="new-btn d-flex align-items-center justify-content-center">
+              <span>Send in message</span>
+            </button>
+            <span
+              *ngIf="hasPermissionToCreateEdit && !getCategoryDetail(item.topicId).hideEdit"
+              class="card-action"
+              (click)="editActionLink2(item)"
+              >Edit</span
+            >
+          </div>
+          <app-message-action-link
+            [messageActionLink]="$any(item)"
+            [linkBackground]="getCategoryDetail(item.topicId).color"
+            [imgLink]="getCategoryDetail(item.topicId).svg">
+          </app-message-action-link>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

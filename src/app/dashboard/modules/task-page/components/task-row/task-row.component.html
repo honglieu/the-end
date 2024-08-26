@@ -1,0 +1,184 @@
+<ng-container *rxLet="taskItem$; let taskItem;">
+  <div
+    #taskRow
+    trudi-item
+    (contextmenu)="onRightClick($event)"
+    (itemClick)="handleItemClick($event)"
+    [class.task-select]="(checked || taskItem.id === queryParams?.['taskId']) && activeTaskList.length <= 1"
+    [class.task-menu-displayed]="isMenuDisplayed"
+    (shiftClickPressed)="onShiftClick($event)"
+    (ctrClickPressed)="onCtrClick()"
+    tabindex="0"
+    (downKeyPressed)="handleNavigateNextTask()"
+    (upKeyPressed)="handleNavigatePreTask()"
+    (deleteKeyPressed)="handleDeleteTask()"
+    class="task-row-wrapper d-flex w-100 gap-8 cursor-pointer"
+    [class.task-deleting]="taskItem.isDeleting"
+    id="task-row-wrapper">
+    <div class="d-flex flex-1">
+      <ng-container *ngIf="!isConsole">
+        <trudi-checkbox
+          class="checkbox-frame align-self-start"
+          [attr.id]="taskItem.id"
+          [ngModel]="checked"
+          (ngModelChange)="handleChangeSelected($event)"></trudi-checkbox>
+      </ng-container>
+      <div class="d-flex w-100">
+        <div
+          class="d-flex flex-1 gap-16 align-items-start task-row-info-container">
+          <ng-container *ngTemplateOutlet="taskInfo"></ng-container>
+          <ng-container *ngTemplateOutlet="progressPreview"></ng-container>
+          <ng-container *ngTemplateOutlet="calendarPreview"></ng-container>
+        </div>
+        <ng-container *ngTemplateOutlet="assignee"></ng-container>
+      </div>
+    </div>
+    <div [style.width.px]="113">
+      <div *ngIf="taskItem.isDeleting" class="task-deleting-text">Deleting</div>
+      <button
+        *ngIf="!taskItem.isDeleting"
+        trudi-btn
+        variant="outlined"
+        btnType="primary"
+        size="small"
+        (click)="$event.stopPropagation(); navigateToTaskDetail()"
+        class="btn-move-to-task-detail">
+        <div class="d-flex align-item-center justify-content-center gap-6">
+          <span class="btn-move-to-task-text">Go to task</span>
+          <trudi-icon svgClass="size-20" icon="navigation"></trudi-icon>
+        </div>
+      </button>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #taskInfo>
+  <div
+    class="task-row-info-wrapper d-flex align-items-center gap-16"
+    [ngClass]="{'progress-or-calendar-is-hidden' : !taskViewSettings?.[ETaskViewSettingsKey.SHOW_PROGRESS] || !taskViewSettings?.[ETaskViewSettingsKey.SHOW_CALENDAR_DATES],
+                'progress-and-calendar-is-hidden' : !taskViewSettings?.[ETaskViewSettingsKey.SHOW_PROGRESS] && !taskViewSettings?.[ETaskViewSettingsKey.SHOW_CALENDAR_DATES]
+    }">
+    <div class="d-flex task-row-info-wrapper__item flex-dir-column gap-4">
+      <div class="task-row-name-wrapper relative">
+        <div class="task-name-wrapper">
+          <div class="d-flex align-items-center">
+            <div
+              tabindex="0"
+              #taskTitleTemplate
+              [class.visibility-hidden]="isEditTitle"
+              (click)="$event.stopPropagation(); navigateToTaskDetail()"
+              (keydown.enter)="$event.stopPropagation(); navigateToTaskDetail()"
+              class="task-name"
+              trudi-tooltip
+              [nzTooltipTitle]="taskItem?.indexTitle"
+              nzTooltipPlacement="top"
+              [hideWhenClick]="true"
+              [nzTooltipOverlayClassName]="'tooltip-task-title'"
+              [nzTooltipTrigger]="taskTitleTemplate?.offsetWidth < taskTitleTemplate?.scrollWidth ? 'hover' : null"
+              [innerHTML]="taskItem?.indexTitle | highlight: search"></div>
+            <div
+              [tabindex]="!isEditTitle ? 0 : -1"
+              class="wrapper-icon-edit"
+              (keyup.enter)="handleEditTaskTitle($event)"
+              (click)="handleEditTaskTitle($event)">
+              <trudi-icon
+                *ngIf="!isEditTitle"
+                class="icon-task-title-edit"
+                icon="penGrayIcon"></trudi-icon>
+            </div>
+            <span class="item-unRead border-rad-16 ml-8" *ngIf="unReadTask">
+              {{ unReadTask | totalCountPipe }}
+            </span>
+          </div>
+        </div>
+        <div [class.editing]="isEditTitle" class="task-name-editing">
+          <trudi-text-field
+            #trudiTextField
+            (keyup.enter)="trudiTextField.inputElem.nativeElement.blur()"
+            (triggerEventBlur)="handleBlurTaskGroup()"
+            [showCounting]="false"
+            [maxCharacter]="75"
+            [formControl]="taskTitle"></trudi-text-field>
+        </div>
+      </div>
+      <div
+        class="address-wrapper d-flex gap-4"
+        [ngClass]="{'un-highlight': taskItem?.property?.status && taskItem.property.status !== 'ACTIVE'}">
+        <div
+          #taskPropertyTpl
+          trudi-tooltip
+          nzTooltipPlacement="top"
+          [hideWhenClick]="true"
+          [nzTooltipOverlayClassName]="'tooltip-task-title'"
+          [nzTooltipTitle]="taskItem?.property?.streetline || taskItem?.property?.shortenStreetline"
+          [nzTooltipTrigger]="taskPropertyTpl?.offsetWidth < taskPropertyTpl?.scrollWidth ? 'hover' : null"
+          class="property-address"
+          [innerHTML]="(taskItem?.property?.streetline || taskItem?.property?.shortenStreetline || 'No property') | highlight: search"></div>
+      </div>
+      <ng-container *ngTemplateOutlet="openTime"></ng-container>
+      <trudi-badge
+        *ngIf="isAutoReopen && !taskItem.isSeen"
+        variant="inProgress"
+        size="small"
+        text="Recently reopened"></trudi-badge>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #progressPreview>
+  <div
+    class="steps-progress-wrapper"
+    [ngClass]="{'d-none': !taskViewSettings?.[ETaskViewSettingsKey.SHOW_PROGRESS], 'calendar-is-hidden': !taskViewSettings?.[ETaskViewSettingsKey.SHOW_CALENDAR_DATES]}">
+    <progress-preview
+      [displayLabel]="false"
+      [inprogress]="taskItem?.workflow"
+      [isNoPropertyTask]="taskItem?.property.isTemporary"
+      [taskId]="taskItem?.id"></progress-preview>
+  </div>
+</ng-template>
+
+<ng-template #calendarPreview>
+  <div
+    class="calendar-events-wrapper"
+    [ngClass]="{'d-none': !taskViewSettings?.[ETaskViewSettingsKey.SHOW_CALENDAR_DATES], 'progress-is-hidden': !taskViewSettings?.[ETaskViewSettingsKey.SHOW_PROGRESS]}">
+    <calendar-preview
+      [displayLabel]="false"
+      [icon]="'iconCalendarFillV3'"
+      [calenderWidgetExpiredDays]="calenderWidgetExpiredDays"
+      [calendarEvents]="taskItem?.calendarEventPreview"
+      [taskId]="taskItem?.id"></calendar-preview>
+  </div>
+</ng-template>
+
+<ng-template #assignee>
+  <div
+    [ngClass]="{'d-none': !taskViewSettings?.[ETaskViewSettingsKey.SHOW_ASSIGNEE]}"
+    class="assign-agents-wrapper d-flex justify-content-end">
+    <assign-to-agents
+      [displayText]="'Assign'"
+      [task]="taskItem"
+      [isCustom]="true"
+      [avatarSize]="24"
+      [maxDisplayAssignees]="maxDisplayAssignee"
+      titleMode="avatar"
+      [isReadOnly]="isConsole"
+      (click)="$event.stopPropagation()"
+      (onAssignToAgentsClick)="$event.stopPropagation()"
+      (onAssignAgentsSelectedClick)="onAssignAgentsSelectedClick($event)">
+    </assign-to-agents>
+  </div>
+</ng-template>
+
+<ng-template #openTime>
+  <span
+    [ngClass]="{'d-none': !taskViewSettings?.[ETaskViewSettingsKey.SHOW_OPENED_COMPLETED_DATES]}"
+    *ngIf="!taskItem.isDeleting"
+    class="open-time">
+    {{taskItem?.status | taskDateCase : taskItem?.createdAt:
+    taskItem?.updatedAtOfTask}} {{taskItem?.status === TaskStatusType.inprogress
+    ? (taskItem?.createdAt | dateCase | async) === TIME_NOW ? '' :
+    (taskItem?.createdAt | dateCase | async) : (taskItem?.updatedAtOfTask |
+    dateCase | async) === TIME_NOW ? '' : (taskItem?.updatedAtOfTask | dateCase
+    | async)}}
+  </span>
+</ng-template>

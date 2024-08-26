@@ -1,0 +1,60 @@
+@import 'function';
+
+.task_type--title {
+  display: flex;
+  align-items: center;
+  gap: 0 4px;
+  white-space: nowrap;
+  @include fontSetup(
+    var(--fg-neutral-normal, #646464),
+    14px,
+    20px,
+    normal,
+    400
+  );
+}
+.task_type--count {
+  height: 16px;
+  display: flex;
+  padding: 0 4px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: var(--bg-brand-solid-normal, #00aa9f);
+  @include fontSetup(var(--white), 12px, 18px, normal, 600);
+}
+
+::ng-deep
+  .task_type_filter-event{
+    margin: 0px;
+  .trudi-select-dropdown-container
+  .trudi-select-dropdown-scroll {
+  max-height: 270px !important;
+  overflow: hidden !important;
+  &:hover {
+    overflow: auto !important;
+  }
+  cdk-virtual-scroll-viewport {
+    height: 270px;
+    .cdk-virtual-scroll-content-wrapper {
+      width: 100%;
+    }
+  }
+  }
+
+}
+
+:host ::ng-deep {
+  .trudi-ui-btn {
+    color: var(--fg-neutral-normal, #646464);
+    gap: 0 4px !important;
+    border-radius: 6px !important;
+    justify-content: unset !important;
+
+    &:focus-visible {
+      box-shadow: none !important;
+      border: 2px solid var(--brand-500) !important;
+      border-radius: 6px !important;
+    }
+  }
+}

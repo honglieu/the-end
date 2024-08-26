@@ -1,0 +1,57 @@
+<div
+  class="widget-common-wrapper cursor-pointer"
+  [ngClass]="{'success': widgetState.isShowSuccess && widgetState.isShowBackground, 'syncing': type === syncPropertyTree.INPROGRESS, 'fail': type === syncPropertyTree.FAILED || isShowActionWhenInvoiceStatusUnPaid}"
+  [attr.data-button-key]="buttonKey"
+  [attr.data-button-type]="EButtonType.STEP"
+  PreventButton
+  (leftClick)="handleClickCard($event)">
+  <div class="title">{{ title }}</div>
+  <div class="container">
+    <div class="title-status" *ngIf="!hideStatusSection">
+      <div
+        class="title-success"
+        *ngIf="widgetState.isShowSuccess && widgetState.isShowBackground">
+        <trudi-icon svgClass="size-16" [icon]="'syncSuccessV2'" viewBox="auto">
+        </trudi-icon>
+        <div>{{successTitle ? successTitle : 'Synced successfully'}}</div>
+      </div>
+      <div class="title-syncing" *ngIf="type === syncPropertyTree.INPROGRESS">
+        <trudi-icon
+          svgClass="size-16"
+          class="spin"
+          [icon]="'syncingV2'"
+          viewBox="auto">
+        </trudi-icon>
+        <div>Syncing</div>
+      </div>
+      <div
+        class="title-fail"
+        *ngIf="type === syncPropertyTree.FAILED || isShowActionWhenInvoiceStatusUnPaid">
+        <trudi-icon svgClass="size-16" [icon]="'syncFailV2'" viewBox="auto">
+        </trudi-icon>
+        <div>{{errorTitle ? errorTitle : 'Fail to sync'}}</div>
+      </div>
+    </div>
+    <div class="box-content">
+      <ng-content></ng-content>
+    </div>
+    <div
+      class="box-button-fail"
+      *ngIf="type === syncPropertyTree.FAILED || isShowActionWhenInvoiceStatusUnPaid">
+      <button
+        class="button-retry"
+        *ngIf="!isConsole"
+        (click)="handleRetry($event)">
+        <div class="text-btn-retry">Retry</div>
+      </button>
+      <button
+        class="button-remove"
+        *ngIf="!isConsole"
+        (click)="handleRemove($event)">
+        <div class="text-btn-remove">
+          {{isDislayBtnCancel ? 'Cancel' : 'Remove'}}
+        </div>
+      </button>
+    </div>
+  </div>
+</div>

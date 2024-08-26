@@ -1,0 +1,77 @@
+<div class="leading messages-header" (click)="onClickPopup($event)">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="header">ASSIGN TO</div>
+  </div>
+  <div
+    class="assign-search-bar d-flex gap-10 border-rad-8 align-items-center background--gray"
+    style="margin-top: 12px">
+    <trudi-icon svgClass="size-20" icon="iconSearch"></trudi-icon>
+    <input
+      type="text"
+      class="search-property-input background--gray"
+      placeholder="Search"
+      onfocus="this.placeholder = ''"
+      onblur="this.placeholder = 'Search'"
+      [formControl]="searchFormControl$"
+      (keydown.enter)="onSearch($event);$event.target.blur();" />
+    <div
+      class="clear-search cursor-pointer"
+      *ngIf="showClearIcon"
+      (click)="handleClearSearch()">
+      <img src="assets/icon/close-btn.svg" alt="clear" />
+    </div>
+  </div>
+</div>
+
+<div class="count-container">
+  <div class="d-flex count-wrapper align-items-center">
+    <div class="count-text" *ngIf="!!defaultAgentList?.length">
+      {{listAgentId?.length || 0}}/{{defaultAgentList?.length || 0}}
+    </div>
+  </div>
+</div>
+
+<div class="assign-list-items" (click)="onClickPopup($event)">
+  <div class="assign-list-items-info">
+    <ng-container *ngIf="agentList?.length > 0 else noResult">
+      <cdk-virtual-scroll-viewport
+        class="assign-list-items-list"
+        [style.height]="vitrualHeight + 'px'"
+        itemSize="20"
+        appendOnly>
+        <div
+          *cdkVirtualFor="let item of agentList; index as i"
+          class="assign-item cursor-pointer"
+          [ngClass]="{'disable': item.isLastItem, 'active': item.selected}"
+          (click)="handleCheckbox(i)"
+          tabindex="0">
+          <div class="assign-item-content">
+            <div class="assign-item-info">
+              <app-user-avatar
+                [avatar]="item?.googleAvatar"
+                [user]="item"
+                [style]="'width: 28px; height: 28px; font-size: 14px;'"></app-user-avatar>
+              <div
+                class="assign-name text-overflow"
+                [ngClass]="{'active': item.selected}">
+                {{(item?.firstName || '') + ' ' + (item?.lastName || '')}}
+              </div>
+            </div>
+            <td-checkbox
+              [size]="24"
+              [isChecked]="item.selected"
+              (tdCheckboxChanged)="handleCheckbox(i)"
+              [disableCheckbox]="item.isLastItem || (inboxService.isArchiveMailbox | async) || item.id === trudiUserId"
+              [inviteStatus]="item.inviteStatus"
+              [listInviteStatus]="listInviteStatus"
+              [currentUser]="item">
+            </td-checkbox>
+          </div>
+        </div>
+      </cdk-virtual-scroll-viewport>
+    </ng-container>
+    <ng-template #noResult>
+      <div class="no-result">No results found</div>
+    </ng-template>
+  </div>
+</div>

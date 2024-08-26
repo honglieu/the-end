@@ -1,0 +1,68 @@
+@import 'function';
+
+::ng-deep .trudi-modal:has(.rm-invoice-detail-form) {
+  top: 0;
+  max-width: unset;
+  width: 100vw !important;
+  padding-bottom: 0;
+
+  .rm-invoice-detail-form {
+    height: calc(100vh - 194px);
+
+    .trudi-table-wrapper {
+      td,
+      th {
+        border-right: none !important;
+      }
+    }
+  }
+
+  .scrollWrapper {
+    ::ng-deep .ant-table-body {
+      ::ng-deep .ng-dropdown-panel.ng-select-top {
+        margin: 80px 0px !important;
+        .ng-option {
+          padding: 12px;
+          font-style: italic;
+        }
+      }
+
+      ::ng-deep .ng-dropdown-panel.ng-select-bottom {
+        margin-top: 55px !important;
+        .ng-option {
+          padding: 12px;
+          font-style: italic;
+        }
+      }
+    }
+  }
+
+  .rent-manager-issue-invoice-details-popup-header {
+    position: relative;
+    justify-content: center;
+
+    .size-icon {
+      position: absolute;
+      left: 0;
+    }
+
+    ::ng-deep .ant-table-body {
+      overflow-y: auto !important;
+    }
+
+    .title {
+      margin-left: 48px;
+    }
+  }
+
+  .rent-manager-issue-popup-footer {
+    .info-status {
+      white-space: nowrap;
+
+      span {
+        @include fontSetup(var(--bg-overlay-dark), 12px, 20px, normal, 500);
+        margin-left: 4px;
+      }
+    }
+  }
+}

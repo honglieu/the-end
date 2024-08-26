@@ -1,0 +1,31 @@
+<trudi-modal
+  className="published-task"
+  [visible]="visible"
+  [title]="title"
+  subTitle=""
+  [closable]="true"
+  hiddenCancelBtn="true"
+  (onCancel)="handleCancel()">
+  <ng-template #footerModal>
+    <button
+      [disabled]="isDisabled"
+      (click)="handleOk()"
+      class="btn-comfirm-task d-flex align-items-center gap-8">
+      Confirm
+    </button>
+  </ng-template>
+  <div class="list-form-container">
+    <div *ngFor="let item of dataItems" class="form-item">
+      <div class="form-item-label">{{ item.name }}</div>
+      <trudi-form-control>
+        <trudi-single-select
+          [items]="topicLists"
+          [required]="true"
+          bindValue="id"
+          bindLabel="name"
+          [formControl]="item.topicId"
+          placeholder="Select inbox folder"></trudi-single-select>
+      </trudi-form-control>
+    </div>
+  </div>
+</trudi-modal>

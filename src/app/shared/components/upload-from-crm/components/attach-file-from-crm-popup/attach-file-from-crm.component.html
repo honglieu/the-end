@@ -1,0 +1,303 @@
+<trudi-modal
+  [visible]="visible"
+  [closable]="!!configs?.header?.showCloseBtn"
+  [modelWidth]="624"
+  className="trudi-modal-attach-file-from-crm"
+  (onCancel)="onCloseSendMsg()">
+  <ng-template #headerModal>
+    <div class="d-flex align-items-center">
+      <div
+        class="image-property-tree"
+        [ngSwitch]="currentCompanyCRMSystemName$ | async">
+        <trudi-icon
+          *ngSwitchCase="CRMSystemName.PROPERTY_TREE"
+          icon="propertyTree"
+          [style]="{'width.px':84, 'height.px':20}"></trudi-icon>
+
+        <trudi-icon
+          *ngSwitchCase="CRMSystemName.RENT_MANAGER"
+          icon="rentManager"
+          [style]="{'width.px':106, 'height.px':20}"></trudi-icon>
+      </div>
+      <div class="title trudi-modal-attach-file-from-crm-title cursor-default">
+        Attach file
+      </div>
+    </div>
+  </ng-template>
+  <div class="trudi-modal-attach-file-from-crm-property d-flex">
+    <trudi-icon
+      icon="mapPin"
+      [style]="{'width.px':16, 'height.px':16}"></trudi-icon>
+    <p>{{currentProperty?.streetline}}</p>
+  </div>
+  <div class="trudi-modal-attach-file-from-crm-body">
+    <trudi-text-field
+      [ngModel]="searchText"
+      iconLeft="iconSearch"
+      placeholder="Search for document"
+      (ngModelChange)="handleSearch($event)"
+      [clearable]="true"></trudi-text-field>
+    <div class="trudi-modal-attach-file-from-crm-body-tabs">
+      <ng-container *ngIf="dataTabs.length > 1">
+        <trudi-tab-panels (changeCurrentTabIndex)="setCurrentTab($event)">
+          <div
+            *ngFor="let tab of dataTabs; let i = index"
+            tabPanel
+            [tabTitle]="tab.label">
+            <ng-container *ngIf="!isLoading; else skeleton">
+              <ng-container *ngIf="listFiles?.length; else noItems">
+                <div
+                  class="file-row"
+                  [ngStyle]="{'height': (containerHeight) +'px' }">
+                  <cdk-virtual-scroll-viewport
+                    #scrollContainer
+                    class="d-flex flex-dir-column w-100 h-100"
+                    (scroll)="onScroll($event)"
+                    [itemSize]="71">
+                    <file-row
+                      *cdkVirtualFor="let file of listFiles;let lastRowData = last"
+                      [rowData]="file"
+                      [lastRowData]="lastRowData"
+                      (fileEmit)="handleOptionChange($event)"></file-row>
+
+                    <ng-container *ngIf="isLoadingMore">
+                      <div *ngFor="let _ of [].constructor(2)" class="">
+                        <div class="skeleton d-flex gap-12">
+                          <nz-skeleton
+                            class="skeleton-thumbnail"
+                            style="width: 38px; height: 38px"
+                            [nzActive]="true"
+                            [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+                          <div class="skeleton-infor d-flex flex-dir-column">
+                            <nz-skeleton
+                              class="skeleton-title"
+                              style="width: 100%; height: 20px"
+                              [nzActive]="true"
+                              [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+                            <nz-skeleton
+                              class="skeleton-date"
+                              style="width: 10%; height: 16px"
+                              [nzActive]="true"
+                              [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+                          </div>
+
+                          <nz-skeleton
+                            style="width: 20px"
+                            class="ml-auto mr-12 skeleton-checkbox"
+                            [nzActive]="true"
+                            [nzParagraph]="{ rows: 0}"></nz-skeleton>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </cdk-virtual-scroll-viewport>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </trudi-tab-panels>
+      </ng-container>
+      <ng-container *ngIf="dataTabs.length <= 1">
+        <ng-container *ngIf="!isLoading; else skeleton">
+          <ng-container *ngIf="listFiles?.length; else noItems">
+            <div
+              class="file-row"
+              [ngStyle]="{'height': (containerHeight) +'px' }">
+              <cdk-virtual-scroll-viewport
+                #scrollContainer
+                class="d-flex flex-dir-column w-100 h-100"
+                (scroll)="onScroll($event)"
+                [itemSize]="71">
+                <file-row
+                  *cdkVirtualFor="let file of listFiles;let lastRowData = last"
+                  [rowData]="file"
+                  [lastRowData]="lastRowData"
+                  (fileEmit)="handleOptionChange($event)"></file-row>
+
+                <ng-container *ngIf="isLoadingMore">
+                  <div *ngFor="let _ of [].constructor(2)" class="">
+                    <div class="skeleton d-flex gap-12">
+                      <nz-skeleton
+                        class="skeleton-thumbnail"
+                        style="width: 38px; height: 38px"
+                        [nzActive]="true"
+                        [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+                      <div class="skeleton-infor d-flex flex-dir-column">
+                        <nz-skeleton
+                          class="skeleton-title"
+                          style="width: 100%; height: 20px"
+                          [nzActive]="true"
+                          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+                        <nz-skeleton
+                          class="skeleton-date"
+                          style="width: 10%; height: 16px"
+                          [nzActive]="true"
+                          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+                      </div>
+
+                      <nz-skeleton
+                        style="width: 20px"
+                        class="ml-auto mr-12 skeleton-checkbox"
+                        [nzActive]="true"
+                        [nzParagraph]="{ rows: 0}"></nz-skeleton>
+                    </div>
+                  </div>
+                </ng-container>
+              </cdk-virtual-scroll-viewport>
+            </div>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+      <div
+        *ngIf="isSubmitted && !selectedFiles.length"
+        class="error-container y-center gap-4">
+        <trudi-icon svgClass="size-12" icon="errorBgRed"></trudi-icon>
+        <span class="error-text">{{validatePropertyMsg}}</span>
+      </div>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div
+      class="d-flex w-100 align-items-center trudi-modal-attach-file-from-crm-footer gap-12">
+      <button
+        *ngIf="configs?.footer?.buttons?.showBackBtn || isShowBackBtn || backFromCheckList"
+        trudi-btn
+        variant="outlined"
+        btnType="neutral"
+        (click)="onTriggerClick(false, $event)"
+        type="submit"
+        class="trudi-btn">
+        <span class="btn-text">Back</span>
+      </button>
+      <button
+        trudi-btn
+        (click)="onTriggerClick(true, $event)"
+        type="submit"
+        class="trudi-btn">
+        <span class="btn-text">Attach</span>
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>
+<ng-template #noItems>
+  <div class="body-no-item" [ngStyle]="{'height': (containerHeight) +'px' }">
+    <div class="header-text">File not found.</div>
+  </div>
+</ng-template>
+<ng-template #skeleton>
+  <div [ngStyle]="{'height': (containerHeight) +'px' }">
+    <div>
+      <div class="skeleton d-flex gap-12">
+        <nz-skeleton
+          class="skeleton-thumbnail"
+          style="width: 38px; height: 38px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+        <div class="skeleton-infor d-flex flex-dir-column">
+          <nz-skeleton
+            class="skeleton-title"
+            style="width: 100%; height: 20px"
+            [nzActive]="true"
+            [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+          <nz-skeleton
+            class="skeleton-date"
+            style="width: 10%; height: 16px"
+            [nzActive]="true"
+            [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+        </div>
+
+        <nz-skeleton
+          style="width: 20px"
+          class="ml-auto mr-12 skeleton-checkbox"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0}"></nz-skeleton>
+      </div>
+      <div class="skeleton d-flex gap-12">
+        <nz-skeleton
+          class="skeleton-thumbnail"
+          style="width: 38px; height: 38px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+        <div class="skeleton-infor d-flex flex-dir-column">
+          <nz-skeleton
+            class="skeleton-title"
+            style="width: 100%; height: 20px"
+            [nzActive]="true"
+            [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+          <nz-skeleton
+            class="skeleton-date"
+            style="width: 10%; height: 16px"
+            [nzActive]="true"
+            [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+        </div>
+
+        <nz-skeleton
+          style="width: 20px"
+          class="ml-auto mr-12 skeleton-checkbox"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0}"></nz-skeleton>
+      </div>
+      <div class="skeleton d-flex gap-12">
+        <nz-skeleton
+          class="skeleton-thumbnail"
+          style="width: 38px; height: 38px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+        <div class="skeleton-infor d-flex flex-dir-column">
+          <nz-skeleton
+            class="skeleton-title"
+            style="width: 100%; height: 20px"
+            [nzActive]="true"
+            [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+          <nz-skeleton
+            class="skeleton-date"
+            style="width: 10%; height: 16px"
+            [nzActive]="true"
+            [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+        </div>
+
+        <nz-skeleton
+          style="width: 20px"
+          class="ml-auto mr-12 skeleton-checkbox"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0}"></nz-skeleton>
+      </div>
+      <div class="skeleton d-flex gap-12">
+        <nz-skeleton
+          class="skeleton-thumbnail"
+          style="width: 38px; height: 38px"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+        <div class="skeleton-infor d-flex flex-dir-column">
+          <nz-skeleton
+            class="skeleton-title"
+            style="width: 100%; height: 20px"
+            [nzActive]="true"
+            [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+
+          <nz-skeleton
+            class="skeleton-date"
+            style="width: 10%; height: 16px"
+            [nzActive]="true"
+            [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+        </div>
+
+        <nz-skeleton
+          style="width: 20px"
+          class="ml-auto mr-12 skeleton-checkbox"
+          [nzActive]="true"
+          [nzParagraph]="{ rows: 0}"></nz-skeleton>
+      </div>
+    </div>
+  </div>
+</ng-template>

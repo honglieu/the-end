@@ -1,0 +1,52 @@
+@import 'function';
+.popup-container {
+  & .header {
+    padding: 10px 14px 10px 14px;
+    border-bottom: solid 1px var(--gray-100);
+
+    .text-title-content {
+      flex-direction: column;
+    }
+
+    .background-icon {
+      img {
+        width: 48px;
+        height: 48px;
+      }
+    }
+
+    &-icon {
+      width: 48px;
+      height: 48px;
+    }
+
+    &-title {
+      margin-left: 23px;
+    }
+
+    &-title-text {
+      @include fontSetup(var(--gray-950), 20px, 28px, normal, 600);
+    }
+
+    &-subtitle-text {
+      @include fontSetup(var(--gray-500), 14px, 20px, normal, 400);
+    }
+  }
+
+  & .button-control {
+    width: 100%;
+    padding: 10px 6px 10px 14px;
+    @include fontSetup(var(--white), 14px, 16px, normal, 500);
+    .btn-wrapper {
+      margin: 0;
+      justify-content: flex-end;
+      column-gap: 12px;
+      button {
+        &:disabled {
+          opacity: 0.6;
+          pointer-events: none;
+        }
+      }
+    }
+  }
+}

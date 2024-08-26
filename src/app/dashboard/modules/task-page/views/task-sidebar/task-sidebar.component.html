@@ -1,0 +1,73 @@
+<div class="task-sidebar-wrapper">
+  <div class="task-sidebar__header">
+    @if (showFolderNameInput) {
+    <task-folder-input
+      #folderNameRef
+      placeholder="Enter folder name"
+      [defaultFolderIcon]="'TrudiFiSrFolder'"
+      [formControl]="folderNameControl"
+      [showColorPicker]="showDropdown"
+      (changeSelectedIcon)="selectedIcon = $event"
+      (keyup.enter)="onEnter()"
+      (triggerEventBlur)="handleBlurFolderName()"
+      (triggerDropdown)="handleFolderDropdown()" />
+    } @else {
+    <button
+      (click)="showFolderNameInput = true; folderNameRef?.nativeElement?.focus()"
+      class="add-btn"
+      trudi-btn
+      [disabled]="isConsole"
+      variant="tonal"
+      [appE2E]="'task-new-task-folder-button'"
+      btnType="neutral">
+      <ng-template [iconPrefix]>
+        <trudi-icon
+          class="plus-icon"
+          svgClass="size-20"
+          icon="plusIconV3" /> </ng-template
+      >New task folder
+    </button>
+    }
+  </div>
+  <div
+    class="task-sidebar-bottom auto-hide-scroll"
+    cdkDropList
+    [cdkDropListData]="taskFolders"
+    (cdkDropListDropped)="dropped($event)">
+    @for (taskFolder of taskFolders; track taskFolder.id) {
+    <div
+      cdkDrag
+      (cdkDragStarted)="handleStartDragFolder()"
+      [cdkDragDisabled]="isConsole || !!taskSiderBarItem?.isEditFolder"
+      [cdkDragData]="taskFolder">
+      <task-sidebar-item
+        #taskSiderBarItem
+        [taskFolder]="taskFolder"
+        (onClickFolderAction)="handleFolderAction($event)" />
+      <div *cdkDragPlaceholder class="example-custom-placeholder"></div>
+      <div *cdkDragPreview [matchSize]="true" class="group-drag-preview">
+        <div class="task-preview-wrapper d-flex align-items-center">
+          <div class="d-flex align-items-center">
+            <div class="icon-wrapper task-icon">
+              <trudi-icon
+                class="item-icon"
+                [icon]="taskFolder.icon"
+                [style]="{'width.px': 16, 'height.px': 16}"></trudi-icon>
+            </div>
+            <span class="item-name ml-8"> {{ taskFolder?.name}} </span>
+            <span
+              class="item-unRead border-rad-16"
+              *ngIf="taskFolder?.unReadTaskCount">
+              {{ ((taskFolder?.unReadTaskCount || 0) +
+              (taskFolder?.unreadInternalNoteCount || 0)) | totalCountPipe }}
+            </span>
+          </div>
+          <span class="item-total ml-auto">
+            {{ taskFolder?.taskCount | totalCountPipe: 999: true }}
+          </span>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div>

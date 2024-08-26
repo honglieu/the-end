@@ -1,0 +1,48 @@
+<trudi-step
+  [model]="model"
+  [showIconTitle]="false"
+  [hideProcessLine]="false"
+  [buttonKey]="buttonKey"
+  (onProcess)="enableProcess()">
+</trudi-step>
+
+<resizable-modal-popup
+  *ngIf="popupState.selectEvent"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [okText]="'Next'"
+  [title]="'Select events'"
+  [hiddenCancelBtn]="true"
+  [show]="popupState.selectEvent"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="660"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [isShowFooter]="true"
+  [showBackBtn]="hasConfirmEssential"
+  (onCancel)="handleClose()"
+  (onBack)="onBack()"
+  (onOk)="onNextEvent()"
+  [isCustomMoveable]="true">
+  <div style="padding: 20px 24px">
+    <select-event-popup
+      *ngIf="popupState.selectEvent"
+      [listEvents]="listEvents"
+      [isRequired]="isRequired"
+      (onChangeOption)="handleEventChangeOption($event)">
+    </select-event-popup>
+  </div>
+</resizable-modal-popup>
+
+<!-- <trudi-send-msg-v2
+  *ngIf="popupState.isTrudiSendMessage"
+  [rawMsg]="textForwardMessg"
+  [configs]="sendMessageConfigs"
+  [prefillVariables]="prefillVariable"
+  (onQuit)="onQuit()"
+  [listOfFiles]="model?.fields?.files || []"
+  (onSendMsg)="onSendMsg($event)"
+  (onNextDropdown)="handleNextBtnDropdown($event)"
+  (onBack)="handleBackSendMsg()">
+</trudi-send-msg-v2> -->

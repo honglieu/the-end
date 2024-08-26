@@ -1,0 +1,86 @@
+@import 'function';
+.box-body {
+  .search-box {
+    padding: 0 16.5px;
+    border-radius: 8px;
+    background-color: var(--gray-50);
+    border: 1px solid transparent;
+    display: flex;
+    align-items: center;
+    margin: 20px 14px 12px 14px;
+    img {
+      width: 14px;
+      height: 14px;
+      color: var(--gray-500);
+    }
+    .search-input {
+      width: 90%;
+      max-width: 90%;
+      margin: 0;
+      background-color: transparent;
+      border: none;
+      padding: 15px 13.65px;
+      &::placeholder {
+        @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+      }
+    }
+    &:focus {
+      border-color: var(--brand-500);
+    }
+  }
+  .list-view {
+    margin: 0 -10px;
+    max-height: calc(72px * 5);
+    .item {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      transition: 0.2s;
+      cursor: pointer;
+      &:hover {
+        background-color: var(--gray-50);
+      }
+      * {
+        cursor: pointer !important;
+      }
+      td-checkbox {
+        padding: 14px 24px;
+        width: 100%;
+        height: 72px;
+      }
+      &.selected {
+        background-color: var(--brand-50);
+      }
+    }
+  }
+}
+
+.checkbox-label-container {
+  gap: 4px;
+  max-width: 536px;
+  // display: flex;
+  // gap: 20px;
+  // .supplier-avatar{
+  //   background-color: var(--supplier-500);
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: center;
+  //   min-width: 40px;
+  //   height: 40px;
+  //   border-radius: 50%;
+  //   img{
+  //     height: 20px;
+  //     width: 20px;
+  //   }
+  // }
+  // .supplier-info{
+  //   gap: 4px;
+  //   max-width: 476px;
+  .supplier-companyName {
+    @include fontSetup(var(--gray-700), 16px, 24px, normal, 600);
+  }
+  .supplier-contactName {
+    @include fontSetup(var(--gray-500), 14px, 16px, normal, 400);
+  }
+  // }
+}

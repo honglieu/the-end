@@ -1,0 +1,13 @@
+@import 'function';
+
+::ng-deep nz-modal-container {
+  .trudi-modal:has(.invoice-list-wrapper) {
+    width: 824px !important;
+    .ant-modal-body {
+      padding: 20px 24px 0 24px;
+    }
+    .invoice-list-wrapper {
+      overflow-y: auto;
+    }
+  }
+}

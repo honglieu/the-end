@@ -1,0 +1,144 @@
+@if (item.isOpen) {
+<hr class="break-line-top" />
+}
+<ul nz-menu nzMode="inline" class="border-r-none background--white">
+  <li
+    appE2E
+    e2eId="inbox-email-folder-dropdown"
+    nz-submenu
+    [nzTitle]="sidebarTitle"
+    class="submenu"
+    nzOpen="true"
+    [(nzOpen)]="item.isOpen"
+    [ngClass]="['relative']"
+    (click)="handleExpandMailbox(); $event.stopPropagation()"
+    (keydown.enter)="handleExpandMailbox()"
+    tabindex="0">
+    <div class="box-content" [ngClass]="{'d-none': !item.isOpen}">
+      <ng-container
+        *ngIf="item?.status === EMailBoxStatus.DISCONNECT && item?.role.includes(EUserMailboxRole.OWNER)">
+        <button class="btn-connect" (click)="connectAgain(item)">
+          <span>Connect again</span>
+        </button>
+      </ng-container>
+      <ng-container
+        *ngIf="item?.status === EMailBoxStatus.FAIL && item?.role.includes(EUserMailboxRole.OWNER)">
+        <button class="btn-connect" (click)="handleRetrySync(item)">
+          <span>Reconnect</span>
+        </button>
+      </ng-container>
+      <ng-container *ngIf="item.status === EMailBoxStatus.SYNCING">
+        <div
+          class="loading-bar-item"
+          nz-tooltip
+          [nzTooltipTitle]="(item?.totalItem?.totalMessageSynced || 0) + '/' + item?.totalItem?.totalItemCount + ' messages'"
+          nzTooltipPlacement="right">
+          <div
+            class="progress-bar"
+            [style.width.%]="item?.totalItem?.totalMessageSynced > 5
+                  ? (item?.totalItem?.totalMessageSynced / item?.totalItem?.totalItemCount || 1) * 100
+                  : 5"></div>
+        </div>
+      </ng-container>
+      <sidebar-item-v2
+        [item]="item"
+        [channelId]="channelId"
+        (selectMailbox)="handleSelectMailbox($event)"></sidebar-item-v2>
+      @if (!isLastItem && !isUnderItemOpen) {
+      <hr class="break-line" />
+      }
+    </div>
+    <ng-template #sidebarTitle>
+      <div class="multiple-user__item">
+        <ng-container
+          *ngTemplateOutlet="avatarTemplate; context: {$implicit:item}"></ng-container>
+        <div class="d-flex flex-dir-column">
+          <div class="d-flex gap-4 align-items-center">
+            <span
+              #activeMailboxName
+              nz-tooltip
+              nzTooltipPlacement="bottom"
+              [nzTooltipTitle]="item?.name"
+              [nzTooltipOverlayStyle]="{ 'max-width': '266px', 'padding-top': '5px' }"
+              class="text-ellipsis"
+              [ngClass]="{'multiple-user__name': item?.status !== EMailBoxStatus.SYNCING, 'multiple-user__name-syncing': item?.status === EMailBoxStatus.SYNCING}"
+              >{{item?.name}}</span
+            >
+            <trudi-icon *ngIf="unreadList[item.id]" icon="redDotUnreadMessage">
+            </trudi-icon>
+            <trudi-icon
+              *ngIf="item?.status === EMailBoxStatus.DISCONNECT || item?.status === EMailBoxStatus.FAIL"
+              nz-tooltip
+              [nzTooltipTitle]="
+                      item?.status === EMailBoxStatus.FAIL
+                        ? titleTemplate
+                        : item?.role.includes(EUserMailboxRole.OWNER)
+                        ? textTooltip
+                        : textTooltip + ' Please contact mailbox owner.'
+                    "
+              [nzTooltipOverlayClassName]="'tool-tip-mailbox'"
+              nzTooltipPlacement="bottom"
+              [icon]="item?.status === EMailBoxStatus.FAIL ? 'alertWarningIcon' : 'alertOctagonIcon'"
+              svgClass="size-20">
+            </trudi-icon>
+            <ng-container *ngIf="item?.status === EMailBoxStatus.SYNCING">
+              <div
+                class="icon-expand cursor-pointer"
+                [ngClass]="{'spin': item?.status === EMailBoxStatus.SYNCING}">
+                <trudi-icon [icon]="'syncingV3'"> </trudi-icon>
+              </div>
+            </ng-container>
+            <ng-template #titleTemplate>
+              <div class="d-flex flex-dir-column text-left">
+                <span>Fail to connect</span>
+                <span>{{item?.lastTimeSync | formatDateTime| async}}</span>
+              </div>
+            </ng-template>
+          </div>
+          <span
+            *ngIf="item?.isOpen"
+            nz-tooltip
+            nzTooltipPlacement="bottom"
+            [nzTooltipTitle]="item?.emailAddress"
+            [nzTooltipOverlayStyle]="{ 'max-width': '266px', 'padding-top': '5px' }"
+            class="text-ellipsis"
+            [ngClass]="{'error-text': item?.status === EMailBoxStatus.DISCONNECT, 'multiple-user__email': item?.status !== EMailBoxStatus.SYNCING, 'multiple-user__email-syncing': item?.status === EMailBoxStatus.SYNCING}"
+            >{{item?.emailAddress}}</span
+          >
+        </div>
+      </div>
+      <ng-template #avatarTemplate let-item>
+        <div class="box-avatar position-relative">
+          <a
+            *ngIf="isAccountAdded"
+            (click)="navigateToMailboxSetting(); $event.stopPropagation()"
+            class="cursor-pointer mailbox-setting"
+            nz-tooltip
+            nzTooltipPlacement="bottom"
+            [nzTooltipTitle]="'Mailbox settings'"
+            tabindex="0"
+            (keydown.enter)="navigateToMailboxSetting(); $event.stopPropagation()">
+            <trudi-icon [icon]="'settingV2'" svgClass="size-12"> </trudi-icon>
+          </a>
+          <div class="avatar">
+            <img
+              *ngIf="item.picture; else noneAvt"
+              [src]="item.picture"
+              alt="avatar" />
+            <ng-template #noneAvt>
+              <div class="custom-avatar">{{item?.name | shortenName}}</div>
+            </ng-template>
+            <trudi-icon
+              *ngIf="item.type === mailBoxType.COMPANY"
+              [icon]="'mailboxTypeCompany'"
+              [style]="{ 'width.px': 16, 'height.px': 16 }">
+            </trudi-icon>
+          </div>
+        </div>
+      </ng-template>
+    </ng-template>
+  </li>
+  <div *cdkDragPreview class="mailbox-item-preview">
+    <ng-container *ngTemplateOutlet="sidebarTitle"></ng-container>
+  </div>
+</ul>

@@ -1,0 +1,66 @@
+<trudi-modal
+  [visible]="visible"
+  [title]="configs.header.title"
+  [subTitle]="''"
+  [autoFocus]="null"
+  [closable]="closable"
+  className="trudi-modal-contact-card"
+  (onCancel)="onCloseSendMsg()">
+  <div class="trudi-send-msg-body">
+    <div [formGroup]="form">
+      <div class="trudi-form-group">
+        <div class="trudi-form-control">
+          <trudi-select-receiver-contact-card
+            [isPolicy]="isPolicy"
+            [isOutOfOffice]="isOutOfOffice"
+            [extraCls]="{
+              'input-error-select':
+                selectedContactCard.invalid &&
+                (selectedContactCard.dirty || selectedContactCard.touched)
+            }"
+            [compareWith]="compareWith"
+            [items]="listReceiver"
+            formControlName="selectedContactCard"
+            [iconTemplate]="'iconSearch'"
+            [lazyLoad]="true"
+            [isSelectedProperty]="!!propertyId"
+            [loading]="userListLoading$ | async"
+            (search)="searchUser($event)"
+            (nextPage)="getNextPage()"
+            [totalReceiver]="trudiSendMsgUserService.totalUser"
+            (clearAll)="selectedContactCard.setValue([])"
+            (handleShowArchivedContacts)="onHandleShowArchivedContacts($event)"></trudi-select-receiver-contact-card>
+          <div
+            *ngIf="
+              selectedContactCard.invalid &&
+              (selectedContactCard.dirty || selectedContactCard.touched) &&
+              selectedContactCard.errors['requiredContactCard']
+            "
+            class="error-container d-flex align-items-center gap-4">
+            <img src="/assets/icon/icon_warning.svg" alt="msfb-error" />
+            <div class="error-text">Please select a contact to continue</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="trudi-send-msg-footer">
+    <div class="trudi-send-msg-footer-btn-wrapper">
+      <ng-container *ngIf="configs.footer.buttons.showBackBtn">
+        <button
+          trudi-btn
+          variant="outlined"
+          btnType="neutral"
+          (click)="onTriggerClick(false)">
+          Back
+        </button>
+      </ng-container>
+      <button trudi-btn data-e2e="send-btn" (click)="onTriggerClick(true)">
+        Add contact
+      </button>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div class="modal-footer-contact-card"></div>
+  </ng-template>
+</trudi-modal>

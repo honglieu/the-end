@@ -1,0 +1,59 @@
+<div
+  [formGroup]="sendMsgForm"
+  class="header-conversation d-flex flex-dir-column">
+  <div
+    nz-resizable
+    class="compose-section resizable-box"
+    [style.height.px]="contentHeight"
+    [nzMaxHeight]="CONTENT_MAX_HEIGHT"
+    [nzMinHeight]="minHeight"
+    [nzBounds]="'window'"
+    (nzResize)="onContentResize($event)">
+    <nz-resize-handle nzDirection="top">
+      <div class="content-resize-line"></div>
+    </nz-resize-handle>
+    <div
+      #attachments
+      class="attachments"
+      [ngClass]="{hidden: !listOfFiles?.value?.length}">
+      <div
+        class="file-section"
+        [ngClass]="{hidden: !listOfFiles?.value?.length}">
+        <trudi-send-msg-file></trudi-send-msg-file>
+      </div>
+    </div>
+    <div
+      #editor
+      *ngIf="isShowSMSInlineMessage"
+      class="inline-editor"
+      id="inlineEditor"
+      appOutsideClickListener
+      [whiteList]="whiteList"
+      (clickOutside)="onOutSide()">
+      <sms-inline-message-editor
+        #inlineSMSTinyEditor
+        [configs]="configs"
+        [prefillText]="prefillText"
+        [isDisableSendBtn]="isConsole || isDisableSendBtn"
+        [deleteInlineType]="deleteInlineType"
+        [currentProperty]="currentProperty || currentReceiverProperty"
+        [listDynamicParams]="listDynamicParams"
+        (onChangeSendOption)="handleChangeTypeSendMessage($event)"
+        (contentHeightChange)="handleContentHeightChange($event)"
+        (submitToSendMsg)="handleSendMsg($event)"></sms-inline-message-editor>
+    </div>
+  </div>
+</div>
+
+<trudi-modal
+  *ngIf="isShowModalWarning"
+  [visible]="isShowModalWarning"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  className="trudi-modal-custom">
+  <warning-note-popup
+    [warningMessage]="errorMessage"
+    [timeToCloseModal]="3000"
+    (isCloseModal)="isShowModalWarning = $event">
+  </warning-note-popup>
+</trudi-modal>

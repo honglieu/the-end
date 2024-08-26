@@ -1,0 +1,28 @@
+<trudi-modal
+  [visible]="visible"
+  [modelWidth]="624"
+  [autoFocus]="null"
+  title="Confirm event type"
+  [subTitle]="subTitle"
+  hiddenCancelBtn="true"
+  [disableOkBtn]="!selectedOption"
+  okText="Next"
+  (onOk)="handleNext()"
+  (onCancel)="handleCancel()">
+  <div class="body-confirm-event-type gap-12">
+    <div class="warning d-flex flex-dir-row align-items-center gap-12">
+      <trudi-icon icon="iconWarningRed" svgClass="size-20"></trudi-icon>
+      <div class="warning-content gap-4">
+        <p class="warning-title">Multiple event types detected</p>
+        <p class="warning-subtitle">Please select one event type to continue</p>
+      </div>
+    </div>
+    <div class="type-wrapper d-flex gap-8">
+      <trudi-radio-button
+        class="select-type"
+        [options]="selectOptionEventType"
+        (ngModelChange)="onSelectRadioOption()"
+        [(ngModel)]="selectedOption"></trudi-radio-button>
+    </div>
+  </div>
+</trudi-modal>

@@ -1,0 +1,19 @@
+<ng-container *ngIf="vacateDetail">
+  <trudi-suggested-step-group [groupTitle]="'VACATE DETAILS'">
+    <widget-common
+      title="VACATE DETAILS"
+      (showModal)="openVacateDetailForm()"
+      (remove)="removeWidget()"
+      (retry)="retrySync()"
+      [type]="vacateDetail?.status"
+      [firstTimeSyncSuccess]="vacateDetail?.firstTimeSyncSuccess"
+      [isDislayBtnCancel]="vacateDetail?.isSuccessful">
+      <div class="rm-vacate-detail d-flex">
+        <div class="rm-vacate-detail-title">Tenant</div>
+        <div class="rm-vacate-detail-value">
+          {{ vacateDetail?.tenancy?.name }}
+        </div>
+      </div>
+    </widget-common>
+  </trudi-suggested-step-group>
+</ng-container>

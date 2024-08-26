@@ -1,0 +1,10 @@
+<div class="modal-overlay">
+  <div class="content">
+    <div class="icon" *ngIf="data.iconUrl">
+      <img [src]="data.iconUrl" alt="TickMark" />
+    </div>
+
+    <div class="title" *ngIf="data.title">{{data.title}}</div>
+    <div class="message" *ngIf="data.message">{{data.message}}</div>
+  </div>
+</div>

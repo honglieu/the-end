@@ -1,0 +1,87 @@
+<ng-container *ngIf="isTaskFolderLoading; else taskFolderContent">
+  <div class="inbox-sidebar-container d-flex flex-dir-column auto-hide-scroll">
+    <div class="wrapper-skeleton-msg">
+      <div class="message-block d-flex flex-dir-column gap-4">
+        <div class="sidebar-title">
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"
+            class="ant-skeleton-custom"></nz-skeleton>
+        </div>
+        <div
+          class="d-flex flex-row align-items-center gap-4"
+          *ngFor="let _ of [].constructor(3); let i = index">
+          <div>
+            <nz-skeleton-element
+              nzType="avatar"
+              [nzActive]="true"></nz-skeleton-element>
+          </div>
+          <div class="w-100">
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="ant-skeleton-custom"></nz-skeleton>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #taskFolderContent>
+  <div
+    class="folder-wrapper"
+    [ngClass]="{'pd-top-12': [EMailBoxStatus.DISCONNECT, EMailBoxStatus.FAIL].includes(item?.status) && item?.role.includes(EUserMailboxRole.OWNER)}">
+    <div class="message-block">
+      <message-sidebar-item
+        [item]="messageInboxRoute"
+        [mailbox]="item"
+        (onClick)="handleSelectAccount($event)">
+      </message-sidebar-item>
+    </div>
+    <div class="voice-mail-block" *ngIf="isShowVoiceMailSection">
+      <message-sidebar-item
+        [item]="voiceMailInboxRoute"
+        [features]="features"
+        [featuresConnectionStatus]="featuresConnectionStatus"
+        [mailbox]="item"
+        (onClick)="handleSelectAccount($event)"></message-sidebar-item>
+    </div>
+    <div *ngIf="isShowSmsMessageSection" class="voice-mail-block">
+      <message-sidebar-item
+        [item]="smsMessageRoute"
+        [features]="features"
+        [mailbox]="item"
+        (onClick)="handleSelectAccount($event)">
+      </message-sidebar-item>
+    </div>
+    <div
+      *ngIf="isMailboxCompany && isShowAppMessageSection"
+      class="voice-mail-block">
+      <message-sidebar-item
+        [item]="appMessageRoute"
+        [features]="features"
+        [featuresConnectionStatus]="featuresConnectionStatus"
+        [mailbox]="item"
+        (onClick)="handleSelectAccount($event)">
+      </message-sidebar-item>
+    </div>
+    <div class="voice-mail-block" *ngIf="isShowWhatsappSection">
+      <message-sidebar-item
+        [item]="whatsappInboxRoute"
+        [features]="features"
+        [featuresConnectionStatus]="featuresConnectionStatus"
+        [mailbox]="item"
+        (onClick)="handleSelectAccount($event)"></message-sidebar-item>
+    </div>
+
+    <div class="voice-mail-block" *ngIf="isShowFacebookSection">
+      <message-sidebar-item
+        [item]="facebookInboxRoute"
+        [features]="features"
+        [featuresConnectionStatus]="featuresConnectionStatus"
+        [mailbox]="item"
+        (onClick)="handleSelectAccount($event)"></message-sidebar-item>
+    </div>
+  </div>
+</ng-template>

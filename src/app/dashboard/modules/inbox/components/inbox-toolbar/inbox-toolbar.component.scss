@@ -1,0 +1,198 @@
+@import 'function';
+
+:host {
+  .inbox-toolbar {
+    position: fixed;
+    left: calc(152px + (100vw - 366px) / 2);
+    bottom: 10%;
+    display: flex;
+    width: fit-content;
+    background: var(--bg-base);
+    box-shadow: 0px 16px 66px rgba(0, 0, 0, 0.24),
+      0px 4px 26px var(--bg-overlay-light), 0px 8px 34px rgba(0, 0, 0, 0.13);
+    border-radius: 8px;
+
+    &:has(:nth-child(8)) {
+      left: calc(73px + (100vw - 825px) / 2) !important;
+    }
+
+    &:has(:nth-child(5)) {
+      left: calc((100vw - 366px) / 2 - 56px);
+    }
+
+    .toolbar-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      min-width: 100px;
+      height: 72px;
+      padding: 16px 12px;
+      @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 600);
+
+      &.disabled-option {
+        cursor: not-allowed !important;
+        opacity: 0.5;
+        &:hover,
+        &:active {
+          background: none !important;
+          color: var(--gray-600) !important;
+        }
+      }
+
+      &:not(.count-selected) {
+        cursor: pointer;
+
+        &:hover {
+          background-color: var(--bg-neutral-tonal-stronger);
+          color: var(--fg-neutral-normal);
+        }
+
+        &:active,
+        &.active {
+          background-color: var(--bg-neutral-tonal-strongest);
+          color: var(--gray-700);
+
+          & ~ .toolbar-icon {
+            ::ng-deep svg-icon {
+              svg {
+                &:active {
+                  color: var(--gray-700);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      &.count-selected {
+        @include fontSetup(var(--fg-base), 16px, 24px, normal, 600);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        background-color: var(--bg-brand-solid-normal);
+        color: var(--fg-base);
+        padding: 10px 24px;
+
+        .count {
+          @include fontSetup(var(--fg-base), 32px, 24px, normal, 600);
+          transform: translateY(1px);
+        }
+      }
+
+      &:first-child {
+        border-radius: 8px 0px 0px 8px;
+      }
+
+      &:last-child {
+        width: 72px;
+        min-width: unset;
+        border-radius: 0px 8px 8px 0px;
+        border-left: 1px solid var(--gray-200);
+      }
+      &.danger {
+        color: var(--fg-danger) !important;
+
+        &::ng-deep trudi-icon svg path {
+          fill: var(--fg-danger) !important;
+        }
+      }
+    }
+  }
+
+  .active {
+    background-color: var(--bg-neutral-tonal-strongest);
+    color: var(--fg-neutral-stronger, #3d3d3d) !important;
+
+    & ~ .toolbar-icon {
+      ::ng-deep svg-icon {
+        svg {
+          color: var(--fg-neutral-stronger, #3d3d3d) !important;
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .ant-dropdown.children-menu-dropdown {
+  > div {
+    transform: translate(7px, 7px);
+  }
+}
+
+.list-options-menu-container {
+  min-width: 161px;
+  background: var(--white, #fff);
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px 0px var(--bg-overlay-light),
+    0px 8px 28px 0px rgba(0, 0, 0, 0.05);
+
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 48px;
+    width: 100%;
+    padding: 12px;
+    background: var(--status-bg);
+    border: none;
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      14px,
+      20px,
+      normal,
+      500
+    );
+
+    ::ng-deep .ant-menu-title-content:has(.menu-item-description) {
+      flex-direction: column;
+      align-items: start;
+      gap: 0;
+    }
+
+    &:hover {
+      background-color: var(--bg-neutral-tonal-stronger);
+      color: var(--fg-neutral-normal);
+    }
+  }
+
+  .disabled {
+    cursor: not-allowed !important;
+    pointer-events: auto !important;
+    color: var(--fg-neutral-weakest, #b9bec0);
+
+    &:hover {
+      background: var(--bg-base);
+      color: var(--fg-neutral-weakest, #b9bec0);
+    }
+  }
+
+  .menu-item:not(:last-child) {
+    border-bottom: 1px solid var(--border-light, #f2f5f7);
+  }
+  .add-to-task {
+    flex-direction: column;
+    align-items: flex-start;
+    height: 54px;
+    padding: 8px 12px;
+    gap: 0;
+  }
+
+  .menu-item-description {
+    @include fontSetup(
+      var(--fg-neutral-weaker, #999999),
+      12px,
+      16px,
+      normal,
+      500
+    );
+  }
+
+  .menu-item-label {
+    display: flex;
+    gap: 8px;
+  }
+}

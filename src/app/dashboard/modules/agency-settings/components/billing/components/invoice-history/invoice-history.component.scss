@@ -1,0 +1,161 @@
+@import 'function';
+
+:host {
+  width: 100%;
+  ::ng-deep {
+    .invoice-history-wrapper {
+      padding: 8px 12px;
+      .invoice-item {
+        &-content {
+          display: grid;
+          grid-template-columns: 1fr 1.4fr 0.5fr 1fr 0.2fr;
+          align-items: center;
+          @include fontSetup(
+            var(--fg-neutral-stronger),
+            14px,
+            20px,
+            normal,
+            500
+          );
+          .download-icon {
+            padding: 1px;
+            border-radius: 50px;
+            width: 32px;
+            height: 32px;
+            border: none;
+            background-color: transparent;
+            &:hover {
+              background-color: var(--bg-neutral-tonal-stronger);
+              cursor: pointer;
+            }
+          }
+        }
+        &-dropdown {
+          margin-right: auto;
+          trudi-collapse-widget {
+            .trudi-collapse-container {
+              border-bottom: 1px solid var(--border-neutral-dark) !important;
+              padding-bottom: 8px !important;
+              min-height: unset !important;
+              .trudi-collapse-content-box .ant-collapse-header {
+                padding: 0 !important;
+                .trudi-collapse-header-content {
+                  text-transform: unset;
+                  .box-detail-header-title {
+                    @include fontSetup(
+                      var(--fg-brand),
+                      12px,
+                      16px,
+                      normal,
+                      500
+                    );
+                  }
+                }
+                .icon-expand {
+                  left: 94px !important;
+                  right: unset;
+                  color: var(--fg-brand);
+                  &:hover {
+                    background-color: unset;
+                  }
+                }
+              }
+              .ant-collapse-content {
+                .ant-collapse-content-box {
+                  padding: 0;
+                }
+              }
+            }
+
+            .invoice-table-wrapper {
+              border: 1px solid var(--border-neutral-dark);
+              border-radius: 12px;
+              padding: 12px;
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+              align-items: flex-start;
+              billing-table {
+                width: 100%;
+              }
+              .invoice-title {
+                @include fontSetup(
+                  var(--fg-neutral-normal),
+                  14px,
+                  20px,
+                  normal,
+                  600
+                );
+              }
+              .invoice-detail {
+                display: flex;
+                flex-direction: column;
+                gap: 1px;
+                width: 100%;
+                &-row {
+                  width: 100%;
+                  display: grid;
+                  grid-template-columns: 1.5fr 1fr 1.5fr 72px;
+                  background: var(--bg-neutral-tonal-normal, #f2f5f7);
+                  padding: 6px 12px;
+                  @include fontSetup(
+                    var(--fg-neutral-stronger),
+                    14px,
+                    20px,
+                    normal,
+                    500
+                  );
+
+                  .icon-home {
+                    color: var(--fg-neutral-weakest);
+                  }
+                }
+                .more-item {
+                  margin-top: 11px;
+                  padding: 0 12px;
+                }
+              }
+              .invoice-footer {
+                width: 100%;
+                padding: 0 12px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-end;
+                .invoice-cost,
+                .invoice-gst,
+                .invoice-fee {
+                  @include fontSetup(
+                    var(--fg-neutral-normal),
+                    14px,
+                    20px,
+                    normal,
+                    500
+                  );
+                }
+                .invoice-total {
+                  @include fontSetup(
+                    var(--fg-neutral-stronger),
+                    14px,
+                    20px,
+                    normal,
+                    600
+                  );
+                }
+                .invoice-cost {
+                  width: 127px;
+                  text-align: right;
+                  margin-right: 20px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.coupon-name {
+  text-transform: uppercase;
+}

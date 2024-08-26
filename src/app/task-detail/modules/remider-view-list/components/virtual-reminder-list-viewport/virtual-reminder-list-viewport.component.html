@@ -1,0 +1,23 @@
+<div class="virtrual-reminder-list" id="virtual-reminder-list">
+  <cdk-virtual-scroll-viewport
+    #scrollViewport
+    autosize
+    itemSize="50"
+    appendOnly
+    class="reminder-viewport">
+    <div class="d-flex flex-dir-column">
+      <message-reminder
+        *cdkVirtualFor="let message of reminderList; let i = index;"
+        [@collapseMotion]="!message.isRemove ? 'expanded' : 'collapsed'"
+        [attr.data-ignore]="message?.isHidden || message?.isRemove || ''"
+        [indexMessage]="i"
+        [message]="message"
+        [isIgnore]="isIgnore"
+        [queryParam]="queryParam"
+        [ngClass]="{'reminder-hidden': message?.isHidden }"></message-reminder>
+    </div>
+    <div *ngIf="isLoading" class="loading-append">
+      <span class="loader"></span>
+    </div>
+  </cdk-virtual-scroll-viewport>
+</div>

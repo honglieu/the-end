@@ -1,0 +1,46 @@
+<ng-container *ngIf="invoice">
+  <widget-common
+    title="Creditor Invoice"
+    [buttonKey]="EButtonStepKey.CREDITOR_INVOICE"
+    [type]="invoice.syncStatus"
+    [externalError]="invoice?.externalError"
+    [firstTimeSyncSuccess]="invoice.firstTimeSyncSuccess"
+    (retry)="handleRetryCreditor(invoice.id)"
+    (remove)="handleRemoveCreditor(invoice)"
+    (showModal)="handleEditCreditor(invoice.id)"
+    [isDislayBtnCancel]="invoice?.creditorInvoice?.isSuccessful">
+    <div class="creditor-sync-warpper">
+      <div class="d-flex align-items-center">
+        <span class="creditor-sync-label">Invoice</span>
+        <span class="creditor-sync-name name-invoice"
+          >{{invoice.creditorInvoice?.description}}</span
+        >
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="creditor-sync-label">Creditor</span>
+        <span class="creditor-sync-name">{{invoice.supplierName}}</span>
+      </div>
+      <div class="d-flex align-items-center">
+        <span class="creditor-sync-label">Amount</span>
+        <span class="creditor-sync-name"
+          >${{invoice.creditorInvoice.amount}}</span
+        >
+      </div>
+      <div
+        *ngIf="invoice.creditorInvoice?.status && invoice.syncStatus !== SYNCTYPE.INPROGRESS"
+        class="d-flex align-items-center">
+        <span class="creditor-sync-label">Status</span>
+        <span
+          class="creditor-sync-name"
+          [ngClass]="{
+                    'unpaid-creditor-text': invoice.creditorInvoice?.status === ESTATUSPAID.UNPAID,
+                    'paid-creditor-text': invoice.creditorInvoice?.status === ESTATUSPAID.PAID,
+                    'part-paid-creditor-text': invoice.creditorInvoice?.status === ESTATUSPAID.PARTPAID,
+                    'cancel-creditor-text': invoice.creditorInvoice?.status === ESTATUSPAID.CANCELLED
+                  }"
+          >{{invoice.creditorInvoice.status}}</span
+        >
+      </div>
+    </div>
+  </widget-common>
+</ng-container>

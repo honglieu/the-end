@@ -1,0 +1,276 @@
+<ng-container
+  *ngIf="item.dataType === ETypeContactItem.PROPERTY || item.dataType === ETypeContactItem.UNIT">
+  <button
+    (click)="handleActionBasedOnType(ACTION_TYPE.PROPERTY, item)"
+    [class.cursor-default]="!item?.data?.propertyId && item.data.status !== ERentPropertyStatus.DELETED"
+    class="property-item">
+    <property-unit-item
+      [item]="item"
+      [environmentType]="'RENT_MANAGER'"
+      [searchValue]="searchValue"></property-unit-item>
+  </button>
+</ng-container>
+
+<div class="contact-wrapper">
+  <ng-container
+    *ngIf="item?.dataType === ETypeContactItem.TENANT || item?.dataType === ETypeContactItem.OWNER">
+    <tenancy-ownership-item [item]="item" [searchValue]="searchValue">
+    </tenancy-ownership-item>
+  </ng-container>
+
+  <ng-container *ngIf="item?.dataType === ETypeContactItem.CONTACT">
+    <div class="body ml-32" [ngClass]="{'last-item': item?.data?.isLast}">
+      <div class="contact-row">
+        <div
+          tabindex="0"
+          class="contact-row__content"
+          [ngClass]="{'cursor-not-allowed': item?.data?.status === ERentPropertyStatus.DELETED}"
+          (click)="handleActionBasedOnType(ACTION_TYPE.PEOPLE, item)">
+          <div
+            class="contact-col contact-name cursor-pointer"
+            [ngClass]="{'cursor-not-allowed': item?.data?.status === ERentPropertyStatus.DELETED}"
+            (click)="handleActionBasedOnType(ACTION_TYPE.PEOPLE, item)">
+            <div
+              [ngClass]="{'deleted': item?.data?.status === ERentPropertyStatus.DELETED || item?.data?.status === ERentPropertyStatus.ARCHIVED}"
+              class="prop-people wrapper-text break-word"
+              [innerHTML]="(item?.data?.firstName + ' ' + item?.data?.lastName) | highlight: searchValue"></div>
+          </div>
+          <div
+            class="contact-col cursor-pointer"
+            [ngClass]="{'cursor-not-allowed': item?.data?.status === ERentPropertyStatus.DELETED}"
+            (click)="handleActionBasedOnType(ACTION_TYPE.ROLE, item)">
+            <div
+              [ngClass]="{'deleted': item?.data?.status === ERentPropertyStatus.DELETED || item?.data?.status === ERentPropertyStatus.ARCHIVED}"
+              class="prop-role wrapper-text">
+              {{isRmEnvironment ? item?.data?.displayType : ''}}
+              <div *ngIf="isPTEnvironment && item?.data?.displayType?.values">
+                <p
+                  class="pt-contact-type"
+                  *ngFor="let type of item?.data?.displayType">
+                  {{type}}
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="contact-col contact-email">
+            <div class="wrapper-email d-flex">
+              <div
+                [ngClass]="{'deleted': item?.data?.status === ERentPropertyStatus.DELETED || item?.data?.status === ERentPropertyStatus.ARCHIVED }"
+                class="error-icon text-right">
+                <div
+                  *ngIf="item?.data?.unconfirmedChangeEmail; else errorIcon"
+                  nz-tooltip
+                  [nzTooltipOverlayClassName]="'unverified-tooltip'"
+                  [nzTooltipTitle]="unverifiedTooltip"
+                  nzTooltipPlacement="bottomLeft">
+                  <trudi-icon icon="errorOutlineRed" class="cursor-pointer">
+                  </trudi-icon>
+                </div>
+                <ng-template #errorIcon>
+                  <div
+                    class="hidden-element"
+                    nz-tooltip
+                    [nzTooltipTitle]="unverifiedTooltip">
+                    <trudi-icon icon="errorOutlineRed"> </trudi-icon>
+                  </div>
+                </ng-template>
+                <ng-template #unverifiedTooltip>
+                  <span class="unverified-text"
+                    >{{item?.data?.unconfirmedChangeEmail}} (unverified)</span
+                  >
+                </ng-template>
+              </div>
+              <div
+                class="prop-email cursor-pointer"
+                [ngClass]="{'cursor-not-allowed': item?.data?.status === ERentPropertyStatus.DELETED}"
+                (click)="handleActionBasedOnType(ACTION_TYPE.EMAIL, item)">
+                <div class="d-flex gap-12 flex-dir-column">
+                  <ng-container
+                    *ngIf="(item?.data?.email || !item?.data?.secondaryEmails?.length) ; else firstSecondaryEmail">
+                    <div
+                      [ngClass]="{'deleted': item?.data?.status === ERentPropertyStatus.DELETED || item?.data?.status === ERentPropertyStatus.ARCHIVED}"
+                      class="d-flex gap align-items-center primary-email action">
+                      <div
+                        class="wrapper-email-data"
+                        nz-tooltip
+                        nzTooltipPlacement="top"
+                        [nzTooltipTitle]="item?.data?.email"
+                        [innerHTML]="(item?.data?.email) | highlight: searchValue"></div>
+                      <button
+                        *ngIf="item?.data?.email"
+                        trudi-btn
+                        size="extra-small"
+                        variant="outlined"
+                        btnType="neutral"
+                        shape="circle"
+                        [disabled]="disabled"
+                        class="action-function email-function cursor-pointer"
+                        (click)="$event.stopPropagation(); handleActionBasedOnType(ACTION_TYPE.ADD_MAIL,item)">
+                        <trudi-icon icon="iconPlus2"></trudi-icon>
+                      </button>
+                    </div>
+                  </ng-container>
+                  <ng-template #firstSecondaryEmail>
+                    <div class="mt-20"></div>
+                  </ng-template>
+                  <ng-container
+                    *ngFor="let secondaryEmail of item?.data?.secondaryEmails; let SEIdx = index">
+                    <div
+                      [ngClass]="{'deleted': item?.data?.status === ERentPropertyStatus.DELETED || item?.data?.status === ERentPropertyStatus.ARCHIVED}"
+                      *ngIf="secondaryEmail?.email?.length ? (SEIdx >= 0) : (SEIdx >= 1)"
+                      class="secondary-email d-flex align-items-center action">
+                      <div
+                        class=""
+                        nz-tooltip
+                        nzTooltipPlacement="top"
+                        [nzTooltipTitle]="secondaryEmail?.email"
+                        [innerHTML]="secondaryEmail?.email | highlight: searchValue"></div>
+                      <button
+                        *ngIf="secondaryEmail?.email"
+                        trudi-btn
+                        size="extra-small"
+                        variant="outlined"
+                        btnType="neutral"
+                        shape="circle"
+                        [disabled]="disabled"
+                        class="action-function email-function cursor-pointer"
+                        data-e2e="delete-option"
+                        (click)="$event.stopPropagation();handleActionBasedOnType(ACTION_TYPE.DELETE_SECONDARY_EMAIL, secondaryEmail);">
+                        <span>
+                          <trudi-icon icon="deleteIconOutline"></trudi-icon>
+                        </span>
+                      </button>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="contact-col cursor-pointer"
+            [ngClass]="{'cursor-not-allowed': item?.data?.status === ERentPropertyStatus.DELETED}"
+            (click)="handleActionBasedOnType(ACTION_TYPE.PHONE_NUMBER, item)">
+            <div class="d-flex flex-dir-column gap-12">
+              <ng-container
+                *ngIf="(item?.data?.phoneNumbers?.length || !item?.data?.secondaryPhones?.length) ; else firstSecondaryPhones">
+                <ng-container *ngFor="let number of item?.data?.phoneNumbers;">
+                  <div class="primary-phone d-flex">
+                    <span
+                      [ngClass]="{'deleted': item?.data?.status === ERentPropertyStatus.DELETED || item?.data?.status === ERentPropertyStatus.ARCHIVED}"
+                      class="wrapper-phone wrapper-text text-ellipsis"
+                      nz-tooltip
+                      nzTooltipPlacement="top"
+                      [nzTooltipTitle]="'Primary phone number'"
+                      [innerHTML]="number | phoneNumberFormat | phoneNumberHighlight: searchValue"></span>
+                  </div>
+                </ng-container>
+              </ng-container>
+              <ng-template #firstSecondaryPhones>
+                <div
+                  [ngClass]="{'deleted': item?.data?.status === ERentPropertyStatus.DELETED || item?.data?.status === ERentPropertyStatus.ARCHIVED}"
+                  class="secondary-phone d-flex align-items-center">
+                  <div
+                    (click)="handleActionBasedOnType(ACTION_TYPE.PHONE_NUMBER, item)"
+                    ngClass="no-opacity"
+                    *ngIf="item?.data?.secondaryPhones[0].phoneNumber">
+                    {{item?.data?.secondaryPhones[0].phoneNumber}}
+                  </div>
+                </div>
+              </ng-template>
+              <ng-container
+                *ngFor="let secondary of item?.data?.secondaryPhones;">
+                <div
+                  class="secondary-phone table-phone-number d-flex align-items-center action">
+                  <div
+                    [ngClass]="{'deleted': item?.data?.status === ERentPropertyStatus.DELETED || item?.data?.status === ERentPropertyStatus.ARCHIVED}"
+                    class="wrapper-text text-ellipsis"
+                    [innerHTML]="secondary.phoneNumber | phoneNumberFormat | phoneNumberHighlight: searchValue"></div>
+                  <button
+                    *ngIf="secondary?.phoneNumber"
+                    trudi-btn
+                    size="extra-small"
+                    variant="outlined"
+                    btnType="neutral"
+                    shape="circle"
+                    [disabled]="disabled"
+                    class="action-function phone-function cursor-pointer"
+                    data-e2e="delete-option"
+                    (click)="$event.stopPropagation();handleActionBasedOnType(ACTION_TYPE.DELETE_SECONDARY_PHONE, secondary)">
+                    <span>
+                      <trudi-icon icon="deleteIconOutline"></trudi-icon>
+                    </span>
+                  </button>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          <div
+            [ngClass]="{'deleted': item?.data?.status === ERentPropertyStatus.DELETED || item?.data?.status === ERentPropertyStatus.ARCHIVED,
+            'cursor-not-allowed':  item?.data?.status === ERentPropertyStatus.DELETED
+           }"
+            class="contact-col wrapper-text cursor-pointer gap-12 d-flex flex-dir-column"
+            (click)="handleActionBasedOnType(ACTION_TYPE.TRUDI_APP, item)">
+            <div class="d-flex gap-4 align-items-center flex-dir-row">
+              <trudi-icon
+                svgClass="size-16"
+                icon="trudiLogoBorder"></trudi-icon>
+              <span
+                nz-tooltip
+                nzTooltipPlacement="top"
+                [nzTooltipOverlayClassName]="'tooltip-label'"
+                [nzTooltipTitle]="'Trudi® App invite status'"
+                class="invite-status"
+                >{{ (item?.data?.lastActivity ? "" : item?.data?.inviteStatus) |
+                titlecase }} {{ (item?.data?.lastActivity ||
+                item?.data?.iviteSent || "") | formatDate | async }}</span
+              >
+            </div>
+            <ng-container *ngIf="item?.data?.userMessengers?.length">
+              <ng-container
+                *ngTemplateOutlet="contactListChannels; context: { contacts: item.data.userMessengers, icon: 'messengerLogo', label: 'name'}">
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="item?.data?.userWhatsApps ?.length">
+              <ng-container
+                *ngTemplateOutlet="contactListChannels; context: { contacts: item.data.userWhatsApps , icon: 'whatsappLogo', label: 'externalId'}">
+              </ng-container>
+            </ng-container>
+          </div>
+          <div
+            class="contact-col contact-checkbox d-flex justify-content-center">
+            <button
+              class="action-function d-flex align-self-start"
+              (click)="$event.stopPropagation(); handleCheckbox(item)">
+              <trudi-icon
+                [icon]="item?.isChecked ? 'userChecked' : 'userUnCheck'"
+                class="cursor-pointer">
+              </trudi-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<ng-template
+  #contactListChannels
+  let-contacts="contacts"
+  let-icon="icon"
+  let-label="label">
+  <div class="d-flex gap-4 align-items-top flex-dir-row">
+    <trudi-icon svgClass="size-16" [icon]="icon" class="mt-2"></trudi-icon>
+    <div class="d-flex flex-dir-column gap-4 wrapper-list-messenger">
+      <ng-container *ngFor="let contact of contacts">
+        <span
+          *ngIf="contact?.[label]"
+          disableTooltipOnWidth
+          nz-tooltip
+          [nzTooltipTitle]="contact.name || contact.externalId"
+          nzTooltipPlacement="top"
+          class="text-ellipsis"
+          [innerHTML]="contact?.[label] | highlight: searchValue"></span>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>

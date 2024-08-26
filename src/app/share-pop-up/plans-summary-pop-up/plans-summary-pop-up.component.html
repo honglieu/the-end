@@ -1,0 +1,74 @@
+<trudi-modal
+  title=""
+  subTitle=""
+  [visible]="isShowModal"
+  [autoFocus]="null"
+  [isHideFooter]="true"
+  [hiddenCancelBtn]="true"
+  [hiddenOkBtn]="true"
+  [classContainer]="'plan-summary-modal'"
+  (onCancel)="handleClose()">
+  <div class="plan-summary-wrapper">
+    <div class="list-features">
+      <div
+        *ngFor="let item of listFeatures; let i = index"
+        class="feature"
+        [class.feature-long]="i === 3">
+        <div>
+          {{item.label}}
+          <trudi-icon
+            nzTooltipOverlayClassName="tooltip_title"
+            nz-tooltip
+            [nzTooltipTitle]="item.toolTipText"
+            class="feature-information-icon"
+            icon="circleInfoTooltip"></trudi-icon>
+        </div>
+      </div>
+    </div>
+    <ng-container *ngFor="let planSummary of planSummaryData">
+      <div
+        class="summary-plan-column"
+        [ngClass]="{
+          'starter-column': planSummary.plan === EAgencyPlan.STARTER,
+          'pro-column': planSummary.plan === EAgencyPlan.PRO,
+          'elite-column': planSummary.plan === EAgencyPlan.ELITE
+        }">
+        <div class="summary-plan-title">
+          <img
+            *ngIf="planSummary.image"
+            [src]="planSummary.image"
+            alt="plan summary logo image" />
+          {{ planSummary.title }}
+        </div>
+        <div class="summary-plan-content">
+          <div
+            class="d-flex align-items-center justify-content-center summary-plan-item"
+            *ngFor="let item of planSummary.checkListFeatures">
+            <trudi-icon
+              toolText="item"
+              [style]="{ 'width.px': 28, 'height.px': 28}"
+              *ngIf="!item.label; else starterText"
+              [class]="item.class"
+              [icon]="item.iconName"></trudi-icon>
+            <ng-template #starterText>
+              <span class="summary-plan-text">{{ item.label }}</span>
+            </ng-template>
+          </div>
+          <div class="d-flex align-items-center justify-content-center">
+            <button
+              (click)="handleChangePlan(planSummary.plan)"
+              class="plan-btn"
+              [disabled]="currentPlan === planSummary.plan || isLoading"
+              trudi-btn
+              size="large">
+              {{ planSummary.buttonText }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <ng-template #headerModal>
+    <div></div>
+  </ng-template>
+</trudi-modal>

@@ -1,0 +1,34 @@
+<div class="company-setting-group">
+  <company-settings-item
+    tabindex="-1"
+    *ngFor="let item of companySettingTabs; let i = index"
+    [ngClass]="{'item-company-setting': i < companySettingTabs.length - 1}"
+    [label]="item.label"
+    (changePopupState)="handlePopupState($event)"
+    (hiddenDropdown)="hiddenDropdown($event)"
+    [listItem]="item.tabs"></company-settings-item>
+</div>
+
+<trudi-modal
+  [(visible)]="popupState.requestSent"
+  [modelWidth]="624"
+  [closable]="false"
+  [autoFocus]="null"
+  [hiddenCancelBtn]="true"
+  okText="Ok, got it"
+  className="task-editor-popup"
+  title="We’re on it"
+  subTitle=""
+  (onOk)="handlePopupState({ requestSent: false, requestFromTab: false })">
+  <div class="d-flex flex-dir-column gap-20 request-sent-text">
+    <div>We’re received your request to upgrade your subscription.</div>
+    <div>One of our Sales Team will be in contact shortly.</div>
+  </div>
+</trudi-modal>
+
+<plans-summary-pop-up
+  [isShowModal]="popupState.plansSummary"
+  [currentPlan]="agencyPlans"
+  (onQuit)="handlePopupState({ plansSummary: false })"
+  (changePlan)="handlePopupState({ plansSummary: false, requestSent: true })">
+</plans-summary-pop-up>

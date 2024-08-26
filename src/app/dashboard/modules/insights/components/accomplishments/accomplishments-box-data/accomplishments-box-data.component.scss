@@ -1,0 +1,83 @@
+@import 'function';
+
+.data-box {
+  width: 340px;
+  padding: 20px;
+  background-color: var(--white);
+  box-shadow: 0px 4px 12px 0px #0000001a, 0px 8px 28px 0px #0000000d;
+
+  .number {
+    @include fontSetup(var(--gray-600), 44px, 48px, normal, 600);
+    letter-spacing: 0em;
+    text-align: left;
+  }
+
+  .type-text-box {
+    @include fontSetup(var(--gray-500), 16px, 28px, normal, 600);
+    letter-spacing: 0em;
+    text-align: left;
+  }
+
+  .trend-wrapper {
+    height: 60px;
+    padding: 8px;
+    border-radius: 4px;
+  }
+
+  .trend-down-bg {
+    background-color: var(--danger-100);
+  }
+
+  .trend-up-bg {
+    background-color: var(--brand-100);
+  }
+
+  .noData-gray-bg {
+    background-color: var(--gray-200);
+  }
+
+  .noData-gray-text {
+    color: var(--fg-neutral-weakest);
+  }
+
+  .trend-percent {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    letter-spacing: 0em;
+    text-align: left;
+  }
+
+  .trend-percent-up {
+    color: var(--success-500);
+  }
+
+  .trend-percent-down {
+    color: var(--danger-500);
+  }
+
+  .text-trend {
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 400);
+    width: 100%;
+    letter-spacing: 0em;
+    text-align: left;
+  }
+
+  ::ng-deep .toolTip svg-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .btn-view-detail {
+    text-align: left;
+    color: unset;
+  }
+}
+
+.column-gap-4 {
+  column-gap: 4px;
+}
+
+.row-gap-4 {
+  row-gap: 4px;
+}

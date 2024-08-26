@@ -1,0 +1,113 @@
+<div [ngClass]="classContainer">
+  <div class="step" *ngIf="button.action === EStepAction.SEND_BASIC_EMAIL">
+    <send-basic-email [model]="button"></send-basic-email>
+  </div>
+
+  <div class="step" *ngIf="button.action === EStepAction.SEND_CONTACT_CARD">
+    <send-contact-card [model]="button"></send-contact-card>
+  </div>
+
+  <div
+    class="step"
+    *ngIf="button.action === EStepAction.SEND_CONVERSATION_FILES">
+    <send-conversation-file [model]="button"></send-conversation-file>
+  </div>
+
+  <div class="step" *ngIf="button.action === EStepAction.SEND_ATTACHMENT">
+    <send-attachment [model]="button"></send-attachment>
+  </div>
+
+  <div class="step" *ngIf="button.action === EStepAction.SCHEDULE_REMINDER">
+    <schedule-reminder [model]="button"></schedule-reminder>
+  </div>
+
+  <div class="step" *ngIf="button.action === EStepAction.SEND_CALENDAR_EVENT">
+    <send-calendar-event [model]="button"></send-calendar-event>
+  </div>
+
+  <div class="step" *ngIf="button.action === EStepAction.SEND_REQUEST">
+    <send-request [model]="button"></send-request>
+  </div>
+  <div
+    class="step"
+    *ngIf="button.action === EStepAction.APPLICATIONS_SHORTLIST">
+    <application-shortlist [model]="button"></application-shortlist>
+  </div>
+
+  <div class="step" *ngIf="button.action === EStepAction.BOND_RETURN_SUMMARY">
+    <bond-return-summary [model]="button"></bond-return-summary>
+  </div>
+
+  <div class="step" *ngIf="button.action === EStepAction.BOND_AMOUNT_DUE">
+    <bond-amount-due [model]="button"></bond-amount-due>
+  </div>
+
+  <div class="step" *ngIf="button.action === EStepAction.ENTRY_REPORT_DEADLINE">
+    <entry-report-deadline [model]="button"></entry-report-deadline>
+  </div>
+
+  <div class="step" *ngIf="button.action === EStepAction.NOTICE_TO_LEAVE">
+    <notice-to-leave [model]="button"></notice-to-leave>
+  </div>
+
+  <div
+    class="step"
+    *ngIf="button.action === EStepAction.LETTING_RECOMMENDATIONS">
+    <letting-recommendation [model]="button"></letting-recommendation>
+  </div>
+
+  <div
+    class="step"
+    *ngIf="button.action === EStepAction.CAPTURE_BREAK_LEASE_FEES">
+    <capture-break-lease-fee [model]="button"></capture-break-lease-fee>
+  </div>
+  <div class="step" *ngIf="button.action === EStepAction.CAPTURE_LEASE_TERMS">
+    <capture-lease-terms [model]="button"></capture-lease-terms>
+  </div>
+
+  <div
+    class="step"
+    *ngIf="button.action === EStepAction.CAPTURE_INSPECTION_ACTIONS">
+    <capture-inspection-action [model]="button"></capture-inspection-action>
+  </div>
+
+  <div class="step" *ngIf="button.stepType === EStepType.PROPERTY_TREE">
+    <property-tree-step [model]="button"></property-tree-step>
+  </div>
+
+  <!-- <div class="step" *ngIf="button.stepType === EStepType.RENT_MANAGER">
+    <rent-manager [model]="button"></rent-manager>
+  </div> -->
+
+  <div class="step" *ngIf="button.stepType === EStepType.NEW_TASK">
+    <new-task-step [model]="button"></new-task-step>
+  </div>
+
+  <div class="step" *ngIf="button.action === EStepAction.CAPTURE_PET_BOND">
+    <capture-pet-bond [model]="button"></capture-pet-bond>
+  </div>
+
+  <div
+    class="step"
+    *ngIf="button.action === EStepAction.CAPTURE_CONDITIONS_FOR_REQUEST_APPROVAL">
+    <capture-conditions-for-request-approval
+      [model]="button"></capture-conditions-for-request-approval>
+  </div>
+
+  <div
+    class="step calendar-event-step-cls"
+    *ngIf="button.stepType === EStepType.CALENDAR_EVENT">
+    <calendar-event-step [model]="button"></calendar-event-step>
+  </div>
+
+  <div
+    class="step"
+    *ngIf="button.action === EStepAction.CAPTURE_AMOUNT_OWING_TO_VACATE">
+    <capture-amount-owing-to-vacate
+      [model]="button"></capture-amount-owing-to-vacate>
+  </div>
+
+  <div class="step" *ngIf="button.stepType === EStepType.CHECK_LIST">
+    <check-list [model]="button"> </check-list>
+  </div>
+</div>

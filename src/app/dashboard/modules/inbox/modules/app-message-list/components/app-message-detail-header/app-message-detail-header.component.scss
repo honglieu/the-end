@@ -1,0 +1,586 @@
+@import 'function';
+
+.app-message-detail-header-wrapper {
+  background-color: white;
+  .property-address {
+    display: flex;
+    align-items: center;
+    gap: 4px !important;
+  }
+
+  .temp-element {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  &.app-message-view {
+    margin: 0;
+    padding: 12px 12px 11px 12px;
+    border-bottom: 1px solid var(--border-neutral-dark, #d8dcdf);
+  }
+
+  .info-user-app-message {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .app-message-title-default {
+    @include fontSetup(
+      var(--fg-neutral-weaker, #999999),
+      16px,
+      24px,
+      normal,
+      600
+    );
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .app-message-title-not-default {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      16px,
+      24px,
+      normal,
+      600
+    );
+  }
+
+  .app-message-no-title {
+    @include fontSetup(var(--fg-neutral-weaker), 16px, 24px, italic, 500);
+  }
+
+  .app-message-title,
+  .app-message-user-role {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      16px,
+      1,
+      normal,
+      600
+    );
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+    background-color: var(--white);
+    border: none;
+    padding: 2px;
+  }
+
+  .button-threeDot-trudi-app {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--gray-200);
+    border-radius: 4.8px;
+    background: var(--white);
+  }
+
+  .app-message-property {
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      14px,
+      20px,
+      normal,
+      500
+    );
+  }
+
+  .icon-help {
+    color: var(--fg-neutral-normal, #646464);
+  }
+
+  .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
+  }
+
+  .sync {
+    @include fontSetup(
+      var(--fg-neutral-normal, #61646c),
+      12px,
+      16px,
+      normal,
+      400
+    );
+    padding: 2px;
+    &-success {
+      color: var(--fg-neutral-normal, #61646c);
+    }
+
+    &-fail {
+      color: var(--fg-neutral-normal, #61646c);
+    }
+  }
+}
+
+.app-message-menu-wrapper {
+  width: 240px;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: var(--white);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+
+  &.add-to-task {
+    width: 160px;
+  }
+
+  .item {
+    padding: 12px;
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+    cursor: pointer;
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+
+      .size-20 {
+        opacity: 0.3;
+      }
+    }
+
+    &:not(:first-child) {
+      border-top: 1px var(--border-neutral-light) solid;
+    }
+
+    .text {
+      margin: 0;
+      white-space: nowrap;
+    }
+  }
+}
+
+// --- Move to folder modal ---
+
+::ng-deep .conversation-preview-select-task {
+  & .ant-modal .ant-modal-content {
+    .ant-modal-body {
+      padding: 24px 28px 32px 28px;
+    }
+
+    .ant-modal-footer {
+      display: none;
+    }
+
+    .select_option--task {
+      display: block !important;
+      button:disabled {
+        cursor: not-allowed !important;
+        pointer-events: all !important;
+      }
+    }
+
+    .convert_task,
+    .move_task {
+      display: flex;
+      flex: 1;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border-neutral-dark, #d8dcdf);
+      background: var(--bg-base, #fff);
+      width: 100%;
+      padding: 24px;
+
+      p {
+        margin: 0;
+        padding: 0;
+        text-align: left;
+        @include fontSetup(
+          var(--fg-neutral-normal, #646464),
+          16px,
+          24px,
+          normal,
+          600
+        );
+      }
+
+      span {
+        @include fontSetup(
+          var(--fg-neutral-weaker, #999999),
+          12px,
+          16px,
+          normal,
+          500
+        );
+      }
+    }
+  }
+}
+
+.app-message-button-address {
+  display: flex;
+  border: 0;
+  border-radius: 6px;
+  gap: 4px;
+  align-items: center;
+  width: fit-content;
+  cursor: pointer;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+
+  &:focus-visible {
+    border: none !important;
+  }
+
+  &.un-highlight {
+    text-decoration-line: line-through;
+    color: var(--gray-700) !important;
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  &.disabled {
+    opacity: 1;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  &.disabled:hover {
+    background: none;
+  }
+
+  &.disabled:active {
+    background: none;
+  }
+}
+
+.info-property-address {
+  max-width: 530px;
+  @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+  text-align: left;
+  margin: 0;
+  max-width: auto;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  &.unidentified-property {
+    color: var(--fg-neutral-weaker, #999);
+
+    &.disabled-button {
+      pointer-events: none;
+    }
+  }
+
+  &.no-property {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--fg-neutral-weaker, #999);
+  }
+
+  &.strike-through {
+    text-decoration: line-through;
+  }
+  &.draft-folder-property {
+    color: var(--fg-neutral-stronger, #3d3d3d);
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+::ng-deep.assign-to-agent-app-message assign-to-agents .target-person-detail {
+  border: 0 !important;
+
+  &:hover {
+    background-color: var(--white) !important;
+  }
+}
+
+.app-message-header-container {
+  overflow: hidden;
+}
+
+.icon-button-task-app-message {
+  gap: 6px;
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+  background: var(--white);
+  padding: 3px;
+  height: 28px;
+}
+
+.address-title {
+  @include fontSetup(var(--text-text-subtitle), 12px, 16px, normal, 400);
+
+  .info-property-address {
+    margin: 0;
+  }
+
+  .strike-through {
+    text-decoration: line-through;
+  }
+}
+
+.app-message-list-options {
+  pointer-events: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  height: 20px;
+  padding: 2px 6px;
+  border-radius: 24px;
+  border: none;
+  width: fit-content;
+  background: var(--status-bg);
+  --status-bg: '';
+  --status-text-color: '';
+
+  &.open,
+  &.inprogress,
+  &.unassigned {
+    --status-bg: var(--info-100);
+    --status-text-color: var(--info-500);
+
+    &:hover {
+      --status-bg: var(--info-200);
+    }
+
+    &:active,
+    &.active {
+      --status-bg: var(--info-300);
+    }
+  }
+
+  &.resolved,
+  &.completed {
+    --status-bg: var(--success-100);
+    --status-text-color: var(--success-500);
+
+    &:hover {
+      --status-bg: var(--success-200);
+    }
+
+    &:active,
+    &.active {
+      --status-bg: var(--success-300);
+    }
+  }
+
+  &.deleted,
+  &.canceled {
+    --status-bg: var(--danger-100);
+    --status-text-color: var(--danger-500);
+
+    &:hover {
+      --status-bg: var(--danger-200);
+    }
+
+    &:active,
+    &.active {
+      --status-bg: var(--danger-300);
+    }
+  }
+
+  .app-message-text-list-options {
+    display: flex;
+    @include fontSetup(var(--status-text-color), 12px, 16px, normal, 500);
+    align-items: center;
+    width: max-content;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+.rei-form-icon {
+  background: var(--bg-base, #fff);
+  padding: 4px;
+  cursor: pointer;
+}
+
+.linked-app-message {
+  padding: 8px 16px 8px 16px;
+  gap: 8px;
+  border: 0px 0px 1px 0px;
+  opacity: 0px;
+  background: var(--bg-base, #ffffff);
+  border-bottom: 1px solid var(--border-neutral-dark, #d8dcdf);
+
+  .title-link-app-message {
+    @include fontSetup(var(--fg-neutral-weaker), 12px, 16px, normal, 500);
+  }
+
+  .link-button-app-message {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    background: var(--bg-base, #ffffff);
+    &:hover,
+    &:active {
+      color: var(--bg-neutral-solid-stronger, #333741);
+      text-decoration: underline;
+    }
+    span {
+      @include fontSetup(
+        var(--fg-neutral-normal, #51525c),
+        12px,
+        16px,
+        normal,
+        600
+      );
+    }
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1400px) {
+  .app-message-actions-btn-text {
+    display: none !important;
+  }
+
+  .button-task-app-message {
+    padding: 4px !important;
+    min-width: unset !important;
+  }
+}
+
+::ng-deep {
+  .spin-syncing-v2 {
+    -webkit-animation: spinSyncing 8s linear infinite;
+    -moz-animation: spinSyncing 8s linear infinite;
+    animation: spinSyncing 8s linear infinite;
+  }
+
+  @-moz-keyframes spinSyncing {
+    100% {
+      -moz-transform: rotate(360deg);
+    }
+  }
+
+  @-webkit-keyframes spinSyncing {
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spinSyncing {
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(-360deg);
+    }
+  }
+}
+::ng-deep .sync-task-detail {
+  .y-center {
+    align-items: flex-start;
+  }
+}
+::ng-deep .move-to-icon.ant-tooltip-placement-bottomLeft .ant-tooltip-arrow {
+  left: 25px !important;
+}
+::ng-deep .synced {
+  max-height: 20px;
+}
+
+.folder-option.export-conversation-options {
+  max-width: 210px;
+  margin-left: 30px;
+  margin-bottom: -5px;
+  .folder-option-item {
+    max-width: 100%;
+  }
+  .disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+}
+
+.folder-option {
+  max-width: 161px;
+  background: var(--white, #fff);
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px 0px var(--bg-overlay-light),
+    0px 8px 28px 0px rgba(0, 0, 0, 0.05);
+
+  .disabled {
+    cursor: not-allowed !important;
+    pointer-events: auto !important;
+    background-color: var(--gray-200);
+  }
+
+  .folder-option-item {
+    border: none;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 45px;
+    max-width: 161px;
+    padding: 12px;
+    background: var(--status-bg);
+    cursor: pointer;
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      14px,
+      20px,
+      normal,
+      500
+    );
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+
+      &:hover,
+      &:active {
+        background: none !important;
+        color: var(--gray-600) !important;
+      }
+    }
+    &:hover:not(.disabled) {
+      background-color: var(--bg-neutral-tonal-stronger);
+      color: var(--fg-neutral-normal);
+    }
+  }
+}
+
+::ng-deep .cdk-overlay-container:has(.sync-resolved) {
+  .ant-tooltip-placement-bottom {
+    padding-top: 8px !important;
+  }
+}
+
+.badge-status {
+  white-space: nowrap;
+}
+
+:host {
+  .scratch-draft-wrapper {
+    background-color: #ffffff;
+    @include fontSetup(
+      var(--fg-neutral-weaker, #999999),
+      14px,
+      20px,
+      normal,
+      500
+    );
+
+    & > div {
+      padding: 8px 16px;
+      height: 40px;
+      border-bottom: 1px solid #d8dcdf;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+  }
+}
+
+::ng-deep .ant-dropdown:has(.folder-option.export-conversation-options) {
+  margin-bottom: -40px;
+}

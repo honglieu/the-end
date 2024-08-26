@@ -1,0 +1,74 @@
+<div class="billing-table-wrapper">
+  <div class="billing-title">{{tableTitle}}</div>
+  <div class="billing-detail">
+    <div *ngFor="let item of billingTableData?.slice(0, rowLimit)">
+      <div
+        class="billing-row"
+        [ngClass]="{ 'billing-row__one-time': item.oneTime }">
+        <div>{{item?.period?.start | formatDate | async}}</div>
+        <div
+          class="d-flex align-items-center gap-4 quantity-column text-ellipsis"
+          *ngIf="!item.oneTime; else oneTime">
+          <span
+            *ngIf="item?.quantity < 0; else negative1"
+            class="billing-quantity"
+            >{{item?.quantity}}</span
+          >
+          <ng-template #negative1>
+            <div class="billing-quantity">
+              <span *ngIf="!hiddenQuantitySymbol">+</span>
+              <span>{{item?.quantity}}</span>
+            </div>
+          </ng-template>
+          <trudi-icon class="icon-home" icon="iconHome"></trudi-icon>
+        </div>
+        <div *ngIf="isTrial; else notTrial"></div>
+        <ng-template #notTrial>
+          <div *ngIf="!item.oneTime">
+            {{item?.period?.start | dayLeft: item?.period?.end}}
+          </div>
+        </ng-template>
+        <ng-template #oneTime
+          ><div class="row-desctiption">{{ item.description }}</div>
+        </ng-template>
+        <div class="text-ellipsis amount-column amount-style">
+          <span *ngIf="item?.amount < 0; else negative2">
+            {{(item?.amount) | currency: 'USD' : true : '1.2-2'}}
+          </span>
+          <ng-template #negative2>
+            <span *ngIf="!hiddenQuantitySymbol && item?.amount !== 0">+</span>
+            <span>{{(item?.amount) | currency: 'USD' : true : '1.2-2'}}</span>
+          </ng-template>
+        </div>
+      </div>
+      <ng-container *ngIf="isCoupon">
+        <div *ngFor="let coupon of item?.coupon" class="billing_row--child">
+          <div></div>
+          <div>
+            <div
+              *ngIf="coupon?.unit === unitCoupon.Dollar; else blockCouponUnit">
+              {{coupon?.name}} ({{(coupon?.value) | currency: 'USD' : true :
+              '1.2-2'}}{{coupon?.unit}} off)
+            </div>
+            <ng-template #blockCouponUnit>
+              {{coupon?.name}} ({{coupon?.percent}}{{coupon?.unit}} off)
+            </ng-template>
+          </div>
+          <div class="amount-style">
+            <div>{{-(coupon?.value) | currency: 'USD' : true : '1.2-2'}}</div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+    <button
+      *ngIf="showMoreBtn"
+      class="more-item cursor-pointer"
+      (click)="handleShowMore()">
+      <trudi-icon
+        svgClass="size-16"
+        icon="threeDotOutlined"
+        class="more-icon"></trudi-icon>
+      <span class="more-text">Show all {{billingTableData?.length}} items</span>
+    </button>
+  </div>
+</div>

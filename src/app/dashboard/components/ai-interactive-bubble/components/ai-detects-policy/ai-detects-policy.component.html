@@ -1,0 +1,190 @@
+<div *ngIf="canUseAI">
+  <button
+    class="ai-detect-policy-icon"
+    [class.popover-opened]="visible"
+    nz-tooltip
+    tabindex="0"
+    (keydown.tab)="onTab($event)"
+    nzTooltipPlacement="top"
+    [nzTooltipTitle]="'Policy detection'"
+    nz-popover
+    #popoverView="nzPopover"
+    [(nzPopoverVisible)]="visible"
+    (nzPopoverVisibleChange)="onPopoverVisibleChange($event)"
+    [nzPopoverTrigger]="!isPolicyPanelOpened ? 'click' : null"
+    [nzPopoverPlacement]="['bottomRight', 'bottomLeft', 'topRight', 'topLeft', 'leftTop', 'leftBottom', 'rightTop', 'rightBottom']"
+    [nzPopoverOverlayClassName]="'ai-detect-policy-popover-overlay'"
+    [nzPopoverTitle]="aiDetectPolicyTitleTmpl"
+    [nzPopoverContent]="aiDetectPolicyContentTmpl">
+    <ng-container
+      *ngIf="isMsgChanging || visible || (unignoredPolicies?.length <= 0 && !isLoading); else notDefaultIcon">
+      <trudi-icon
+        class="default-icon"
+        svgClass="size-20"
+        [style]="{color: '#E2AB10'}"
+        icon="fileGuard"></trudi-icon>
+    </ng-container>
+
+    <ng-template #notDefaultIcon>
+      <ng-container *ngIf="!isLoading">
+        <div class="policies">{{unignoredPolicies.length}}</div>
+      </ng-container>
+      <ng-container *ngIf="isLoading">
+        <div class="spin">
+          <img src="/assets/icon/loading-policy.png" />
+        </div>
+      </ng-container>
+    </ng-template>
+
+    <trudi-icon
+      class="white-default-icon"
+      svgClass="size-20"
+      [style]="{color: '#FFFFFF'}"
+      icon="fileGuard"></trudi-icon>
+  </button>
+</div>
+
+<ng-template #aiDetectPolicyTitleTmpl>
+  <div class="ai-detect-policy-title">
+    <div class="ai-detect-policy-title-label">
+      <trudi-icon svgClass="size-20" icon="aiSummaryStar"></trudi-icon>
+      <div>Policy detected</div>
+      <trudi-icon
+        svgClass="size-16"
+        icon="infoCircle"
+        nz-tooltip
+        [nzTooltipTitle]="info"></trudi-icon>
+    </div>
+
+    <trudi-icon
+      *ngIf="!noPoliciesDetected && !showPolicyInfo"
+      svgClass="size-16 ai-policy-view-btn"
+      [icon]="showIgnored ? 'eye' : 'eyeShow'"
+      (click)="changeView()"
+      nz-tooltip
+      [nzTooltipTitle]="showIgnored ? 'Hide ignored policies' : 'Show ignored policies'"></trudi-icon>
+  </div>
+</ng-template>
+
+<ng-template #info>
+  <div>
+    <div>
+      A 'policy' is a piece of information that helps train our AI model to
+      answer your frequently asked questions.
+    </div>
+    <div>
+      The more policies you add, the more accurate your AI-generated replies
+      will become.
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #aiDetectPolicyContentTmpl>
+  <ng-container *ngIf="showPolicyInfo; else defaultTmp">
+    <div class="ai-policy-content">
+      <div class="questions">What is a policy?</div>
+      <p class="stored-sentence">
+        A 'policy' is a piece of information that helps train our AI model to
+        answer your frequently asked questions.<br /><br />
+        The more policies you add, the more accurate your AI-generated replies
+        will become.
+      </p>
+    </div>
+    <div class="ai-detect-footer">
+      <div class="footer-options">
+        <button
+          trudi-btn
+          [disabled]="isUpdating"
+          [size]="'extra-small'"
+          [btnType]="'tenant'"
+          [variant]="'filled'"
+          (click)="handleGotIt()">
+          Got it
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #defaultTmp>
+  <div class="ai-policy-content">
+    <ng-container *ngIf="!isLoading; else loading">
+      <ng-container
+        *ngTemplateOutlet="policyDetailTmpl; context: {policyList: showIgnored ? policies : unignoredPolicies}"></ng-container>
+    </ng-container>
+  </div>
+
+  <ng-container *ngIf="!isLoading">
+    <ng-container
+      *ngTemplateOutlet="footerTmpl; context: {policyList: showIgnored ? policies : unignoredPolicies}"></ng-container>
+  </ng-container>
+</ng-template>
+
+<ng-template #policyDetailTmpl let-policyList="policyList">
+  <ng-container *ngIf="policyList?.length; else noPolicy">
+    <div
+      *ngIf="policyList[currentPolicyIdx]?.threeApplicableQuestions"
+      class="questions">
+      <div
+        *ngFor="let question of policyList[currentPolicyIdx]?.threeApplicableQuestions">
+        {{question}}
+      </div>
+    </div>
+    <div class="stored-sentence">
+      {{policyList[currentPolicyIdx]?.reusableSentenceToBeStored}}
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #footerTmpl let-policyList="policyList">
+  <ng-container *ngIf="policyList?.length">
+    <div class="ai-detect-footer">
+      <div class="footer-option">
+        <button
+          trudi-btn
+          [size]="'extra-small'"
+          [btnType]="'tenant'"
+          [variant]="'filled'"
+          (click)="addPolicy()">
+          Add policy
+        </button>
+        <button
+          trudi-btn
+          [size]="'extra-small'"
+          [btnType]="'tenant'"
+          [variant]="'outlined'"
+          (click)="changeIgnoreStatus()">
+          {{policyList[currentPolicyIdx]?.ignored ? 'Unignore' : 'Ignore'}}
+        </button>
+      </div>
+      <div class="policy-paging">
+        <trudi-icon
+          class="cursor-pointer"
+          svgClass="size-16"
+          icon="chevronLeft"
+          (click)="changeCurrentIndex(-1, policyList.length)"></trudi-icon>
+        <div>{{currentPolicyIdx + 1}}/{{policyList.length}}</div>
+        <trudi-icon
+          class="cursor-pointer"
+          svgClass="size-16"
+          icon="chevronRight"
+          (click)="changeCurrentIndex(1, policyList.length)"></trudi-icon>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>
+
+<ng-template #noPolicy>
+  <ng-container *ngIf="noPoliciesDetected; else resolvedAll">
+    <div class="no-policy">No policy detected</div>
+  </ng-container>
+  <ng-template #resolvedAll>
+    <div class="resolve-all">
+      Nice one! You’ve dealt with all suggested policies.
+    </div>
+  </ng-template>
+</ng-template>
+
+<ng-template #loading>
+  <div class="loading">Detecting policies</div>
+</ng-template>

@@ -1,0 +1,151 @@
+@import 'function';
+
+.invite-wrapper {
+  .header {
+    padding: 10px 14px;
+
+    .detail-invite {
+      gap: 16px;
+
+      .send-invite-icon {
+        .background-icon {
+          height: 48px;
+          width: 48px;
+          background-color: var(--white);
+        }
+      }
+
+      .send-invite-text {
+        flex-grow: 1;
+        min-width: 468px;
+
+        p {
+          @include fontSetup(var(--gray-950), 18px, 24px, normal, 600);
+          margin: 0;
+        }
+
+        div {
+          display: flex;
+          margin-top: 8px;
+          @include fontSetup(var(--gray-500), 14px, 16px, normal, 500);
+        }
+      }
+
+      .close-btn {
+        min-width: 28px;
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  hr {
+    margin-top: 10px;
+    margin-bottom: 0;
+    border-top: 1px solid var(--bg-overlay-light);
+    margin-left: -10px;
+    margin-right: -10px;
+
+    &.hr-bottom {
+      margin-top: 0;
+    }
+  }
+
+  ::ng-deep .supplier-tab {
+    .search-box {
+      .supplier-dropdown.ng-select.ng-error .ng-select-container {
+        border: 1px solid var(--danger-500) !important;
+        box-shadow: none !important;
+        outline: 2px solid rgba(var(--danger-500-rgb), 0.6) !important;
+      }
+
+      .supplier-dropdown.ng-select {
+        .ng-select-container {
+          background-color: var(--white) !important;
+
+          &::before {
+            content: unset;
+          }
+
+          .ng-value-container {
+            padding-left: 7px;
+            .ng-input {
+              left: 5px;
+            }
+            .ng-value {
+              background-color: var(--white) !important;
+              border-radius: 8px;
+              border: 1px solid var(--gray-200);
+              min-height: 32px;
+              display: flex;
+              align-items: center;
+
+              .ng-value-label {
+                padding: 8px !important;
+                @include fontSetup(var(--gray-700), 12px, 16px, normal, 500);
+              }
+            }
+          }
+        }
+
+        .ng-dropdown-panel {
+          margin-top: 0px;
+
+          .ng-dropdown-panel-items {
+            max-height: 250px;
+
+            .ng-option.ng-option-selected::after {
+              top: 8px;
+            }
+          }
+
+          .ng-option.ng-option-selected .supplier-email-item {
+            @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+          }
+        }
+
+        .ng-arrow-wrapper {
+          display: unset;
+          padding: 0;
+          margin-right: 10px;
+
+          .ng-arrow {
+            width: 12px;
+            height: 8px;
+            border: none;
+            background: url('/assets/images/arow.png');
+          }
+        }
+
+        &.ng-select-opened {
+          .ng-arrow-wrapper {
+            display: unset;
+            padding: 0;
+            margin-right: 10px;
+
+            .ng-arrow {
+              border: none;
+              width: 20px;
+              height: 13px;
+              background-size: cover;
+              background-image: url('/assets/images/chevron-up.png');
+            }
+          }
+        }
+      }
+    }
+
+    .text-danger {
+      font-size: 12px;
+    }
+  }
+
+  .btn-wrapper {
+    margin: 0;
+    padding: 20px 14px 10px 14px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 4px;
+  }
+}

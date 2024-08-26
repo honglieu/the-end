@@ -1,0 +1,28 @@
+<div class="confirm-wrapper">
+  <div class="header d-flex gap-16">
+    <img
+      class="size-48"
+      src="/assets/icon/icon-warning-red.svg"
+      data-e2e="warning-icon" />
+    <div class="confirm-text d-flex flex-dir-column gap-8">
+      <div class="text-sure" data-e2e="title">
+        Are you sure you want to cancel?
+      </div>
+      <div class="cannot-text" data-e2e="cancel-modal-text">
+        All progress will be lost on this action.
+      </div>
+    </div>
+  </div>
+  <div class="btn-wrapper d-flex gap-12">
+    <button trudi-btn variant="tonal" btnType="neutral" (click)="onGoBack()">
+      <span class="btn-text"> Go back </span>
+    </button>
+    <button
+      trudi-btn
+      btnType="danger"
+      data-e2e="yes-cancel-btn"
+      (click)="onConfirm()">
+      <span class="btn-text"> Yes, cancel </span>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,276 @@
+<ng-container *ngIf="isLoading; else isLoaded">
+  <div class="content-main skeleton" [style.height]="containerHeight">
+    <ng-container
+      *ngTemplateOutlet="skeletonLoadingItem; context: {rowNumber: 2}">
+    </ng-container>
+  </div>
+</ng-container>
+
+<ng-template #isLoaded>
+  <div
+    class="content-main d-flex flex-dir-column gap-24 mt-20"
+    [style.height]="containerHeight">
+    <ng-container *ngIf="listAgentUserProperties?.length; else noItems">
+      <div
+        *ngIf="prePropertyName && environmentType === EContactPageType.RM"
+        (click)="handleEventRow({type: ACTION_TYPE.PROPERTY, data: prePropertyContact?.data, dataType: prePropertyContact?.dataType, contactPageType: environmentType})"
+        class="pre-property-wrapper y-center gap-8 cursor-pointer"
+        [class.cursor-default]="!prePropertyContact?.data?.propertyId && prePropertyContact?.data?.status !== ERentPropertyStatus.DELETED"
+        [class.cursor-not-allowed]="prePropertyContact?.data?.status === ERentPropertyStatus.DELETED"
+        [ngClass]="{'property-disabled': [
+            ERentPropertyStatus.DELETED,
+            ERentPropertyStatus.INACTIVE,
+            ERentPropertyStatus.ARCHIVED
+          ].includes(prePropertyContact?.data?.status)}"
+        [style.width]="propertyElementWidth">
+        <trudi-icon icon="buildingIcon"></trudi-icon>
+        <span
+          class="pre-property-name"
+          [ngClass]="{'text-underline-address': prePropertyContact?.data?.propertyId && ![ERentPropertyStatus.DELETED].includes(prePropertyContact?.data?.status)}"
+          >{{prePropertyName}}</span
+        >
+      </div>
+      <cdk-virtual-scroll-viewport
+        (scroll)="onScrollDown()"
+        [itemSize]="45"
+        class="w-100 h-100 auto-hide-scroll">
+        <div
+          *cdkVirtualFor="let item of listAgentUserProperties; let idx = index;  trackBy: trackById"
+          [ngClass]="{'property mb-12 mt-24': item.dataType === ETypeContactItem.PROPERTY || item.dataType === ETypeContactItem.UNIT, 'id-property': item.groups}">
+          <contact-property-row
+            (changeValueCheckbox)="handleCheckRow($event)"
+            (handleEventRow)="handleEventRow($event)"
+            [contactPageType]="environmentType"
+            [searchValue]="searchValue"
+            [disabled]="isConsole"
+            [item]="item"></contact-property-row>
+        </div>
+        <ng-container *ngIf="isLoadingMore">
+          <ng-container
+            *ngTemplateOutlet="skeletonLoadingItem; context: { rowNumber: 1 }">
+          </ng-container>
+        </ng-container>
+      </cdk-virtual-scroll-viewport>
+    </ng-container>
+    <ng-template #noItems>
+      <div class="no-result-block">
+        <div class="header-text">No results found</div>
+        <div class="desc-text">
+          You may want to try using different keywords, check for correct
+          spelling or adjust your filters.
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</ng-template>
+
+<ng-template #skeletonLoadingItem let-row="rowNumber">
+  <div class="property-skeleton-wrapper">
+    <ng-container *ngFor="let _ of [].constructor(2)">
+      <div class="property-contact-container">
+        <div
+          class="property-skeleton-header d-flex flex-row align-items-center">
+          <div>
+            <nz-skeleton-element
+              nzType="avatar"
+              [nzActive]="true"></nz-skeleton-element>
+          </div>
+          <div>
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="ant-skeleton-custom w-100"></nz-skeleton>
+          </div>
+        </div>
+        <div
+          class="property-block-content"
+          *ngFor="let _ of [].constructor(row)">
+          <div class="property-block-header">
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="ant-skeleton-custom w-10 size-50"></nz-skeleton>
+          </div>
+          <div class="property-block-main">
+            <div class="property-block-row">
+              <ng-container *ngTemplateOutlet="contentBlock"></ng-container>
+              <div class="size-90-block">
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"
+                  class="ant-skeleton-content"></nz-skeleton>
+              </div>
+              <div class="size-40-block">
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"
+                  class="ant-skeleton-content"></nz-skeleton>
+              </div>
+              <div class="size-60-block">
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"
+                  class="ant-skeleton-content"></nz-skeleton>
+              </div>
+              <div class="size-40-block">
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"
+                  class="ant-skeleton-content"></nz-skeleton>
+              </div>
+              <div class="size-40-block">
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"
+                  class="ant-skeleton-content"></nz-skeleton>
+              </div>
+              <ng-container *ngTemplateOutlet="contentBlock"></ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-template>
+
+<ng-template #contentBlock>
+  <div class="first-block">
+    <nz-skeleton
+      [nzParagraph]="paragraph"
+      [nzActive]="true"
+      class="ant-skeleton-content"></nz-skeleton>
+  </div>
+  <div class="custom-block">
+    <nz-skeleton
+      [nzParagraph]="paragraph"
+      [nzActive]="true"
+      class="ant-skeleton-content"></nz-skeleton>
+  </div>
+  <div class="first-block">
+    <nz-skeleton
+      [nzParagraph]="paragraph"
+      [nzActive]="true"
+      class="ant-skeleton-content"></nz-skeleton>
+  </div>
+  <div class="custom-block">
+    <nz-skeleton
+      [nzParagraph]="paragraph"
+      [nzActive]="true"
+      class="ant-skeleton-content"></nz-skeleton>
+  </div>
+  <div class="last-block">
+    <nz-skeleton
+      [nzParagraph]="paragraph"
+      [nzActive]="true"
+      class="ant-skeleton-content"></nz-skeleton>
+  </div>
+</ng-template>
+
+<user-info-drawer
+  [visible]="popupState.isShowUserInfo"
+  [currentDataUser]="userPropertiesSelected"
+  [openFrom]="ETypePage.TENANTS_LANLORDS"
+  (triggerCloseDrawer)="handleCloseModal(ACTION_TYPE.PEOPLE)"></user-info-drawer>
+
+<export-conversation-history
+  [disableExportButton]="disableExportButton"
+  (exportConversationHistory)="exportConversationHistory()"
+  (visibleChange)="handleCloseModal(ACTION_TYPE.EXPORT_HISTORY)"
+  [visible]="popupState.isShowExportSuccess">
+</export-conversation-history>
+
+<!-- Add mail Popup -->
+<add-email-pop-up
+  [isAddingEmail]="isAddingEmail"
+  [APIerr]="addEmailErr"
+  [isShowModal]="popupState.isShowAddEmail"
+  [addEmailTitle]="addEmailTitle"
+  (onCancel)="handleCloseModal(ACTION_TYPE.ADD_MAIL)"
+  (onConfirm)="handleAddNewEmail($event)">
+</add-email-pop-up>
+<!-- Confirm Delete Modal-->
+<trudi-modal
+  [visible]="popupState.isShowDeleteUser"
+  iconName="iconWarningRed"
+  [modelWidth]="510"
+  [closable]="false"
+  colorBtn="danger"
+  type="confirm"
+  [title]="textConfirm.title"
+  [subTitle]="textConfirm.contentText"
+  okText="Delete"
+  cancelText="Cancel"
+  [isHideBody]="true"
+  [disableOkBtn]="isDeleting"
+  (onCancel)="handleCloseModal(ACTION_TYPE.DELETE_PERSON)"
+  (onOk)="onDeleteConfirm()">
+</trudi-modal>
+
+<!-- Info-people -->
+<info-people-popup
+  *ngIf="popupState.propertyInfo"
+  [isShow]="isShowPropertyInfo"
+  (isCloseModal)="handleCloseModal(ACTION_TYPE.PROPERTY)"
+  (isShowModalAddNote)="isShowModalAdd($event)"
+  (statusProperty)="statusProperty($event)"
+  [streetline]="propertyInfoValue?.streetline"
+  [isExpandProperty]="isExpandProperty"
+  [crmSystemId]="crmSystemId"
+  [propertyId]="propertyInfoValue?.propertyId"></info-people-popup>
+
+<!-- Add-note -->
+<add-note-property
+  *ngIf="popupState.addNotePropertyInfo"
+  [isShow]="popupState.addNotePropertyInfo"
+  (onCloseModalAddNote)="handleCloseModal(ACTION_TYPE.ADD_NOTE)"
+  (onSubmit)="onSubmitAddNote($event)"
+  (onBack)="handleBackAddNote($event)"
+  (statusExpandProperty)="statusExpandProperty($event)"
+  [propertyId]="propertyInfoValue?.propertyId"
+  [agencyId]="propertyInfoValue?.agencyId"
+  [isExpandProperty]="isExpandProperty">
+</add-note-property>
+
+<!-- App Send Invite -->
+<app-modal-popup
+  *ngIf="popupState.isSendInvite"
+  [show]="popupState.isSendInvite">
+  <confirm-send-invite-or-message
+    [isSendInvite]="isActionSendInvite"
+    [numberSent]="selectedUser.length"
+    [usersHaveInvalidEmail]="usersHaveInvalidEmail"
+    (isOpenSuccessModal)="handleSuccessConfirmSendInvite($event)"
+    (isCloseModal)="handleCloseModal(ACTION_TYPE.APP_INVITE)"></confirm-send-invite-or-message>
+</app-modal-popup>
+
+<!-- Trudi Send Msg -->
+<!-- <trudi-send-msg-v2
+  *ngIf="popupState.isShowSendMessageModal"
+  [openFrom]="eUserPropertyType.LANDLORD"
+  [configs]="createNewConversationConfigs"
+  [typeMessage]="typeMessage.SCRATCH"
+  (onQuit)="handleCloseModal(ACTION_TYPE.SEND_MSG)"
+  (onSendMsg)="onSendMsg($event)">
+</trudi-send-msg-v2> -->
+
+<!-- App Success Send Modal -->
+<app-modal-popup
+  *ngIf="popupState.isShowSuccessMessageModal"
+  [show]="popupState.isShowSuccessMessageModal">
+  <app-send-message-success
+    [icon]="'trudi-logo'"
+    [numberSent]="sentUsersCount"
+    [listReceiver]="selectedUser"></app-send-message-success>
+</app-modal-popup>
+
+<task-editor-toolbar></task-editor-toolbar>
+
+<property-profile-drawer
+  [visible]="popupState.visiblePropertyProfile"
+  (triggerCloseDrawer)="handleCloseModal(ACTION_TYPE.PROPERTY_PROFILE)"
+  [propertyId]="propertyProfileParams.propertyId"
+  [userId]="propertyProfileParams.userId"
+  [openFrom]="ETypePage.TENANTS_LANLORDS"
+  [currentDataUser]="userPropertiesSelected"
+  [userType]="propertyProfileParams.userType">
+</property-profile-drawer>

@@ -1,0 +1,292 @@
+@import 'function';
+
+:host {
+  .toolbar {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+    &-panel {
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    &-anchor {
+      position: relative;
+      .hidden-templates {
+        position: absolute;
+        right: 0;
+
+        width: max-content;
+        height: auto;
+        max-height: 400px;
+        padding: 10px;
+        overflow: auto;
+        flex-direction: column;
+        align-items: flex-end;
+        // display: none;
+        gap: 8px;
+      }
+    }
+  }
+  &.active .assigned-agent {
+    background-color: var(--gray-200) !important;
+  }
+  .hide-list-toolbar-when-process {
+    visibility: hidden;
+  }
+}
+::ng-deep .hidden-templates {
+  border-radius: 6px;
+  .item-toolbar {
+    width: 100% !important;
+    .icon-down {
+      display: none;
+    }
+    .icon-left {
+      display: flex;
+    }
+    .target-person {
+      width: 100% !important;
+      padding: 12px !important;
+    }
+    .target-person {
+      border: none !important;
+      border-radius: 0 !important;
+      height: 44px !important;
+    }
+    .target-status {
+      width: 100% !important;
+      padding: 12px !important;
+      height: 44px !important;
+    }
+    .target-status {
+      border: none !important;
+      border-radius: 0 !important;
+    }
+    .assigned-agent-container,
+    :host {
+      width: 100% !important;
+    }
+  }
+  .item_toolbar--dropdown {
+    button {
+      height: 44px;
+      width: 100%;
+      padding: 12px;
+      border: none;
+      .arrow-icon {
+        display: none;
+      }
+    }
+    .trudi-ui-btn {
+      border: none !important;
+      border-radius: 0 !important;
+    }
+  }
+}
+:host {
+  color: var(--fg-neutral-normal, #646464);
+  position: relative;
+  width: fit-content;
+  display: block;
+  // border-radius: 20px;
+  overflow: hidden;
+}
+
+.assigned-agent-container {
+  min-width: fit-content;
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  &:focus-visible {
+    box-shadow: none !important;
+    border: 2px solid var(--brand-500);
+  }
+  .assigned-agent {
+    &.focused {
+      background-color: var(--bg-neutral-tonal-stronger, #f0f1f1) !important;
+    }
+  }
+  .target-person {
+    padding: 6px 12px;
+    width: -moz-fit-content;
+    width: fit-content;
+    max-width: 230px;
+    border-radius: 6px;
+    border: 1px solid var(--border-neutral-dark);
+    background: var(--bg-base);
+    .info {
+      @include fontSetup(
+        var(--fg-neutral-normal, #646464),
+        14px,
+        20px,
+        normal,
+        400
+      );
+    }
+    .text-agent-detail {
+      display: flex;
+      gap: 4px;
+      .filter-wrapper {
+        position: relative;
+        .filter-icon {
+          color: var(--fg-neutral-normal);
+        }
+        .text-count {
+          position: absolute;
+          top: -2px;
+          right: -6px;
+          @include fontSetup(var(--bg-base), 10px, 12px, normal, 500);
+          border-radius: 16px;
+          padding: 0 3px;
+          background: var(--bg-brand-solid-normal);
+        }
+
+        .right-big-count {
+          right: -10px !important;
+        }
+      }
+    }
+  }
+
+  .text-agent {
+    @include fontSetup(var(--bg-base), 12px, 16px, normal, 600);
+    border-radius: 16px;
+    padding: 0 4px;
+    background: var(--bg-brand-solid-normal);
+  }
+
+  .target-person-detail {
+    padding: 0px 8px;
+    width: fit-content;
+    border-radius: 6px;
+    height: 24px;
+    border: 1px solid var(--gray-200, #d8dcdf);
+    &.assigned-agent {
+      .item-avatar {
+        gap: 4px;
+        overflow: initial !important;
+        @include FlbMiddleAll;
+        max-width: 160px;
+        &.remaining-item {
+          color: var(--gray-500);
+          min-width: 16px;
+          height: 16px;
+          border-radius: 19px !important;
+          position: relative;
+          &:hover .non-display-agents-box {
+            display: block;
+          }
+        }
+        label {
+          margin-bottom: 0px;
+          @include fontSetup(var(--gray-500), 14px, 20px, normal, 600);
+          &:hover ~ .non-display-agents-box {
+            display: block;
+          }
+        }
+      }
+    }
+
+    .info {
+      @include fontSetup(
+        var(--fg-neutral-normal, #646464),
+        14px,
+        20px,
+        normal,
+        400
+      );
+    }
+    .text-agent-detail {
+      display: flex;
+      gap: 4px;
+    }
+    .text-agent {
+      @include fontSetup(var(--bg-base), 12px, 16px, normal, 600);
+      border-radius: 16px;
+      padding: 0 4px;
+      background: var(--bg-brand-solid-normal);
+    }
+    &:hover {
+      background: var(--gray-100, #e7eaed);
+    }
+  }
+
+  .target-person-assignEl {
+    height: 24px;
+    padding: 0px 8px;
+    justify-content: center;
+    border-radius: 6px;
+    border: 1px solid var(--border-neutral-dark, #d8dcdf);
+    &:hover {
+      background-color: var(--gray-100);
+    }
+    &.btn-focus {
+      background-color: var(--gray-200);
+      &:hover {
+        background-color: var(--gray-100);
+      }
+    }
+    .info {
+      @include fontSetup(
+        var(--fg-neutral-normal, #646464),
+        14px,
+        20px,
+        normal,
+        400
+      );
+    }
+  }
+}
+
+.target-person-item {
+  border: 1px solid var(--gray-200);
+  border-radius: 6px;
+
+  .text-agent {
+    @include fontSetup(var(--gray-500), 14px, 20px, normal, 600);
+  }
+}
+
+::ng-deep .non-display-agents {
+  &-box {
+    background-color: var(--gray-500);
+    padding: 4px 0 4px 6px;
+    cursor: default;
+
+    .non-display-agents-content {
+      text-align: left;
+      max-height: calc(28px * 8);
+      max-width: 97px;
+      min-width: 97px;
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding-right: 6px;
+      white-space: nowrap;
+      @include fontSetup(var(--white), 12px, 16px, normal, 400);
+    }
+  }
+}
+::ng-deep .ant-popover.toolbar-popover {
+  &.ant-popover-placement-bottomRight {
+    padding-top: 4px;
+  }
+  &.ant-popover-placement-leftTop {
+    padding-right: 4px;
+  }
+  .ant-popover-inner-content {
+    padding: 0;
+    .ant-menu-root {
+      border-radius: 6px;
+      overflow: hidden;
+    }
+  }
+  .ant-popover-arrow {
+    display: none;
+  }
+  .toolbar-item-hidden {
+    border-bottom: 1px solid var(--border-neutral-light);
+    min-width: 140px;
+  }
+}

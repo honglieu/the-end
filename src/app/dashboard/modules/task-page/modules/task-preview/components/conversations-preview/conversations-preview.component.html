@@ -1,0 +1,159 @@
+<div class="conversations-preview">
+  <div
+    class="task-group-header d-flex justify-content-start align-items-center gap-4">
+    <h3 class="title-header">CONVERSATIONS</h3>
+    <ng-container *rxLet="unReadConversationCount$; let count">
+      <ng-container *ngIf="count > 0">
+        <span class="unread-conversation"> {{ count }} </span>
+      </ng-container>
+    </ng-container>
+  </div>
+  <ng-container *rxLet="conversations$; let conversations">
+    <ng-container *rxIf="conversations?.length; else noConversationTemplate">
+      <app-message-groups
+        [items]="conversations"
+        [totalItems]="conversations?.length"
+        groupField="lastMessageDate"
+        [listItemsTemplate]="conversationGroupsOutlet">
+      </app-message-groups>
+
+      <ng-template #conversationGroupsOutlet let-itemsInGroup="itemsInGroup">
+        <div
+          class="conversations-list"
+          cdkDropList
+          cdkDropListSortingDisabled
+          [cdkDropListData]="itemsInGroup"
+          (cdkDropListDropped)="handleDropConversation($event)">
+          <div
+            *rxFor="let conversation of itemsInGroup; trackBy: 'id'"
+            cdkDrag
+            [cdkDragData]="conversation"
+            [cdkDragDisabled]="isConsole"
+            (cdkDragMoved)="dragMovedHandler($event)"
+            [class.unread-message]="!conversation.isSeen"
+            class="drag_task--conversation conversation-box d-flex flex-direction-column gap-2"
+            [ngClass]="{'one-child': itemsInGroup?.length === 1}">
+            <conversation-item
+              class="w-100"
+              [isArchiveMailbox]="isArchiveMailbox"
+              [taskPreview]="taskPreview"
+              [task]="task"
+              [conversation]="conversation"
+              [currentUser]="currentUser"
+              [isRmEnvironment]="isRmEnvironment"
+              (menuChange)="handleMenuChange($event)"></conversation-item>
+            <div *cdkDragPlaceholder class="drag-placeholder"></div>
+            <div *cdkDragPreview class="drag_preview">
+              <p *ngIf="currentDraggingToFolderName" class="tooltip-for-drag">
+                <span class="tooltip-content"
+                  >{{currentDraggingToFolderName}}</span
+                >
+                <span class="tooltip-arrow"></span>
+              </p>
+              <conversation-item
+                class="w-100"
+                [isArchiveMailbox]="isArchiveMailbox"
+                [taskPreview]="taskPreview"
+                [task]="task"
+                [conversation]="conversation"
+                [currentUser]="currentUser"
+                [isRmEnvironment]="isRmEnvironment"></conversation-item>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
+  </ng-container>
+</div>
+
+<ng-template #noConversationTemplate>
+  <p class="no-conversation">No conversations to display</p>
+</ng-template>
+
+<trudi-modal
+  [classContainer]="'conversation-preview-select-task'"
+  (onCancel)="handleCancelPopup()"
+  [isHideFooter]="true"
+  [visible]="currentPopupConversionTask === popupTypeConversionTask.SELECT_OPTION"
+  [autoFocus]="null"
+  title="Select an option to continue">
+  <div class="select_option--task">
+    <button (click)="handleOpenConvertToTask()" class="convert_task">
+      <div class="content_btn_task">
+        <trudi-icon class="item-icon" icon="createNewTask"></trudi-icon>
+        <div>
+          <p>Create new task</p>
+          <span>Create a new task and add messages to this task</span>
+        </div>
+      </div>
+    </button>
+    <button (click)="handleOpenMoveToTask()" class="move_task">
+      <div class="content_btn_task">
+        <trudi-icon class="item-icon" icon="existingTask"></trudi-icon>
+        <div>
+          <p>Add to existing task</p>
+          <span>Add messages to an existing task</span>
+        </div>
+      </div>
+    </button>
+  </div>
+</trudi-modal>
+
+<create-new-task-pop-up
+  *ngIf="currentPopupConversionTask === popupTypeConversionTask.CREATE_TASK"
+  [isFromTrudiApp]="currentConversation.conversationType === EConversationType.APP"
+  [isFromVoiceMail]=" !isPropertyArchiveOrDelete && currentConversation.conversationType === EConversationType.VOICE_MAIL"
+  [disableSelectProperty]="currentConversation.conversationType === EConversationType.APP || !isPropertyArchiveOrDelete && currentConversation.conversationType === EConversationType.VOICE_MAIL"
+  [taskNameList]="taskNameList"
+  [openFrom]="openFrom"
+  [propertyId]="currentPropertyId"
+  [activeProperty]="activeProperty"
+  [categoryID]="categoryID"
+  [selectedFolderId]="folderUid"
+  [showBackBtn]="isShowBackBtn"
+  (onBack)="isShowBackBtn && handleBackPopupCreateTask()"
+  (stopProcessCreateNewTask)="stopProcessCreateNewTask()">
+</create-new-task-pop-up>
+
+<trudi-modal
+  *ngIf="currentPopupConversionTask === popupTypeConversionTask.MOVE_TASK"
+  [visible]="currentPopupConversionTask === popupTypeConversionTask.MOVE_TASK"
+  [autoFocus]="null"
+  className="trudi-modal-custom">
+  <app-move-mess-to-different-task-v2
+    [isFromTrudiApp]="currentConversation.conversationType === EConversationType.APP"
+    [isFromVoiceMail]="!isPropertyArchiveOrDelete && currentConversation.conversationType === EConversationType.VOICE_MAIL"
+    [taskDetailViewMode]="EViewDetailMode.CONVERSATION"
+    (onBack)="isShowBackBtn && handleBackPopupMoveTask()"
+    [isBackButtonVisible]="isShowBackBtn"
+    [propertyIds]="propertyIds"
+    [taskIds]="taskIds"
+    [taskFolderId]="folderUid"
+    [isUnHappyPath]="isUnHappyPath"
+    [conversationId]="targetConvId"
+    [isShowAddress]="isUnHappyPath"
+    (isQuitModal)="stopMoveToTaskFolder()"></app-move-mess-to-different-task-v2>
+</trudi-modal>
+
+<confirm-properties-popup
+  *ngIf="isShowModalConfirmProperties"
+  [isInTaskOrMessageDetail]="true"
+  [showModal]="isShowModalConfirmProperties"
+  [isActionSyncConversationToRM]="isActionSyncConversationToRM"
+  [listConversation]="conversationNotMove"
+  (selectedPropertyInDetail)="selectedPropertyInDetail($event)"
+  (quitModal)="handleCancelConfirmProperties($event)"
+  (onConfirm)="handleConfirmProperties()"></confirm-properties-popup>
+
+<trudi-modal
+  *ngIf="isShowModalWarning"
+  [visible]="isShowModalWarning"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  className="trudi-modal-custom">
+  <warning-note-popup
+    [warningMessage]="errorMessage"
+    [timeToCloseModal]="3000"
+    (isCloseModal)="isShowModalWarning = $event">
+  </warning-note-popup>
+</trudi-modal>

@@ -1,0 +1,39 @@
+<div class="font-size-wrapper">
+  <button
+    class="btn-action"
+    (click)="$event.stopPropagation()"
+    nz-dropdown
+    nz-button
+    [nzClickHide]="false"
+    [nzDropdownMenu]="menu"
+    [nzTrigger]="'click'"
+    [nzPlacement]="'topLeft'"
+    [nzVisible]="displayDropdown"
+    (nzVisibleChange)="displayDropdown = $event"
+    trudi-tooltip
+    [nzTooltipTitle]="'Font sizes'">
+    <trudi-icon
+      [icon]="displayDropdown ? 'chevronUp' : 'chevronDown'"></trudi-icon>
+    <span class="btn-label">{{ currentFontSize.title }}</span>
+  </button>
+</div>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div nz-menu focusElement [isFocus]="displayDropdown" tabindex="0">
+    <div class="font-family-menu-wrapper">
+      <ng-container *ngFor="let item of fontSizes">
+        <div
+          nz-menu-item
+          class="item d-flex align-items-center gap-8"
+          tabindex="0"
+          (click)="$event.stopPropagation();onHandleChangeFontSize(item)"
+          (keydown.enter)="onHandleChangeFontSize(item)">
+          <span>{{item.title}}</span>
+          <trudi-icon
+            *ngIf="item.format === currentFontSize.format"
+            icon="checkSuccess"></trudi-icon>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</nz-dropdown-menu>

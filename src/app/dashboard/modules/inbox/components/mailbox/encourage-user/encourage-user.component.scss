@@ -1,0 +1,35 @@
+@import 'function';
+
+.modal-encourage-user {
+  .modal-encourage {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      14px,
+      20px,
+      normal,
+      400
+    );
+  }
+
+  .recommendations {
+    display: flex;
+    gap: 12px;
+    flex-direction: column;
+    margin-top: 20px;
+
+    span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+    }
+  }
+
+  .ant-modal-body {
+    padding: 20px !important;
+  }
+}

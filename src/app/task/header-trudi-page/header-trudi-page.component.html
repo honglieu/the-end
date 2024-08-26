@@ -1,0 +1,34 @@
+<div class="header-section">
+  <div *ngIf="isHideLogo" class="header-section-logo">
+    <img
+      [style.width.px]="size"
+      [style.height.px]="size"
+      data-console="trudi-icon"
+      src="/assets/icon/icon_trudi.svg"
+      alt="trudi_avt" />
+  </div>
+  <div class="header-section-title">
+    <ng-container *ngIf="!isSelectContact">
+      <h3 *ngIf="email" class="header-email" [innerText]="email"></h3>
+      <h3
+        *ngIf="title"
+        class="header-title"
+        data-e2e="trudi-understood-text"
+        [innerText]="title"></h3>
+    </ng-container>
+    <ng-container *ngIf="isSelectContact">
+      <ng-container
+        *ngIf="isUnindentifiedEmail || isUnindentifiedPhoneNumber ; else multipleContacts">
+        <h3 class="header-title">{{unrecognisedTitle}}</h3>
+        <h3 *ngIf="isUnindentifiedEmail" class="header-email">{{email}}</h3>
+        <h3 *ngIf="isUnindentifiedPhoneNumber" class="header-email">
+          {{phoneNumber | phoneNumberFormat}}
+        </h3>
+      </ng-container>
+      <ng-template #multipleContacts>
+        <span class="header-email">{{email}}</span>
+        <span class="header-title">{{textIdentifiedEmail}}</span>
+      </ng-template>
+    </ng-container>
+  </div>
+</div>

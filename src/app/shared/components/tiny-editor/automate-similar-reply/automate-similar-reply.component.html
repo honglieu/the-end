@@ -1,0 +1,26 @@
+<div class="auto-similar-replies">
+  <trudi-checkbox
+    label="Automate similar replies?"
+    [disabled]="disabled"
+    [formControl]="automateSimilarControl"></trudi-checkbox>
+  <trudi-icon
+    icon="toolTip2"
+    svgClass="size-20"
+    nz-tooltip
+    [nzTooltipTitle]="tooltipAutomateTemplate"
+    nzTooltipPlacement="top">
+  </trudi-icon>
+</div>
+<ng-template #tooltipAutomateTemplate>
+  <div class="cursor-default">
+    <span>
+      Trudi® will reply on your behalf next time a similar enquiry is received.
+      Control your automation preferences in your
+    </span>
+    <span
+      class="text-decoration-underline cursor-pointer"
+      (click)="navigateToMailboxSettings()">
+      Mailbox settings
+    </span>
+  </div>
+</ng-template>

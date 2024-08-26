@@ -1,0 +1,15 @@
+::ng-deep .model-breach-notice {
+  .ant-modal {
+    &-header {
+      display: none !important;
+    }
+
+    &-body {
+      padding: 10px !important;
+    }
+
+    &-footer {
+      display: none !important;
+    }
+  }
+}

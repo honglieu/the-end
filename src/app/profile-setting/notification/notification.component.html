@@ -1,0 +1,17 @@
+<div class="profile-wrapper d-flex">
+  <div class="wrapper d-flex flex-dir-column">
+    <ng-container *ngIf="loadingService.multiLoading$ | async">
+      <notification-skeleton></notification-skeleton>
+      <notification-skeleton></notification-skeleton>
+      <notification-skeleton></notification-skeleton>
+    </ng-container>
+
+    <div [hidden]="(loadingService.multiLoading$ | async)">
+      <notifications-layout
+        [notifications]="portalActivity"
+        [title]="'Activity notifications'"
+        (onCheckboxChange)="onCheckboxChange($event)"></notifications-layout>
+      <reminders></reminders>
+    </div>
+  </div>
+</div>

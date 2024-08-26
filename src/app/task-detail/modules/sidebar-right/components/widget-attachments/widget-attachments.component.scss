@@ -1,0 +1,28 @@
+@import 'function';
+:host ::ng-deep {
+  .widget-attachments
+    .trudi-collapse-content-box
+    div.ant-collapse-content
+    .ant-collapse-content-box {
+    padding: 0;
+  }
+
+  .wrapper-skeleton-file {
+    margin: 0 10px;
+    .skeleton-rectangle {
+      width: 50%;
+      height: 0px;
+      margin-right: 7px;
+      h3.ant-skeleton-title {
+        margin-top: -8px;
+      }
+    }
+    .skeleton-circle {
+      span.ant-skeleton-avatar.ant-skeleton-avatar-circle {
+        margin-top: 0px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+  }
+}

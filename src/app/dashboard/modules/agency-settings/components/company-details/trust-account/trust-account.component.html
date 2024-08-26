@@ -1,0 +1,173 @@
+<nz-table
+  #accountTable
+  class="account-table"
+  [nzData]="listOfTrustAccount"
+  [nzFrontPagination]="false"
+  [nzShowPagination]="false"
+  [nzOuterBordered]="!createMode"
+  [nzNoResult]="noAccount"
+  [nzFooter]="!isAddingAccount && isPermissionEdit ? footer : null">
+  <thead>
+    <tr>
+      <th nzWidth="232px">CRM subscription</th>
+      <th nzWidth="248px">Account name</th>
+      <th nzWidth="158px">BSB</th>
+      <th nzWidth="212px">Account number</th>
+      @if(isPermissionEdit) {
+      <th nzWidth="108px"></th>
+      }
+    </tr>
+  </thead>
+  <tbody>
+    @for(account of accountTable.data; track account.id;) { @if(currentEditId
+    !== account.id && !account.tempAccount) {
+    <tr class="account-row">
+      <td [ngClass]="{'border-left': createMode}">{{ account.agencyName }}</td>
+      <td>{{ account.accountName }}</td>
+      <td>{{ account.bsb | mask: BSB_PATTERN}}</td>
+      <td>{{ account.accountNumber | mask: ACCOUNT_NUMBER_PATTERN }}</td>
+      @if (isPermissionEdit) {
+      <td [ngClass]="{'border-right': createMode}">
+        <div class="wrapper-icon wrapper-icon_edit">
+          <button
+            trudi-btn
+            variant="ghost"
+            size="small"
+            btnType="neutral"
+            shape="circle"
+            trudi-tooltip
+            nzTooltipTrigger="hover"
+            [nzTooltipTitle]="'Edit'"
+            nzTooltipPlacement="top"
+            nzTooltipOverlayClassName="tooltip-edit"
+            (click)="triggerEventEdit(account)">
+            <trudi-icon
+              [style]="{'width.px': 20, 'height.px': 20}"
+              icon="editIcon"></trudi-icon>
+          </button>
+        </div>
+      </td>
+      }
+    </tr>
+    } @else {
+    <tr class="account-row" [formGroup]="accountForm">
+      <td [ngClass]="{'invalid': invalid, 'border-left-radius': createMode}">
+        <trudi-form-control>
+          <trudi-single-select
+            formControlName="crmSubscription"
+            [items]="listOfSubscription"
+            bindLabel="name"
+            bindValue="id"
+            placeholder="Select subscription"
+            [clearable]="false">
+            <ng-template
+              trudi-option-tmp
+              let-item="item"
+              let-item$="item$"
+              let-searchTerm="searchTerm">
+              <div class="sub-item" [ngClass]="{'disabled': item?.disabled}">
+                <div class="d-flex">
+                  <span class="text-name">{{item?.name}}</span>
+                </div>
+                <div *ngIf="item$.selected" class="d-flex align-items-center">
+                  <trudi-icon icon="checkSuccess"></trudi-icon>
+                </div>
+              </div>
+            </ng-template>
+          </trudi-single-select>
+        </trudi-form-control>
+      </td>
+      <td [ngClass]="{'invalid': invalid}">
+        <trudi-form-control>
+          <trudi-text-field
+            formControlName="accountName"
+            [maxCharacter]="100"
+            size="large"
+            placeholder="Enter account name">
+          </trudi-text-field>
+        </trudi-form-control>
+      </td>
+      <td [ngClass]="{'invalid': invalid}">
+        <trudi-form-control [checkSubmit]="checkSubmit">
+          <trudi-number-field
+            formControlName="bsb"
+            [checkSubmit]="checkSubmit"
+            size="large"
+            [maxCharacter]="7"
+            [maskPattern]="BSB_PATTERN"
+            placeholder="xxx-xxx">
+          </trudi-number-field>
+        </trudi-form-control>
+      </td>
+      <td [ngClass]="{'invalid': invalid}">
+        <trudi-form-control [checkSubmit]="checkSubmit">
+          <trudi-number-field
+            formControlName="accountNumber"
+            [checkSubmit]="checkSubmit"
+            size="medium"
+            [maxCharacter]="13"
+            [maskPattern]="ACCOUNT_NUMBER_PATTERN"
+            placeholder="xxx-xxx-xxx">
+          </trudi-number-field>
+        </trudi-form-control>
+      </td>
+      <td [ngClass]="{'invalid': invalid, 'border-right-radius': createMode}">
+        <div class="d-flex gap-8">
+          <div class="wrapper-icon wrapper-icon_success">
+            <button
+              trudi-btn
+              variant="tonal"
+              size="small"
+              shape="circle"
+              [disabled]="disableOkBtn"
+              (click)="handleOk()">
+              <trudi-icon
+                [style]="{ 'width.px': 20, 'height.px': 20 }"
+                icon="checkSuccessGreenLight"></trudi-icon>
+            </button>
+          </div>
+          <div class="wrapper-icon wrapper-icon_error">
+            <button
+              trudi-btn
+              variant="tonal"
+              size="small"
+              btnType="danger"
+              shape="circle"
+              (click)="cancel()">
+              <trudi-icon
+                icon="cancelEdit"
+                [style]="{ 'width.px': 20, 'height.px': 20 }"></trudi-icon>
+            </button>
+          </div>
+        </div>
+      </td>
+    </tr>
+    } }
+  </tbody>
+</nz-table>
+
+<ng-template #footer>
+  <div
+    class="footer-btn"
+    [class.disabled]="disableAddBtn"
+    trudi-tooltip
+    nzTooltipTrigger="hover"
+    [nzTooltipTitle]="disableAddBtn ? tooltipTitle : ''"
+    nzTooltipPlacement="top"
+    nzTooltipOverlayClassName="tooltip-add">
+    <button
+      trudi-btn
+      size="small"
+      [disabled]="disableAddBtn"
+      btnType="neutral"
+      variant="tonal"
+      (click)="addAccount()">
+      <trudi-icon svgClass="size-16" viewBox="auto" icon="plusGray"></trudi-icon
+      >Add account
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #noAccount>
+  <span class="no-account">No trust accounts</span>
+</ng-template>

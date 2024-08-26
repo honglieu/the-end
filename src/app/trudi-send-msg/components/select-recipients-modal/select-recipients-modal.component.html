@@ -1,0 +1,36 @@
+<trudi-modal
+  title="Select recipients"
+  [visible]="visible"
+  onText="Confirm"
+  [hiddenCancelBtn]="true"
+  [showBackBtn]="configs.footer.buttons.showBackBtn && configs.otherConfigs.openFromBulkCreateTask"
+  [disableOkBtn]="!selectRecipientsControl.value?.length"
+  (onOk)="handleConfirm()"
+  (onBack)="handleBack()"
+  (onCancel)="handleCloseModal()">
+  <div class="form-container">
+    <trudi-form-control
+      [errors]="[{errorName: 'emailInvalid', errorMessage: 'Please remove invalid email'}]">
+      <trudi-select-receiver
+        class="contact-type-and-receiver-wrapper"
+        [configs]="configs"
+        [extraCls]="{'input-error-select': selectRecipientsControl.invalid && selectRecipientsControl.touched}"
+        [items]="listReceiver"
+        [listContactTypes]="listContactTypes"
+        [isAddItem]="true"
+        [lazyLoad]="true"
+        [formControl]="selectRecipientsControl"
+        [compareWith]="compareWith"
+        [loading]="userListLoading$ | async"
+        [disabled]="configs.otherConfigs.disabledReceivers"
+        (nextPage)="getNextPage()"
+        (search)="searchUser($event)"
+        [sendMsgType]="configs.footer.buttons.sendType"
+        [totalReceiver]="trudiSendMsgUserService.totalUser"
+        (clearAll)="handleClearAll()"
+        [isShowContactType]="configs?.body?.receiver?.isShowContactType"
+        [isPrefillSelected]="configs?.body?.receiver?.prefillSelectedTypeItem"
+        [prefillData]="prefillData"></trudi-select-receiver>
+    </trudi-form-control>
+  </div>
+</trudi-modal>

@@ -1,0 +1,80 @@
+@import 'function';
+
+:host {
+  .show-original,
+  .hide-original {
+    white-space: normal;
+    margin-top: 4px;
+  }
+
+  .original-content {
+    padding-inline: 8px;
+    margin-top: 4px;
+    border-left: 2px solid var(--border-neutral-dark, #ECECED);
+
+    &-text {
+      @include fontSetup(var(--gray-600), 12px, 16px, italic, 400);
+      word-break: break-word;
+      ::ng-deep a {
+        color: var(--fg-hyperlink, #0D42FF);
+        cursor: pointer;
+        &:hover, &:active {
+          color: var(--fg-hyperlink, #0D42FF);
+        }
+      }
+
+      &-weakest {
+        color: var(--white) !important;
+      }
+    }
+  }
+  .tooltip-quote::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    z-index: 9999;
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid rgba(100, 100, 100, 0.8);
+    bottom: -6px;
+  }
+  .btn-toggle-est {
+    cursor: pointer;
+    position: relative;
+    border-radius: 4px;
+    border: none;
+    background-color: transparent;
+    padding: 0;
+
+    .tooltip-quote {
+      visibility: hidden;
+      width: 138px;
+      background-color: rgba(100, 100, 100, 0.8);
+      color: var(--white);
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 16px;
+      border-radius: 4px;
+      padding: 4px 6px;
+      position: absolute;
+      z-index: 9999;
+      top: -25px;
+      left: 0px;
+    }
+
+    .gmail-quote-tooltip {
+      width: 148px;
+    }
+
+    &:hover .tooltip-quote {
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+  .gmail-quote-button {
+    margin: 20px 0 0px 0;
+  }
+}

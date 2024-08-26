@@ -1,0 +1,30 @@
+@import 'function';
+
+:host {
+  .label-wrapper {
+    .required-checkbox {
+      ::ng-deep trudi-checkbox label.trudi-checkbox .label-text {
+        @include fontSetup(
+          var(--fg-neutral-strongest, #202020),
+          14px,
+          20px,
+          normal,
+          400
+        );
+      }
+    }
+  }
+  label.send-attachment-label {
+    @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 600);
+  }
+  .attachment-form {
+    display: flex;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border-neutral-dark, #d8dcdf);
+
+    ::ng-deep trudi-text-field label.trudi-ui-text-field-label {
+      @include fontSetup(var(--fg-neutral-normal), 14px, 16px, normal, 400);
+    }
+  }
+}

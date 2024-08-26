@@ -1,0 +1,73 @@
+:host {
+  .conversation-option {
+    width: calc(100% - 20px);
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    background-color: var(--white);
+    border-bottom: 1px solid var(--border-neutral-light, #f2f5f7);
+    gap: 4px;
+    
+    &:hover {
+      background-color: var(--bg-brand-tonal-stronger);
+    }
+
+    &-left {
+      width: calc(100% - 20px);
+      flex-wrap: wrap;
+    }
+
+    &-text {
+      color: var(--fg-neutral-stronger, #3d3d3d);
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 20px;
+      white-space: initial;
+      word-break: break-word;
+      display: inline-block;
+    }
+
+    &-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      gap: 4px;
+      border-radius: 24px;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 16px;
+      text-align: center;
+      margin-left: 4px;
+
+      &.tenant,
+      &.tenant-property,
+      &.tenant-unit &.tenant-prospect {
+        background-color: var(--tenant-100);
+        color: var(--tenant-600);
+      }
+
+      &.landlord,
+      &.owner-prospect {
+        background-color: var(--brand-100);
+        color: var(--brand-500);
+      }
+
+      &.supplier {
+        background-color: var(--supplier-100);
+        color: var(--supplier-500);
+      }
+
+      &.other {
+        background-color: var(--danger-100);
+        color: var(--danger-500);
+      }
+
+      &.unidentified {
+        background-color: var(--gray-50);
+        color: var(--gray-400);
+      }
+    }
+  }
+}

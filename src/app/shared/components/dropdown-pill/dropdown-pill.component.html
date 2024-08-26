@@ -1,0 +1,34 @@
+<div
+  nz-dropdown
+  nzTrigger="click"
+  [nzDropdownMenu]="menu"
+  (nzVisibleChange)="change($event)"
+  class="dropdown-pill">
+  <trudi-badge
+    [variant]="getBadgeType(value)"
+    [text]="getLabelByValue || value"
+    [icon]="getIconCheckMark()"
+    [extraClass]="'custom-trudi-badge'"></trudi-badge>
+</div>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <ul nz-menu nzSelectable class="dropdown-pill-list">
+    <li
+      *ngFor="let item of options"
+      class="dropdown-pill-list__item"
+      nz-menu-item
+      (click)="selectMenuItem(item.value)">
+      <trudi-badge
+        [variant]="getBadgeType(item.value)"
+        [text]="item.label"></trudi-badge>
+
+      <trudi-icon
+        *ngIf="value === item.value"
+        class="checkmark-down"
+        svgClass="size-20"
+        viewBox="auto"
+        icon="check">
+      </trudi-icon>
+    </li>
+  </ul>
+</nz-dropdown-menu>

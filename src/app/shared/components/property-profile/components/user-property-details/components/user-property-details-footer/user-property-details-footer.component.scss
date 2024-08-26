@@ -1,0 +1,68 @@
+:host {
+  &::ng-deep .move-to-icon .ant-tooltip-arrow {
+    right: 0px !important;
+  }
+
+  border-top: 1px solid var(--gray-100);
+  padding-top: 8px;
+}
+
+::ng-deep {
+  .ant-tooltip.export-button {
+    .ant-tooltip-arrow {
+      right: 4px;
+    }
+  }
+
+  .ant-tooltip.remove-button {
+    .ant-tooltip-arrow {
+      right: 0;
+    }
+  }
+}
+
+.btn-action {
+  border-radius: 100px;
+  border: none;
+  background-color: transparent;
+  padding: 0;
+}
+
+.action-icon {
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 50%;
+
+  &:hover {
+    background-color: var(--gray-100);
+  }
+}
+
+.delete-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 80px;
+  padding: 6px;
+  background: var(--bg-neutral-tonal-normal);
+
+  &:focus-visible {
+    box-shadow: inset 0px 0px 0px 2px var(--brand-500),
+    0px 0px 0px 0px rgba(var(--brand-500-rgb), 0.6) !important;
+    border: none;
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    background: var(--bg-neutral-tonal-strongest) !important;
+
+    ::ng-deep svg-icon svg path {
+      fill: var(--fg-neutral-weakest) !important;
+    }
+  }
+
+  ::ng-deep svg-icon {
+    svg {
+      width: 20px !important;
+    }
+  }
+}

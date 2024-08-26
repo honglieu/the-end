@@ -1,0 +1,72 @@
+<div class="trudi-table-wrapper">
+  <nz-table
+    [nzFooter]="footer"
+    [nzFrontPagination]="false"
+    #editRowTable
+    nzTemplateMode
+    nzBordered
+    [nzScroll]="{ y: 'calc(100vh - 515px)' }"
+    [nzData]="checklistFormControl.controls">
+    <thead>
+      <tr>
+        <th nzWidth="auto">Checklist</th>
+        <th nzWidth="240px" nzAlign="center">Completed</th>
+        <th nzWidth="64px"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container>
+        <tr
+          *ngFor="let control of checklistFormControl.controls, let i = index"
+          class="editable-row">
+          <ng-container [formGroup]="control">
+            <td>
+              <trudi-form-control>
+                <trudi-textarea
+                  [checkSubmit]="!isSubmittedRentIssueForm"
+                  trudiTextFieldResize
+                  [disabled]="isDisabled"
+                  maxHeightResize="189"
+                  minHeightResize="36"
+                  [maxCharacter]="2000"
+                  [showCounting]="false"
+                  formControlName="description"
+                  placeholder="Add checklist..."
+                  class="editable-cell">
+                  ></trudi-textarea
+                >
+              </trudi-form-control>
+            </td>
+
+            <td nzAlign="right">
+              <trudi-checkbox
+                [disabled]="isDisabled"
+                [label]=""
+                formControlName="status"></trudi-checkbox>
+            </td>
+            <td>
+              <trudi-icon
+                nz-tooltip
+                [nzTooltipTitle]="isDisabled || isDisabledDeleteRow(i) ? 'Item can only be deleted directly from Rent Manager' : ''"
+                nzTooltipPlacement="left"
+                [ngClass]="{'cursor-not-allowed disabled' : isDisabled || isDisabledDeleteRow(i)}"
+                (click)="deleteRow(i)"
+                [style]="{ 'width.px': 20, 'height.px': 20 }"
+                [icon]="'trashBin2'"></trudi-icon>
+            </td>
+          </ng-container></tr
+      ></ng-container>
+    </tbody>
+  </nz-table>
+</div>
+<ng-template #footer>
+  <button
+    trudi-btn
+    [disabled]="isDisabled"
+    btnType="neutral"
+    variant="outlined"
+    (click)="addRow()">
+    <trudi-icon svgClass="size-20" viewBox="auto" icon="iconPlus"></trudi-icon
+    >Add
+  </button>
+</ng-template>

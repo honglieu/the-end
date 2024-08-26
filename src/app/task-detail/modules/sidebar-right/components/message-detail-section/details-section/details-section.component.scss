@@ -1,0 +1,137 @@
+@import 'function';
+::ng-deep .assign-contact-overlay {
+  padding-bottom: 8px !important;
+  padding-top: 5px !important;
+  left: -16px;
+  .ant-popover-arrow {
+    display: none;
+  }
+  .ant-popover-inner {
+    box-shadow: 0px 8px 28px rgba(0, 0, 0, 0.05),
+      0px 4px 12px var(--bg-overlay-light);
+    border-radius: 8px;
+  }
+  .ant-popover-inner-content {
+    padding: 16px;
+  }
+}
+.not-app-chat-header {
+  .unidentified {
+    .info {
+      font-size: 14px !important;
+    }
+  }
+}
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  .info {
+    @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+    &.task-email {
+      @include fontSetup(var(--gray-700), 12px, 20px, normal, 400);
+    }
+  }
+  .description {
+    background-color: white;
+    gap: 8px;
+    width: fit-content;
+    .info {
+      @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .info-email-unidentified {
+      @include fontSetup(var(--danger-600), 14px, 20px, normal, 500);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .assign-to-contact {
+      position: absolute;
+      top: 0;
+    }
+    .info-sender-unidentified {
+      @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .info-property-address-unidentified {
+      @include fontSetup(var(--gray-300), 14px, 20px, normal, 500);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .detail-label {
+      display: flex;
+      gap: 8px;
+      span {
+        color: var(--gray-400);
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 16px;
+        font-style: normal;
+      }
+      .assign-to-contact {
+        color: var(--brand-500);
+        font-weight: 500;
+        line-height: 16px;
+        font-size: 12px;
+        border: none;
+        background-color: white;
+        width: 103px;
+        padding: 0;
+      }
+    }
+  }
+  .assign-contact-header {
+    .assign-to-contact {
+      top: -10px !important;
+    }
+  }
+  .detail-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    background: var(--gray-50);
+    border-radius: 6px;
+    img {
+      max-width: none;
+    }
+  }
+}
+.w-full {
+  width: 100%;
+}
+.box-contact {
+  max-width: 298px;
+  width: 298px;
+  height: fit-content;
+  gap: 20px;
+  background: var(--white);
+}
+.box-btn-call {
+  display: flex;
+  gap: 30px;
+  .btn-call {
+    cursor: pointer;
+  }
+}
+:host ::ng-deep .detail-item {
+  .dropdown-box {
+    left: 0;
+  }
+}

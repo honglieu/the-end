@@ -1,0 +1,682 @@
+@if(isShowCarousel) {
+<app-modal-popup
+  [transparent]="true"
+  [show]="isShowCarousel"
+  [zIndex]="999999"
+  [position]="popupModalPosition.full_screen">
+  <app-images-carousel
+    [open]="isShowCarousel"
+    [isSyncing]="isSyncing"
+    [imageUrlList]="viewSyncFile ? arrayImageCarousel2 : arrayImageCarousel"
+    [initialIndex]="initialIndex"
+    (showCarousel)="manageCarouselState($event)"
+    (showSelectPeoplePopup)="handleShowTrudiSendMsg($event); onForwardBtn('Select People')"
+    (fileEmit)="handleFileEmit($event)"></app-images-carousel>
+</app-modal-popup>
+} @if(isImageDetail) {
+<app-modal-popup
+  [transparent]="isImageDetail"
+  [show]="isImageDetail"
+  [position]="popupModalPosition.full_screen">
+  <app-image-detail
+    [open]="isImageDetail"
+    [imageUrl]="imageDetailUrl"
+    (onClose)="handleCloseImageDetail()"></app-image-detail>
+</app-modal-popup>
+} @if(showSendActionLink) {
+<app-modal-popup
+  [show]="showSendActionLink"
+  [position]="popupModalPosition.full_screen">
+  <app-send-action-link
+    [show]="showSendActionLink"
+    (close)="onCloseSendActionLink($event)"></app-send-action-link>
+</app-modal-popup>
+} @if(isShowSelectPeopleModal) {
+<app-select-people-popup
+  (isCloseModal)="showSelectPeople($event)"
+  (isOpenSendMessageModal)="showAppSendMessage($event)"
+  (listSelectedUser)="getSelectedUser($event)"
+  [isOpenFrom]="'file'"
+  [show]="isShowSelectPeopleModal"
+  [onlyOwnerTenant]="isOnlyOwnerTenant"
+  [onlySupplier]="isOnlySupplier"
+  [enableSelectTab]="showOwnerTenantAndSupplier"
+  [mode]="selectedMode"
+  (isOpenLikeToSay)="openSendMessageFromSendQuote($event)"></app-select-people-popup>
+} @if(isShowTrudiScheduledMsg) {
+<trudi-scheduled-msg
+  [hasConversationHistory]="!!groupMessage.length"
+  (onQuit)="closeModalScheduleMsg()"></trudi-scheduled-msg>
+} @if(isShowQuitConfirmModal) {
+<app-modal-popup
+  [show]="isShowQuitConfirmModal"
+  [position]="popupModalPosition.center">
+  <app-quit-confirm
+    (isCloseModal)="showQuitConfirm($event)"
+    (isOpenSendMessageModal)="showAppSendMessage($event)"
+    (isOpenFileModal)="showAddFiles($event)"></app-quit-confirm>
+</app-modal-popup>
+} @if(popupState.addReiFormOutside) {
+<div
+  [show]="popupState.addReiFormOutside"
+  [position]="popupModalPosition.center">
+  <trudi-rei-form-card></trudi-rei-form-card>
+</div>
+} @if(isShowAddFilesModal) {
+<app-add-files-popup
+  [show]="isShowAddFilesModal"
+  (isOpenQuitConfirmModal)="showQuitConfirm($event)"
+  (isOpenSendMessageModal)="showAppSendMessage($event)"
+  (outSelectedFile)="getSelectedFile($event)"
+  [fileTypeSelect]="fileTypeQuote"></app-add-files-popup>
+} @if(isModalDialogVisible) {
+<app-modal-popup
+  [specificWidth]="510"
+  [show]="isModalDialogVisible"
+  [position]="popupModalPosition.center">
+  <app-message-dialog (isConfirmed)="closeModal($event)"></app-message-dialog>
+</app-modal-popup>
+
+} @if(contactCardPopupState.addContactCardOutside) {
+<trudi-add-contact-card
+  [visible]="contactCardPopupState.addContactCardOutside"
+  [configs]="attachmentTextEditorConfigs"
+  [form]="sendMsgForm"
+  (onTrigger)="onTriggerAddContactCard()"
+  (onClose)="onCloseAddContactCard()"></trudi-add-contact-card>
+} @if(uploadFileFromCRMPopupState.uploadFileFromCRMOutside) {
+<upload-from-crm
+  [configs]="attachmentTextEditorConfigs"
+  (onTrigger)="onTriggerAddFilesFromCrm()"
+  (onClose)="onCloseUploadFromCRM()"></upload-from-crm>
+
+}
+
+<div class="wrapper-relative">
+  <div
+    class="box-drop-files message-view"
+    cdkDropList
+    #todoList="cdkDropList"
+    [cdkDropListData]="fileList"
+    [cdkDropListConnectedTo]="connectedChild"
+    (cdkDropListDropped)="drop($event)"
+    [class.d-none]="loading"
+    #boxChat>
+    <div class="chat d-flex flex-dir-column">
+      @if(this.queryParams['appMessageCreateType'] !== 'NEW_APP_MESSAGE') {
+      <div #chatHeader id="app-chat-header">
+        @if(loadingCreateScratch || loadingReplyViaApp) {
+        <message-header-skeleton></message-header-skeleton>
+        @if(loadingReplyViaApp) {
+        <message-ticket-skeleton></message-ticket-skeleton>
+        } } @else if(currentConversation?.id &&
+        (!currentConversation?.isScratchDraft || showLinkedTask))
+        {@if(showLinkedTask) {
+        <linked-task
+          [taskItem]="currentTask"
+          [currentConversationId]="currentConversationId"></linked-task>
+        }
+        <app-message-detail-header
+          [hasTrudiAssignee]="hasTrudiAssignee"
+          [activeMobileApp]="activeMobileApp"
+          [currentConversation]="currentConversation"
+          [currentProperty]="currentProperty"
+          [isCallConversation]="isCallConversation"
+          [typeShowAppMsg]="typeShowAppMsg"
+          (reopenMsg)="changeConversationStatus($event)"
+          (resolveMsg)="setLoadingChangeStatus()"
+          [loading]="loading"></app-message-detail-header>
+        }
+      </div>
+      }
+
+      <ng-container *ngIf="!loadingMessageSection; else messageSectionSkeleton">
+        <div
+          class="message-detail-wrapper"
+          [style.height]="heightDetailWrapper"
+          [style.min-height]="0"
+          [ngClass]="{'margin-top-44': !this.loadingReplyViaApp && this.queryParams['appMessageCreateType'] === 'NEW_APP_MESSAGE'}">
+          <div
+            class="chat-section flex-1"
+            (dragenter)="onDragEnter($event)"
+            (dragover)="onDragOver($event)"
+            (drop)="onDrop($event)">
+            <!-- 69 is min height of re-open-footer -->
+            @if(!!groupMessage.length && currentProperty) {
+            <div
+              class="container-wrapper"
+              [style.marginTop.px]="dynamicStyle.chatContainer.marginTop"
+              [style.min-height]="0"
+              [style.height]="currentConversation?.status === conversationType.resolved ||
+              currentConversation?.status === 'SOLVED' ?
+              'calc(100% - '+ ((footerContainer?.offsetHeight) + 'px)') : (currentConversation?.status === conversationType.open && currentConversation?.isDraft) ? '100%' :
+              'calc(100% - '+ ((textareaContainer?.offsetHeight) + 'px)')">
+              <div
+                id="chat-container"
+                class="chat-container scroll-container-wrapper"
+                data-e2e="message-thread"
+                infiniteScroll
+                [scrollWindow]="false"
+                [infiniteScrollDistance]="2"
+                [infiniteScrollThrottle]="300"
+                [immediateCheck]="true"
+                (scrolledUp)="loadHistory(currentConversation.id, true, createdTimeOfFirstMsg, null, null, null, 'up')"
+                (scroll)="checkScroll()"
+                [class.d-none]="loadingReplyViaApp"
+                #scrollDown>
+                @if(isFetchingOlderMessages) {
+                <div class="loading-spinner loading-spinner-top">
+                  <ng-container
+                    *ngTemplateOutlet="loadingSpinner"></ng-container>
+                </div>
+                }
+                <div
+                  #messageWrapper
+                  class="message-wrapper"
+                  [ngStyle]="{
+                        'padding-bottom':  !loadingTicket ? '70px' : '12px'
+                      }">
+                  <app-call-inprogress-notify-v2
+                    [isShow]="isProgressCall"
+                    [message]="startedCallMessage"
+                    [lastCall]="lastCall"></app-call-inprogress-notify-v2>
+                  @for (parentMsg of groupMessage; track parentMsg.timeStamp;
+                  let lastMsgInline = $last ) {
+                  <div>
+                    @if(hasMessageFromApp && !parentMsg?.messages?.[0]?.isDraft)
+                    {
+                    <div class="timestamp-badge wrap-order-day y-center">
+                      <div class="divider flex-1 hideDivider"></div>
+                      <div class="order-day timeStamp">
+                        {{parentMsg?.timeStamp | dateTimeString | async |
+                        uppercaseFirstLetter }}
+                      </div>
+                      <div class="divider flex-1 hideDivider"></div>
+                    </div>
+                    }
+                    <div class="d-flex flex-dir-column gap-12">
+                      @for (message of parentMsg?.messages; track
+                      message.trackId; let last = $last; let idx = $index ; ) {
+                      <div
+                        appRendered
+                        (rendered)="handleItemRendered()"
+                        class="message"
+                        [id]="'message-' + message.id"
+                        [class.flex-dir-column]="message.isLastReadMessage && isHasNewMessage"
+                        [class.align-items-end]="message.isLastReadMessage && message.senderType !== 'user' && isHasNewMessage"
+                        [class.block]="message.messageType === messagesType.ticket && (message?.options?.type !== 'contact' && !message?.options?.contacts)"
+                        [ngClass]="message.messageType === messagesType.ticket && (message?.options?.type !== 'contact' && !message?.options?.contacts) ? '' : message.senderType | lowercase">
+                        @if(message.messageType) { @switch (message.messageType)
+                        { @case (messagesType.actionLink) {
+                        <div class="message-body">
+                          <div class="al-border">
+                            <app-message-action-link
+                              [reBorderAtChatApp]="true"
+                              [messageActionLink]="message.actionLink"
+                              [propertyId]="currentProperty.id"
+                              [linkBackground]="message.color"
+                              [imgLink]="message.svg">
+                            </app-message-action-link>
+                          </div>
+                          @if(!currentConversation.isFrozen) {
+                          <app-message-footer
+                            [senderType]="message.senderType"
+                            [createdAt]="message.createdAt"
+                            [isRead]="message.isRead"></app-message-footer>
+                          }
+                        </div>
+                        } @case (messagesType.file) {
+                        <div
+                          class="message-body"
+                          (click)="message.isError && onResendTheMessage($event, message.id)">
+                          @if(!currentConversation.isFrozen &&
+                          !message.isSendFromEmail &&
+                          !message.isSendFromVoiceMail) {
+                          <app-message-header
+                            [currentConversation]="currentConversation"
+                            [message]="message"
+                            [firstName]="message.firstName"
+                            [lastName]="message.lastName"
+                            [activeMobileApp]="activeMobileApp"
+                            class="header-message-file"></app-message-header>
+                          } @if(message.messageReply) {
+                          <message-reply
+                            [isSending]="isSending"
+                            [message]="message.messageReply"
+                            [position]="message.senderType === 'user' ? 'left' : 'right'">
+                          </message-reply>
+                          }
+                          <app-message-file
+                            [message]="message"
+                            [isSending]="message?.isSending || message?.isError"
+                            [messageFile]="message.isShowFile ? message.file : null"
+                            [isShowActionButton]="isShowActionButton"
+                            [isShowFile]="message.isShowFile"
+                            (isVideoLoaded)="scrollToBottom()"
+                            [isAppMessage]="true"
+                            [isLoadingFile]="!message.file.mediaLink"
+                            (fileOnClicked)="manageCarouselState($event)"
+                            (showSelectPeople)="openForwardMessageModal($event); onForwardBtn('Select People')"
+                            (fileEmit)="handleFileEmit($event)"
+                            class="message-file"></app-message-file>
+                          @if(!currentConversation.isFrozen &&
+                          !message.isSendFromVoiceMail) {
+                          <app-message-footer
+                            [documentType]="message?.file?.documentType"
+                            [isError]="message?.isError"
+                            [isSending]="message?.isSending"
+                            [senderType]="message.senderType"
+                            [createdAt]="message.createdAt"
+                            [isRead]="message.isRead"
+                            (reSendEmitter)="onResendTheMessage($event, message.id)"></app-message-footer>
+                          }
+                        </div>
+                        } @case (messagesType.call) {
+                        <div
+                          class="message-body call"
+                          style="width: fit-content">
+                          <app-message-call
+                            [userId]="currentConversation.userId"
+                            [message]="message"
+                            [currentConversationId]="currentConversation.id"></app-message-call>
+                        </div>
+                        } @case (messagesType.solved) {
+                        <div class="message-body full-width no-padding">
+                          <app-message-resolved
+                            [message]="message"
+                            [attr.data-e2e]="'message-resolved'">
+                          </app-message-resolved>
+                        </div>
+                        } @case (messagesType.reopened) {
+                        <div
+                          class="message-body no-transform full-width no-padding">
+                          <app-message-reopened [message]="message">
+                          </app-message-reopened>
+                        </div>
+                        } @case (messagesType.agentJoin) {
+                        <div class="message-body full-width no-padding">
+                          <app-message-agent-join
+                            [conversationType]="message.conversationType"
+                            [message]="message"
+                            [title]="message.userTitle">
+                          </app-message-agent-join>
+                        </div>
+                        } @case (messagesType.changeProperty) {
+                        <div class="message-body full-width no-padding">
+                          <message-change-property
+                            [message]="message"
+                            [listProperty]="propertyService.listPropertyAllStatus | async"></message-change-property>
+                        </div>
+                        } @case (messagesType.syncConversation) {
+                        <div class="message-body full-width no-padding">
+                          <message-synced-conversation
+                            [message]="message"></message-synced-conversation>
+                        </div>
+                        } @case (messagesType.ticket) {
+                        @if(!!message?.options?.contacts?.length) {
+                        <div class="message-body">
+                          <div class="message-container">
+                            <div class="message-box">
+                              <app-message-header
+                                [senderType]="message.senderType"
+                                [currentConversation]="currentConversation"
+                                [message]="message"
+                                [firstName]="message.firstName"
+                                [lastName]="message.lastName"
+                                *ngIf="!message.options?.contacts?.length"></app-message-header>
+                              <app-message-default
+                                class="message-text-box message-text-box-ticket-contact"
+                                [isSending]="message?.isSending || message?.isError"
+                                [message]="message"></app-message-default>
+                              <app-message-footer
+                                [isSending]="message?.isSending"
+                                [isError]="message?.isError"
+                                [senderType]="message.senderType"
+                                [createdAt]="message.seenDate || message.createdAt"
+                                [isRead]="message.isRead"></app-message-footer>
+                            </div>
+                          </div>
+                        </div>
+                        } @else {
+                        <div class="ticket-message-wrapper">
+                          <div class="message-body full-width no-padding">
+                            <div class="message-container row-reverse">
+                              <div class="message-box">
+                                <app-message-header
+                                  [senderType]="message.senderType"
+                                  [currentConversation]="currentConversation"
+                                  [message]="message"
+                                  [firstName]="message.firstName"
+                                  [lastName]="message.lastName"
+                                  *ngIf="!message.options?.contacts?.length"></app-message-header>
+                                <app-message-default
+                                  [isSending]="message?.isSending || message?.isError"
+                                  [message]="message"></app-message-default>
+                                <app-message-footer
+                                  [isSending]="message?.isSending"
+                                  [isError]="message?.isError"
+                                  [senderType]="message.senderType"
+                                  [createdAt]="message.createdAt"
+                                  [isRead]="message.isRead"></app-message-footer>
+                              </div>
+                            </div>
+                          </div>
+                          @if (message.options?.response?.type !==
+                          ERequestType.GET_DOCUMENT) {
+                          <request-card
+                            (triggerOnRequestAction)="updateStatusTicket($event)"
+                            (fileOnClicked)="manageCarouselState($event)"
+                            [message]="message"></request-card>
+                          }
+                        </div>
+                        } } @case (messagesType.buttons) {
+                        <div class="message-body-wrapper d-flex">
+                          <div class="message-body">
+                            @if(message.message) {
+                            <ng-container>
+                              <app-message-header
+                                [senderType]="message.senderType"
+                                [currentConversation]="currentConversation"
+                                [message]="message"
+                                [firstName]="message.firstName"
+                                [lastName]="message.lastName"
+                                *ngIf="!message.options?.contacts?.length"></app-message-header>
+                              <app-message-default
+                                [isSending]="message?.isSending || message?.isError"
+                                [message]="message"></app-message-default>
+                              <app-message-footer
+                                [isSending]="message?.isSending || message?.isError"
+                                [isError]="message?.isError"
+                                [senderType]="message.senderType"
+                                [createdAt]="message.createdAt"
+                                [isRead]="message.isRead"></app-message-footer>
+                            </ng-container>
+                            }
+                          </div>
+                          <div class="message-options">
+                            @for (item of message.options; track i; let i =
+                            $index) {
+                            <app-trudi-default-actions
+                              [userMessage]="item"></app-trudi-default-actions>
+                            }
+                          </div>
+                        </div>
+                        } @case (messagesType.navigationUrl) {
+                        <div class="message-body__nav">
+                          <div class="message-body">
+                            <app-message-default
+                              [isSending]="message?.isSending || message?.isError"
+                              [message]="message"></app-message-default>
+                          </div>
+                          @for (link of message.options; track i; let i =
+                          $index) {
+                          <div class="message-body message-body_nav-link">
+                            <app-trudi-nav-links
+                              [linkType]="link"></app-trudi-nav-links>
+                          </div>
+                          }
+                        </div>
+                        } @case (messagesType.url) {
+                        <div
+                          class="message-body"
+                          [ngClass]="{'not-message': !message?.message}">
+                          @if(!!message?.message?.trim()) {
+                          <ng-container>
+                            @if(!currentConversation.isFroze) {
+                            <app-message-header
+                              [senderType]="message.senderType"
+                              [currentConversation]="currentConversation"
+                              [message]="message"
+                              [firstName]="message.firstName"
+                              [lastName]="message.lastName"
+                              *ngIf="!message.options?.contacts?.length"></app-message-header>
+                            }
+
+                            <app-message-default
+                              [isSending]="message?.isSending || message?.isError"
+                              [message]="message"></app-message-default>
+                            @if(!currentConversation.isFrozen) {
+                            <app-message-footer
+                              [isSending]="message?.isSending"
+                              [isError]="message?.isError"
+                              [senderType]="message.senderType"
+                              [createdAt]="message.createdAt"
+                              [isRead]="message.isRead"></app-message-footer>
+                            }
+                          </ng-container>
+                          } @for (url of message.options; track i; let i =
+                          $index) {
+                          <app-trudi-url
+                            class="trudi-url"
+                            [url]="url"></app-trudi-url>
+                          }
+                        </div>
+                        } @case (messagesType.defaultText) {
+                        @if(message.options?.type !== 'RESCHEDULE_REQUEST') {
+                        <ng-container>
+                          @if(!message.isSendFromEmail &&
+                          !message.isSendFromVoiceMail) {
+                          <div class="message-body no-transform ml-8">
+                            <div
+                              (click)="message.isError && onResendTheMessage($event, message.id)"
+                              class="message-container"
+                              [ngClass]="{'row-reverse': message.senderType !== 'user', 'message-has-error': message.isError}">
+                              <div class="message-box">
+                                <app-message-header
+                                  [senderType]="message.senderType"
+                                  [currentConversation]="currentConversation"
+                                  [message]="message"
+                                  [firstName]="message.firstName"
+                                  [lastName]="message.lastName"
+                                  *ngIf="!message.options?.contacts?.length"></app-message-header>
+                                <app-message-default
+                                  [ngClass]="{'text-black' : message.messageType==='TEXT'}"
+                                  [isSending]="message?.isSending || message.isError"
+                                  [message]="message"></app-message-default>
+                                @if(!currentConversation.isFrozen &&
+                                !message.isSendFromEmail &&
+                                !message.isSendFromVoiceMail) {
+                                <div
+                                  class="time-stamp-wrapper"
+                                  [ngClass]="message.senderType">
+                                  <app-message-footer
+                                    [senderType]="message.senderType"
+                                    [isError]="message.isError"
+                                    [isSending]="message.isSending"
+                                    [createdAt]="message.createdAt"
+                                    (reSendEmitter)="onResendTheMessage($event, message.id)"
+                                    [isRead]="message.senderType === 'user' ? null : message.isRead">
+                                  </app-message-footer>
+                                </div>
+                                }
+                              </div>
+                            </div>
+                          </div>
+                          }
+                        </ng-container>
+                        } } } } @if(message.isLastReadMessage && isHasNewMessage
+                        && !isHideRedLineNew) {
+                        <div
+                          class="d-flex flex-dir-row align-items-center red-line"
+                          #redLineNew>
+                          <hr />
+                          <trudi-icon icon="newMessageTag"> </trudi-icon>
+                        </div>
+                        }
+                      </div>
+                      }
+                    </div>
+                    <div
+                      *ngIf="currentConversation?.inviteStatus === EInviteStatus.OFFBOARDED && currentConversation?.crmStatus !== EUserDetailStatus.DELETED && lastMsgInline"
+                      class="d-flex align-items-center justify-content-center message-body full-width no-padding">
+                      <div
+                        class="end-session d-flex align-items-center wrap-conversation-status marker">
+                        This user has been offboarded
+                      </div>
+                    </div>
+                    <div
+                      *ngIf="currentConversation?.crmStatus === EUserDetailStatus.DELETED && lastMsgInline"
+                      class="d-flex align-items-center justify-content-center message-body full-width no-padding">
+                      <div
+                        class="end-session d-flex align-items-center wrap-conversation-status marker">
+                        This user has been deleted
+                      </div>
+                    </div>
+                  </div>
+                  }
+                  <div class="typing-block">
+                    <app-typing-animation></app-typing-animation>
+                  </div>
+                </div>
+                @if(isFetchingNewerMessages) {
+                <div class="loading-spinner loading-spinner-bottom">
+                  <ng-container
+                    *ngTemplateOutlet="loadingSpinner"></ng-container>
+                </div>
+                }
+              </div>
+              <div class="action-panel">
+                @if(showScrollToBottomButton && scrollDown &&
+                scrollDown?.scrollHeight > scrollDown?.clientHeight){
+                <button
+                  trudi-btn
+                  btnType="neutral"
+                  variant="outlined"
+                  size="extra-small"
+                  class="view-most-recent"
+                  (click)="handleViewMostRecent(EBehaviorScroll.SMOOTH)">
+                  <trudi-icon icon="chevronDown" svgClass="size-16">
+                  </trudi-icon>
+                  <span>View most recent</span>
+                </button>
+                }
+                <div class="conversation-summary-general">
+                  <conversation-summary
+                    [currentConversation]="currentConversation"
+                    [currentTask]="currentTask"
+                    [elementRefHeight]="elementRefHeight"
+                    (triggerCurrentConversation)="triggerCurrentConversation($event)"></conversation-summary>
+                </div>
+                @if(!isUserVerified) {
+                <div class="conversation-summary-general mt-12">
+                  <join-conversation
+                    [disabled]="isDisabledJoinButton"
+                    [currentConversation]="currentConversation"
+                    (joinConversation)="handleJoinConversation()"></join-conversation>
+                </div>
+                }
+              </div>
+            </div>
+            } @else if(!groupMessage.length) {
+            <ng-container>
+              @if(isTaskType && !currentConversation) {
+              <div class="empty-task-chat-container">
+                <div class="no-data-icon">
+                  <div class="position-center-w">
+                    <trudi-icon
+                      icon="noConversationsV2"
+                      class="size-140"></trudi-icon>
+                    <p>No conversations to display</p>
+                  </div>
+                </div>
+              </div>
+              } @else {
+              <div
+                class="empty-message-chat-container"
+                [style.height]="'calc(100% - 12px - '+ ((textareaContainer?.offsetHeight) + 'px)')">
+                <div>
+                  <trudi-button-scheduled-msg
+                    (onOpenModal)="openModalScheduledMsg()"
+                    [position]="0"
+                    [conversationId]="currentConversation?.id">
+                  </trudi-button-scheduled-msg>
+                </div>
+              </div>
+              }
+            </ng-container>
+            }
+          </div>
+        </div>
+      </ng-container>
+      @if(isShowAppComposeMessage) {
+      <div #textareaContainer>
+        <app-compose-message
+          #composeMessage
+          (onMsgResize)="handleResizeInlineMsg($event)"
+          [activeMobileApp]="activeMobileApp"
+          [configs]="createNewConversationConfigs"
+          [composeType]="composeType"
+          [currentProperty]="currentProperty"
+          (onSendMsg)="handleOnSendMsg($event)"
+          [currentConversation]="currentConversation"
+          [loadingCreateScratch]="loadingCreateScratch"
+          [loadingMessage]="loading"
+          [hasGroupMessage]="!!groupMessage.length"
+          (onSelectedReceiversChange)="handleOnSelectedReceiversChange($event)"></app-compose-message>
+      </div>
+      }
+    </div>
+  </div>
+
+  <!-- break loading  -->
+  <div
+    class="wrapper-loading-message"
+    [class.d-none]="!loading && allMessageRender">
+    <message-header-skeleton></message-header-skeleton>
+    <ng-container *ngTemplateOutlet="messageSectionSkeleton"></ng-container>
+    <div class="bottom-section">
+      <nz-skeleton-element
+        class="button-skeleton"
+        nzType="button"
+        [nzActive]="true"></nz-skeleton-element>
+    </div>
+  </div>
+</div>
+
+<div
+  *ngIf="!isInboxDetail"
+  appOutsideClickListener
+  (clickOutside)="handleClickOutsideUserProfileDrawer()"
+  [whiteList]="whiteListMsgDetail">
+  <user-info-drawer
+    [openFrom]="ETypePage.TASK_DETAIL"
+    [currentDataUser]="currentDataUserProfile"
+    [visible]="isUserProfileDrawerVisible"
+    [isAppMessage]="true"></user-info-drawer>
+</div>
+
+<ng-template #messageSectionSkeleton>
+  <div [ngClass]="{'wrapper-loading-message-section': loadingMessageSection}">
+    <div
+      class="message-section message-section-skeleton d-flex flex-dir-column">
+      <div class="mb-12" style="align-self: end">
+        <div class="text-skeleton">
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"></nz-skeleton-element>
+          <div class="avatar-skeleton"></div>
+        </div>
+      </div>
+      <div class="mb-12">
+        <div class="text-skeleton ml-12">
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"></nz-skeleton-element>
+          <div class="avatar-skeleton"></div>
+        </div>
+      </div>
+      <div class="mb-12" style="align-self: end">
+        <div class="text-skeleton">
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"></nz-skeleton-element>
+          <div class="avatar-skeleton"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #loadingSpinner>
+  <img src="assets/images/loading-spinner.gif" />
+</ng-template>

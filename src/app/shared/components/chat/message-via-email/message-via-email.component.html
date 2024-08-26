@@ -1,0 +1,819 @@
+<div class="message-wrapper" data-e2e="reply-message" tabindex="0">
+  <div class="message-header cursor-pointer" (click)="collapseMess();">
+    <div class="sender-info d-flex align-items-center">
+      <ng-container *ngIf="!!message.emailMetadata?.from?.length">
+        <button
+          class="circle-avatar-btn action-btn"
+          (click)="$event.stopPropagation(); handleClickEmail(senderOfMessage)">
+          <app-circle-avatar
+            [firstName]="[EUserPropertyType.MAILBOX, EUserPropertyType.LEAD].includes(senderOfMessage?.userType) ? senderOfMessage?.pmName : excludedUserRole.includes(senderOfMessage?.senderRole) ? null : senderOfMessage?.firstName"
+            [lastName]="[EUserPropertyType.MAILBOX, EUserPropertyType.LEAD].includes(senderOfMessage?.userType) ? '' : excludedUserRole.includes(senderOfMessage?.senderRole) ? null : senderOfMessage?.lastName"
+            [size]="32"
+            [userType]="![EUserPropertyType.MAILBOX, EUserPropertyType.LEAD].includes(senderOfMessage?.userType) && (excludedUserRole.includes(senderOfMessage?.senderRole)) ? EUserPropertyType.EXTERNAL : senderOfMessage?.userPropertyType || senderOfMessage?.userType"
+            [avatar]="[EUserPropertyType.MAILBOX].includes(senderOfMessage?.userType) ? message.googleAvatar : senderOfMessage?.googleAvatar"
+            [userId]="[EUserPropertyType.MAILBOX].includes(senderOfMessage?.userType) ? message.userId : senderOfMessage?.userId"
+            [isDraft]="isDraft">
+          </app-circle-avatar>
+        </button>
+      </ng-container>
+      <ng-container *ngIf="!message.emailMetadata?.from?.length">
+        <button
+          class="circle-avatar-btn action-btn"
+          (click)="$event.stopPropagation(); handleClickEmail(senderOfMessage)">
+          <app-circle-avatar
+            [firstName]="(message.userPropertyType || message.userType) ? message.firstName : null"
+            [lastName]="(message.userPropertyType || message.userType) ? message.lastName : null"
+            [size]="32"
+            [userType]="message.userPropertyType || message.userType"
+            [avatar]="message.googleAvatar"
+            [userId]="message.userId"
+            [isDraft]="isDraft">
+          </app-circle-avatar>
+        </button>
+      </ng-container>
+      <div
+        class="box-header-info-coll"
+        [class.expanded]="!isCollapseMess && (!isDraftPage && ![taskStatusType.deleted, taskStatusType.completed, taskStatusType.resolved,taskStatusType.cancelled  ].includes(message?.status))">
+        <div
+          class="header-right"
+          [ngClass]="{'d-flex' : isDraft && !isCollapseMess && !message?.isSendFromVoiceMail && !message.emailMetadata?.to?.length && !message.emailMetadata?.cc?.length && !message.emailMetadata?.bcc?.length,
+                      'align-items-center d-flex': (!message.emailMetadata?.to?.length && !message.emailMetadata?.cc?.length && !message.emailMetadata?.bcc?.length && ((isDraft && !message.textContent) || !isCollapseMess)
+                       || (isDraft && !message.textContent && message.emailMetadata?.to?.length && isCollapseMess))
+                    }">
+          <div class="header-collapse">
+            <div class="sender-info-collapse">
+              <div class="sender-info-wrapper">
+                <div class="sender-name">
+                  <span *ngIf="isDraft" class="sender-name">Draft</span>
+                  <span
+                    tabindex="0"
+                    *ngIf="!isDraft"
+                    (click)="$event.stopPropagation(); handleClickEmail(senderOfMessage)"
+                    (keydown.enter)="$event.stopPropagation(); handleClickEmail(senderOfMessage)"
+                    class="sender-name"
+                    [class.sender-name-underline]="senderOfMessage?.userId !== trudiUserId && message.userId !== trudiUserId">
+                    <ng-container *ngIf="!!message.emailMetadata?.from?.length">
+                      {{senderOfMessage?.pmName || senderOfMessage?.senderName}}
+                    </ng-container>
+                    <ng-container *ngIf="!message.emailMetadata?.from?.length">
+                      <ng-container
+                        *ngIf="message.email || message.lastName || message.firstName; else senderNameFfromVoiceMail">
+                        <span class="text-ellipsis"
+                          >{{ { firstName: message?.firstName || '', lastName:
+                          message?.lastName || '' } | formatFullname: true}}
+                        </span>
+                      </ng-container>
+                      <ng-template #senderNameFfromVoiceMail>
+                        <span>Unknown</span>
+                      </ng-template>
+                    </ng-container>
+                    <div
+                      *ngIf="message?.isAutomatedReply"
+                      (click)="$event.stopPropagation()"
+                      nz-tooltip
+                      nzTooltipTitle="This reply was sent by Trudi® on your behalf."
+                      nzTooltipPlacement="top"
+                      nzTooltipOverlayClassName="auto-reply-tooltip"
+                      class="ml-4 badge-auto-reply d-flex gap-2 align-items-center">
+                      <trudi-icon
+                        svgClass="size-14"
+                        viewBox="auto"
+                        icon="frame"></trudi-icon>
+                      <span class="badge-title">Automated reply</span>
+                    </div>
+                  </span>
+                  <span class="sender-email d-flex"> </span>
+                </div>
+                <ng-container
+                  *ngIf="message.emailMetadata?.from?.length && !isDraft; else senderRole">
+                  <div class="role-name" *ngIf="senderOfMessage?.senderRole">
+                    • {{senderOfMessage?.senderRole}}
+                  </div>
+                </ng-container>
+
+                <ng-template #senderRole>
+                  <div
+                    class="role-name"
+                    *ngIf="message?.userPropertyType?.length  && !isDraft">
+                    • ({{ ((isDeletedOrArchived(message.crmStatus) ?
+                    message.crmStatus + ' ' : '') + (message.isPrimary ?
+                    'primary' : '') + (message.userType ===
+                    EUserPropertyType.OTHER ? (message?.contactType ===
+                    EUserPropertyType.OTHER ? 'other contacts' :
+                    message?.contactType?.replace('_', ' ')) :
+                    (message.userPropertyType === EUserPropertyType.LANDLORD ?
+                    EUserPropertyType.OWNER : message.userPropertyType) |
+                    userTypeInRm: pipeType : isRmEnvironment)) | lowercase |
+                    uppercaseFirstLetter }})
+                  </div>
+                </ng-template>
+              </div>
+
+              <ng-container *ngIf="!isCollapseMess">
+                <div
+                  *ngIf="message.languageCode && message.languageCode !== 'en' && message.languageCode !== 'und'"
+                  class="ml-8">
+                  <language-translation-label
+                    (languageTranslationDisabled)="updateMessage($event)"
+                    [messagesTranslate]="message.messagesTranslate"
+                    [inputLanguage]="message.languageCode"></language-translation-label>
+                </div>
+              </ng-container>
+            </div>
+            <div class="attachment-container">
+              <ng-container *ngIf="isCollapseMess && !isDraft">
+                <div *ngIf="countAttachment > 0" class="attachment-quantity">
+                  <trudi-icon icon="attachments"></trudi-icon>
+                  <div>{{countAttachment}}</div>
+                </div>
+              </ng-container>
+              <div *ngIf="!isDraft">
+                <div class="send-time-container align-items-center">
+                  <ng-container [ngSwitch]="message.emailStatus">
+                    <ng-container
+                      *ngSwitchCase="messageEmailStatusEnum.SENT_NOT_DELIVERED">
+                      <span
+                        class="sent-failed-badges d-flex align-items-center sent-failed-icon-text">
+                        <trudi-icon
+                          class=""
+                          icon="alertOctagonIcon"></trudi-icon>
+                        <span class="text-ellipsis"
+                          >Check recipient email and try again</span
+                        >
+                      </span>
+                      <div
+                        nz-tooltip
+                        nzTooltipTitle="Check recipient email and try again"
+                        nzTooltipPlacement="bottom"
+                        [nzTooltipOverlayStyle]="{ 'max-width': '150px' }"
+                        class="sent-failed-badges d-flex align-items-center sent-failed-icon pointer">
+                        <trudi-icon icon="alertOctagonIcon"></trudi-icon>
+                      </div>
+                    </ng-container>
+                    <ng-container
+                      *ngSwitchCase="messageEmailStatusEnum.SENT_DELIVERED">
+                      <trudi-icon
+                        class="pointer"
+                        nz-tooltip
+                        [nzTooltipTitle]="messageStatusTooltip.DELIVERED"
+                        icon="checkGrayIcon"></trudi-icon>
+                    </ng-container>
+                    <ng-container
+                      *ngSwitchCase="messageEmailStatusEnum.DELIVERED_READ">
+                      <trudi-icon
+                        class="pointer"
+                        nz-tooltip
+                        [nzTooltipTitle]="messageStatusTooltip.OPENED"
+                        icon="doubleCheckIcon"></trudi-icon>
+                    </ng-container>
+                    <ng-container *ngSwitchDefault> </ng-container>
+                  </ng-container>
+                  <div class="sending-text" *ngIf="isSending">Sending...</div>
+                  <div
+                    class="error-text"
+                    *ngIf="isError"
+                    [class.resend-disable]="!isShowResendButton"
+                    (click)="isShowResendButton && onResend()">
+                    Delivery failed
+                    <span *ngIf="isShowResendButton">, tap to resend</span>
+                  </div>
+                  <div class="send-time" *ngIf="!isSending && !isError">
+                    {{ message.createdAt | formatDateTime | async | lowercase}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <ng-container *ngIf="isCollapseMess">
+            <div class="message_preview">
+              <div
+                *ngIf="updatedMessage || message.messagesTranslateText else textContent"
+                [ngClass]="isDraft  ? 'shortened-message-draft' : 'shortened-message'"
+                class="message_preview-text"
+                [innerHTML]="message.messagesTranslateText"></div>
+              <ng-template #textContent>
+                <div
+                  class="message_preview-text"
+                  [ngClass]="isDraft  ? 'shortened-message-draft' : 'shortened-message'"
+                  [innerHTML]="message.textContent"></div>
+              </ng-template>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="!isCollapseMess">
+            <div class="box-receiver">
+              <div class="d-flex gap-16">
+                <div
+                  *ngIf="message?.isSendFromVoiceMail|| message.emailMetadata?.to?.length"
+                  class="receiver d-flex">
+                  <span class="fg-neutral-high-emphasis-color mr-4"> To: </span>
+                  <p *ngIf="!!message.emailMetadata?.to?.length">
+                    <message-via-email-metadata
+                      [userId]="message.userId"
+                      [ngClass]="(message.emailMetadata?.cc?.length && message.emailMetadata?.bcc?.length)  ? 'max-width-140' : 'max-width'"
+                      [canViewUserProfile]="true"
+                      [showEmailTag]="false"
+                      [emailMetadataFiled]="[message.emailMetadata?.to?.[0]]"
+                      [isInfoOfHeader]="true"
+                      [message]="message">
+                    </message-via-email-metadata>
+                    <span *ngIf="message.emailMetadata?.to?.length > 1">
+                      , +{{message.emailMetadata?.to?.length > 1 ?
+                      message.emailMetadata?.to?.length - 1 : ''}}</span
+                    >
+                  </p>
+
+                  <div
+                    *ngIf="!message.emailMetadata?.to?.length"
+                    [ngClass]="(message.emailMetadata?.cc?.length && message.emailMetadata?.bcc?.length)  ? 'max-width-140' : 'max-width'"
+                    class="box-sender-items-info">
+                    <ng-container
+                      *ngIf="!(message.userType === EUserPropertyType.LEAD &&
+                                message.userType === EUserPropertyType.PM &&
+                                message.userType === EUserPropertyType.AGENT)">
+                      <div *ngIf="message?.isSendFromVoiceMail" class="">
+                        {{message.isSendFromVoiceMail && message.agencyName +
+                        'voicemail number - ' + (message.voiceMailPhoneNumber |
+                        phoneNumberFormat)}}
+                      </div>
+                    </ng-container>
+                  </div>
+                </div>
+                <div
+                  *ngIf="!!message.emailMetadata?.cc?.length"
+                  class="receiver">
+                  <span
+                    class="fg-neutral-high-emphasis-color mr-4"
+                    [ngClass]="{'cc': !!message.emailMetadata?.to?.length && !!message.emailMetadata?.bcc?.length}"
+                    >Cc:</span
+                  >
+
+                  <p
+                    [ngClass]="{'cc': !!message.emailMetadata?.to?.length && !!message.emailMetadata?.bcc?.length}">
+                    <message-via-email-metadata
+                      [userId]="message.userId"
+                      [ngClass]="(message.emailMetadata?.cc?.length && message.emailMetadata?.bcc?.length)  ? 'max-width-140' : 'max-width'"
+                      [canViewUserProfile]="true"
+                      [showEmailTag]="false"
+                      [emailMetadataFiled]="[message.emailMetadata?.cc?.[0]]"
+                      [message]="message">
+                    </message-via-email-metadata>
+                    <span *ngIf="message.emailMetadata?.cc?.length > 1">
+                      , +{{message.emailMetadata?.cc?.length > 1 ?
+                      message.emailMetadata?.cc?.length - 1: ''}}
+                    </span>
+                  </p>
+
+                  <span
+                    *ngIf="!!message.emailMetadata?.to?.length && !!message.emailMetadata?.bcc?.length"
+                    class="participant-small-screen-cc">
+                    ,&nbsp;{{message.emailMetadata?.cc?.length ?
+                    message.emailMetadata?.cc?.length : ''}} &nbsp;Cc
+                  </span>
+                </div>
+                <div
+                  *ngIf="!!message.emailMetadata?.bcc?.length"
+                  class="receiver">
+                  <span
+                    class="fg-neutral-high-emphasis-color mr-4"
+                    [ngClass]="{'bcc': !!message.emailMetadata?.to?.length && !!message.emailMetadata?.cc?.length}"
+                    >Bcc:</span
+                  >
+
+                  <p
+                    [ngClass]="{'bcc': !!message.emailMetadata?.to?.length && !!message.emailMetadata?.cc?.length}">
+                    <message-via-email-metadata
+                      [userId]="message.userId"
+                      [ngClass]="(message.emailMetadata?.cc?.length && message.emailMetadata?.bcc?.length)  ? 'max-width-140' : 'max-width'"
+                      [canViewUserProfile]="true"
+                      [showEmailTag]="false"
+                      [emailMetadataFiled]="[message.emailMetadata?.bcc?.[0]]"
+                      [message]="message">
+                    </message-via-email-metadata>
+                    <span *ngIf="message.emailMetadata?.bcc?.length > 1"
+                      >, +{{message.emailMetadata?.bcc?.length > 1 ?
+                      message.emailMetadata?.bcc?.length - 1 : ''}}</span
+                    >
+                  </p>
+
+                  <span
+                    *ngIf="!!message.emailMetadata?.to?.length && !!message.emailMetadata?.cc?.length"
+                    class="participant-small-screen-bcc">
+                    ,&nbsp;{{message.emailMetadata?.bcc?.length ?
+                    message.emailMetadata?.bcc?.length : ''}} &nbsp;Bcc
+                  </span>
+                </div>
+              </div>
+              <button
+                *ngIf="!isDraft"
+                class="arrow-icon size-20"
+                [class.active]="isShowBoxInfo"
+                (click)="handleShowBoxInfo(message?.id); $event.stopPropagation()"
+                [nzTooltipTitle]="'Show details'"
+                nzTooltipPlacement="bottom"
+                nz-tooltip>
+                <trudi-icon icon="arrowAppChatPrimary"></trudi-icon>
+              </button>
+            </div>
+          </ng-container>
+        </div>
+        <div class="header-left" *ngIf="isDraft && !isCollapseMess">
+          <div class="wrapper-btn-draft d-flex">
+            <button
+              *ngIf="message?.status !== taskStatusType.deleted && message?.status !== taskStatusType.completed && message?.status !== taskStatusType.resolved && message?.status !== taskStatusType.cancelled"
+              trudi-btn
+              size="medium"
+              btnType="neutral"
+              [style.minWidth.px]="100"
+              [disabled]="isConsole || deletingDraft"
+              disableOpenSendMsgModal
+              variant="outlined"
+              (click)="handleEditDraft(message); $event.stopPropagation()">
+              Edit draft
+            </button>
+            <button
+              class="btn-delete-draft action-btn"
+              (click)="handleDeleteDraft(); $event.stopPropagation()"
+              [disabled]="isConsole || deletingDraft">
+              <trudi-icon
+                class="delete-draft-icon"
+                icon="deleteIconOutline"></trudi-icon>
+            </button>
+          </div>
+        </div>
+        <ng-container *ngIf="!isCollapseMess && !isDraft">
+          <div
+            *ngIf="!isDraftPage && message?.status !== taskStatusType.deleted && message?.status !== taskStatusType.completed && message?.status !== taskStatusType.resolved && message?.status !== taskStatusType.cancelled"
+            class="icon-directional">
+            <button
+              disableOpenSendMsgModal
+              (click)="$event.stopPropagation();handleReply()"
+              class="d-flex align-items-center btn-action">
+              <div class="collapse-icon">
+                <trudi-icon
+                  icon="replyMessageIcon"
+                  svgClass="size-24"></trudi-icon>
+              </div>
+            </button>
+            <button
+              nz-dropdown
+              [nzClickHide]="false"
+              [nzDropdownMenu]="menu"
+              nzPlacement="bottomRight"
+              [nzVisible]="isShowDropdownMenu"
+              (nzVisibleChange)="handleDropdownVisibleChange($event)"
+              (keydown.enter)="handleDropdownVisibleChange(!isShowDropdownMenu)"
+              (click)="$event.stopPropagation();handleClickMenu()"
+              class="btn-action d-flex align-items-center"
+              [class.active]="isShowDropdownMenu">
+              <div class="collapse-icon">
+                <trudi-icon icon="threeDotMessageIcon"></trudi-icon>
+              </div>
+            </button>
+            <nz-dropdown-menu #menu="nzDropdownMenu">
+              <div
+                focusElement
+                [isFocus]="isShowDropdownMenu"
+                tabindex="0"
+                nz-menu>
+                <div class="menu-wrapper menu-message-via-email border-rad-8">
+                  <ng-container *ngFor="let item of listItemDropdown">
+                    <div
+                      *ngIf="!item.hidden"
+                      disableOpenSendMsgModal
+                      [attr.data-button-key]="item?.key"
+                      nz-dropdown
+                      nzTrigger="click"
+                      class="item-dropdown d-flex align-items-center gap-8"
+                      [appE2E]="item?.dataE2e || ''"
+                      (clickStopPropagation)="item.action()"
+                      tabindex="0"
+                      ripple>
+                      <trudi-icon
+                        svgClass="size-20"
+                        viewBox="auto"
+                        [icon]="item.icon"></trudi-icon>
+                      <p class="text">{{item.text}}</p>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </nz-dropdown-menu>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <ng-container *ngIf="!isCollapseMess">
+    <div class="message-body mt-16" data-e2e="message">
+      <ng-container *ngIf="isShowBoxInfo && !isCollapseMess">
+        <div
+          appOutsideClickListener
+          (clickOutside)="isShowBoxInfo = false"
+          class="box-sender-info">
+          <div class="box-sender-items d-flex">
+            <div class="box-sender-items-wrapper">
+              <div class="box-sender-items-title">From:</div>
+              <div class="box-sender-items-info">
+                <ng-container
+                  *ngIf="!message.isSendFromVoiceMail; else SendFromVoiceMail">
+                  <message-via-email-metadata
+                    [isSender]="true"
+                    [userId]="message.userId"
+                    [senderPmName]="senderOfMessage?.pmName"
+                    [canViewUserProfile]="true"
+                    [emailMetadataFiled]="message?.emailMetadata?.from"
+                    [showAddContactButton]="true"
+                    [message]="message">
+                  </message-via-email-metadata>
+                </ng-container>
+                <ng-template #SendFromVoiceMail>
+                  <span class="info-name">
+                    {{ (message.email || message.firstName || message.lastName)
+                    ?(((message.firstName ? message.firstName + ' ' : '') +
+                    (message.lastName || '')) || 'Unknown') :'Unknown' }} - {{
+                    message.fromPhoneNumber | phoneNumberFormat }}
+                  </span>
+                </ng-template>
+              </div>
+            </div>
+            <div class="box-sender-items d-flex">
+              <div class="box-sender-items-wrapper">
+                <div class="box-sender-items-title">To:</div>
+                <div
+                  *ngIf="!!message.emailMetadata?.to?.length"
+                  class="box-sender-items-info">
+                  <message-via-email-metadata
+                    [userId]="message.userId"
+                    [emailMetadataFiled]="message?.emailMetadata?.to"
+                    [canViewUserProfile]="true"
+                    [showAddContactButton]="true"
+                    [message]="message">
+                  </message-via-email-metadata>
+                </div>
+                <div
+                  *ngIf="!message.emailMetadata?.to?.length"
+                  class="box-sender-items-info">
+                  <ng-container
+                    *ngIf="!(message.userType === EUserPropertyType.LEAD &&
+                      message.userType === EUserPropertyType.PM &&
+                      message.userType === EUserPropertyType.AGENT)">
+                    <div *ngIf="message?.isSendFromVoiceMail" class="">
+                      {{message.isSendFromVoiceMail && message.agencyName +
+                      'voicemail number - ' + (message.voiceMailPhoneNumber |
+                      phoneNumberFormat)}}
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+            <div
+              *ngIf="!!message.emailMetadata?.cc?.length"
+              class="box-sender-items d-flex">
+              <div class="box-sender-items-wrapper">
+                <div class="box-sender-items-title">Cc:</div>
+                <div class="box-sender-items-info">
+                  <message-via-email-metadata
+                    [userId]="message.userId"
+                    [emailMetadataFiled]="message.emailMetadata?.cc"
+                    [canViewUserProfile]="true"
+                    [showAddContactButton]="true"
+                    [message]="message">
+                  </message-via-email-metadata>
+                </div>
+              </div>
+            </div>
+            <div
+              *ngIf="!!message.emailMetadata?.bcc?.length"
+              class="box-sender-items d-flex">
+              <div class="box-sender-items-wrapper">
+                <div class="box-sender-items-title">Bcc:</div>
+                <div class="box-sender-items-info">
+                  <message-via-email-metadata
+                    [userId]="message.userId"
+                    [emailMetadataFiled]="message.emailMetadata?.bcc"
+                    [canViewUserProfile]="true"
+                    [showAddContactButton]="true"
+                    [message]="message">
+                  </message-via-email-metadata>
+                </div>
+              </div>
+            </div>
+            <div
+              class="box-sender-items d-flex"
+              *ngIf="!message.isSendFromVoiceMail">
+              <div class="box-sender-items-wrapper">
+                <div class="box-sender-items-title">Title:</div>
+                <div class="box-sender-items-info">
+                  {{message?.title || message?.conversationTitle ||
+                  currentConversation?.categoryName}}
+                </div>
+              </div>
+            </div>
+            <div class="sending-text" *ngIf="isSending">Sending...</div>
+            <div
+              class="error-text"
+              *ngIf="isError"
+              [class.resend-disable]="!isShowResendButton"
+              (click)="onResend()">
+              Delivery failed
+              <span *ngIf="isShowResendButton">, tap to resend</span>
+            </div>
+            <div *ngIf="!isSending && !isError" class="box-sender-items d-flex">
+              <div class="box-sender-items-wrapper">
+                <span class="box-sender-items-title"> Sent: </span>
+                <div class="box-sender-items-info">
+                  {{message.createdAt | formatDateTime | async | uppercase}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <span *ngFor="let mes of message.message; trackBy: messageTrackBy">
+        <span
+          class="text"
+          cdkDropList
+          id="source-drag-text"
+          #doneList="cdkDropList"
+          [cdkDropListData]="message.options?.sentences"
+          [cdkDropListConnectedTo]="'destination-drop-text'">
+          <ng-container
+            *ngIf="message.options && message.options.type === optionType.DIALOGFLOW_MAINTENANCE;
+                else noDragDropText">
+            <span
+              *ngFor="let sentence of message.options.sentences; index as i"
+              class="text-message"
+              [ngStyle]="{'background-color': sentence.isHighlight ? 'var(--brand-200)' : ''}"
+              [ngClass]="{'move': sentence.isHighlight}"
+              cdkDrag
+              cdkDragHandle
+              [cdkDragDisabled]="!sentence.isHighlight"
+              (cdkDragStarted)="onDraggingText(sentence.text)">
+              {{sentence.text + (i < message.options.sentences.length - 1 ? '.'
+              : '' )}}
+            </span>
+          </ng-container>
+          <ng-template #noDragDropText>
+            <div #textWrapper class="w-100 overflow-visible position-relative">
+              <ng-container *ngIf="isShowIframeContent; else contentMessage">
+                <iframe-message
+                  [triggerAddPolicyPopup]="true"
+                  [message]="message"
+                  [htmlContent]="htmlContent"></iframe-message>
+                <div
+                  *ngIf="updatedMessage && message.messagesTranslate && message.languageCode && message.languageCode !== 'en' && message.languageCode !== 'und'"
+                  class="ml-8 mt-8">
+                  <language-original-content
+                    [content]="mes.value"></language-original-content>
+                </div>
+              </ng-container>
+              <ng-template #contentMessage>
+                <div
+                  [triggerTextSelectionAddPolicy]="true"
+                  [style]="!((updatedMessage || mes.value) | isHTML) ? 'white-space: pre-line' : null"
+                  class="text-value"
+                  #textContain
+                  imageErrorHandler
+                  [innerHtml]="(updatedMessage || mes.value) | safe"
+                  data-e2e="message-email-detail"></div>
+                <div
+                  *ngIf="updatedMessage && message.messagesTranslate && message.languageCode && message.languageCode !== 'en' && message.languageCode !== 'und'"
+                  class="mt-8">
+                  <language-original-content
+                    [content]="mes.value"></language-original-content>
+                </div>
+              </ng-template>
+
+              <div
+                class="ticket__body-images"
+                *ngIf="message.ticketFile?.length">
+                <div
+                  cdkDropList
+                  #fileList="cdkDropList"
+                  id="source-drag-photo"
+                  class="d-flex"
+                  [cdkDropListData]="message?.ticketFile"
+                  [cdkDropListConnectedTo]="'destination-drop-photo'">
+                  <div
+                    class="image-item"
+                    *ngFor="let file of message?.ticketFile"
+                    cdkDrag
+                    cdkDragHandle>
+                    <app-message-file
+                      [showBoxShadow]="false"
+                      [grayBorder]="true"
+                      [widthInPercent]="40"
+                      [messageFile]="file?.propertyDocument"
+                      [size]="90"
+                      (fileOnClicked)="handleEmitCarousel($event)">
+                    </app-message-file>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </span>
+      </span>
+
+      <ng-container
+        *ngIf="message.options && message.options.ticket && (!message.options.type || message.options.type === 'MUlTIPLE_TASK')">
+        <ng-container *ngIf="message.options.type === 'MUlTIPLE_TASK'">
+          <app-chat-ticket
+            [attr.data-e2e]="'forward-ticket'"
+            class="with-message"
+            [ticketCreator]="message?.options.ticket"
+            [subtitle]="message.options.ticket.text"
+            [status]="message.options.ticket.status"
+            [ticketCategoryInfo]="message.ticketCategoryInfo"
+            [timeCreated]="message?.options?.ticket?.createdAt ? message?.options?.ticket?.createdAt : message.createdAt"
+            [fileList]="message.ticketFile"
+            [showBoxShadow]="false"
+            [grayBorder]="true"
+            [widthInPercent]="30"></app-chat-ticket>
+        </ng-container>
+        <ng-container *ngIf="message.options.type !== 'MUlTIPLE_TASK'">
+          <app-chat-ticket
+            class="with-message"
+            [attr.data-e2e]="'forward-ticket'"
+            [ticketCreator]="message?.options"
+            [subtitle]="message.options.text"
+            [status]="message.options.status"
+            [ticketCategoryInfo]="message.ticketCategoryInfo"
+            [timeCreated]="message?.options?.createdAt ? message?.options?.createdAt : message.createdAt"
+            [fileList]="message.ticketFile"
+            [showBoxShadow]="false"
+            [grayBorder]="true"
+            [widthInPercent]="30">
+          </app-chat-ticket>
+        </ng-container>
+      </ng-container>
+
+      <div
+        *ngIf="message.options?.contacts?.length > 0"
+        class="list-contact d-flex flex-dir-column gap-12">
+        <ng-container *ngFor="let contact of message.options?.contacts">
+          <info-ticket
+            [attr.data-e2e]="'contact-card'"
+            [contact]="contact"
+            [size]="'small'"></info-ticket>
+        </ng-container>
+      </div>
+      <div
+        *ngIf="message.userType === 'USER' && message.files && (message.files.mediaList?.length || message.files.fileList?.length || message.files.unSupportedList?.length)"
+        class="attach-text">
+        Attached files:
+      </div>
+      <ng-container *ngIf="message?.files">
+        <div class="files-list" *ngIf="mediaLists?.length">
+          <div
+            cdkDropList
+            #fileList="cdkDropList"
+            id="source-drag-photo"
+            class="d-flex"
+            [cdkDropListData]="mediaLists"
+            [cdkDropListConnectedTo]="'destination-drop-photo'">
+            <div *ngFor="let item of mediaLists" cdkDrag cdkDragHandle>
+              <app-message-file
+                [showBoxShadow]="false"
+                [grayBorder]="true"
+                [widthInPercent]="30"
+                [messageFile]="item"
+                [message]="message"
+                [isFileDeleted]="!item.isShowFile"
+                [size]="92"
+                (fileOnClicked)="handleEmitCarousel($event)"></app-message-file>
+            </div>
+          </div>
+        </div>
+        <div class="files-list" *ngIf="audioLists?.length">
+          <div
+            cdkDropList
+            #fileList="cdkDropList"
+            id="source-drag-photo"
+            class="d-flex"
+            [cdkDropListData]="audioLists"
+            [cdkDropListConnectedTo]="'destination-drop-photo'">
+            <div *ngFor="let item of audioLists" cdkDrag cdkDragHandle>
+              <app-message-file
+                [showBoxShadow]="false"
+                [grayBorder]="true"
+                [widthInPercent]="30"
+                [messageFile]="item"
+                [message]="message"
+                [isFileDeleted]="!item.isShowFile"
+                [size]="92"
+                (fileOnClicked)="handleEmitCarousel($event)"></app-message-file>
+            </div>
+          </div>
+        </div>
+        <div
+          class="files-list d-flex flex-dir-column"
+          *ngIf="fileLists?.length"
+          [ngClass]="{'file-supplier': message.type === 'SUPPLIER'}">
+          <ng-container *ngFor="let item of fileLists">
+            <div class="d-flex files-list-action-wrapper">
+              <app-message-file
+                [attr.data-e2e]="'invoice-card'"
+                class="file-block"
+                [showBoxShadow]="false"
+                [grayBorder]="true"
+                [widthInPercent]="30"
+                [messageFile]="item"
+                [message]="message"
+                [isFileDeleted]="!item.isShowFile"
+                (showSelectPeople)="onForward($event)"
+                (fileOnClicked)="handleEmitCarousel($event)"
+                [isShowActionButton]="true"
+                [size]="92">
+              </app-message-file>
+            </div>
+          </ng-container>
+        </div>
+        <div class="files-list" *ngIf="message.files.unSupportedList?.length">
+          <ng-container *ngFor="let item of message.files.unSupportedList">
+            <div class="d-flex files-list-action-wrapper">
+              <app-message-file
+                class="file-block"
+                [ngClass]="{'deleted-file': !item.isShowFile}"
+                [showBoxShadow]="false"
+                [grayBorder]="true"
+                [widthInPercent]="30"
+                [messageFile]="item"
+                [message]="message"
+                [isFileDeleted]="!item.isShowFile"
+                [size]="92"
+                [isShowActionButton]="true"
+                (showSelectPeople)="onForward($event)"
+                (fileOnClicked)="handleEmitCarousel($event)"></app-message-file>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="message.actionlinks">
+        <div *ngFor="let item of message.actionlinks">
+          <app-message-action-link
+            [grayBorder]="true"
+            [widthInPercent]="30"
+            [radiusConfig]="true"
+            [messageActionLink]="item"
+            [linkBackground]="message.color"
+            [imgLink]="message.svg">
+          </app-message-action-link>
+        </div>
+      </ng-container>
+      <button-action
+        *ngIf="!isDraftPage && !isDraft && lastItem && message?.status !== taskStatusType.deleted && message?.status !== taskStatusType.completed && message?.status !== taskStatusType.resolved && message?.status !== taskStatusType.cancelled"
+        [countMetadata]="countMetaDataLength"
+        (showModal)="handleButton($event)"></button-action>
+    </div>
+    <ng-container *ngIf="!isSyncedAttachment">
+      <msg-attachment-load
+        class="attachment-load"
+        [threadIds]="currentConversation?.threadId ? [currentConversation.threadId] : []"
+        [(attachmentSynced)]="isSyncedAttachment"></msg-attachment-load>
+    </ng-container>
+  </ng-container>
+</div>
+
+<!-- <trudi-send-msg-v2
+  *ngIf="isShowSendMsgModal"
+  [rawMsg]="rawMsg"
+  [configs]="sendMsgModalConfig"
+  [selectedTasks]="selectedTasks"
+  [openFrom]="TaskType.MESSAGE"
+  (onQuit)="handleQuit()"
+  [typeMessage]="typeMessage.SCRATCH"
+  (onSendMsg)="onSendMsg($event)"
+  [listOfFiles]="listOfFiles"
+  [listContactCard]="contactsList">
+</trudi-send-msg-v2> -->
+
+<!-- <trudi-modal
+  [visible]="isShowEditDraftPopup"
+  title="To edit this draft, you'll need to re-open the conversation?"
+  className="trudi-modal">
+  <div class="wrapper-body">
+    <div class="d-flex gap-8">
+      <button
+        trudi-btn
+        [btnType]="'neutral'"
+        class="trudi-btn trudi-btn-tertiary btn-cancel button-size">
+        Cancel
+      </button>
+      <button trudi-btn >Re-open</button>
+    </div>
+  </div>
+    <ng-template #footerModal>
+    <div class="d-flex gap-8">
+      <button
+        trudi-btn
+        [btnType]="'neutral'"
+        class="trudi-btn trudi-btn-tertiary btn-cancel button-size"
+        (click)="handleBack()">
+        Don’t save
+      </button>
+      <button trudi-btn (click)="handleConfirm()">Save</button>
+    </div>
+  </ng-template>
+</trudi-modal> -->

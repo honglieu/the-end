@@ -1,0 +1,86 @@
+@import 'function';
+
+.invite-wrapper {
+  padding: 6px 14px 10px 14px;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+
+    ::ng-deep {
+      .close-btn {
+        cursor: pointer;
+        & svg {
+          width: 14.4px;
+          height: 14.4px;
+          color: var(--gray-500);
+        }
+      }
+    }
+
+    .detail-invite {
+      display: flex;
+      align-items: center;
+
+      .send-invite-icon {
+        margin-right: 2.4rem;
+      }
+
+      .send-invite-text {
+        p {
+          @include fontSetup(var(--gray-700), 20px, 24px, normal, 500);
+          margin: 0;
+          &.numbers-sent {
+            @include fontSetup(var(--gray-950), 18px, 28px, normal, 600);
+          }
+        }
+
+        .number-sent {
+          margin-top: 8px;
+          @include fontSetup(var(--gray-500), 14px, 16px, normal, 500);
+        }
+      }
+    }
+  }
+
+  .list-phone {
+    .phone-radio {
+      gap: 12px;
+      justify-content: space-between;
+      @include fontSetup(var(--gray-700), 16px, 24px, normal, 600);
+      padding: 16px 0;
+      border-bottom: 1px solid var(--gray-100);
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  hr {
+    margin: 0 -24px;
+  }
+
+  .error-container {
+    margin-bottom: 20px;
+    margin-top: 0;
+  }
+
+  .btn-wrapper {
+    column-gap: 12px;
+    padding-top: 20px;
+    margin: 0;
+
+    .trudi-btn {
+      @include fontSetup(var(--white), 12px, 18px, normal, 600);
+      &-tertiary {
+        color: var(--gray-700);
+      }
+    }
+  }
+}

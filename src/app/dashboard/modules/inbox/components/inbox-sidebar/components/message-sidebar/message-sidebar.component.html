@@ -1,0 +1,88 @@
+<nz-tree
+  #treeCom
+  nzBlockNode
+  style="background: #f2f5f7"
+  [nzData]="nestedFoldersDisplay"
+  nzShowIcon
+  (nzClick)="activeNode($event)"
+  [nzTreeTemplate]="nzTreeTemplate"
+  [nzExpandedIcon]="multiExpandedIconTpl"
+  class="inbox-tree">
+  <ng-template #multiExpandedIconTpl let-node let-origin="origin">
+    <ng-container
+      *ngTemplateOutlet="node.origin.id === nestedFoldersDisplay[0].id ? rootIcon : childIcon">
+    </ng-container>
+    <ng-template #rootIcon>
+      <trudi-icon
+        class="icon-chevron first-icon"
+        [ngClass]="{'icon-rotate': node.isExpanded}"
+        [icon]="'grayChevronDown'"
+        [style]="{'width.px': 20, 'height.px': 20, color: '#646464'}"
+        nz-icon
+        nzType="file">
+      </trudi-icon>
+    </ng-template>
+    <ng-template #childIcon>
+      <trudi-icon
+        *ngIf="node.children.length > 0"
+        class="icon-chevron"
+        [ngClass]="{'icon-rotate': node.isExpanded}"
+        [icon]="'chevronDownIcon'"
+        [style]="{'width.px': 12, 'height.px': 12}"
+        nz-icon
+        nzType="file">
+      </trudi-icon>
+    </ng-template>
+  </ng-template>
+</nz-tree>
+<ng-template
+  #nzTreeTemplate
+  let-node
+  let-origin="origin"
+  class="ng-my-select-option">
+  <div
+    class="wrapper-node drop_task--folder"
+    title=""
+    [ngClass]="{'selected': matchRouterMessage && ((!folderActivedId && node.origin.id === nestedFoldersDisplay[0].id) || folderActivedId === node.origin.internalId) }">
+    <trudi-icon
+      *ngIf="node.origin.id !== nestedFoldersDisplay[0].id"
+      [icon]="node.icon"
+      [style]="{'width.px': 18, 'height.px': 18}"
+      nz-icon
+      nzType="file"
+      class="ant-tree-switcher-line-icon"></trudi-icon>
+    <div
+      trudi-tooltip
+      nzTooltipTrigger="hover"
+      [nzTooltipTitle]="node.title.length > 25 ? node.title : null"
+      nzTooltipPlacement="right"
+      class="folder-name"
+      [ngClass]="'folder-name-lv-'+node.level">
+      <ng-container
+        *ngTemplateOutlet="node.origin.id === nestedFoldersDisplay[0].id ? rootTemplate : childTemplate">
+      </ng-container>
+      <ng-template #rootTemplate>
+        <div class="d-flex align-items-center w-100">
+          <div class="d-flex align-items-center gap-4">
+            <div
+              class="title-index"
+              [ngClass]="{'title-index-selected': matchRouterMessage && ((!folderActivedId && node.origin.id === nestedFoldersDisplay[0].id) || folderActivedId === node.origin.internalId) }">
+              {{ node.title }}
+            </div>
+            <span
+              class="item-unRead ml-4 border-rad-16"
+              *ngIf="node.origin.unReadMsgCount">
+              {{ node.origin.unReadMsgCount | totalCountPipe }}
+            </span>
+          </div>
+          <span class="item-total ml-auto">
+            {{ node.origin.total | totalCountPipe }}
+          </span>
+        </div>
+      </ng-template>
+      <ng-template #childTemplate>{{ node.title }}</ng-template>
+    </div>
+    <ng-container
+      *ngTemplateOutlet="iconMoreTemplate; context: { child: node }"></ng-container>
+  </div>
+</ng-template>

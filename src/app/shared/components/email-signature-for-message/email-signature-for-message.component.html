@@ -1,0 +1,7 @@
+<div
+  class="d-flex gap-12 flex-dir-column mt-8"
+  *ngIf="isHasSignature && !!currentMailboxSignature">
+  <div class="wrap-email-signature" [ngClass]="{'hide': !(isShowSignature)}">
+    <div [innerHTML]="currentMailboxSignature | safe"></div>
+  </div>
+</div>

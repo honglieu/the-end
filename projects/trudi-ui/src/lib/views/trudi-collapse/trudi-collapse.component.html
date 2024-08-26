@@ -1,0 +1,31 @@
+<nz-collapse class="trudi-collapse-container" nzGhost>
+  <nz-collapse-panel
+    class="trudi-collapse-content-box"
+    [nzHeader]="header"
+    [nzExpandedIcon]="iconExpand"
+    (nzActiveChange)="activeExpand=$event;handleActiveChange($event)"
+    [nzActive]="activeExpand">
+    <ng-content></ng-content>
+  </nz-collapse-panel>
+</nz-collapse>
+
+<ng-template #header>
+  <div class="trudi-collapse-header">
+    <div class="d-flex trudi-collapse-header-content" *ngIf="titleHeader">
+      <ng-container [ngTemplateOutlet]="titleHeader"></ng-container>
+      <ng-container>
+        <button
+          class="cursor-pointer icon-expand"
+          [ngClass]="{'icon-rotate': !activeExpand}">
+          <trudi-icon
+            [icon]="'chevronDown'"
+            [style]="{'width.px': 16, 'height.px': 22}">
+          </trudi-icon>
+        </button>
+      </ng-container>
+    </div>
+    <ng-container [ngTemplateOutlet]="titleHeaderRight"></ng-container>
+  </div>
+</ng-template>
+
+<ng-template #iconExpand> </ng-template>

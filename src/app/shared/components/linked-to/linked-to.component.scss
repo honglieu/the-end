@@ -1,0 +1,36 @@
+@import 'function';
+
+.content-navigate {
+  padding: 0px 4px;
+  width: calc(100% - 80px);
+}
+
+.box-navigate {
+  padding: 12px;
+  max-height: 40px;
+  border-bottom: 1px solid var(--border-neutral-dark, #d8dcdf);
+  background: var(--white, #ffffff);
+}
+
+:host::ng-deep trudi-icon[icon='iconTrailing'] svg-icon svg path {
+  fill: var(--brand-500) !important;
+}
+
+.link-address {
+  align-items: center;
+  white-space: nowrap;
+  @include fontSetup(var(--brand-500), 14px, 20px, normal, 500);
+  &:hover {
+    text-decoration: underline var(--brand-500);
+  }
+}
+
+.text-linked {
+  @include fontSetup(
+    var(--fg-neutral-stronger, #3d3d3d),
+    14px,
+    20px,
+    normal,
+    400
+  );
+}

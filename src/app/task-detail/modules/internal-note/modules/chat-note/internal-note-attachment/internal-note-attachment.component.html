@@ -1,0 +1,102 @@
+<div
+  *ngIf="listOfFiles.length || selectedContactCard.length"
+  class="attach-container mb-12"
+  data-e2e="chat-note-attachments-dropdown">
+  <div id="attachments-wrapper" class="overflow-x-auto">
+    <div class="d-flex gap-16 attachments">
+      <ng-container *ngIf="selectedContactCard.length > 0">
+        <div
+          *ngIf="selectedContactCard.length > 0"
+          #listContactCard
+          class="contact-card d-flex gap-16"
+          [class.files-spacing]="selectedContactCard.length > 0">
+          <ng-container
+            *ngFor="let contact of selectedContactCard; let i = index">
+            <contact-card
+              [contact]="contact"
+              (onClose)="onClearContact(i)"></contact-card>
+          </ng-container>
+        </div>
+      </ng-container>
+      <div *ngIf="listOfFiles.length > 0" #listFile class="attachment-files">
+        <ng-container
+          *ngFor="let item of listOfFiles; let i = index; trackBy: trackByItems">
+          <div
+            class="message-file"
+            [ngClass]="{'message-file-error': item | checkFileInvalid}"
+            style="margin: 0">
+            <div
+              class="file-logo"
+              [class.dim-brightness]="item[0]?.localThumb && item[0]?.isSupportedVideo">
+              <img
+                *ngIf="item[0]?.localThumb"
+                [src]="(item[0].localThumb | safe: 'resourceUrl')"
+                data-e2e="pdf-label" />
+              <img
+                *ngIf="!item[0]?.localThumb"
+                [src]="(((item?.fileName || item?.name || item[0]?.name) | getFileIconType))"
+                data-e2e="pdf-label" />
+              <div
+                *ngIf="item[0]?.localThumb && item[0]?.isSupportedVideo"
+                class="play-icon">
+                <trudi-icon icon="playSolid"></trudi-icon>
+              </div>
+            </div>
+
+            <div data-e2e="pdf-title" class="file">
+              <div
+                #fileName
+                data-e2e="pdf-title"
+                class="file-name"
+                nz-tooltip
+                nzTooltipPlacement="top"
+                [nzTooltipTitle]="item?.title || item?.name || item[0]?.name"
+                [nzTooltipOverlayStyle]="{ 'max-width': '200px', 'word-break': 'break-all' }"
+                [nzTooltipTrigger]="fileName?.offsetWidth < fileName?.scrollWidth ? 'hover' : null">
+                {{item.title || item.name || item[0]?.name |
+                uppercaseFirstLetter}}
+              </div>
+              <div class="file-size">
+                {{(item?.size || item[0]?.size) | convertFileSize}}
+              </div>
+            </div>
+            <ng-container
+              *ngIf="(!item?.uploaded && item?.canUpload) || (
+            !item[0]?.uploaded && item[0]?.canUpload
+          ); else closeButton">
+              <div class="image-rotation rotate-image">
+                <img src="/assets/icon/loading.png" alt="loading-icon" />
+              </div>
+            </ng-container>
+            <ng-template #closeButton>
+              <ng-container *ngIf="item.name || item[0]?.name">
+                <div
+                  class="delete-media cursor-pointer delete-file"
+                  (click)="removeFile($event,i)">
+                  <trudi-icon
+                    class="trudi-icon"
+                    [style]="{ 'width.px': 16, 'height.px': 16, color: '#646464' }"
+                    icon="closeIcon"></trudi-icon>
+                </div>
+              </ng-container>
+            </ng-template>
+          </div>
+          <!-- File Forward from Send quote to Landlord (don't have title) is not able to delete -->
+        </ng-container>
+      </div>
+    </div>
+
+    <div
+      class="d-flex flex-dir-column gap-4 mt-4 color--danger"
+      *ngIf="unSupportFile || overFileSize">
+      <div class="d-flex gap-4 align-items-center" *ngIf="overFileSize">
+        <trudi-icon icon="errorInputIcon"></trudi-icon>
+        Your file is larger than 25MB. Please upload a smaller file.
+      </div>
+      <div class="d-flex gap-4 align-items-center" *ngIf="unSupportFile">
+        <trudi-icon icon="iconWarning"></trudi-icon>
+        Unsupported file type.
+      </div>
+    </div>
+  </div>
+</div>

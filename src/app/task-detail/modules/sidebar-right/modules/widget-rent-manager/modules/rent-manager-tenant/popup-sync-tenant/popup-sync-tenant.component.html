@@ -1,0 +1,122 @@
+<trudi-modal
+  *ngIf="visiblePopup$ | push"
+  [visible]="visiblePopup$ | push"
+  [modelWidth]="960"
+  [autoFocus]="null"
+  [hiddenCancelBtn]="true"
+  (triggerAfterClose)="handleClosePopup()"
+  [classContainer]="'rent-manager-popup-sync-tenant-container'"
+  [className]="popupClassName$ | push">
+  <ng-template #headerModal>
+    <div class="new-tenant-header-wrap d-flex align-items-center">
+      <trudi-icon
+        [style]="{ 'width.px': 106, 'height.px': 20 }"
+        [icon]="'rentManager'"></trudi-icon>
+      <div class="title w-100 new-tenant-header-wrap-title cursor-default">
+        <span>New tenant</span>
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="rent-manager-popup-sync-tenant-content">
+    <tenant-tab-group>
+      <info-form
+        tabPanel
+        tabTitle="Tenant info"
+        [isError]="errorState[tenantFormName.Info]"
+        [isSubmitted]="isSubmitted"
+        [isLoading]="isLoading"
+        [formName]="tenantFormName.Info"
+        [formMaster]="formMaster">
+      </info-form>
+
+      <lease-form
+        tabPanel
+        tabTitle="Lease details"
+        [isError]="errorState[tenantFormName.Lease]"
+        [isSubmitted]="isSubmitted"
+        [isLoading]="isLoading"
+        [formName]="tenantFormName.Lease"
+        [formMaster]="formMaster">
+      </lease-form>
+
+      <contact-form
+        tabPanel
+        tabTitle="Contacts"
+        [isError]="errorState[tenantFormName.Contact]"
+        [isSubmitted]="isSubmitted"
+        [isLoading]="isLoading"
+        [formName]="tenantFormName.Contact"
+        [formMaster]="formMaster">
+      </contact-form>
+
+      <div
+        tabPanel
+        tabTitle="Deposit & Settings"
+        [isError]="errorState[tenantFormName.Deposit] || errorState[tenantFormName.Setting]"
+        class="tennant-form-group">
+        <div class="deposit-form d-flex">
+          <div class="deposit-form-left">
+            <deposit-form
+              [formName]="tenantFormName.Deposit"
+              [isSubmitted]="isSubmitted"
+              [isLoading]="isLoading"
+              [formMaster]="formMaster">
+            </deposit-form>
+          </div>
+          <div class="deposit-form-right">
+            <setting-form
+              [formName]="tenantFormName.Setting"
+              [isSubmitted]="isSubmitted"
+              [syncStatus]="syncInfo.status"
+              [isLoading]="isLoading"
+              [formMaster]="formMaster">
+            </setting-form>
+          </div>
+        </div>
+      </div>
+
+      <charges-form
+        tabPanel
+        tabTitle="Charges"
+        [isError]="errorState[tenantFormName.Charges]"
+        [isSubmitted]="isSubmitted"
+        [isLoading]="isLoading"
+        [formName]="tenantFormName.Charges"
+        [formMaster]="formMaster">
+      </charges-form>
+
+      <user-fields-form
+        tabPanel
+        tabTitle="User defined fields"
+        class="h-100"
+        [isError]="errorState[tenantFormName.UserFields]"
+        [isSubmitted]="isSubmitted"
+        [isLoading]="isLoading"
+        [formName]="tenantFormName.UserFields"
+        [formMaster]="formMaster">
+      </user-fields-form>
+    </tenant-tab-group>
+  </div>
+
+  <ng-template #footerModal>
+    <div
+      class="rent-manager-issue-popup-footer d-flex align-items-center justify-content-between w-100">
+      <div class="info-status d-flex align-items-center">
+        <sync-status
+          [syncStatus]="syncInfo.status"
+          [lastTimeSynced]="syncInfo.time"></sync-status>
+      </div>
+
+      <div class="footer-wrapper d-flex" [style.gap.px]="12">
+        <button
+          type="button"
+          [disabled]="isConsole || (disabledForm$ | push) || isLoading || (isArchiveMailbox$ | push)"
+          class="btn-confirm trudi-btn trudi-btn-semi-large trudi-btn-primary"
+          (click)="handleSyncTenant()">
+          <span class="btn-text">Sync to Rent Manager</span>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</trudi-modal>

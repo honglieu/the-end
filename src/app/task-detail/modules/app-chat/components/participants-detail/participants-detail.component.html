@@ -1,0 +1,460 @@
+<!-- SKELETON START -->
+<ng-container *ngIf="loadingService.multiLoading$ | push; else content">
+  <div class="participants-container">
+    <ng-container *ngFor="let _ of [].constructor(3); let i = index">
+      <div class="participant-section d-flex flex-dir-column gap-4">
+        <div class="label-participant">
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"
+            class="w-50"></nz-skeleton>
+        </div>
+        <div class="d-flex gap-8 align-items-center skeleton-content">
+          <nz-skeleton-element
+            nzType="avatar"
+            [nzActive]="true"
+            [nzSize]="24"></nz-skeleton-element>
+
+          <nz-skeleton-element
+            class="skeleton-label"
+            nzType="button"
+            nzShape="default"
+            [nzActive]="true"></nz-skeleton-element>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</ng-container>
+<!-- SKELETON END -->
+
+<ng-template #content>
+  <div *ngFor="let group of participants">
+    <div class="participants-container">
+      <div class="participant-section d-flex flex-dir-column gap-4">
+        <div class="label-participant">{{group.type}}</div>
+        <ng-container *ngIf="group?.participants.length; else noContact">
+          <div
+            *ngFor="let participant of group?.participants"
+            class="d-flex flex-dir-column gap-12 contact-item"
+            [ngClass]="{
+          'bg-neutral': participant.isExpand
+        }">
+            <div
+              class="d-flex contact-item-avatar"
+              (click)="toggleParticipant(participant.messageRecipientId)">
+              <div
+                class="d-flex gap-8 align-items-center w-100 overflow-hidden">
+                <app-circle-avatar
+                  [firstName]="group.type !== EParticipantType.UNIDENTIFIED_CONTACTS ? participant.firstName : null"
+                  [lastName]="group.type !== EParticipantType.UNIDENTIFIED_CONTACTS ? participant.lastName : null"
+                  [size]="32"
+                  [userType]="(participant.type === EConfirmContactType.SUPPLIER || participant.type === EConfirmContactType.OTHER) ? participant.type : participant.userPropertyType"
+                  [avatar]="participant?.googleAvatar">
+                </app-circle-avatar>
+                <div
+                  #titleParticipant
+                  nz-tooltip
+                  nzTooltipPlacement="top"
+                  [nzTooltipTitle]="participant?.generateUserName + ' ' + (participant?.isShouldShowBullet ? '&#8226;' : '') + ' ' + (participant?.determineUserType | titleCasePipe |
+                  lowercase | uppercaseFirstLetter)"
+                  [nzTooltipOverlayStyle]="{ 'max-width': '200px', 'padding-top': '5px' }"
+                  [nzTooltipTrigger]="titleParticipant?.offsetWidth < titleParticipant?.scrollWidth ? 'hover' : null"
+                  *ngIf="group.type !== EParticipantType.UNIDENTIFIED_CONTACTS; else otherContact"
+                  data-e2e="participant-name"
+                  [ngClass]="{
+                    'child': participant?.isExpand
+                  }"
+                  class="participant-name text-ellipsis gap-4">
+                  {{ participant?.generateUserName }}
+                  <span
+                    *ngIf="participant?.isDisplayUserDetail && !!participant?.determineUserType"
+                    class="text-ellipsis">
+                    <span *ngIf="participant?.isShouldShowBullet">&#8226;</span>
+                    {{ participant?.determineUserType | titleCasePipe |
+                    lowercase | uppercaseFirstLetter }}
+                  </span>
+                </div>
+
+                <ng-template #otherContact>
+                  <div *ngIf="participant?.isExpand">
+                    <div
+                      *ngIf="participant?.isDisplayContactDetail; else phoneUnidentified"
+                      data-e2e="participant-name"
+                      #titleParticipant
+                      nz-tooltip
+                      nzTooltipPlacement="top"
+                      [nzTooltipTitle]="participant?.generateUserName ? participant?.generateUserName : participant?.email"
+                      [nzTooltipOverlayStyle]="{ 'max-width': '200px', 'padding-top': '5px' }"
+                      [nzTooltipTrigger]="titleParticipant?.offsetWidth < titleParticipant?.scrollWidth ? 'hover' : null"
+                      [ngClass]="{
+                      'child': participant?.isExpand,
+                      'participant-name-child': participant?.isExpand && participant?.generateUserName !== participant?.email
+                    }"
+                      class="participant-name unidentified-contact text-ellipsis">
+                      {{participant?.generateUserName ?
+                      participant?.generateUserName : participant?.email}}
+                    </div>
+                  </div>
+                  <div *ngIf="!participant?.isExpand">
+                    <div
+                      *ngIf="participant?.isDisplayContactDetail; else phoneUnidentified"
+                      data-e2e="participant-name"
+                      #titleParticipant
+                      nz-tooltip
+                      nzTooltipPlacement="top"
+                      [nzTooltipTitle]="participant?.generateUserName &&
+                      participant?.generateUserName !== participant?.email ?
+                      (participant?.generateUserName + ' (' + participant?.email
+                      + ')') : participant?.email"
+                      [nzTooltipOverlayStyle]="{ 'max-width': '200px', 'padding-top': '5px' }"
+                      [nzTooltipOverlayClassName]="'tooltipTitleView'"
+                      [nzTooltipTrigger]="titleParticipant?.offsetWidth < titleParticipant?.scrollWidth ? 'hover' : null"
+                      [ngClass]="{
+                      'child': participant?.isExpand
+                  }"
+                      class="participant-name unidentified-contact text-ellipsis">
+                      {{ participant?.generateUserName &&
+                      participant?.generateUserName !== participant?.email ?
+                      (participant?.generateUserName + ' (' + participant?.email
+                      + ')') : participant?.email}}
+                    </div>
+                  </div>
+                </ng-template>
+
+                <ng-template #phoneUnidentified>
+                  <div
+                    *ngIf="participant?.isDisplayPhoneUnidentified && (participant?.secondaryPhoneNumber || participant?.phoneNumberFromConversationLog || participant?.mobileNumber?.length || participant?.phoneNumber)"
+                    data-e2e="participant-name"
+                    #titleParticipant
+                    nz-tooltip
+                    nzTooltipPlacement="top"
+                    [nzTooltipTitle]="getFormattedPhoneNumbers(participant)"
+                    [nzTooltipOverlayStyle]="{ 'max-width': '200px', 'padding-top': '5px' }"
+                    [nzTooltipTrigger]="titleParticipant?.offsetWidth < titleParticipant?.scrollWidth ? 'hover' : null"
+                    [ngClass]="{
+                      'child': participant?.isExpand
+                    }"
+                    class="participant-name text-ellipsis unidentified-contact">
+                    <ng-container
+                      *ngTemplateOutlet="contactInfo; context: { isExpandTitle: true }"></ng-container>
+                  </div>
+                </ng-template>
+
+                <span
+                  class="participant-app-user"
+                  *ngIf="participant?.isAppUser">
+                  App user
+                </span>
+              </div>
+              <trudi-icon
+                icon="{{participant.isExpand ? 'chevronUp' : 'chevronDown'}}"></trudi-icon>
+            </div>
+            <ng-container *ngIf="participant.isExpand">
+              <!-- type UNIDENTIFIED_CONTACTS -->
+              <div
+                *ngIf="group.type === EParticipantType.UNIDENTIFIED_CONTACTS">
+                <ng-container
+                  *ngIf="participant?.isMultipleContact; else unrecognizedContacts">
+                  <ng-container *ngTemplateOutlet="contactInfo"></ng-container>
+                  <span
+                    *ngIf="participant?.email"
+                    [ngClass]="{'text-email': group.type === EParticipantType.UNIDENTIFIED_CONTACTS}"
+                    >{{ participant?.email }}</span
+                  >
+                  <span class="text-title"
+                    >&nbsp;is assigned to multiple contacts</span
+                  >
+                </ng-container>
+
+                <ng-template #unrecognizedContacts>
+                  <span class="text-title"
+                    >{{participant?.email ? 'Unrecognized contact ' :
+                    'Unrecognized phone number '}}</span
+                  >
+                  <span
+                    *ngIf="participant?.email"
+                    [ngClass]="{'text-email': group.type === EParticipantType.UNIDENTIFIED_CONTACTS}"
+                    >{{participant?.email}}</span
+                  >
+                  <ng-container *ngTemplateOutlet="contactInfo"></ng-container>
+                </ng-template>
+
+                <app-unhappy-path-trudi
+                  [overlayDropdown]="false"
+                  [taskId]="task?.id"
+                  [items]="contactList"
+                  [participant]="participant"
+                  [propertyList]="propertyList"
+                  [taskNameList]="taskNameList"
+                  [isUnHappyPath]="isUnHappyPath"
+                  [isUnidentifiedEmail]="isUnindentifiedEmail"
+                  [isUnindentifiedProperty]="isUnindentifiedProperty"
+                  [isUnindentifiedPhoneNumber]="isUnindentifiedPhoneNumber"
+                  [unhappyStatus]="showPopoverContact? unhappyStatusReassign: unhappyStatus"
+                  [placeholder]="placeHolderTrudiUnhappy"
+                  [loading]="unhappyPathLoading"
+                  (onConfirm)="handleConfirmSelectContact($event, group.type !== EParticipantType.UNIDENTIFIED_CONTACTS ? true : false, participant)"
+                  (onSearch)="handleOnGetUnHappyPath($event, group.type !== EParticipantType.UNIDENTIFIED_CONTACTS ? true : false, participant)"
+                  (onSetEmptyContactList)="setEmptyContactList()">
+                </app-unhappy-path-trudi>
+              </div>
+
+              <div class="d-flex flex-dir-column gap-8">
+                <div class="mail-participant d-flex flex-dir-column gap-4">
+                  <div
+                    *ngIf="group.type !== EParticipantType.UNIDENTIFIED_CONTACTS && (participant?.secondaryPhoneNumber || participant?.phoneNumberFromConversationLog || participant?.mobileNumber?.length || participant?.phoneNumber)"
+                    class="d-flex gap-2">
+                    <trudi-icon
+                      icon="phoneCall"
+                      svgClass="size-16"></trudi-icon>
+
+                    <ng-container
+                      *ngIf="participant?.secondaryPhoneNumber; else conversationLog">
+                      <!-- secondaryPhoneNumber -->
+                      <div
+                        data-e2e="participant-phoneNumber"
+                        class="text-ellipsis text-participant">
+                        {{ participant?.secondaryPhoneNumber | phoneNumberFormat
+                        }}
+                      </div>
+                    </ng-container>
+
+                    <ng-template #conversationLog>
+                      <ng-container
+                        *ngIf="participant?.phoneNumberFromConversationLog; else mobileNumbers">
+                        <!-- phoneNumberFromConversationLog -->
+                        <div
+                          data-e2e="participant-phoneNumber"
+                          class="text-ellipsis text-participant">
+                          {{ participant?.phoneNumberFromConversationLog |
+                          phoneNumberFormat }}
+                        </div>
+                      </ng-container>
+
+                      <ng-template #mobileNumbers>
+                        <ng-container
+                          *ngIf="participant?.mobileNumber?.length; else defaultPhoneNumber">
+                          <!-- mobileNumber -->
+                          <div
+                            *ngFor="let item of participant?.mobileNumber; let isLast=last"
+                            data-e2e="participant-phoneNumber"
+                            class="text-ellipsis text-participant">
+                            <span
+                              >{{ item | phoneNumberFormat: isRmEnvironment
+                              }}</span
+                            >
+                            <span *ngIf="!isLast" class="has-value">/</span>
+                          </div>
+                        </ng-container>
+
+                        <ng-template #defaultPhoneNumber>
+                          <!-- phoneNumber -->
+                          <div
+                            data-e2e="participant-phoneNumber"
+                            class="text-ellipsis text-participant">
+                            {{ (participant?.phoneNumber) | phoneNumberFormat }}
+                          </div>
+                        </ng-template>
+                      </ng-template>
+                    </ng-template>
+                  </div>
+                  <div
+                    class="d-flex gap-2"
+                    *ngIf="group.type !== EParticipantType.UNIDENTIFIED_CONTACTS && !!(participant?.secondaryEmail || participant?.email)">
+                    <trudi-icon icon="mailThin"></trudi-icon>
+                    <div
+                      data-e2e="participant-mail"
+                      #emailChild
+                      nz-tooltip
+                      nzTooltipPlacement="top"
+                      [nzTooltipTitle]="participant?.secondaryEmail || participant?.email"
+                      [nzTooltipOverlayStyle]="{ 'max-width': '200px', 'padding-top': '5px' }"
+                      [nzTooltipTrigger]="emailChild?.offsetWidth < emailChild?.scrollWidth ? 'hover' : null"
+                      class="text-ellipsis text-participant">
+                      {{ participant?.secondaryEmail || participant?.email }}
+                    </div>
+                  </div>
+                  <div
+                    *ngIf="(participant?.determinePropertyAddress || participant?.streetline) && group.type !== EParticipantType.UNIDENTIFIED_CONTACTS"
+                    class="address"
+                    [ngClass]="{
+                      'address-no-property': participant?.determinePropertyAddress === 'No property'
+                    }">
+                    <trudi-icon class="size-16" icon="iconAddress"></trudi-icon>
+
+                    <span
+                      #addressChild
+                      nz-tooltip
+                      nzTooltipPlacement="top"
+                      [nzTooltipTitle]="participant?.determinePropertyAddress ?? participant?.streetline"
+                      [nzTooltipOverlayStyle]="{ 'max-width': '200px', 'padding-top': '5px' }"
+                      [nzTooltipTrigger]="addressChild?.offsetWidth < addressChild?.scrollWidth ? 'hover' : null"
+                      class="text-participant"
+                      >{{ participant?.determinePropertyAddress ??
+                      participant?.streetline }}</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="view-profile-participant d-flex gap-8 align-items-center"
+                  *ngIf="group.type !== EParticipantType.UNIDENTIFIED_CONTACTS && participant.isShowProfile"
+                  (click)="handleParticipantInfoClick(participant)">
+                  View profile
+                </div>
+              </div>
+              <div class="actions d-flex gap-8 w-100">
+                <div
+                  *ngIf="(participant?.secondaryEmail || participant?.email)"
+                  class="btn-action"
+                  (click)="sendMessageFromParticipant(participant)">
+                  <trudi-icon icon="iconMessageParticipant"></trudi-icon>
+                  Send message
+                </div>
+                <div
+                  nz-tooltip
+                  [nzTooltipTitle]="callTooltipType?.voice ? upsellVoiceCall : ''"
+                  [nzTooltipTrigger]="callTooltipType?.voice ? 'hover' : null"
+                  nzTooltipPlacement="top"
+                  [nzTooltipOverlayStyle]="{ 'max-width': '200px', 'padding-top': '5px' }"
+                  [nzTooltipOverlayClassName]="'tooltipCall'"
+                  class="btn-action"
+                  [class.disabled]="callTooltipType?.voice || [TaskStatusType.resolved, TaskStatusType.deleted].includes(currentConversation.status)"
+                  *ngIf="((participant?.secondaryPhoneNumber || participant?.phoneNumberFromConversationLog || participant?.mobileNumber?.length || participant?.phoneNumber) && group.type !== EParticipantType.UNIDENTIFIED_CONTACTS) || (participant?.isMultipleContact && group.type === EParticipantType.UNIDENTIFIED_CONTACTS && [EMessageComeFromType.VOICE_MAIL].includes(participant?.createdFrom))"
+                  (click)="(!callTooltipType?.voice && ![TaskStatusType.resolved, TaskStatusType.deleted].includes(currentConversation.status)) && requestToCallWithType(callType.voiceCall, enableCallBtn.voiceCall, participant)">
+                  <trudi-icon
+                    [icon]="(callTooltipType?.voice || [TaskStatusType.resolved, TaskStatusType.deleted].includes(currentConversation.status)) ? 'disableVoiceCall' : 'phoneNoWrapActive'"></trudi-icon>
+                  Phone call
+                </div>
+                <div
+                  nz-tooltip
+                  [nzTooltipTitle]="callTooltipType?.video ? upsellVideoCall : ''"
+                  [nzTooltipTrigger]="callTooltipType?.video ? 'hover' : null"
+                  nzTooltipPlacement="topRight"
+                  [nzTooltipOverlayStyle]="{ 'max-width': '200px', 'padding-top': '5px' }"
+                  [nzTooltipOverlayClassName]="'tooltipCall'"
+                  [class.disabled]="callTooltipType?.video || [TaskStatusType.resolved, TaskStatusType.deleted].includes(currentConversation.status)"
+                  class="btn-action"
+                  *ngIf="participant?.isAppUser"
+                  (click)="(!callTooltipType?.video && ![TaskStatusType.resolved, TaskStatusType.deleted].includes(currentConversation.status)) && requestToCallWithType(callType.videoCall, enableCallBtn.videoCall, participant)">
+                  <trudi-icon
+                    [icon]="(callTooltipType?.video || [TaskStatusType.resolved, TaskStatusType.deleted].includes(currentConversation.status)) ? 'disableVideoCalllNoWrap' : 'videocallNoWrapActive'"></trudi-icon>
+                  Video call
+                </div>
+              </div>
+              <div
+                class="d-flex gap-4 align-items-center"
+                *ngIf="(participant?.isMultipleContact && !participant?.isAppUser) && group.type !== EParticipantType.UNIDENTIFIED_CONTACTS">
+                <div class="text-not">
+                  Not {{participant?.generateUserName}}?
+                </div>
+                <div
+                  (click)="handleShowPopupReassign(participant.messageRecipientId)"
+                  [ngClass]="{
+                    'reassign-active': participant.isReAssign
+                  }"
+                  class="reassign d-flex gap-4 align-items-center">
+                  Reassign
+                  <trudi-icon
+                    *ngIf="participant.isReAssign"
+                    class="chevron-up"
+                    icon="chevronUpTenantIcon"
+                    svgClass="size-12"></trudi-icon>
+                  <trudi-icon
+                    *ngIf="!participant.isReAssign"
+                    class="chevron-down"
+                    icon="chevronDownTenantIcon"
+                    svgClass="size-12"></trudi-icon>
+                </div>
+              </div>
+              <div *ngIf="participant.isReAssign">
+                <span class="text-email-reassign"
+                  >{{(participant?.secondaryEmail || participant?.email) ?
+                  (participant?.secondaryEmail || participant?.email) :
+                  participant?.generateUserName}}</span
+                >
+                <span class="text-title reassign"
+                  >is assigned to multiple contacts</span
+                >
+                <app-unhappy-path-trudi
+                  [overlayDropdown]="false"
+                  [title]="'Select contact'"
+                  [taskId]="task?.id"
+                  [items]="contactList"
+                  [participant]="participant"
+                  [propertyList]="propertyList"
+                  [taskNameList]="taskNameList"
+                  [isUnHappyPath]="isUnHappyPath"
+                  [isReassign]="isReassign"
+                  [isUnidentifiedEmail]="currentConversation.createdFrom !== EMessageComeFromType.VOICE_MAIL && isUnindentifiedEmail"
+                  [isUnindentifiedProperty]="currentConversation.createdFrom !== EMessageComeFromType.VOICE_MAIL && isUnindentifiedProperty"
+                  [isUnindentifiedPhoneNumber]="currentConversation.createdFrom !== EMessageComeFromType.VOICE_MAIL && isUnindentifiedPhoneNumber"
+                  [unhappyStatus]="showPopoverContact? unhappyStatusReassign: unhappyStatus"
+                  [placeholder]="placeHolderTrudiUnhappy"
+                  [loading]="unhappyPathLoading"
+                  (onConfirm)="handleConfirmSelectContact($event, group.type !== EParticipantType.UNIDENTIFIED_CONTACTS ? true : false, participant, true)"
+                  (onSearch)="handleOnGetUnHappyPath($event, group.type !== EParticipantType.UNIDENTIFIED_CONTACTS ? true : false, participant, true)"
+                  (onSetEmptyContactList)="setEmptyContactList()">
+                </app-unhappy-path-trudi>
+              </div>
+            </ng-container>
+            <ng-template #contactInfo let-isExpandTitle="isExpandTitle">
+              <ng-container
+                *ngIf="participant?.secondaryPhoneNumber; else conversationLog">
+                <span
+                  [ngClass]="{'text-email': group.type === EParticipantType.UNIDENTIFIED_CONTACTS, 'title-expand': isExpandTitle && participant?.isExpand}"
+                  >{{ participant?.secondaryPhoneNumber | phoneNumberFormat :
+                  isRmEnvironment }}</span
+                >
+              </ng-container>
+
+              <ng-template #conversationLog>
+                <ng-container
+                  *ngIf="participant?.phoneNumberFromConversationLog; else mobileNumbers">
+                  <span
+                    [ngClass]="{'text-email': group.type === EParticipantType.UNIDENTIFIED_CONTACTS, 'title-expand': isExpandTitle && participant?.isExpand}"
+                    >{{ participant?.phoneNumberFromConversationLog |
+                    phoneNumberFormat : isRmEnvironment }}</span
+                  >
+                </ng-container>
+
+                <ng-template #mobileNumbers>
+                  <ng-container
+                    *ngIf="participant?.mobileNumber?.length; else defaultPhoneNumber">
+                    <span
+                      *ngFor="let item of participant?.mobileNumber; let isLast=last"
+                      [ngClass]="{'text-email': group.type === EParticipantType.UNIDENTIFIED_CONTACTS, 'title-expand': isExpandTitle && participant?.isExpand}">
+                      <span
+                        >{{ item | phoneNumberFormat: isRmEnvironment }}</span
+                      >
+                      <span *ngIf="!isLast" class="has-value">/</span>
+                    </span>
+                  </ng-container>
+
+                  <ng-template #defaultPhoneNumber>
+                    <span
+                      [ngClass]="{'text-email': group.type === EParticipantType.UNIDENTIFIED_CONTACTS, 'title-expand': isExpandTitle && participant?.isExpand}"
+                      >{{ (participant?.phoneNumber) | phoneNumberFormat :
+                      isRmEnvironment }}</span
+                    >
+                  </ng-template>
+                </ng-template>
+              </ng-template>
+            </ng-template>
+          </div>
+        </ng-container>
+        <ng-template #noContact>
+          <div class="text-no-contact">No contacts found</div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<trudi-send-msg-v2
+  *ngIf="isShowTrudiSendMsg"
+  [typeMessage]="typeMessage.SCRATCH"
+  [openFrom]="EInboxAction.SEND_MESSAGE"
+  [configs]="configs"
+  (onQuit)="handleCloseModalSendMsg()"
+  (onSendMsg)="onSendMsg($event)">
+</trudi-send-msg-v2>

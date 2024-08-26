@@ -1,0 +1,17 @@
+<div class="wrapper-email-folder" id="email-foder-list">
+  <p class="email-folder-title">EMAIL FOLDERS</p>
+  <div cdkDropList (cdkDropListDropped)="drop($event)">
+    @for (item of listMailBoxSidebar; track item.id; let i = $index) {
+    <span style="display: none"></span>
+    <div
+      cdkDrag
+      (cdkDragStarted)="handleStartDrag()"
+      (click)="handleSelectMailBox(listMailBoxs[i], item)"
+      [ngStyle]="{'padding-bottom': i === listMailBoxSidebar.length - 1 ? '12px' : '0'}">
+      <email-folder-sidebar [item]="item" [mailBox]="listMailBoxs[i]">
+      </email-folder-sidebar>
+      <div *cdkDragPlaceholder class="email-place-holder"></div>
+    </div>
+    }
+  </div>
+</div>

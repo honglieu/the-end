@@ -1,0 +1,29 @@
+<div class="insights">
+  <insights-header></insights-header>
+  <div class="insights-container" cdkScrollable (scroll)="handleScroll($event)">
+    <insights-skeleton
+      *ngIf="isLoading; else insightsContainerTemplate"></insights-skeleton>
+
+    <ng-template #insightsContainerTemplate>
+      <div class="insights-section">
+        <accomplishments
+          [accomplishmentsData]="accomplishments"
+          [properties]="properties"></accomplishments>
+        <top-performing-team-members
+          [topPerformingTeamMembers]="topPerformingTeamMembers"></top-performing-team-members>
+      </div>
+      <time-savings-section
+        [rangeDateType]="rangeDateType"
+        [breakDownTimeSavedData]="breakDownTimeSaved"
+        [timeSavingData]="timeSavings"
+        id="TIME_SAVED"></time-savings-section>
+      <efficiency-section
+        id="EFFICIENCY"
+        [efficiencyData]="efficiency"
+        [rangeDateType]="rangeDateType"
+        [isFilterInsightForEntireTeam]="isFilterInsightForEntireTeam"></efficiency-section>
+    </ng-template>
+    <div #enquiresResolvedSectionElement id="ENQUIRY"></div>
+    <div #taskCompletedSectionElement id="TASK"></div>
+  </div>
+</div>

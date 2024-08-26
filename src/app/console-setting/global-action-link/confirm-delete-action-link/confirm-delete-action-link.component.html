@@ -1,0 +1,23 @@
+<div class="confirm-wrapper">
+  <div class="header">
+    <div class="warning-icon">
+      <img src="assets/icon/icon-warning-red.svg" />
+    </div>
+    <div class="confirm-text">
+      <p class="bold-text">Are you sure you want to delete?</p>
+      <p class="grey-text">This action link will be permenantly erased.</p>
+    </div>
+  </div>
+  <div class="btn-wrapper">
+    <button data-e2e="button-cancel" type="button" class="go-back-btn">
+      <span class="btn-text" (click)="isOpenModal(false)"> Cancel </span>
+    </button>
+    <button
+      data-e2e="button-yes-delete"
+      type="button"
+      class="confirm-btn"
+      (click)="isShowDeleteSuccessModal(true)">
+      <span class="btn-text"> Yes, delete </span>
+    </button>
+  </div>
+</div>

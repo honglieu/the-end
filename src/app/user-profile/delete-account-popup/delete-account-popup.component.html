@@ -1,0 +1,280 @@
+<trudi-modal
+  [(visible)]="this.isShowModalForm"
+  [autoFocus]="false"
+  (onCancel)="handleEmitClose()"
+  className="modal-form-delete-account"
+  title="Account deletion"
+  subTitle="Before you delete your account there’s a few things we need:">
+  <div
+    class="content"
+    #contentModal
+    [ngStyle]="{
+      'overflow': isOpen ? 'hidden' : 'auto'
+    }">
+    <div class="form-delete-account" *ngIf="!!formGroup">
+      <div [formGroup]="formGroup" class="body">
+        <div id="reassignOwner-select" *ngIf="isRoleOwner">
+          <div class="large-label mb-6" data-e2e="select-ReassignOwner-label">
+            Reassign primary mailbox ownership
+          </div>
+          <trudi-form-control
+            [checkSubmit]="!isSubmit"
+            [showErrorMessage]="!ngSelectReassignOwner.isOpen">
+            <ng-select
+              #ngSelectReassignOwner
+              class="reassign-list reassign-Owner"
+              id="reassign-list"
+              bindValue="id"
+              (change)="ngSelectReassignOwner.blur()"
+              [items]="listData"
+              [loading]="loadingListData"
+              [searchable]="true"
+              [clearable]="true"
+              [multiple]="false"
+              placeholder="Select other team member"
+              [clearSearchOnAdd]="true"
+              [appendTo]="'body'"
+              [virtualScroll]="true"
+              formControlName="userReassignOwner"
+              [searchFn]="customSearchFn"
+              (search)="handlerHighlight($event)"
+              [ngClass]="{'input-error': isSubmit &&  formGroup.get('userReassignOwner').invalid && !ngSelectReassignOwner.isOpen}">
+              <ng-template
+                ng-label-tmp
+                let-item="item"
+                let-items="items"
+                let-clear="clear">
+                <div class="select-item d-flex align-items-center gap-8">
+                  <ng-container
+                    *ngTemplateOutlet="ownerTemplate;
+                   context: { item: item, item$: item$ }
+                  "></ng-container>
+                </div>
+              </ng-template>
+              <ng-template ng-optgroup-tmp let-item="item">
+                <ng-container
+                  *ngTemplateOutlet="ownerTemplate;
+                  context: { item: item, item$: item$ }
+              "></ng-container>
+              </ng-template>
+
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-item$="item$"
+                let-index="index"
+                let-searchTerm="searchTerm">
+                <div
+                  class="select-item d-flex gap-8"
+                  [ngClass]="{'disable-field': item.disabled}">
+                  <ng-container
+                    *ngTemplateOutlet="
+                  ownerTemplate;
+                  context: { item: item, item$: item$, searchTerm: searchTerm }
+                  "></ng-container>
+                </div>
+              </ng-template>
+            </ng-select>
+          </trudi-form-control>
+        </div>
+        <div id="reassignMessage-select">
+          <div class="large-label mb-12" data-e2e="reassign-label">
+            Reassign my open & in progress messages & tasks
+          </div>
+          <div
+            formArrayName="usersReassign"
+            *ngIf="listMailboxAssignee.length; else noMailboxesFoundTemplate">
+            <div *ngIf="isUsersReassignFormArray">
+              <div
+                *ngFor="let item of listMailboxAssignee; let i = index"
+                [formGroupName]="i"
+                class="mb-12"
+                id="reassign-message-select-field">
+                <div
+                  class="small-label-select mb-6"
+                  data-e2e="select-Reassign-label">
+                  {{item.name}} - {{item.emailAddress}}
+                </div>
+                <trudi-form-control
+                  [checkSubmit]="!isSubmit"
+                  [showErrorMessage]="!ngSelectReassignMessage.isOpen">
+                  <ng-select
+                    #ngSelectReassignMessage
+                    class="reassign-list"
+                    id="reassign-list"
+                    [items]="item.mailPermissions"
+                    bindValue="companyAgent.user.id"
+                    [searchable]="true"
+                    [clearable]="false"
+                    [multiple]="true"
+                    [searchFn]="customSearchFn"
+                    placeholder="Select other team member"
+                    [clearSearchOnAdd]="false"
+                    [closeOnSelect]="false"
+                    [appendTo]="'body'"
+                    [virtualScroll]="true"
+                    formControlName="usersReassignList"
+                    dropdownPosition="bottom"
+                    (open)="openSelect()"
+                    (close)="closeSelect()"
+                    (search)="handlerHighlight($event)"
+                    [ngClass]="{'input-error': isSubmit && formGroup.get('usersReassign').controls[i].invalid && !ngSelectReassignMessage.isOpen}">
+                    <ng-template
+                      ng-label-tmp
+                      let-item="item"
+                      let-items="items"
+                      let-clear="clear">
+                      <div class="select-item d-flex align-items-center gap-8">
+                        <ng-container
+                          *ngTemplateOutlet="userReassignMessageTemplate;
+                       context: { item: item, item$: item$ }
+                      "></ng-container>
+                        <trudi-icon
+                          *ngIf="!item?.disabled"
+                          class="cursor-pointer select-item-remove"
+                          icon="closeGray64"
+                          [style]="{ 'width.px': 8, 'height.px': 8 }"
+                          (click)="clear(item)"></trudi-icon>
+                      </div>
+                    </ng-template>
+                    <ng-template ng-optgroup-tmp let-item="item">
+                      <ng-container
+                        *ngTemplateOutlet="userReassignMessageTemplate;
+                      context: { item: item, item$: item$ }
+                  "></ng-container>
+                    </ng-template>
+
+                    <ng-template
+                      ng-option-tmp
+                      let-item="item"
+                      let-item$="item$"
+                      let-index="index"
+                      let-searchTerm="searchTerm">
+                      <div
+                        class="select-item d-flex gap-8"
+                        [ngClass]="{'disable-field': item.disabled}">
+                        <ng-container
+                          *ngTemplateOutlet="
+                          userReassignMessageTemplate;
+                          context: { item: item, item$: item$, searchTerm: searchTerm }
+                        "></ng-container>
+                        <div>
+                          <trudi-icon
+                            [icon]="item$.selected ? 'userChecked' : 'userUnCheck'"
+                            class="cursor-pointer">
+                          </trudi-icon>
+                        </div>
+                      </div>
+                    </ng-template>
+
+                    <ng-template ng-header-tmp>
+                      <div
+                        *ngIf="item.mailPermissions.length"
+                        class="d-flex align-items-center justify-content-between pd-12">
+                        <div>
+                          <span class="count-text"
+                            >{{usersReassignForm?.controls[i]?.get('usersReassignList')?.value.length
+                            || 0}}/{{item.mailPermissions.length}}</span
+                          >
+                        </div>
+                        <span
+                          class="clear-btn clear-selection-btn"
+                          *ngIf="usersReassignForm?.controls[i]?.get('usersReassignList')?.value.length"
+                          (click)="clearAllUsersReassignList(i)"
+                          >Clear selection</span
+                        >
+                      </div>
+                    </ng-template>
+                  </ng-select>
+                </trudi-form-control>
+              </div>
+            </div>
+          </div>
+
+          <ng-template #noMailboxesFoundTemplate>
+            <p class="no-mailboxs-found-text">No mailboxes found</p>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <button trudi-btn (click)="onConfirm()" data-e2e="confirm-btn">
+      Confirm
+    </button>
+  </ng-template>
+</trudi-modal>
+
+<trudi-modal
+  [(visible)]="this.isShowModalConfirm"
+  [autoFocus]="null"
+  (onCancel)="handleEmitClose()"
+  className="modal-delete-confirm">
+  <div class="confirm-container">
+    <div class="d-flex gap-16">
+      <trudi-icon
+        class="warning-icon"
+        svgClass="size-48"
+        icon="iconWarningRed"
+        data-e2e="warning-icon"></trudi-icon>
+      <div class="confirm-text">
+        <p class="text-sure">Are you sure you want to delete your account?</p>
+        <p class="cannot-text">
+          You will lose access to Trudi® account services, and we permanently
+          delete your personal data, and your individual mailboxes will be
+          archived. You cannot undo this request.
+        </p>
+      </div>
+    </div>
+    <div class="btn-wrapper gap-12">
+      <button
+        trudi-btn
+        variant="tonal"
+        btnType="neutral"
+        (click)="handleEmitClose()"
+        data-e2e="go-back-btn">
+        <span class="btn-text">No, cancel</span>
+      </button>
+      <button
+        trudi-btn
+        btnType="danger"
+        (click)="onSubmit()"
+        data-e2e="yes-cancel-btn">
+        <span class="btn-text">Yes, delete</span>
+      </button>
+    </div>
+  </div>
+</trudi-modal>
+
+<ng-template
+  #ownerTemplate
+  let-item="item"
+  let-item$="item$"
+  let-searchTerm="searchTerm">
+  <div *ngIf="item" class="select-item__info flex-grow-1">
+    <app-user-avatar
+      [avatar]="item.googleAvatar"
+      [user]="item"
+      [style]="'width: 28px; height: 28px; font-size: 14px; margin-right: 8px;'"></app-user-avatar>
+    <span [ngOptionHighlight]="searchTerm ? searchTerm : ''"
+      >{{ item.firstName }} {{ item.lastName }}</span
+    >
+  </div>
+</ng-template>
+
+<ng-template
+  #userReassignMessageTemplate
+  let-item="item"
+  let-item$="item$"
+  let-searchTerm="searchTerm">
+  <div *ngIf="item" class="select-item__info flex-grow-1">
+    <app-user-avatar
+      [avatar]="item.companyAgent.user.googleAvatar"
+      [user]="item.companyAgent.user"
+      [style]="'width: 28px; height: 28px; font-size: 14px; margin-right: 8px;'"></app-user-avatar>
+    <span [ngOptionHighlight]="searchTerm ? searchTerm : ''"
+      >{{ item.companyAgent.user.firstName }} {{ item.companyAgent.user.lastName
+      }}</span
+    >
+  </div>
+</ng-template>

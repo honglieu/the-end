@@ -1,0 +1,116 @@
+<ng-container>
+  <div class="file-row-wrapper">
+    <div class="row-wrapper">
+      <div
+        class="file-row-item align-items-center cursor-default"
+        [ngClass]="{'last-row-data': lastRowData}">
+        <div class="item">
+          <div class="files" [class.files-spacing]="file > 0" *ngIf="rowData">
+            <div
+              [ngSwitch]="fileType"
+              class="attachment-message align-items-center justify-content-between"
+              style="margin: 0">
+              <ng-container *ngSwitchCase="'file'">
+                <ng-container
+                  *ngTemplateOutlet="formTemplate; context: {msgFile: rowData}"></ng-container>
+              </ng-container>
+              <ng-container *ngSwitchCase="'audio'">
+                <ng-container
+                  *ngTemplateOutlet="formTemplate; context: {msgFile: rowData}"></ng-container>
+              </ng-container>
+              <ng-container *ngSwitchCase="'video'">
+                <div class="file-infor d-flex align-items-center">
+                  <div
+                    [style.width.px]="size"
+                    [style.height.px]="size"
+                    class="video-wrapper dim-brightness">
+                    <img
+                      [src]="rowData?.thumbMediaLink || '/assets/images/bgblack.jpg'"
+                      [alt]="rowData?.thumbMediaLink"
+                      class="video-thumb" />
+                    <trudi-icon
+                      class="play-icon"
+                      svgClass="size-16"
+                      icon="playSolid"></trudi-icon>
+                  </div>
+                  <div class="file send-file">
+                    <div class="file-info-wrapper d-flex flex-dir-column">
+                      <span
+                        class="file-name"
+                        #filePanelName
+                        nz-tooltip
+                        [nzTooltipTitle]="rowData?.name"
+                        [nzTooltipTrigger]="filePanelName?.offsetWidth < filePanelName?.scrollWidth ? 'hover' : null"
+                        [nzTooltipOverlayStyle]="{ 'word-break': 'break-all', 'max-width': '250px'}"
+                        >{{ rowData?.name}}</span
+                      >
+                      <span class="file-date-created">
+                        <span *ngIf="rowData?.user"
+                          >{{rowData?.user?.name}} •
+                        </span>
+                        {{rowData?.syncedDate | formatDate | async}}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container *ngSwitchCase="'photo'">
+                <div class="file-infor d-flex align-items-center">
+                  <div
+                    [style.width.px]="size"
+                    [style.height.px]="size"
+                    class="message-file">
+                    <img
+                      class="file-image"
+                      [style.width.px]="size"
+                      [style.height.px]="size"
+                      loading="lazy"
+                      src="{{
+                        rowData.mediaLink ? rowData.mediaLink : ('assets/images/icons/' + fileType)
+                      }}" />
+                  </div>
+                  <div class="file send-file">
+                    <div class="file-info-wrapper d-flex flex-dir-column">
+                      <span class="file-name">{{ rowData?.name}}</span>
+                      <span class="file-date-created">
+                        <span *ngIf="rowData?.user">
+                          {{rowData?.user?.name}} •
+                        </span>
+                        {{rowData?.syncedDate | formatDate | async}}</span
+                      >
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+        <div class="item-checkbox">
+          <trudi-checkbox
+            type="circle"
+            class="checkbox-frame"
+            [(ngModel)]="rowData.isSelected"
+            (ngModelChange)="handleChangeSelected($event, rowData)"></trudi-checkbox>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-template #formTemplate let-msgFile="msgFile">
+  <div class="file-infor d-flex align-items-center">
+    <img
+      class="border-rad-full"
+      [style.width.px]="size"
+      [style.height.px]="size"
+      src="assets/images/icons/{{fileIcon}}" />
+    <div class="file send-file">
+      <div class="file-info-wrapper d-flex flex-dir-column">
+        <span class="file-name">{{ rowData?.name}}</span>
+        <span class="file-date-created">
+          <span *ngIf="rowData?.user">{{rowData?.user?.name}} • </span>
+          {{rowData?.syncedDate | formatDate | async}}</span
+        >
+      </div>
+    </div>
+  </div>
+</ng-template>

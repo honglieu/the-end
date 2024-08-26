@@ -1,0 +1,43 @@
+@import 'function';
+
+::ng-deep trudi-date-picker {
+  .trudi-picker {
+    max-width: 100% !important;
+  }
+}
+
+::ng-deep trudi-radio-button {
+  nz-radio-group.radio-group .radio-label span {
+    color: var(--gray-500) !important;
+    font-weight: 500 !important;
+  }
+}
+
+::ng-deep .box-body .trudi-text-field-wrapper {
+  margin-top: 10px;
+}
+
+.box-body {
+  padding: 20px 24px;
+  .form {
+    &-title {
+      @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+    }
+  }
+}
+
+.breach-contract-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 24px;
+  gap: 12px;
+  background: transparent;
+  border-top: 1px solid var(--gray-100);
+  border-radius: 0 0 8px 8px;
+}
+
+.error-container {
+  &-options {
+    margin-top: 12px;
+  }
+}

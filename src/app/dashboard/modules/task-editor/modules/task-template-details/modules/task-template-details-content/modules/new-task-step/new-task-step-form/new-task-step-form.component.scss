@@ -1,0 +1,75 @@
+@import 'function';
+
+.new-task-form-wrapper {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  .field-wrapper {
+    max-width: 523px;
+  }
+  .field-label {
+    @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+    width: 100%;
+  }
+  ::ng-deep trudi-radio-button.pt-step-action {
+    nz-radio-group .radio-label span {
+      font-weight: 400 !important;
+    }
+  }
+}
+:host ::ng-deep {
+  .ng-select.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
+    background: var(--bg-base);
+    box-shadow: var(--shadow-brand) !important;
+    border-radius: 8px;
+  }
+  .new-task-form-skeleton {
+    padding: 20px 24px;
+    .skeleton-rectangle {
+      border-radius: 17.5px;
+      h3.ant-skeleton-title {
+        margin-top: 0px;
+      }
+    }
+    .skeleton-label {
+      width: 15%;
+    }
+    .skeleton-select {
+      height: 44px;
+      border-radius: 8px;
+      margin-top: 6px;
+      background: var(--bg-neutral-tonal-normal);
+      .skeleton-rectangle,
+      .skeleton-rectangle h3.ant-skeleton-title {
+        height: 12px;
+      }
+    }
+  }
+
+  .skeleton-rectangle-value {
+    width: 70%;
+    h3.ant-skeleton-title {
+      margin-top: 0px;
+    }
+  }
+  .skeleton-input {
+    span.ant-skeleton-avatar.ant-skeleton-avatar-circle {
+      margin-top: 0px;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  trudi-single-select
+    .ng-dropdown-panel
+    .ng-dropdown-panel-items
+    .ng-star-inserted {
+    width: 100%;
+  }
+  .item-option-icon {
+    width: fit-content !important;
+  }
+  .skeleton-content .ant-skeleton-content .ant-skeleton-title {
+    margin: 0;
+  }
+}

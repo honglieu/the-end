@@ -1,0 +1,68 @@
+@import 'function';
+
+.trudi-scheduled-msg {
+  &-body {
+    padding: 20px 24px;
+    max-height: calc(100vh - 420px) !important;
+    overflow-y: auto !important;
+
+    &-toolbars {
+      margin-bottom: 6px;
+      margin-top: 7px !important;
+
+      &-disable {
+        pointer-events: none;
+        cursor: default;
+        opacity: 0.5;
+      }
+
+      &-time {
+        color: var(--gray-500);
+      }
+
+      .item-action-button {
+        width: 16px !important;
+        height: 16px !important;
+        border-radius: 4px;
+        padding: 1px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:hover {
+          background-color: var(--gray-50);
+          cursor: pointer;
+        }
+      }
+    }
+
+    &-content {
+      padding: 12px;
+      background: var(--gray-200);
+      @include fontSetup(var(--gray-500), 12px, 20px, normal, 500);
+      .icon-attachments {
+        width: fit-content;
+        align-items: center;
+      }
+      &-message {
+        display: -webkit-box;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        white-space: pre-wrap;
+      }
+    }
+  }
+}
+
+.delete-btn {
+  &:hover {
+    background-color: var(--bg-danger-tonal-normal) !important;
+    cursor: pointer;
+  }
+}
+
+.icon-reschedule {
+  filter: brightness(0.2);
+}

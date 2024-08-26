@@ -1,0 +1,11 @@
+<div class="trudi-checkbox-group">
+  <label
+    class="trudi-checkbox-group-label no-margin"
+    [ngStyle]="{ display: !label ? 'none' : 'initial' }">
+    <span>{{ label }}</span>
+  </label>
+  <br [ngStyle]="{ display: !label ? 'none' : 'initial' }" />
+  <div class="trudi-checkbox-group-container">
+    <ng-content></ng-content>
+  </div>
+</div>

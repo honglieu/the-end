@@ -1,0 +1,140 @@
+@import 'function';
+
+:host .file-row-wrapper {
+  .last-row-data {
+    border-bottom: none !important;
+  }
+  .file-row-item {
+    padding: 16px 12px;
+    display: flex;
+    border-bottom: 1px solid var(--gray-200);
+    justify-content: space-between;
+
+    .file-infor {
+      gap: 12px;
+    }
+
+    .file-info-wrapper {
+      gap: 2px;
+      .file-date-created {
+        @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 500);
+      }
+      .file-name {
+        @include fontSetup(
+          var(--fg-neutral-strongest),
+          14px,
+          20px,
+          normal,
+          500
+        );
+        // padding: 10px 25px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 100%;
+      }
+    }
+
+    .item-checkbox {
+      margin-left: auto;
+    }
+    .checkbox-frame {
+      height: 24px;
+      width: 24px;
+      display: flex;
+      justify-content: center;
+    }
+    ::ng-deep .item-checkbox trudi-checkbox span,
+    label {
+      width: 20px;
+      height: 20px;
+    }
+    ::ng-deep .item-checkbox trudi-checkbox trudi-icon {
+      color: var(--fg-brand);
+    }
+    ::ng-deep .item-checkbox trudi-checkbox trudi-icon rect {
+      stroke: none;
+      fill: var(--fg-brand);
+    }
+  }
+  .separator-event {
+    margin: 16px 0px;
+    border: none;
+    &.last-event-date-group {
+      border-top: 1px solid var(--border-neutral-dark);
+    }
+  }
+
+  .file-image {
+    flex: 1;
+    object-fit: cover;
+    height: 0;
+  }
+
+  .message-file {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: 250px;
+    width: 250px;
+    border-radius: 8px;
+    background-color: var(--white);
+    overflow: hidden;
+
+    .file-image {
+      flex: 1;
+      object-fit: cover;
+      height: 0;
+    }
+  }
+  .item-thumbnail {
+    .link-img-icon,
+    .play-icon,
+    &::before {
+      display: none;
+    }
+    & > img {
+      width: 36px;
+      min-width: 36px;
+      height: 36px;
+      min-height: 36px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+  }
+  .video-wrapper {
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    .video-thumb {
+      object-fit: cover;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+    .play-icon {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 3;
+      transform: translate(-50%, -50%);
+    }
+  }
+  .files-item-detail {
+    display: none;
+  }
+  .file-tooltip {
+    max-width: 208px;
+    .ant-tooltip-inner {
+      text-align: left;
+    }
+  }
+  .attachment-message {
+    background-color: var(--white);
+    overflow: hidden;
+    border-radius: 8px;
+  }
+}

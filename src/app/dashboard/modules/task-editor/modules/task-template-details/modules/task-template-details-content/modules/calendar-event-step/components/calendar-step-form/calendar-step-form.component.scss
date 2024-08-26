@@ -1,0 +1,92 @@
+@import 'function';
+
+.calendar-wrapper {
+  padding: 20px 24px 24px;
+  .event-type-label {
+    .event-type-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      .title {
+        @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 600);
+      }
+    }
+    .event-type-required {
+      ::ng-deep .trudi-checkbox .label-text {
+        @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+      }
+    }
+  }
+
+  .error-container {
+    margin-top: 16px !important;
+  }
+
+  ::ng-deep .trudi-form-control-wrapper .error-container {
+    margin-top: 16px !important;
+  }
+}
+
+:host {
+  .calendar-wrapper {
+    ::ng-deep nz-radio-group {
+      .radio-label span {
+        @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 400);
+      }
+    }
+    ::ng-deep .trudi-checkbox .label-text {
+      @include fontSetup(
+        var(--fg-neutral-weaker, #999),
+        14px,
+        20px,
+        normal,
+        400
+      );
+    }
+    .list-contact-type {
+      margin: 16px 0px;
+    }
+    .item-label {
+      @include fontSetup(
+        var(--fg-neutral-stronger, #3d3d3d) !important,
+        14px,
+        20px,
+        normal,
+        500
+      );
+    }
+    ::ng-deep .trudi-label-wrapper .trudi-select-label {
+      @include fontSetup(
+        var(--fg-neutral-stronger, #3d3d3d) !important,
+        14px,
+        20px,
+        normal,
+        500
+      );
+    }
+  }
+}
+
+::ng-deep {
+  .ant-tooltip.tool-tip-calendar {
+    left: 6% !important;
+    padding-top: 7px !important;
+    max-width: 208px !important;
+    .ant-tooltip-inner {
+      margin: 0 !important;
+      border: none !important;
+      text-align: left !important;
+      font-size: 12px !important;
+    }
+    .ant-tooltip-arrow {
+      margin: 0 !important;
+      padding: 0 !important;
+      border: none !important;
+      height: 17px !important;
+      width: 17px !important;
+      .ant-tooltip-arrow-content::before {
+        background: rgba(100, 100, 100, 0.8) !important;
+      }
+    }
+  }
+}

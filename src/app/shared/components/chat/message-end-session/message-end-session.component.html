@@ -1,0 +1,7 @@
+<div class="marker-end-session" data-e2e="marker-end-session">
+  <trudi-icon svgClass="size-16" icon="iconClockOutline"></trudi-icon>
+  <div class="custom-text">
+    {{message.type === EAiAssistantAction.MOBILE ? 'Session' : 'Call'}} ended
+    {{message.createdAt | formatDateTime: true | async | lowercase}}
+  </div>
+</div>

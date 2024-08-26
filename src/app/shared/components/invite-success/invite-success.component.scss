@@ -1,0 +1,14 @@
+@import 'function';
+.content-wrapper {
+  padding: 14px;
+  display: flex;
+  .success-content {
+    flex: 1;
+    .text-sure {
+      @include fontSetup(var(--gray-950), 2rem, 2.8rem, normal, 600);
+    }
+    .cannot-text {
+      @include fontSetup(var(--gray-500), 1.4rem, 2rem, normal, 500);
+    }
+  }
+}

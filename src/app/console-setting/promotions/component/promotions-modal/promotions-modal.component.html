@@ -1,0 +1,57 @@
+<div
+  *ngIf="isShowPromotionsModal"
+  [ngStyle]="position"
+  class="wrap-promotions absolute d-flex flex-dir-column gap-20">
+  <p class="header-title wrap-break-word">{{promotionsData?.title}}</p>
+
+  <swiper
+    id="swiper"
+    [config]="swiperConfig"
+    class="mySwiper2"
+    #swiperContainer>
+    <ng-template
+      swiperSlide
+      *ngFor="let item of promotionsData?.promotionCarousels">
+      <div class="wrap-content d-flex flex-dir-column gap-12">
+        <div class="wrap-img">
+          <img [src]="item.image[0].mediaLink" width="100%" height="100%" />
+        </div>
+        <p class="content-title wrap-break-word">{{item.featureName}}</p>
+        <p class="content wrap-break-word">
+          {{item.description}}
+          <a class="link-name" [href]="item.url" target="new_tab">
+            {{item.urlDisplay || item.url | trunCateUrl}}
+          </a>
+        </p>
+      </div>
+    </ng-template>
+  </swiper>
+
+  <div class="wrap-footer y-center m-auto gap-8">
+    <trudi-icon
+      *ngIf="currentPage !== 0 && promotionsData?.promotionCarousels?.length > 1"
+      (click)="previousPage()"
+      class="left-button absolute pointer"
+      icon="previousArrowButton"></trudi-icon>
+    <ng-container *ngIf="promotionsData?.promotionCarousels?.length > 1">
+      <div
+        *ngFor="let item of promotionsData?.promotionCarousels; let idx = index">
+        <trudi-icon
+          [icon]="currentPage === idx ? 'grayDot' : 'gainsboroDot'"></trudi-icon>
+      </div>
+    </ng-container>
+    <div class="right-button absolute">
+      <trudi-icon
+        *ngIf="(currentPage < promotionsData?.promotionCarousels?.length - 1) && (promotionsData?.promotionCarousels?.length > 1)"
+        class="pointer"
+        (click)="nextPage()"
+        icon="nextArrowButton"></trudi-icon>
+      <button
+        (click)="closeModal()"
+        *ngIf="currentPage === (promotionsData?.promotionCarousels?.length - 1)"
+        class="close-btn">
+        Let's go
+      </button>
+    </div>
+  </div>
+</div>

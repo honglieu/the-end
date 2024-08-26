@@ -1,0 +1,239 @@
+@import 'function';
+
+.week-calender-container {
+  width: 244px;
+  background-color: white;
+
+  .header {
+    height: 40px;
+
+    .current-month-text {
+      @include fontSetup(var(--fg-neutral-weaker), 14px, 16px, normal, 600);
+
+      &.active {
+        @include fontSetup(var(--brand-500), 14px, 16px, normal, 600);
+      }
+    }
+    .months-after {
+      color: var(--fg-neutral-normal);
+    }
+  }
+
+  .calendar ul {
+    display: flex;
+    list-style: none;
+    flex-wrap: wrap;
+    text-align: center;
+    gap: 0px;
+    margin: 0px;
+    padding: 0px;
+
+    &.weeks li {
+      padding: 8px;
+      width: 32px;
+      height: 32px;
+      position: relative;
+      background-color: transparent;
+      overflow: hidden;
+      border-radius: 4px;
+      border: none;
+    }
+
+    .day-item {
+      padding: 6px;
+      position: relative;
+      width: 32px;
+      height: 32px;
+      background-color: transparent;
+      cursor: pointer;
+      border-radius: 50%;
+      &:hover {
+        background-color: var(--bg-neutral-tonal-stronger);
+      }
+
+      button.day-button {
+        position: relative;
+        background-color: transparent;
+        border: none;
+        padding: 0px;
+        width: 100%;
+        height: 100%;
+        @include fontSetup(var(--fg-neutral-stronger), 12px, 16px, normal, 400);
+      }
+
+      .selected-day-popup {
+        position: absolute;
+        bottom: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        min-width: 160px;
+        min-height: 120px;
+        box-shadow: 8px 0px 21px rgba(0, 0, 0, 0.02),
+          0px -2px 16px rgba(0, 0, 0, 0.08), 0px 26px 24px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        background: white;
+        z-index: 10;
+        padding: 12px;
+        cursor: default;
+
+        & .popup-holiday {
+          flex-direction: column;
+
+          &-label {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            @include fontSetup(var(--gray-700), 20px, 40px, normal, 400);
+          }
+
+          &-name {
+            margin-bottom: 12px;
+            @include fontSetup(var(--gray-500), 14px, 16px, normal, 400);
+          }
+        }
+
+        & .popup-remove {
+          flex-direction: column;
+
+          &-label {
+            display: block;
+            position: relative;
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            margin-bottom: 10px;
+            @include fontSetup(var(--danger-500), 20px, 40px, normal, 400);
+
+            span {
+              bottom: -4px;
+              left: 50%;
+              transform: translateX(-50%);
+              position: absolute;
+              @include fontSetup(var(--danger-500), 12px, 14px, normal, 500);
+            }
+          }
+
+          &-name {
+            margin-bottom: 12px;
+            @include fontSetup(var(--gray-500), 14px, 16px, normal, 400);
+          }
+        }
+
+        &.left-pos {
+          left: -170px !important;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+
+        &.left-top-pos {
+          left: -170px !important;
+          bottom: 0;
+          transform: translate(0);
+        }
+
+        &.right-pos {
+          left: 40px !important;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+
+        &.right-top-pos {
+          left: 40px !important;
+          bottom: 0;
+          transform: translate(0);
+        }
+
+        &.bottom-pos {
+          left: 50%;
+          top: 40px !important;
+          transform: translateX(-50%);
+        }
+
+        .close-day-popup-btn {
+          position: absolute;
+          right: 4px;
+          top: 4px;
+        }
+      }
+
+      &::before {
+        position: absolute;
+        content: '';
+        width: 100%;
+        height: 100%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        z-index: -1;
+      }
+
+      &.active {
+        button.day-button {
+          opacity: 1 !important;
+        }
+      }
+
+      &.active {
+        background-color: var(--bg-brand-tonal-normal);
+        &.selected {
+          background-color: var(--bg-brand-tonal-strongest) !important;
+        }
+        &:hover::before,
+        &:hover {
+          background-color: var(--bg-brand-tonal-stronger) !important;
+        }
+        button {
+          color: var(--fg-brand);
+        }
+      }
+
+      &:not(.active).selected {
+        background: var(--bg-neutral-tonal-strongest);
+        z-index: 10 !important;
+        &:has(button:hover) {
+          background-color: var(--bg-neutral-tonal-stronger);
+        }
+      }
+
+      &.dayoff button {
+        &:not(.popup-holiday-action) {
+          color: var(--danger-500) !important;
+        }
+
+        .dayoff-text {
+          position: absolute;
+          bottom: -4px;
+          left: 50%;
+          transform: translateX(-50%);
+          @include fontSetup(var(--danger-500), 8px, 9px, normal, 600);
+        }
+      }
+
+      &.is-not-day:hover::before {
+        background: none;
+      }
+
+      &.in-the-pass {
+        .day-button {
+          opacity: 0.6;
+        }
+      }
+
+      &.is-out-of-month {
+        cursor: unset;
+        background: none;
+      }
+    }
+
+    &.days li {
+      cursor: pointer;
+      @include fontSetup(var(--gray-500), 12px, 14px, normal, 400);
+      z-index: 1;
+    }
+
+    &.weeks li {
+      @include fontSetup(var(--fg-neutral-normal), 12px, 24px, normal, 600);
+    }
+  }
+}

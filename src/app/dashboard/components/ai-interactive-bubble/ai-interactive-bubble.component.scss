@@ -1,0 +1,76 @@
+.interactive-bubble {
+  box-shadow: 0px 4px 6px -2px #10182808, 0px 12px 16px -4px #10182814;
+  background-image: linear-gradient(var(--fg-base), var(--fg-base)),
+    linear-gradient(145.35deg, #ffca62 3.66%, #38dbd0 55.74%, #4285f4 102.24%);
+  border: double 1px transparent;
+  border-top-left-radius: 24px;
+  border-top-right-radius: 24px;
+  border-bottom-right-radius: 24px;
+  border-bottom-left-radius: 4px;
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  position: relative;
+
+  .drag-handle {
+    margin-left: 5px;
+    cursor: grab;
+  }
+
+  &__actions {
+    margin: 5px 6px 5px 0px;
+  }
+
+  &.inactive-bubble {
+    background-image: unset;
+    background-color: var(--bg-base);
+    border: 1px solid var(--border-neutral-dark);
+  }
+}
+
+:host {
+  &.cdk-drag-dragging {
+    .drag-handle {
+      cursor: grabbing;
+    }
+  }
+
+  position: absolute;
+}
+
+::ng-deep {
+  body:has(ai-interactive-bubble.cdk-drag-dragging) {
+    cursor: grabbing;
+
+    ai-interactive-bubble.cdk-drag-dragging {
+      .drag-handle {
+        cursor: grabbing;
+      }
+    }
+  }
+}
+
+::ng-deep {
+  body:has(ai-interactive-bubble) {
+    .fromInlineMsg {
+      ai-interactive-reply {
+        .resize-wrapper {
+          bottom: calc(100% + 4px) !important;
+          top: unset;
+        }
+      }
+    }
+  }
+}
+
+.interactive-bubble::after {
+  content: '';
+  margin: -1px;
+}
+
+::ng-deep {
+  body:has(app-splash-screen) {
+    .interactive-bubble {
+      display: none;
+    }
+  }
+}

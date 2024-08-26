@@ -1,0 +1,587 @@
+@import 'function';
+
+@mixin normal-button-states(
+  $bg-normal,
+  $bg-hover,
+  $bg-active,
+  $bg-disabled,
+  $color,
+  $color-disabled
+) {
+  background-color: $bg-normal;
+  color: $color;
+  transition: transform 0.2s ease-in-out;
+
+  &:hover,
+  &.trudi-ui-btn-selected {
+    background-color: $bg-hover;
+  }
+
+  &.trudi-ui-btn-selected.rotate-icon {
+    transform: rotate(180deg);
+  }
+
+  &:active {
+    background-color: $bg-active;
+  }
+
+  &:disabled {
+    color: $color-disabled;
+    background-color: $bg-disabled;
+    cursor: not-allowed !important;
+    pointer-events: unset !important;
+    opacity: 0.5;
+
+    &.trudi-ui-btn-icon-filled {
+      ::ng-deep trudi-icon svg path {
+        fill: $color-disabled;
+      }
+    }
+
+    &:hover,
+    &:active {
+      background-color: $bg-disabled;
+    }
+  }
+}
+
+@mixin link-button-states($color-normal, $color-hover, $color-active) {
+  color: $color-normal;
+
+  &:hover,
+  &.trudi-ui-btn-selected {
+    color: $color-hover;
+  }
+
+  &:active {
+    color: $color-active;
+  }
+
+  &:disabled {
+    color: var(--fg-neutral-weakest, #cecfd2);
+    opacity: 0.5;
+
+    &.trudi-ui-btn-icon-filled {
+      ::ng-deep trudi-icon svg path {
+        fill: var(--fg-neutral-weakest, #cecfd2);
+      }
+    }
+  }
+}
+
+@mixin text-button-states($color, $bg-hover, $bg-active) {
+  color: $color;
+
+  &:hover {
+    background-color: $bg-hover;
+  }
+
+  &:active {
+    background-color: $bg-active;
+  }
+
+  &:disabled {
+    background-color: var(--bg-neutral-tonal-strongest, #ececed);
+  }
+}
+
+@mixin button-size(
+  $height,
+  $padding,
+  $font-size,
+  $line-height,
+  $border-radius
+) {
+  height: $height;
+  padding: $padding;
+  border-radius: $border-radius;
+  @include fontSetup(var(--white), $font-size, $line-height, normal, 600);
+}
+
+.trudi-icon {
+  display: flex;
+  align-items: center;
+  &.selected {
+    background-color: var(--gray-200) !important;
+    border-radius: 50%;
+  }
+  &.large,
+  .semi-large,
+  .medium {
+    width: 20px;
+    height: 20px;
+  }
+  &.small {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+:host {
+  &.trudi-ui-btn {
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+
+    &:focus-visible {
+      box-shadow: 0px 0px 0px 2px var(--brand-200);
+      border: none;
+    }
+
+    &-extra-large {
+      @include button-size(48px, 12px 20px, 16px, 24px, 6px);
+      min-width: 100px;
+
+      &-square,
+      &-circle {
+        padding: 12px;
+        width: 48px;
+      }
+    }
+
+    &-large {
+      @include button-size(36px, 8px 16px, 14px, 20px, 6px);
+      min-width: 80px;
+
+      &-square,
+      &-circle {
+        padding: 8px;
+        width: 36px;
+      }
+    }
+
+    &-medium {
+      @include button-size(32px, 6px 16px, 14px, 20px, 6px);
+      min-width: 60px;
+
+      &-square,
+      &-circle {
+        padding: 6px;
+        width: 32px;
+      }
+    }
+
+    &-small {
+      @include button-size(28px, 4px 12px, 14px, 20px, 6px);
+      min-width: 60px;
+
+      &-square,
+      &-circle {
+        padding: 4px;
+        width: 28px;
+      }
+    }
+
+    &-extra-small {
+      @include button-size(24px, 4px 8px, 12px, 16px, 4px);
+      min-width: 40px;
+
+      &-square,
+      &-circle {
+        padding: 4px;
+        width: 24px;
+      }
+    }
+
+    &-circle {
+      border-radius: 9999px;
+      min-width: unset;
+    }
+
+    &-square {
+      border-radius: 6px;
+      min-width: unset;
+    }
+
+    &-filled {
+      ::ng-deep trudi-icon svg {
+        fill: var(--white);
+      }
+
+      &-primary {
+        @include normal-button-states(
+          var(--bg-brand-solid-normal, #28ad99),
+          var(--bg-brand-solid-stronger, #209386),
+          var(--bg-brand-solid-strongest, #107569),
+          var(--bg-neutral-tonal-strongest, #ececed),
+          var(--white),
+          var(--white)
+        );
+      }
+
+      &-danger {
+        @include normal-button-states(
+          var(--bg-danger-solid-normal, #fa3939),
+          var(--bg-danger-solid-stronger, #e81a1a),
+          var(--bg-danger-solid-strongest, #c61111),
+          var(--bg-neutral-tonal-strongest, #ececed),
+          var(--white),
+          var(--white)
+        );
+      }
+
+      &-neutral {
+        @include normal-button-states(
+          var(--bg-neutral-solid-normal, #85888e),
+          var(--bg-neutral-solid-stronger, #333741),
+          var(--bg-neutral-solid-strongest, #1f242f),
+          var(--bg-neutral-tonal-strongest, #ececed),
+          var(--white),
+          var(--white)
+        );
+      }
+
+      &-info {
+        @include normal-button-states(
+          var(--bg-info-solid-normal, #2e90fa),
+          var(--bg-info-solid-stronger, #1570ef),
+          var(--bg-info-solid-strongest, #175cd3),
+          var(--bg-neutral-tonal-strongest, #ececed),
+          var(--white),
+          var(--white)
+        );
+      }
+
+      &-tenant {
+        @include normal-button-states(
+          var(--bg-tenant-solid-normal, #f1c012),
+          var(--bg-tenant-solid-stronger, #e2ab10),
+          var(--bg-tenant-solid-strongest, #c3840b),
+          var(--bg-neutral-tonal-strongest, #ececed),
+          var(--white),
+          var(--white)
+        );
+      }
+    }
+
+    &-tonal {
+      &-neutral {
+        @include normal-button-states(
+          var(--bg-neutral-tonal-normal, #f5f5f6),
+          var(--bg-neutral-tonal-stronger, #f0f1f1),
+          var(--bg-neutral-tonal-strongest, #ececed),
+          var(--bg-neutral-tonal-strongest, #ececed),
+          var(--fg-neutral-normal, #61646c),
+          var(--white)
+        );
+      }
+
+      &-primary {
+        @include normal-button-states(
+          var(--bg-brand-tonal-normal),
+          var(--bg-brand-tonal-stronger),
+          var(--bg-brand-tonal-strongest),
+          var(--bg-neutral-tonal-strongest, #ececed),
+          var(--fg-brand, #28ad99),
+          var(--white)
+        );
+      }
+
+      &-danger {
+        @include normal-button-states(
+          var(--bg-danger-tonal-normal),
+          var(--bg-danger-tonal-stronger),
+          var(--bg-danger-tonal-strongest),
+          var(--bg-neutral-tonal-strongest, #ececed),
+          var(--fg-danger, #e81a1a),
+          var(--white)
+        );
+      }
+
+      &-info {
+        @include normal-button-states(
+          var(--bg-info-tonal-normal, #ecf7ff),
+          var(--bg-info-tonal-stronger, #d8edff),
+          var(--bg-info-tonal-strongest, #b2ddff),
+          var(--bg-neutral-tonal-strongest, #ececed),
+          var(--fg-info, #2e90fa),
+          var(--white)
+        );
+      }
+
+      &-tenant {
+        @include normal-button-states(
+          var(--bg-tenant-tonal-normal, #fefbe8),
+          var(--bg-tenant-tonal-stronger, #fefad7),
+          var(--bg-tenant-tonal-strongest, #fdf5b5),
+          var(--bg-neutral-tonal-strongest, #ececed),
+          var(--fg-tenant, #e2ab10),
+          var(--white)
+        );
+      }
+    }
+
+    &-outlined {
+      &-neutral {
+        @include normal-button-states(
+          var(--white),
+          var(--bg-neutral-tonal-stronger),
+          var(--bg-neutral-tonal-strongest),
+          var(--white),
+          var(--fg-neutral-normal, #61646c),
+          var(--fg-neutral-weakest)
+        );
+        border: 1px solid var(--border-neutral-dark);
+      }
+
+      &-primary {
+        @include normal-button-states(
+          var(--white),
+          var(--bg-brand-tonal-normal, #f2fbfa),
+          var(--bg-brand-tonal-stronger, #def8f5),
+          var(--white),
+          var(--fg-brand, #28ad99),
+          var(--fg-neutral-weakest)
+        );
+        border: 1px solid var(--border-brand);
+      }
+
+      &-danger {
+        @include normal-button-states(
+          var(--white),
+          var(--bg-danger-tonal-normal, #fff2f2),
+          var(--bg-danger-tonal-stronger, #ffe0e0),
+          var(--white),
+          var(--fg-danger, #e81a1a),
+          var(--fg-neutral-weakest)
+        );
+        border: 1px solid var(--border-danger);
+      }
+
+      &-info {
+        @include normal-button-states(
+          var(--white),
+          var(--bg-info-tonal-normal, #ecf7ff),
+          var(--bg-info-tonal-stronger, #d8edff),
+          var(--white),
+          var(--fg-info, #2e90fa),
+          var(--fg-neutral-weakest)
+        );
+        border: 1px solid var(--border-info, #2e90fa);
+      }
+
+      &-tenant {
+        @include normal-button-states(
+          var(--white),
+          var(--bg-tenant-tonal-normal, #fefbe8),
+          var(--bg-tenant-tonal-stronger, #fefad7),
+          var(--white),
+          var(--fg-tenant, #e2ab10),
+          var(--fg-neutral-weakest)
+        );
+        border: 1px solid var(--border-tenant, #f1c012);
+      }
+
+      &:disabled {
+        border: 1px solid var(--border-neutral-dark, #ececed);
+      }
+    }
+
+    &-ghost {
+      &-neutral {
+        @include normal-button-states(
+          transparent,
+          var(--bg-neutral-tonal-stronger),
+          var(--bg-neutral-tonal-strongest),
+          transparent,
+          var(--fg-neutral-normal, #61646c),
+          var(--fg-neutral-weakest)
+        );
+      }
+
+      &-primary {
+        @include normal-button-states(
+          transparent,
+          var(--bg-brand-tonal-normal, #f2fbfa),
+          var(--bg-brand-tonal-stronger, #def8f5),
+          transparent,
+          var(--fg-brand, #28ad99),
+          var(--fg-neutral-weakest)
+        );
+      }
+
+      &-danger {
+        @include normal-button-states(
+          transparent,
+          var(--bg-danger-tonal-normal, #fff2f2),
+          var(--bg-danger-tonal-stronger, #ffe0e0),
+          transparent,
+          var(--fg-danger, #e81a1a),
+          var(--fg-neutral-weakest)
+        );
+      }
+
+      &-info {
+        @include normal-button-states(
+          transparent,
+          var(--bg-info-tonal-normal, #ecf7ff),
+          var(--bg-info-tonal-stronger, #d8edff),
+          transparent,
+          var(--fg-info, #2e90fa),
+          var(--fg-neutral-weakest)
+        );
+      }
+
+      &-tenant {
+        @include normal-button-states(
+          transparent,
+          var(--bg-tenant-tonal-normal, #fefbe8),
+          var(--bg-tenant-tonal-stronger, #fefad7),
+          transparent,
+          var(--fg-tenant, #e2ab10),
+          var(--fg-neutral-weakest)
+        );
+      }
+    }
+
+    &-link {
+      background-color: transparent;
+      min-width: unset;
+      height: unset;
+      border-radius: unset;
+      font-weight: 500;
+      padding: unset;
+
+      &:hover,
+      &:active {
+        text-decoration: underline;
+      }
+
+      &:focus-visible {
+        box-shadow: none;
+        border: 2px solid var(--brand-200);
+        border-radius: 6px;
+      }
+
+      &.trudi-ui-btn-extra-large {
+        font-size: 18px;
+        line-height: 28px;
+        gap: 6px;
+      }
+
+      &.trudi-ui-btn-large {
+        font-size: 16px;
+        line-height: 24px;
+        gap: 6px;
+      }
+
+      &.trudi-ui-btn-medium {
+        font-size: 14px;
+        line-height: 20px;
+        gap: 6px;
+      }
+
+      &.trudi-ui-btn-small {
+        font-size: 12px;
+        line-height: 16px;
+        gap: 4px;
+      }
+
+      &.trudi-ui-btn-extra-small {
+        font-size: 10px;
+        line-height: 12px;
+        gap: 4px;
+      }
+
+      &-neutral {
+        @include link-button-states(
+          var(--fg-neutral-normal, #61646c),
+          var(--bg-neutral-solid-stronger, #333741),
+          var(--bg-neutral-solid-strongest, #1f242f)
+        );
+      }
+
+      &-primary {
+        @include link-button-states(
+          var(--fg-brand, #28ad99),
+          var(--bg-brand-solid-stronger, #209386),
+          var(--bg-brand-solid-strongest, #107569)
+        );
+      }
+
+      &-danger {
+        @include link-button-states(
+          var(--fg-danger, #e81a1a),
+          var(--bg-danger-solid-stronger, #e81a1a),
+          var(--bg-danger-solid-strongest, #c61111)
+        );
+      }
+
+      &-tenant {
+        @include link-button-states(
+          var(--fg-tenant, #e2ab10),
+          var(--bg-tenant-solid-stronger, #e2ab10),
+          var(--bg-tenant-solid-strongest, #c3840b)
+        );
+      }
+
+      &-base {
+        @include link-button-states(
+          var(--fg-base, #ffffff),
+          var(--fg-base, #ffffff),
+          var(--fg-neutral-weakest, #cecfd2)
+        );
+      }
+
+      &-weakest {
+        @include link-button-states(
+          var(--fg-neutral-weakest, #CECFD2),
+          var(--fg-neutral-weakest, #CECFD2),
+          var(--fg-neutral-weakest, #CECFD2)
+        );
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        text-decoration: unset;
+        pointer-events: unset;
+
+        &:hover,
+        &:active {
+          text-decoration: unset;
+        }
+      }
+    }
+
+    &-text {
+      font-size: 500;
+      font-weight: 18px;
+      line-height: 28px;
+      background-color: transparent;
+
+      &-neutral {
+        @include text-button-states(
+          var(--fg-neutral-normal, #61646c),
+          var(--bg-neutral-tonal-stronger),
+          var(--bg-neutral-tonal-strongest)
+        );
+      }
+
+      &-primary {
+        @include text-button-states(
+          var(--brand-500),
+          var(--bg-brand-solid-stronger, #209386),
+          var(--bg-brand-solid-strongest, #107569)
+        );
+      }
+
+      &-danger {
+        @include text-button-states(
+          var(--fg-danger, #e81a1a),
+          var(--bg-danger-tonal-normal),
+          var(--bg-danger-tonal-strongest)
+        );
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        pointer-events: unset;
+      }
+    }
+  }
+}

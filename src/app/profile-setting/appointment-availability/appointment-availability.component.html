@@ -1,0 +1,82 @@
+<div class="appointment-availability-wrapper">
+  <h4 class="title">Appointment availability</h4>
+  <p class="description">
+    Please enter the hours you are available to conduct out of office
+    appointments such as <br />
+    routine inspections. Appointments will be automatically scheduled at these
+    times.
+  </p>
+  <span *ngIf="'' | formatDateTimeAbbrev | async" class="label-hint">
+    Times displayed in {{ '' | formatDateTimeAbbrev: false: true | async }}
+  </span>
+  <ng-container
+    *ngIf="loadingService.isLoading$ | async; else appointmentAvailability">
+    <div
+      class="appointment-availability-wrapper appointment-availability-wrapper-skeleton">
+      <div class="time-setting time-setting-skeleton">
+        <div
+          class="time-setting-item"
+          *ngFor="let _ of [].constructor(7); let i = index">
+          <span class="time-setting-label">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 1, width: '80%' }"
+              [nzTitle]="false"
+              [nzActive]="true"></nz-skeleton>
+          </span>
+          <div class="time-setting-value time-setting-value-skeleton">
+            <nz-skeleton-element nzType="button" [nzActive]="true">
+            </nz-skeleton-element>
+          </div>
+        </div>
+      </div>
+      <div>
+        <nz-skeleton-element nzType="button" [nzActive]="true">
+        </nz-skeleton-element>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #appointmentAvailability>
+    <div class="time-setting">
+      <div class="time-setting-item" *ngFor="let item of times; index as index">
+        <span class="time-setting-label"> {{item.lable | titlecase}} </span>
+        <div class="time-setting-value">
+          <ng-container *ngIf="item.value?.length > 0">
+            <div
+              class="time-setting-value-item d-flex align-items-center"
+              *ngFor="let range of item.value; index as timeIndex">
+              <range-time-picker
+                [startHourd]="range.startTime"
+                [endHourd]="range.endTime"
+                (onChange)="setTime(index,timeIndex,$event)"
+                [validate]="validate">
+              </range-time-picker>
+              <button
+                trudi-btn
+                variant="outlined"
+                btnType="neutral"
+                shape="square"
+                size="medium"
+                class="btn-remove"
+                style="margin-left: 10px"
+                (click)="removeTime(index,timeIndex)">
+                <trudi-icon
+                  icon="redCloseIcon"
+                  [style]="{'width.px': 10}"></trudi-icon>
+              </button>
+            </div>
+          </ng-container>
+          <button
+            trudi-btn
+            variant="outlined"
+            btnType="neutral"
+            shape="square"
+            size="medium"
+            (click)="insertTime(index)">
+            <trudi-icon icon="plusGray" [style]="{'width.px': 14}"></trudi-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <button *ngIf="times?.length > 0" trudi-btn (click)="submit()">Save</button>
+  </ng-template>
+</div>

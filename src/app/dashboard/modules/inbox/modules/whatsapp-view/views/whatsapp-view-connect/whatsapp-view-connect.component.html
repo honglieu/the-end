@@ -1,0 +1,189 @@
+<div class="whatsapp-overlay">
+  @switch (currentStep) { @case (WhatsappSteps.Initial) {
+  <div class="whatsapp-popup" [style.max-width.px]="601" @fadeIn>
+    <img
+      width="326"
+      height="165"
+      src="/assets/images/trudi_with_whapsapp.png"
+      alt="whatsapp-image" />
+
+    <div class="whatsapp-popup__info">
+      <p class="whatsapp-popup__info--title">
+        Get started with WhatsApp Business
+      </p>
+      <p class="whatsapp-popup__info--subTitle">
+        Create a new WhatsApp Business account<br />
+        and connect it to your Meta Business Suite here in Trudi®.
+      </p>
+    </div>
+    <div class="d-flex flex-dir-column gap-8 mt-24">
+      <button
+        [disabled]="true"
+        class="create-account-btn"
+        trudi-tooltip
+        nzTooltipTitle="Your WhatsApp feature is turned OFF. Please contact your administrator."
+        [nzTooltipArrowPointAtCenter]="true"
+        [nzTooltipTrigger]="!isTurnOnWhatsApp && 'hover'"
+        trudi-btn
+        btnType="info"
+        size="large"
+        (click)="handleCreateWhatsAppAccount()">
+        <span class="create-account-btn__text"
+          >Create WhatsApp Business account</span
+        >
+      </button>
+      <div class="d-flex gap-4 align-items-center justify-content-center">
+        <trudi-icon
+          [icon]="isPermissionEdit ? 'infoCircle' : 'infoFill'"
+          class="icon-alert"
+          [svgClass]="isPermissionEdit ? 'size-14' : 'size-12'">
+        </trudi-icon>
+        @if(isPermissionEdit) {
+        <span class="notice-text"
+          >Want to use your existing account? Sorry we can’t do that yet. Set up
+          a new one instead.
+        </span>
+        } @else {
+        <span class="info-text"
+          >You need to be an account administrator to edit this page.
+        </span>
+        }
+      </div>
+    </div>
+  </div>
+  } @case (WhatsappSteps.GetStart) {
+  <div class="whatsapp-popup" [style.max-width.px]="681" @fadeIn>
+    <div class="close-button d-flex w-100">
+      <button (click)="handleCancel()" class="close-button">
+        <trudi-icon icon="closeIcon"></trudi-icon>
+      </button>
+    </div>
+    <div class="d-flex flex-dir-column align-items-center gap-24">
+      <img
+        width="200"
+        height="60"
+        src="/assets/images/twilio-logo.png"
+        alt="twilio-image" />
+      <div class="whatsapp-popup__info">
+        <p class="whatsapp-popup__info--title">
+          Get started with WhatsApp Business
+        </p>
+        <p class="whatsapp-popup__info--subTitle">
+          We use a 3rd party system called Twillio to manage conversations in
+          your Trudi® inbox.<br />
+          You will need to give permission to Twillio to manage your WhatApps
+          Business account.
+        </p>
+      </div>
+      <button
+        class="trudi-btn trudi-btn-primary w-100"
+        trudi-tooltip
+        [nzTooltipArrowPointAtCenter]="true"
+        [nzTooltipTrigger]="!isHasFeatureMessenger && 'hover'"
+        trudi-btn
+        btnType="filled"
+        (click)="handleAddPhoneNumberForm()">
+        <span class="create-account-btn__text">Ok, got it</span>
+      </button>
+    </div>
+  </div>
+
+  } @case (WhatsappSteps.Integrate) {
+  <div
+    class="whatsapp-popup whatsapp-popup-not-space"
+    [style.max-width.px]="681"
+    @fadeIn>
+    <div class="whatsapp-popup__header">
+      <span class="whatsapp-popup__header--title"
+        >Select a phone number to register</span
+      >
+    </div>
+    <div class="phone-number-form">
+      <p class="whatsapp-popup__info--subTitle">
+        Which phone number would you like to use for your WhatsApp Business
+        Account?
+      </p>
+      <form class="w-100" [formGroup]="phoneForm">
+        <trudi-radio-button
+          formControlName="phoneOption"
+          [options]="checkboxList"
+          [selectedValue]="phoneForm.get('phoneOption').value"
+          (ngModelChange)="phoneForm.patchValue({ phoneOption: $event })">
+          <ng-template trudi-radio-button-tmp let-value="value">
+            @switch(value) { @case
+            (PhoneNumberToRegisterType.MY_OWN_PHONE_NUMBER) {
+            <ng-container>
+              <p class="notice-text">
+                A phone number linked to a physical device. This phone number
+                cannot be linked to an existing WhatsApp account and must be
+                able to verify via a one-time PIN.
+              </p>
+              <trudi-form-control
+                [errors]="[{errorName: 'invalidPhoneNumber', errorMessage: 'Invalid phone number'}]"
+                class="phone-number-wrapper">
+                <trudi-number-field
+                  [size]="'large'"
+                  formControlName="phoneNumber"
+                  [maskPattern]="phoneNumberPattern"
+                  (onChangeData)="triggerCompanyPhoneNumber($event)"
+                  maxCharacter="11"
+                  [prefixText]="'(' + areaCode + ')' || ''">
+                </trudi-number-field>
+              </trudi-form-control>
+            </ng-container>
+            } @case (PhoneNumberToRegisterType.SAME_PHONE_NUMBER) {
+            <ng-container>
+              <trudi-text-field
+                [size]="'large'"
+                [disabled]="true"
+                [placeholder]="voicemailPhoneNumber"
+                [prefixText]="'(' + areaCode + ')' || ''">
+              </trudi-text-field>
+            </ng-container>
+            } }
+          </ng-template>
+        </trudi-radio-button>
+      </form>
+    </div>
+
+    <div class="footer-model d-flex gap-12">
+      <button
+        type="button"
+        class="trudi-btn trudi-btn-tertiary trudi-btn-large"
+        (click)="handleCancel()">
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="trudi-btn trudi-btn-primary trudi-btn-large"
+        (click)="handleConfirm()">
+        Next
+      </button>
+    </div>
+  </div>
+  } @case (WhatsappSteps.Success) {
+  <div class="whatsapp-popup gap-24" [style.max-width.px]="620" @fadeIn>
+    <img
+      width="306"
+      height="164"
+      src="/assets/images/successfully.png"
+      alt="successfully-image" />
+    <div class="d-flex flex-dir-column align-items-center gap-24">
+      <div class="whatsapp-popup__info">
+        <p class="whatsapp-popup__info--title">You're all set</p>
+        <p class="whatsapp-popup__info--subTitle">
+          The WhatsApp account for (+81) 654.223.512 has been successfully<br />
+          added to your Trudi® inbox.
+        </p>
+      </div>
+      <button
+        (click)="handleComplete()"
+        size="large"
+        trudi-btn
+        class="trudi-btn trudi-btn-primary w-100">
+        <span class="create-account-btn__text">Done</span>
+      </button>
+    </div>
+  </div>
+  }}
+</div>

@@ -1,0 +1,59 @@
+<div class="app-message-header-skeleton">
+  <div class="header-section gap-12">
+    <div class="info-row info-row-first">
+      <div class="mr-8">
+        <nz-skeleton
+          [nzTitle]="true"
+          [nzParagraph]="false"
+          [style.width.px]="300"
+          [nzActive]="true"></nz-skeleton>
+      </div>
+      <div class="mr-8">
+        <nz-skeleton
+          [nzTitle]="true"
+          [nzParagraph]="false"
+          [style.width.px]="50"
+          [nzActive]="true"></nz-skeleton>
+      </div>
+      <div class="d-flex gap-6 ml-auto">
+        @for (_ of [1,2]; track i; let i = $index) {
+        <nz-skeleton
+          [nzTitle]="true"
+          [nzParagraph]="false"
+          [style.width.px]="32"
+          [nzActive]="true"></nz-skeleton>
+        }
+        <div class="d-flex align-items-center gap-4 ml-auto">
+          <nz-skeleton
+            class="circle-sm"
+            [nzTitle]="false"
+            [nzParagraph]="false"
+            [nzAvatar]="true"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+        <div class="d-flex align-items-center gap-4 ml-auto">
+          <nz-skeleton
+            class="circle-sm"
+            [nzTitle]="false"
+            [nzParagraph]="false"
+            [nzAvatar]="true"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </div>
+    </div>
+    <div class="info-row info-row-second">
+      <nz-skeleton
+        [nzTitle]="true"
+        [nzParagraph]="false"
+        [style.width.px]="376"
+        [nzActive]="true"></nz-skeleton>
+      <div class="d-flex align-items-center gap-6 ml-auto">
+        <nz-skeleton
+          [nzTitle]="false"
+          [nzParagraph]="false"
+          [nzAvatar]="true"
+          [nzActive]="true"></nz-skeleton>
+      </div>
+    </div>
+  </div>
+</div>

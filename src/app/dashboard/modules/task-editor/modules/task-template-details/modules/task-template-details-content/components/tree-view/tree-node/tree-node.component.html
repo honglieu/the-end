@@ -1,0 +1,239 @@
+<div
+  class="tree-node d-flex"
+  [class.step-node]="node.type === ETypeElement.STEP"
+  [class.section-node]="node.type === ETypeElement.SECTION"
+  [class.decision-node]="node.type === ETypeElement.DECISION"
+  [attr.data-tree-node]="node.type + '-' + node.title"
+  [attr.data-node-key]="node.key">
+  <div
+    class="tree-node-item"
+    [class.disabled]="disabled"
+    [attr.data-node-key]="node.key"
+    [attr.data-tree-node]="node.type + '-' + node.title">
+    <div
+      class="indent-block"
+      [attr.data-tree-node]="node.type + '-' + node.title"
+      *ngFor="let indent of currentIndents; let index = index;"
+      [class.line]="indent"
+      [class.negative-left-pad]="currentIndents?.length >=3 && index === 0"
+      [class.square]="(isEnd || onlyChild) && index === level - 1"
+      [class.cross]="hasSibling && indent && !isEnd && index === level - 1"></div>
+    <div
+      cdkDrag
+      [cdkDragData]="node"
+      [cdkDragDisabled]="node.state === ETreeNodeState.DRAFT || disabled"
+      (cdkDragMoved)="onDragMoved($event)"
+      [attr.data-node-key]="node.key"
+      class="tree-node-name tree-node-draggable d-flex gap-12"
+      [ngClass]="{'tree-node-draft': node.state !== ETreeNodeState.DRAFT}">
+      <div class="d-flex gap-12">
+        <div
+          class="step-action"
+          [ngClass]="{'step-action-decision': node.type === ETypeElement.DECISION, 'step-action-section': node.type === ETypeElement.SECTION, 'step-action-step': node.type === ETypeElement.STEP}">
+          <div
+            class="task-edit-field d-flex gap-12"
+            *ngIf="node.type === ETypeElement.DECISION || node.type === ETypeElement.SECTION">
+            <span class="textfield-underlay">{{node.title}}</span>
+            <trudi-text-field
+              #textField
+              #textFieldModel="ngModel"
+              [ngClass]="{'errorNode': node.error}"
+              [(ngModel)]="node.title"
+              [name]="node.key"
+              [maxCharacter]="node.type === ETypeElement.DECISION ? 75 : 50"
+              [checkSubmit]="true"
+              [showCounting]="false"
+              [disabled]="disabled"
+              size="large"
+              required
+              (triggerEventFocus)="editNode(node)"
+              (triggerEventBlur)="handleClickOutsideTextField(textField, textFieldModel, node)"
+              [placeholder]="node.type === ETypeElement.DECISION ? ' ENTER DECISION TREE NAME': node.type === ETypeElement.SECTION ? 'ENTER SECTION NAME': ''"></trudi-text-field>
+            <div class="task-edit" *ngIf="node.edit">
+              <button
+                trudi-btn
+                variant="outlined"
+                btnType="neutral"
+                shape="circle"
+                size="medium"
+                class="task-edit-icon y-center"
+                (mousedown)="$event.preventDefault();$event.stopPropagation();cancel(node)">
+                <trudi-icon
+                  [style]="{ 'width.px': 14, 'height.px': 14}"
+                  icon="closeGray64"></trudi-icon>
+              </button>
+              <button
+                trudi-btn
+                variant="outlined"
+                btnType="neutral"
+                shape="circle"
+                size="medium"
+                class="task-edit-icon y-center"
+                [disabled]="!node.title"
+                (click)="$event.stopPropagation();updateNode(node)">
+                <trudi-icon
+                  [style]="{ 'width.px': 12, 'height.px': 12}"
+                  icon="checkedSync"></trudi-icon>
+              </button>
+            </div>
+          </div>
+          <button
+            (click)="handleEditStep(node)"
+            class="step-title y-center"
+            *ngIf="node.type === ETypeElement.STEP">
+            <span>{{node.title}}</span>
+            <trudi-icon
+              [style]="{'width.px':20, 'height.px':20,'color':'#3D3D3D'}"
+              [ngClass]="'ml-4'"
+              icon="checklist"
+              *ngIf="node.stepType === stepType.CHECK_LIST"></trudi-icon>
+            <img
+              *ngIf="currentCrmLogo && isActionStep"
+              [src]="currentCrmLogo"
+              alt="logo" />
+            <ng-container
+              *ngIf="node?.crmConflictErrors && node?.crmConflictErrors?.length else otherError">
+              <trudi-icon
+                icon="infoFill"
+                class="node-error"
+                nz-tooltip
+                nzTooltipPlacement="top"
+                [nzTooltipTitle]="node?.crmConflictErrors[0]?.message"
+                [nzTooltipOverlayStyle]="{ 'max-width': '200px' }">
+              </trudi-icon>
+            </ng-container>
+            <ng-template #otherError>
+              <trudi-icon
+                *ngIf="node.isInvalidDynamicParam"
+                nz-tooltip
+                nzTooltipTitle="Email template contains dynamic fields that does not exist in workflow"
+                class="icon-alert node-error"
+                svgClass="size-16"
+                viewBox="auto"
+                icon="iconAlert"></trudi-icon>
+              <ng-container *ngIf="(errorNode | async) as err">
+                <trudi-icon
+                  icon="infoFill"
+                  class="node-error"
+                  nz-tooltip
+                  nzTooltipPlacement="top"
+                  [nzTooltipTitle]="err[0]?.message"
+                  [nzTooltipOverlayStyle]="{ 'max-width': '200px' }">
+                </trudi-icon>
+              </ng-container>
+            </ng-template>
+          </button>
+        </div>
+      </div>
+      <div
+        class="tree-node-actions"
+        *ngIf="node.state !== ETreeNodeState.DRAFT && !disabled">
+        <button
+          class="icon-button"
+          trudi-btn
+          variant="ghost"
+          btnType="neutral"
+          shape="circle"
+          size="medium"
+          [selected]="dropdown.nzVisible"
+          nz-dropdown
+          nzTrigger="hover"
+          #dropdown="nzDropdown"
+          [nzOverlayClassName]="'treenode-dropdown'"
+          [nzDropdownMenu]="menu">
+          <trudi-icon
+            icon="iconPlus2"
+            [style]="{ 'width.px': 20, 'height.px': 20}"></trudi-icon>
+        </button>
+        <button
+          class="icon-button"
+          trudi-btn
+          variant="ghost"
+          btnType="neutral"
+          shape="circle"
+          size="medium"
+          (click)="duplicateNode(node)"
+          nz-tooltip
+          nzTooltipTitle="Duplicate">
+          <trudi-icon
+            icon="duplicate"
+            [style]="{ 'width.px': 20, 'height.px': 20}"></trudi-icon>
+        </button>
+        <button
+          class="icon-button"
+          trudi-btn
+          variant="ghost"
+          btnType="neutral"
+          shape="circle"
+          size="medium"
+          (click)="removeNode(node)"
+          nz-tooltip
+          nzTooltipTitle="Delete">
+          <trudi-icon
+            icon="deleted"
+            [style]="{ 'width.px': 20, 'height.px': 20}"></trudi-icon>
+        </button>
+        <button
+          [draggable]="true"
+          cdkDragHandle
+          class="icon-button drag-icon"
+          trudi-btn
+          variant="ghost"
+          btnType="neutral"
+          shape="circle"
+          size="medium"
+          nz-tooltip
+          nzTooltipTitle="Hold & Drag"
+          nzTooltipPlacement="top">
+          <trudi-icon
+            icon="drag"
+            [style]="{ 'width.px': 20, 'height.px': 20}"></trudi-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="node.children && node.children.length > 0">
+    <div class="tree-node-children">
+      <trudi-tree-node
+        *ngFor="let childNode of node?.children; let last = last; let first = first; let index = index"
+        [currentCrmLogo]="currentCrmLogo"
+        [level]="level + 1"
+        [parentNode]="node"
+        [hasSibling]="node.children.length > 1 && index !== node.children.length - 1"
+        [indents]="currentIndents"
+        [isStart]="!last && first"
+        [isEnd]="last && !first"
+        [onlyChild]="last && first"
+        [node]="childNode"
+        (onRemoveNode)="handleRemoveChildDecision($event)"
+        [defaultDecisionKey]="node?.type === ETypeElement.DECISION ? node.childDecisionKey : null"
+        [disabled]="disabled"
+        (changeDefaultDecision)="handleChangeDefaultChildDecision($event)">
+      </trudi-tree-node>
+    </div>
+  </ng-container>
+</div>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <ul nz-menu>
+    <li
+      nz-menu-item
+      class="tree-dropdown-menu-item"
+      (click)="addNodeBelow(ETypeElement.STEP)">
+      Add step below
+    </li>
+    <li
+      nz-menu-item
+      class="tree-dropdown-menu-item"
+      (click)="addNodeBelow(ETypeElement.SECTION)">
+      Add section below
+    </li>
+    <li
+      nz-menu-item
+      class="tree-dropdown-menu-item"
+      (click)="addNodeBelow(ETypeElement.DECISION)">
+      Add decision below
+    </li>
+  </ul>
+</nz-dropdown-menu>

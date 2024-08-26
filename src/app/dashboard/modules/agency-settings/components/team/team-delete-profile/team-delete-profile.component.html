@@ -1,0 +1,26 @@
+<div class="team-deactive">
+  <div class="d-flex gap-16">
+    <img class="size-48" src="assets/icon/icon-warning-red.svg" />
+    <div class="confirm-text">
+      <p class="bold-text">
+        Are you sure you want to delete this profile permanently?
+      </p>
+    </div>
+  </div>
+  <div class="btn-wrapper gap-12">
+    <button
+      data-e2e="button-cancel"
+      type="button"
+      class="trudi-btn trudi-btn-large trudi-btn-tertiary"
+      (click)="isOpenModal()">
+      <span class="btn-text"> No, keep it </span>
+    </button>
+    <button
+      data-e2e="button-deactive"
+      type="button"
+      class="trudi-btn trudi-btn-large trudi-btn-danger"
+      (click)="isDeleteProfile()">
+      <span class="btn-text"> Yes, delete </span>
+    </button>
+  </div>
+</div>

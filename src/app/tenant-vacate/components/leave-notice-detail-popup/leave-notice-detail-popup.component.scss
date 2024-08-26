@@ -1,0 +1,155 @@
+@import 'function';
+.popup-body-content {
+  padding: 20px 24px;
+}
+
+.leave-notice-detail-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 24px;
+  gap: 12px;
+  background: transparent;
+  border-top: 1px solid var(--gray-100);
+  border-radius: 0 0 8px 8px;
+}
+
+:host ::ng-deep {
+  popup-modal .header {
+    border-bottom: none !important;
+  }
+}
+
+.vacate-wrapper {
+  input {
+    border-radius: 8px;
+    background-color: var(--gray-200);
+    height: 44px;
+    width: 100%;
+    border: none;
+    padding: 0.8rem;
+    @include fontSetup(var(--gray-700), 12px, 16px, normal, 500);
+
+    &::placeholder {
+      @include fontSetup(var(--gray-500), 12px, 16px, normal, 500);
+    }
+
+    &.has-error {
+      border: 1px solid var(--danger-500) !important;
+      box-shadow: none !important;
+      outline: 2px solid rgba(var(--danger-500-rgb), 0.6) !important;
+    }
+
+    &:hover {
+      border-color: var(--gray-100) !important;
+      background: var(--gray-100) !important;
+      box-shadow: none !important;
+      cursor: pointer;
+    }
+
+    &:focus {
+      background: var(--white);
+      border: 1px solid var(--brand-500);
+      outline: 2px solid rgba(var(--brand-500-rgb), 0.6);
+
+      &::-webkit-input-placeholder {
+        opacity: 0;
+      }
+    }
+  }
+  .vacate-title {
+    @include fontSetup(var(--gray-700), 14px, 18px, normal, 600);
+  }
+  .vacate-form {
+    .mt-20 {
+      margin-top: 20px;
+    }
+
+    .form-row {
+      .form-title {
+        @include fontSetup(var(--gray-500), 12px, 18px, normal, 400);
+      }
+      .form-input {
+        gap: 4px;
+
+        .input-error-text {
+          border: 1px solid var(--danger-500);
+          border-radius: 9px;
+          outline: 2px solid rgba(var(--danger-500-rgb), 0.6) !important;
+        }
+      }
+
+      .trudi-date trudi-date-picker {
+        max-width: unset !important;
+        height: 44px !important;
+      }
+
+      .notice-area {
+        textarea {
+          width: 100%;
+          background: var(--gray-200);
+          resize: none;
+          white-space: pre-wrap;
+          padding: 8px;
+          border-radius: 6px;
+          border: 1px solid var(--gray-200);
+          @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+
+          &::-webkit-scrollbar {
+            width: 0;
+          }
+
+          &::placeholder {
+            color: var(--gray-500);
+          }
+
+          &:focus {
+            border: 1px solid var(--brand-500) !important;
+            outline: 2px solid rgba(var(--brand-500-rgb), 0.6) !important;
+            background-color: var(--white) !important;
+          }
+
+          &:hover:not(:focus) {
+            background: var(--gray-100) !important;
+          }
+
+          &.active-required {
+            border: 1px solid var(--danger-500) !important;
+            outline: 2px solid var(--danger-500) !important;
+          }
+          &.has-error {
+            margin: 0 2px;
+            padding: 12px 10px;
+            @include box-shadow-input-select(var(--shadow-danger) !important);
+          }
+        }
+      }
+    }
+  }
+}
+:host ::ng-deep .trudi-date .trudi-picker {
+  .trudi-picker-input {
+    input {
+      @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+    }
+  }
+}
+
+::ng-deep {
+  .trudi-form-control-wrapper .notice-area:has(textarea) {
+    &:hover {
+      @include box-shadow-input-select(var(--shadow-brand) !important);
+    }
+    .error-container {
+      visibility: hidden;
+    }
+  }
+  .trudi-form-control-wrapper:has(.date.trudi-picker-focused) {
+    .error-container {
+      visibility: hidden;
+    }
+  }
+  .trudi-form-control-wrapper .date.trudi-picker-focused {
+    @include box-shadow-input-select(var(--shadow-brand) !important);
+    background-color: var(--white);
+  }
+}

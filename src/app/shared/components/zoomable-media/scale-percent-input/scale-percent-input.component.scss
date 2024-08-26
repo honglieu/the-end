@@ -1,0 +1,24 @@
+@import 'function';
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  width: 54px;
+
+  span {
+    @include fontSetup(var(--white), 14px, 20px, normal, 500);
+  }
+}
+
+.input-wrapper.focused {
+  background-color: var(--white);
+  border-radius: 8px;
+  border: 1px solid var(--border-neutral-dark);
+  box-shadow: 0 0 0 2px #464646;
+
+  > span {
+    color: var(--bg-neutral-solid-stronger, #333741) !important;
+  }
+}

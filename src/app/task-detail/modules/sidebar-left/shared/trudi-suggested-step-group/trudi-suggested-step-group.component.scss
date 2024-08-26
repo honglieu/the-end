@@ -1,0 +1,36 @@
+@import 'function';
+
+:host {
+  & {
+    display: block;
+    margin-bottom: 20px;
+    .trudi-suggested-step-group-title {
+      display: flex;
+      align-items: center;
+      column-gap: 4px;
+      padding-bottom: 8px;
+
+      .group-title-icon {
+        width: 12px;
+        height: 2px;
+        background-color: var(--gray-600);
+      }
+
+    }
+  }
+  .trudi-suggested-step-group-container {
+    padding: 0px 12px 12px 12px;
+    .content {
+      border-radius: 8px;
+      border: 1px solid var(--border-neutral-dark);
+      &:hover {
+        background: var(--gray-100, #e7eaed);
+      }
+      .group-title {
+        padding: 12px 16px 0 16px;
+        text-transform: uppercase;
+        @include fontSetup(var(--gray-600), 1.2rem, 1.6rem, normal, 600);
+      }
+    }
+  }
+}

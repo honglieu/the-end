@@ -1,0 +1,168 @@
+<div
+  class="modal-container"
+  *ngIf="isShowPreview"
+  @openClose
+  (@openClose.done)="handleAnimationEnd()"
+  appOutsideClickListener
+  (clickOutside)="handleClickOutside(true)"
+  [whiteList]="['.menu-wrapper-message']">
+  <ng-container
+    [ngTemplateOutlet]="(isLoading || isLoadingSkeleton) ? loadingTemplate : showAnimationSidePanel ? loaderTemplate :
+  (queryParams?.[ETaskQueryParams.TASK_ID] && taskPreview && hasTaskInList) ? contentTemplate : checkedTaskImageTemplate">
+  </ng-container>
+</div>
+
+<ng-template #loaderTemplate>
+  <div class="task-preview-center-template">
+    <img
+      loading="lazy"
+      src="assets/images/animation-side-panel.gif"
+      alt="animation side panel" />
+  </div>
+</ng-template>
+
+<ng-template #checkedTaskImageTemplate>
+  <div class="task-preview-center-template">
+    <div class="wrapper-image-checked">
+      <img
+        [src]="'assets/images/' + (!hasCheckedTask ? 'no-item' : 'item-selected') + '.png'" />
+      <p class="select-item-text" *ngIf="!hasCheckedTask && hasTaskInFolder">
+        Select an item to read
+      </p>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #contentTemplate>
+  <div class="task-preview-content-template">
+    <div
+      *ngIf="queryParams?.[ETaskQueryParams.TASK_ID]"
+      class="task-preview-wrapper-scroll">
+      <task-header-preview
+        (handleChangeTitleTask)="handleChangeTitleTask($event)"
+        [conversationType]="taskPreview?.conversations?.[0]?.conversationType"
+        [titleTaskPreview]="taskPreview?.title"
+        [property]="taskPreview?.property"
+        [taskId]="taskPreview?.id"
+        (handleOpenPropertyProfile)="handleOpenPropertyProfile()"></task-header-preview>
+      <progress-preview
+        [inprogress]="taskPreview?.inprogress"
+        [isNoPropertyTask]="taskPreview?.property.isTemporary ?? !taskPreview?.property.streetline"
+        [taskId]="taskPreview?.id"></progress-preview>
+      <calendar-preview
+        [calenderWidgetExpiredDays]="calenderWidgetExpiredDays"
+        [calendarEvents]="taskPreview?.calendarEvents"
+        [taskId]="taskPreview?.id"></calendar-preview>
+      <conversations-preview
+        [taskPreview]="taskPreview"
+        [task]="taskService?.currentTask$.value"
+        [taskId]="taskPreview?.id">
+      </conversations-preview>
+    </div>
+  </div>
+  <ng-container [ngTemplateOutlet]="propertyProfileTemp"> </ng-container>
+</ng-template>
+
+<ng-template #loadingTemplate>
+  <div class="task-preview-content-template">
+    <div class="task-preview-skeleton">
+      <div class="header-skeleton">
+        <nz-skeleton [nzParagraph]="paragraph" [nzActive]="true"></nz-skeleton>
+        <nz-skeleton [nzParagraph]="paragraph" [nzActive]="true"></nz-skeleton>
+        <nz-skeleton [nzParagraph]="paragraph" [nzActive]="true"></nz-skeleton>
+      </div>
+
+      <div class="progress-skeleton mt-14">
+        <nz-skeleton
+          class="title-header-skeleton"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+        <div class="progress-container-skeleton">
+          <div class="item-progress">
+            <div class="workflow-step__icon-wrapper"></div>
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+          <div class="item-progress">
+            <div class="workflow-step__icon-wrapper"></div>
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </div>
+      </div>
+
+      <div class="calendar-skeleton mt-14">
+        <nz-skeleton
+          class="title-header-skeleton"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+        <div class="calendar-container">
+          <div class="calendar-icon"></div>
+          <div class="calendar-content">
+            <div class="item-calendar" *ngFor="let _ of [].constructor(2)">
+              <div class="w-100">
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"></nz-skeleton>
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"></nz-skeleton>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="conversation-preview-skeleton mt-14">
+        <nz-skeleton
+          class="title-header-skeleton"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+        <div class="conversation-list-preview-skeleton">
+          <div
+            *ngFor="let _ of [].constructor(4)"
+            class="conversation-box-skeleton">
+            <div
+              class="conversation-infor-skeleton w-100 d-flex justify-content-between align-items-center">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"></nz-skeleton>
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+            <nz-skeleton
+              class="conversation-description-skeleton"
+              [nzParagraph]="paragraph"
+              [nzActive]="true"></nz-skeleton>
+            <div
+              class="conversation-message-skeleton w-100 d-flex justify-content-between align-items-center">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"></nz-skeleton>
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #propertyProfileTemp>
+  <div class="task-preview-property-profile">
+    <property-profile-drawer
+      closeMargin="-450"
+      [visible]="displayPropertyProfile"
+      [displayBackButton]="true"
+      (triggerCloseDrawer)="handleClosePropertyProfile(); handleClickOutside()"
+      (triggerBackButton)="handleClosePropertyProfile()"
+      [openFrom]="ETypePage.TASK_DETAIL"
+      [propertyId]="taskPreview?.property?.id">
+    </property-profile-drawer>
+  </div>
+</ng-template>

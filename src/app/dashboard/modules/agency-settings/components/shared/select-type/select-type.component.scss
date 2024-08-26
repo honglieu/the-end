@@ -1,0 +1,125 @@
+@import 'function';
+
+.input-type {
+  padding: 4px;
+  border-bottom: 1px solid var(--gray-200);
+  width: 100%;
+  trudi-text-field ::ng-deep trudi-icon svg-icon svg path {
+    fill: var(--gray-600);
+  }
+
+  ::ng-deep .trudi-text-field-wrapper .trudi-ui-text-field {
+    @include fontSetup(var(--gray-700) !important, 14px, 20px, normal, 400);
+  }
+
+  ::ng-deep .error-container {
+    justify-content: unset !important;
+  }
+}
+
+.add-new-type-btn {
+  padding: 12px;
+}
+
+.type_list {
+  padding: 8px 12px;
+  width: 100%;
+  border-bottom: 1px solid var(--border-neutral-light, #f2f5f7);
+
+  &::ng-deep .trudi-ui-btn-extra-small-circle {
+    padding: 1px !important;
+  }
+
+  .type_list-wrapper {
+    overflow: hidden;
+  }
+}
+
+.text-name {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  @include fontSetup(var(--gray-700) !important, 14px, 20px, normal, 500);
+}
+
+:host ::ng-deep ng-template {
+  .select-item {
+    trudi-badge.type-name {
+      height: unset;
+      align-items: unset;
+    }
+  }
+}
+
+:host
+  ::ng-deep
+  ng-select.trudi-single-select
+  .ng-dropdown-panel
+  .ng-dropdown-footer {
+  padding: unset !important;
+}
+
+:host ::ng-deep .footer-wrapper {
+  width: 100% !important;
+}
+
+:host ::ng-deep trudi-form-control {
+  width: 100%;
+}
+
+.menu-action-wrapper {
+  width: 120px;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: var(--white);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+
+  .item {
+    padding: 12px;
+    @include fontSetup(
+      var(--bg-neutral-solid-stronger, #333741),
+      14px,
+      20px,
+      normal,
+      500
+    );
+    cursor: pointer;
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed !important;
+
+      .size-20 {
+        opacity: 0.3;
+      }
+    }
+
+    .text {
+      margin: 0;
+      white-space: nowrap;
+    }
+  }
+
+  .item-content:not(:last-child) {
+    border-bottom: 1px solid var(--border-neutral-dark, #ececed);
+  }
+}
+
+.type-name-default {
+  @include fontSetup(var(--white), 12px, 16px, normal, 400);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.type_list:hover .check-success {
+  display: none !important;
+}
+
+.type_list:hover .three-dots-button {
+  display: block;
+}
+
+.type_list .three-dots-button {
+  display: none;
+}

@@ -1,0 +1,103 @@
+<trudi-modal
+  *ngIf="show"
+  [(visible)]="show"
+  [modelWidth]="624"
+  [subTitle]="''"
+  [title]="initObj[taskNameId]?.title"
+  [autoFocus]="null"
+  (onCancel)="closeModal()"
+  iconName="trudiAvt"
+  [showIconName]="false">
+  <div class="">
+    <div
+      class="form-container d-flex flex-dir-column gap-16"
+      [formGroup]="formGroup">
+      <div class="value2-container">
+        <div class="input-label" data-e2e="summary-issue-label">
+          {{initObj[taskNameId]?.label2}}
+        </div>
+        <div #textAreaWrapper class="content relative">
+          <textarea
+            #textarea
+            type="text"
+            rows="4"
+            autosize
+            formControlName="value2"
+            placeholder="Enter summary"
+            [maxlength]="MAX_TEXT_MESS_LENGTH"
+            data-e2e="summary-textarea"
+            [ngClass]="{'has-error': formGroup.get('value2').dirty && formGroup.get('value2').invalid}"></textarea>
+          <div class="down-right-text textarea-bottom-text">
+            {{MAX_TEXT_MESS_LENGTH - formGroup.get('value2').value?.length}}
+          </div>
+        </div>
+        <div
+          *ngIf="formGroup.get('value2').dirty && formGroup.get('value2').invalid"
+          class="error-container d-flex align-items-center gap-4">
+          <img
+            class="ng-select-alert size-12"
+            src="/assets/icon/icon-warning-red-fit.svg"
+            alt="icon" />
+          <span class="error-text">Required field</span>
+        </div>
+      </div>
+      <div class="attachment-images">
+        <div class="input-label" data-e2e="photo-label">Photos (optional)</div>
+        <div class="list-file d-flex gap-8" data-e2e="brown-files-square">
+          <ng-container *ngFor="let image of images; let idx = index">
+            <preview-image-video-box
+              *ngIf="idx < 5"
+              [fileData]="image"
+              [canSelected]="true"></preview-image-video-box>
+          </ng-container>
+          <div *ngIf="images.length < 5">
+            <label for="file" class="pointer size-60 file-label"></label>
+            <input
+              type="file"
+              class="hide"
+              [accept]="acceptFileType"
+              id="file"
+              (change)="fileBrowseHandler($event)"
+              hidden />
+          </div>
+        </div>
+        <div
+          *ngIf="overFileSize; else fileValid"
+          class="error-container d-flex align-items-center gap-4">
+          <img src="/assets/icon/icon_warning.svg" alt="" />
+          <div class="error-text">
+            Your file is larger than 25MB. Please upload a smaller file.
+          </div>
+        </div>
+        <ng-template #fileValid>
+          <div
+            *ngIf="mediaFilesInConversation > 0 && hasOriginalMediaFile"
+            class="input-label input-label-bottom">
+            {{mediaFilesInConversation + (mediaFilesInConversation > 1 ? '
+            photos ' : ' photo ') + 'found in task conversations'}}
+          </div>
+        </ng-template>
+      </div>
+    </div>
+    <ng-template #footerModal>
+      <div class="d-flex gap-16">
+        <button
+          *ngIf="showBackBtn"
+          type="button"
+          class="trudi-btn trudi-btn-large trudi-btn-tertiary"
+          (click)="onBackClick()"
+          data-e2e="back-btn">
+          Back
+        </button>
+        <button
+          type="button"
+          [disabled]="isLoadingConfirm || isConsole"
+          class="trudi-btn trudi-btn-large trudi-btn-primary"
+          (click)="isEdit ? handleEditTask() : createTask()"
+          data-e2e="confirm-btn">
+          Confirm
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</trudi-modal>

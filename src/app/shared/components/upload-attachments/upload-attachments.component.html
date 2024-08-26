@@ -1,0 +1,61 @@
+<resizable-modal-popup
+  *ngIf="showAddFilesModal"
+  [modalId]="modalId"
+  [show]="showAddFilesModal"
+  [showTitle]="true"
+  [title]="titleHeader"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [footerTemplate]="footerModal"
+  (onCancel)="stopProcess()"
+  [isCustomMoveable]="true">
+  <div class="send-pet-request-landlord">
+    <div class="body">
+      <ng-container *ngFor="let item of listFileUpload; let i=index">
+        <card-upload-file
+          [fileRequired]="fileRequired"
+          [isSubmit]="isNext"
+          [titleContent]="item.title"
+          [acceptType]="acceptType"
+          (isOpenFile)="openFile(i)"
+          (handleRemove)="remove($event)"
+          (onFile)="addFile($event, i)"
+          [file]="item.listFile">
+        </card-upload-file>
+      </ng-container>
+    </div>
+    <ng-template #footerModal>
+      <div class="d-flex align-items-center gap-12 upload-attachment-footer">
+        <button
+          data-e2e="button-back"
+          *ngIf="hasBack"
+          trudi-btn
+          variant="outlined"
+          btnType="neutral"
+          (click)="backSelectLandlord()">
+          <span class="btn-text">Back</span>
+        </button>
+        <button
+          data-e2e="button-next"
+          trudi-btn
+          [disabled]="isDisabled"
+          (click)="submit()">
+          <span class="btn-text">Next</span>
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</resizable-modal-popup>
+
+<div class="file-upload" *ngIf="showPopupUploadFile">
+  <app-add-files-popup
+    [show]="showPopupUploadFile"
+    (isOpenSendQuote)="BackUploadAttachments()"
+    (outSelectedFile)="addFile($event)"
+    (isOpenQuitConfirmModal)="stopProcess()">
+  </app-add-files-popup>
+</div>

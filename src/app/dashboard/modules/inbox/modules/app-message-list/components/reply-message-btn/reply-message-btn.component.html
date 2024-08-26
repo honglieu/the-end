@@ -1,0 +1,11 @@
+<button
+  class="message-reply-button"
+  [ngClass]="{'in-dropdown': inDropdown}"
+  trudi-btn
+  btnType="neutral"
+  variant="ghost"
+  size="extra-small"
+  shape="circle"
+  (click)="handleReply()">
+  <trudi-icon svgClass="size-16" icon="replyIcon"></trudi-icon>
+</button>

@@ -1,0 +1,212 @@
+<div class="mailbox-behaviors">
+  <div
+    *ngIf="listImageMailbox.includes(mailboxSetting?.mailBehavior?.provider) else otherProvider">
+    <img
+      class="mailbox-logo"
+      [src]="imageMapping[mailboxSetting?.mailBehavior?.provider]"
+      alt="mailbox-logo" />
+  </div>
+  <ng-template #otherProvider>
+    <trudi-badge variant="role" size="medium" [text]="'EMAIL PROVIDER'">
+    </trudi-badge>
+  </ng-template>
+  <span class="mailbox__provider-text">Save messages to mailbox</span>
+
+  <ng-container *ngIf="!isMailboxFromSendGrid">
+    <div class="grid-container" [formGroup]="mailboxBehavioursForm">
+      <div class="grid-item">Resolved messages</div>
+      <div class="grid-item">
+        <trudi-single-select
+          [isDisabled]="(inboxService?.isArchiveMailbox$ | async) || ((currentMailbox?.role) | checkMailboxPermission) === false || isConsole"
+          [showLeftIcon]="true"
+          iconName="folderIcon"
+          bindLabel="name"
+          bindValue="internalId"
+          [clearable]="true"
+          [enableSearch]="false"
+          formControlName="resolvedMessages"
+          virtualScroll="true"
+          [items]="folderListResolved">
+          <ng-template
+            trudi-option-tmp
+            let-item="item"
+            let-searchTerm="searchTerm">
+            <div class="list-folder-item">
+              <div class="wrapper-item" [style.paddingLeft]="8*item.level+'px'">
+                <div class="d-flex">
+                  <span class="wrapper-icon">
+                    <trudi-icon
+                      icon="iconFolder"
+                      svgClass="size-18"></trudi-icon>
+                  </span>
+                  <p
+                    class="item-text"
+                    [style.maxWidth]="'calc(235px - ' + (8 * item.level) + 'px )'">
+                    {{item.name}}
+                  </p>
+                </div>
+                <div class="wrapper-icon mr-8">
+                  <trudi-icon
+                    icon="checkSuccess"
+                    svgClass="size-20"
+                    *ngIf="item.id === resolvedMessages.value"></trudi-icon>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template *ngIf="!isConsole" trudi-footer-tmp>
+            <div
+              class="d-flex align-items-center"
+              (click)="handleAddEmailFolder(EmailFolderPopup.RESOLVED_MESSAGE)">
+              <trudi-icon
+                icon="iconPlusSuccess"
+                [style]="{ 'width.px': 16, 'height.px': 16}"></trudi-icon>
+              <span class="select-footer-title">Add new email folder</span>
+            </div>
+          </ng-template>
+        </trudi-single-select>
+      </div>
+      <div class="grid-item">Deleted messages</div>
+      <div class="grid-item">
+        <trudi-single-select
+          [isDisabled]="(inboxService?.isArchiveMailbox$ | async) || ((currentMailbox?.role ) | checkMailboxPermission) === false || isConsole"
+          [showLeftIcon]="true"
+          iconName="folderIcon"
+          bindLabel="name"
+          bindValue="internalId"
+          [enableSearch]="false"
+          [clearable]="true"
+          formControlName="deletedMessages"
+          [items]="folderListDeleted"
+          virtualScroll="true">
+          <ng-template
+            trudi-option-tmp
+            let-item="item"
+            let-searchTerm="searchTerm">
+            <div class="list-folder-item">
+              <div class="wrapper-item" [style.paddingLeft]="8*item.level+'px'">
+                <div class="d-flex">
+                  <span class="wrapper-icon">
+                    <trudi-icon
+                      icon="iconFolder"
+                      svgClass="size-18"></trudi-icon>
+                  </span>
+                  <p
+                    class="item-text"
+                    [style.maxWidth]="'calc(235px - ' + (8 * item.level) + 'px )'">
+                    {{item.name}}
+                  </p>
+                </div>
+                <div class="wrapper-icon mr-8">
+                  <trudi-icon
+                    icon="checkSuccess"
+                    svgClass="size-20"
+                    *ngIf="item.id === deletedMessages.value"></trudi-icon>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template *ngIf="!isConsole" trudi-footer-tmp>
+            <div
+              class="d-flex align-items-center"
+              (click)="handleAddEmailFolder(EmailFolderPopup.DELETED_MESSAGE)">
+              <trudi-icon
+                icon="iconPlusSuccess"
+                [style]="{ 'width.px': 16, 'height.px': 16 }"></trudi-icon>
+              <span class="select-footer-title">Add new email folder</span>
+            </div>
+          </ng-template>
+        </trudi-single-select>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="isRmEnvironment">
+    <div class="save-conversation" [ngClass]="{'mt' : !isMailboxFromSendGrid}">
+      <div class="d-flex gap-12">
+        <div class="save-conversation-title">Save conversations to notes</div>
+        <trudi-icon [icon]="'rentManager'"></trudi-icon>
+      </div>
+      <div class="d-flex save-conversation-container">
+        <div class="save-conversation-container-text">
+          Automatically sync resolved conversations with tenants / owners to
+          property notes in Rent Manager
+        </div>
+        <ng-template [ngTemplateOutlet]="toggle"> </ng-template>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #toggle>
+    <div>
+      <trudi-switch
+        [(ngModel)]="isSaveMailboxBeHaviours"
+        [disabled]="
+        (inboxService?.isArchiveMailbox$ | async)||
+        (((currentMailbox?.role ) | checkMailboxPermission) === false) &&
+        (inboxService.isDisconnectedMailbox | async) === true ||
+        (((currentMailbox?.role ) | checkMailboxPermission) === false) ||
+        isConsole"
+        (ngModelChange)="handleSaveMailBoxSyncTaskActivity($event)">
+      </trudi-switch>
+    </div>
+  </ng-template>
+
+  <ng-container *ngIf="!isRmEnvironment">
+    <div class="mailbox-activity mt-12">
+      <div class="mailbox-activity-icon">
+        <trudi-icon
+          [icon]="'mailboxPtIcon'"
+          [style]="{'width.px': 136, 'height.px': 36}"></trudi-icon>
+      </div>
+      <div class="mailbox-activity-header mt-12 mb-12">
+        Save mailbox activity to Property Tree
+      </div>
+      <div
+        class="save-conversation"
+        [ngClass]="{'mt' : !isMailboxFromSendGrid}">
+        <div class="d-flex save-conversation-pt-container gap-20">
+          <div class="save-conversation-pt-content-wrapper">
+            <h3 class="save-conversation-pt-sub-title">
+              Automatically sync resolved conversations
+            </h3>
+            <span class="save-conversation-pt-description">
+              Conversation data will be exported as a PDF and saved into the
+              documents section for each property.
+            </span>
+          </div>
+          <ng-template [ngTemplateOutlet]="toggle"> </ng-template>
+        </div>
+      </div>
+      <div class="mailbox-activity-document mt-12">
+        <div class="mailbox-activity-document-title mb-8">
+          Select document category to save conversations
+        </div>
+        <trudi-single-select
+          [virtualScroll]="true"
+          [items]="listCategoryTaskActivity"
+          bindLabel="name"
+          [placeholder]="'Select category'"
+          bindValue="id"
+          [clearable]="true"
+          [formControl]="saveCategoryDocumentTypeForm"
+          [isDisabled]="
+        (inboxService?.isArchiveMailbox$ | async)||
+        (((currentMailbox?.role ) | checkMailboxPermission) === false) &&
+        (inboxService.isDisconnectedMailbox | async) === true ||
+        (((currentMailbox?.role ) | checkMailboxPermission) === false) ||
+        isConsole">
+        </trudi-single-select>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<ng-container *ngIf="isShowGmailFolderPopup">
+  <create-edit-gmail-folder-pop-up
+    [folders]="nestedFolders"
+    [isVisible]="isShowGmailFolderPopup"
+    [isCreateNewFolder]="true"
+    [mailBoxIdEmailFolder]="mailboxId"
+    (onClose)="handleClosePopup($event)">
+  </create-edit-gmail-folder-pop-up>
+</ng-container>

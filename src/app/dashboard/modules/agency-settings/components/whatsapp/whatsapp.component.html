@@ -1,0 +1,165 @@
+<div class="integrations">
+  <div *ngIf="!isPermissionEdit" class="d-flex gap-4 align-items-center mb-8">
+    <trudi-icon icon="infoFill" [style]="{ 'width.px': 12, 'height.px': 12 }">
+    </trudi-icon>
+    <span class="warning-notice-text"
+      >You need to be an account administrator to edit this page.</span
+    >
+  </div>
+  <div class="integrations-whatsapp-content">
+    <div class="whatsapp-box">
+      <trudi-icon
+        icon="whatsappIcon"
+        [style]="{ 'width.px': 24, 'height.px': 24 }"></trudi-icon>
+      <span class="whatsapp-text">WhatsApp</span>
+
+      @if (pageWhatsAppConnected?.status === WhatsAppConnectStatus.ACTIVE) {
+      <div class="connect-wrapper y-center gap-4">
+        <trudi-badge
+          text="Connected"
+          icon="checkSuccess"
+          variant="success"
+          size="large"
+          fillIcon="true"
+          customIconSize="16">
+        </trudi-badge>
+      </div>
+      }
+    </div>
+
+    @if (!pageWhatsAppConnected || pageWhatsAppConnected?.status !==
+    WhatsAppConnectStatus.ACTIVE) {
+    <span class="integrations-whatsapp-description">
+      Integrate your WhatsApp Business account to manage messages received on
+      your WhatsApp Business account.
+    </span>
+
+    <button
+      trudi-tooltip
+      nzTooltipTitle="Your WhatsApp feature is turned OFF. Please contact your administrator."
+      [nzTooltipArrowPointAtCenter]="true"
+      [nzTooltipTrigger]="!isHasFeatureWhatsApp && 'hover'"
+      [disabled]="!isPermissionEdit || !isHasFeatureWhatsApp"
+      class="signIn-btn"
+      trudi-btn
+      variant="filled"
+      btnType="info"
+      size="medium"
+      [ngClass]="{'disabled-not-pm': !isPermissionEdit || !isHasFeatureWhatsApp}"
+      (click)="loginWhatsApp()">
+      Create WhatsApp Business account
+    </button>
+    <div class="d-flex gap-4 wrapper-info">
+      <trudi-icon class="size-16" icon="grayWarning"></trudi-icon>
+      <span class="info-text"
+        >Want to use your existing account? Sorry, we can't do that yet. Set up
+        a new one instead.</span
+      >
+    </div>
+    } @else {
+    <div class="integrations-whatsapp-connected-description">
+      <span class="integrations-whatsapp-connected-description__title"
+        >Connected number:</span
+      >
+      <div
+        class="d-flex justify-content-start align-items-start flex-1 gap-8 overflow-hidden">
+        <span class="integrations-whatsapp-connected-description__page-name"
+          >{{pageWhatsAppConnected?.externalId}}</span
+        >
+        @if (!isHasFeatureWhatsApp) {
+        <trudi-icon
+          class="alert-octagon-icon"
+          icon="alertOctagonIcon"
+          trudi-tooltip
+          nzTooltipTitle="Your WhatsApp feature is turned OFF. Please contact your administrator."
+          [nzTooltipArrowPointAtCenter]="true"
+          nzTooltipTrigger="hover"></trudi-icon>
+        }
+        <button
+          class="btn-copy"
+          (click)="copyToClipboard(pageWhatsAppConnected?.externalId)">
+          <trudi-icon
+            [style]="{ 'width.px': 24, 'height.px': 24 }"
+            icon="btnCopy"></trudi-icon>
+        </button>
+      </div>
+    </div>
+
+    <button
+      [disabled]="!isPermissionEdit"
+      class="disconnect-btn"
+      trudi-btn
+      variant="tonal"
+      btnType="danger"
+      size="medium"
+      (click)="showConfirmDisconnectWhatsApp = true">
+      Disconnect your WhatsApp account
+    </button>
+    }
+  </div>
+</div>
+
+<trudi-modal
+  [autoFocus]="null"
+  [modelWidth]="400"
+  [visible]="showModalAddMailboxInfo"
+  className="trudi-modal-custom">
+  <div class="modal-add-mailbox-info">
+    @if (permissionService.isOwner) {
+    <div class="modal-add-mailbox-info__content">
+      Please add a company mailbox first!
+    </div>
+
+    <div class="button-box">
+      <button
+        trudi-btn
+        variant="outlined"
+        btnType="neutral"
+        (click)="handleCancel()">
+        Cancel
+      </button>
+      <button
+        class="navigate-btn"
+        trudi-btn
+        variant="filled"
+        btnType="primary"
+        (click)="navigateToInboxPage()">
+        Go to inbox
+      </button>
+    </div>
+    } @else {
+    <div class="modal-add-mailbox-info__content">
+      Please ask the owner to add a company mailbox first!
+    </div>
+
+    <div class="button-box">
+      <button
+        trudi-btn
+        variant="filled"
+        btnType="primary"
+        (click)="handleCancel()">
+        Ok
+      </button>
+    </div>
+    }
+  </div>
+</trudi-modal>
+
+<trudi-modal
+  [visible]="showConfirmDisconnectWhatsApp"
+  [autoFocus]="null"
+  [modelWidth]="520"
+  className="trudi-modal-custom">
+  <confirm-popup
+    [iconUrl]="'/assets/icon/icon-warning-red.svg'"
+    [backgroundRightBtn]="'var(--danger-500)'"
+    [titleText]="'Are you sure you want to disconnect?'"
+    [subTexts]="['Your WhatsApp account will be archived in your Trudi® inbox.']"
+    [buttonLeft]="'No, cancel'"
+    [buttonRight]="'Yes, disconnect'"
+    btnType="danger"
+    (onButtonLeftClick)="showConfirmDisconnectWhatsApp = false"
+    (onButtonRightClick)="handleDisconnectWhatsApp()">
+    >
+  </confirm-popup>
+</trudi-modal>

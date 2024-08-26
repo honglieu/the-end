@@ -1,0 +1,134 @@
+<div
+  [formGroup]="communicationForm"
+  class="communication-form-wrapper"
+  #modalContent>
+  <upgrade-message
+    *ngIf="isShowUpgradeMessage"
+    [action]="EActionShowMessageTooltip.EDIT_WORKFLOWS"
+    [isTooltip]="false"></upgrade-message>
+
+  <div>
+    <div class="d-flex align-items-center justify-content-between mb-6">
+      <span class="field-label"> Step type </span>
+      <button
+        trudi-btn
+        variant="link"
+        size="medium"
+        (click)="openHelpDocument()">
+        Help
+      </button>
+    </div>
+    <trudi-form-control [checkSubmit]="!isSubmittedCommunicationForm">
+      <trudi-single-select
+        [items]="items"
+        groupBy="type"
+        bindValue="id"
+        bindLabel="label"
+        formControlName="stepType"
+        placeholder="Select step type"
+        #stepTypeSelect>
+      </trudi-single-select>
+    </trudi-form-control>
+  </div>
+
+  <div class="d-flex flex-dir-column gap-12">
+    <div class="field-label">Send as</div>
+    <div>
+      <trudi-form-control
+        [checkSubmit]="!isSubmittedCommunicationForm"
+        [control]="typeSendControl"
+        [errors]="[{errorName: 'required', errorMessage: 'Please select an option'}]">
+        <div class="d-flex align-items-center gap-12">
+          <div
+            *ngFor="let option of typeSendOptions"
+            class="option-send border-rad-8 w-50 text-center d-flex flex-dir-column gap-4 align-items-center"
+            [ngClass]="{'selected' : typeSendControl?.value === option.value, 'disabled': disabledForm }"
+            (click)="!disabledForm && handleSelectSendOption(option)">
+            <trudi-icon class="size-28" [icon]="option.icon"></trudi-icon>
+            <span>{{option.text}}</span>
+          </div>
+        </div>
+      </trudi-form-control>
+    </div>
+    <ng-container *ngIf="typeSendControl.value === ETypeSend.BULK_EMAIL">
+      <select-receiver-container-for-bulk
+        [formGrp]="communicationForm"
+        toFieldLabel="Send separate emails to"
+        [toPlaceholder]="toPlaceholder"
+        ccBccLabel="Cc/bcc the following recipients into each email"
+        [ccBccPlaceholder]="ccBccPlaceholder"
+        toFormName="sendTo"
+        ccFormName="sendCc"
+        bccFormName="sendBcc"
+        [isFormSubmitted]="isSubmittedCommunicationForm"
+        [isOnlySupplierAndOther]="true">
+        <select-contact-type
+          #selectContactType
+          prefixTemplate="SP To"
+          suffixPaddingLeft="45px"
+          [placeholder]="toPlaceholder"
+          [items]="multiItems"
+          [control]="sendToControl"></select-contact-type>
+      </select-receiver-container-for-bulk>
+    </ng-container>
+    <ng-container *ngIf="typeSendControl.value === ETypeSend.SINGLE_EMAIL">
+      <select-receiver-container
+        [formGrp]="communicationForm"
+        toFieldLabel="Send separate emails to"
+        [toPlaceholder]="toPlaceholder"
+        ccBccLabel="Cc/bcc the following recipients into each email"
+        [ccBccPlaceholder]="ccBccPlaceholder"
+        toFormName="sendTo"
+        ccFormName="sendCc"
+        bccFormName="sendBcc"
+        [isFormSubmitted]="isSubmittedCommunicationForm"
+        [isOnlySupplierAndOther]="true">
+        <select-contact-type
+          #selectContactType
+          prefixTemplate="To"
+          suffixPaddingLeft="30px"
+          [placeholder]="toPlaceholder"
+          [items]="multiItems"
+          [control]="sendToControl"></select-contact-type>
+      </select-receiver-container>
+    </ng-container>
+  </div>
+
+  <ng-container #customForm> </ng-container>
+
+  <trudi-form-control [checkSubmit]="!isSubmittedCommunicationForm">
+    <trudi-text-field
+      formControlName="emailTitle"
+      label="Email title"
+      [disabled]="disabledForm"
+      [showCounting]="!disabledForm"
+      [isShowEmbedCodeFunction]="!disabledForm"
+      [listCodeOptions]="listCodeOptions"
+      [checkSubmit]="!isSubmittedCommunicationForm"
+      maxCharacter="100"></trudi-text-field>
+  </trudi-form-control>
+
+  <div style="flex: 1">
+    <div class="d-flex align-items-center justify-content-between mb-6">
+      <span class="field-label"> Message copy </span>
+    </div>
+    <trudi-form-control
+      *ngIf="messageCopyControl"
+      [control]="messageCopyControl">
+      <tiny-editor-container
+        [aiInteractiveBubbleConfigs]="aiInteractiveBubbleConfigs"
+        formControlName="messageCopy"
+        [enableSetPreview]="false"
+        [isDisabled]="isMsgCopyDisabled"
+        [communicationStepType]="stepTypeControl.value"
+        [listComponentStep]="listComponentStep"
+        [calendarEventTypes]="calendarEventTypes"
+        [isShowPreviewAttachment]="true"
+        [listOfFiles]="fileAttach"
+        [editorError]="messageCopyControl.touched && messageCopyControl.invalid"
+        (dropFile)="dropFile($event)"
+        #tinyEditorContainer>
+      </tiny-editor-container>
+    </trudi-form-control>
+  </div>
+</div>

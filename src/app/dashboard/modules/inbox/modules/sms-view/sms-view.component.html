@@ -1,0 +1,22 @@
+<div class="sms-message-view-container">
+  <div class="sms-message-view-container__index">
+    <sms-message-index></sms-message-index>
+  </div>
+  <div class="sms-message-view-container__detail">
+    <div
+      class="sms-message-view-container__detail-no-select"
+      [class.d-none]="showMessageDetail">
+      <img
+        [src]="hasSelectedInbox ? 'assets/images/item-selected.png' :'assets/images/no-item.png'"
+        [alt]="hasSelectedInbox ? 'Items Selected' : 'No item'"
+        [class.selected-item]="hasSelectedInbox"
+        alt="no data" />
+      <p *ngIf="!hasSelectedInbox">Select an item to read</p>
+    </div>
+    <ng-container *ngIf="showMessageDetail">
+      <sms-message-detail
+        [isBlockSetMailbox]="true"
+        [taskDetailViewMode]="EViewDetailMode.MESSAGE"></sms-message-detail>
+    </ng-container>
+  </div>
+</div>

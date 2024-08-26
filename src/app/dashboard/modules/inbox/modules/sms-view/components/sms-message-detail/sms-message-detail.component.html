@@ -1,0 +1,14 @@
+<div class="task_detail--wapper">
+  <div class="content-block d-flex">
+    <div class="center-block">
+      <div class="center-block-content">
+        <header-conversations
+          [currentProperty]="currentProperty"
+          [task]="taskService?.currentTask$?.value"
+          [taskDetailViewMode]="taskDetailViewMode"></header-conversations>
+        <sms-message-detail-list></sms-message-detail-list>
+      </div>
+    </div>
+  </div>
+  <div id="task_detail--overlay"></div>
+</div>

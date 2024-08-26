@@ -1,0 +1,43 @@
+@import 'function';
+
+:host {
+  display: block;
+  height: 100vh;
+  overflow: auto;
+  background-color: var(--white);
+  padding: 24px;
+  border-radius: 8px;
+
+  .sms-title {
+    @include fontSetup(
+      var(--fg-neutral-strongest),
+      18px,
+      32px,
+      normal,
+      600
+    );
+  }
+
+  .sms-number {
+    margin-top: 8px;
+    width: max-content;
+    padding: 6px 16px;
+    border-radius: 8px;
+    background: var(--bg-brand-tonal-stronger);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    @include fontSetup(var(--border-brand), 14px, 20px, normal, 600);
+  }
+}
+
+::ng-deep {
+  .voicemail-number-skeleton.ant-skeleton {
+    margin-top: 8px;
+    .ant-skeleton-content .ant-skeleton-paragraph li {
+      border-radius: 8px !important;
+      width: 157px !important;
+      height: 36px !important;
+    }
+  }
+}

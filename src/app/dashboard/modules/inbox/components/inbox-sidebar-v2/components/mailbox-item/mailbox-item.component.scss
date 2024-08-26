@@ -1,0 +1,357 @@
+@import 'function';
+
+:host {
+  ::ng-deep .ant-menu-inline {
+    background-color: #ffffff;
+    & > .ant-menu-submenu > .ant-menu-submenu-title {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    & > ul .ant-menu-item-selected,
+    .item-selected {
+      & > .ant-menu-submenu-title {
+        margin-bottom: 0px;
+      }
+
+      .icon-wrapper {
+        .item-icon {
+          color: var(--fg-neutral-high-emphasis) !important;
+        }
+      }
+
+      .item-total {
+        @include fontSetup(
+          var(--fg-neutral-high-emphasis) !important,
+          12px,
+          16px,
+          normal,
+          500
+        );
+      }
+
+      .item-name {
+        @include fontSetup(
+          var(--fg-neutral-high-emphasis) !important,
+          14px,
+          20px,
+          normal,
+          500 !important
+        );
+      }
+
+      background: var(--bg-neutral-tonal-focus) !important;
+    }
+
+    & > ul .non-selected {
+      background-color: transparent !important;
+
+      .item-total {
+        @include fontSetup(
+          var(--fg-neutral-normal) !important,
+          12px,
+          16px,
+          normal,
+          500 !important
+        );
+      }
+
+      .item-name {
+        @include fontSetup(
+          var(--fg-neutral-normal) !important,
+          14px,
+          20px,
+          normal,
+          500 !important
+        );
+      }
+    }
+  }
+
+  ::ng-deep .ant-menu-item a:hover {
+    color: var(--fg-neutral-high-emphasis) !important;
+  }
+
+  ::ng-deep .ant-menu-submenu-title {
+    padding: 0 40px 0 0 !important;
+    transition: none !important;
+  }
+
+  ::ng-deep
+    .ant-menu-submenu:hover
+    > .ant-menu-submenu-title
+    > .ant-menu-submenu-arrow {
+    color: var(--fg-neutral-normal);
+  }
+
+  ::ng-deep
+    .ant-menu-submenu-open.ant-menu-submenu-inline
+    > .ant-menu-submenu-title
+    > .ant-menu-submenu-arrow::before {
+    top: -8px;
+    rotate: 270deg;
+    transform: unset;
+  }
+
+  ::ng-deep .ant-menu-submenu-arrow {
+    left: 12px;
+    display: block;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      right: -225px;
+      width: 20px;
+      height: 20px;
+      transform: unset;
+      rotate: 90deg;
+      background-repeat: no-repeat;
+      background-color: transparent;
+      background-image: url('/assets/images/chevron-right.png');
+    }
+
+    &::after {
+      content: none;
+    }
+  }
+
+  ::ng-deep .ant-menu-inline {
+    // overflow: hidden !important;
+    & > .ant-menu-submenu > .ant-menu-submenu-title {
+      &:hover,
+      &:active {
+        background-color: var(--neutral-bg-tonal-default, #f2f5f7) !important;
+        color: var(--fg-neutral-subtle, #999);
+        .mailbox-setting {
+          z-index: 999;
+          background-color: rgba(0, 0, 0, 0.4);
+        }
+        .multiple-user__item {
+          background-color: transparent;
+        }
+      }
+    }
+  }
+
+  .cdk-placeholder {
+    background: gray;
+    height: 24px;
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  .cdk-drag-placeholder {
+    opacity: 1;
+  }
+
+  .mailbox-place-holder {
+    width: 100%;
+    height: 44px;
+    background-color: #f0f1f1;
+  }
+}
+
+.multiple-user {
+  &__item {
+    background-color: white;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    & img {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      max-width: none;
+    }
+  }
+
+  &__name {
+    max-width: 120px;
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      14px,
+      20px,
+      normal,
+      600
+    );
+  }
+
+  &__name-syncing {
+    max-width: 120px;
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      14px,
+      20px,
+      normal,
+      600
+    );
+  }
+
+  &__email {
+    max-width: 140px;
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      12px,
+      16px,
+      normal,
+      400
+    );
+  }
+
+  &__email-syncing {
+    max-width: 130px;
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      12px,
+      16px,
+      normal,
+      400
+    );
+  }
+}
+
+.avatar {
+  position: relative;
+  width: 24px;
+  display: flex;
+  trudi-icon {
+    position: absolute;
+    bottom: -5px;
+    right: 0;
+    transform: translateX(50%);
+    border-radius: 50%;
+    overflow: hidden;
+  }
+}
+
+.custom-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background: var(--bg-neutral-tonal-focus, #d8dcdf);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-neutral-subtle, #999);
+}
+
+.btn-connect {
+  width: 100%;
+  height: 32px;
+  margin-top: 12px;
+  padding: 0px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  align-self: stretch;
+  border-radius: 8px;
+  border: 1px solid var(--border-neutral-dark, #d8dcdf);
+  background: var(--bg-base, #fff);
+
+  @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 600);
+
+  &:hover {
+    background-color: var(--bg-neutral-tonal-hover, #e7eaed);
+  }
+}
+
+.error-text {
+  color: var(--fg-danger, #e1024f);
+}
+
+.box-content {
+  padding: 4px 12px;
+  .break-line {
+    margin: 8px 0px 0px 0px
+  }
+}
+
+.break-line-top {
+  width: 91%;
+  margin: 0 auto;
+}
+
+.progress-bar {
+  height: 8px;
+  border-radius: 8px;
+  background: var(--bg-brand-solid-normal, #00aa9f);
+  background-image: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.1) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0.1) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+  animation: progress-bar-stripes 1s linear infinite;
+}
+
+.loading-bar-item {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+  border-radius: var(--spacing-md, 8px);
+  margin-bottom: 10px;
+}
+
+.icon-expand {
+  transition-duration: 0.5s;
+  border-radius: 50%;
+  border: none;
+  background-color: transparent;
+
+  &.no-padding {
+    padding: 0;
+  }
+
+  &:hover {
+    background-color: var(--gray-100);
+  }
+
+  &:active {
+    background: var(--bg-neutral-tonal-normal, #f2f5f7);
+  }
+  &:focus-visible {
+    box-shadow: inset 0px 0px 0px 1px var(--brand-500),
+      0px 0px 0px 2px rgba(var(--brand-500-rgb), 0.6) !important;
+  }
+}
+
+.spin {
+  @keyframes rotation {
+    from {
+      transform: rotate(360deg);
+    }
+
+    to {
+      transform: rotate(0deg);
+    }
+  }
+
+  animation: rotation 3s infinite linear;
+}
+
+.box-avatar {
+  width: 24px;
+  height: 24px;
+  .mailbox-setting {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+  }
+}
+
+.mailbox-item-preview {
+  width: 260px;
+  box-shadow: 0px 4px 8px -1px #0000001a, 0px -2px 6px -1px #0000000f;
+}

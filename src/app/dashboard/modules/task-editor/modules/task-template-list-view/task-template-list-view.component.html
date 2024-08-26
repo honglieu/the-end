@@ -1,0 +1,121 @@
+<div class="task-wrapper" [ngClass]="{'no-padding': isConsole}">
+  <task-editor-header></task-editor-header>
+  <ng-container *ngIf="isLoading; else noResultsFound">
+    <div class="table-fix-feader scroll-small table-setting-all">
+      <table
+        class="table-task"
+        data-e2e="task-editor-table"
+        data-console="task-table">
+        <colgroup>
+          <ng-container *trudiPermission="'TASK_EDITOR.TASKS.CREATE'">
+            <col style="width: 4%" />
+            <col style="width: 46%" />
+            <col style="width: 25%" />
+            <col style="width: 25%" />
+          </ng-container>
+          <ng-container *ngIf="!canDeactive">
+            <col style="width: 50%" />
+            <col style="width: 25%" />
+            <col style="width: 25%" />
+          </ng-container>
+        </colgroup>
+        <thead>
+          <tr>
+            <th *trudiPermission="'TASK_EDITOR.TASKS.CREATE'">
+              <trudi-checkbox [disabled]="(isLoading) || !templates?.length">
+              </trudi-checkbox>
+            </th>
+            <th data-console="task-name-title">
+              {{isConsole ? 'Task template name' : 'Task name'}}
+            </th>
+            <th data-console="crm-title">CRM</th>
+            <th data-console="last-updated-title">Last updated</th>
+          </tr>
+        </thead>
+        <tbody
+          [ngClass]="{ 'skeleton-wrapper' : isLoading,
+        'empty-block': isEmpty()
+      }">
+          <ng-container>
+            <tr *ngFor="let item of [].constructor(12)">
+              <td
+                *trudiPermission="'TASK_EDITOR.TASKS.CREATE'"
+                class="property">
+                <div class="prop-name gap-2">
+                  <nz-skeleton
+                    [nzParagraph]="{ rows: 0 }"
+                    [nzActive]="true"></nz-skeleton>
+                </div>
+              </td>
+              <td class="property">
+                <div class="d-flex flex-dir-column gap-4 prop-task-name">
+                  <nz-skeleton
+                    [nzParagraph]="{ rows: 0 }"
+                    [nzActive]="true"></nz-skeleton>
+                </div>
+              </td>
+              <!-- <td class="property">
+                <div class="prop-region">
+                  <nz-skeleton
+                    [nzParagraph]="{ rows: 0 }"
+                    [nzActive]="true"></nz-skeleton>
+                </div>
+              </td> -->
+              <td class="property">
+                <div class="prop-region">
+                  <nz-skeleton
+                    [nzParagraph]="{ rows: 0 }"
+                    [nzActive]="true"></nz-skeleton>
+                </div>
+              </td>
+              <td class="property">
+                <div class="prop-region">
+                  <nz-skeleton
+                    [nzParagraph]="{ rows: 0 }"
+                    [nzActive]="true"></nz-skeleton>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
+
+  <ng-template #noResultsFound>
+    <div class="table-fix-feader">
+      <div *ngIf="!canDeactive" class="d-flex gap-4 align-items-center mb-8">
+        <trudi-icon
+          icon="infoFill"
+          [style]="{ 'width.px': 12, 'height.px': 12 }">
+        </trudi-icon>
+        <span class="warning-notice-text"
+          >You need to be an account administrator to edit this page.</span
+        >
+      </div>
+      <trudi-table
+        #trudiTable
+        class="table-list-task-editor"
+        [trudiTableColumns]="tableColumns"
+        [trudiTableDataSource]="templates"
+        [showPagination]="true"
+        [disableCheckbox]="!canDeactive"
+        (selectedRow)="handleCheckRow($event)"
+        (refreshTable)="handleChangePagination($event)"
+        [trudiPaginationData]="taskEditorPaginationData"
+        (onClickItems)="handleClickTaskTemplate($event)"
+        [tooltipTitle]="UPGRADE_YOUR_ACCOUNT"
+        [searchText]="searchValue">
+      </trudi-table>
+    </div>
+  </ng-template>
+</div>
+
+<ng-container *ngIf="isShowPopup === PopUpEnum.PopupWarningUnpublish">
+  <warning-unpublish-popup
+    [visible]="isShowPopup === PopUpEnum.PopupWarningUnpublish"
+    [taskTemplates]="referenceTemplates"
+    [taskState]="taskState"
+    (onConfirm)="handleAction($event)"
+    (onClose)="handleClosePopup()"></warning-unpublish-popup>
+</ng-container>

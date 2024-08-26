@@ -1,0 +1,71 @@
+@import 'function';
+
+.syncs-note-wrapper {
+  .data-row-wrapper {
+    margin-top: 12px !important;
+    .title {
+      @include fontSetup(
+        var(--fg-neutral-normal, #646464),
+        12px,
+        16px,
+        normal,
+        400
+      );
+      margin-bottom: 6px;
+    }
+  }
+  .error-text {
+    margin-left: 4px;
+    @include fontSetup(var(--fg-danger, #e1024f), 12px, 16px, normal, 400);
+  }
+  ::ng-deep .warning-wrapper {
+    display: none !important;
+  }
+  ::ng-deep .remove-button:disabled {
+    pointer-events: unset;
+  }
+}
+
+::ng-deep {
+  ant-modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+  .trudi-btn-primary:disabled {
+    background-color: var(--brand-200);
+    pointer-events: unset;
+    box-shadow: none;
+    cursor: not-allowed !important;
+  }
+  .file-container {
+    .file {
+      max-height: 200px;
+      overflow-y: auto;
+      grid: unset;
+      display: flex;
+      flex-wrap: wrap;
+
+      .file-box {
+        width: 135px;
+        height: 28px;
+
+        .file-logo {
+          img {
+            min-width: 16px;
+            min-height: 16px;
+          }
+        }
+
+        .file-content {
+          .file-name {
+            width: 75px;
+          }
+
+          .file-size {
+            display: none !important;
+          }
+        }
+      }
+    }
+  }
+}

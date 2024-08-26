@@ -1,0 +1,106 @@
+<div class="email-signature-preview-wrapper">
+  <div class="preview-header d-flex align-items-end justify-content-between">
+    <div class="preview-header--title d-flex flex-dir-column gap-2">
+      <div class="title-text">Email signature preview</div>
+      <div class="sub-title-text">
+        Here’s how your profile appears when using Trudi®.
+      </div>
+    </div>
+    <div class="preview-header--mailbox">
+      <trudi-select-dropdown-v2
+        [clearable]="false"
+        [virtualScroll]="true"
+        [items]="listMailboxActive | async"
+        size="small"
+        variant="text"
+        bindValue="id"
+        bindLabel="name"
+        [(ngModel)]="selectedMailBox"
+        (ngModelChange)="onChangeMailboxSelector($event)">
+        <ng-template trudi-select-dropdown-option-tmp let-item="item">
+          <div
+            class="mailbox-option"
+            [class.selected]="item?.id === selectedMailBox">
+            <div class="d-flex flex-dir-column align-items-start flex-grow-1">
+              <div class="company-name">{{item.name}}</div>
+              <div class="company-email">{{item.emailAddress}}</div>
+            </div>
+            <trudi-icon
+              class="checked-icon"
+              icon="checkCurrentColor"></trudi-icon>
+          </div>
+        </ng-template>
+      </trudi-select-dropdown-v2>
+    </div>
+  </div>
+
+  <div class="preview-body">
+    <div class="preview-body-skeleton">
+      <div class="signature__preview">
+        <nz-skeleton-element
+          class="signature__preview--skeleton"
+          nzType="input">
+        </nz-skeleton-element>
+        <nz-skeleton-element
+          class="signature__preview--skeleton"
+          nzType="input">
+        </nz-skeleton-element>
+      </div>
+
+      <nz-skeleton
+        [nzTitle]="false"
+        [nzActive]="false"
+        class="content-signature-preview"
+        [nzRound]="true"
+        [nzParagraph]="{ rows: 6, width: [ '100%','100%','100%','44%','100%','44%'] }"></nz-skeleton>
+    </div>
+
+    <div class="preview-body-pm-signature">
+      <div
+        nz-tooltip
+        [nzTooltipTitle]="agencySignatureTooltip"
+        [nzTooltipTitleContext]="{ $implicit: {
+        title: 'Mailbox signature. To edit, go to',
+        subTitle: 'Mailbox settings',
+        navigateTo: '/dashboard/mailbox-settings/email-signature'
+      } }"
+        nzTooltipPlacement="right"
+        [nzTooltipArrowPointAtCenter]="true"
+        class="mt-6 fit-content"
+        [innerHTML]="(mailboxSignature || '') | safe"></div>
+    </div>
+    <div *ngIf="imageSignature" class="preview-body-image-singature">
+      <img
+        class="image-signature"
+        [style.width.px]="imageSignatureSize?.width"
+        [style.height.px]="imageSignatureSize?.height"
+        [src]="imageSignature"
+        alt="emailSignature" />
+    </div>
+    <div class="preview-body-content-signature">
+      <div
+        class="fit-content"
+        [innerHTML]="(agencySignature || '') | safe"
+        nz-tooltip
+        [nzTooltipTitle]="agencySignatureTooltip"
+        [nzTooltipTitleContext]="{ $implicit: {
+          title: 'Company signature. To edit, go to',
+          subTitle: 'Company settings',
+          navigateTo: '/dashboard/agency-settings/email-settings'
+        } }"
+        nzTooltipPlacement="right"
+        [nzTooltipArrowPointAtCenter]="true"></div>
+    </div>
+  </div>
+</div>
+
+<ng-template #agencySignatureTooltip let-thing>
+  <div class="tooltip-content-wrapper fit-content text-center">
+    <p class="m-0">{{thing.title}}</p>
+    <p
+      (click)="handleNavigate(thing.navigateTo)"
+      class="m-0 cursor-pointer text-decoration-underline">
+      {{ thing.subTitle }}
+    </p>
+  </div>
+</ng-template>

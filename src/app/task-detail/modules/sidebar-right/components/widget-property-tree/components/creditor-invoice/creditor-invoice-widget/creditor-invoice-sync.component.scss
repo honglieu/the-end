@@ -1,0 +1,68 @@
+@import 'function';
+
+.creditor-sync-label {
+  min-width: 80px;
+  font-size: 12px;
+  color: var(--gray-500);
+}
+.name-invoice {
+  font-weight: 500;
+}
+.creditor-sync-name {
+  font-size: 12px;
+  color: var(--gray-600);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.no-creditor {
+  @include fontSetup(var(--gray-500), 14px, 20px, italic, 400);
+}
+
+.unpaid-creditor-text {
+  color: var(--warning-500);
+}
+
+.part-paid-creditor-text {
+  color: var(--tenant-500);
+}
+
+.paid-creditor-text {
+  color: var(--success-500);
+}
+
+.cancel-creditor-text {
+  color: var(--danger-500);
+}
+
+.header-modal-confirm {
+  padding: 16px 24px;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  .title-header {
+    @include fontSetup(
+      var(--fg-neutral-strongest, #202020),
+      18px,
+      28px,
+      normal,
+      600
+    );
+  }
+}
+
+.trudi-button-cancle {
+  display: flex;
+  height: 40px;
+  min-width: 100px;
+  padding: 0px 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  background: var(--bg-danger-solid-normal, #e1024f);
+  @include fontSetup(var(--fg-base, #fff), 14px, 20px, normal, 600);
+  border: none;
+  outline: unset;
+}

@@ -1,0 +1,49 @@
+@import 'function';
+:host {
+  ::ng-deep {
+    trudi-form-control:not(:last-child) .trudi-form-control-wrapper {
+      border-bottom: unset !important;
+    }
+    trudi-form-control:has(:last-child) .trudi-form-control-wrapper {
+      border-bottom: 1px solid var(--border-neutral-dark);
+      margin-bottom: 0px;
+    }
+    .invalid-receiver {
+      color: var(--fg-danger);
+    }
+  }
+}
+
+.to-preview {
+  display: flex;
+  align-items: center;
+  cursor: text;
+  border-bottom: 1px solid var(--border-neutral-dark);
+
+  trudi-select-receiver-preview {
+    width: 100%;
+  }
+}
+
+.select-receiver-container {
+  .preview-label {
+    margin-bottom: 0;
+    border: unset;
+    max-height: 128px;
+    padding: 10px 12px;
+    overflow-y: auto;
+    .function-btn {
+      border-radius: 6px;
+      border: 1px solid var(--border-neutral-dark, #d8dcdf);
+      background: var(--bg-base, #fff);
+      padding: 0px 8px;
+      @include fontSetup(
+        var(--fg-neutral-strongest) !important,
+        14px,
+        20px,
+        normal,
+        400
+      );
+    }
+  }
+}

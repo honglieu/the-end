@@ -1,0 +1,21 @@
+<trudi-modal
+  [visible]="true"
+  [closable]="true"
+  title="Preview email template"
+  okText="Execute step"
+  [disableOkBtn]="disabled || (currentStep.id === (stepService.currentStep$ | async)?.step?.id) && (stepService.isExecutingStep$ | async)"
+  [modelWidth]="576"
+  [hiddenCancelBtn]="true"
+  (onCancel)="onCancel()"
+  (onOk)="onExecuteStep()"
+  className="preview-email-modal"
+  [autoFocus]="null">
+  <iframe
+    #previewEmailFrame
+    width="100%"
+    src="about:blank"
+    frameborder="0"
+    scrolling="no"
+    (load)="loadHtmlContent($event)"></iframe>
+  <div [innerHTML]="emailSignature | safeHtml"></div
+></trudi-modal>

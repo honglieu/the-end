@@ -1,0 +1,110 @@
+<div [formGroup]="sendContactCardForm">
+  <div class="send-contact-card-wrapper">
+    <div class="d-flex align-items-center justify-content-between mb-6">
+      <span class="send-contact-card-label"> Select contact card </span>
+      <trudi-checkbox
+        [label]="'Required'"
+        formControlName="isRequired"
+        [disabled]="isDisabled"></trudi-checkbox>
+    </div>
+    <div class="list-contact-type mb-6">
+      <trudi-radio-button
+        formControlName="contactCardType"
+        (ngModelChange)="changeContactType()"
+        [options]="radioListContactCardType"
+        [disabled]="disabled"></trudi-radio-button>
+    </div>
+    <ng-container
+      *ngIf="contactCardTypeControl.value === EContactCardType.INDIVIDUAL_SUPPLIER; else contactType">
+      <trudi-form-control>
+        <trudi-multi-select
+          (scrollToEnd)="onScroll()"
+          [serversideSearch]="true"
+          (search)="search($event)"
+          (handleOpen)="handleOpen()"
+          [items]="listIndividualSupplier"
+          label=""
+          [required]="true"
+          bindValue="id"
+          bindLabel="lastName"
+          formControlName="contactData"
+          placeholder="Search for supplier"
+          [loading]="isLoading"
+          [totalOptions]="listIndividualSupplier.length"
+          [clearSearchOnAdd]="false"
+          #select>
+          <ng-template trudi-footer-tmp>
+            <div class="p-2 clear-btn" (click)="clearAll()">Clear all</div>
+          </ng-template>
+          <ng-template
+            trudi-option-tmp
+            let-item="item"
+            let-searchTerm="searchTerm"
+            let-item$="item$">
+            <div
+              class="d-flex justify-content-between align-items-center w-100 pd-12">
+              <div class="d-flex flex-dir-column gap-4 w-75">
+                <span
+                  class="item-label"
+                  [ngOptionHighlight]="searchTerm ? searchTerm : ''">
+                  {{item.lastName}}</span
+                >
+                <trudi-badge
+                  [icon]="'mailFill'"
+                  variant="role"
+                  text="{{ item.email ? item.email : 'No email address' }}"
+                  [extraClass]="'custom-trudi-badge'"
+                  [highlighText]="searchTerm"
+                  size="small"></trudi-badge>
+              </div>
+              <div class="d-flex align-items-center">
+                <trudi-checkbox
+                  [ngModel]="item$.selected"
+                  [ngModelOptions]="{standalone: true}"></trudi-checkbox>
+              </div>
+            </div>
+          </ng-template>
+        </trudi-multi-select>
+      </trudi-form-control>
+    </ng-container>
+    <ng-template #contactType>
+      <trudi-form-control>
+        <trudi-multi-select
+          [items]="listContactTypes"
+          label=""
+          [required]="true"
+          bindValue="id"
+          bindLabel="label"
+          formControlName="contactData"
+          placeholder="Select contact"
+          [totalOptions]="listContactTypes.length"
+          [clearSearchOnAdd]="false"
+          #select>
+          <ng-template trudi-footer-tmp>
+            <div class="p-2 clear-btn" (click)="clearAll()">Clear all</div>
+          </ng-template>
+          <ng-template
+            trudi-option-tmp
+            let-item="item"
+            let-searchTerm="searchTerm"
+            let-item$="item$">
+            <div
+              class="d-flex justify-content-between align-items-center w-100 pd-12">
+              <div class="d-flex flex-dir-column gap-4">
+                <span class="item-label"> {{item.label}} </span>
+                <span *ngIf="item?.subLabel" class="sendTo-subLabel">
+                  {{item.subLabel}}
+                </span>
+              </div>
+              <div class="d-flex align-items-center">
+                <trudi-checkbox
+                  [ngModel]="item$.selected"
+                  [ngModelOptions]="{standalone: true}"></trudi-checkbox>
+              </div>
+            </div>
+          </ng-template>
+        </trudi-multi-select>
+      </trudi-form-control>
+    </ng-template>
+  </div>
+</div>

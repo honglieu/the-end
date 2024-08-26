@@ -1,0 +1,74 @@
+<div class="content-trudi" [ngClass]="{'disable': disable}">
+  <div class="reply-section">
+    <div class="reply-content" #replyContent>
+      <p
+        class="content break-word white-space-prewrap"
+        [innerHTML]="emailContent"
+        data-e2e="message-box"></p>
+    </div>
+
+    <!-- Hide button action at disable state -->
+    <ng-container *ngIf="!disable">
+      <div class="action-trudi">
+        <circle-button
+          *ngFor="let button of trudiBody?.button"
+          (onClick)="handleOnClick($event)"
+          [button]="button"
+          [size]="32"
+          [sizeimg]="12">
+        </circle-button>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<app-modal-popup
+  *ngIf="isShowSendMessageModal"
+  [bigSize]="true"
+  [show]="isShowSendMessageModal"
+  [position]="popupModalPosition.center">
+  <app-send-message
+    [isTypeTrudi]="TYPE_TRUDI.q_a"
+    [isReset]="isResetModal"
+    [openFrom]="SEND_MESSAGE_POPUP_OPEN_FROM.trudi"
+    [notEditTopicTitle]="isSendEmail"
+    [listOfFiles]="selectedFiles"
+    [sendEmail]="isSendEmail"
+    [notEditTopicTrudi]="notEditShow"
+    (isOpenSuccessModal)="showSuccessMessageModal($event)"
+    (isCloseModal)="closeModal($event)"
+    (isOpenQuitConfirmModal)="showQuitConfirm($event)"
+    (moveToNextStep)="onMoveToNextStep($event)"
+    [dataMessageTrudi]="emailContent"
+    [trudiBody]="trudiBody"
+    [nextStep]="nextStep"
+    [show]="isShowSendMessageModal"
+    (isOpenFile)="showAddFiles($event)"
+    [showTextForward]="true"
+    [trudiResponseVariable]="trudiBody?.variable"
+    [attr.data-e2e]="'send-message-modal'">
+  </app-send-message>
+</app-modal-popup>
+
+<app-modal-popup
+  *ngIf="isShowSecceessMessageModal"
+  [show]="isShowSecceessMessageModal"
+  [position]="popupModalPosition.center">
+  <app-send-message-success></app-send-message-success>
+</app-modal-popup>
+
+<app-add-files-popup
+  [show]="isShowAddFilesModal"
+  (isOpenQuitConfirmModal)="showQuitConfirm($event)"
+  (isOpenSendMessageModal)="showAppSendMessage($event)"
+  (outSelectedFile)="getSelectedFile($event)"></app-add-files-popup>
+
+<app-modal-popup
+  *ngIf="isShowQuitConfirm"
+  [show]="isShowQuitConfirm"
+  [position]="popupModalPosition.center">
+  <app-quit-confirm
+    (isCloseModal)="showQuitConfirm($event)"
+    (isOpenSendMessageModal)="showAppSendMessage($event)"
+    (isOpenFileModal)="showAddFiles($event)"></app-quit-confirm>
+</app-modal-popup>

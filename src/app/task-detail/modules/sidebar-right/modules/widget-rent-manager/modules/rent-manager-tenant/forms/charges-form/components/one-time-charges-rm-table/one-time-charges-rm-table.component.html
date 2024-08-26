@@ -1,0 +1,157 @@
+<div class="one-time-charges">
+  <div class="d-flex gap-12 flex-dir-column">
+    <trudi-collapse [titleHeader]="headerOneTimeCollapse" [activeExpand]="true">
+      <table class="table-property">
+        <thead>
+          <tr>
+            <th>Charge type</th>
+            <th>Date</th>
+            <th>Reference</th>
+            <th>Comment</th>
+            <th>Amount</th>
+            <th></th>
+          </tr>
+        </thead>
+        <ng-container *ngIf="!loading; else loadingSkeleton">
+          <tbody [class]="oneTimeChargeList?.length === 0 ? 'empty-block' : ''">
+            <ng-container *ngIf="oneTimeChargeList?.length === 0">
+              <tr class="no-result-text">
+                <div class="content-text">No one-time charges found</div>
+              </tr>
+            </ng-container>
+            <tr *ngFor="let item of oneTimeChargeList; index as i">
+              <td>{{item.chargeType?.name || item.chargeType}}</td>
+              <td>{{item.date | formatDate | push}}</td>
+              <td>{{item.reference}}</td>
+              <td>{{item.comment}}</td>
+              <td class="text-center" [ngStyle]="{'width.px': 80}">
+                {{item.amount | formatAmount}}
+              </td>
+              <td [ngStyle]="{'width': '64px'}">
+                <button
+                  [ngClass]="{'disabled-btn': disableField}"
+                  nz-dropdown
+                  [nzDropdownMenu]="menu"
+                  [nzTrigger]="'click'"
+                  [nzVisible]="visibleDropdown"
+                  (nzVisibleChange)="handleVisibleDropdown($event)"
+                  class="icon-more pointer">
+                  <trudi-icon
+                    icon="verticalMore"
+                    [style]="{ 'width.px': 20, 'height.px': 20 }"></trudi-icon>
+                </button>
+                <nz-dropdown-menu #menu="nzDropdownMenu">
+                  <div nz-menu class="team-menu-options">
+                    <ng-container>
+                      <button
+                        nz-menu-item
+                        (click)="onOpenOneTimeCharges(i)"
+                        class="item">
+                        <trudi-icon icon="editIconOutline"></trudi-icon>
+                        <span>Edit</span>
+                      </button>
+                      <button
+                        nz-menu-item
+                        (mouseenter)="handleMouseEnter(item)"
+                        (mouseleave)="handleMouseLeave()"
+                        (click)="!item?.id ? handleDeleteOneTimeCharge(i) : itemSelected=null"
+                        [ngClass]="{'disabled': item?.id}"
+                        class="item"
+                        nz-tooltip
+                        [nzTooltipVisible]="itemSelected === item"
+                        [nzTooltipTitle]="item?.id ? titleTooltip : ''"
+                        [nzTooltipOverlayStyle]="{'max-width': '172px'}">
+                        <trudi-icon icon="deleteIconOutline"></trudi-icon>
+                        <span>Delete</span>
+                      </button>
+                    </ng-container>
+                  </div>
+                </nz-dropdown-menu>
+              </td>
+            </tr>
+          </tbody>
+        </ng-container>
+
+        <tfoot>
+          <tr>
+            <td colspan="6">
+              <div
+                class="container-btn"
+                nz-tooltip
+                nzTooltipPlacement="right"
+                [nzTooltipOverlayClassName]="'tooltip-disabled-btn'"
+                [nzTooltipTitle]="disabled ? titleButtonAddNotSync : ''">
+                <button
+                  [ngClass]="{'disabled-btn': disabled || loading}"
+                  (click)="(disabled || loading) ? null : onOpenOneTimeCharges()"
+                  class="d-flex pointer gap-8 align-items-center btn-add button-tab">
+                  <trudi-icon
+                    icon="plusGray"
+                    [style]="{'width.px': 16, 'height.px': 16}"></trudi-icon>
+                  <span>Add</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </trudi-collapse>
+  </div>
+</div>
+
+<ng-template #headerOneTimeCollapse>
+  <span>One-time charges</span>
+</ng-template>
+
+<ng-template #loadingSkeleton>
+  <tbody class="skeleton-wrapper">
+    <ng-container>
+      <tr *ngFor="let item of [].constructor(2)">
+        <td class="property">
+          <div class="data-item">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0 }"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </td>
+        <td class="property">
+          <div class="data-item">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0 }"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </td>
+        <td class="property">
+          <div class="data-item">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0 }"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </td>
+        <td class="property">
+          <div class="data-item">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0 }"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </td>
+        <td class="property">
+          <div class="data-item">
+            <nz-skeleton
+              [nzParagraph]="{ rows: 0 }"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </td>
+        <td class="property" [ngStyle]="{'width.px': 64}">
+          <div class="data-item">
+            <nz-skeleton-element
+              class="ant-skeleton-circle"
+              nzType="avatar"
+              [nzSize]="32"
+              [nzActive]="true"></nz-skeleton-element>
+          </div>
+        </td>
+      </tr>
+    </ng-container>
+  </tbody>
+</ng-template>

@@ -1,0 +1,126 @@
+@import 'function';
+
+:host {
+  display: block;
+  width: 100%;
+  .trudi-send-msg-header {
+    display: flex;
+    align-items: center;
+    padding: 4px 6px;
+    &-body {
+      flex: 1;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      overflow: hidden;
+      .max-width-100 {
+        max-width: 100%;
+        overflow: hidden;
+
+        ::ng-deep {
+          trudi-send-msg-property {
+            width: 100%;
+            .trudi-ui-btn-outlined-neutral {
+              background-color: var(--gray-200);
+              height: 32px;
+              &:focus-visible {
+                box-shadow: inset 0 0 0 2px var(--brand-500) !important;
+              }
+            }
+          }
+        }
+      }
+      .lable-dropdown,
+      .lable-dropdown-showpopover {
+        cursor: pointer;
+        color: var(--fg-neutral-normal, #646464);
+        font-family: Work Sans;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 20px;
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+      }
+      .lable-dropdown-text {
+        max-width: calc(50vw - 170px);
+        width: fit-content;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .lable-dropdown-showpopover {
+        position: absolute;
+        top: 0;
+      }
+      .icon-dropdown {
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+        min-height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        &.selected {
+          background-color: var(--gray-200);
+        }
+        &:hover {
+          background-color: var(--gray-200);
+        }
+      }
+      &-title {
+        @include fontSetup(
+          var(--fg-neutral-strongest, #202020),
+          14px,
+          20px,
+          normal,
+          500
+        );
+        &.error-text {
+          color: var(--danger-500);
+        }
+      }
+    }
+
+    .property-wrapper {
+      ::ng-deep {
+        .ng-dropdown-panel {
+          max-width: calc(50vw - 170px);
+        }
+      }
+    }
+    ::ng-deep .popover-content:has(.trudi-send-msg) {
+      padding: 12px 12px 0px 12px;
+    }
+    ::ng-deep .popover-container {
+      width: 450px;
+      height: 377px;
+    }
+    ::ng-deep .ant-popover-inner-content {
+      width: 450px;
+      height: 377px;
+    }
+  }
+  .header-icon:focus-visible {
+    box-shadow: inset 0px 0px 0px 1px var(--brand-500),
+      0px 0px 0px 2px rgba(var(--brand-500-rgb), 0.6) !important;
+    border: none;
+  }
+}
+
+.trudi-send-msg {
+  &-header {
+    &-icon {
+      &-close,
+      &-expand-or-collapse {
+        cursor: pointer;
+        padding: 15px 0 15px 15px;
+
+        &:focus-visible {
+          box-shadow: inset 0 0 0 2px var(--brand-500);
+        }
+      }
+    }
+  }
+}

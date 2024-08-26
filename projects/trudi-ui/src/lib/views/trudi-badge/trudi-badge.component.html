@@ -1,0 +1,15 @@
+<trudi-icon
+  *ngIf="!!icon && !customBadgeIconTemplate"
+  [icon]="icon"
+  [style]="{ 'width.px': iconSize, 'height.px': iconSize }"></trudi-icon>
+<ng-container *ngTemplateOutlet="customBadgeIconTemplate"></ng-container>
+<div
+  class="badge-text"
+  [ngClass]="{ 'truncate': allowTruncated }"
+  [ngOptionHighlight]="highlighText">
+  <ng-container
+    *ngTemplateOutlet="customBadgeTextTemplate || default"></ng-container>
+  <ng-template #default>
+    {{text | userTypeInRm: pipeType : isRmEnvironment}}
+  </ng-template>
+</div>

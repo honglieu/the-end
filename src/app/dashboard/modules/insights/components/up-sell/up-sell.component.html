@@ -1,0 +1,53 @@
+<div class="up-cell-wrapper"></div>
+
+<app-modal-popup
+  [show]="popupState === EPopupState.UP_SALE_POPUP"
+  title=""
+  subTitle=""
+  class="upsell-modal">
+  <div class="up-sell-content">
+    <img
+      class="up-sell-img"
+      src="/assets/images/insight-group.png"
+      alt="up-sell" />
+    <div class="up-sell-title">Trudi® Insights</div>
+    <div class="up-sell-summary">
+      <div>
+        Allows managers to track and export valuable team data, including:
+      </div>
+      <ul class="benefit-list">
+        <li *ngFor="let item of BENEFIT_LIST">{{item}}</li>
+      </ul>
+      <div>To access your team insights, please upgrade your plan</div>
+    </div>
+    <button
+      [disabled]="disabledUpSellBtn"
+      (click)="handleUpgradePlan()"
+      trudi-btn
+      class="up-sell-button">
+      {{upSellButtonText}}
+    </button>
+  </div>
+</app-modal-popup>
+
+<plans-summary-pop-up
+  [isShowModal]="popupState === EPopupState.SUMMARY_PLAN_POPUP"
+  [currentPlan]="configPlans?.plan"
+  (onQuit)="onClosePlansSummary()"
+  (changePlan)="handleChangePlan($event)"></plans-summary-pop-up>
+
+<trudi-modal
+  [visible]="popupState === EPopupState.CONFIRM_PLAN_POPUP"
+  [autoFocus]="null"
+  okText="Ok, got it"
+  title="We’re on it"
+  [closable]="false"
+  (onOk)="popupState = EPopupState.UP_SALE_POPUP"
+  [hiddenCancelBtn]="true">
+  <div class="confirm-request-body">
+    <p>
+      We’ve received your request to {{planModifyingText}} your subscription.
+    </p>
+    <p>One of our Sales team will be in contact shortly.</p>
+  </div>
+</trudi-modal>

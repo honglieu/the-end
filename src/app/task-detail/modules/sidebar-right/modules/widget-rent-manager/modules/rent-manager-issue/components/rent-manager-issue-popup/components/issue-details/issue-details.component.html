@@ -1,0 +1,105 @@
+<div [formGroup]="fromIssueDetails" class="issue_details">
+  <div class="issue_details--right">
+    <trudi-form-control>
+      <trudi-single-select
+        formControlName="tenantId"
+        bindValue="id"
+        [loading]="!tenantsOrProspects || loadingListUser"
+        [items]="tenantsOrProspects"
+        [searchFn]="customSearchFn"
+        label="Linked tenant/tenant prospect">
+        <ng-template
+          trudi-option-tmp
+          let-item="item"
+          let-item$="item$"
+          let-searchTerm="searchTerm">
+          <div class="tenants_list">
+            <div [ngOptionHighlight]="searchTerm ? searchTerm : ''">
+              {{ (item.firstName ? item.firstName : '')+' '+(item.lastName ?
+              item.lastName : '') }}
+            </div>
+            <div *ngIf="item$.selected" class="d-flex align-items-center">
+              <trudi-icon icon="checkSuccess"></trudi-icon>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template
+          trudi-label-tmp
+          let-item="item"
+          let-searchTerm="searchTerm">
+          <div class="tenants_preview">
+            {{ (item.firstName ? item.firstName : '') +' '+ (item.lastName ?
+            item.lastName : '') }}
+          </div>
+        </ng-template>
+      </trudi-single-select>
+    </trudi-form-control>
+    <div class="issue_details--select">
+      <trudi-form-control>
+        <trudi-single-select
+          [items]="issueDetails?.category"
+          bindLabel="name"
+          bindValue="id"
+          [loading]="false"
+          formControlName="categoryId"
+          label="Category"></trudi-single-select>
+      </trudi-form-control>
+      <trudi-form-control>
+        <trudi-single-select
+          [loading]="false"
+          bindLabel="name"
+          bindValue="id"
+          [items]="issueDetails?.priority"
+          formControlName="priorityId"
+          label="Priority"></trudi-single-select>
+      </trudi-form-control>
+      <trudi-form-control>
+        <trudi-single-select
+          [loading]="false"
+          [items]="issueDetails?.project"
+          bindLabel="name"
+          bindValue="id"
+          formControlName="projectId"
+          label="Project"></trudi-single-select>
+      </trudi-form-control>
+      <trudi-form-control>
+        <trudi-single-select
+          [loading]="!vendor || loadingListSuppliers"
+          [items]="vendor"
+          formControlName="vendorId"
+          bindLabel="lastName"
+          bindValue="id"
+          [disabled]="isDisabledVendorField"
+          label="Vendor"></trudi-single-select>
+      </trudi-form-control>
+    </div>
+    <trudi-form-control>
+      <trudi-single-select
+        [items]="issueDetails?.job"
+        formControlName="jobId"
+        bindLabel="name"
+        bindValue="id"
+        [loading]="false"
+        [disabled]="isDisabledJobField"
+        label="Job"></trudi-single-select>
+    </trudi-form-control>
+  </div>
+  <div class="issue_details--left">
+    <span>
+      <trudi-form-control>
+        <trudi-textarea
+          formControlName="description"
+          label="Description"
+          [maxCharacter]="2000"></trudi-textarea>
+      </trudi-form-control>
+    </span>
+    <span>
+      <trudi-form-control>
+        <trudi-textarea
+          [maxCharacter]="2000"
+          formControlName="resolution"
+          label="Resolution"></trudi-textarea>
+      </trudi-form-control>
+    </span>
+  </div>
+</div>

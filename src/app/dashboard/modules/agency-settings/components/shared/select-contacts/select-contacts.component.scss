@@ -1,0 +1,247 @@
+@import 'function';
+
+:host ::ng-deep ng-select {
+  .trudi-multi-select-header {
+    padding: 6px 12px;
+  }
+
+  &.trudi-single-select .ng-dropdown-panel .ng-dropdown-footer {
+    padding: 12px !important;
+  }
+
+  &.ng-select-multiple .ng-select-container {
+    padding: 12px 16px !important;
+    &.ng-has-value {
+      padding: 8px 16px !important;
+    }
+    min-height: unset !important;
+  }
+
+  &.ng-select.ng-select-multiple .ng-select-container .ng-value-container {
+    .ng-placeholder {
+      top: auto;
+      @include fontSetup(
+        var(--fg-neutral-weaker, #85888e),
+        14px,
+        20px,
+        normal,
+        400
+      );
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    .ng-input {
+      padding: 0 !important;
+      margin: 0 !important;
+      & > input {
+        padding: 0 !important;
+      }
+    }
+
+    .ng-value .trudi-label-wrapper {
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      border-radius: 8px;
+      padding: 2px 8px !important;
+
+      trudi-icon svg path {
+        fill: var(--fg-neutral-normal, #61646c);
+      }
+
+      &-readonly {
+        cursor: default !important;
+      }
+
+      &.trudi-label-wrapper-disabled {
+        opacity: 0.5;
+      }
+
+      &:not(.trudi-label-wrapper-readonly):not(
+          .trudi-label-wrapper-disabled
+        ):hover {
+        background-color: var(--bg-neutral-tonal-stronger, #f0f1f1);
+      }
+
+      &:not(.trudi-label-wrapper-readonly):not(
+          .trudi-label-wrapper-disabled
+        ):active {
+        background-color: var(--bg-neutral-tonal-strongest, #ececed);
+      }
+
+      .trudi-select-label {
+        max-width: 248px !important;
+        @include fontSetup(
+          var(--fg-neutral-normal, #61646c),
+          16px,
+          24px,
+          normal,
+          500
+        );
+        .text-ellipsis {
+          display: block !important;
+        }
+      }
+    }
+    .ng-value {
+      white-space: unset !important;
+    }
+  }
+
+  &.trudi-single-select {
+    .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+      .trudi-select-option {
+        &.select-contact-option {
+          height: auto;
+
+          .wrapper-option {
+            max-width: 100%;
+            overflow: hidden;
+
+            .item-label {
+              width: 100%;
+              display: flex;
+              align-items: center;
+              gap: 8px;
+
+              &-supplier {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                @include fontSetup(
+                  var(--fg-neutral-stronger, #333741),
+                  14px,
+                  20px,
+                  normal,
+                  500
+                );
+              }
+
+              .email-wrapper {
+                display: flex;
+                align-items: center;
+                gap: 2px;
+                span {
+                  @include fontSetup(
+                    var(--fg-neutral-normal, #61646c) !important,
+                    12px,
+                    16px,
+                    normal,
+                    400
+                  );
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &.ng-select-multiple.ng-select-disabled .ng-select-container {
+    background-color: var(--gray-200);
+  }
+
+  &.ng-select.ng-select-disabled
+    > .ng-select-container
+    .ng-value-container
+    .ng-value {
+    background: var(--bg-base, #fff) !important;
+  }
+}
+
+:host ::ng-deep {
+  trudi-checkbox {
+    &.trudi-checkbox-square {
+      pointer-events: none;
+    }
+  }
+}
+
+.hover-template {
+  max-width: 264px;
+}
+
+.close-wrapper {
+  border: none;
+  background-color: transparent;
+  border-radius: 50%;
+}
+
+:host ::ng-deep ng-template {
+  .select-item__contact {
+    trudi-badge.company-name {
+      height: unset;
+      align-items: unset;
+    }
+  }
+}
+
+.option-disabled {
+  cursor: not-allowed;
+}
+
+::ng-deep .select-item__contact {
+  trudi-badge trudi-icon svg-icon svg path {
+    &[fill] {
+      fill: var(--fg-neutral-normal);
+    }
+
+    &:not([fill]) {
+      stroke: var(--fg-neutral-normal);
+    }
+  }
+}
+
+::ng-deep .tooltip {
+  .hover-template {
+    trudi-badge {
+      border-radius: 10px;
+    }
+  }
+  .company-name {
+    trudi-badge {
+      align-items: unset;
+      trudi-icon {
+        padding-top: 3px;
+      }
+    }
+    .trudi-badge.trudi-badge-small {
+      height: unset;
+    }
+  }
+}
+
+.add-new-supplier-btn {
+  color: var(--fg-brand, #28ad99);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    .add-new-supplier-btn-text {
+      color: var(--bg-brand-solid-stronger, #209386);
+      text-decoration: underline;
+    }
+
+    ::ng-deep trudi-icon svg-icon svg path {
+      fill: var(--bg-brand-solid-stronger, #209386);
+    }
+  }
+
+  &:active {
+    .add-new-supplier-btn-text {
+      color: var(--bg-brand-solid-strongest, #107569);
+      text-decoration: underline;
+    }
+
+    ::ng-deep trudi-icon svg-icon svg path {
+      fill: var(--bg-brand-solid-strongest, #107569);
+    }
+  }
+}

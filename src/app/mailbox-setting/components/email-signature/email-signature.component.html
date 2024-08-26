@@ -1,0 +1,266 @@
+<div class="email-signature">
+  <div class="toast">
+    <div class="message-toast">
+      The following preferences will be used by all team members using this
+      mailbox.
+    </div>
+  </div>
+  <div class="email-signature-container">
+    <div [formGroup]="emailSignatureForm">
+      <div class="greeting-container">
+        <div class="headline">Start your email with:</div>
+        <ng-container *ngIf="!isLoading">
+          <div class="d-flex gap-4 align-items-center greeting-form">
+            <trudi-form-control class="greeting">
+              <trudi-single-select
+                class="greeting"
+                bindValue="key"
+                bindLabel="label"
+                formControlName="greetingOption"
+                [items]="listGreeting"
+                [required]="true"
+                (triggerEventChange)="handleSaveGreeting()"
+                [clearable]="false">
+              </trudi-single-select>
+            </trudi-form-control>
+            <trudi-form-control class="recipient-option">
+              <trudi-single-select
+                bindValue="key"
+                bindLabel="label"
+                formControlName="recipientOption"
+                [items]="recipientFormatOptions"
+                [required]="true"
+                (triggerEventChange)="handleSaveGreeting()"
+                [clearable]="false">
+              </trudi-single-select>
+            </trudi-form-control>
+          </div>
+        </ng-container>
+        <ng-container *ngIf="isLoading">
+          <div class="d-flex align-items-center gap-4">
+            <nz-skeleton
+              [nzTitle]="false"
+              [nzActive]="true"
+              [nzRound]="true"
+              [nzParagraph]="{ rows: 1, width: [120] }"></nz-skeleton>
+            <nz-skeleton
+              [nzTitle]="false"
+              [nzActive]="true"
+              [nzRound]="true"
+              [nzParagraph]="{ rows: 1, width: [250] }"></nz-skeleton>
+          </div>
+        </ng-container>
+      </div>
+      <div class="personalise-form">
+        <div class="headline">Finish your email with:</div>
+        <ng-container *ngIf="!isLoading">
+          <div
+            class="personalise-form-option"
+            [ngClass]="{'disable': isDisable}">
+            <trudi-checkbox
+              (triggerEventChange)="handleSaveSignature()"
+              formControlName="enableSignOffPhrase"></trudi-checkbox>
+            <div>Sign off phrase</div>
+            <div class="wrapper-phrase" [ngClass]="{'disable': isDisable}">
+              <trudi-text-field
+                class="d-block"
+                [disabled]="isDisable"
+                [ngClass]="{'disable': isDisable}"
+                cdkOverlayOrigin
+                #trigger="cdkOverlayOrigin"
+                [prefixText]="selectedItem === 'Other' ? 'OTHER:' : ''"
+                formControlName="signOffPhrase"
+                style="width: 190px"
+                (triggerEventFocus)="handleEventFocus($event)"
+                [readonly]="true">
+              </trudi-text-field>
+              <span
+                class="arrow-icon cursor-pointer"
+                [ngClass]="{'disable-arrow-icon': isDisable || !enableSignOffPhrase?.value}"
+                (click)="handleOpenOrCloseDropdown($event)"
+                [ngStyle]="{'transform': isOpen ? 'rotate(0deg)' : 'rotate(180deg)'}">
+                <img src="/assets/images/chevron-up.png" alt="chevron-up" />
+              </span>
+            </div>
+
+            <ng-template
+              cdkConnectedOverlay
+              [cdkConnectedOverlayOrigin]="trigger"
+              [cdkConnectedOverlayOpen]="isOpen"
+              (overlayOutsideClick)="overlayOutsideClick($event)">
+              <div class="sign-off-list">
+                <ng-container
+                  *ngFor="let item of signOffPhrasesOption; let last = last">
+                  <ng-container *ngIf="last else otherItem">
+                    <div
+                      class="d-flex gap-4 align-items-center last-option"
+                      (click)="handleChangeSignOffPhrases(item)"
+                      [ngClass]="{'selected': item.key === selectedItem, 'not-selected': item.key !== selectedItem}">
+                      <span class="select-text">{{ item.label }}</span>
+                      <trudi-form-control
+                        [control]="optionOther"
+                        [showErrorMessage]="false">
+                        <trudi-text-field
+                          [ngClass]="{'disable': isDisable}"
+                          style="width: 190px"
+                          maxCharacter="75"
+                          [showCounting]="false"
+                          (click)="handleClickOptionOther($event)"
+                          (triggerEventInput)="handleChangeTextOther($event)"
+                          formControlName="optionOther"></trudi-text-field>
+                      </trudi-form-control>
+                      <trudi-icon
+                        *ngIf="item.key === selectedItem"
+                        icon="checkSuccess"></trudi-icon>
+                    </div>
+                  </ng-container>
+                  <ng-template #otherItem>
+                    <div
+                      class="d-flex gap-4 align-items-center wrapper-option"
+                      [ngClass]="{'selected': item.key === selectedItem, 'not-selected': item.key !== selectedItem}">
+                      <span
+                        class="option"
+                        (click)="handleChangeSignOffPhrases(item)"
+                        >{{item.label}}</span
+                      >
+                      <trudi-icon
+                        *ngIf="item.key === selectedItem"
+                        icon="checkSuccess"></trudi-icon>
+                    </div>
+                  </ng-template>
+                </ng-container>
+              </div>
+            </ng-template>
+          </div>
+          <div
+            class="personalise-form-option"
+            [ngClass]="{'disable': isDisable}">
+            <trudi-checkbox
+              formControlName="enableName"
+              (triggerEventChange)="handleSaveSignature()"></trudi-checkbox>
+            Name of team member sending email
+          </div>
+          <div
+            class="personalise-form-option"
+            [ngClass]="{'disable': isDisable}">
+            <trudi-checkbox
+              formControlName="enableRole"
+              (triggerEventChange)="handleSaveSignature()"></trudi-checkbox>
+            Role of team member sending email
+          </div>
+          <div
+            class="personalise-form-option"
+            [ngClass]="{'disable': isDisable}">
+            <trudi-checkbox
+              formControlName="enablePhoneNumber"
+              (triggerEventChange)="handleSaveSignature()"></trudi-checkbox>
+            Phone of team member sending email
+          </div>
+          <div
+            class="personalise-form-option"
+            [ngClass]="{'disable': isDisable}">
+            <trudi-checkbox
+              formControlName="enableTeamName"
+              (triggerEventChange)="handleSaveSignature()"></trudi-checkbox>
+            <span> Team name </span>
+            <trudi-form-control [control]="teamName" [showErrorMessage]="false">
+              <trudi-text-field
+                [disabled]="isConsole || !enableTeamName?.value"
+                maxCharacter="100"
+                [showCounting]="false"
+                style="width: 190px"
+                (triggerEventBlur)="handleChangeTeamName($event)"
+                [placeholder]="'e.g. Trudi'"
+                formControlName="teamName"></trudi-text-field>
+            </trudi-form-control>
+          </div>
+          <div
+            class="personalise-form-option"
+            [ngClass]="{'disable': isDisable}">
+            <trudi-checkbox
+              formControlName="enableEmailAddress"
+              (triggerEventChange)="handleSaveSignature()"></trudi-checkbox>
+            Mailbox email address
+          </div>
+          <div
+            class="personalise-form-option"
+            [ngClass]="{'disable': isDisable}">
+            <trudi-checkbox
+              (triggerEventChange)="handleSaveSignature()"
+              formControlName="enableSignature"></trudi-checkbox>
+            Include team member’s signature JPEG
+          </div>
+        </ng-container>
+        <ng-container *ngIf="isLoading">
+          <nz-skeleton
+            [nzTitle]="false"
+            [nzRound]="true"
+            [nzParagraph]="{ rows: 5, width: [340, 280, 270, 340, 180]}"></nz-skeleton>
+        </ng-container>
+      </div>
+    </div>
+    <div class="preview-container">
+      <div class="header-preview d-flex align-items-center">
+        <trudi-icon
+          class="cursor-pointer preview-icon"
+          icon="frame"></trudi-icon>
+        <div class="preview-text">Preview</div>
+      </div>
+      <div class="signature-preview">
+        <div>
+          <div class="mt-6" [innerHTML]="(greetingPreview || '') | safe"></div>
+        </div>
+        <nz-skeleton
+          class="signature-preview-skeleton"
+          [nzRound]="true"
+          [nzParagraph]="{ rows: 0}"></nz-skeleton>
+        <nz-skeleton
+          [nzTitle]="false"
+          class="content-signature-preview"
+          [nzRound]="true"
+          [nzParagraph]="{ rows: 6, width: [453, 453, 453, 233, 453, 233] }"></nz-skeleton>
+        <div *ngIf="!isLoadingEmailSignOffData else loadingContent">
+          <div class="mt-6" [innerHTML]="(mailboxSignature || '') | safe"></div>
+        </div>
+        <img
+          *ngIf="isShowSignatureDefault"
+          class="signature-default"
+          src="assets/images/illustrations/mail-box-signature/signature-default.png"
+          alt="signature" />
+        <div
+          class="fit-content"
+          [innerHTML]="(agencySignature || '') | safe"
+          nz-tooltip
+          [nzTooltipTitle]="buttonAiSummaryTemplate"
+          nzTooltipPlacement="right"
+          [nzTooltipArrowPointAtCenter]="true"></div>
+      </div>
+
+      <ng-template #loadingContent>
+        <div class="mt-6">
+          <nz-skeleton
+            [nzActive]="true"
+            [nzRound]="true"
+            class="sign-off-skeleton"
+            [nzParagraph]="{ rows: 0 }"></nz-skeleton>
+          <nz-skeleton
+            [nzTitle]="false"
+            [nzActive]="true"
+            [nzRound]="true"
+            [nzParagraph]="{ rows: 4, width: [64, 142, 123, 142] }"></nz-skeleton>
+        </div>
+      </ng-template>
+    </div>
+
+    <ng-template #buttonAiSummaryTemplate>
+      <div class="tooltip-content-wrapper fit-content text-center">
+        <p class="m-0">Company signature. To edit, go to</p>
+        <p
+          (click)="handleNavigate()"
+          class="m-0 cursor-pointer text-decoration-underline">
+          Company settings
+        </p>
+      </div>
+    </ng-template>
+  </div>
+</div>

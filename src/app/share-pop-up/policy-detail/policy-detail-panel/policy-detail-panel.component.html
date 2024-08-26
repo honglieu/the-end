@@ -1,0 +1,344 @@
+<trudi-drawer
+  [(visible)]="visible"
+  [width]="704"
+  [enableOkBtn]="true"
+  [enableCancel]="true"
+  [enableDeleteBtn]="editMode"
+  [disabledNext]="!permissionToEdit || isLoadingOk || isLoadingFile || isAiGenerating"
+  [disabledDelete]="!permissionToEdit || isLoadingOk"
+  [disabledCancel]="isLoadingOk"
+  [okText]="!isLoadingOk ? 'Save' : 'Saving...'"
+  (onDelete)="handleDelete($event)"
+  (onCancel)="handleCancel()"
+  (onOk)="handleOk()"
+  (onScroll)="onScrollDrawerContent($event)"
+  [footerTpl]="isLoading && !isAiGenerating ? skeletonFooterTpl : ''"
+  wrapClassName="policy-detail-panel-drawer">
+  <ng-container *ngIf="!isLoading; else policySkeleton">
+    <div #headerPanel class="policy-header d-flex flex-dir-column">
+      <div class="policy-name-container">
+        <ng-container>
+          <div class="question" [formGroup]="policyForm">
+            <trudi-form-control
+              [control]="policyName"
+              [errors]="[{errorName: 'policyNameInvalid', errorMessage: 'Policy name already exists'}]">
+              @if (isBlurPolicyName) {
+              <div
+                (click)="clickPolicyName()"
+                [ngClass]="{'disabled': isLoadingOk}"
+                class="policy-value d-flex align-items-center text-ellipsis">
+                <span
+                  class="text-ellipsis tool-tip"
+                  disableTooltipOnWidth
+                  [maxWidthTooltip]="635"
+                  nz-tooltip
+                  [nzTooltipTitle]="policyName.value"
+                  nzTooltipPlacement="bottom"
+                  >{{policyName.value}}</span
+                >
+              </div>
+              } @else {
+              <trudi-textarea
+                formControlName="policyName"
+                [disabled]="isLoadingOk"
+                [rows]="1"
+                [cols]="1"
+                [placeholder]="'Give this policy a name'"
+                [showCounting]="false"
+                [resizable]="false"
+                [isPressEnter]="true"
+                (triggerEventFocus)="onFocus()"
+                (triggerEventBlur)="onBlur()"
+                [maxCharacter]="100"></trudi-textarea>
+              }
+            </trudi-form-control>
+          </div>
+          <div *ngIf="editMode" class="policy-last-updated text-ellipsis">
+            <span>Last updated: {{updatedAt}}</span>
+            <span class="dot no-pointer-event"> • </span>
+            <span class="updated-name text-ellipsis">
+              {{lastUpdatedBy?.isConsoleUpdate ? 'Trudi team' :
+              lastUpdatedBy?.firstName}}
+            </span>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+    <div
+      #policyBodyPanel
+      [ngStyle]="{'padding-top.px': headerPanel.offsetHeight + 10}"
+      class="policy-content d-flex flex-dir-column gap-16 pd-24"
+      [ngClass]="{'disable-drawer no-pointer-event': isLoadingOk}">
+      <div class="question-examples-container d-flex flex-dir-column gap-8">
+        <!-- Trigger scroll to index policy -->
+        <button
+          id="scroll-policy"
+          (click)="scrollToSelectedPolicyVersion()"
+          hidden></button>
+        <div class="question-example-title">Question examples</div>
+        <ng-container *ngIf="isNoQuestion">
+          <span class="d-flex align-items-center"
+            ><trudi-icon icon="iconWarning"></trudi-icon>
+            <p class="warning-question">
+              At least one question is required
+            </p></span
+          >
+        </ng-container>
+        <div class="description">
+          Tell us the questions you'd like to answer.
+        </div>
+        <question-tag
+          [listQuestions]="listQuestions"
+          [isClosable]="true"
+          [isShowError]="isShowErrorOfQuestionTag"
+          [isShowAddButton]="true"
+          (onEditQuestion)="handleEditQuestion($event)"
+          (onClose)="handleCloseQuestion($event)"
+          (onAddQuestion)="handleAddQuestion($event)"></question-tag>
+      </div>
+      <div class="reply-container d-flex flex-dir-column gap-8">
+        <div class="reply-default-title">Default policy</div>
+        <div class="description">
+          The following information will be used in all AI-generated replies,
+          unless a custom policy is found. <br />
+          Please make sure the copy is suitable for all regions and properties.
+        </div>
+        <div class="reply-content" [formGroup]="policyForm">
+          <trudi-form-control [control]="defaultReply">
+            <generated-reply
+              [formGroup]="policyForm"
+              [invalid]="defaultReply.invalid"
+              (triggerEventFocus)="handleFocusReply()"
+              (triggerUploadComputer)="handleAddFileComputer()"
+              (triggerUploadContactCard)="triggerUploadContactCard()"
+              [controlName]="'defaultReply'"></generated-reply>
+          </trudi-form-control>
+          <input
+            id="upload-policy"
+            [multiple]="true"
+            class="input-file d-none"
+            type="file"
+            accept="{{ACCEPT_ONLY_SUPPORTED_FILE}}"
+            (change)="fileBrowseHandler($event)" />
+        </div>
+        <attach-file
+          *ngIf="listOfFiles?.length || selectedContactCard?.length"
+          [files]="listOfFiles"
+          [cards]="selectedContactCard"
+          [overFileSize]="overFileSize"
+          [isUnSupportFile]="isUnSupportFile"
+          [isPolicy]="true"
+          (onRemoveFile)="removeFile($event)"
+          (clearCard)="onClearContactById($event)">
+        </attach-file>
+      </div>
+      <div class="custom-policy">
+        <button
+          trudi-btn
+          variant="outlined"
+          (click)="handleAddCustomPolicy($event)"
+          class="btn-add-custom d-flex align-items-center gap-4">
+          <trudi-icon icon="iconPlus2"></trudi-icon>
+          <span>Add custom policy</span>
+        </button>
+        <div [formGroup]="policyForm">
+          <div formArrayName="customPolicy">
+            @for (group of customPolicy.controls; track group; let index =
+            $index) {
+            <div class="custom-policy-form" #customPolicyElements cdkScrollable>
+              <add-custom-policy
+                [customPolicyFormGroup]="group"
+                [indexHasInactiveProperty]="indexHasInactiveProperty"
+                [index]="index"
+                (addListOfFiles)="addListOfFiles($event, index)"
+                (supplierChange)="onSupplierChange($event, index)"
+                [dataSources]="dataSources"
+                [isGroupBy]="!isRMEnvironment"
+                [openFrom]="openFrom"
+                (onFocusChange)="currentIndex = index;handleFocusChange($event)"
+                (openSuppierPopup)="setSupplierPopupVariable(true, $event)"
+                (remove)="removeCustomPolicy(index)"
+                (invalidCustomFile)="handleInvalidCustomFile($event)"
+                (triggerLoadingFile)="handleLoadingFileCustomPolicy($event)"
+                [isAddSupplier]="isAddSupplier"
+                [policyDefaultValue]="policyDefaultValue"></add-custom-policy>
+            </div>
+
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #policySkeleton>
+    @if(isAiGenerating) {
+    <div class="ai-generating-skeleton d-flex gap-6 flex-dir-column">
+      <div class="ai-generating d-flex flex-dir-row align-items-center">
+        <div class="cursor-pointer" (click)="onCloseSuggestedChatGpt()">
+          <ng-lottie [options]="options"></ng-lottie>
+        </div>
+        <div>
+          <span> Generating policy...</span>
+        </div>
+      </div>
+      <nz-skeleton-element
+        class="header-skeleton"
+        nzType="input"
+        [nzActive]="true"></nz-skeleton-element>
+      <div class="ai-generating-body gap-24">
+        <div class="question-example-title">Question examples</div>
+        <div class="description">
+          Tell us the questions you'd like to answer.
+        </div>
+        <nz-skeleton-element
+          class="input-skeleton"
+          nzType="input"
+          [nzActive]="true"></nz-skeleton-element>
+        <div class="question-example-title">Default policy</div>
+        <div class="description">
+          Use the following information in AI-generated replies. <br />
+          Please make sure your default reply is suitable for all regions and
+          properties.
+        </div>
+        <div class="reply-skeleton">
+          <span>Information to include in your reply...</span>
+        </div>
+        <nz-skeleton-element
+          class="end-skeleton"
+          nzType="input"
+          [nzActive]="true"></nz-skeleton-element>
+      </div>
+    </div>
+    } @else {
+    <div class="policy-skeleton d-flex flex-dir-column gap-24 pd-24">
+      <nz-skeleton-element
+        class="input-skeleton"
+        nzType="input"
+        [nzActive]="true"></nz-skeleton-element>
+      <nz-skeleton-element
+        class="title-skeleton"
+        nzType="input"
+        [nzActive]="true"></nz-skeleton-element>
+      <div class="question-skeleton d-flex flex-dir-column gap-8">
+        <nz-skeleton-element
+          class="question-skeleton-1"
+          nzType="input"
+          [nzActive]="true"></nz-skeleton-element>
+        <div class="d-flex flex-dir-column question-skeleton-2">
+          @for (_ of [].constructor(2); track i; let i = $index) {
+          <div class="question-skeleton__row">
+            <nz-skeleton-element
+              class="question-skeleton__row--1"
+              nzType="input"
+              [nzActive]="true"></nz-skeleton-element>
+            <nz-skeleton-element
+              class="question-skeleton__row--2"
+              nzType="input"
+              [nzActive]="true"></nz-skeleton-element>
+          </div>
+          }
+        </div>
+
+        <nz-skeleton
+          class="add-button-skeleton"
+          [nzTitle]="false"
+          [nzRound]="true"
+          [nzParagraph]="{ rows: 1, width: [80]}"></nz-skeleton>
+      </div>
+      <div class="default-reply-skeleton d-flex flex-dir-column gap-8">
+        <nz-skeleton-element
+          class="title-skeleton"
+          nzType="input"
+          [nzActive]="true"></nz-skeleton-element>
+        <div class="default-reply-skeleton__wrap d-flex flex-dir-column">
+          @for (_ of [].constructor(2); track i; let i = $index) {
+          <nz-skeleton-element
+            class="title-skeleton__sub"
+            nzType="input"
+            [nzActive]="true"></nz-skeleton-element>
+          }
+        </div>
+
+        <div class="input-reply-skeleton">
+          <div class="input-reply-skeleton__content">
+            @for (_ of [].constructor(2); track i; let i = $index) {
+            <nz-skeleton-element
+              nzType="input"
+              [nzActive]="true"></nz-skeleton-element>
+            }
+          </div>
+          <nz-skeleton-element
+            class="input-reply-skeleton__icon"
+            nzType="input"
+            [nzActive]="true"></nz-skeleton-element>
+        </div>
+      </div>
+      <div class="list-file-import-skeleton">
+        @for (_ of [].constructor(3); track i; let i = $index) {
+        <div class="file-import__item">
+          <nz-skeleton-element
+            class="file-import__item__img"
+            nzType="input"
+            [nzActive]="true"></nz-skeleton-element>
+          <div class="file-import__item__des">
+            <nz-skeleton-element
+              nzType="input"
+              [nzActive]="true"></nz-skeleton-element>
+            <nz-skeleton-element
+              nzType="input"
+              [nzActive]="true"></nz-skeleton-element>
+          </div>
+        </div>
+        }
+      </div>
+      <nz-skeleton
+        class="add-button-skeleton"
+        [nzTitle]="false"
+        [nzRound]="true"
+        [nzParagraph]="{ rows: 1, width: [154]}"></nz-skeleton>
+    </div>
+    }
+  </ng-template>
+  <ng-template #skeletonFooterTpl>
+    <div class="trudi-drawer-footer" [ngClass]="{'loading-footer': isLoading}">
+      <div class="trudi-drawer-footer-left">
+        <nz-skeleton
+          [nzTitle]="false"
+          [nzRound]="true"
+          [nzParagraph]="{ rows: 1, width: [80]}"></nz-skeleton>
+      </div>
+      <div class="trudi-drawer-footer-right">
+        <nz-skeleton
+          [nzTitle]="false"
+          [nzRound]="true"
+          [nzParagraph]="{ rows: 1, width: [83]}"></nz-skeleton>
+      </div>
+    </div>
+  </ng-template>
+</trudi-drawer>
+
+@if( isOpenSupplierPopup ) {
+<add-supplier
+  [visible]="isOpenSupplierPopup"
+  [userType]="userPropertyType.SUPPLIER"
+  [form]="supplierPopupForm"
+  [closable]="false"
+  (onAddCard)="onTriggerAddContactCard($event)"
+  (onClose)="onCloseAddContactCard()"
+  (closePopup)="onCloseAddContactCard()"></add-supplier>
+}
+
+<trudi-modal
+  [visible]="confirmDelete"
+  iconName="iconWarningRed"
+  [closable]="false"
+  type="confirm"
+  className="modal-delete-policy"
+  okText="Yes, delete it"
+  cancelText="No, keep it"
+  (onCancel)="handleCancelModal()"
+  [modelWidth]="510"
+  title="Are you sure you want to delete this policy?"
+  colorBtn="danger"
+  (onOk)="deletePolicy()">
+</trudi-modal>

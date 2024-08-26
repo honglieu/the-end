@@ -1,0 +1,16 @@
+<div class="invite-wrapper">
+  <ng-container *ngIf="popupState.showSelectInspectionPopup">
+    <select-outgoing-inspection
+      [modalId]="modalId"
+      [isShowModal]="popupState.showSelectInspectionPopup"
+      (handleCloseModalSelect)="handleCloseModal()"
+      (handleNextModal)="handleNextModal()"></select-outgoing-inspection>
+  </ng-container>
+  <ng-container *ngIf="popupState.showOutgoingFormPopup">
+    <sync-outgoing-inspection
+      [modalId]="modalId"
+      [isShowModal]="popupState.showOutgoingFormPopup"
+      (handleCloseModalSync)="handleCloseModal()"
+      (handleBackModalSync)="handleBackModal()"></sync-outgoing-inspection>
+  </ng-container>
+</div>

@@ -1,0 +1,127 @@
+<resizable-modal-popup
+  *ngIf="visible"
+  [modalId]="modalId"
+  [show]="visible"
+  [showTitle]="true"
+  [title]="title"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [iconName]="'ptLogo'"
+  [styleIcon]="null"
+  [classIconTitle]="null"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [footerTemplate]="footerModal"
+  (onCancel)="handleCloseModal()"
+  [isCustomMoveable]="true"
+  class="select-existing-invoice-popup">
+  <div
+    class="content-modal"
+    *ngIf="selectInvoiceForm"
+    [formGroup]="selectInvoiceForm">
+    <div class="select-invoice-body">
+      <div
+        class="d-flex flex-dir-column align-items-center justify-content-start align-items-start gap-16">
+        <trudi-radio-button
+          [options]="checkboxList"
+          formControlName="userChoice">
+        </trudi-radio-button>
+      </div>
+      <div class="select-form-wrapper">
+        <div
+          class="search-box"
+          id="invoice-select"
+          *ngIf="userChoice.value === POPUP_OPTION.SELECT_EXISTING">
+          <trudi-form-control [control]="selectedInvoice">
+            <trudi-single-select
+              formControlName="selectedInvoice"
+              [items]="invoices"
+              id="invoice-list"
+              class="select-invoice"
+              bindValue="linkedInvoiceValue"
+              [ngClass]="{'red-border': selectedInvoice.invalid && (selectedInvoice.dirty ||  selectedInvoice.touched) }"
+              [clearable]="true"
+              [virtualScroll]="true"
+              [searchable]="true"
+              [loading]="loading"
+              [serversideSearch]="true"
+              [typeToSearchText]="'No results found'"
+              [typeahead]="searchText">
+              <ng-template trudi-label-tmp let-item="item">
+                {{item.invoiceDescription}} - {{invoiceType ===
+                ESelectInvoiceType.TENANCY_INVOICE ? item.tenancyName :
+                item.creditorName }}
+              </ng-template>
+              <ng-template
+                trudi-option-tmp
+                let-item="item"
+                let-item$="item$"
+                let-search="searchTerm">
+                <div
+                  class="w-100 d-flex justify-content-between invoice-option">
+                  <div class="invoice-info">
+                    <div
+                      class="invoice-name"
+                      [ngOptionHighlight]="!loading ? search : ''">
+                      {{item.invoiceDescription}} - {{invoiceType ===
+                      ESelectInvoiceType.TENANCY_INVOICE ? item.tenancyName :
+                      item.creditorName }}
+                    </div>
+                    <div class="d-flex sub-info">
+                      <div
+                        class="sub-info__amount"
+                        [ngOptionHighlight]="!loading ? search : ''">
+                        {{item.invoiceAmount | currency:'USD'}}
+                      </div>
+                      -
+                      <div
+                        *ngIf="item.invoiceStatus"
+                        class="sub-info__amount"
+                        [ngOptionHighlight]="!loading ? search : ''"
+                        [ngClass]="item.invoiceStatus | lowercase">
+                        {{item.invoiceStatus | titlecase }}
+                      </div>
+                      <trudi-badge
+                        size="small"
+                        trudi-tooltip
+                        nzTooltipPlacement="topCenter"
+                        [nzTooltipOverlayClassName]="'tool-tip-area-item'"
+                        [nzTooltipTitle]="'Due date'"
+                        variant="role">
+                        <ng-template #customBadgeTextTemplate
+                          >{{item.invoiceDueDate | formatDate |
+                          async}}</ng-template
+                        >
+                      </trudi-badge>
+                    </div>
+                  </div>
+                  <div *ngIf="item$.selected" class="d-flex align-items-center">
+                    <trudi-icon
+                      icon="checkSuccess"
+                      svgClass="size-16"
+                      viewBox="auto"></trudi-icon>
+                  </div>
+                </div>
+              </ng-template>
+            </trudi-single-select>
+          </trudi-form-control>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div class="footer-modal">
+      <button
+        [disabled]="isDisable"
+        class="trudi-btn trudi-btn-large trudi-btn-primary"
+        size="large"
+        variant="filled"
+        btnType="primary"
+        (click)="handleNext()">
+        <div class="text-btn">Confirm</div>
+      </button>
+    </div>
+  </ng-template>
+</resizable-modal-popup>

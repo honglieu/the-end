@@ -1,0 +1,97 @@
+@import 'function';
+
+.btn-focus-view {
+  border: none;
+  padding: 2px;
+  background-color: transparent;
+
+  &:focus-visible {
+    border-radius: 4px;
+  }
+
+  &:not(.focus-on):hover {
+    ::ng-deep trudi-icon svg-icon svg rect {
+      fill: var(--gray-200);
+    }
+  }
+
+  &.trigger {
+    &:not(.focus-on) {
+      ::ng-deep trudi-icon svg-icon svg rect {
+        fill: var(--gray-200) !important;
+      }
+    }
+  }
+}
+
+.header-focus-container {
+  display: flex;
+  flex-direction: column;
+  width: 344px !important;
+  gap: 8px;
+  background-color: var(--bg-base, #ffffff);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid var(--border-neutral-dark, #ececed);
+
+  &.focus-on {
+    background: linear-gradient(
+        145.35deg,
+        rgba(255, 202, 98, 0.08) 3.66%,
+        rgba(56, 219, 208, 0.08) 55.74%,
+        rgba(66, 133, 244, 0.08) 102.24%
+      ),
+      #ffffff;
+    box-shadow: 0px 8px 28px rgba(0, 0, 0, 0.05),
+      0px 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative;
+    border: none;
+    padding: 17px;
+
+    &:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: -1;
+      margin: -1px;
+      border-radius: 8px;
+      background: linear-gradient(
+        145.35deg,
+        #ffca62 3.66%,
+        #38dbd0 55.74%,
+        #4285f4 102.24%
+      );
+    }
+  }
+
+  .title {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #333741),
+      14px,
+      20px,
+      normal,
+      600
+    );
+  }
+
+  .description {
+    p {
+      @include fontSetup(
+        var(--fg-neutral-normal, #61646c),
+        12px,
+        16px,
+        normal,
+        400
+      );
+    }
+  }
+}
+
+::ng-deep .cdk-overlay-pane:has(.header-focus-container) {
+  left: 115px !important;
+  top: 50px !important;
+}

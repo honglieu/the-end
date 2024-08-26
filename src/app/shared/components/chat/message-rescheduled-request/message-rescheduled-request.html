@@ -1,0 +1,264 @@
+<div
+  class="message"
+  [class]="{
+    'ai-assistant__block': isAiAsistantPage || isAppMessageLog,
+    'ml-18': !isAiAsistantPage && !isAppMessageLog
+  }">
+  <span
+    *ngIf="!isAiAsistantPage && !isAppMessageLog"
+    class="message__avatar"
+    (click)="handleClickAvatar($event)">
+    <ng-container *ngIf="!!message.emailMetadata?.from?.length">
+      <app-circle-avatar
+        [firstName]="[EUserPropertyType.MAILBOX, EUserPropertyType.LEAD].includes(senderOfMessage?.userType) ? senderOfMessage?.pmName : excludedUserRole.includes(senderOfMessage?.senderRole) ? null : senderOfMessage?.firstName"
+        [lastName]="[EUserPropertyType.MAILBOX, EUserPropertyType.LEAD].includes(senderOfMessage?.userType) ? '' : excludedUserRole.includes(senderOfMessage?.senderRole) ? null : senderOfMessage?.lastName"
+        [size]="24"
+        [userType]="![EUserPropertyType.MAILBOX, EUserPropertyType.LEAD].includes(senderOfMessage?.userType) && (excludedUserRole.includes(senderOfMessage?.senderRole)) ? EUserPropertyType.EXTERNAL : senderOfMessage?.userPropertyType || senderOfMessage?.userType"
+        [avatar]="[EUserPropertyType.MAILBOX].includes(senderOfMessage?.userType) ? message.googleAvatar : senderOfMessage?.googleAvatar"
+        [userId]="[EUserPropertyType.MAILBOX].includes(senderOfMessage?.userType) ? message.userId : senderOfMessage?.userId">
+      </app-circle-avatar>
+    </ng-container>
+    <ng-container *ngIf="!message.emailMetadata?.from?.length">
+      <app-circle-avatar
+        [firstName]="(message.userPropertyType || message.userType) ? message.firstName : null"
+        [lastName]="(message.userPropertyType || message.userType) ? message.lastName : null"
+        [size]="24"
+        [userType]="message.userPropertyType || message.userType"
+        [avatar]="message.googleAvatar"
+        [userId]="message.userId">
+      </app-circle-avatar>
+    </ng-container>
+  </span>
+  <ng-container
+    *ngIf="!isAiAsistantPage && !isAppMessageLog; else aiAsistantTicket">
+    <div
+      *ngIf="(ticket?.ticketLanguageCode && ticket?.ticketLanguageCode !== 'en' && ticket?.ticketLanguageCode !== 'und')"
+      class="translation-label">
+      <language-translation-label
+        (languageTranslationDisabled)="updateReason($event)"
+        [messagesTranslate]="ticket?.ticketTrans"
+        [inputLanguage]="ticket?.ticketLanguageCode"></language-translation-label>
+    </div>
+    <div class="message__content">
+      <div class="message__content--header message__content--header-ticket">
+        <trudi-icon
+          icon="timeIcon"
+          svgClass="size-24"
+          viewBox="auto"></trudi-icon>
+        <span>{{title}}</span>
+      </div>
+      <div class="message__content--inspection mt-8">
+        <div *ngIf="suggestedDate">
+          Suggested date:
+          <div class="message__content--inspection-text">{{suggestedDate}}</div>
+        </div>
+        <div *ngIf="suggestedTime">
+          Suggested time:
+          <div class="message__content--inspection-text">{{suggestedTime}}</div>
+        </div>
+        <div *ngIf="reason">
+          Reason:
+          <div class="message__content--inspection-text">
+            {{(updatedReason || reason) | uppercaseFirstLetter: true}}
+          </div>
+        </div>
+      </div>
+      <div
+        class="message__content--translation mt-4"
+        *ngIf="updatedReason && ticket.ticketTrans && ticket?.ticketLanguageCode && ticket?.ticketLanguageCode !== 'en' && ticket?.ticketLanguageCode !== 'und'">
+        <language-original-content
+          [content]="reason"></language-original-content>
+      </div>
+    </div>
+    <div class="message__action">
+      <div
+        *ngIf="status === scheduledStatus.PENDING"
+        class="d-flex justify-content-between gap-12">
+        <button
+          class="trudi-btn trudi-btn-large message__action--btn-decline"
+          [ngClass]="{
+            'btn-none-pointer': isReadonly
+          }"
+          [disabled]="inboxService.isArchiveMailbox$ | async"
+          (click)="changeStatusRescheduleRequest(scheduledStatus.DECLINED)">
+          Decline
+        </button>
+        <button
+          class="trudi-btn trudi-btn-large trudi-btn-secondary"
+          [ngClass]="{
+            'btn-none-pointer ': isReadonly
+          }"
+          [disabled]="inboxService.isArchiveMailbox$ | async"
+          (click)="changeStatusRescheduleRequest(scheduledStatus.APPROVED)">
+          Approve
+        </button>
+      </div>
+      <div
+        class="d-flex flex-dir-column"
+        *ngIf="status !== scheduledStatus.PENDING">
+        <button
+          class="trudi-btn message__action--disabled message__action--text-decline"
+          *ngIf="status === scheduledStatus.DECLINED"
+          disabled>
+          <img src="/assets/icon/close-approve.svg" alt="" /> Declined
+        </button>
+        <button
+          class="trudi-btn message__action--disabled"
+          *ngIf="status === scheduledStatus.APPROVED"
+          disabled>
+          <img src="/assets/icon/check-success-approve.svg" alt="" /> Approved
+        </button>
+        <button
+          class="trudi-btn message__action--disabled message__action--text-decline"
+          *ngIf="status === scheduledStatus.CANCELLED && !isHideCancelledButton"
+          disabled>
+          Cancelled
+        </button>
+      </div>
+    </div>
+    <div class="message__content--footer">
+      <div class="submitted-text">
+        Submitted {{ isCreatedViaLink ? 'at' : ('via ' + (createdFrom |
+        titleCasePipe | lowercase))}} {{message.createdAt | formatDateTime |
+        async}}
+      </div>
+      <div
+        *ngIf="!isReadonly && !isCreatedViaLink"
+        class="view-conversation"
+        (click)="(createdFrom !== EMessageComeFromType.APP ? (sessionEnded || !message?.conversationLogId) : true) && handleViewConversation()"
+        (keyup.enter)="viewConversation.click()"
+        [class.view-conversation-disabled]="createdFrom !== EMessageComeFromType.APP && (!sessionEnded && !!message?.conversationLogId)">
+        <span #viewConversation class="view-conversation-text"
+          >View conversation</span
+        >
+      </div>
+    </div>
+  </ng-container>
+  <!-- <div
+    *ngIf="!isAiAsistantPage && !isDraftPage && !isAppMessageLog"
+    class="wraper-button"
+    [ngClass]="{'justify-content-center': isUnidentifiedProperty}">
+    <button-action
+      [ngClass]="{'full-width': !isUnidentifiedProperty}"
+      *ngIf="message?.status !== taskStatusType.deleted && message?.status !== taskStatusType.completed && message?.status !== taskStatusType.resolved && message?.status !== taskStatusType.cancelled"
+      [countMetaData]="countMetaDataLength"
+      (showModal)="handleButton($event)"
+      [isUnidentifiedProperty]="isUnidentifiedProperty"
+      [isFullWidth]="!isUnidentifiedProperty"></button-action>
+  </div> -->
+</div>
+
+<ng-template #aiAsistantTicket>
+  <div class="d-flex justify-content-between align-items-start">
+    <div class="ai-assistant__block-wrap">
+      <trudi-icon
+        icon="timeIcon"
+        svgClass="size-32"
+        viewBox="auto"
+        class="mt-4"></trudi-icon>
+      <div class="message__content message__content-ai">
+        <div class="message__content--header">
+          <div class="d-flex align-items-center gap-4">
+            <span>{{title}}</span>
+            <div *ngIf="isUrgent">
+              <trudi-badge
+                text="Urgent"
+                size="extra-small"
+                variant="error"
+                badgeType="filled"
+                [rounded]="true">
+              </trudi-badge>
+            </div>
+          </div>
+          <div>
+            {{ticket?.status || "Submitted"}} at {{message.createdAt |
+            formatDateTime | async}}
+          </div>
+        </div>
+        <div
+          class="message__content--inspection"
+          [class.mt-8]="isOpenDescription"
+          [@collapseMotion]="isOpenDescription ? 'expanded' : 'collapsed'">
+          <div *ngIf="suggestedDate">
+            Suggested date:
+            <div class="message__content--inspection-text">
+              {{suggestedDate}}
+            </div>
+          </div>
+          <div *ngIf="suggestedTime">
+            Suggested time:
+            <div class="message__content--inspection-text">
+              {{suggestedTime}}
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-4">
+            <div *ngIf="reason">
+              <div class="d-flex align-items-center gap-4">
+                <span>Reason:</span>
+                <div
+                  class="translation-label"
+                  [@collapseMotion]="isOpenDescription && (ticket?.ticketLanguageCode && ticket?.ticketLanguageCode !== 'en' && ticket?.ticketLanguageCode !== 'und') && ticket.status !== EStatusTicket.SUBMIT ? 'expanded' : 'collapsed'">
+                  <language-translation-label
+                    [isFromAIAssistant]="true"
+                    (languageTranslationDisabled)="updateReason($event)"
+                    [messagesTranslate]="ticket?.ticketTrans"
+                    [inputLanguage]="ticket?.ticketLanguageCode"></language-translation-label>
+                </div>
+              </div>
+              <div class="message__content--inspection-text">
+                {{(updatedReason || reason) | uppercaseFirstLetter: true}}
+              </div>
+            </div>
+          </div>
+          <div
+            *ngIf="updatedReason && (ticket.ticketTrans && ticket?.ticketLanguageCode !== 'en' && ticket?.ticketLanguageCode !== 'und') && ticket.status !== EStatusTicket.SUBMIT">
+            <language-original-content
+              [isOpenDescription]="isOpenDescription"
+              [content]="reason"></language-original-content>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      *ngIf="(ticket?.status || 'Submitted') === EStatusTicket.SUBMIT"
+      trudi-btn
+      variant="ghost"
+      btnType="neutral"
+      size="medium"
+      shape="circle"
+      (click)="handleNavigateToTask()"
+      class="mt-8">
+      <trudi-icon
+        icon="arrowRight"
+        svgClass="icon-svg"
+        viewBox="auto"></trudi-icon>
+    </button>
+    <button
+      *ngIf="(ticket?.status || 'Submitted') !== EStatusTicket.SUBMIT && !(!suggestedDate && !suggestedTime && !reason)"
+      trudi-btn
+      variant="ghost"
+      btnType="neutral"
+      size="medium"
+      shape="circle"
+      (click)="handleViewTicket()">
+      <trudi-icon
+        icon="chevronDown"
+        svgClass="size-24"
+        [class.rotation]="isOpenDescription"
+        viewBox="auto"></trudi-icon>
+    </button>
+  </div>
+</ng-template>
+
+<!-- <trudi-send-msg-v2
+  *ngIf="isShowSendMsgModal"
+  [selectedTasks]="selectedTasks"
+  [rawMsg]="rawMsg"
+  [configs]="sendMsgModalConfig"
+  [openFrom]="TaskType.MESSAGE"
+  (onQuit)="handleQuit()"
+  [typeMessage]="typeMessage.SCRATCH"
+  [listOfFiles]="listOfFiles"
+  [listContactCard]="contactsList"
+  (onSendMsg)="onSendMsg($event)">
+</trudi-send-msg-v2> -->

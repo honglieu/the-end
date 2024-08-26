@@ -1,0 +1,130 @@
+<div class="appointment-card">
+  <div
+    class="appointment-card-date-title"
+    PreventButton
+    [attr.data-button-key]="EButtonWidget.VIEW_CALENDAR"
+    [attr.data-button-type]="EButtonType.WIDGET"
+    (leftClick)="handleNavigate()">
+    <div class="calendar no-pointer-event">
+      <trudi-icon icon="filledCalendar" class="size-28"> </trudi-icon>
+    </div>
+    <div class="appointment-card-date no-pointer-event">
+      <span
+        class="y-center gap-8 appointment-card-title__content no-pointer-event">
+        <ng-container
+          *ngIf="event.eventType !== EEventType.BREACH_REMEDY; else noPipe">
+          {{ event.eventNameDisplay || event.eventName | uppercaseFirstLetter }}
+        </ng-container>
+        <ng-template #noPipe>
+          {{ event.eventNameDisplay || event.eventName }}
+        </ng-template>
+      </span>
+      <div class="appointment-card-date__content no-pointer-event">
+        <div
+          [ngClass]="{'cancelled' : [EEventStatus.CANCELLED, EEventStatus.CLOSED].includes(event.eventStatus), 'no-pointer-event': true}">
+          <span class="no-pointer-event"
+            >{{ event.eventDate | formatDate | push }}</span
+          >
+          <span *ngIf="event.defaultTime" class="no-pointer-event">
+            , {{ event.defaultTime | formatTime: true | push}}
+          </span>
+          <span
+            *ngIf="event.startTime && event.endTime"
+            class="no-pointer-event">
+            , {{ event.startTime && event.startTime | formatTime: true | push }}
+            - {{ event.endTime && event.endTime | formatTime: true | push }}
+          </span>
+          <span
+            *ngIf="event.defaultTime || (event.startTime && event.endTime)"
+            class="label-abbrev no-pointer-event">
+            {{ '' | formatDateTimeAbbrev: true | push }}
+          </span>
+
+          <ng-container
+            *ngIf="[EEventStatus.CANCELLED, EEventStatus.CLOSED].includes(event.eventStatus) else openStatus">
+            <span class="cancelled-status no-pointer-event">
+              <span class="dot no-pointer-event"> • </span>
+              <span class="no-pointer-event"
+                >{{notOpenStatus[event.eventStatus]}}</span
+              >
+            </span>
+          </ng-container>
+          <ng-template #openStatus>
+            <span
+              *ngIf="!!(event?.expired | formatExpiredDate: event?.eventType)"
+              [ngClass]="[event | viewClassNameRemainDays : calenderWidgetExpiredDays, 'no-pointer-event']">
+              <span class="dot no-pointer-event"> • </span>
+              <span class="no-pointer-event"
+                >{{ event?.expired | formatExpiredDate: event?.eventType}}</span
+              >
+            </span>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    [ngClass]="{'d-block': isShowDropdown, 'disabled': isArchiveMailbox}"
+    (click)="toggleDropdown()"
+    class="content">
+    <div class="content-circle">
+      <trudi-icon icon="verticalCustom"></trudi-icon>
+    </div>
+  </div>
+  <ng-container [ngTemplateOutlet]="eventMenu"></ng-container>
+</div>
+
+<ng-template #eventMenu>
+  <div
+    *ngIf="isShowDropdown"
+    class="menu-wrapper calendar-widget-options"
+    appOutsideClickListener
+    [whiteList]="['.content', '.content-circle']"
+    (clickOutside)="triggerMenu.emit()">
+    @if(isPreventButton) {
+    <div
+      *ngIf="event.eventStatus === EEventStatus.OPENED && isAllowUpdate"
+      class="item"
+      PreventButton
+      [attr.data-button-key]="EButtonTask.EDIT_CALENDAR"
+      [attr.data-button-type]="EButtonType.TASK"
+      (leftClick)="openEditModal()">
+      <p class="text">Edit event</p>
+    </div>
+
+    } @else {
+    <div
+      *ngIf="event.eventStatus === EEventStatus.OPENED && isAllowUpdate"
+      class="item"
+      (click)="$event.stopPropagation(); openEditModal()">
+      <p class="text">Edit event</p>
+    </div>
+    }
+
+    <div
+      *ngIf="event.eventStatus === EEventStatus.OPENED && isAllowUpdate"
+      class="item"
+      (click)="cancelOrReopenDetailsOfBreach()">
+      <p class="text">Cancel event</p>
+    </div>
+    <div
+      *ngIf="event.eventStatus === EEventStatus.CANCELLED && isAllowUpdate"
+      class="item"
+      (click)="cancelOrReopenDetailsOfBreach()">
+      <p class="text">Reopen event</p>
+    </div>
+    <div
+      class="item"
+      disableOpenSendMsgModal
+      appE2E="events-widget-three-dots-send"
+      (click)="onClickOption(ECalendarOption.SHARE_CALENDAR_INVITE)">
+      <p class="text no-pointer-event">Share event invite</p>
+    </div>
+    <div
+      [ngClass]="{ 'disabled': isConsole }"
+      class="item"
+      (click)="onClickOption(ECalendarOption.UNLINK_INVITE)">
+      <p class="text">Unlink event</p>
+    </div>
+  </div>
+</ng-template>

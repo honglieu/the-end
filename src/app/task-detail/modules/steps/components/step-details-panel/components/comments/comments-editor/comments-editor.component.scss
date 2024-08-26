@@ -1,0 +1,161 @@
+$COMMENT_BOX_MAX_HEIGHT: 115px;
+
+.comment-input-wrapper {
+  background-color: var(--bg-neutral-tonal-normal);
+  height: $COMMENT_BOX_MAX_HEIGHT;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  padding-top: 12px;
+
+  .comment-input {
+    height: 100%;
+    flex: 1;
+    overflow-y: auto;
+
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    & {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
+
+    ::ng-deep editor {
+      height: 100%;
+      .tox-tinymce {
+        overflow: hidden !important;
+        border: none;
+        .tox-tinymce-aux {
+          overflow: hidden !important;
+        }
+        .tox-edit-area__iframe {
+          background-color: transparent;
+        }
+      }
+    }
+  }
+
+  .comment-action {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    padding-right: 12px;
+    padding-bottom: 12px;
+
+    .attach-btn:focus-visible {
+      box-shadow: none !important;
+   }
+
+    .action-button {
+      border: none;
+      outline: none;
+      background: none;
+      padding: 0;
+    }
+    .send-button {
+      background-color: var(--bg-neutral-tonal-strongest);
+      padding: 5px;
+      border-radius: 50%;
+
+      &.active {
+        background-color: var(--bg-brand-solid-normal);
+      }
+    }
+  }
+
+  &.active {
+    border: 1px solid var(--border-brand);
+    box-shadow: 0px 0px 0px 2px #caf3ee;
+    background: var(--bg-base);
+  }
+
+  &.invalid {
+    border: 1px solid var(--border-danger);
+    box-shadow: 0px 0px 0px 2px #ffc7c7;
+  }
+
+  .tox-dialog__footer-end .tox-button {
+    background-color: var(--bg-brand-solid-normal);
+    border: none;
+    outline: none;
+
+    &:hover {
+      background-color: var(--bg-brand-solid-normal);
+    }
+  }
+
+  .tox .tox-dialog__body-nav-item--active {
+    border-bottom: 2px solid var(--bg-brand-solid-normal);
+    color: var(--bg-brand-solid-normal);
+  }
+}
+
+::ng-deep .emoji-wrapper {
+  padding-top: 0;
+  left: -47px;
+  .ant-popover-arrow {
+    display: none;
+  }
+  .ant-popover-inner-content {
+    padding: 0;
+  }
+
+  .emoji-mart-anchor {
+    cursor: pointer;
+  }
+
+  .emoji-mart-category .emoji-mart-emoji span {
+    cursor: pointer;
+  }
+}
+
+::ng-deep emoji-mart {
+  [aria-label="Frequently Used"] {
+    display: none !important;
+  }
+
+  .emoji-mart-bar {
+    .emoji-mart-anchor-selected {
+      color: var(--bg-brand-solid-normal) !important;
+
+      .emoji-mart-anchor-bar {
+        background-color: var(--bg-brand-solid-normal) !important;
+        left: 6px;
+      }
+    }
+  }
+
+  .emoji-mart-scroll {
+    height: 225px !important;
+  }
+
+  .emoji-mart-preview {
+    height: 60px !important;
+
+    .emoji-mart-preview-emoji {
+      .emoji-mart-emoji span {
+        width: 25px !important;
+        height: 25px !important;
+      }
+    }
+
+    .emoji-mart-preview-name {
+      font-size: 12px !important;
+    }
+
+    .emoji-mart-preview-shortname {
+      font-size: 8px !important;
+    }
+  }
+}
+::ng-deep .tox-tinymce-aux {
+      display: none;
+      overflow: hidden !important;
+    }
+
+

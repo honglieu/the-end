@@ -1,0 +1,135 @@
+@import 'function';
+:host ::ng-deep {
+  .ng-select.trudi-single-select .ng-select-container {
+    padding: 6px 8px !important;
+    min-height: 32px !important;
+  }
+  .ng-select-single .ng-select-container {
+    height: 32px !important;
+  }
+
+  .ng-select-filtered {
+    .ng-dropdown-panel {
+      width: fit-content !important;
+    }
+  }
+
+  .trudi-form-control-wrapper {
+    margin: 0 5px;
+  }
+
+  .trudi-form-control-wrapper {
+    margin: 0 5px;
+    display: inline-block;
+  }
+
+  .is-textarea {
+    display: flex !important;
+    .trudi-form-control-wrapper {
+      display: flex !important;
+    }
+  }
+
+  .d-inline-block {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .ng-select {
+    .ng-select-container {
+      .ng-value-container {
+        .ng-input {
+          & > input {
+            padding: 0 !important;
+            padding-left: 10px !important ;
+          }
+        }
+      }
+    }
+  }
+}
+
+.wrapper-item-block {
+  position: relative;
+  margin-top: 12px;
+  flex-wrap: wrap;
+  ::ng-deep {
+    ng-select.trudi-single-select.ng-select-disabled {
+      .ng-select-container {
+        .ng-value-label {
+          color: var(--gray-400) !important;
+        }
+      }
+    }
+    ng-select.trudi-single-select {
+      .ng-select-container {
+        .ng-value-label {
+          color: var(--gray-600) !important;
+        }
+      }
+    }
+  }
+}
+
+.active-sub-option {
+  padding-left: 25px;
+}
+
+.custom-textarea {
+  margin-top: 4px;
+}
+
+.description {
+  @include fontSetup(var(--gray-500), 14px, 20px, normal, 400);
+}
+
+.font-active {
+  @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+}
+
+:host ::ng-deep trudi-checkbox {
+  .checkbox-input:checked:disabled + .trudi-checkbox span:first-child {
+    background: var(--brand-300) !important;
+    border-color: var(--brand-300) !important;
+  }
+}
+
+:host ::ng-deep .is-safari {
+  .trudi-form-control-wrapper {
+    trudi-number-field {
+      .trudi-number-field-wrapper {
+        &.disabled {
+          #trudi-number-field {
+            color: var(--gray-600) !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+:host ::ng-deep trudi-number-field {
+  .trudi-number-field-wrapper {
+    #trudi-number-field {
+      color: var(--gray-600) !important;
+    }
+    .prefix-text {
+      color: var(--gray-400) !important;
+    }
+    &.disabled {
+      #trudi-number-field,
+      .prefix-text {
+        color: var(--gray-400) !important;
+      }
+    }
+  }
+}
+
+:host ::ng-deep .trudi-text-field-wrapper {
+  .trudi-ui-text-field {
+    color: var(--fg-neutral-stronger) !important;
+  }
+  &.disabled .trudi-ui-text-field {
+    color: var(--gray-400) !important;
+  }
+}

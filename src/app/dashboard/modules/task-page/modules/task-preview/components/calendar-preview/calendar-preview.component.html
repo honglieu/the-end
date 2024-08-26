@@ -1,0 +1,71 @@
+<div class="calendar-preview">
+  <div *ngIf="displayLabel" class="calendar-label">EVENTS</div>
+  <div class="calendar-event">
+    <div
+      *ngIf="calendarEvents?.length && !isNotValidToRender; else calendarTemplate"
+      class="calendar-container">
+      <div class="calendar-content">
+        <ng-container *ngFor="let event of calendarEvents">
+          <div class="item-calendar" *ngIf="event?.calendarEvent">
+            <trudi-icon [icon]="icon" class="calendar-icon"></trudi-icon>
+            <div class="event-name-date">
+              <div class="event-name text-ellipsis">
+                {{ event.calendarEvent?.eventName }}
+              </div>
+              <div class="event-date">
+                <div class="appointment-card-date__content">
+                  <div
+                    class="text-ellipsis"
+                    [ngClass]="{'cancelled' : [EEventStatus.CANCELLED, EEventStatus.CLOSED].includes(event.calendarEvent?.eventStatus)}">
+                    <div class="text-ellipsis">
+                      <span
+                        >{{ event.calendarEvent?.eventDate | formatDate | async
+                        }}</span
+                      >
+                      <span
+                        *ngIf="event.calendarEvent?.widget?.startTime && event.calendarEvent?.widget?.endTime"
+                        >, {{ event.calendarEvent?.widget?.startTime |
+                        formatTime: true | async }} - {{
+                        event.calendarEvent?.widget?.endTime | formatTime: true
+                        | async }}
+                      </span>
+                      <span
+                        *ngIf="event.calendarEvent?.widget?.defaultTime || (event.calendarEvent?.widget?.startTime && event.calendarEvent?.widget?.endTime)"
+                        class="label-abbrev">
+                        {{ '' | formatDateTimeAbbrev: true | async }}
+                      </span>
+                    </div>
+                    <ng-container
+                      *ngIf="[EEventStatus.CANCELLED, EEventStatus.CLOSED].includes(event.calendarEvent?.eventStatus) else openStatus">
+                      <span class="cancelled-status">
+                        <span class="dot"> • </span>
+                        <span
+                          >{{notOpenStatus[event.calendarEvent?.eventStatus]}}</span
+                        >
+                      </span>
+                    </ng-container>
+                    <ng-template #openStatus>
+                      <span
+                        *ngIf="!!(event.calendarEvent?.expired | formatExpiredDate: event.calendarEvent?.eventType)"
+                        [class]="event.calendarEvent | viewClassNameRemainDays : calenderWidgetExpiredDays">
+                        <span class="dot"> • </span>
+                        <span
+                          >{{ event.calendarEvent?.expired | formatExpiredDate:
+                          event.calendarEvent?.eventType}}</span
+                        >
+                      </span>
+                    </ng-template>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <ng-template #calendarTemplate>
+      <div class="calendar__no-items">No linked events</div>
+    </ng-template>
+  </div>
+</div>

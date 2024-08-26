@@ -1,0 +1,15 @@
+@import 'function';
+
+.custom-waiting {
+  width: fit-content;
+  display: flex;
+  gap: 4px;
+  margin: 16px auto;
+
+  .custom-text {
+    color: var(--gray-500);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 20px;
+  }
+}

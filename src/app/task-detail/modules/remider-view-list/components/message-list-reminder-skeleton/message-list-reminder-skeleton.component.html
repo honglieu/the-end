@@ -1,0 +1,91 @@
+<div class="reminder-list-wrapper reminder-skeleton">
+  <div
+    *ngFor="let _ of [].constructor(20); let i = index"
+    class="reminder-wrapper">
+    <div class="reminder-row-wrapper d-flex flex-dir-column">
+      <div class="d-flex align-items-center gap-16">
+        <div class="d-flex gap-8 flex-1 align-items-center">
+          <div class="d-flex flex-1 align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-12">
+              <div class="message-name">
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"
+                  class="w-50"></nz-skeleton>
+              </div>
+              <div class="message-role">
+                <span class="task-item-time-text text-ellipsis">
+                  <nz-skeleton
+                    [nzParagraph]="paragraph"
+                    [nzActive]="true"
+                    class="ant-skeleton-message-role"></nz-skeleton>
+                </span>
+              </div>
+              <div class="property-address">
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"
+                  class="w-50"></nz-skeleton>
+              </div>
+            </div>
+            <div class="d-flex align-items-center gap-8">
+              <nz-skeleton
+                class="ant-skeleton-circle"
+                [nzParagraph]="paragraph"
+                [nzActive]="true"></nz-skeleton>
+              <nz-skeleton
+                class="ant-skeleton-checkbox"
+                [nzParagraph]="paragraph"
+                [nzActive]="true"
+                class="size-16"></nz-skeleton>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="reminder-quote-wrapper">
+        <nz-skeleton
+          class="ant-skeleton-custom w-300"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+      </div>
+      <div class="reminder-quote-wrapper">
+        <nz-skeleton
+          class="ant-skeleton-custom"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+      </div>
+      <div class="reminder-quote-wrapper">
+        <nz-skeleton
+          class="ant-skeleton-custom w-250"
+          [nzParagraph]="paragraph"
+          [nzActive]="true"></nz-skeleton>
+      </div>
+      <div class="d-flex align-items-center justify-content-between mt-4">
+        <div class="d-flex align-items-center gap-16">
+          <nz-skeleton
+            class="ant-skeleton-circle w-70"
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+          <nz-skeleton
+            class="ant-skeleton-circle w-40"
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+        <div class="d-flex align-items-center">
+          <nz-skeleton-element
+            class="skeleton-circle"
+            nzType="avatar"
+            [nzSize]="20"
+            [nzShape]="'circle'"
+            [nzActive]="true"></nz-skeleton-element>
+          <nz-skeleton-element
+            class="skeleton-circle"
+            nzType="avatar"
+            [nzSize]="24"
+            [nzShape]="'circle'"
+            [nzActive]="true"></nz-skeleton-element>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,258 @@
+<ng-container *ngIf="isTaskType">
+  <ng-container *ngIf="!(isLoading && firstLoad); else loadingConversation">
+    <div class="header-wrapper">
+      <ng-container>
+        <div class="d-flex w-100 h-100 list-item-container">
+          <div class="d-flex w-100 list-item-box">
+            <div class="w-100">
+              <div class="conversations mb-4 d-flex align-items-center">
+                <div class="conversations-title flex-1">
+                  <div class="mr-4">
+                    <trudi-icon icon="chatMsg"></trudi-icon>
+                  </div>
+                  <div class="mr-4">CONVERSATIONS</div>
+                  <span *ngIf="countConversationUnread > 0">
+                    {{countConversationUnread | totalCountPipe}}
+                  </span>
+                </div>
+                <div class="conversations-btn-add relative">
+                  <button
+                    disableOpenSendMsgModal
+                    #createConversationBtn
+                    [tabIndex]="0"
+                    trudi-btn
+                    size="small"
+                    variant="text"
+                    btnType="neutral"
+                    shape="square"
+                    [selected]="popupState.isShowAddConversationOption"
+                    data-console="create-conversation-button"
+                    [appE2E]="'task-details-create-conversation-button'"
+                    (keyup.enter)="createConversationBtn.click()"
+                    (click)="openSendMsgModal()"
+                    [disabled]="isConsoleUser"
+                    appOutsideClickListener
+                    (clickOutside)="onOutSide()">
+                    <trudi-icon
+                      class="no-pointer-event"
+                      icon="compose"
+                      svgClass="size-20"
+                      viewBox="auto"></trudi-icon>
+                  </button>
+                </div>
+              </div>
+              <nz-tabset
+                [nzSelectedIndex]="currentTabTemplateBind"
+                (nzSelectedIndexChange)="handleChangeTabSelected($event)"
+                class="trudi-tabs">
+                <nz-tab
+                  *ngFor="let tab of taskDetailTab; index as i;"
+                  [nzTitle]="titleTemplate"
+                  (nzClick)="handleChangeTabManual(i)">
+                  <ng-template #titleTemplate>
+                    <div
+                      tabindex="0"
+                      class="task-tab d-flex align-items-center gap-4"
+                      (keydown.enter)="handleChangeTabManual(i); handleChangeTabSelected(i)">
+                      {{ tab.title }}
+                      <trudi-icon
+                        *ngIf="tab.isUnreadMessage"
+                        icon="redDotUnreadMessage"></trudi-icon>
+                    </div>
+                  </ng-template>
+                </nz-tab>
+              </nz-tabset>
+
+              <div
+                *ngIf="isCreateAppMsg && currentTabTemplateBind === EConversationStatusTab.OPEN"
+                class="new-app-message">
+                New message
+              </div>
+              <app-message-groups
+                groupField="messageDate"
+                [totalItems]="listConversationsByStatus?.length"
+                [items]="listConversationsByStatus"
+                [listItemsTemplate]="conversationOutlet">
+              </app-message-groups>
+              <ng-container
+                [ngTemplateOutlet]="!listConversationsByStatus?.length ? emptyConversations : null"></ng-container>
+              <ng-template #conversationOutlet let-itemsInGroup="itemsInGroup">
+                <div
+                  *ngIf="itemsInGroup.length; else emptyConversations"
+                  class="list-content">
+                  <ng-container
+                    *rxFor="let conversation of itemsInGroup; index as i; trackBy: trackByFn">
+                    <div
+                      #messageConversation
+                      [id]="conversation.id"
+                      [tabIndex]="0"
+                      class="list-content-box message cursor-pointer"
+                      trudi-item
+                      (deleteKeyPressed)="!isConsole && handleDeleteOnKeyUp(conversation)"
+                      (click)="handleClickConversation(conversation)"
+                      [ngClass]="{
+                    'active': conversation.id === this.currentConvId && isShowConversation,
+                    'read-message': conversation.isSeen,
+                    'unread-message': !conversation.isSeen
+                  }">
+                      @if(!conversation.isLoading) {
+                      <header-conversation-item
+                        [task]="task"
+                        [conversation]="conversation"
+                        [isArchiveMailbox]="isArchiveMailbox"
+                        [isRmEnvironment]="isRmEnvironment"
+                        [currentTab]="currentTab"
+                        [activeMobileApp]="activeMobileApp"
+                        [isMessageActive]="conversation.id === this.currentConvId && isShowConversation"
+                        (menuChange)="handleMenuChange($event)"></header-conversation-item>
+                      } @else {
+                      <div class="message-skeleton" style="height: auto">
+                        <div class="message-wrapper">
+                          <div
+                            class="message-row-wrapper d-flex flex-dir-column m-12">
+                            <div class="quote-wrapper">
+                              <nz-skeleton
+                                class="ant-skeleton-custom"
+                                [nzParagraph]="paragraph"
+                                [style.width.px]="256"
+                                [nzActive]="true"></nz-skeleton>
+                            </div>
+                            <div class="quote-wrapper">
+                              <nz-skeleton
+                                class="ant-skeleton-custom"
+                                [nzParagraph]="paragraph"
+                                [style.width.px]="256"
+                                [nzActive]="true"></nz-skeleton>
+                            </div>
+                            <div class="quote-wrapper">
+                              <nz-skeleton
+                                class="ant-skeleton-custom"
+                                [nzParagraph]="paragraph"
+                                [nzActive]="true"></nz-skeleton>
+                            </div>
+                            <div class="quote-wrapper">
+                              <nz-skeleton
+                                class="ant-skeleton-custom"
+                                [nzParagraph]="paragraph"
+                                [style.width.px]="256"
+                                [nzActive]="true"></nz-skeleton>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      }
+                    </div>
+                  </ng-container>
+                </div>
+              </ng-template>
+              <ng-template #emptyConversations>
+                <div
+                  *ngIf="!isCreateAppMsg && !tempConversations?.length"
+                  class="empty-conversations">
+                  <div class="empty-conversations__content">
+                    <img
+                      width="160"
+                      height="160"
+                      src="assets/images/box.png"
+                      alt="no item" />
+                    No messages to display
+                  </div>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</ng-container>
+
+<ng-template #loadingConversation>
+  <div class="message-skeleton">
+    <ng-container>
+      <div class="message-list-wrapper">
+        <ng-container
+          *ngTemplateOutlet="skeletonLoadingItem; context: {rowNumber: 6, rowTab: 4}">
+        </ng-container>
+      </div>
+
+      <ng-template #skeletonLoadingItem let-row="rowNumber" let-rowTab="rowTab">
+        <div class="message-header">
+          <div class="message-header__title">
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [style.width.px]="90"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+          <div class="d-flex align-items-center pd-12 gap-12">
+            <ng-container
+              *ngFor="let _ of [].constructor(rowTab); let i = index">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [style.width.px]="60"
+                [nzActive]="true"></nz-skeleton>
+            </ng-container>
+          </div>
+        </div>
+        <div
+          *ngFor="let _ of [].constructor(row); let i = index"
+          class="message-wrapper">
+          <div class="message-row-wrapper d-flex flex-dir-column m-12 gap-8">
+            <div class="quote-wrapper">
+              <nz-skeleton
+                class="ant-skeleton-first"
+                [nzParagraph]="paragraph"
+                [style.width.px]="60"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+            <div class="quote-wrapper">
+              <nz-skeleton
+                class="ant-skeleton-custom"
+                [nzParagraph]="paragraph"
+                [style.width.px]="182"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+            <div class="quote-wrapper">
+              <nz-skeleton
+                class="ant-skeleton-custom"
+                [nzParagraph]="paragraph"
+                [style.width.px]="233"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+            <div class="quote-wrapper">
+              <nz-skeleton
+                class="ant-skeleton-custom"
+                [nzParagraph]="paragraph"
+                [style.width.px]="143"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+          </div>
+          <div class="break-line"></div>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+</ng-template>
+
+<trudi-modal
+  *ngIf="isShowModalWarning"
+  [visible]="isShowModalWarning"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  className="trudi-modal-custom">
+  <warning-note-popup
+    [warningMessage]="errorMessage"
+    [timeToCloseModal]="3000"
+    (isCloseModal)="isShowModalWarning = $event">
+  </warning-note-popup>
+</trudi-modal>
+
+<confirm-properties-popup
+  *ngIf="isShowModalConfirmProperties"
+  [isInTaskOrMessageDetail]="true"
+  [showModal]="isShowModalConfirmProperties"
+  [isActionSyncConversationToRM]="isActionSyncConversationToRM"
+  [listConversation]="conversationNotMove"
+  (selectedPropertyInDetail)="selectedPropertyInDetail($event)"
+  (quitModal)="handleCancelConfirmProperties($event)"
+  (onConfirm)="handleConfirmProperties()"></confirm-properties-popup>

@@ -1,0 +1,98 @@
+@import 'function';
+
+.kpi-tooltip {
+  @include fontSetup(var(--white), 12px, 16px, normal, 400);
+  max-width: 344px;
+  background-color: rgba(100, 100, 100, 0.8);
+  backdrop-filter: blur(3px);
+  text-align: center;
+  word-break: word;
+  // white-space: nowrap;
+  border-radius: 6px;
+  position: fixed;
+  z-index: 120000;
+  display: block;
+  opacity: 0;
+  -webkit-transition: opacity 300ms;
+  -moz-transition: opacity 300ms;
+  -o-transition: opacity 300ms;
+  transition: opacity 300ms;
+  margin-top: -4px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+.kpi-tooltip-sizing {
+  padding: 5px 8px;
+}
+
+.kpi-tooltip-show {
+  opacity: 1;
+}
+
+.kpi-tooltip::after {
+  content: '';
+  position: absolute;
+  border-style: solid;
+}
+
+.kpi-tooltip-top::after {
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-color: var(--gray-600) transparent transparent transparent;
+}
+
+.kpi-tooltip-top-on-left::after {
+  top: 100%;
+  left: calc(100% - 30px);
+  margin-left: -5px;
+  border-width: 5px;
+  border-color: var(--gray-600) transparent transparent transparent;
+}
+
+.kpi-tooltip-top-on-left-scheduled-msg-popup::after {
+  top: 100%;
+  left: calc(100% - 23px);
+  margin-left: -5px;
+  border-width: 5px;
+  border-color: var(--gray-600) transparent transparent transparent;
+}
+
+.re-config-position:after {
+  left: 15px !important;
+}
+
+.kpi-tooltip-bottom::after {
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-color: transparent transparent var(--gray-600) transparent;
+}
+
+.kpi-tooltip-left::after {
+  top: 50%;
+  left: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-color: transparent transparent transparent var(--gray-600);
+}
+
+.kpi-tooltip-right::after {
+  top: 50%;
+  right: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-color: transparent var(--gray-600) transparent transparent;
+}
+
+.trudi-table-tooltip .ant-tooltip-inner {
+  text-align: left;
+  @include fontSetup(var(--white), 12px, 16px, normal, 400);
+}
+
+trudi-icon[nz-tooltip] {
+  cursor: pointer;
+}

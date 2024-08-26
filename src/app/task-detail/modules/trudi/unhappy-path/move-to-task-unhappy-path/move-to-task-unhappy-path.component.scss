@@ -1,0 +1,30 @@
+@import 'function';
+
+.move-to-task-container {
+  align-items: flex-start;
+}
+
+dropdown-group {
+  width: 400px;
+  &group-item {
+    width: 400px;
+  }
+}
+.trudi-btn-detail {
+  display: flex;
+  width: fit-content;
+  height: 36px;
+  padding: 0px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  background: var(--bg-brand-tonal-normal, #e1f8f5);
+  color: var(--bg-brand-solid-normal, #00aa9f);
+  &:hover {
+    background: var(--bg-brand-tonal-stronger, #d1f0ed);
+  }
+  &:active {
+    background: var(--bg-brand-tonal-strongest, #b9e8e4);
+  }
+}

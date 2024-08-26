@@ -1,0 +1,38 @@
+<div
+  class="file border-rad-4 overflow-hidden cursor-pointer"
+  [ngClass]="isChangeSize ? 'size-48':'size-60'"
+  (click)="handleSelectImg()">
+  <img
+    *ngIf="fileData?.formatSrc ==='image' || fileData?.formatSrc ==='photo' || fileData?.mediaType === 'photo' "
+    [src]="fileData?.src || fileData?.mediaLink"
+    [ngClass]="isChangeSize ? 'size-48':'size-60'" />
+  <div
+    *ngIf="fileData?.formatSrc === 'video' || fileData?.mediaType === 'video'"
+    class="video relative">
+    <img
+      *ngIf="fileData.thumbMediaLink; else supportedVideo"
+      class="size-60"
+      [src]="fileData.thumbMediaLink"
+      alt="thumbMediaLink" />
+    <ng-template #supportedVideo>
+      <video
+        [src]="fileData?.src || fileData?.mediaLink"
+        (error)="handleVideoError(idx)"
+        class="fit-video"
+        [ngClass]="isChangeSize ? 'size-48':'size-60'"></video>
+    </ng-template>
+    <div class="play-icon">
+      <trudi-icon
+        [style]="{'width.px': 20, 'height.px': 20}"
+        icon="play"></trudi-icon>
+    </div>
+  </div>
+  <img
+    *ngIf="fileData?.formatSrc==='unSVideo'"
+    class="position-center-w size-60"
+    src="assets/images/icons/video.svg" />
+  <trudi-icon
+    *ngIf="canSelected"
+    class="size-16 file-checkbox"
+    [icon]="fileData?.checked ? 'ownershipCheck' : 'blankUncheck'"></trudi-icon>
+</div>

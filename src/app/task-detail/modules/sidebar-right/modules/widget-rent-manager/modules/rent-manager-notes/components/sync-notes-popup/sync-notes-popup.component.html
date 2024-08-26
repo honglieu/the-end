@@ -1,0 +1,134 @@
+<trudi-modal
+  [visible]="isShowModal"
+  [autoFocus]="false"
+  [hiddenCancelBtn]="true"
+  okText="Next"
+  (triggerAfterClose)="handleAfterClose()">
+  <ng-template #headerModal>
+    <div class="d-flex align-items-center">
+      <trudi-icon [icon]="'rentManager'" class="flex-1 size-icon"></trudi-icon>
+      <div class="title flex-1 w-100">
+        <span>Note</span>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #headerModal>
+    <div>
+      <div class="header">
+        <div
+          class="detail-invite d-flex justify-content-between align-items-center">
+          <div class="send-invite-icon">
+            <div
+              class="background-icon d-flex align-items-center justify-content-around">
+              <trudi-icon [icon]="'ptLogo'"></trudi-icon>
+            </div>
+          </div>
+          <div class="send-invite-text d-flex align-items-center">
+            <p>Note</p>
+          </div>
+          <div class="close-btn"></div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <div>
+    <div [formGroup]="rmNoteForm" class="syncs-note-wrapper">
+      <div>
+        <div class="d-flex justify-content-between gap-16">
+          <div class="w-100">
+            <trudi-form-control>
+              <trudi-single-select
+                label="Save to"
+                formControlName="entityType"
+                [disabled]="disabledFields.entityType"
+                [items]="SAVE_TO_OPTIONS"
+                bindValue="value"
+                (triggerEventChange)="handleChangeEntityType()"
+                bindLabel="label"></trudi-single-select>
+            </trudi-form-control>
+          </div>
+          <div class="w-100">
+            <trudi-form-control>
+              <trudi-single-select
+                label="Note type"
+                formControlName="categoryId"
+                [disabled]="!rmNoteForm.get('entityType').value"
+                [items]="listHistoryCategoriesByType"
+                bindValue="id"
+                bindLabel="name"></trudi-single-select>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div
+          class="data-row-wrapper w-100"
+          *ngIf="rmNoteForm.value.entityType && rmNoteForm.value.entityType !== currentSaveToValue.PROPERTY">
+          <trudi-form-control>
+            <trudi-single-select
+              [label]="'Select ' + (rmNoteForm.get('entityType').value | formatLabel)"
+              formControlName="entityId"
+              [disabled]="disabledFields.entityId"
+              [items]="listEntities"
+              bindValue="id"
+              bindLabel="name"></trudi-single-select>
+          </trudi-form-control>
+        </div>
+        <div class="data-row-wrapper w-100">
+          <trudi-form-control [checkSubmit]="!isSubmittedRentNoteForm">
+            <trudi-textarea
+              [checkSubmit]="!isSubmittedRentNoteForm"
+              formControlName="description"
+              label="Note"
+              [maxCharacter]="2000"></trudi-textarea>
+          </trudi-form-control>
+        </div>
+        <div class="data-row-wrapper w-100">
+          <span class="title">File attachments</span>
+          <attach-file-button
+            [disableRemoveButton]="isRMSyncing"
+            disableTooltipText="Item can only be deleted directly from Rent Manager"
+            [showFileSize]="true"
+            [listFileAttached]="listFileAttached"
+            (updateListFileAttached)="updateListFileAttached($event)"></attach-file-button>
+          <div *ngIf="isInvalidNumberFiles" class="d-flex mt-12">
+            <trudi-icon
+              svgClass="size-16"
+              [icon]="'iconWarningRedFit'"
+              class="d-flex align-items-center"
+              alt="error"></trudi-icon>
+            <span class="error-text"
+              >You can only upload 5 files at maximum</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div class="d-flex align-items-center justify-content-between w-100">
+      <div class="d-flex align-items-center">
+        <sync-status
+          [syncStatus]="(syncStatus$ | push).status"
+          [lastTimeSynced]="(syncStatus$ | push).lastTimeSynced"></sync-status>
+      </div>
+      <div class="d-flex" [style.gap.px]="12">
+        <button
+          *ngIf="isShowBackBtn || isUpdateNoteModal"
+          trudi-btn
+          size="large"
+          variant="outlined"
+          btnType="neutral"
+          class="btn-cancel"
+          (click)="handleBack()">
+          <span class="btn-text">Back</span>
+        </button>
+        <button
+          type="button"
+          [disabled]="isConsole || isRMSyncing || isLoading || isArchiveMailbox"
+          (click)="handleSyncRM()"
+          class="btn-confirm trudi-btn trudi-btn-semi-large trudi-btn-primary">
+          <span class="btn-text">Sync to Rent Manager</span>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</trudi-modal>

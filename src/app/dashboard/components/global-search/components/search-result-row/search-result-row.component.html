@@ -1,0 +1,167 @@
+<div
+  class="search-result-row-wrapper cursor-pointer"
+  (click)="handleNavigateToEmailResult()">
+  <div class="search-result-row-container d-flex gap-4 flex-dir-column">
+    <div class="d-flex gap-4 align-items-center text-ellipsis">
+      <div class="d-flex gap-4 w-100">
+        <div class="d-flex gap-4 flex-dir-column">
+          <span>From:</span>
+          <span>To:</span>
+        </div>
+        <div class="d-flex gap-4 flex-dir-column flex-1">
+          <div class="d-flex justify-content-between">
+            <ng-container
+              *ngTemplateOutlet="contactInfo; context: {$implicit:'from'}"></ng-container>
+            <span class="ml-auto time-email-send">
+              {{searchResultRow?.conversationStatus |
+              resultRowConversationStatus : searchResultRow?.taskStatus}}
+              {{searchResultRow?.updatedAt | dateCase: true: false | async}}
+            </span>
+          </div>
+          <ng-container
+            *ngTemplateOutlet="contactInfo; context: {$implicit:'toField'}"></ng-container>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex align-items-center w-100 gap-4">
+      <div
+        class="d-flex flex-1 gap-4 align-items-center conversation-title-wrapper">
+        <span
+          *ngIf="searchResultRow?.emailTitle"
+          class="email-title text-ellipsis"
+          [innerHTML]="searchResultRow?.emailTitle | highlight: searchTerm">
+        </span>
+        <div class="property-address align-items-center d-flex gap-4">
+          <trudi-icon icon="mapPin"> </trudi-icon>
+          <span
+            class="text-ellipsis flex-1"
+            [innerHTML]="searchResultRow?.streetline || 'No property' | highlight: searchTerm"></span>
+        </div>
+      </div>
+
+      @if([EConversationType.EMAIL, EConversationType.APP,
+      EConversationType.VOICE_MAIL].includes(searchResultRow.conversationType)
+      && searchResultRow?.totalActions) {
+      <div
+        class="ticket-count-wrapper"
+        #ticketBox
+        [ngClass]="{'ticket-many-count-wrapper': searchResultRow?.totalActions > 99}">
+        <div class="ticket-count-wrapper--box">
+          <div class="ticket-count-wrapper--box--count">
+            {{searchResultRow?.totalActions | totalCountPipe: 99: true}}
+          </div>
+        </div>
+      </div>
+      } @if([EConversationType.SMS,
+      EConversationType.MESSENGER].includes(searchResultRow.conversationType) &&
+      searchResultRow?.totalUnreadTicket) {
+      <div
+        class="ticket-count-wrapper"
+        #ticketBox
+        [ngClass]="{'ticket-many-count-wrapper': searchResultRow?.totalUnreadTicket > 99}">
+        <div class="ticket-count-wrapper--box">
+          <div class="ticket-count-wrapper--box--count">
+            {{searchResultRow?.totalUnreadTicket | totalCountPipe: 99: true}}
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+    <div
+      *ngIf="!!searchResultRow?.lastMessage?.message"
+      class="element d-flex justify-content-between">
+      <div class="d-flex gap-4 align-items-center text-ellipsis">
+        <span
+          *ngIf="searchResultRow?.lastMessage?.isDraft"
+          class="tag-draft"
+          [innerHTML]="'Draft' | highlight: searchTerm"></span>
+        <span
+          class="email-body truncate"
+          [innerHTML]="(searchResultRow?.isShowTranslatedMessage &&
+          searchResultRow?.lastMessage?.textTranslatedContent) ||
+          searchResultRow?.lastMessage?.message | highlight: searchTerm">
+        </span>
+      </div>
+      <div
+        *ngIf="contactAndAttachment?.length || searchResultRow?.attachmentCount"
+        class="icon-attachments d-flex align-items-center">
+        <img src="/assets/icon/attachments.svg" alt="" />
+        <span>
+          {{ contactAndAttachment?.length || searchResultRow?.attachmentCount }}
+        </span>
+      </div>
+    </div>
+    <div
+      *ngIf="searchResultRow?.taskTitle && searchResultRow?.taskType === taskType.TASK"
+      class="d-flex gap-4">
+      <span
+        class="task-title"
+        [innerHTML]="'Task:' | highlight: searchTerm"></span>
+      <span
+        class="task-title-content truncate"
+        [innerHTML]="searchResultRow?.taskTitle | highlight: searchTerm"></span>
+    </div>
+  </div>
+</div>
+<hr class="break-line" />
+
+<ng-template #contactInfo let-prefixTitle>
+  <div class="d-flex gap-4">
+    <span
+      *ngIf="searchResultRow?.[prefixTitle+'Name']"
+      class="sender-name text-ellipsis"
+      [innerHTML]="searchResultRow?.[prefixTitle+'Name'] | highlight: searchTerm"></span>
+    <span
+      *ngIf="searchResultRow?.[prefixTitle+'Name'] !== 'Trudi'
+            && (searchResultRow?.[prefixTitle]?.secondaryEmail 
+            || searchResultRow?.[prefixTitle]?.email)"
+      class="sender-email text-ellipsis">
+      <<span
+        [innerHTML]="(searchResultRow?.[prefixTitle]?.type === EUserPropertyType.LEAD
+                      ? searchResultRow?.mailBoxEmail
+                      : searchResultRow?.[prefixTitle]?.secondaryEmail ||
+                    searchResultRow?.[prefixTitle]?.email) | highlight: searchTerm"></span
+      >>
+    </span>
+
+    <ng-container
+      *ngIf="(searchResultRow.conversationType === EConversationType.EMAIL && prefixTitle === 'toField') || 
+        (searchResultRow.conversationType !== EConversationType.MESSENGER && prefixTitle === 'from' && searchResultRow?.['from']?.type !== EUserPropertyType.LEAD)">
+      <ng-container *ngIf="searchResultRow?.[prefixTitle]?.phoneNumber">
+        @if(searchResultRow?.[prefixTitle+'Name']) {
+        <span class="sender-phone"> • </span> }
+        @if(searchResultRow.conversationType === EConversationType.WHATSAPP) {
+        <trudi-icon icon="whatsappFilledIcon" svgClass="size-14"></trudi-icon>
+        }
+        <span class="sender-phone text-ellipsis">
+          <span
+            [innerHTML]="searchResultRow?.[prefixTitle]?.phoneNumber 
+              | phoneNumberFormat 
+              | highlight: searchTerm : EHighLightTextType.PHONE_NUMBER"></span>
+        </span>
+      </ng-container>
+    </ng-container>
+
+    <ng-container
+      *ngIf="searchResultRow.conversationType === EConversationType.EMAIL && 
+          prefixTitle === 'toField' && 
+          remainingRecipients > 0">
+      <span class="remaining-recipients border-rad-8">
+        +{{remainingRecipients}} more {{remainingRecipients > 2 ?
+        'recipients':'recipient'}}
+      </span>
+    </ng-container>
+
+    <ng-container
+      *ngIf="prefixTitle === 'from' && 
+        searchResultRow.conversationType === EConversationType.MESSENGER">
+      @if(searchResultRow.fromName || searchResultRow?.from?.secondaryEmail ||
+      searchResultRow?.from?.email) { • }
+      <trudi-icon icon="messengerIcon" svgClass="size-14"></trudi-icon>
+      <span>
+        <span
+          [innerHTML]="searchResultRow?.from?.channelUserName | highlight: searchTerm"></span>
+      </span>
+    </ng-container>
+  </div>
+</ng-template>

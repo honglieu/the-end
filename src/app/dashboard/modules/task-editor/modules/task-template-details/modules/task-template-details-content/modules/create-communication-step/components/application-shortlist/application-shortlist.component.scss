@@ -1,0 +1,81 @@
+@import 'function';
+.application-shortlist-form-wrapper {
+  .pre-screen-heading {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      14px,
+      20px,
+      normal,
+      600
+    );
+  }
+  .pre-screen-wrapper {
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border-neutral-dark, #d8dcdf);
+  }
+  ::ng-deep .trudi-checkbox .label-text {
+    @include fontSetup(
+      var(--fg-neutral-strongest, #202020),
+      14px,
+      20px,
+      normal,
+      400
+    );
+  }
+  .application-heading {
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      14px,
+      20px,
+      normal,
+      500
+    );
+  }
+  ::ng-deep trudi-text-field .trudi-ui-text-field-label {
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464) !important,
+      12px !important,
+      16px !important,
+      normal,
+      400 !important
+    );
+  }
+  ::ng-deep .trudi-input {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      14px,
+      20px,
+      normal,
+      500
+    );
+    &:hover {
+      border-color: #ffff;
+    }
+    &:focus {
+      @include box-shadow-input-select(var(--shadow-brand) !important);
+      .error-container {
+        visibility: hidden;
+      }
+    }
+    &:disabled {
+      background: var(--bg-neutral-tonal-strongest, #d8dcdf) !important;
+      color: var(--fg-neutral-weakest, #b9bec0);
+    }
+  }
+  ::ng-deep .trudi-text-field-wrapper .trudi-ui-text-field {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      14px,
+      20px,
+      normal,
+      500
+    );
+  }
+  ::ng-deep .trudi-text-field-wrapper.disabled .trudi-ui-text-field {
+    color: var(--fg-neutral-weaker, #999);
+  }
+}

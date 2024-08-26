@@ -1,0 +1,116 @@
+@if(visible && (isShowToolbarDelayed$ | async)) {
+<div appE2E e2eId="tool-bar" class="inbox-toolbar" @toolbarAnimation>
+  <ng-container
+    *rxFor="let item of toolbars; let first = first; let last = last; trackBy: 'key' ; strategy: 'immediate'">
+    @if(item.customTemplate) {
+    <ng-containter *ngTemplateOutlet="item.customTemplate"></ng-containter>
+    } @else {
+    <div
+      disableOpenSendMsgModal
+      [attr.data-button-key]="item.key || 'count-selected'"
+      trudi-tooltip
+      nzTooltipTrigger="hover"
+      [nzTooltipTitle]="item?.disabled ? item?.tooltip : '' "
+      nzTooltipPlacement="top"
+      appE2E
+      [e2eId]="!first ? item?.dataE2e || 'tool-bar-X-button' : 'tool-bar-seleted-count'"
+      nz-dropdown
+      [nzTrigger]="item?.routeName !== routeName.VOICEMAIL_MESSAGES || item?.routeName !== routeName.APP_MESSAGES || !item?.hideChildren ? 'click' : null"
+      [nzDropdownMenu]="([routeName.VOICEMAIL_MESSAGES, routeName.APP_MESSAGES].includes(item?.routeName) ? !item.hideChildren : [inboxAction.MOVE_MESSAGE, inboxAction.ADD_TO_TASK, inboxAction.EXPORT_CONVERSATION_HISTORY, inboxAction.EXPORT_TASK_ACTIVITY, inboxAction.MORE].includes(item?.key)) ? menu : ''"
+      nzPlacement="topLeft"
+      [(nzVisible)]="isDropdownVisible"
+      (nzVisibleChange)="isDropdownVisible = false"
+      class="toolbar-item {{item?.actionType}}"
+      [ngClass]="{
+          'count-selected cursor-default': item?.count,
+          'disabled-option': (hasMessageInTask && item.key === EInboxAction.MOVE_TO_FOLDER) || item?.disabled,
+          'active': [inboxAction.MOVE_MESSAGE, inboxAction.ADD_TO_TASK, inboxAction.EXPORT_CONVERSATION_HISTORY, inboxAction.EXPORT_TASK_ACTIVITY].includes(item?.key) && isDropdownVisible}"
+      (click)="([routeName.VOICEMAIL_MESSAGES, routeName.APP_MESSAGES].includes(item?.routeName) ? item.hideChildren : !(item?.disabled || (hasMessageInTask && item.key === EInboxAction.MOVE_TO_FOLDER))) && handleToolbarAction(item.action, last, $event)">
+      @if (item?.count) {
+      <span class="count no-pointer-event">{{ item?.count }}</span>
+      } @else {
+      <trudi-icon
+        class="toolbar-icon no-pointer-event"
+        [icon]="item.icon"
+        svgClass="size-20"></trudi-icon>
+      } @if(item?.label && item?.key !== EInboxAction.SAVE_TO_PROPERTY_TREE;) {
+      <div class="d-flex text-center no-pointer-event">
+        {{ item?.label | uppercaseFirstLetter }}
+      </div>
+      } @else {
+      <div *ngIf="item?.label" class="d-flex text-center no-pointer-event">
+        {{ item?.label}}
+      </div>
+      }
+    </div>
+    }
+
+    <nz-dropdown-menu #menu="nzDropdownMenu">
+      <div
+        nz-menu
+        [class.d-none]="item?.hideChildren"
+        class="list-options-menu-container">
+        <button
+          *rxFor="let itemChildren of item?.children; trackBy: 'key' ; strategy: 'immediate'"
+          class="menu-item"
+          nz-dropdown
+          nzPlacement="rightBottom"
+          nzOverlayClassName="children-menu-dropdown"
+          trudi-tooltip
+          nzTooltipTrigger="hover"
+          [nzTooltipTitle]="itemChildren?.disabled ? itemChildren?.tooltip : '' "
+          nzTooltipPlacement="top"
+          [nzTrigger]="'click'"
+          [nzDropdownMenu]="itemChildren.grandchildren && menuGrandChildern"
+          [appE2E]="itemChildren?.dataE2e || ''"
+          [ngClass]="{'disabled': itemChildren?.disabled, 'd-none': itemChildren?.hideOption, 'add-to-task': itemChildren.hasSpecialStyle}"
+          [disabled]="itemChildren?.disabled"
+          (click)="$event.stopPropagation(); !itemChildren?.hideOption && itemChildren?.action?.()">
+          <div class="menu-item-label">
+            @if(itemChildren?.icon) {
+            <trudi-icon
+              class="toolbar-icon no-pointer-event"
+              [icon]="itemChildren.icon"
+              svgClass="size-20"></trudi-icon>
+            } {{ itemChildren.label }}
+          </div>
+          @if(itemChildren?.description){
+          <span class="menu-item-description">
+            {{ itemChildren.description }}</span
+          >
+          }
+
+          <nz-dropdown-menu #menuGrandChildern="nzDropdownMenu">
+            <div
+              nz-menu
+              [class.d-none]="itemChildren?.hideChildren"
+              class="list-options-menu-container">
+              <button
+                *rxFor="let grandchildren of itemChildren?.grandchildren; trackBy: 'key' ; strategy: 'immediate'"
+                class="menu-item"
+                [appE2E]="grandchildren?.dataE2e || ''"
+                [ngClass]="{'disabled': grandchildren?.disabled, 'd-none': grandchildren?.hideOption, 'add-to-task': grandchildren.hasSpecialStyle}"
+                [disabled]="grandchildren?.disabled"
+                (click)="$event.stopPropagation(); !grandchildren?.hideOption && grandchildren?.action?.()">
+                <div class="menu-item-label">
+                  @if(grandchildren?.icon) {
+                  <trudi-icon
+                    class="toolbar-icon no-pointer-event"
+                    [icon]="grandchildren.icon"
+                    svgClass="size-20"></trudi-icon>
+                  } {{ grandchildren.label }}
+                </div>
+                @if(grandchildren?.description){
+                <span class="menu-item-description">
+                  {{ grandchildren.description }}</span
+                >
+                }
+              </button>
+            </div>
+          </nz-dropdown-menu>
+        </button>
+      </div>
+    </nz-dropdown-menu>
+  </ng-container>
+</div>
+}

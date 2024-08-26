@@ -1,0 +1,41 @@
+@import 'function';
+
+::ng-deep .reply-section {
+  padding: 1.6rem;
+  .reply-content {
+    .content {
+      @include fontSetup(var(--info-500), 1.2rem, 1.8rem, normal, 600);
+
+      a {
+        text-decoration: underline;
+        @include fontSetup(var(--info-500), 1.2rem, 1.8rem, normal, 600);
+      }
+    }
+
+    .contentmail {
+      resize: none;
+      background: var(--white);
+      border: 1px solid var(--info-500);
+      border-radius: 0.6rem;
+      padding: 0.8rem;
+      margin: 0;
+      height: 100%;
+      @include fontSetup(var(--gray-700), 1.2rem, 1.8rem, normal, 500);
+    }
+  }
+}
+.content-trudi {
+  background: rgba(74, 124, 224, 0.12);
+  border-radius: 8px;
+  margin-top: 1rem;
+
+  &.disable {
+    opacity: 0.5;
+  }
+
+  .action-trudi {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.8rem;
+  }
+}

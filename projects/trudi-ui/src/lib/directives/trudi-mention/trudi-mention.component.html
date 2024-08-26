@@ -1,0 +1,48 @@
+<ng-template #defaultItemTemplate let-item="item">
+  <div class="d-flex gap-8 align-items-center overflow-hidden">
+    <div class="user-avatar size-28">
+      <img
+        *ngIf="item[avatarKey] && !item[avatarKey].includes('google_avatar'); else noAvatar"
+        [src]="item[avatarKey]"
+        class=""
+        alt="avatar" />
+      <ng-template #noAvatar>
+        <div class="text">{{item[labelKey] | twoCharacter}}</div>
+      </ng-template>
+    </div>
+    <div class="mention-item-text text-ellipsis">{{item[labelKey]}}</div>
+  </div>
+</ng-template>
+
+<div
+  [hidden]="hidden"
+  nz-dropdown
+  [(nzVisible)]="nzVisible"
+  nzTrigger="click"
+  [nzDropdownMenu]="mentionMenu"></div>
+
+<nz-dropdown-menu #mentionMenu="nzDropdownMenu">
+  <ul
+    #list
+    [hidden]="hidden"
+    class="auto-hide-scroll"
+    [ngClass]="{
+    'mention-menu': !styleOff
+  }">
+    <li
+      *ngFor="let item of items; let i = index"
+      [class.active]="activeIndex === i"
+      [class.mention-active]="!styleOff && activeIndex === i">
+      <a
+        class="dropdown-item"
+        [ngClass]="{
+        'mention-item': !styleOff
+      }"
+        (mousedown)="onItemClick(i); $event.preventDefault()">
+        <ng-template
+          [ngTemplateOutlet]="itemTemplate"
+          [ngTemplateOutletContext]="{'item':item}"></ng-template>
+      </a>
+    </li>
+  </ul>
+</nz-dropdown-menu>

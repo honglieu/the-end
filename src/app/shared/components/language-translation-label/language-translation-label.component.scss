@@ -1,0 +1,87 @@
+@import 'function';
+
+:host .language-translation {
+  &-label {
+    padding: 2px 4px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    width: max-content;
+    border-radius: 4px;
+    z-index: 0;
+    gap: 4px;
+    position: relative;
+    background: var(--fg-base, #fff);
+
+    &.disabled {
+      background: var(--bg-neutral-tonal-normal, #f2f5f7);
+      border: 1px solid var(--border-neutral-dark, #d8dcdf);
+      &::before {
+        display: none;
+      }
+
+      .language-translation-input,
+      .language-translation-output {
+        color: var(--fg-neutral-weakest, #b9bec0);
+      }
+
+      &::ng-deep trudi-icon svg-icon svg path {
+        fill: var(--fg-neutral-weakest, #b9bec0);
+      }
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      z-index: -1;
+      inset: 0;
+      padding: 1px;
+      border-radius: 4px;
+      background: linear-gradient(
+        94deg,
+        rgba(255, 202, 98, 0.4) 0%,
+        rgba(56, 219, 208, 0.4) 70%,
+        rgba(66, 133, 244, 0.4) 100%
+      );
+      -webkit-mask: linear-gradient(
+            94deg,
+            rgba(255, 202, 98, 0.6) 0%,
+            rgba(56, 219, 208, 0.6) 70%,
+            rgba(66, 133, 244, 0.6) 100%
+          )
+          content-box,
+        linear-gradient(
+          94deg,
+          rgba(255, 202, 98, 1) 0%,
+          rgba(56, 219, 208, 1) 70%,
+          rgba(66, 133, 244, 1) 100%
+        );
+      mask: linear-gradient(
+            94deg,
+            rgba(255, 202, 98, 0.3) 0%,
+            rgba(56, 219, 208, 0.3) 70%,
+            rgba(66, 133, 244, 0.3) 100%
+          )
+          content-box,
+        linear-gradient(
+          94deg,
+          rgba(255, 202, 98, 0.3) 0%,
+          rgba(56, 219, 208, 0.3) 70%,
+          rgba(66, 133, 244, 0.3) 100%
+        );
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+    }
+  }
+
+  &-input,
+  &-output {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      10px,
+      12px,
+      normal,
+      600
+    );
+  }
+}

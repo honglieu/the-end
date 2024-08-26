@@ -1,0 +1,87 @@
+<app-modal-popup
+  *ngIf="showPopup"
+  [show]="showPopup"
+  [position]="popupModalPosition.center"
+  [specificWidth]="472">
+  <div class="popup-header d-flex align-items-center justify-content-between">
+    <div class="d-flex gap-16 align-items-center">
+      <img
+        class="size-48"
+        src="/assets/icon/trudi-logo.svg"
+        style="width: 48px" />
+      <div class="title">Schedule message</div>
+    </div>
+    <img
+      class="cursor-pointer size-28"
+      src="/assets/icon/close-modal.svg"
+      alt="close modal"
+      (click)="onCloseModal.emit()" />
+  </div>
+  <div class="divider"></div>
+  <div class="popup-body d-flex flex-dir-column gap-20">
+    <div
+      class="d-flex gap-4 flex-dir-column"
+      *ngFor="let group of dateTimeFormArray.controls; let i = index">
+      <div class="d-flex align-items-center gap-20 flex-1">
+        <div class="d-flex gap-8 flex-dir-column flex-1">
+          <div class="title-text">Date</div>
+          <trudi-date-picker
+            [dueDate]="scheduleDate"
+            [defaultValue]="group.get('date').value"
+            [trudiDisabledDate]="disabledDate"
+            (trudiOnOk)="handleDateHoliday($event, i)">
+          </trudi-date-picker>
+        </div>
+        <div class="d-flex gap-8 flex-dir-column flex-1">
+          <div class="title-text">Time</div>
+          <time-picker
+            [value]="group.get('time').value"
+            [label]="''"
+            [rangeFrom]="0"
+            [rangeTo]="86399"
+            [isFrom]="true"
+            (onChangeHour)="handleChangeStartHour($event, i)">
+          </time-picker>
+        </div>
+      </div>
+      <div class="relative d-flex align-items-center justify-content-between">
+        <app-time-detail-routine
+          *ngIf="group.get('date').value"
+          [reminderTime]="group.get('date').value"
+          [scheduleDate]="scheduleDate">
+        </app-time-detail-routine>
+        <div
+          *ngIf="dateTimeFormArray.length > 1"
+          class="title-text align-self-end cursor-pointer text-decoration-underline"
+          (click)="deleteGroup(i)">
+          Delete
+        </div>
+      </div>
+    </div>
+    <button
+      class="align-self-start trudi-btn trudi-btn-medium trudi-btn-secondary"
+      (click)="addNewDateTimeGroup('', null)">
+      + Add
+    </button>
+    <div
+      *ngIf="showWarning.after || showWarning.duplicate || showWarning.before"
+      class="d-flex gap-4 align-items-center warning-text">
+      <img class="size-12" src="/assets/icon/icon-warning-red-fit.svg" />
+      {{warningMessage}}
+    </div>
+  </div>
+  <div class="d-flex popup-footer justify-content-end gap-12">
+    <button
+      *ngIf="showBackButton"
+      class="trudi-btn trudi-btn-large trudi-btn-tertiary"
+      (click)="back()">
+      Back
+    </button>
+    <button
+      class="trudi-btn trudi-btn-large trudi-btn-primary"
+      [disabled]="showWarning.after || showWarning.duplicate || showWarning.before || dateTimeFormArray.invalid"
+      (click)="next()">
+      {{ textConfirm }}
+    </button>
+  </div>
+</app-modal-popup>

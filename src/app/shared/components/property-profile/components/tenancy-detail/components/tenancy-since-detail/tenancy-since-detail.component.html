@@ -1,0 +1,90 @@
+<div>
+  <div class="item-people-tenancy">
+    <div class="owner-content justify-content-between relative">
+      <div
+        *ngIf="userTenancyList.status !== TENANCY_STATUS.prospect && userTenancyList?.userPropertyGroupLeases?.[0].originalLeaseStartDate"
+        class="d-flex flex-dir-row gap-2">
+        <span class="owner-content-title gap-2">
+          {{ isCRM ? 'Tenant' : 'Tenancy'}} since {{
+          userTenancyList?.userPropertyGroupLeases?.[0].originalLeaseStartDate |
+          formatDate | async }}
+        </span>
+        <span class="owner-content-title">
+          {{
+          userTenancyList?.userPropertyGroupLeases?.[0].originalLeaseStartDate |
+          rentedTime }}
+        </span>
+      </div>
+    </div>
+    <app-lease-share
+      *ngFor="let lease of userTenancyList?.userPropertyGroupLeases"
+      [crmSystemId]="crmSystemId"
+      [dayRemaining]="lease.dayRemaining"
+      [endDate]="lease.endDate?.toString()"
+      [frequency]="lease.frequency"
+      [paidDate]="lease.paidTo?.toString()"
+      [rentAmount]="lease.rentAmount"
+      [startDate]="lease.startDate?.toString()"></app-lease-share>
+  </div>
+  <div class="info-arrears">
+    <div class="info-arrears-grid">
+      <span class="info-arrears-label">Vacate</span>
+      <span class="info-arrears-data"
+        >{{ (userTenancyList?.userPropertyGroupLeases[0]?.vacateDate |
+        formatDate | async) | formatDisplayValue: 'date' }}</span
+      >
+    </div>
+    <div class="info-arrears-grid">
+      <span class="info-arrears-label">Total arrears</span>
+      <span class="info-arrears-data total-arrears">
+        <span class="total">
+          ${{ amountTooltipData?.Total?.amount | number: '1.2-2'}}
+        </span>
+        <trudi-icon
+          *ngIf="!!amountTooltipData?.Total?.amount"
+          [nzTooltipTitle]="tooltipTemplate"
+          icon="circleInfoTooltip"
+          nz-tooltip
+          nzTooltipOverlayClassName="tooltip_title"></trudi-icon>
+        <ng-template #tooltipTemplate>
+          <div
+            class="d-flex justify-content-between flex-dir-column info-arrears-amount-list">
+            <div
+              *ngIf="!!amountTooltipData?.[EArrearsType.RENT]?.amount"
+              class="info-arrears-amount-wrapper"
+              nz-row
+              nzAlign="middle">
+              <span class="arrears-item-title">Rent:</span>
+              <span class="arrears-item-value"
+                >${{ amountTooltipData?.[EArrearsType.RENT]?.amount |
+                number:'1.2-2' }}</span
+              >
+            </div>
+            <div
+              *ngIf="!!amountTooltipData?.[EArrearsType.FEES]?.amount"
+              class="info-arrears-amount-wrapper">
+              <span class="arrears-item-title">Invoices/ Fees:</span>
+              <span class="arrears-item-value">
+                ${{ amountTooltipData?.[EArrearsType.FEES]?.amount | number:
+                '1.2-2' }}
+              </span>
+            </div>
+            <div class="info-arrears-amount-wrapper">
+              <span class="arrears-item-title">Total arrears:</span>
+              <span class="arrears-item-value"
+                >${{ amountTooltipData?.Total?.amount | number: '1.2-2' }}</span
+              >
+            </div>
+          </div>
+        </ng-template>
+      </span>
+    </div>
+    <div class="info-arrears-grid">
+      <span class="info-arrears-label">Next inspection</span>
+      <span class="info-arrears-data"
+        >{{ (userTenancyList?.nextInspection | formatDate | async) |
+        formatDisplayValue: 'date' }}</span
+      >
+    </div>
+  </div>
+</div>

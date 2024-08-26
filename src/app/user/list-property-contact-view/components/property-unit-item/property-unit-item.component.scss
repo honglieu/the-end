@@ -1,0 +1,28 @@
+@import 'function';
+
+.property-wrapper {
+  gap: 8px;
+}
+
+.unit-wrapper {
+  gap: 6px;
+  margin-left: 32px;
+}
+
+.property-name {
+  @include fontSetup(var(--gray-700), 18px, 28px, normal, 600);
+  white-space: pre-wrap;
+}
+
+.unit-name {
+  @include fontSetup(var(--gray-600), 16px, 24px, normal, 600);
+}
+
+.deleted {
+  opacity: 0.5;
+  color: var(--fg-neutral-weakest) !important;
+}
+
+.text-underline-address:hover {
+  text-decoration: underline;
+}

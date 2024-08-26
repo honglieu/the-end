@@ -1,0 +1,18 @@
+<div class="trudi-send-msg-header">
+  <div class="trudi-send-msg-header-body">
+    <trudi-icon [icon]="configs.header?.icon"></trudi-icon>
+    <div class="flex-dir-column max-width-100">
+      <div class="d-flex align-items-center gap-8">
+        <span
+          *ngIf="configs.header?.title"
+          class="trudi-send-msg-header-body-title">
+          {{ configs.header.title }}
+        </span>
+      </div>
+      <trudi-send-option-menu
+        [hasAppUser]="isAppUser"
+        [formControl]="sendOption"></trudi-send-option-menu>
+    </div>
+  </div>
+  <ng-container *ngTemplateOutlet="sendActionTpl"></ng-container>
+</div>

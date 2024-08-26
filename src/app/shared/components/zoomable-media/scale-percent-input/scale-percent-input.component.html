@@ -1,0 +1,14 @@
+<div
+  class="input-wrapper"
+  #inputWrapper
+  appOutsideClickListener
+  (clickOutside)="handleBlur()">
+  <span
+    #input
+    contenteditable="true"
+    id="input"
+    (focus)="handleFocus()"
+    (keydown)="handleInput($event)"
+    [textContent]="value"></span>
+  <span>%</span>
+</div>

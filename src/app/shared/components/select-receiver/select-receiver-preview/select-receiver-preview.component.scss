@@ -1,0 +1,31 @@
+@import 'function';
+
+:host ::ng-deep {
+  .receivers-info-wrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 22px;
+
+    &-content {
+      overflow: hidden;
+      white-space: nowrap;
+      width: 100%;
+    }
+
+    .preview-color,
+    .number-more,
+    .to-place-holder,
+    .separate-el {
+      @include fontSetup(var(--fg-neutral-weaker), 14px, 20px, normal, 400);
+    }
+
+    .receiver {
+      font-weight: 500;
+    }
+
+    .unidentified-contact {
+      color: var(--fg-danger);
+    }
+  }
+}

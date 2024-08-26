@@ -1,0 +1,210 @@
+@import 'function';
+
+:host {
+  display: block;
+  width: 308px;
+  left: 100%;
+  top: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--white);
+  .leading {
+    height: 44px;
+    padding: 4px;
+  }
+  .header {
+    @include fontSetup(var(--gray-600), 12px, 20px, normal, 500);
+  }
+  .text-decoration-underline {
+    @include fontSetup(var(--gray-500), 12px, 14px, normal, 400);
+    cursor: pointer;
+  }
+  .assign-list-items {
+    height: fit-content;
+    max-height: calc(400px - 76px);
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    .assign-list-items-list {
+      overflow: hidden;
+      &:hover {
+        overflow: auto;
+      }
+    }
+  }
+  .assign-item-content {
+    width: 100%;
+    border-bottom: 1px solid var(--gray-200);
+    .assign-item-wrapper {
+      width: 100%;
+      padding: 12px;
+    }
+  }
+  .assign-item {
+    transition: 0.3s;
+    width: 100%;
+    &-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    &[focusable]:focus-visible {
+      transition: none;
+      border-radius: 8px;
+      border: 1px solid var(--brand-500) !important;
+      box-shadow: 0px 0px 0px 1px var(--brand-300);
+    }
+    &:last-child > .assign-item-content {
+      border: none;
+    }
+    &.disable {
+      pointer-events: none;
+    }
+    &-info {
+      display: flex;
+      align-items: center;
+    }
+    img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+    }
+    .assign-name {
+      margin-left: 10px;
+      @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+      &.active {
+        color: var(--gray-700);
+      }
+    }
+    .icon {
+      fill: var(--brand-500);
+      width: 16px;
+      height: 16px;
+      margin-left: auto;
+    }
+  }
+
+  .no-result {
+    @include fontSetup(var(--gray-500), 13px, 100%, normal, 400);
+    font-style: italic;
+    padding: 25px 12px 31px;
+  }
+
+  .assign-search-bar {
+    padding: 8px;
+    border: 1px solid transparent;
+
+    &:focus-within {
+      border: 1px solid var(--brand-500);
+      background: var(--white);
+      .search-property-input {
+        background: var(--white);
+      }
+    }
+
+    .search-property-input {
+      border: none;
+      outline: none;
+      width: 100%;
+      @include fontSetup(var(--gray-700), 14px, 20px, normal, 400);
+      padding-right: 24px;
+    }
+
+    .clear-wrapper {
+      cursor: pointer;
+    }
+  }
+  .assign-sub-title {
+    margin: 10px 0 0;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--gray-500);
+  }
+
+  .count-container {
+    border-bottom: 1px solid var(--border-neutral-light, #f2f5f7);
+    .count-wrapper {
+      justify-content: space-between;
+      height: 32px;
+      padding: 12px;
+      .count-text {
+        @include fontSetup(
+          var(--fg-neutral-weaker, #999),
+          12px,
+          16px,
+          normal,
+          400
+        );
+      }
+      .clear-btn {
+        border: none;
+        padding: 0;
+        &[focusable]:focus-visible {
+          border-radius: 8px;
+          border: 1px solid var(--brand-500);
+          box-shadow: 0px 0px 0px 1px var(--bg-brand-tonal-strongest) !important;
+        }
+        @include fontSetup(
+          var(--fg-neutral-stronger, #3d3d3d),
+          12px,
+          16px,
+          normal,
+          500
+        );
+        background-color: var(--white);
+      }
+    }
+  }
+}
+
+.grid-assignee {
+  border-bottom: 1px solid var(--gray-200);
+  padding: 12px;
+  height: 44px;
+
+  .grid-item {
+    ::ng-deep .ant-skeleton-custom {
+      h3.ant-skeleton-title {
+        width: 100% !important;
+        height: 16px !important;
+        max-width: 150px !important;
+        margin: 0;
+      }
+
+      .ant-skeleton-paragraph {
+        display: none;
+      }
+    }
+  }
+  .avatar-item {
+    ::ng-deep .ant-skeleton-custom {
+      h3.ant-skeleton-title {
+        width: 28px !important;
+        height: 28px !important;
+        max-width: 28px !important;
+        margin: 0;
+        border-radius: 50%;
+      }
+
+      .ant-skeleton-paragraph {
+        display: none;
+      }
+    }
+  }
+  .grid-checkbox {
+    width: 100% !important;
+    max-width: 16px !important;
+    ::ng-deep .ant-skeleton-custom {
+      h3.ant-skeleton-title {
+        width: 100% !important;
+        height: 16px !important;
+        max-width: 16px !important;
+        margin: 0;
+      }
+
+      .ant-skeleton-paragraph {
+        display: none;
+      }
+    }
+  }
+}

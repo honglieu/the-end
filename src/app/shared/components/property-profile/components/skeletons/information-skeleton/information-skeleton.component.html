@@ -1,0 +1,18 @@
+<div class="information-skeleton">
+  <div class="heading">
+    <nz-skeleton-element
+      class="button-skeleton heading"
+      nzType="button"
+      [nzActive]="true"></nz-skeleton-element>
+  </div>
+  <div *ngFor="let _ of [].constructor(4)" class="info-row d-flex">
+    <nz-skeleton-element
+      class="button-skeleton sk-label"
+      nzType="button"
+      [nzActive]="true"></nz-skeleton-element>
+    <nz-skeleton-element
+      class="button-skeleton sk-value"
+      nzType="button"
+      [nzActive]="true"></nz-skeleton-element>
+  </div>
+</div>

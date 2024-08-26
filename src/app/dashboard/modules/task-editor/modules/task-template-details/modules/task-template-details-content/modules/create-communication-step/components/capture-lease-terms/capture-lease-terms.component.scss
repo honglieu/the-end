@@ -1,0 +1,58 @@
+@import 'function';
+
+:host::ng-deep {
+  .lease-label {
+    @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 600);
+  }
+
+  trudi-text-field .trudi-ui-text-field-label {
+    color: var(--gray-500) !important;
+    font-size: 12px !important;
+    font-weight: 400 !important;
+  }
+
+  .label {
+    color: var(--gray-500) !important;
+    font-size: 12px !important;
+    font-weight: 400 !important;
+    margin-bottom: 6px;
+  }
+
+  .label-wrapper {
+    .required-checkbox {
+      .trudi-checkbox label.trudi-checkbox .label-text {
+        @include fontSetup(
+          var(--fg-neutral-strongest, #202020),
+          14px,
+          20px,
+          normal,
+          400
+        );
+      }
+    }
+  }
+
+  .form-content-wrapper {
+    display: flex;
+    padding: 16px;
+    border-radius: 8px;
+    flex-direction: column;
+    gap: 16px;
+    border: 1px solid var(--border-neutral-dark, #d8dcdf);
+
+    .rental-form {
+      &_container {
+        display: grid;
+        grid-template-columns: calc(50% - 8px) calc(20% - 16px) calc(30% - 8px);
+        gap: 16px;
+      }
+    }
+
+    .bond-amount-form {
+      width: 100%;
+      .trudi-checkbox-square label {
+        gap: 6px;
+      }
+    }
+  }
+}

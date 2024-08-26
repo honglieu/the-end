@@ -1,0 +1,21 @@
+@import 'function';
+
+::ng-deep .warning-rei-form .modal-wrapper {
+  .warning-rei-form-header .header-detail {
+    padding: 6px 14px 0 14px;
+
+    .header-detail-text {
+      .main-text {
+        @include fontSetup(var(--fg-neutral-stronger), 18px, 28px, normal, 600);
+      }
+
+      .sub-text {
+        @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 500);
+      }
+    }
+  }
+
+  .warning-rei-form-footer {
+    padding: 20px 10px 10px 10px;
+  }
+}

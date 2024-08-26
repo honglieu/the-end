@@ -1,0 +1,119 @@
+<div
+  class="facebook-message-attachment-wrapper"
+  [class.facebook-message-attachment-wrapper-user]="message.userSendType === EUserSendType.USER">
+  <div
+    *ngIf="!isSending && !isLoadingFile && message.userSendType !== EUserSendType.USER"
+    nz-dropdown
+    nzTrigger="click"
+    class="facebook-message-attachment-action-button"
+    [nzDropdownMenu]="menu"
+    [nzPlacement]="dropdownPlacement"
+    (click)="onInsideActionButtonClick($event)"
+    [(nzVisible)]="visibleDropdownMenu">
+    <trudi-icon class="size-16" icon="greyThreeDot"></trudi-icon>
+  </div>
+  <div class="facebook-message-attachment-content">
+    @for (fileMessage of listFileMessage; track fileMessage;) {
+    <app-message-file
+      [dropdownPlacement]="dropdownPlacement"
+      [canReply]="isUserVerified"
+      [message]="message"
+      [isSending]="message?.isSending || message?.isError"
+      [isShowReaction]="false"
+      [messageFile]="message.isShowFile ? fileMessage : null"
+      [isShowActionButtonInside]="false"
+      [isShowActionButton]="false"
+      (fileOnClicked)="handleFileClick($event)"
+      [isShowFile]="message.isShowFile"
+      [isAppMessage]="true"
+      [isLoadingFile]="!fileMessage.mediaLink"
+      class="message-file"></app-message-file>
+    } @if(message?.reaction && message?.reaction?.action ===
+    EReactionStatus.REACT) {
+    <div
+      class="message-emotions"
+      nz-tooltip
+      [class.message-emotions-user]="message.userSendType === EUserSendType.USER"
+      nzTooltipPlacement="top"
+      [innerHTML]="message?.reaction?.emoji | twemoji"
+      [nzTooltipTitle]="currentConversation?.participants[0]?.name"></div>
+    }
+  </div>
+  <div
+    *ngIf="!isSending && !isLoadingFile && message.userSendType === EUserSendType.USER"
+    nz-dropdown
+    nzTrigger="click"
+    class="facebook-message-attachment-action-button"
+    [nzDropdownMenu]="menu"
+    [nzPlacement]="dropdownPlacement"
+    (click)="onInsideActionButtonClick($event)"
+    [(nzVisible)]="visibleDropdownMenu">
+    <trudi-icon class="size-16" icon="greyThreeDot"></trudi-icon>
+  </div>
+</div>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <ul nz-menu class="menu-button">
+    <li
+      *ngIf="!isFileFromFolder"
+      disableOpenSendMsgModal
+      nz-menu-item
+      PreventButton
+      [attr.data-button-key]="EButtonTask.TASK_CREATE_MESSAGE"
+      [attr.data-button-type]="EButtonType.TASK"
+      [appE2E]="'message-3-dots-forward-button'"
+      (leftClick)="onForward()">
+      <div class="d-flex align-items-center gap-8 no-pointer-event">
+        <trudi-icon
+          [style]="{'width.px': 16, 'height.px': 16, 'color': '#3D3D3D'}"
+          class="size-16 no-pointer-event"
+          icon="moveToIcon"></trudi-icon>
+        <div class="dropdown-item-text no-pointer-event">Forward</div>
+      </div>
+    </li>
+    <li *ngIf="!isFileFromFolder" nz-menu-divider></li>
+    <li nz-menu-item (click)="handleClickDownloadFile()">
+      <div class="d-flex align-items-center gap-8">
+        <trudi-icon
+          [style]="{'width.px': 16, 'height.px': 16, 'color': '#3D3D3D'}"
+          class="size-16"
+          icon="iconDownload"></trudi-icon>
+        <div class="dropdown-item-text">Download</div>
+      </div>
+    </li>
+    <li *ngIf="!isFileFromFolder" nz-menu-divider></li>
+    <li
+      *ngIf="!isFileFromFolder"
+      nz-menu-item
+      trudi-tooltip
+      nzTooltipPlacement="bottom"
+      [nzTooltipTitle]="visibleDropdownMenu ? 'No property assigned' : null"
+      [nzTooltipTrigger]="currentConversation?.isTemporaryProperty ? 'hover' : null"
+      class="message-file-menu-item"
+      (click)="!(isConsole || currentConversation?.isTemporaryProperty || (isConsole && isDisConnectedMailbox) || isArchiveMailbox || isSyncing) && handleSyncAll(); visibleDropdownMenu = false; fileIdDropdown = null"
+      [class.disabled]="isConsole || currentConversation?.isTemporaryProperty || (isConsole && isDisConnectedMailbox) || isArchiveMailbox || isSyncing">
+      <div
+        *ngIf="(!isSyncing); else syncingButtonTemplate"
+        class="d-flex align-items-center gap-8">
+        <trudi-icon
+          [style]="{'width.px': 16, 'height.px': 16, 'color': '#3D3D3D'}"
+          class="size-16"
+          icon="iconSync"></trudi-icon>
+        <div class="dropdown-item-text">
+          {{ currentCompanyName === CRMSystemName.PROPERTY_TREE ? "Sync to
+          Property Tree" : "Sync to Rent Manager" }}
+        </div>
+      </div>
+
+      <ng-template #syncingButtonTemplate>
+        <div class="d-flex align-items-center gap-8">
+          <trudi-icon
+            [style]="{'width.px': 16, 'height.px': 16, 'color': '#3D3D3D'}"
+            class="size-16"
+            icon="syncSuccessPic"></trudi-icon>
+          <div class="dropdown-item-text">Syncing</div>
+        </div>
+      </ng-template>
+    </li>
+  </ul>
+</nz-dropdown-menu>

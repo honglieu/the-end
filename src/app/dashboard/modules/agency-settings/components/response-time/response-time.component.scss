@@ -1,0 +1,46 @@
+@import 'function';
+
+.container {
+  padding: 32px;
+
+  &-subTitleChild {
+    @include fontSetup(var(--gray-500), 14px, 20px, normal, 400);
+  }
+
+  ::ng-deep .ng-select {
+    .ng-select-container {
+      .ng-value-container {
+        .ng-input {
+          & > input {
+            padding: 0 0px 0 7px !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+:host ::ng-deep {
+  .radio-polices {
+    nz-radio-group.radio-group {
+      .radio-label {
+        span {
+          @include fontSetup(var(--gray-500), 14px, 20px, normal, 400);
+        }
+
+        .ant-radio-checked + span {
+          @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+        }
+      }
+    }
+  }
+
+  .response-time-skeleton.ant-skeleton {
+    margin-top: 12px;
+
+    .ant-skeleton-content .ant-skeleton-paragraph li {
+      width: 200px !important;
+      height: 20px !important;
+    }
+  }
+}

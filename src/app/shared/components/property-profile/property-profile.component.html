@@ -1,0 +1,123 @@
+<ng-container
+  [ngTemplateOutlet]="(propertyProfileService.isLoading$ | async) ? loadingTemplate : ((propertyProfileService.currentStep$ | async) === EPropertyProfileStep.EVENT_DETAIL ? eventDetailTemplate : contentTemplate)">
+</ng-container>
+
+<ng-template #contentTemplate>
+  <div class="property-profile-wrap" #profileWrapEl>
+    <div class="header-wrap pd-16" #headerEl>
+      <div class="d-flex gap-8">
+        <button
+          trudi-btn
+          variant="outlined"
+          btnType="neutral"
+          size="medium"
+          shape="square"
+          class="btn-back"
+          (click)="handleClickBackBtn()"
+          *ngIf="displayBackButton || ((propertyProfileService.currentStep$ | async) === EPropertyProfileStep.PARENT_PROPERTY_DETAIL)">
+          <trudi-icon icon="chevronLeft"></trudi-icon>
+        </button>
+        <div class="property-address">{{currentProperty?.streetline}}</div>
+      </div>
+
+      <div class="d-flex mt-6">
+        <trudi-badge
+          [extraClass]="'property-status-badge'"
+          [text]="currentProperty?.status | uppercaseFirstLetter"
+          [variant]="currentProperty?.status | propertyStatusVariant"
+          size="small"></trudi-badge>
+        <span class="property-tree-icon-wrap">
+          <trudi-icon
+            [icon]="(propertyProfileService.currentCompany$ | async)?.CRM === ECrmSystemId.PROPERTY_TREE ? 'propertyTreeLogo':'rentManager'"
+            [viewBox]="auto"
+            [style]="{'width.px': 70, 'height.px': 16}"></trudi-icon>
+        </span>
+      </div>
+    </div>
+    <nz-tabset
+      [nzSelectedIndex]="(propertyProfileService.selectedTab$ | async)"
+      (nzSelectedIndexChange)="handleChangeTabSelected($event)"
+      class="trudi-tabs">
+      <nz-tab *ngFor="let tab of tabs; index as i;" [nzTitle]="titleTemplate">
+        <ng-template #titleTemplate>
+          <div
+            tabindex="0"
+            class="property-tab-item"
+            (keydown.enter)="handleChangeTabSelected(i)">
+            {{ tab.title }}
+          </div>
+        </ng-template>
+      </nz-tab>
+    </nz-tabset>
+    <div class="property-profile-content-wrap" #profileContentEl>
+      <ng-container
+        [ngSwitch]="tabs[(propertyProfileService.selectedTab$ | async)].value">
+        <ng-container *ngSwitchCase="EPropertyProfileTab.DETAILS">
+          <details-tab></details-tab>
+        </ng-container>
+        <ng-container *ngSwitchCase="EPropertyProfileTab.NOTES">
+          <notes-tab></notes-tab>
+        </ng-container>
+        <ng-container *ngSwitchCase="EPropertyProfileTab.EVENTS">
+          <events-tab></events-tab>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #loadingTemplate>
+  <div class="property-profile-skeleton">
+    <div class="header-skeleton pd-16">
+      <div class="d-flex gap-8">
+        <button
+          trudi-btn
+          variant="outlined"
+          btnType="neutral"
+          size="medium"
+          shape="square"
+          class="btn-back"
+          (click)="handleClickBackBtn()"
+          *ngIf="displayBackButton">
+          <trudi-icon icon="chevronLeft"></trudi-icon>
+        </button>
+        <nz-skeleton [nzParagraph]="paragraph" [nzActive]="true"></nz-skeleton>
+      </div>
+
+      <div class="d-flex gap-8 mt-6">
+        <nz-skeleton-element
+          class="button-skeleton mr-8"
+          nzType="button"
+          [nzActive]="true"
+          style="width: 50px"></nz-skeleton-element>
+        <nz-skeleton-element
+          class="button-skeleton"
+          nzType="button"
+          [nzActive]="true"
+          style="width: 82px"></nz-skeleton-element>
+      </div>
+    </div>
+    <nz-tabset [nzSelectedIndex]="0" class="trudi-tabs">
+      <nz-tab
+        *ngFor="let tab of tabs; index as i;"
+        [nzTitle]="skeletonTabTemplate"
+        [nzDisabled]="true">
+        <ng-template #skeletonTabTemplate>
+          <nz-skeleton-element
+            class="button-skeleton property-tab-item"
+            nzType="button"
+            [nzActive]="true"></nz-skeleton-element>
+        </ng-template>
+        <div class="property-profile-content-wrap">
+          <information-skeleton></information-skeleton>
+          <ownership-section-skeleton></ownership-section-skeleton>
+          <tenancies-section-skeleton></tenancies-section-skeleton>
+        </div>
+      </nz-tab>
+    </nz-tabset>
+  </div>
+</ng-template>
+
+<ng-template #eventDetailTemplate>
+  <detail-event></detail-event>
+</ng-template>

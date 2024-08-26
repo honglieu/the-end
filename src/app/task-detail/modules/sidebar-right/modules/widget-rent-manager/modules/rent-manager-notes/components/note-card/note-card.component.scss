@@ -1,0 +1,78 @@
+@import 'function';
+
+.card-wrapper {
+  border: 1px solid var(--border-neutral-dark, #d8dcdf);
+  border-radius: 8px;
+  background: var(--bg-neutral-tonal-normal, #f2f5f7);
+
+  &-content {
+    padding: 12px;
+  }
+
+  .item-category {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      12px,
+      16px,
+      normal,
+      500
+    );
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .item-description {
+    @include fontSetup(
+      var(--fg-neutral-normal, #646464),
+      12px,
+      16px,
+      normal,
+      400
+    );
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .item-file {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+  }
+
+  &:hover {
+    background: var(--bg-neutral-tonal-normal, #f2f5f7);
+  }
+}
+
+.mx-4 {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.trudi-button-cancle {
+  display: flex;
+  height: 40px;
+  min-width: 100px;
+  padding: 0px 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  background: var(--bg-danger-solid-normal, #e1024f);
+  @include fontSetup(var(--fg-base, #fff), 14px, 20px, normal, 600);
+  border: none;
+  outline: unset;
+}
+
+:host
+  ::ng-deep
+  .ant-modal
+  .ant-modal-content
+  .ant-modal-header
+  .ant-modal-title
+  .wrapper-title
+  .sub-title {
+  display: none;
+}

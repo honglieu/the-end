@@ -1,0 +1,54 @@
+<ng-container *ngIf="hasTrudiResponse">
+  <confirm-essential
+    *ngIf="popupState.type === TrudiPopupStep.CONFIRM_ESSENTIAL"
+    [isShowPopup]="popupState.type === TrudiPopupStep.CONFIRM_ESSENTIAL"
+    (handleClose)="handleClosePopup()"
+    [options]="popupState.options"
+    [modalId]="popupState.options.buttonKey">
+  </confirm-essential>
+  <div>
+    <div class="workflow-header">
+      <div class="workflow-header__left">
+        <trudi-icon icon="taskListBold"></trudi-icon>
+        <span class="workflow-header__title">WORKFLOW</span>
+      </div>
+      <div class="workflow-header__right">
+        <button
+          *ngIf="hasIgnoredStep"
+          class="eye-button"
+          (click)="handleEyeButton()">
+          <ng-template #filtered>
+            <trudi-icon
+              icon="eye"
+              trudi-tooltip
+              [hideWhenClick]="true"
+              nzTooltipPlacement="top"
+              [nzTooltipTitle]="'Show ignored steps'"></trudi-icon>
+          </ng-template>
+          <trudi-icon
+            *ngIf="showIgnoredStep$ | async; else filtered"
+            trudi-tooltip
+            [hideWhenClick]="true"
+            nzTooltipPlacement="top"
+            [nzTooltipTitle]="'Hide ignored steps'"
+            icon="eyeShow"></trudi-icon>
+        </button>
+      </div>
+    </div>
+    <trudi-decision
+      [decisions]="decisions"
+      [steps]="primarySteps"
+      [decisionIndex]="currentDecisionIndex"></trudi-decision>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="typePopup === typePropertyTree.UPDATE_WIDGET">
+  <update-pt-popup
+    [visible]="typePopup === typePropertyTree.UPDATE_WIDGET"
+    (onClose)="handleCloseModal()"></update-pt-popup>
+</ng-container>
+<ng-container *ngIf="typePopup === typeRentManager.UPDATE_RM_POPUP">
+  <update-rm-popup
+    [visible]="typePopup === typeRentManager.UPDATE_RM_POPUP"
+    (onClose)="handleCloseModal()"></update-rm-popup>
+</ng-container>

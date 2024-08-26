@@ -1,0 +1,64 @@
+<!-- <trudi-send-msg-v2
+  *ngIf="popupStateCommon.isShowSendMessageModal"
+  [openFrom]="eUserPropertyType.LANDLORD"
+  [configs]="createNewConversationConfigs"
+  [typeMessage]="typeMessage.SCRATCH"
+  (onQuit)="handleCloseModal(ACTION_TYPE.SEND_MSG)"
+  (onSendMsg)="onSendMsg($event)">
+</trudi-send-msg-v2> -->
+
+<app-modal-popup
+  *ngIf="popupStateCommon.isShowSuccessMessageModal"
+  [show]="popupStateCommon.isShowSuccessMessageModal">
+  <app-send-message-success
+    [icon]="'trudi-logo'"
+    [numberSent]="sentUsersCount"
+    [listReceiver]="selectedUser"></app-send-message-success>
+</app-modal-popup>
+
+<add-email-pop-up
+  [APIerr]="addEmailErr"
+  [isShowModal]="popupStateCommon.showAddEmail"
+  [addEmailTitle]="'Add email'"
+  (onCancel)="handleCloseModal(ACTION_TYPE.ADD_MAIL)"
+  (onConfirm)="handleAddNewEmail($event)">
+</add-email-pop-up>
+
+<trudi-modal
+  [(visible)]="popupStateCommon.isShowConfirmModal"
+  iconName="iconWarningRed"
+  [type]="'confirm'"
+  [className]="'confirm-delete'"
+  [closable]="false"
+  [modelWidth]="510"
+  [title]="textConfirm.title"
+  [subTitle]="textConfirm.contentText"
+  [autoFocus]="null">
+  <ng-template #footerModal>
+    <div class="d-flex justify-content-end gap-12">
+      <button
+        type="button"
+        class="trudi-btn trudi-btn-large trudi-btn-tertiary"
+        (click)="handleCloseModal(ACTION_TYPE.DELETE_SECONDARY_EMAIL)">
+        <span class="btn-text"> Cancel </span></button
+      ><button
+        type="button"
+        class="trudi-btn trudi-btn-large trudi-btn-danger"
+        (click)="onDeleteConfirm()">
+        <span class="btn-text"> Delete </span>
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>
+
+<!-- App Send Invite -->
+<app-modal-popup
+  *ngIf="popupStateCommon.isSendInvite"
+  [show]="popupStateCommon.isSendInvite">
+  <confirm-send-invite-or-message
+    [isSendInvite]="false"
+    [numberSent]="selectedUser.length"
+    [usersHaveInvalidEmail]="usersHaveInvalidEmail"
+    (isOpenSuccessModal)="handleSuccessConfirmSendInvite($event)"
+    (isCloseModal)="handleCloseModal(ACTION_TYPE.APP_INVITE)"></confirm-send-invite-or-message>
+</app-modal-popup>

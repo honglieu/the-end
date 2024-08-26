@@ -1,0 +1,82 @@
+<div
+  class="wrapper-skeleton"
+  [hidden]="(loadingService.isLoading$ | push) === false">
+  <div
+    class="justify-content-between align-items-center files-item pd-12 skeleton-bg">
+    <div class="skeleton-rectangle">
+      <nz-skeleton
+        [nzParagraph]="paragraph"
+        [nzActive]="true"
+        class="w-100"></nz-skeleton>
+    </div>
+    <div class="w-25">
+      <nz-skeleton-element
+        class="skeleton-circle"
+        nzType="avatar"
+        [nzActive]="true"
+        [nzSize]="'small'"></nz-skeleton-element>
+    </div>
+    <div class="d-flex justify-content-end w-25">
+      <nz-skeleton-element
+        class="skeleton-circle"
+        nzType="avatar"
+        [nzActive]="true"
+        [nzSize]="'small'"></nz-skeleton-element>
+    </div>
+  </div>
+</div>
+<trudi-collapse-widget
+  [titleHeader]="headerTextTemplates"
+  [activeExpand]="true"
+  [isShowItemsCount]="true"
+  [itemsCount]="listEvents?.length || 0"
+  class="widget-calendar"
+  [hidden]="loadingService.isLoading$ | push">
+  <ng-container>
+    <div class="widget-calendar-content">
+      <ng-container *ngIf="listEvents.length; else noEvent">
+        <area-appointment
+          *rxFor="
+            let event of listEvents;
+            let index = index;
+            patchZone: false;
+            strategy: 'low';
+            trackBy: trackEvents;
+          "
+          (triggerMenu)="setCurrentEventIndex(index)"
+          (calendarEventOption)="handleCalendarEvent($event)"
+          [calenderWidgetExpiredDays]="calenderWidgetExpiredDays"
+          [isShowDropdown]="event?.isShowDropdown"
+          [event]="event"></area-appointment>
+      </ng-container>
+      <ng-template #noEvent>
+        <div class="no-data">
+          {{!isNoPropertyTask ? WIDGET_DESCRIPTION.NO_EVENTS :
+          WIDGET_DESCRIPTION.NO_PROPERTY_TASK[EWidgetSectionType.CALENDAR]}}
+        </div>
+      </ng-template>
+    </div>
+  </ng-container>
+</trudi-collapse-widget>
+
+<ng-template #headerTextTemplates>
+  <span data-e2e="details-title">EVENTS</span>
+  <button
+    trudi-btn
+    [attr.data-button-key]="EButtonWidget.CALENDAR"
+    [attr.data-button-type]="EButtonType.WIDGET"
+    PreventButton
+    [appE2E]="'task-details-calendar-widget-plus-button'"
+    [disabled]="isNoPropertyTask"
+    variant="outlined"
+    btnType="neutral"
+    shape="circle"
+    size="extra-small"
+    (leftClick)="onShowSelectEventPopup($event)"
+    class="cursor-pointer icon-plus ml-10 size-24">
+    <trudi-icon
+      [icon]="'iconPlus2'"
+      svgClass="size-16"
+      class="no-pointer-event"></trudi-icon>
+  </button>
+</ng-template>

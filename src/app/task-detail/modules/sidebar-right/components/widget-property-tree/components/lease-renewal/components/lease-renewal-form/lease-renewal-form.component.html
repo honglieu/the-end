@@ -1,0 +1,155 @@
+<div [formGroup]="leaseRenewalForm">
+  <div class="trudi-form-control mb-24 form-lease-renewal">
+    <div class="trudi-input-label">Select tenancy</div>
+    <trudi-form-control [control]="tenancyControl">
+      <ng-select
+        #selectTenancy
+        class="share-ng-select"
+        [items]="tenanciesOptions"
+        [ngClass]="{'input-error-select': tenancyControl.invalid && (tenancyControl.dirty || tenancyControl.touched) }"
+        formControlName="tenancy"
+        bindValue="id"
+        bindLabel="label"
+        [clearable]="true"
+        [virtualScroll]="true"
+        [searchable]="true"
+        [editableSearchTerm]="true"
+        dropdownPosition="bottom"
+        notFoundText="No results found"
+        (change)="handleChangeTenancies($event)"
+        [readonly]="readonly || readonlyTenancy">
+        <ng-template
+          ng-option-tmp
+          let-item="item"
+          let-index="index"
+          let-search="searchTerm">
+          <div class="d-flex">
+            <span class="flex-1">{{item.label}}</span>
+            <trudi-icon
+              icon="checkSuccess"
+              *ngIf="item.id === tenancyControl.value"
+              [style]="{'width.px': 16, 'height.px': 20}"></trudi-icon>
+          </div>
+          <ng-template #original>{{item.label}}</ng-template>
+        </ng-template>
+      </ng-select>
+    </trudi-form-control>
+  </div>
+  <div class="mb-12">
+    <h4 class="title">New lease dates</h4>
+    <div class="trudi-form-group">
+      <div class="trudi-form-control">
+        <div class="trudi-input-label">Lease start</div>
+        <trudi-form-control [control]="leaseStartControl">
+          <trudi-date-picker
+            class="pointer"
+            formControlName="leaseStart"
+            [defaultValue]="leaseStartControl?.value"
+            [class.trudi-picker-error]="leaseStartControl.invalid && (leaseStartControl.dirty || leaseStartControl.touched)"
+            [trudiDisabled]="readonly">
+          </trudi-date-picker>
+        </trudi-form-control>
+      </div>
+
+      <div class="trudi-form-control">
+        <div class="trudi-input-label">Lease end</div>
+        <trudi-form-control [control]="leaseEndControl">
+          <trudi-date-picker
+            formControlName="leaseEnd"
+            class="pointer"
+            [defaultValue]="leaseEndControl?.value"
+            [class.trudi-picker-error]="leaseEndControl.invalid && (leaseEndControl.dirty || leaseEndControl.touched)"
+            [trudiDisabled]="readonly">
+          </trudi-date-picker>
+        </trudi-form-control>
+      </div>
+    </div>
+  </div>
+
+  <h4 class="title">
+    Rent schedule <span class="trudi-input-label">(Optional)</span>
+  </h4>
+  <span class="trudi-input-label">Rent</span>
+  <div class="form-row mt-5">
+    <div class="mt-6 d-flex gap-16">
+      <div class="wrap-field flex-1">
+        <trudi-form-control
+          [control]="rentScheduleControl"
+          [errors]="[{errorName: 'pattern', errorMessage: 'Invalid number'}]">
+          <trudi-number-field
+            iconLeft="dollarIcon"
+            size="large"
+            [disabled]="readonly"
+            [formControl]="rentScheduleControl">
+          </trudi-number-field>
+        </trudi-form-control>
+      </div>
+      <div class="flex-1">
+        <div class="block-rent-select">
+          <trudi-form-control [control]="rentTypeControl">
+            <ng-select
+              #selectRentType
+              class="share-ng-select rent-ng-select"
+              [ngClass]="{'input-error-select': rentTypeControl.invalid && (rentTypeControl.dirty || rentTypeControl.touched) }"
+              [items]="listRent"
+              bindValue="value"
+              bindLabel="label"
+              [clearable]="true"
+              [virtualScroll]="true"
+              [readonly]="readonly"
+              [searchable]="true"
+              [editableSearchTerm]="true"
+              placeholder="Payment period"
+              formControlName="rentType">
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm">
+                <div class="d-flex">
+                  <span class="flex-1">{{item.label}}</span>
+                  <trudi-icon
+                    icon="checkSuccess"
+                    *ngIf="item.value === rentTypeControl.value"
+                    [style]="{'width.px': 16, 'height.px': 20}"></trudi-icon>
+                </div>
+              </ng-template>
+              <ng-template *ngIf="listRent.length" ng-footer-tmp>
+                <div
+                  class="option-clear pointer"
+                  (click)="onClearFrequencyType()">
+                  Clear
+                </div>
+              </ng-template>
+            </ng-select>
+          </trudi-form-control>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="trudi-form-control mt-6 mb-24">
+    <div class="trudi-input-label mt-12">Rent change effective date</div>
+    <trudi-form-control [control]="rentEffectiveControl">
+      <trudi-date-picker
+        class="pointer"
+        formControlName="rentEffective"
+        [trudiDisabled]="readonly"
+        [class.trudi-picker-error]="rentEffectiveControl.invalid && (rentEffectiveControl.dirty || rentEffectiveControl.touched)"
+        [trudiDisabledDate]="disabledPastDate">
+      </trudi-date-picker>
+    </trudi-form-control>
+  </div>
+  <div *ngIf="showLeaseRenewalModal">
+    <lease-renewal-attach-file-button
+      [multipleFile]="true"
+      [disable]="readonly"
+      [disableRemoveButton]="disableRemoveButton"
+      [title]="'Signed lease document'"
+      [label]="labelAttachFile"
+      [icon]="iconAttachFile"
+      (setStatusSyncButton)="handleSetStatusSyncButton($event)"
+      (getListFile)="getUploadedFile($event)">
+    </lease-renewal-attach-file-button>
+  </div>
+</div>

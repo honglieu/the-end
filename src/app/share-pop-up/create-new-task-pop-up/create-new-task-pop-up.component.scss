@@ -1,0 +1,49 @@
+@import 'function';
+
+create-blank-task {
+  position: relative;
+}
+
+.wrapper-progress {
+  width: 100%;
+  display: flex;
+  column-gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  .title {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      18px,
+      28px,
+      normal,
+      600
+    );
+  }
+}
+
+.loading-bar {
+  width: 100%;
+  max-width: 330px;
+  height: 8px;
+  background-color: var(--gray-200);
+  border-radius: var(--radius-full, 9999px);
+}
+.progress-bar {
+  height: 8px;
+  border-radius: var(--radius-full, 9999px);
+  background: var(--fg-brand, #00aa9f);
+  text-align: center;
+  line-height: 20px;
+  color: white;
+}
+
+.task-percent {
+  min-width: 60px;
+  @include fontSetup(
+    var(--fg-neutral-stronger, #3d3d3d),
+    14px,
+    20px,
+    normal,
+    500
+  );
+}

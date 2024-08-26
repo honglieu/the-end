@@ -1,0 +1,181 @@
+@import 'function';
+:host {
+  .content-event-tab {
+    cursor: pointer;
+    padding: 16px 16px 0 16px;
+
+    &:hover {
+      background-color: var(--gray-100);
+    }
+
+    &:active {
+      background-color: var(--gray-200);
+    }
+
+    .wrapper-detail-content-event-tab {
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--gray-200);
+
+      .detail-content-event-tab {
+        display: flex;
+        gap: 4px;
+        flex-direction: column;
+
+        .title {
+          align-items: center;
+          gap: 3px;
+          width: 100%;
+
+          .title-detail {
+            font-size: 14px;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+
+  .link-task,
+  .no-link-task {
+    align-items: center;
+  }
+
+  .link-task {
+    cursor: pointer;
+    & ::ng-deep trudi-icon svg-icon svg path {
+      fill: var(--fg-neutral-normal, #61646c);
+    }
+
+    span {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--fg-neutral-normal, #61646c);
+    }
+  }
+
+  .no-link-task {
+    & ::ng-deep trudi-icon svg-icon svg path {
+      fill: var(--fg-neutral-normal, #61646c);
+    }
+
+    span {
+      cursor: default;
+      font-style: italic;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--gray-500);
+    }
+  }
+
+  .link-task,
+  .no-link-task {
+    & ::ng-deep trudi-icon svg {
+      width: 14px !important;
+      height: 14px !important;
+    }
+  }
+}
+
+.desc,
+.date-detail-left,
+.time-detail-left {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--fg-neutral-stronger, #1f242f);
+}
+
+.date-detail-right {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--gray-500);
+}
+
+.time-detail-right {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--gray-500);
+}
+
+.date,
+.time {
+  gap: 3px;
+  align-items: baseline;
+}
+
+.tag {
+  background-color: var(--danger-100);
+  padding: 0 6px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tag span {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--danger-600);
+}
+
+.links-task-menu {
+  max-height: 350px;
+  overflow-y: auto;
+  max-width: 363.2px;
+
+  &-wrapper-item:last-child {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+
+  &-wrapper-item:first-child {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+  }
+
+  &__item {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--gray-50);
+    border-radius: unset !important;
+
+    & ::ng-deep .ant-menu-title-content {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      gap: 2px;
+    }
+
+    &:hover {
+      background-color: var(--gray-50);
+    }
+
+    &:active {
+      background-color: var(--gray-100);
+    }
+
+    & .task-title {
+      max-width: 100%;
+      @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+    }
+
+    & .task-duration {
+      @include fontSetup(var(--gray-600), 12px, 16px, normal, 400);
+    }
+  }
+}
+
+.statusCancelled {
+  text-decoration-line: line-through;
+  color: var(--gray-200);
+}
+
+.statusNotCancelled {
+  text-decoration-line: none;
+  color: var(--fg-neutral-stronger, #1f242f);
+}
+
+.event-expired {
+  color: var(--fg-danger);
+}
+.event-upcoming {
+  color: var(--gray-500);
+}

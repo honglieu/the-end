@@ -1,0 +1,47 @@
+<div class="task_detail--wapper">
+  <div class="content-block d-flex">
+    <div class="center-block">
+      <div class="center-block-content">
+        <header-conversations
+          [currentProperty]="currentProperty"
+          [task]="taskService?.currentTask$?.value"
+          [taskDetailViewMode]="taskDetailViewMode"></header-conversations>
+        <app-message-detail-list
+          [activeMobileApp]="activeMobileApp"></app-message-detail-list>
+      </div>
+    </div>
+  </div>
+  <div id="task_detail--overlay"></div>
+</div>
+
+<move-message-to-email-folder
+  *ngIf="popupState === EPopupState.MOVE_MESSAGE_TO_EMAIL_FOLDER"
+  [visible]="popupState === EPopupState.MOVE_MESSAGE_TO_EMAIL_FOLDER"
+  [subTitleMoveToTask]="'1 message selected'"
+  (onCancel)="handleResetPopup()"></move-message-to-email-folder>
+
+<create-new-task-pop-up
+  *ngIf="addToTaskConfig && addToTaskConfig.isOpenCreateNewTask"
+  [taskNameList]="addToTaskConfig.taskNameList"
+  [openFrom]="addToTaskConfig.openFrom"
+  [propertyId]="addToTaskConfig.currentPropertyId"
+  [activeProperty]="addToTaskConfig.activeProperty"
+  [categoryID]="addToTaskConfig.categoryID"
+  [showBackBtn]="addToTaskConfig.isShowBackBtn"
+  (stopProcessCreateNewTask)="stopProcessAddToTask()">
+</create-new-task-pop-up>
+
+<trudi-modal
+  *ngIf="addToTaskConfig && addToTaskConfig.isOpenMoveToExistingTask"
+  [visible]="addToTaskConfig.isOpenMoveToExistingTask"
+  [autoFocus]="null"
+  className="trudi-modal-custom">
+  <app-move-mess-to-different-task-v2
+    [propertyIds]="[addToTaskConfig.propertyId]"
+    [show]="addToTaskConfig.isOpenMoveToExistingTask"
+    [isUnHappyPath]="addToTaskConfig.isUnHappyPath"
+    [isShowAddress]="addToTaskConfig.isShowAddress"
+    [isFromVoiceMail]="addToTaskConfig.isFromVoiceMail"
+    (isQuitModal)="stopProcessAddToTask()">
+  </app-move-mess-to-different-task-v2>
+</trudi-modal>

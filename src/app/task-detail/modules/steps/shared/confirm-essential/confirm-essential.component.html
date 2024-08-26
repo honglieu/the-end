@@ -1,0 +1,52 @@
+<resizable-modal-popup
+  [modalId]="modalId"
+  [show]="isShowPopup"
+  [showTitle]="true"
+  [title]="'Confirm essential details'"
+  [footerTemplate]="footerModal"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  (onCancel)="handleClose.emit($event)"
+  [isCustomMoveable]="true"
+  class="modal-confirm-essential">
+  <div class="confirm-essential d-flex flex-dir-column gap-20">
+    <div class="title-confirm-essential d-flex flex-dir-column gap-20">
+      <p>{{essentialItems | selectDynamicTitle: essentialData}}</p>
+      <p>Please confirm which items the email should reference.</p>
+    </div>
+    <div
+      [formGroup]="formGroup"
+      class="add-new-supplier-wrapper grid-container d-flex flex-dir-column gap-20">
+      <ng-container *ngFor="let control of essentialData">
+        <trudi-form-control
+          class="essential-control"
+          *ngIf="control.values.length > 0">
+          <trudi-single-select
+            [class]="!getFormControl(control.key)?.value ? 'no-value-selected' : ''"
+            [label]="'Select ' + control.name"
+            [items]="control.values"
+            bindLabel="name"
+            bindValue="id"
+            [clearable]="true"
+            [formControlName]="control.key"
+            placeholder=""
+            [required]="true"
+            [isShowSubLabelOption]="showSubLabel(control?.key) ? true : false"
+            [isShowSubLabel]="control?.key === PTWidgetDataField.NOTES ? true : false"
+            [searchFn]="search">
+          </trudi-single-select>
+        </trudi-form-control>
+      </ng-container>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div
+      class="wrapper-footer-confirm-essential d-flex align-items-center justify-content-end">
+      <button trudi-btn (click)="handleNext()">Next</button>
+    </div>
+  </ng-template>
+</resizable-modal-popup>

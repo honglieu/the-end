@@ -1,0 +1,202 @@
+.wrapper-background {
+  min-height: 100vh !important;
+}
+.action-links-wrapper {
+  margin: 0 auto;
+  max-width: 1068px;
+  &__header {
+    height: 36px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 33px 0 14px 0;
+    font-size: 16px;
+    color: var(--gray-800);
+    header {
+      font-weight: 500;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: normal;
+      letter-spacing: normal;
+    }
+    .create-btn {
+      cursor: pointer;
+      display: flex;
+      padding: 6px 20.5px;
+      font-size: 14px;
+      border-radius: 4px;
+			font-weight: 600;
+      background-color: var(--brand-500);
+      border: 0;
+      width: -moz-fit-content;
+      width: fit-content;
+      color: var(--white);
+      align-items: center;
+      -webkit-user-select: none;
+      user-select: none;
+      svg {
+        margin-right: 8px;
+      }
+    }
+  }
+  &__booking {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: -8px -8px 0 -8px;
+  }
+  .message-booking:hover {
+    .card-wrapper {
+      opacity: 0.1;
+    }
+    .message-booking-inner__hover {
+      .new-btn {
+        height: 43px;
+        border-radius: 21.5px;
+        background-color: var(--brand-500);
+        color: var(--white);
+        font-size: 18px;
+        text-transform: none;
+        cursor: pointer;
+        span {
+          padding: 0 12px;
+        }
+      }
+      .card-action {
+        height: 20px;
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 1.11;
+        color: var(--brand-500);
+        margin-top: 16px;
+        cursor: pointer;
+        .card-action-button {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          padding: 0 16px;
+          height: 20px;
+        }
+      }
+      transition: .5s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+  .message-booking {
+    margin: 8px;
+    width: calc(100% / 3 - 16px);
+    /*&:nth-child(2n + 3) {
+      margin-right: 0;
+    }*/
+    .message-booking-inner {
+      border: 1px solid transparent;
+      box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.2);
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      height: 100%;
+      &.link-selected {
+        box-shadow: 0 3px 17px -10px var(--brand-500);
+      }
+      &__hover {
+        z-index: 10;
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--white);
+      }
+
+      .card-action {
+        text-align: center;
+        height: 44px;
+        background-color: var(--white);
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 1.11;
+        color: var(--brand-500);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-top: 1px solid var( --gray-100);
+        &:last-child {
+          border-radius: 0 0 18px 18px;
+        }
+        .card-action-button {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          padding: 0 16px;
+          height: 20px;
+        }
+      }
+      .card-wrapper {
+        .card-image {
+          height: 60px;
+          min-height: 60px;
+          width: 60px;
+          min-width: 60px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 16px 0 0;
+          object-fit: contain;
+        }
+        img {
+          width: 40px;
+          height: 40px;
+        }
+      }
+    }
+    & > * {
+
+      background-color: var(--white);
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .card-wrapper {
+      display: flex;
+      flex-direction: row;
+      padding: 16px;
+      overflow: hidden;
+      .card-image {
+        border-radius: 50%;
+      }
+      .card-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        font-size: 16px;
+        line-height: 1.25;
+        color: var(--gray-500);
+        height: 60px;
+        overflow: hidden;
+        .card-title {
+          font-size: 18px;
+          font-weight: 600;
+          line-height: 1.11;
+          color: var(--gray-950);
+          margin-bottom: 4px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .card-description {
+          word-break: break-word;
+          display: -webkit-box;
+          overflow: hidden;
+          /* autoprefixer: off */
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+        }
+      }
+    }
+  }
+}

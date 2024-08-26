@@ -1,0 +1,387 @@
+<div
+  class="message-file-wrapper"
+  *ngIf="isShowFile && (messageFile?.fileType || fileType)">
+  <div
+    PreventButton
+    [attr.data-button-key]="EButtonTask.VIEW_FILE"
+    [attr.data-button-type]="EButtonType.TASK"
+    (leftClick)="loadFile(messageFile.id)"
+    class="attachment-message"
+    [ngSwitch]="fileType"
+    [ngClass]="{
+    'gray-border': grayBorder,
+    'box-shadow': showBoxShadow,
+    'no-min-max-width': fileType !== 'file' && fileType !== 'audio' || isTicketRequest,
+    'no-event': isSending,
+    'no-border': isTicketRequest
+  }"
+    cdkDropList
+    #fileAppChatList="cdkDropList"
+    id="source-drag-file"
+    [cdkDropListData]="[messageFile]"
+    [cdkDropListConnectedTo]="'destination-drop-photo'">
+    <ng-container *ngSwitchCase="'file'">
+      <ng-container
+        *ngTemplateOutlet="formTemplate; context: {msgFile: messageFile}"></ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="'audio'">
+      <ng-container
+        *ngTemplateOutlet="formTemplate; context: {msgFile: messageFile}"></ng-container>
+    </ng-container>
+
+    <ng-template #formTemplate let-msgFile="msgFile">
+      <div
+        [ngClass]="{'active-audio': isShowAudioControl && selectedFileId === (msgFile.id + '_'),'sending-from-user-file': isSending, 'processing-file': isLoadingFile, 'main-title': !isTicketRequest }">
+        <div class="elements-container">
+          <div
+            class="link-img link-img-file"
+            [ngStyle]="{ 'width.px': isTicketRequest ? size : 'auto', 'height.px': isTicketRequest ? size : 'auto' }">
+            @if(fileExtension === 'pdf' && isTicketRequest) {
+            <img
+              [src]="messageFile.thumbMediaLink ? messageFile.thumbMediaLink : ('assets/images/icons/' + fileType)"
+              [alt]="messageFile.thumbMediaLink"
+              [ngStyle]="{ 'width.px': isTicketRequest ? size : 'auto', 'height.px': isTicketRequest ? size : 'auto' }" />
+            }@else {
+            <img
+              src="assets/images/icons/{{ fileIcon }}"
+              [ngStyle]="{ 'width.px': isTicketRequest ? size : 'auto', 'height.px': isTicketRequest ? size : 'auto' }" />
+            }
+            <trudi-icon
+              *ngIf="msgFile.syncPTStatus === SyncPropertyDocumentStatus.SUCCESS"
+              icon="syncSuccess"
+              [style]="{'width.px': 20, 'height.px': 20}"
+              class="link-img-icon link-img-icon--file"></trudi-icon>
+          </div>
+          @if(!isTicketRequest) { @if(isLoadingFile) {
+          <div class="text-elements-processing d-flex align-items-center">
+            <div class="mr-4">
+              <span class="title-text">{{ msgFile.title || msgFile.name}}</span>
+              <div class="processing-text">Processing...</div>
+            </div>
+            <div class="image-rotation spin">
+              <img src="/assets/icon/loading.png" alt="loading-icon" />
+            </div>
+          </div>
+          } @else {
+          <div class="text-elements">
+            <span
+              #messageFileName
+              class="title-text"
+              nz-tooltip
+              [nzTooltipTitle]="msgFile.title || msgFile.name"
+              [nzTooltipTrigger]="messageFileName?.offsetWidth < messageFileName?.scrollWidth ? 'hover' : null"
+              [nzTooltipOverlayStyle]="{ 'max-width': '250px', 'word-break': 'break-all' }"
+              >{{ msgFile.title || msgFile.name}}</span
+            >
+            <div class="sub-title-text">{{msgFile.size| convertFileSize}}</div>
+          </div>
+          } }
+        </div>
+
+        <audio-control
+          *ngIf="fileType === 'audio'"
+          class="w-100"
+          [isCollapsed]="isShowAudioControl && selectedFileId === (msgFile.id + '_')"
+          [isStop]="messageService.isActiveCallMessage | async"
+          [linkMedia]="msgFile.mediaLink"></audio-control>
+      </div>
+    </ng-template>
+
+    <ng-container *ngSwitchCase="'video'">
+      <ng-container
+        *ngIf="!isSms || (isSms && messageFile.name | allowedMedia: 'video'); else mediaUnsupportedTpl;">
+        <div cdkDrag cdkDragHandle>
+          <div
+            [ngClass]="{'sending-from-user-media': isSending}"
+            [style.width.px]="size"
+            [style.height.px]="size"
+            class="video-wrapper dim-brightness">
+            <img
+              (error)="handleImgError($event)"
+              [src]="messageFile.thumbMediaLink || '/assets/images/icons/video.svg'"
+              [alt]="messageFile.thumbMediaLink"
+              class="video-tag" />
+            <trudi-icon
+              class="play-icon"
+              [ngClass]="{'play-icon-thumb': isTicketRequest}"
+              [svgClass]="isTicketRequest ? 'size-20' : 'size-32'"
+              icon="playSolid"></trudi-icon>
+            <trudi-icon
+              *ngIf="messageFile.syncPTStatus === SyncPropertyDocumentStatus.SUCCESS"
+              class="link-img-icon link-img-icon--video"
+              svgClass="size-20"
+              icon="syncSuccess"></trudi-icon>
+            <div
+              *ngIf="isShowActionButtonInside && !isSending && !isLoadingFile"
+              nz-dropdown
+              nzTrigger="click"
+              class="attachment-message-action-button message-action-button-inside"
+              [nzDropdownMenu]="menu"
+              [nzPlacement]="dropdownPlacement"
+              (click)="onInsideActionButtonClick($event)"
+              [ngClass]="{'-active': messageFile?.id === fileIdDropdown}"
+              [(nzVisible)]="visibleDropdownMenu"
+              (nzVisibleChange)="onDropdownVisibleChanged($event)">
+              <trudi-icon class="size-16" icon="greyThreeDot"></trudi-icon>
+            </div>
+          </div>
+          <div *cdkDragPreview class="video-wrapper-preview">
+            <img
+              (error)="handleImgError($event)"
+              [src]="messageFile.thumbMediaLink || '/assets/images/icons/video.svg'"
+              [alt]="messageFile.thumbMediaLink"
+              class="video-tag" />
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="'photo'">
+      <div cdkDrag cdkDragHandle>
+        <div
+          [ngClass]="{'sending-from-user-media': isSending}"
+          [style.width.px]="size"
+          [style.height.px]="size"
+          class="message-file">
+          <img
+            (error)="handleImgError($event)"
+            class="file-image"
+            [style.width.px]="size"
+            [style.height.px]="size"
+            loading="lazy"
+            src="{{
+						messageFile.mediaLink ? messageFile.mediaLink : ('assets/images/icons/' + fileType)
+					}}" />
+          <trudi-icon
+            *ngIf="messageFile.syncPTStatus === SyncPropertyDocumentStatus.SUCCESS"
+            class="link-img-icon link-img-icon--photo"
+            svgClass="size-20"
+            icon="syncSuccess"></trudi-icon>
+          <div
+            *ngIf="isShowActionButtonInside && !isSending && !isLoadingFile"
+            nz-dropdown
+            nzTrigger="click"
+            class="attachment-message-action-button message-action-button-inside"
+            [nzDropdownMenu]="menu"
+            [nzPlacement]="dropdownPlacement"
+            (click)="onInsideActionButtonClick($event)"
+            [ngClass]="{'-active': messageFile?.id === fileIdDropdown}"
+            [(nzVisible)]="visibleDropdownMenu"
+            (nzVisibleChange)="onDropdownVisibleChanged($event)">
+            <trudi-icon class="size-16" icon="greyThreeDot"></trudi-icon>
+          </div>
+        </div>
+        <div *cdkDragPreview class="message-file-preview">
+          <img
+            src="{{
+						messageFile.mediaLink ? messageFile.mediaLink : ('assets/images/icons/' + fileType)
+					}}" />
+          <trudi-icon
+            *ngIf="messageFile.syncPTStatus === SyncPropertyDocumentStatus.SUCCESS"
+            class="link-img-icon link-img-icon--photo"
+            svgClass="size-20"
+            icon="syncSuccess"></trudi-icon>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  @if(message?.reaction && message?.reaction?.action === EReactionStatus.REACT
+  && isShowReaction) {
+  <div
+    class="message-emotions"
+    nz-tooltip
+    [class.message-emotions-user]="message.userSendType === EUserSendType.USER"
+    nzTooltipPlacement="top"
+    [innerHTML]="message?.reaction?.emoji | twemoji"
+    [nzTooltipTitle]="currentConversation?.participants[0]?.name"></div>
+  }
+</div>
+<div
+  *ngIf="!isShowFile"
+  class="attachment-message unset-max-width"
+  [ngClass]="{
+    'gray-border': grayBorder,
+    'box-shadow': showBoxShadow
+  }">
+  <ng-container>
+    <div class="main-title" [ngClass]="{'sending-from-user-file': isSending}">
+      <div class="elements-container flex-start">
+        <div class="link-img">
+          <trudi-icon icon="deletedFile"></trudi-icon>
+        </div>
+        <div class="text-elements">
+          <span class="title-text">File not found</span>
+          <div class="sub-title-text unset-line-clamp">
+            It looks like this file no longer exists or your permission has been
+            removed.
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<div
+  *ngIf="isShowFile && (!messageFile?.fileType && !fileType)"
+  class="attachment-message"
+  (click)="loadFile()"
+  [ngClass]="{
+    'gray-border': grayBorder,
+    'box-shadow': showBoxShadow,
+    'no-min-max-width': isTicketRequest,
+    'no-border': isTicketRequest
+  }">
+  <ng-container>
+    <div [ngClass]="{ 'main-title': !isTicketRequest }">
+      <div class="elements-container">
+        <div
+          class="link-img"
+          [ngStyle]="{ 'width.px': isTicketRequest ? size : 'auto', 'height.px': isTicketRequest ? size : 'auto' }">
+          @if(fileExtension === 'pdf' && isTicketRequest) {
+          <img
+            [src]="messageFile.thumbMediaLink ? messageFile.thumbMediaLink : ('assets/images/icons/' + fileType)"
+            [alt]="messageFile.thumbMediaLink"
+            [ngStyle]="{ 'width.px': isTicketRequest ? size : 'auto', 'height.px': isTicketRequest ? size : 'auto' }" />
+          }@else {
+          <img
+            src="assets/images/icons/{{ fileIcon }}"
+            [ngStyle]="{ 'width.px': isTicketRequest ? size : 'auto', 'height.px': isTicketRequest ? size : 'auto' }" />
+          }
+          <trudi-icon
+            *ngIf="messageFile.syncPTStatus === SyncPropertyDocumentStatus.SUCCESS"
+            class="link-img-icon link-img-icon--question"
+            svgClass="size-20"
+            icon="syncSuccess"></trudi-icon>
+        </div>
+        @if(!isTicketRequest) {
+        <div class="text-elements">
+          <span class="title-text"
+            >{{ messageFile?.name | uppercaseFirstLetter }}</span
+          >
+          <div class="sub-title-text">
+            {{messageFile?.size| convertFileSize}}
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<ng-template #mediaUnsupportedTpl>
+  <div
+    class="attachment-message"
+    [ngClass]="{
+      'gray-border': grayBorder, 
+      'box-shadow': showBoxShadow, 
+      'no-min-max-width': isTicketRequest,
+      'no-border': isTicketRequest
+    }">
+    <div [ngClass]="{ 'main-title': !isTicketRequest }">
+      <div class="elements-container">
+        <div
+          class="link-img"
+          [ngStyle]="{ 'width.px': isTicketRequest ? size : 'auto', 'height.px': isTicketRequest ? size : 'auto' }">
+          <img
+            src="assets/images/icons/question-mark.svg"
+            [ngStyle]="{ 'width.px': isTicketRequest ? size : 'auto', 'height.px': isTicketRequest ? size : 'auto' }" />
+          <trudi-icon
+            *ngIf="messageFile.syncPTStatus === SyncPropertyDocumentStatus.SUCCESS"
+            class="link-img-icon link-img-icon--question"
+            svgClass="size-20"
+            icon="syncSuccess"></trudi-icon>
+        </div>
+        @if(!isTicketRequest) {
+        <div class="text-elements">
+          <span class="title-text"
+            >{{ messageFile?.name | uppercaseFirstLetter }}</span
+          >
+          <div class="sub-title-text">
+            {{messageFile?.size| convertFileSize}}
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<div
+  *ngIf="isShowActionButton && !isSending && !isLoadingFile && (isShowActionButtonInside ? fileType !== 'photo' && fileType !== 'video' : true)"
+  nz-dropdown
+  nzTrigger="click"
+  class="attachment-message-action-button"
+  [nzDropdownMenu]="menu"
+  [nzPlacement]="dropdownPlacement"
+  [ngClass]="{'-active': (isAppMessage || messageFile?.id === fileIdDropdown)}"
+  [(nzVisible)]="visibleDropdownMenu"
+  (nzVisibleChange)="onDropdownVisibleChanged($event)">
+  <trudi-icon class="size-16" icon="greyThreeDot"></trudi-icon>
+</div>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <ul nz-menu class="menu-button">
+    <li
+      *ngIf="!isFileFromFolder"
+      disableOpenSendMsgModal
+      nz-menu-item
+      PreventButton
+      [attr.data-button-key]="EButtonTask.TASK_CREATE_MESSAGE"
+      [attr.data-button-type]="EButtonType.TASK"
+      (leftClick)="onForward(messageFile)"
+      [appE2E]="'message-3-dots-forward-button'">
+      <div class="d-flex align-items-center gap-8 no-pointer-event">
+        <trudi-icon
+          [style]="{'width.px': 16, 'height.px': 16, 'color': '#3D3D3D'}"
+          class="size-16 no-pointer-event"
+          icon="moveToIcon"></trudi-icon>
+        <div class="dropdown-item-text no-pointer-event">Forward</div>
+      </div>
+    </li>
+    <li *ngIf="!isFileFromFolder" nz-menu-divider></li>
+    <li
+      nz-menu-item
+      (click)="filesService.downloadResource(messageFile.mediaLink, messageFile.name)">
+      <div class="d-flex align-items-center gap-8">
+        <trudi-icon
+          [style]="{'width.px': 16, 'height.px': 16, 'color': '#3D3D3D'}"
+          class="size-16"
+          icon="iconDownload"></trudi-icon>
+        <div class="dropdown-item-text">Download</div>
+      </div>
+    </li>
+    <li *ngIf="!isFileFromFolder" nz-menu-divider></li>
+    <li
+      *ngIf="!isFileFromFolder"
+      nz-menu-item
+      trudi-tooltip
+      nzTooltipPlacement="bottom"
+      [nzTooltipTitle]="visibleDropdownMenu ? 'No property assigned' : null"
+      [nzTooltipTrigger]="currentConversation?.isTemporaryProperty ? 'hover' : null"
+      class="message-file-menu-item"
+      (click)="!(isConsole || currentConversation?.isTemporaryProperty || (isConsole && isDisConnectedMailbox) || isArchiveMailbox || isSyncing) && handleSync(messageFile); visibleDropdownMenu = false; fileIdDropdown = null"
+      [class.disabled]="isConsole || currentConversation?.isTemporaryProperty || (isConsole && isDisConnectedMailbox) || isArchiveMailbox || isSyncing">
+      <div
+        *ngIf="(!isSyncing); else syncingButtonTemplate"
+        class="d-flex align-items-center gap-8">
+        <trudi-icon
+          [style]="{'width.px': 16, 'height.px': 16, 'color': '#3D3D3D'}"
+          class="size-16"
+          icon="iconSync"></trudi-icon>
+        <div class="dropdown-item-text">
+          {{ currentCompanyName === CRMSystemName.PROPERTY_TREE ? "Sync to
+          Property Tree" : "Sync to Rent Manager" }}
+        </div>
+      </div>
+
+      <ng-template #syncingButtonTemplate>
+        <div class="d-flex align-items-center gap-8">
+          <trudi-icon
+            [style]="{'width.px': 16, 'height.px': 16, 'color': '#3D3D3D'}"
+            class="size-16"
+            icon="syncSuccessPic"></trudi-icon>
+          <div class="dropdown-item-text">Syncing</div>
+        </div>
+      </ng-template>
+    </li>
+  </ul>
+</nz-dropdown-menu>

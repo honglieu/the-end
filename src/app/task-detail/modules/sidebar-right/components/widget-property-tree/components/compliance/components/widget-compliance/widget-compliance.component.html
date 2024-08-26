@@ -1,0 +1,34 @@
+<div class="mt-4">
+  <widget-common
+    title="Compliance Item"
+    [buttonKey]="EButtonStepKey.COMPLIANCE"
+    [type]="complianceItem?.syncStatus"
+    (retry)="handleRetryCompliance(complianceItem)"
+    (remove)="confirmCancel(complianceItem)"
+    (showModal)="handleEditCompliance(complianceItem)"
+    [firstTimeSyncSuccess]="complianceItem?.firstTimeSyncSuccess"
+    [isDislayBtnCancel]="complianceItem.isSuccessful">
+    <div class="content-sync-compliance d-flex flex-dir-column gap-4">
+      <div class="d-flex">
+        <span class="title-compliance d-flex flex-dir-column">Item</span>
+        <span class="text-compliance d-flex flex-dir-column text-item"
+          >{{ complianceItem?.complianceCategory?.name }}</span
+        >
+      </div>
+      <div class="d-flex">
+        <span class="title-compliance d-flex flex-dir-column">Managed by</span>
+        <span class="text-compliance d-flex flex-dir-col-column text-manageBy"
+          >{{ complianceItem?.managedBy }}</span
+        >
+      </div>
+      <div class="d-flex" *ngIf="complianceItem?.status">
+        <span class="title-compliance d-flex flex-dir-column">Status</span>
+        <span
+          [ngClass]="((complianceItem?.status === EComplianceStatus.CLOSED ? 'close-status' : complianceItem?.status) | lowercase)"
+          class="text-compliance d-flex flex-dir-column"
+          >{{ complianceItem?.status | uppercaseFirstLetter }}</span
+        >
+      </div>
+    </div>
+  </widget-common>
+</div>

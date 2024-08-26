@@ -1,0 +1,91 @@
+<div class="toast-custom-box">
+  <div
+    *ngIf="message && options.enableHtml"
+    role="alert"
+    [class]="options.messageClass"
+    class="toast-custom__message"
+    [innerHTML]="message"></div>
+  <div class="wrap-btn">
+    <ng-container [ngSwitch]="toastType">
+      <ng-container *ngSwitchCase="EToastCustomType.SUCCESS_WITH_VIEW_BTN">
+        <div
+          *ngIf="!isErrorToastVisible"
+          class="view-btn"
+          PreventButton
+          [attr.data-button-key]="EButtonTask.VIEW_DETAIL_PAGE"
+          [attr.data-button-type]="EButtonType.TASK"
+          (leftClick)="navigateToDetailPage()">
+          View
+        </div>
+      </ng-container>
+
+      <ng-container
+        *ngSwitchCase="EToastCustomType.SUCCESS_WITH_VIEW_BTN_SUB_NAV">
+        <div class="view-btn" (click)="action($event)">View</div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="EToastCustomType.INFO_RELOAD_WORKFLOW">
+        <div class="view-btn" (click)="action($event)">Reload</div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="EToastCustomType.IGNORED_STEP_WITH_UNDO_BTN">
+        <div class="view-btn" (click)="action($event)">Undo</div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="EToastCustomType.SUCCESS_WITH_UNDO_BTN">
+        <div class="view-btn" (click)="handleUndoReportSpam()">Undo</div>
+      </ng-container>
+
+      <ng-container
+        *ngSwitchCase="EToastCustomType.SUCCESS_WITH_UNDO_BTN_REMINDER">
+        <div class="view-btn" (click)="handleUndoReminderMsg()">Undo</div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="EToastCustomType.CONFLICT_DATA">
+        <div class="view-btn" (click)="onReloadPage()">Reload</div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="EToastCustomType.FAILED_CONNECT">
+        <div class="view-btn" (click)="onReloadPage()">Try again</div>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="EToastCustomType.WARNING_MERGE_REPLIES">
+        <div class="view-btn" (click)="openMergePopup()">Merge</div>
+      </ng-container>
+      <ng-container *ngSwitchCase="EToastCustomType.SUCCESS_AUTOMATED_REPLY">
+        <div
+          class="view-btn"
+          (click)="openSettingAIReply(EToastCustomType.SUCCESS_AUTOMATED_REPLY)">
+          Setting
+        </div>
+      </ng-container>
+      <ng-container
+        *ngSwitchCase="EToastCustomType.SUCCESS_WITH_VIEW_AI_REPLY_BTN">
+        <div
+          class="view-btn"
+          (click)="openSettingAIReply(EToastCustomType.SUCCESS_WITH_VIEW_AI_REPLY_BTN)">
+          View
+        </div>
+      </ng-container>
+
+      <ng-container
+        *ngSwitchCase="
+          (toastType === EToastCustomType.FAILED_EXPORT_CONVERSATION_HISTORY_PDF_FILE ||
+          toastType === EToastCustomType.FAILED_EXPORT_TASK_ACTIVITY_PDF_FILE) ? toastType : ''">
+        <div
+          class="view-btn"
+          (click)="handleRetryExportActivityPDFFile(toastType)">
+          Retry
+        </div>
+      </ng-container>
+    </ng-container>
+
+    <div class="col-3 text-right">
+      <trudi-icon
+        *ngIf="options.closeButton"
+        class="toast-custom__closebtn"
+        icon="closeToast"
+        (click)="handleRemove($event)"></trudi-icon>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,75 @@
+@import 'function';
+
+.canlendar-toolbar {
+  z-index: 9;
+  position: fixed;
+  left: calc(50vw - 155px);
+  bottom: 5%;
+  display: flex;
+  width: fit-content;
+  background: var(--bg-base);
+  box-shadow: 0px 16px 66px rgba(0, 0, 0, 0.24),
+    0px 4px 26px var(--bg-overlay-light), 0px 8px 34px rgba(0, 0, 0, 0.13);
+  border-radius: 8px;
+
+  &:has(:nth-child(5)) {
+    left: calc(73px + (100vw - 366px) / 2);
+  }
+
+  .toolbar-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-width: 72px;
+    height: 72px;
+    padding: 16px 12px;
+    @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 600);
+
+    &:not(.count-selected) {
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--bg-neutral-tonal-stronger);
+        color: var(--fg-neutral-normal);
+      }
+
+      &:active {
+        background-color: var(--bg-neutral-tonal-strongest);
+        color: var(--gray-700);
+        & ~ .toolbar-icon {
+          ::ng-deep svg-icon {
+            svg {
+              &:active {
+                color: var(--gray-700);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &.count-selected {
+      @include fontSetup(var(--fg-base), 16px, 24px, normal, 600);
+
+      background-color: var(--bg-brand-solid-normal);
+      color: var(--fg-base);
+      padding: 10px 24px;
+
+      .count {
+        @include fontSetup(var(--fg-base), 32px, 24px, normal, 600);
+        transform: translateY(1px);
+      }
+    }
+
+    &:first-child {
+      border-radius: 8px 0px 0px 8px;
+    }
+
+    &:last-child {
+      border-radius: 0px 8px 8px 0px;
+      border-left: 2px solid var(--gray-200);
+    }
+  }
+}

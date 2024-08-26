@@ -1,0 +1,22 @@
+<div class="message-reply-wrapper">
+  <div class="reply-header">
+    <span class="reply-back-arrow">
+      <trudi-icon
+        class="icon"
+        svgClass="size-16"
+        icon="cornerUpLeft"></trudi-icon>
+    </span>
+    <span class="reply-text">{{replyTitle}}</span>
+    <span class="reply-close" (click)="handleClose()">
+      <trudi-icon class="icon" svgClass="size-16" icon="closeIcon"></trudi-icon>
+    </span>
+  </div>
+  @if(message.messageType === messagesType.defaultText) {
+  <preview-text
+    [message]="message.textContent || message.message?.[0]?.value || message.message"></preview-text>
+  } @else if(message.messageType === messagesType.file) {
+  <preview-file
+    [classes]="{'message-compose': true}"
+    [file]="message.file"></preview-file>
+  }
+</div>

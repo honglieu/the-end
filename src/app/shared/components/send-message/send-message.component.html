@@ -1,0 +1,408 @@
+<div class="invite-wrapper big-size auto-height" data-e2e="send-message-modal">
+  <div>
+    <div class="header">
+      <div
+        class="detail-invite d-flex justify-content-between align-items-center">
+        <div class="send-invite-icon">
+          <div class="background-trudi size-48">
+            <img
+              class="bg-trudi"
+              src="/assets/icon/trudi_avt.svg"
+              alt="trudi"
+              data-e2e="trudi-logo" />
+          </div>
+        </div>
+        <div class="send-invite-text">
+          <ng-container
+            *ngIf="openFrom !== SEND_MESSAGE_POPUP_OPEN_FROM.trudi; else sendMessageTitle">
+            <p>{{titlePopup}}</p>
+          </ng-container>
+          <ng-template #sendMessageTitle>
+            <div
+              *ngIf="
+              openFrom === SEND_MESSAGE_POPUP_OPEN_FROM.trudi || forwardAction === forwardButtonAction.tkLandlord ||
+              (openFrom === SEND_MESSAGE_POPUP_OPEN_FROM.file && forwardAction === forwardButtonAction.sendQuoteLandlord)
+            ">
+              <p data-e2e="send-message-title" class="title-trudi">
+                Send message
+              </p>
+            </div>
+          </ng-template>
+          <ng-container
+            *ngIf="forwardAction !== forwardButtonAction.notifyLandlord || forwardButtonAction.notifyTenant">
+            <div data-e2e="number-receiver" class="number-sent-bg">
+              {{ numberOfReceiverVariable }}
+              <ng-container *ngIf="listOfUser?.length">
+                <app-user-box
+                  [listOfUserByGroupIndex]="listOfUserByGroupIndex"
+                  [listOfUserByGroup]="listOfUserByGroup"
+                  (handleRemoveReceiver)="handleRemoveReceiver($event)"></app-user-box>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+        <div
+          data-e2e="exit-btn"
+          class="size-28 cursor-pointer"
+          (click)="openQuitConfirmModal(true)">
+          <img src="/assets/icon/close-modal.svg" alt="close" />
+        </div>
+      </div>
+    </div>
+    <hr class="divider" />
+    <!--<div class="body" #scroll [scrollTop]="isScroll ? scroll.scrollHeight : ''">-->
+    <!-- fix for scroll bottom when texting make the display jerky -->
+    <div class="wrapper" #wrapper>
+      <div class="body">
+        <div data-e2e="send-from" class="sender" *ngIf="agentProfile">
+          <div data-e2e="send-from-label" class="up-left-text">Send from</div>
+          <ng-select
+            [attr.data-e2e]="'send-from-dropdown'"
+            #selectSender
+            [searchable]="false"
+            [clearable]="false"
+            [items]="sender"
+            bindLabel="name"
+            bindValue="id"
+            [ngClass]="{'sender-bg': openFrom === SEND_MESSAGE_POPUP_OPEN_FROM.trudi}"
+            [(ngModel)]="selectedSender"
+            (change)="targetChange($event)">
+            <ng-template ng-label-tmp let-item="item">
+              <div class="select-item d-flex align-items-center">
+                <img
+                  *ngIf="item.avatar"
+                  class="avatar"
+                  loading="lazy"
+                  src="{{item.avatar}}"
+                  alt="" />
+                <div class="select-item-name">
+                  <span *ngIf="item.name">{{item.name}}</span>
+                  <span class="small-circle"></span>
+                  <span>{{item.title}}</span>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item" let-index="index">
+              <div
+                [attr.data-e2e]="'document-option-'+index"
+                class="select-item d-flex align-items-center">
+                <img
+                  class="avatar"
+                  loading="lazy"
+                  src="{{item.avatar}}"
+                  alt="" />
+                <div class="select-item-name">
+                  <span>{{item.name}}</span>
+                  <span class="small-circle"></span>
+                  <span>{{item.title}}</span>
+                </div>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <ng-container
+          *ngIf="
+            openFrom !== SEND_MESSAGE_POPUP_OPEN_FROM.trudi &&
+            !isOpenFromFileOfSendQuoteLandlordFlowVariable
+          ">
+          <div
+            class="topic-title"
+            [ngClass]="{
+              'topic-send-file-title':
+                openFrom === SEND_MESSAGE_POPUP_OPEN_FROM.file || sendEmail
+            }">
+            <!-- Remove Title All Flow -->
+            <div *ngIf="hasTitle || ticket" class="title">
+              <div class="d-flex justify-content-between">
+                <div class="up-left-text" data-e2e="title-text">Title</div>
+                <div
+                  class="down-right-text"
+                  *ngIf="openFrom !== SEND_MESSAGE_POPUP_OPEN_FROM.file && !notEditTopicTitle">
+                  <app-remaining-character
+                    [maxlength]="75"
+                    [currentTextLength]="titleText?.length">
+                  </app-remaining-character>
+                </div>
+              </div>
+              <ng-container *ngIf="notEditTopicTitle">
+                <div class="input-not-editable message-title">
+                  <span>{{conversationTitle}}</span>
+                </div>
+              </ng-container>
+              <ng-container *ngIf="!notEditTopicTitle">
+                <input
+                  type="text"
+                  class="input title-text"
+                  [(ngModel)]="titleText"
+                  (ngModelChange)="titleChanged($event)"
+                  maxlength="75"
+                  data-e2e="title-textbox" />
+              </ng-container>
+            </div>
+          </div>
+        </ng-container>
+        <div
+          #textAreaWrapper
+          class="content"
+          data-e2e="message-textarea"
+          [ngClass]="{'backgroundform': openFrom === SEND_MESSAGE_POPUP_OPEN_FROM.trudi}"
+          [style.marginTop.px]="16">
+          <!-- <textarea
+            #textarea
+            type="text"
+            rows="5" autosize
+            class="input content-text break-word"
+            [ngClass]="{'content-trudi': openFrom === SEND_MESSAGE_POPUP_OPEN_FROM.trudi}"
+            [(ngModel)]="contentText"
+            [innerHTML]="getInnerHTML(contentText)"
+            (ngModelChange)="contentChanged($event)"
+            placeholder="Type Message here.."
+            [maxlength]="MAX_TEXT_MESS_LENGTH"
+            data-e2e="message-textarea"
+					></textarea> -->
+          <tiny-editor
+            [text]="contentText"
+            [isEmailSignature]="emailSignature?.value"
+            [from]="'SendMessage'"
+            [disabledAttachBtn]="!showAddFile || noAddFile"
+            [listReceivers]="listOfUser"
+            (value)="handleEditorValueChange($event)"
+            (addFileComputer)="editorAddFileComputer()"
+            #tinyEditor
+            #editorContainer
+            (dropFile)="dropFile($event)"></tiny-editor>
+          <!-- <email-signature-for-message
+            *ngIf="!isAppUser"
+            [formControl]="emailSignature"
+            [listReceivers]="listOfUser"></email-signature-for-message> -->
+        </div>
+        <div
+          *ngIf="openFrom === 'trudi' && !noTicket"
+          class="task-ticket"
+          #taskTicket
+          [style.marginTop.px]="taskTicket.offsetHeight > 16 ? 16 : 0">
+          <task-ticket
+            [attr.data-e2e]="'forward-ticket'"
+            [openFrom]="'trudi-area'"
+            [item]="isItemTaskTicket"
+            [changeText]="false"
+            (textTicket)="getTextTicket($event)">
+          </task-ticket>
+        </div>
+
+        <!-- <ng-container *ngIf="
+					infoAddition?.length &&
+					(forwardAction === forwardButtonAction.supToTenant || forwardAction === forwardButtonAction.createWorkOrder )
+				"> -->
+        <ng-container
+          *ngIf="
+					infoAddition?.length &&
+          (forwardAction === forwardButtonAction.supToTenant || forwardAction === forwardButtonAction.createWorkOrder || forwardAction === forwardButtonAction.askSupplierQuote || forwardAction === forwardButtonAction.tkLandlord)
+				">
+          <div class="list-contact-card d-flex flex-dir-column gap-12">
+            <ng-container *ngFor="let info of infoAddition">
+              <info-ticket
+                [attr.data-e2e]="'contact-card'"
+                [info]="info"></info-ticket>
+            </ng-container>
+          </div>
+        </ng-container>
+        <div class="attachment">
+          <div class="ticket" *ngIf="ticket && openFrom !== 'trudi'">
+            <div class="col-edge"></div>
+            <div class="left-block">
+              <div
+                class="logo"
+                [ngStyle]="{ 'background-color': ticketDetail?.color }">
+                <img
+                  class="image-type position-center-w"
+                  src="assets/icon/{{ ticketDetail?.svg }}" />
+              </div>
+              <div class="2-stripe">
+                <img src="/assets/icon/stripes.svg" alt="" />
+              </div>
+            </div>
+            <div class="right-block">
+              <div class="topic">{{ ticketDetail?.name }}</div>
+              <div class="date-created">
+                {{ticket.options?.createdAt | date: DATE_FORMAT}}
+              </div>
+              <div
+                class="detail"
+                [innerHTML]="ticket.options?.text | safe:'html'"></div>
+              <div class="creator">
+                <div class="name">
+                  <span
+                    >{{ticket.options?.firstName}}
+                    {{ticket.options?.lastName}}</span
+                  >
+                </div>
+                <span class="small-circle"></span>
+                <div class="role">
+                  {{ticket.options?.isPrimary ? 'Primary ' : ''
+                  }}{{ticket.options?.propertyType | titlecase}}
+                </div>
+              </div>
+              <div
+                class="ticket-file gap-8"
+                *ngIf="this.ticket.ticketFile && this.ticket.ticketFile.length">
+                <app-message-file
+                  *ngFor="let file of ticket.ticketFile"
+                  [messageFile]="file.propertyDocument"
+                  [size]="45"></app-message-file>
+              </div>
+            </div>
+          </div>
+          <div
+            data-e2e="pdf-section"
+            class="files"
+            [class.files-spacing]="listOfFiles.length > 0"
+            *ngIf="listOfFiles.length > 0">
+            <div
+              class="message-file"
+              style="margin: 0"
+              [ngClass]="{'message-send-file': openFrom === SEND_MESSAGE_POPUP_OPEN_FROM.file,
+            'invalid-file': (item[0]?.size / (1024 * 1024)) > fileLimit}"
+              *ngFor="let item of listOfFiles; let i = index">
+              <div class="file-logo">
+                <img
+                  class="position-center-w"
+                  src="assets/images/icons/{{item.icon}}"
+                  data-e2e="pdf-label" />
+              </div>
+              <ng-container
+                *ngIf="openFrom === SEND_MESSAGE_POPUP_OPEN_FROM.file; else notOpenFromFiles">
+                <div class="file send-file">
+                  <div class="file-info d-flex flex-dir-column">
+                    <div data-e2e="pdf-title" class="file-name">
+                      {{item.name || item[0]?.name}}
+                    </div>
+                    <!-- <div class="file-date-created">{{item.createdAt | date : DATE_FORMAT}}</div> -->
+                    <div class="file-size">
+                      {{(item?.size || item[0]?.size) | convertFileSize}}
+                    </div>
+                  </div>
+                </div>
+                <div
+                  data-e2e="pdf-exit-btn"
+                  *ngIf="!isFileTab"
+                  class="remove-btn-file cursor-pointer"
+                  (click)="removeFile(i)">
+                  <img src="/assets/icon/small-close-black.svg" alt="" />
+                </div>
+              </ng-container>
+              <ng-template #notOpenFromFiles>
+                <div data-e2e="pdf-title" class="file">
+                  <div data-e2e="pdf-title" class="file-name">
+                    {{item.name || item[0]?.name}}
+                  </div>
+                  <div class="file-size">
+                    {{(item?.size || item[0]?.size) | convertFileSize}}
+                  </div>
+                </div>
+                <!-- File Forward from Send quote to Landlord (don't have title) is not able to delete -->
+                <ng-container *ngIf="item.name || item[0]?.name">
+                  <div
+                    data-e2e="close-btn"
+                    class="cursor-pointer"
+                    (click)="removeFile(i)">
+                    <img src="/assets/icon/small-close-black.svg" alt="" />
+                  </div>
+                </ng-container>
+              </ng-template>
+            </div>
+          </div>
+          <div
+            *ngIf="listOfFiles.length && isFileLarger"
+            class="y-center gap-6 mt-4">
+            <img src="/assets/icon/icon_warning.svg" alt="" />
+            <span class="warning-content">
+              Your file is larger than 25MB. Please upload a smaller file.
+            </span>
+          </div>
+        </div>
+      </div>
+      <ng-container *ngIf="showAddFile && !noAddFile">
+        <div class="addition hide">
+          <div class="btn-wrapper" style="padding: 0">
+            <button
+              data-e2e="button-upload-file"
+              type="button"
+              class="add-file-btn-upload">
+              <input
+                id="send-mess-upload-btn"
+                accept="{{ACCEPT_ONLY_SUPPORTED_FILE}}"
+                title=""
+                [multiple]="true"
+                class="input-file"
+                onclick="this.value=''"
+                type="file"
+                (change)="fileBrowseHandler($event)" />
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="btn-wrapper d-flex justify-content-between">
+    <div class="d-flex flex-dir-column justify-content-center">
+      <!-- <div class="d-flex gap-4 align-items-center">
+        <td-checkbox [isChecked]="SMSreminder" [reverse]="true" label="SMS reminder" [size]="16"
+          (tdCheckboxChanged)="onSMSreminder($event)" [isSMS]="isSMS">
+        </td-checkbox>
+        <img nz-tooltip [nzTooltipTitle]="RemiderTooltip" [src]="ImgPath.grayWarning" alt="warning" class="size-16">
+      </div> -->
+      <td-checkbox
+        [attr.data-e2e]="'mark-checkbox'"
+        [isChecked]="allowResolvedTextbox"
+        [reverse]="true"
+        label="Mark conversation as resolved"
+        [size]="24"
+        (tdCheckboxChanged)="onCheckboxChange($event)">
+      </td-checkbox>
+    </div>
+
+    <div class="group-btn d-flex gap-12">
+      <ng-container *ngIf="!noBackBtn">
+        <button
+          *ngIf="
+            ((popupService.selectPeople$ | async) && openFrom !== SEND_MESSAGE_POPUP_OPEN_FROM.trudi) &&
+            (forwardAction !== forwardButtonAction.sendQuoteLandlord) || isForwardTicketFlow
+          "
+          type="button"
+          class="trudi-btn trudi-btn-tertiary trudi-btn-large"
+          (click)="includePeople ? openSelectPeopleModal(true) : openQuitConfirmModal(true)">
+          {{openFrom === SEND_MESSAGE_POPUP_OPEN_FROM.user ? 'Cancel' : 'Back'}}
+        </button>
+        <button
+          *ngIf="
+            (openFrom === SEND_MESSAGE_POPUP_OPEN_FROM.trudi && forwardAction !== forwardButtonAction.tell_tenant) ||
+            ((openFrom === SEND_MESSAGE_POPUP_OPEN_FROM.file || openFrom === SEND_MESSAGE_POPUP_OPEN_FROM.conv) &&
+            forwardAction === forwardButtonAction.sendQuoteLandlord && isBackSendQuote)
+          "
+          type="button"
+          class="trudi-btn trudi-btn-tertiary trudi-btn-large"
+          (click)="isTypeTrudi === TYPE_TRUDI.q_a ? openQuitConfirmModal(true) : onGoBackTrudiTicket()"
+          [attr.data-e2e]="openFrom === SEND_MESSAGE_POPUP_OPEN_FROM.trudi && isTypeTrudi === TYPE_TRUDI.q_a ? 'Cancel' : 'back-btn'">
+          {{(openFrom === SEND_MESSAGE_POPUP_OPEN_FROM.trudi && isTypeTrudi ===
+          TYPE_TRUDI.q_a) ? 'Cancel' : 'Back'}}
+        </button>
+        <button
+          *ngIf="(popupService.selectPeople$ | async) === false && openedFromUserTab"
+          type="button"
+          class="trudi-btn trudi-btn-tertiary trudi-btn-large"
+          (click)="openQuitConfirmModal(true)">
+          {{ this.getLeftButtonText() }}
+        </button>
+      </ng-container>
+      <button
+        data-e2e="send-btn"
+        type="button"
+        class="trudi-btn trudi-btn-primary trudi-btn-large"
+        [disabled]="isDisabled"
+        (click)="openInviteSuccessModal(false)">
+        Send
+      </button>
+    </div>
+  </div>
+</div>

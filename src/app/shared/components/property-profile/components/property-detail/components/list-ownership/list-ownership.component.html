@@ -1,0 +1,63 @@
+<div class="ownership-wrapper">
+  <ng-container *ngIf="!isCRM; else ownershipCRM">
+    <div
+      class="title"
+      [ngClass]="{'archived': (ownership?.status === ECrmStatus.ARCHIVED)}">
+      <span>OWNERSHIP: {{ ownership?.name }}</span>
+      <trudi-badge
+        size="small"
+        [extraClass]="'property-status-badge'"
+        [text]="ownership?.status | uppercaseFirstLetter"
+        [variant]="ownership?.status | propertyStatusVariant"></trudi-badge>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!isLoading; else skeleton">
+    <div class="list-wrapper">
+      <ng-container *ngFor="let owner of owners; let i = index">
+        <div class="item-tab-wrapper">
+          <div
+            class="item-tab"
+            tabindex="0"
+            (click)="handleClickOwner(owner.id)"
+            (keydown.enter)="handleClickOwner(owner.id)">
+            <div class="d-flex gap-8 label-wrapper align-items-center">
+              <span class="tab-label">
+                {{ {firstName : owner.user.firstName,lastName:
+                owner.user.lastName} | formatFullname:true }}
+              </span>
+              <trudi-badge
+                size="small"
+                *ngIf="owner.isPrimary && !isCRM"
+                [text]="'Primary ' + (owner.type | landlordToOwner | lowercase)"
+                [variant]="'border'"></trudi-badge>
+              <trudi-badge
+                size="small"
+                *ngIf="isCRM"
+                [text]="owner.status | uppercaseFirstLetter"
+                [variant]="(owner.status === ECrmStatus.ARCHIVED || owner.status === 'past') ? 'archive' : 'border'"></trudi-badge>
+            </div>
+            <trudi-icon
+              icon="chevronRight"
+              class="action-icon pd-4"></trudi-icon>
+          </div>
+          <div class="border-bottom" *ngIf="i !== owners.length - 1"></div>
+        </div>
+      </ng-container>
+      <span class="no-content" *ngIf="owners?.length === 0">No owners</span>
+    </div>
+  </ng-container>
+</div>
+
+<ng-template #ownershipCRM>
+  <div class="title">
+    <span class="flex-1">OWNERS</span>
+    <trudi-checkbox
+      [label]="' Include future, past owners'"
+      [ngModel]="includePastFuture"
+      (ngModelChange)="getOwership($event)"></trudi-checkbox>
+  </div>
+</ng-template>
+<ng-template #skeleton>
+  <ownership-section-skeleton
+    [displayHeader]="false"></ownership-section-skeleton>
+</ng-template>

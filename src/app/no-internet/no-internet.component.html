@@ -1,0 +1,25 @@
+<div class="y-center justify-content-center wrapNoInternet">
+  <div class="noInternet y-center flex-dir-column">
+    <div class="bg-test">
+      <svg width="179" height="179">
+        <use xlink:href="#nointernet"></use>
+      </svg>
+    </div>
+    <des-internet-error></des-internet-error>
+    <div class="wrapNoInternetContent">
+      <p class="noInternetContent">
+        Unable to connect. Please check your network settings.
+      </p>
+    </div>
+    <div>
+      <button
+        class="d-flex gap-8 refreshBtn align-items-center"
+        (click)="refreshApp()">
+        <svg width="24" height="24" class="spin">
+          <use xlink:href="#refresh"></use>
+        </svg>
+        <span class="refreshContent">Refresh</span>
+      </button>
+    </div>
+  </div>
+</div>

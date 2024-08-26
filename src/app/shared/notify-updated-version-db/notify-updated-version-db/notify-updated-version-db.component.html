@@ -1,0 +1,40 @@
+<div
+  #popupNotifyNewVersionElement
+  *ngIf="isShowNotifyModal"
+  [ngStyle]="{'bottom': '66px', 'right': '64px'}"
+  class="notify-box border-rad-16">
+  <div class="notify-box-detail">
+    <div>
+      <img
+        src="assets/icon/upload-version.svg"
+        alt=""
+        class="spin-arrow size-44" />
+      <p class="notify-box-detail-text mb-8">
+        Pssst! You’re using an outdated version of the Portal.
+      </p>
+      <p class="notify-box-detail-descr mb-8">
+        Please take a second to reload your app to see the latest updates.
+      </p>
+      <hr class="divider" />
+    </div>
+    <div class="btn-wrapper justify-content-between">
+      <button
+        trudi-btn
+        variant="outlined"
+        btnType="neutral"
+        (click)="handleNotifyLaterBtn()"
+        class="flex-1">
+        <span class="text-later">Notify later</span>
+      </button>
+
+      <button
+        trudi-btn
+        (click)="handleReloadBtn()"
+        [class]="'button-reload'"
+        [ngClass]="{ 'loading': installingNewVersion }"
+        class="flex-1">
+        <span class="text-reload">Reload</span>
+      </button>
+    </div>
+  </div>
+</div>

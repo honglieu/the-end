@@ -1,0 +1,241 @@
+<div @fadeInOut class="msg-content-reminder" [style.width.px]="widthPopover">
+  <ng-container *ngIf="message.hasDraftMessage">
+    <div class="draft-action">
+      <div class="draft-action-title">
+        <trudi-icon icon="toolTip2" [svgClass]="'size-16'"></trudi-icon>
+        <span> You have a draft reply for this message </span>
+      </div>
+      <button class="btn-edit-draft" (click)="handleEditDraft()">
+        <div *ngIf="draftUpdating" class="loader"></div>
+        <span> Edit draft </span>
+      </button>
+    </div>
+  </ng-container>
+  <div class="w-100 d-flex flex-dir-column gap-8 content-reminder-body">
+    <div>
+      <div class="w-100">
+        <div class="d-flex justify-content-between">
+          <div class="d-flex align-items-center gap-4">
+            <span class="msg-sender-items-title">From: </span>
+            <div>
+              <div
+                *ngIf="!!message.emailMetaData?.from?.length"
+                class="msg-sender-items-info">
+                <message-via-email-metadata
+                  [emailMetadataFiled]="message?.emailMetaData?.from"
+                  [showEmailTag]="false"
+                  [showRole]="false"
+                  [conversationProperty]="{ id: message?.conversationPropertyId, isTemporary: message?.isConversationPropertyTemporary }"
+                  [hasStyleName]="true">
+                </message-via-email-metadata>
+              </div>
+            </div>
+          </div>
+          <span class="msg-sender-items-time"
+            >{{message.createdAt | formatDateTime | push | lowercase}}</span
+          >
+        </div>
+        <div class="box-receiver-reminder">
+          <div
+            *ngIf="message?.isSendFromVoiceMail|| message.emailMetaData?.to?.length"
+            class="receiver d-flex"
+            [style.max-width.px]="maxWidthTo"
+            [ngClass]="(message.emailMetaData?.cc?.length && message.emailMetaData?.bcc?.length) ? 'receiver-to-reminder' : 'max-width'">
+            To:
+            <ng-container *ngIf="!!message.emailMetaData?.to?.length">
+              <message-via-email-metadata
+                class="max-width"
+                [emailMetadataFiled]="message?.emailMetaData?.to?.[1] ? [message.emailMetaData?.to?.[0], message.emailMetaData?.to?.[1]] : [message.emailMetaData?.to?.[0]]"
+                [showEmailTag]="false"
+                [showRole]="false"
+                [conversationProperty]="{ id: message?.conversationPropertyId, isTemporary: message?.isConversationPropertyTemporary }"
+                [hasStyleName]="true">
+              </message-via-email-metadata>
+              <span
+                *ngIf="message.emailMetaData?.to?.length > 2"
+                class="count-sender-email">
+                +{{message.emailMetaData?.to?.length > 2 ?
+                message.emailMetaData?.to?.length - 2 : ''}}</span
+              >
+            </ng-container>
+          </div>
+          <div
+            *ngIf="!!message.emailMetaData?.cc?.length"
+            class="receiver d-flex"
+            [style.max-width.px]="maxWidthCc">
+            Cc:
+            <ng-container *ngIf="!!message.emailMetaData?.cc?.length">
+              <message-via-email-metadata
+                class="max-width"
+                [emailMetadataFiled]="[message.emailMetaData?.cc?.[0]]"
+                [showEmailTag]="false"
+                [showRole]="false"
+                [conversationProperty]="{ id: message?.conversationPropertyId, isTemporary: message?.isConversationPropertyTemporary }"
+                [hasStyleName]="true">
+              </message-via-email-metadata>
+            </ng-container>
+            <span
+              *ngIf="message.emailMetaData?.cc?.length > 1"
+              class="count-sender-email">
+              +{{message.emailMetaData?.cc?.length > 1 ?
+              message.emailMetaData?.cc?.length - 1 : ''}}
+            </span>
+          </div>
+          <div
+            *ngIf="!!message.emailMetaData?.bcc?.length"
+            class="receiver d-flex"
+            [style.max-width.px]="maxWidthCc">
+            Bcc:
+            <ng-container *ngIf="!!message.emailMetaData?.bcc?.length">
+              <message-via-email-metadata
+                class="max-width"
+                [emailMetadataFiled]="[message.emailMetaData?.bcc?.[0]]"
+                [showEmailTag]="false"
+                [showRole]="false"
+                [conversationProperty]="{ id: message?.conversationPropertyId, isTemporary: message?.isConversationPropertyTemporary }"
+                [hasStyleName]="true">
+              </message-via-email-metadata>
+              <span
+                class="count-sender-email"
+                *ngIf="message.emailMetaData?.bcc?.length > 1"
+                >+{{message.emailMetaData?.bcc?.length > 1 ?
+                message.emailMetaData?.bcc?.length - 1 : ''}}</span
+              >
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <div class="title-message-reminder">{{message.title}}</div>
+      <div class="message-wrapper">
+        <div class="message-body" data-e2e="message">
+          <div
+            class="w-100 overflow-visible position-relative text"
+            #textWrapper>
+            <ng-container *ngIf="isShowIframeContent; else contentMessage">
+              <iframe-message
+                [message]="message"
+                [htmlContent]="htmlContent"
+                (contentLoadSuccess)="onLoadIframe()"></iframe-message>
+            </ng-container>
+            <ng-template #contentMessage>
+              <div
+                class="text-value"
+                #textContain
+                imageErrorHandler
+                [innerHtml]="message.textContent | safe: 'html'"
+                data-e2e="message-email-detail"></div>
+            </ng-template>
+          </div>
+          <div
+            *ngIf="message.options?.contacts?.length > 0"
+            class="list-contact d-flex flex-dir-column gap-12">
+            <ng-container *ngFor="let contact of message.options?.contacts">
+              <info-ticket
+                [attr.data-e2e]="'contact-card'"
+                [contact]="contact"
+                [size]="'small'"></info-ticket>
+            </ng-container>
+          </div>
+          <ng-container *ngIf="message.propertyDocuments.length">
+            <div
+              class="files-list d-flex"
+              *ngIf="message.propertyDocuments.length">
+              <ng-container *ngFor="let msgFile of message.propertyDocuments">
+                <div class="files-list" *ngIf="msgFile.files.mediaList?.length">
+                  <div *ngFor="let item of msgFile.files.mediaList">
+                    <app-message-file
+                      [showBoxShadow]="false"
+                      [grayBorder]="true"
+                      [widthInPercent]="30"
+                      [messageFile]="item"
+                      [message]="msgFile"
+                      [isFileDeleted]="msgFile.isShowFile"
+                      [isShowActionButton]="false"
+                      [size]="92"
+                      [isShowImage]="false"
+                      [isFileFromFolder]="true"></app-message-file>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+            <div
+              class="files-list d-flex"
+              *ngIf="message.propertyDocuments.length">
+              <ng-container *ngFor="let msgFile of message.propertyDocuments">
+                <div class="files-list" *ngIf="msgFile.files.audioList?.length">
+                  <div *ngFor="let item of msgFile.files.audioList">
+                    <app-message-file
+                      [showBoxShadow]="false"
+                      [grayBorder]="true"
+                      [widthInPercent]="30"
+                      [messageFile]="item"
+                      [message]="msgFile"
+                      [isFileDeleted]="msgFile.isShowFile"
+                      [isShowActionButton]="false"
+                      [size]="92"
+                      [isShowImage]="false"
+                      [isFileFromFolder]="true"></app-message-file>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+            <div
+              class="files-list d-flex flex-dir-column"
+              *ngIf="message.propertyDocuments.length">
+              <ng-container *ngFor="let msgFile of message.propertyDocuments">
+                <div
+                  *ngIf="msgFile.files.fileList?.length"
+                  class="d-flex files-list-action-wrapper">
+                  <div
+                    class="d-flex files-list-action-wrapper"
+                    *ngFor="let item of msgFile.files.fileList">
+                    <app-message-file
+                      [attr.data-e2e]="'invoice-card'"
+                      class="file-block"
+                      [showBoxShadow]="false"
+                      [grayBorder]="true"
+                      [widthInPercent]="30"
+                      [messageFile]="msgFile"
+                      [isFileDeleted]="msgFile.isShowFile"
+                      [isShowActionButton]="false"
+                      [size]="92"
+                      [isShowImage]="false"
+                      [isFileFromFolder]="true">
+                    </app-message-file>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+            <div
+              class="files-list d-flex flex-dir-column"
+              *ngIf="message.propertyDocuments.length">
+              <ng-container *ngFor="let msgFile of message.propertyDocuments">
+                <div
+                  *ngIf="msgFile.files.unSupportedList?.length"
+                  class="d-flex files-list-action-wrapper">
+                  <div
+                    class="d-flex files-list-action-wrapper"
+                    *ngFor="let item of msgFile.files.unSupportedList">
+                    <app-message-file
+                      [attr.data-e2e]="'invoice-card'"
+                      class="file-block"
+                      [showBoxShadow]="false"
+                      [grayBorder]="true"
+                      [widthInPercent]="30"
+                      [messageFile]="msgFile"
+                      [isFileDeleted]="msgFile.isShowFile"
+                      [isShowActionButton]="false"
+                      [size]="92"
+                      [isShowImage]="false"
+                      [isFileFromFolder]="true">
+                    </app-message-file>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

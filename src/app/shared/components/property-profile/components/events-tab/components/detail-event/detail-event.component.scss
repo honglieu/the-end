@@ -1,0 +1,269 @@
+@import 'function';
+
+.modal-window {
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-base, #fff);
+  height: 100%;
+
+  .modal-popup-header {
+    padding: 20px 20px 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    .event {
+      &-information {
+        width: 100%;
+        @include fontSetup(var(--gray-700), 20px, 32px, normal, 600);
+      }
+
+      &-status {
+        @include fontSetup('', 14px, 20px, normal, 500);
+      }
+
+      &-label {
+        min-width: 80px;
+        @include fontSetup(
+          var(--fg-neutral-normal, #61646c),
+          14px,
+          20px,
+          normal,
+          500
+        );
+      }
+
+      &-date {
+        @include fontSetup(
+          var(--fg-neutral-normal, #646464),
+          14px,
+          20px,
+          normal,
+          500
+        );
+      }
+
+      &-address {
+        max-width: 100%;
+
+        @include fontSetup(
+          var(--fg-neutral-normal, #646464),
+          14px,
+          20px,
+          normal,
+          500
+        );
+
+        &-underline {
+          &:hover {
+            text-decoration: underline !important;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+
+    .button-wrapper {
+      width: 100%;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border-neutral-dark, #d8dcdf);
+      display: flex;
+    }
+
+    .event-back-button {
+      display: flex;
+      padding: 6px;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border-neutral-dark, #ececed);
+      background: var(--bg-base, #fff);
+
+      &:hover {
+        border: 1px solid var(--gray-200) !important;
+        background: var(--gray-100, #e7eaed) !important;
+      }
+
+      &:active {
+        background: var(--gray-200) !important;
+        border: 1px solid var(--gray-200);
+      }
+    }
+
+    .event-information {
+      word-wrap: break-word;
+      overflow: hidden;
+      font-size: 18px;
+      color: var(--fg-neutral-normal, #61646c);
+      font-weight: 600;
+    }
+  }
+
+  .modal-popup-content {
+    padding: 20px 20px 0 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+
+    .no-linked-tasks {
+      @include fontSetup(var(--gray-400), 14px, 20px, italic, 400);
+    }
+
+    .taskbar {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding-bottom: 8px;
+      cursor: pointer;
+
+      p {
+        margin: 0;
+      }
+
+      @include fontSetup(var(--gray-400), 14px, 20px, normal, 600);
+
+      &-active {
+        color: var(--brand-500);
+      }
+
+      &-inkbar {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 3px;
+        background: var(--brand-500);
+        transition: width 0.3s, left 0.3s, right 0.3s;
+        pointer-events: none;
+      }
+
+      &-tab {
+        padding: 0;
+        border: none;
+        background: transparent;
+        transition: color 0.3s;
+      }
+
+      &-tab:not(.taskbar-active):hover {
+        color: var(--gray-500);
+      }
+    }
+
+    .task-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      .task-group {
+        @include fontSetup(
+          var(--fg-neutral-normal, #61646c),
+          12px,
+          16px,
+          normal,
+          600
+        );
+      }
+
+      .task-information {
+        display: flex;
+        flex-direction: column;
+
+        .task-title {
+          cursor: pointer;
+          border: none;
+          padding: 0;
+          background-color: transparent;
+          text-align: left;
+          width: 100%;
+
+          @include fontSetup(
+            var(--bg-brand-solid-normal),
+            14px,
+            20px,
+            normal,
+            500
+          );
+
+          &:hover {
+            color: var(--bg-brand-solid-stronger);
+          }
+        }
+
+        .task-duration {
+          @include fontSetup(
+            var(--fg-neutral-weaker, var(--gray-500)),
+            12px,
+            16px,
+            normal,
+            500
+          );
+        }
+      }
+    }
+  }
+}
+
+.link-button {
+  cursor: pointer;
+  display: flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  color: var(--brand-500);
+  border: 1px solid var(--brand-500);
+  border-radius: 50%;
+  padding: 6px;
+
+  &:hover {
+    background-color: var(--bg-brand-tonal-stronger);
+  }
+
+  &:active {
+    background-color: var(--bg-brand-tonal-strongest);
+  }
+}
+
+.skeleton-container {
+  .wrapper-skeleton-event {
+    gap: 4px;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.wrapper-skeleton-event-header {
+  display: flex;
+  flex-wrap: nowrap;
+  margin-top: 12px;
+  & .skeleton-event:last-child {
+    width: 106px !important;
+  }
+
+  & .skeleton-event:first-child {
+    width: 74px !important;
+  }
+}
+
+.skeleton-container-header {
+  .skeleton-event-button {
+    margin-top: 16px;
+    width: 100%;
+  }
+  ::ng-deep .ant-skeleton-element .ant-skeleton-button {
+    width: 100%;
+  }
+}
+
+.skeleton-event {
+  width: 26% !important;
+  ::ng-deep .ant-skeleton-title {
+    margin-top: 0 !important;
+  }
+  ::ng-deep .ant-skeleton-content .ant-skeleton-title {
+    border-radius: 10px;
+  }
+}

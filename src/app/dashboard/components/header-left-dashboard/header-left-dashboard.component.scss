@@ -1,0 +1,62 @@
+@import 'function';
+
+:host {
+  flex: 1;
+}
+
+.left-header {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  .container-header-item {
+    &:focus-visible {
+      box-shadow: none;
+      border: 2px solid var(--brand-500);
+      border-radius: 4px;
+    }
+  }
+}
+
+header-item.header-item {
+  &.avatar {
+    .header-link {
+      &.company-select {
+        .wrapper-logo {
+          width: 32px;
+          height: 32px;
+          margin: auto;
+        }
+      }
+      .wrapper-logo {
+        width: 24px;
+        height: 24px;
+        margin: auto;
+      }
+    }
+
+    &.circle {
+      .header-link {
+        .wrapper-logo {
+          .logo {
+            border-radius: 50%;
+          }
+        }
+      }
+    }
+  }
+}
+
+.skeleton-agency {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  padding: 16px 0;
+  & span {
+    border-radius: 4px;
+  }
+}
+
+::ng-deep .cdk-overlay-pane:has(.company-setting-group) {
+  top: 52px !important;
+}

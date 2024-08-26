@@ -1,0 +1,17 @@
+<div class="link" (click)="openInNewWindow()">
+  <div *ngIf="loading" class="spinner-block">
+    <app-loader title="Loading image"></app-loader>
+  </div>
+  <img *ngIf="!loading && image" class="link__img" [src]="image" />
+  <div *ngIf="!loading && !image" class="link__img no-img">
+    <div class="no-image-container">
+      <img src="assets/icon/combined-shape.svg" alt="no image" />
+    </div>
+  </div>
+  <div class="link__info">
+    <div *ngIf="description" class="link__info__description">
+      {{ description }}
+    </div>
+    <div class="link__info__url">{{url}}</div>
+  </div>
+</div>

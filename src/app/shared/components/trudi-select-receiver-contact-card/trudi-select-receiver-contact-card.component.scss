@@ -1,0 +1,416 @@
+@import 'function';
+
+:host ::ng-deep ng-select {
+  &.ng-select {
+    &.ng-select-multiple {
+      .ng-select-container {
+        .ng-value-container {
+          padding: 0;
+          gap: 8px;
+          max-height: 116px;
+
+          .ng-value {
+            padding: 0;
+            margin: 0;
+            background: var(--white) !important;
+            border-radius: 8px;
+            border: 1px solid var(--gray-200);
+
+            .select-item {
+              padding: 1px 8px;
+            }
+          }
+
+          .ng-placeholder {
+            padding: 0;
+          }
+
+          .ng-input {
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            padding-left: 0 !important;
+
+            & > input {
+              @include fontSetup(
+                var(--gray-700) !important,
+                14px,
+                20px,
+                normal,
+                500
+              );
+            }
+          }
+        }
+      }
+      &.ng-select-opened {
+        .ng-value-container .ng-placeholder {
+          @include fontSetup(
+            var(--gray-300) !important,
+            14px,
+            20px,
+            normal,
+            500
+          );
+          padding-top: 3px;
+        }
+      }
+      &.ng-valid,
+      &.ng-dirty,
+      &.ng-touched {
+        &.input-error-select {
+          .ng-select-container {
+            border-radius: 8px !important;
+            @include box-shadow-input-select(var(--shadow-danger));
+            margin-bottom: 0;
+          }
+        }
+      }
+
+      & .clear-btn {
+        cursor: pointer;
+        border: none;
+        padding: 0;
+        &[focusable]:focus-visible {
+          border-radius: 8px;
+          border: 1px solid var(--brand-500);
+          box-shadow: 0px 0px 0px 1px var(--bg-brand-tonal-strongest) !important;
+        }
+        @include fontSetup(
+          var(--fg-neutral-stronger, #3d3d3d),
+          12px,
+          16px,
+          normal,
+          500
+        );
+        background-color: var(--white);
+      }
+
+      & .count-text {
+        @include fontSetup(var(--fg-neutral-weaker), 12px, 16px, normal, 400);
+      }
+    }
+    .ng-select-container {
+      margin-bottom: 0;
+      padding: 6px 12px;
+      border-radius: 8px;
+      max-height: 128px;
+      overflow-y: auto;
+      background: var(--gray-200);
+      align-items: flex-start;
+      &.ng-has-value {
+        align-items: center;
+      }
+      .ng-arrow-wrapper {
+        display: none;
+      }
+    }
+    &.ng-select-opened.ng-select-bottom > .ng-select-container {
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    &.ng-select-single .ng-select-container {
+      height: 44px;
+    }
+  }
+  &.hide-dropdown {
+    .ng-dropdown-panel {
+      display: none;
+    }
+  }
+  &.hide-last-child {
+    .ng-dropdown-panel {
+      &.ng-select-bottom {
+        .ng-dropdown-panel-items {
+          .ng-option:last-child {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+  &:has(.isAddItem).hide-last-child {
+    .ng-dropdown-panel {
+      &.ng-select-bottom {
+        .ng-dropdown-panel-items {
+          .ng-option:last-child {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  .ng-option,
+  .ng-select-container {
+    .select-item {
+      &__from {
+        @include fontSetup(var(--gray-400), 14px, 20px, normal, 600);
+      }
+      &-remove {
+        padding: 5px 0 5px 5px;
+      }
+      &__info {
+        align-items: center;
+        @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+        ::ng-deep trudi-badge .badge-text {
+          white-space: normal;
+        }
+        div {
+          margin-bottom: 8px;
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+        .avatar {
+          height: 20px;
+          width: 20px;
+          border-radius: 50%;
+          margin-right: 4px;
+        }
+
+        .avatar-trudi {
+          background: var(--white);
+        }
+
+        .small-circle {
+          width: 3px;
+          height: 3px;
+          display: inline-block;
+          border-radius: 100%;
+          margin: 0 5px;
+          margin-bottom: 2px;
+          background-color: var(--gray-950);
+        }
+
+        .custom-select-text {
+          max-width: 234px;
+        }
+
+        .select-item {
+          &__title {
+            @include fontSetup(
+              var(--fg-neutral-stronger, #333741),
+              12px,
+              20px,
+              normal,
+              500
+            );
+            &.item-checked {
+              color: var(--gray-700);
+            }
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 20%;
+          }
+          &__email-wrapper {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+          &__email {
+            @include fontSetup(
+              var(--fg-neutral-normal),
+              12px,
+              16px,
+              normal,
+              400
+            );
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+          }
+          &__street-wrapper {
+            trudi-icon svg {
+              color: var(--fg-neutral-normal);
+              path {
+                fill: var(--fg-neutral-normal) !important;
+              }
+            }
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 45%;
+            flex: 1;
+            &___title {
+              @include fontSetup(
+                var(--fg-neutral-normal) !important,
+                12px,
+                16px,
+                normal,
+                400
+              );
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 100%;
+            }
+          }
+          &__type {
+            @include fontSetup(
+              var(--fg-neutral-stronger),
+              12px,
+              16px,
+              normal,
+              500
+            );
+          }
+        }
+
+        .user-type {
+          @include fontSetup(var(--gray-400), 14px, 20px, normal, 400);
+        }
+
+        &--invalid {
+          color: var(--danger-500);
+        }
+      }
+    }
+  }
+
+  .ng-option-disabled {
+    &.ng-optgroup {
+      background-color: var(--gray-200);
+      .header-group {
+        @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+      }
+    }
+  }
+
+  .ng-dropdown-panel {
+    .ng-dropdown-panel-items {
+      &:not(:has(.ng-option-disabled)) {
+        .ng-option {
+          padding: unset;
+          .select-item-contact-card {
+            padding: 8px 10px;
+          }
+          &:hover {
+            box-shadow: inset 0px -1px 0px var(--gray-200);
+          }
+          & .highlighted {
+            background: var(--tenant-500);
+            color: inherit !important;
+            font-size: inherit !important;
+            font-weight: inherit !important;
+            text-decoration: inherit !important;
+          }
+          &:first-child {
+            border-radius: unset;
+          }
+        }
+      }
+    }
+
+    &.ng-select-bottom {
+      border-radius: 8px !important;
+      overflow: hidden;
+    }
+  }
+  .border-item.ng-select .ng-dropdown-panel .ng-dropdown-panel-items .ng-option,
+  .ng-optgroup {
+    box-shadow: unset;
+  }
+
+  .ng-dropdown-panel .ng-dropdown-panel-items {
+    .ng-option:not(:last-child) {
+      box-shadow: inset 0px -1px 0px var(--gray-200);
+    }
+
+    .ng-option-disabled {
+      font-style: italic;
+    }
+  }
+
+  .select-header {
+    padding: 8px 12px;
+  }
+}
+
+:host {
+  ::ng-deep {
+    mark.highlight {
+      background-color: var(--bg-tenant-solid-normal);
+      color: unset;
+      border-radius: 2px;
+    }
+  }
+}
+
+::ng-deep .select-item {
+  &__address {
+    trudi-badge trudi-icon path {
+      fill: var(--gray-500);
+    }
+  }
+  &__contact {
+    trudi-badge trudi-icon path {
+      fill: var(--gray-500);
+    }
+  }
+}
+
+input[type='checkbox'] {
+  width: 0px;
+  margin-right: 25px;
+}
+
+.visible-checkbox-in-safari {
+  cursor: pointer;
+  visibility: hidden;
+  &::before {
+    visibility: visible;
+  }
+}
+
+::ng-deep.tooltip-archived-contact-view .ant-tooltip-inner {
+  margin-right: 40px;
+}
+
+input[type='checkbox']:before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  border-radius: 4px;
+  vertical-align: middle;
+  border: 1px solid var(--gray-200);
+  text-align: center;
+  background-color: var(--white);
+}
+
+input[type='checkbox']:checked:before {
+  background-image: url('/assets/icon/checkbox-on.svg');
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  background-position: center center;
+  background-color: var(--brand-500);
+  border: none;
+}
+
+input[type='checkbox']:disabled:before {
+  border: 1px solid var(--border-neutral-dark) !important;
+  background-color: var(--bg-neutral-tonal-strongest) !important;
+}
+
+.select-wrapper {
+  position: relative;
+
+  .pseudo-input {
+    @include fontSetup(var(--fg-neutral-weaker), 14px, 20px, normal, 600);
+    position: absolute;
+    top: 8px;
+    left: 12px;
+    z-index: 1001;
+    width: fit-content;
+    &.has-value {
+      top: 8px;
+    }
+  }
+}
+
+.hover-template {
+  max-width: 264px;
+}

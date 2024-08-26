@@ -1,0 +1,90 @@
+@import 'function';
+:host {
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 6px;
+  min-width: 256px;
+}
+
+::ng-deep .toast-container .ngx-toastr {
+  padding: 0;
+  box-shadow: 1px 9px 18px 0 rgba(0, 0, 0, 0.25);
+  width: 100%;
+  &:hover {
+    box-shadow: 1px 9px 18px 0 rgba(0, 0, 0, 0.25);
+  }
+}
+
+::ng-deep .toast-top-right {
+  top: 12px;
+  right: 12px;
+}
+
+::ng-deep .toast-error,
+::ng-deep .toast-info,
+::ng-deep .toast-warning,
+::ng-deep .toast-success {
+  background-image: none;
+}
+
+::ng-deep .toast-custom {
+  padding: 12px 16px;
+  pointer-events: all;
+  border-radius: 4px;
+  background: var(--bg-base, #fff);
+  box-shadow: 0px 14px 36px 0px rgba(0, 0, 0, 0.13),
+    0px 2px 12px 0px rgba(0, 0, 0, 0.08);
+  width: 400px;
+  max-width: 400px;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+
+  & .toast-message,
+  & .custom-message {
+    color: var(--fg-neutral-stronger);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+  }
+
+  & .toast-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+  }
+}
+
+@keyframes ellipsisAnimation {
+  0%,
+  100% {
+    content: '.';
+  }
+  33% {
+    content: '..';
+  }
+  66% {
+    content: '...';
+  }
+}
+
+.ellipsis {
+  position: relative;
+  display: inline-block;
+}
+
+.ellipsis::after {
+  position: absolute;
+  top: 0;
+  left: 100%;
+  content: ''; /* Empty initial content */
+  color: var(--white);
+  animation: ellipsisAnimation 1.5s infinite;
+  color: var(--fg-neutral-stronger);
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 20px;
+}

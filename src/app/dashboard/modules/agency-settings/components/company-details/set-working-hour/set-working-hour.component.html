@@ -1,0 +1,107 @@
+<trudi-modal
+  [visible]="true"
+  title="Set working hours"
+  [subTitle]="subTitle"
+  (onCancel)="close()"
+  [modelWidth]="510"
+  [autoFocus]="null"
+  className="modal-form-set-working"
+  subTitle="">
+  <div class="component-wrapper big-size auto-height">
+    <div>
+      <div class="wrapper" #wrapper>
+        <div class="body">
+          <div [formGroup]="setWorkingForm">
+            <div class="form-group mb-0">
+              <span class="input-title"> Set holidays </span>
+              <div
+                [ngClass]="{'state-require': getStateWorking.touched && getStateWorking.invalid }">
+                <span class="small-title"> Public holidays by state </span>
+                <div class="form-select-group">
+                  <ng-select
+                    #selectSender
+                    class="share-ng-select"
+                    bindLabel="label"
+                    ItemID="id"
+                    [searchable]="true"
+                    [clearable]="true"
+                    [items]="stateList"
+                    formControlName="state"
+                    placeholder="Select state"
+                    (change)="onChangeState($event)"
+                    notFoundText="No states found">
+                  </ng-select>
+                  <ng-container
+                    *ngIf="getStateWorking.touched && getStateWorking.invalid">
+                    <div class="content-require d-flex align-items-center">
+                      <img
+                        src="/assets/images/icons/error-bg-red.svg"
+                        class="sync-icon"
+                        alt=""
+                        srcset="" />
+                      <span class="require-text">Required field</span>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </div>
+
+            <div class="view-calendar">
+              <button
+                trudi-btn
+                variant="link"
+                size="medium"
+                [disabled]="isAddTime"
+                class="view-calendar-label"
+                [routerLink]="isAddTime ? null : ['/dashboard/',  'calendar-view']"
+                [attr.aria-disabled]="isAddTime">
+                View calendar
+              </button>
+            </div>
+
+            <div class="time-setting">
+              <div class="input-title-heading">
+                <span class="input-title"> Set opening hours </span>
+              </div>
+              <div
+                class="time-setting-item d-flex align-items-center"
+                *ngFor="let time of times; index as index ">
+                <div class="w-43 d-flex">
+                  <span class="time-item-label" style="margin-right: 10px">
+                    {{time.label | titlecase}}
+                  </span>
+                  <switch-checkbox
+                    [index]="index"
+                    class="mr-auto"
+                    [label]="time.status ? 'Open' : 'Closed'"
+                    [reverse]="true"
+                    [isChecked]="time.status"
+                    (tdCheckboxChanged)="onCheckboxChange($event, index)">
+                  </switch-checkbox>
+                </div>
+                <div [class.d-none]="!time.status" class="w-52 d-flex">
+                  <range-time-picker
+                    [startHourd]="time.startTime"
+                    [endHourd]="time.endTime"
+                    (onChange)="setTime(index,$event)"
+                    [validate]="validate">
+                  </range-time-picker>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="btn-wrapper d-flex">
+        <div class="group-btn">
+          <button trudi-btn (click)="submit()" [disabled]="submitting">
+            <span class="btn-text">Confirm</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div class="modal-footer-set-working"></div>
+  </ng-template>
+</trudi-modal>

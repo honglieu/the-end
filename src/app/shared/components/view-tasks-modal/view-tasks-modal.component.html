@@ -1,0 +1,29 @@
+<trudi-modal
+  title="View tasks"
+  okText="Confirm"
+  [visible]="isVisible"
+  [modelWidth]="720"
+  [hiddenCancelBtn]="true"
+  (onOk)="handleConfirm()"
+  (onCancel)="handleCancel()"
+  [disableOkBtn]="disabled"
+  [isCondense]="true"
+  classContainer="view-task-container">
+  <div class="view-task-container-scroll">
+    <div class="task-item" *ngFor="let task of displayItems">
+      <div class="task-info">
+        <div class="task-name">{{ task.taskTitle }}</div>
+        <div class="task-address">
+          <trudi-icon icon="iconAddress"></trudi-icon>
+          <p class="m-0">
+            {{ task.property.shortenStreetline || task.property.streetLine ||
+            'No property' }}
+          </p>
+        </div>
+      </div>
+      <trudi-checkbox
+        [(ngModel)]="task.isChecked"
+        (ngModelChange)="handleChangeSelectedTask()"></trudi-checkbox>
+    </div>
+  </div>
+</trudi-modal>

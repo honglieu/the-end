@@ -1,0 +1,26 @@
+<div class="non-display-users-box popup">
+  <div class="non-display-users-content">
+    <ng-container *ngFor="let indexType of listOfUserByGroupIndex; index as i">
+      <div class="user-list d-flex align-items-center">
+        <div class="user-type">
+          {{ indexType === EUserPropertyType.EXTERNAL ? 'EXTERNAL EMAILS' :
+          indexType }}
+        </div>
+        <ng-container
+          *ngFor="let user of listOfUserByGroup[indexType] || []; index as i">
+          <div class="user w-100 d-flex justify-content-between text-ellipsis">
+            <div class="d-flex flex-column gap-8 sub-users-wrapper">
+              <app-sub-user
+                [subUser]="user"
+                [mode]="'send-message'"></app-sub-user>
+            </div>
+            <img
+              class="close-btn"
+              (click)="handleEmitUserId(user.id)"
+              src="/assets/icon/icon_cancel_red.svg" />
+          </div>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</div>

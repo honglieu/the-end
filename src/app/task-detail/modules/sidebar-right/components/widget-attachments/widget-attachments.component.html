@@ -1,0 +1,70 @@
+<div class="wrapper-skeleton-file" [hidden]="!isLoading">
+  <div
+    class="justify-content-between align-items-center files-item pd-12 skeleton-bg">
+    <div class="skeleton-rectangle">
+      <nz-skeleton
+        [nzParagraph]="paragraph"
+        [nzActive]="true"
+        class="w-100"></nz-skeleton>
+    </div>
+    <div class="w-25">
+      <nz-skeleton-element
+        class="skeleton-circle"
+        nzType="avatar"
+        [nzActive]="true"
+        [nzSize]="'small'"></nz-skeleton-element>
+    </div>
+    <div class="d-flex justify-content-end w-25">
+      <nz-skeleton-element
+        class="skeleton-circle"
+        nzType="avatar"
+        [nzActive]="true"
+        [nzSize]="'small'"></nz-skeleton-element>
+    </div>
+  </div>
+</div>
+
+<trudi-collapse-widget
+  [titleHeader]="headerTextTemplates"
+  [activeExpand]="isExpandAttachments"
+  [isShowItemsCount]="true"
+  [itemsCount]="itemsCounts"
+  (activeChange)="onActiveChange($event)"
+  [hidden]="isLoading"
+  class="widget-attachments">
+  <div class="content">
+    <file-panel
+      #filePanel
+      [widgetType]="widgetType.Attachment"
+      e2eData="files-widget-three-dots-send"
+      [isStopAudio]="isStopAudio"
+      (filesCount)="itemsCounts = $event"
+      (isLoading)="onLoadingFilePanel($event)">
+    </file-panel>
+  </div>
+</trudi-collapse-widget>
+
+<ng-template #headerTextTemplates>
+  <span data-e2e="details-title">FILES</span>
+  <button
+    trudi-btn
+    [appE2E]="'task-details-attachment-widget-plus-button'"
+    variant="outlined"
+    btnType="neutral"
+    shape="circle"
+    size="extra-small"
+    (click)="fileInput.click()"
+    class="cursor-pointer icon-plus ml-10 size-24">
+    <trudi-icon
+      [icon]="'iconPlus2'"
+      svgClass="size-16"
+      class="no-pointer-event"></trudi-icon>
+  </button>
+  <input
+    #fileInput
+    [multiple]="true"
+    class="input-file d-none"
+    type="file"
+    accept="{{ACCEPT_ONLY_SUPPORTED_FILE}}"
+    (change)="fileBrowseHandler($event)" />
+</ng-template>

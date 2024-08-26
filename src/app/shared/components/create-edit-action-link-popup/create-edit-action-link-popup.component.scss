@@ -1,0 +1,244 @@
+:host ::ng-deep .invite-wrapper{
+    padding: 14px;
+    .header {
+        display: flex;
+        justify-content: center;
+        .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: baseline;
+        }
+        .detail-invite{
+            display: flex;
+            align-items: center;
+            .send-invite-icon {
+                margin-right: 2.4rem;
+                .background-icon {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-around;
+                    border-radius: 29px;
+                    height: 48px;
+                    width: 48px;
+                    background-color: var(--tenant-500);
+                }
+            }
+            .send-invite-text {
+                p {
+                    font-weight: 500;
+                    font-size: 20px;
+                    line-height: 24px;
+                    margin: 0;
+                    color: var(--gray-700);
+                }
+                .number-sent {
+                    display: flex;
+                    margin-top: 8px;
+                    font-weight: 500;
+                    font-size: 14px;
+                    line-height: 16px;
+                    color: var(--gray-500);
+                    span {
+                        white-space: break-spaces;
+                    }
+                }
+            }
+        }
+    }
+    .body {
+        overflow-y: auto;
+        max-height: 53vh;
+        .preview {
+            display: flex;
+            justify-content: center;
+        }
+        .topic-title {
+            display: flex;
+            justify-content: space-between;
+            .topic {
+                width: 35%;
+            }
+            .title {
+                width: 55%;
+            }
+        }
+        .sub-heading {
+            margin-bottom: 1.5rem;
+        }
+        .pri-btn-text {
+            margin-bottom: 1.5rem;
+        }
+        .pri-btn-url {
+            margin-bottom: 1.5rem;
+        }
+        .check-box  {
+            display: flex;
+            font-size: 14px;
+            line-height: 16px;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            .def-checkbox {
+                display: none;
+            }
+            .checkbox-label {
+                cursor: pointer;
+                margin-left: 24px;
+            }
+        }
+        label.ihr {
+          user-select: none;
+          font-size: 14px;
+          color: var(--gray-700);
+          font-weight: unset;
+        }
+        .sec-btn-text {
+            margin-bottom: 1.5rem;
+        }
+    }
+    .btn-wrapper {
+        margin-top: 25px;
+        display: flex;
+        justify-content: flex-end;
+        .green-btn {
+            display: flex;
+            padding: 0.8rem 3.35rem;
+            font-size: 1.4rem;
+            line-height: 1.6rem;
+            background-color: var(--brand-500);
+            border-radius: 0.7rem;
+            border: 0;
+            color: var(--white);
+            align-items: center;
+
+            .btn-text {
+                font-size: 1.4rem;
+            }
+        }
+        .white-btn {
+            display: flex;
+            padding: 0.8rem 3.35rem;
+            font-size: 1.4rem;
+            margin-right: 2rem;
+            background-color: var(--white);
+            border-radius: 0.7rem;
+            border: 0;
+            color: var(--brand-500);
+            align-items: center;
+
+            .btn-text {
+                font-weight: 500;
+                font-size: 1.4rem;
+            }
+        }
+    }
+}
+
+.input {
+    width: -webkit-fill-available;
+    border: 0;
+    border-bottom: 1px solid var(--gray-100);
+    background-color: var(--white);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 35px;
+    padding: 0;
+    color: var(--gray-700);
+}
+.content-text {
+    width: -webkit-fill-available;
+    border: 0;
+    margin: 0 1.65rem 1.65rem;
+    background-color: var(--white);
+}
+
+.up-left-text {
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--gray-600);
+}
+.down-right-text {
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--gray-600);
+    display: flex;
+    justify-content: flex-end;
+    margin: 0 8.5px 8.5px 0;
+}
+.unclick{
+    pointer-events: none;
+    background-color: var(--brand-200) !important;
+}
+
+:host ::ng-deep .btn {
+    padding-left: 0;
+}
+
+:host ::ng-deep .ng-select-focused:not(::ng-deep .ng-select-opened) > ::ng-deep .ng-select-container{
+    box-shadow: none;
+    border-color: var(--gray-100);
+    background-color: var(--white);
+
+}
+
+:host ::ng-deep ng-select {
+    padding: 0;
+    ::ng-deep .ng-select-focused:not(.ng-select-opened){
+        ::ng-deep &.ng-select-container {
+            box-shadow: none;
+        }
+    }
+    ::ng-deep .ng-select-container {
+        border: 0;
+        color: var(--gray-700);
+        font-weight: 500;
+        align-items: center;
+        font-size: 14px;
+        min-height: 20.5px;
+        height: 26px;
+        border-bottom: 1px solid var(--gray-100);
+        ::ng-deep .ng-value-container {
+            padding: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            height: 32px;
+            margin: 0;
+            border: 0;
+            padding: 0;
+            box-shadow: none;
+        }
+    }
+    ::ng-deep .ng-dropdown-panel {
+        .ng-dropdown-panel-items {
+            .ng-option {
+                font-weight: 500;
+                color: var(--gray-700);
+            }
+            .ng-option-marked, .ng-option-selected {
+                color: var(--gray-700);
+            }
+        }
+    }
+    ::ng-deep .ng-select-container ::after {
+        border: 0;
+        // border-bottom: 1px solid var(--gray-100);
+    }
+}
+
+:host ::ng-deep .btn {
+    .pull-left {
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 19px;
+        color: var(--gray-700);
+        padding: 0;
+    }
+}
+
+.check-dirty {
+    border-bottom: 1px solid red !important;
+    color: red !important;
+}

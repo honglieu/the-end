@@ -1,0 +1,55 @@
+<div class="box-body">
+  <div class="search-box">
+    <img src="/assets/icon/search.svg" />
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search"
+      autocomplete="off"
+      [formControl]="searchText$" />
+  </div>
+  <div
+    class="list-view auto-hide-scroll"
+    #listView
+    *ngIf="!isLoading; else loading">
+    <ng-container *ngIf="listSupplier.length; else empty">
+      <div class="item" *ngFor="let supplier of listSupplier; let i = index">
+        <td-checkbox
+          [size]="24"
+          class="d-flex align-items-center"
+          [labelTemplate]="checkboxLabel"
+          [isChecked]="supplier.checked"
+          (tdCheckboxChanged)="onCheckboxChange($event, i)"
+          [customCheckbox]="{ checked: 'checkboxCircleChecked',
+                              uncheck: 'checkboxCircleEmpty'}"
+          [divider]="i !== listSupplier.length - 1">
+        </td-checkbox>
+
+        <ng-template #checkboxLabel>
+          <div
+            class="checkbox-label-container d-flex align-items-center flex-wrap">
+            <!-- <div class="supplier-avatar">
+              <img src="assets/icon/wrench.svg">
+            </div>
+            <div class="supplier-info d-flex align-items-center flex-wrap"> -->
+            <div
+              class="supplier-companyName text-ellipsis"
+              [innerHTML]="supplier.lastName | highlight: highlightText"></div>
+            <div
+              class="supplier-contactName text-ellipsis"
+              [innerHTML]=" '(' +supplier.email+ ')' | highlight: highlightText"></div>
+            <!-- </div> -->
+          </div>
+        </ng-template>
+      </div>
+    </ng-container>
+    <ng-template #empty>
+      <div class="flb-center">No items found</div>
+    </ng-template>
+  </div>
+  <ng-template #loading>
+    <div style="margin-bottom: 12px">
+      <circle-loading-indicator></circle-loading-indicator>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,30 @@
+@import 'function';
+
+:host {
+  width: 400px;
+  height: 52px;
+  border-radius: 4px;
+  background-color: var(--bg-base);
+  box-shadow: 0px 14px 36px 0px #00000021, 0px 2px 12px 0px #00000014;
+  padding: 10px 16px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+
+  .edit-published-task-toaster {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+
+    .message {
+      @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 600);
+    }
+
+    .icon-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}

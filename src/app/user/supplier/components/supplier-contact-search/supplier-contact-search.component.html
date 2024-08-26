@@ -1,0 +1,46 @@
+<div class="head-wrapper">
+  <trudi-form-control>
+    <trudi-text-field
+      #inputSearch
+      size="large"
+      iconLeft="iconSearch"
+      placeholder="Search"
+      [clearable]="true"
+      [(ngModel)]="searchText"
+      (clear)="handleClearSearch($event)"
+      (keydown.enter)="handleSearch($event); $event.target.blur();"></trudi-text-field>
+  </trudi-form-control>
+  <div style="position: relative" [class.root-cs-value]="isClearCRM">
+    <ng-select
+      #selectCRMStatus
+      class="filter-select crm-filter ng-option custom-placeholder"
+      data-console="crm-status-filter"
+      bindValue="id"
+      [items]="crmStatus"
+      [searchable]="false"
+      [clearable]="false"
+      [(ngModel)]="selectedCRMStatus"
+      (change)="crmChanged($event)">
+      <ng-template ng-label-tmp let-item="item"> {{ item.text }} </ng-template>
+      <ng-template ng-option-tmp let-item="item" let-index="index">
+        <div class="option-select">
+          <span>{{ item.text }}</span>
+          <trudi-icon
+            icon="checkSuccess"
+            *ngIf="selectedCRMStatus === item.id"></trudi-icon>
+        </div>
+      </ng-template>
+    </ng-select>
+    <div class="pls" [style.display]="isClearCRM ? 'block' : 'none'">
+      CRM Status
+    </div>
+  </div>
+  <dropdown-menu-contacts
+    *ngIf="isPtEnvironment && agencies.length > 1"
+    [defaultListValues]="selectedAgencyIds"
+    [listItem]="agencies"
+    [label]="'CRM subscription'"
+    [type]="filterType.AGENCIES"
+    [noResetListItem]="true"
+    (itemsSelected)="changeFilterAgencies($event)"></dropdown-menu-contacts>
+</div>

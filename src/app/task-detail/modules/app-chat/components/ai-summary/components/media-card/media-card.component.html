@@ -1,0 +1,31 @@
+<div class="media-card" [class.disabled]="disabled">
+  <ng-container
+    *ngIf="file?.mediaLink || file?.thumbMediaLink;
+      then previewFileTemplate;
+      else placeholderTemplate">
+  </ng-container>
+
+  <ng-template #previewFileTemplate>
+    <div
+      class="media-card-content"
+      [class.dim-brightness]="file?.mediaType === 'video' && file?.thumbMediaLink">
+      <img
+        [src]="file?.mediaType === 'video' ? file?.thumbMediaLink : file?.mediaLink" />
+      <trudi-icon
+        class="button-remove"
+        icon="circleClear"
+        (click)="removeFile($event)">
+      </trudi-icon>
+      <ng-container *ngIf="file?.mediaType === 'video'">
+        <trudi-icon class="card-icon-play" icon="playSolid"></trudi-icon>
+      </ng-container>
+      <div class="media-card-content-overlay"></div>
+    </div>
+  </ng-template>
+
+  <ng-template #placeholderTemplate>
+    <button class="media-card-placeholder" (click)="handleClick($event)">
+      <trudi-icon icon="imagePlus"></trudi-icon>
+    </button>
+  </ng-template>
+</div>

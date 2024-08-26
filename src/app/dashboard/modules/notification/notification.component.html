@@ -1,0 +1,32 @@
+<div
+  class="modal-container"
+  @openClose
+  *ngIf="isShowNotification"
+  appOutsideClickListener
+  (@openClose.done)="handleAnimationEnd()"
+  [whiteList]="['#notificationSideBarItem']">
+  <div #notificationContent class="modal-window" tabindex="-1">
+    <div
+      class="modal-popup-header d-flex align-items-center justify-content-between">
+      <span>Notifications</span>
+      <button
+        trudi-btn
+        btnType="neutral"
+        variant="tonal"
+        shape="circle"
+        size="medium">
+        <a
+          tabindex="0"
+          routerLinkActive="active"
+          [routerLink]="routerLink"
+          (click)="handleClick($event)"
+          (keydown.enter)="handleClick($event)">
+          <trudi-icon class="size-20" icon="settings"></trudi-icon>
+        </a>
+      </button>
+    </div>
+    <div class="modal-popup-content">
+      <list-notification></list-notification>
+    </div>
+  </div>
+</div>

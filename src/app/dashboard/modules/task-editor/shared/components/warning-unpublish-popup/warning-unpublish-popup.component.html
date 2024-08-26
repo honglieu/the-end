@@ -1,0 +1,41 @@
+<ng-container className="warning-unpublish-popup">
+  <trudi-modal
+    [visible]="true"
+    [modelWidth]="624"
+    (onCancel)="handleCancel()"
+    subTitle=""
+    title="The tasks you are archiving are being referenced elsewhere"
+    iconName="iconWarningRedFit"
+    [autoFocus]="null">
+    <ng-template #footerModal>
+      <div class="d-flex gap-12">
+        <button
+          trudi-btn
+          variant="outlined"
+          btnType="neutral"
+          (click)="handleCancel()">
+          Cancel
+        </button>
+        <button
+          trudi-btn
+          btnType="danger"
+          class="btn-unpublish-anyway"
+          (click)="handleOk()">
+          Unpublish anyway
+        </button>
+      </div>
+    </ng-template>
+    <div class="container-warning-unpublish">
+      <p>
+        Before archiving these tasks, we recommend that you make the following
+        adjustments:
+      </p>
+      <div *ngFor="let item of dataItems" class="title">
+        <p>Remove {{item.name}} from:</p>
+        <ul *ngFor="let x of item.referenceTemplates">
+          <li>{{x.name}}</li>
+        </ul>
+      </div>
+    </div>
+  </trudi-modal>
+</ng-container>

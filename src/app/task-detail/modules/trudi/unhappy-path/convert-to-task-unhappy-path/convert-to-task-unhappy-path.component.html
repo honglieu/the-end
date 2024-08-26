@@ -1,0 +1,21 @@
+<create-new-task-pop-up
+  *ngIf="showConvertToTask"
+  [taskNameList]="listTaskName"
+  [configs]="configs"
+  [openFrom]="CreateTaskByCateOpenFrom.CONVERT_TO_TASK"
+  [selectedTaskNameRegionId]="
+    selectedTaskToConvert?.taskNameRegion?.taskNameRegionId
+  "
+  [activeProperty]="activeProperty"
+  (stopProcessCreateNewTask)="handleStopProcessCreateNewTask()"></create-new-task-pop-up>
+
+<div class="convert-to-task-dropdown">
+  <convert-to-task-dropdown
+    [taskDetailViewMode]="taskDetailViewMode"
+    [listConvertToTask]="listConvertToTask"
+    [isShowCreateTaskBtn]="false"
+    [isError]="isError"
+    [noPrefill]="true"
+    [listTaskName]="listTaskName"
+    (getSelectedTask)="getSelectedTask($event)"></convert-to-task-dropdown>
+</div>

@@ -1,0 +1,34 @@
+@import 'function';
+
+.message {
+  &-agent {
+    margin: 16px auto;
+    width: fit-content;
+    .name-clickable:hover{
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+  &-agent_join {
+    &-avatar {
+      width: 24px;
+      height: 24px;
+      min-width: 24px;
+      min-height: 24px;
+      margin-right: 8px;
+    }
+    &-text {
+      @include fontSetup(
+        var(--fg-neutral-normal, #646464),
+        12px,
+        20px,
+        normal,
+        500
+      );
+      &.font-semi-bold {
+        margin-right: 4px;
+        color: var(--gray-700);
+      }
+    }
+  }
+}

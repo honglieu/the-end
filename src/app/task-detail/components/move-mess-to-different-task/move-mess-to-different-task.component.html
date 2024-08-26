@@ -1,0 +1,176 @@
+<div class="move-wrapper">
+  <div class="header">
+    <div
+      class="detail-invite d-flex justify-content-between align-items-center">
+      <div>
+        <div class="detail-invite-text d-flex">
+          <p>{{titleModal}}</p>
+        </div>
+        <div *ngIf="subTitle">
+          <p class="sub-title">{{subTitle}}</p>
+        </div>
+      </div>
+      <div
+        data-e2e="button-close"
+        class="close-btn close-modal-btn"
+        (click)="onQuitModal($event)">
+        <trudi-icon
+          [style]="{ 'width.px': 24, 'height.px': 24, color: '#646464' }"
+          icon="closeIcon"
+          class="trudi-icon"></trudi-icon>
+      </div>
+    </div>
+  </div>
+  <hr />
+  <div class="body">
+    <div class="move-header" *ngIf="!isSelectMultipleMsg">
+      <p class="move-header-title">{{currentConversation?.categoryName}}</p>
+      <div class="move-info d-flex flex-dir-column">
+        <div class="move-info d-flex flex-dir-column">
+          <span>
+            {{ taskDetailViewMode !== EViewDetailMode.TASK ?
+            (currentProperty?.streetline || currentProperty?.propertyName || "No
+            property") : (currentConversation?.streetline ||
+            currentConversation?.propertyName || "No property") }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="move-select" id="task-select">
+      <div class="move-title">Select task</div>
+      <div [formGroup]="taskTypeActicon">
+        <trudi-form-control>
+          <trudi-single-select
+            [serversideSearch]="true"
+            (scrollToEnd)="getNextPage()"
+            bindLabel="''"
+            class="move_task--select"
+            [items]="isLoading ? skeletonTask : taskList"
+            formControlName="selectedTask"
+            placeholder="Select task"
+            notFoundText="No results found"
+            bindValue="id"
+            (onClear)="handleClearValue()"
+            (isOpened)="handleOpenSelectListTask()"
+            (triggerEventBlur)="handleBlurSelectListTask()"
+            (triggerEventChange)="onItemChange($event)"
+            [loading]="isLoading"
+            [typeahead]="searchText$"
+            [typeToSearchText]="'No results found'"
+            [isShowLabelSuggested]="!isFromVoiceMail"
+            [isHideLabelGroup]="isFromVoiceMail"
+            groupBy="tasks">
+            <ng-template trudi-label-tmp let-item="item" let-clear="clear">
+              <div class="label-select">
+                <div class="label-select__title">{{item?.title}}</div>
+                <div
+                  class="label-select__address"
+                  [ngClass]="{'font-italic': !item?.streetline}">
+                  {{item?.streetline || item?.propertyName || 'No property'}}
+                </div>
+              </div>
+            </ng-template>
+
+            <ng-template trudi-header-tmp>
+              <div class="header_select">
+                <trudi-checkbox
+                  formControlName="onlyMyTasks"
+                  [label]="'My tasks'"></trudi-checkbox>
+                <trudi-checkbox
+                  formControlName="onlyInprogress"
+                  [label]="'In progress tasks'"></trudi-checkbox>
+              </div>
+            </ng-template>
+            <ng-template trudi-group-tmp let-item="item">
+              <div class="group_select">{{item?.topicName }}</div>
+            </ng-template>
+
+            <ng-template
+              trudi-option-tmp
+              let-item="item"
+              let-searchTerm="searchTerm?.trim() || ''">
+              <div
+                *ngIf="item && !isLoading; else showSkeleton"
+                class="option_select">
+                <div>
+                  <div class="option_select--title">
+                    <span class="task-title" [ngOptionHighlight]="searchTerm">
+                      {{item.title}}
+                    </span>
+
+                    <trudi-badge
+                      *ngIf="item?.statusBadge"
+                      variant="role"
+                      [text]="(item.statusBadge | push)"
+                      size="small">
+                    </trudi-badge>
+                  </div>
+                  <div class="option_select--property">
+                    <span
+                      [ngOptionHighlight]="searchTerm"
+                      [ngClass]="{'font-italic': !item?.streetline}"
+                      >{{item?.streetline || (isRmEnvironment ?
+                      item?.propertyName : 'No property')}}</span
+                    >
+                  </div>
+                </div>
+
+                <img
+                  *ngIf="taskTypeActicon.get('selectedTask').value === item.id"
+                  src="/assets/icon/check-success.svg"
+                  alt="selected-icon"
+                  class="selected-icon" />
+              </div>
+              <ng-template #showSkeleton>
+                <div class="skeleton-container w-100">
+                  <nz-skeleton
+                    [nzParagraph]="paragraph"
+                    [nzActive]="true"
+                    class="w-75 mb-4 skeleton-title"></nz-skeleton>
+                  <nz-skeleton
+                    [nzParagraph]="paragraph"
+                    [nzActive]="true"
+                    class="w-50"></nz-skeleton>
+                </div>
+              </ng-template>
+            </ng-template>
+            <ng-template trudi-footer-tmp>
+              <div
+                class="d-flex align-items-center"
+                (click)="handleCreateNewTask()">
+                <trudi-icon
+                  icon="iconPlusSuccess"
+                  [style]="{ 'width.px': 16, 'height.px': 16}"></trudi-icon>
+                <span class="select-footer-title">Create new task</span>
+              </div>
+            </ng-template>
+          </trudi-single-select>
+        </trudi-form-control>
+      </div>
+    </div>
+    <ng-container *ngIf="isShowWarnAssignToTask">
+      <warning-property
+        [msgContent]="messageWarnAssignToTask"></warning-property>
+    </ng-container>
+  </div>
+  <hr />
+  <div class="move-footer d-flex justify-content-end">
+    <div class="btn-wrapper">
+      <button
+        *ngIf="isBackButtonVisible"
+        type="button"
+        class="button_back--popup"
+        (click)="handleBack()">
+        Back
+      </button>
+      <button
+        data-e2e="button-add-to-task"
+        trudi-btn
+        [disabled]="isConsole || disabledMoveToTaskBtn || isArchiveMailbox || isDisconnectMailbox"
+        (click)="onSubmit()">
+        <span class="btn-text"> Add to task </span>
+      </button>
+    </div>
+  </div>
+</div>

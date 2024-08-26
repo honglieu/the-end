@@ -1,0 +1,120 @@
+<div
+  class="d-flex align-items-center gap-4 list-attachment-temp"
+  *ngIf="attachmentsTemp?.length"
+  #attachmentsListTemp>
+  <div *ngFor="let file of attachmentsTemp">
+    <summary-message-dialog-file [file]="file"></summary-message-dialog-file>
+  </div>
+</div>
+<div
+  class="msg-summary"
+  [class.msg-summary-expanded]="previewMsgSummary && !disableGenerateMsgSummary"
+  [ngClass]="{'collapsed-message-summary': !previewMsgSummary, 'no-action': disableGenerateMsgSummary, 'no-message': isNoMessage}"
+  [@collapseModal]="previewMsgSummary && !disableGenerateMsgSummary ? 'expanded' : 'collapsed'"
+  (@collapseModal.done)="onAnimationEnd($event)"
+  [whiteList]="whiteListMsgDetail"
+  appOutsideClickListener
+  (clickOutside)="onOutsideClick()">
+  <div
+    nz-resizable
+    [ngClass]="{'resizable-summary-message w-100': !disableGenerateMsgSummary}"
+    [style.height.px]="contentHeight"
+    [nzMaxHeight]="maxHeight"
+    [nzMinHeight]="minHeight"
+    [nzBounds]="'window'"
+    (nzResize)="onResizable($event)">
+    <nz-resize-handle
+      nzDirection="top"
+      *ngIf="previewMsgSummary && !isDisalbeResize">
+      <div class="content-resize-line"></div>
+    </nz-resize-handle>
+    <div
+      class="msg-summary_header_container cursor-pointer"
+      [ngStyle]="{'padding': previewMsgSummary ? '12px 12px 0 12px' : '6px 12px'}"
+      (click)="handleGenerateSummaryMsg()"
+      [ngClass]="{'collapsed-conver': !previewMsgSummary, 'pointer-events-none': disableGenerateMsgSummary}">
+      <div class="msg-summary_header_content">
+        <trudi-icon
+          *ngIf="!isGeneratingMsg; else iconLoading"
+          class="no-pointer-event"
+          svgClass="size-20"
+          icon="aiSummaryStar"></trudi-icon>
+        <ng-template #iconLoading>
+          <ng-lottie class="icon-loading" [options]="options"></ng-lottie>
+        </ng-template>
+        <div
+          class="header-content-summary d-flex align-items-center gap-4"
+          [ngStyle]="{'font-style': disableGenerateMsgSummary ? 'italic' : '','font-weight': disableGenerateMsgSummary ? '400' : '600' }"
+          *ngIf="disableGenerateMsgSummary">
+          {{titleMsgSummary}}
+        </div>
+        <div
+          *ngIf="!disableGenerateMsgSummary"
+          class="d-flex align-items-center gap-4">
+          <span
+            class="header-content-summary"
+            [ngStyle]="{'padding-left': isGeneratingMsg ? '32px' : '0px'}">
+            <ng-container
+              *ngIf="previewMsgSummary || lastSummaryUpdatedAt || currentConversation?.lastSummaryUpdatedAt; else summarizeText">
+              Message summary
+            </ng-container>
+          </span>
+          <span
+            class="msg-summary-title-date"
+            *ngIf="previewMsgSummary || lastSummaryUpdatedAt || currentConversation?.lastSummaryUpdatedAt">
+            updated at {{ (lastSummaryUpdatedAt ||
+            currentConversation?.lastSummaryUpdatedAt) | trudiDateTime:
+            EPage.INDEX: false | push }}
+          </span>
+        </div>
+
+        <ng-template #summarizeText>
+          <span [ngClass]="{'msg-summary-generating': isGeneratingMsg}"
+            >{{ isGeneratingMsg ? 'Generating summary' : 'Summarize
+            conversation' }}</span
+          >
+        </ng-template>
+      </div>
+      <button
+        *ngIf="listSummaryMessage?.length && currentConversation?.lastSummaryUpdatedAt"
+        class="btn-preview"
+        type="button"
+        [class.active]="previewMsgSummary">
+        <trudi-icon svgClass="size-20" icon="chevronUp"></trudi-icon>
+      </button>
+    </div>
+    <div class="overflow-y-auto msg-summary-body" #infiniteScrollRequest>
+      <div
+        class="w-100 d-flex flex-dir-column gap-12 pd-msg body-msg-summary"
+        #bodyMsgSummary>
+        <div
+          class="timeline-item"
+          *ngFor="let message of listSummaryMessage; let i = index;">
+          <summary-message-dialog-item
+            [message]="message"
+            [inputTaskType]="inputTaskType"
+            [currentConversation]="currentConversation"
+            (onHoverAttachment)="handleHoverAttachment($event)"
+            (onShowAttachment)="handleShowAttachment($event)"></summary-message-dialog-item>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-modal-popup
+  *ngIf="isShowCarousel"
+  [transparent]="true"
+  [show]="isShowCarousel"
+  [position]="popupModalPosition.full_screen">
+  <app-images-carousel
+    *ngIf="isShowCarousel"
+    [open]="isShowCarousel"
+    [isSyncing]="false"
+    [imageUrlList]="arrayImageCarousel"
+    [initialIndex]="initialIndex"
+    (showCarousel)="manageCarouselState($event)"
+    (showSelectPeoplePopup)="handleShowTrudiSendMsg($event)"
+    (fileEmit)="handleFileEmit($event)">
+  </app-images-carousel>
+</app-modal-popup>

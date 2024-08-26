@@ -1,0 +1,137 @@
+<trudi-modal
+  class="task-folder-modal"
+  [(visible)]="showPopup"
+  [autoFocus]="null"
+  [title]="'Task folder'"
+  subTitle=""
+  (triggerAfterClose)="handleClose(); checkSubmitted = true"
+  (onOk)="handleConfirm(); checkSubmitted = false">
+  <div
+    class="task-folder-form"
+    *ngIf="taskFolderForm"
+    [formGroup]="taskFolderForm">
+    <trudi-form-control [checkSubmit]="checkSubmitted" class="name-input">
+      <trudi-text-field
+        label="Folder name"
+        placeholder="Enter folder name"
+        formControlName="name"
+        [prefixTemplate]="prefixTemplate"
+        [checkSubmit]="checkSubmitted"
+        [maxCharacter]="60"></trudi-text-field>
+    </trudi-form-control>
+
+    <div class="select-icon-section">
+      <span class="icon-title">Select icon</span>
+      <div class="select-icon-wrapper">
+        <trudi-text-field
+          iconLeft="iconSearch"
+          placeholder="Search icon"
+          [clearable]="true"
+          formControlName="icon"></trudi-text-field>
+        <ng-container *ngIf="listSearchIcon.length; else notFound">
+          <div class="icon-list">
+            <div
+              class="icon-wrapper"
+              trudi-tooltip
+              [nzTooltipTitle]="item.name"
+              [class.selected-icon]="item.icon === selectedIcon.icon"
+              *ngFor="let item of listSearchIcon"
+              (click)="chooseIcon(item)">
+              <img class="folder-img" [src]="item.src" alt="image" />
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="wrapper">
+      <div class="dropdown-title">Save messages from completed tasks to</div>
+      <div class="dropdown-input w-100">
+        <div style="width: 100%">
+          <trudi-form-control>
+            <trudi-single-select
+              formControlName="labelId"
+              [items]="folderEmails"
+              bindLabel="title"
+              bindValue="internalId"
+              [label]="label"
+              [enableSearch]="true"
+              [clearable]="!mailBehavior?.resolved"
+              placeholder="Select email folder"
+              name="labelId">
+              <ng-template
+                trudi-option-tmp
+                let-item="item"
+                let-searchTerm="searchTerm">
+                <div class="list-folder-item">
+                  <div
+                    class="wrapper-item"
+                    [style.paddingLeft]="8*item.level+'px'">
+                    <div class="d-flex">
+                      <span class="wrapper-icon">
+                        <trudi-icon
+                          icon="iconFolder"
+                          svgClass="size-18"></trudi-icon>
+                      </span>
+                      <p
+                        class="item-text"
+                        [style.maxWidth]="'calc(504px - ' + (8 * item.level) + 'px )'">
+                        {{item.title}}
+                      </p>
+                    </div>
+                    <div class="wrapper-icon mr-8">
+                      <trudi-icon
+                        icon="checkSuccess"
+                        svgClass="size-20"
+                        *ngIf="item.internalId === labelId.value"></trudi-icon>
+                    </div>
+                  </div>
+                </div>
+              </ng-template>
+              <ng-template *ngIf="!isConsole" trudi-footer-tmp>
+                <div
+                  class="d-flex align-items-center"
+                  (click)="handleAddEmailFolder()">
+                  <trudi-icon
+                    icon="iconPlusSuccess"
+                    [style]="{ 'width.px': 16, 'height.px': 16}"></trudi-icon>
+                  <span class="select-footer-title">Add new email folder</span>
+                </div>
+              </ng-template>
+            </trudi-single-select>
+          </trudi-form-control>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #footerModal>
+    <div class="d-flex gap-8">
+      <button
+        *ngIf="hasBackButton"
+        trudi-btn
+        [btnType]="'neutral'"
+        class="trudi-btn trudi-btn-tertiary btn-cancel button-size"
+        (click)="handleBack()">
+        Back
+      </button>
+      <button
+        [appE2E]="'inbox-task-create-folder-button'"
+        trudi-btn
+        (click)="handleConfirm(); checkSubmitted = false"
+        [disabled]="isLoading || (!this.mailBoxId && !this.currentMailBoxId)">
+        Save
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>
+
+<ng-template #prefixTemplate>
+  <div class="name-icon-wrapper">
+    <img [src]="selectedIcon?.src" alt="icon" />
+  </div>
+</ng-template>
+
+<ng-template #notFound>
+  <div class="not-found">No results found</div>
+</ng-template>

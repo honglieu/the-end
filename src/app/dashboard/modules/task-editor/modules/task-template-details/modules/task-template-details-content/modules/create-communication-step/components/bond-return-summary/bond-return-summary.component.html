@@ -1,0 +1,45 @@
+<div [formGroup]="form" class="bond-form-wrapper">
+  <div class="form-label__wrapper">
+    <span class="label__text">Pre-screen</span>
+    <trudi-checkbox label="Required" formControlName="isRequired">
+    </trudi-checkbox>
+  </div>
+
+  <div class="form-content__wrapper">
+    <trudi-form-control [checkSubmit]="!isSubmittedCommunicationForm">
+      <trudi-text-field
+        [checkSubmit]="!isSubmittedCommunicationForm"
+        class="control-bond"
+        formControlName="bondTitle"
+        label="Title"
+        maxCharacter="100"></trudi-text-field>
+    </trudi-form-control>
+    <trudi-form-control>
+      <trudi-number-field
+        class="control-bond"
+        size="extra-large"
+        formControlName="bondTenant"
+        label="Bond amount returned to the tenant?"
+        prefixText="$">
+      </trudi-number-field>
+    </trudi-form-control>
+    <trudi-form-control>
+      <trudi-number-field
+        class="control-bond"
+        size="extra-large"
+        formControlName="bondDeduct"
+        label="Bond amount to be deducted? (Optional)"
+        prefixText="$">
+      </trudi-number-field>
+    </trudi-form-control>
+    <trudi-form-control>
+      <trudi-text-field
+        class="control-bond"
+        formControlName="reasonDeduct"
+        label="Reason for bond deduction?"
+        placeholder="Free text field"
+        [showCounting]="false">
+      </trudi-text-field>
+    </trudi-form-control>
+  </div>
+</div>

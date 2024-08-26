@@ -1,0 +1,67 @@
+@import 'function';
+
+:host ::ng-deep {
+  .billing-table-wrapper {
+    width: 100%;
+    .billing-title {
+      @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 600);
+      margin-bottom: 8px;
+    }
+
+    .billing-detail {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      width: 100%;
+      .billing-row__one-time {
+        grid-template-columns: 1fr 2fr 1fr !important;
+      }
+      .billing-row {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        background: var(--bg-neutral-tonal-normal, #f2f5f7);
+        padding: 6px 12px;
+        @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+
+        .icon-home {
+          color: var(--fg-neutral-weakest);
+        }
+        .quantity-column {
+          .billing-quantity {
+            min-width: 40px;
+            text-align: right;
+          }
+        }
+      }
+
+      .amount-style {
+        text-align: right;
+        margin-right: 20px;
+      }
+
+      .more-item {
+        border: none;
+        background-color: transparent;
+        margin-top: 11px;
+        padding: 0 12px;
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: 4px;
+        @include fontSetup(var(--fg-brand), 12px, 16px, normal, 600);
+      }
+    }
+  }
+}
+
+.billing_row--child {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  padding: 6px 12px;
+  color: var(--fg-neutral-stronger);
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 500;
+}

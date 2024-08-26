@@ -1,0 +1,50 @@
+<trudi-modal
+  *ngIf="popupState.showPopupSelectEvents"
+  [visible]="popupState.showPopupSelectEvents"
+  [modelWidth]="524"
+  [autoFocus]="null"
+  [closable]="false"
+  [title]="title"
+  subTitle="You can edit these later in your integration settings">
+  <div class="events-provider__container">
+    <events-list
+      *ngIf="eventsSyncedPT || eventsSyncedRM"
+      [title]="'Events synced from'"
+      [events]="isRMEnvironment ? eventsSyncedRM : eventsSyncedPT"
+      (itemToggle)="onValueChange($event)"
+      [status]="status"
+      [icon]="isRMEnvironment ? 'rentManager' : 'ptLogo'">
+    </events-list>
+
+    <events-list
+      *ngIf="eventsCreated"
+      [title]="'Events created in Trudi'"
+      [events]="eventsCreated"
+      [status]="status"
+      (itemToggle)="onValueChange($event)"
+      [icon]="'trudiLogo'">
+    </events-list>
+  </div>
+  <ng-template #footerModal>
+    <div class="d-flex justify-content-end gap-12">
+      <button
+        trudi-btn
+        size="large"
+        btnType="neutral"
+        variant="outlined"
+        class="trudi-btn trudi-btn-large ml-auto"
+        (click)="onCancel()">
+        Cancel
+      </button>
+      <button
+        trudi-btn
+        size="large"
+        variant="filled"
+        [disabled]="status === EIntegrationsStatus.DISCONNECTED"
+        class="trudi-btn trudi-btn-large ml-auto"
+        (click)="onSave()">
+        Save
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

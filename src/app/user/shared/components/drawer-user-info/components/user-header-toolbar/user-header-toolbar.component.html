@@ -1,0 +1,241 @@
+<div
+  class="header-toolbar gap-12 d-flex justify-content-between"
+  [class.task-detail]="openFrom === ETypePage.TASK_DETAIL">
+  <div class="user-info d-flex gap-8 align-items-center">
+    <div class="wrapper-avatar" [ngClass]="{'user-tenancy' : roleTenant}">
+      <ng-container *ngIf="hasAvatar else noAvatar">
+        <app-user-avatar
+          [style]="'width: 28px; height: 28px; font-size: 16px;'"
+          [avatar]="currentDataUser?.googleAvatar"
+          [user]="currentDataUser"></app-user-avatar>
+      </ng-container>
+      <ng-template #noAvatar>
+        <div
+          class="avatar-other"
+          [ngClass]="{'avatar-supplier': isSupplierContact}">
+          <trudi-icon
+            class="icon-avatar"
+            [icon]="isSupplierContact ? 'avtSupplier' : 'otherContactAvatar'"></trudi-icon>
+        </div>
+      </ng-template>
+
+      <ng-container *ngIf="isIconSync">
+        <trudi-icon class="icon-sync" icon="iconSyncBlue"></trudi-icon>
+      </ng-container>
+    </div>
+    <div class="info d-block">
+      <div class="d-flex gap-4">
+        <span class="info-name"
+          >{{currentDataUser?.fullName || currentDataUser?.sendFrom}}</span
+        >
+        <trudi-icon
+          *ngIf="currentDataUser?.isFavourite"
+          class="icon-sync"
+          icon="goldStar"></trudi-icon>
+      </div>
+
+      <div class="wrapper-type-status d-flex align-items-center">
+        <div
+          *ngIf="contactType && ![ETypePage.TENANTS_LANLORDS, ETypePage.TASK_DETAIL].includes(openFrom)"
+          [ngClass]="{'border-right-type': status}"
+          class="info-type">
+          {{contactType | titleCasePipe}}
+        </div>
+        <div
+          *ngIf="contactType && openFrom === ETypePage.TASK_DETAIL"
+          [ngClass]="{'border-right-type': status}"
+          class="info-type">
+          {{contactType | titleCasePipe}}
+        </div>
+        <div
+          *ngIf="![ETypePage.OTHER, ETypePage.TASK_DETAIL].includes(openFrom)"
+          class="info-type"
+          [ngClass]="{'border-right-type': status}">
+          {{userProperty?.displayType}}
+        </div>
+        <div
+          *ngIf="status"
+          class="info-status d-flex gap-4 align-items-center ml-10">
+          <span class="status"
+            >{{status | landlordToOwner | uppercaseFirstLetter}}</span
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="user-toolbar d-flex align-items-center"
+    *ngIf="userProperty?.type !== EUserPropertyType.LEAD">
+    <ng-container *ngIf="currentDataUser?.email || secondaryEmailMsg">
+      <button
+        *ngIf="isInboxDetail else btnTmp"
+        [appE2E]=" openFromContactPage ? 'contact-page-contact-info-panel-message' : 'user-profile-send-button'"
+        class="toolbar-button"
+        disableOpenSendMsgModal
+        [ngClass]="{'disabled-button': (isAppMessage && userProperty?.crmStatus === ECrmStatus.DELETED) || isDisableActionByOffBoardStatus || isNotDetectedContact}"
+        [attr.data-button-key]="isAppMessage ? EButtonTask.SEND_MESSAGE : EButtonTask.TASK_CREATE_MESSAGE"
+        [attr.data-button-type]="EButtonType.TASK"
+        nz-dropdown
+        nzTrigger="click"
+        [nzClickHide]="false"
+        [nzPlacement]="'bottomRight'"
+        [nzDropdownMenu]="threeDotsMenu"
+        [selected]="isThreeDotsMenuVisible"
+        (nzVisibleChange)="isSendMessageOptionVisible = $event"
+        [nzVisible]="isSendMessageOptionVisible">
+        <trudi-icon
+          class="check-unread no-pointer-event"
+          [icon]="isAppMessage ? 'sendUserAppMessageIcon' : 'sendUserIcon'"></trudi-icon>
+      </button>
+      <ng-template #btnTmp>
+        <button
+          *ngIf="isAppMessage"
+          [appE2E]=" openFromContactPage ? 'contact-page-contact-info-panel-message' : 'user-profile-send-button'"
+          class="toolbar-button"
+          [ngClass]="{'disabled-button': (isAppMessage && userProperty?.crmStatus === ECrmStatus.DELETED) || isDisableActionByOffBoardStatus || isNotDetectedContact}"
+          PreventButton
+          [attr.data-button-key]="EButtonTask.SEND_MESSAGE"
+          [attr.data-button-type]="EButtonType.TASK"
+          (leftClick)="handleOpenSendMessageModal()">
+          <trudi-icon
+            class="check-unread no-pointer-event"
+            icon="sendUserAppMessageIcon"></trudi-icon>
+        </button>
+        <button
+          *ngIf="!isAppMessage"
+          [appE2E]=" openFromContactPage ? 'contact-page-contact-info-panel-message' : 'user-profile-send-button'"
+          class="toolbar-button"
+          disableOpenSendMsgModal
+          [ngClass]="{'disabled-button': isDisableActionByOffBoardStatus || isNotDetectedContact}"
+          PreventButton
+          [attr.data-button-key]="EButtonTask.TASK_CREATE_MESSAGE"
+          [attr.data-button-type]="EButtonType.TASK"
+          (leftClick)="handleOpenSendMessageModal()">
+          <trudi-icon
+            class="check-unread no-pointer-event"
+            icon="sendUserIcon"></trudi-icon>
+        </button>
+      </ng-template>
+    </ng-container>
+    <!-- <ng-container
+      *ngIf="currentDataUser?.phoneNumber && openFrom === ETypePage.TASK_DETAIL">
+      <button
+        class="toolbar-button disabled"
+        *ngIf="!isTurnOnPhone; else activePhone"
+        nz-tooltip
+        [nzTooltipTitle]="upSellVoiceCall"
+        nzTooltipPlacement="top">
+        <trudi-icon
+          class="check-unread ml-auto"
+          icon="disableVoiceCall"></trudi-icon>
+      </button>
+      <ng-template #activePhone>
+        <button
+          class="toolbar-button"
+          PreventButton
+          [attr.data-button-key]="EButtonTask.CALL"
+          [attr.data-button-type]="EButtonType.TASK"
+          (leftClick)="handlePhoneCall()">
+          <trudi-icon
+            class="check-unread ml-auto"
+            icon="phoneUserIcon"
+            PreventButton
+            [attr.data-button-key]="EButtonTask.CALL"
+            [attr.data-button-type]="EButtonType.TASK"></trudi-icon>
+        </button>
+      </ng-template>
+    </ng-container> -->
+    <ng-container
+      *ngIf="currentDataUser?.isAppUser && openFrom === ETypePage.TASK_DETAIL">
+      <button
+        class="toolbar-button disabled"
+        *ngIf="!isTurnOnCall; else activeCall"
+        nz-tooltip
+        [nzTooltipTitle]="upSellVideoCall"
+        nzTooltipPlacement="top">
+        <trudi-icon
+          class="check-unread ml-auto"
+          icon="disableVideoCalllNoWrap"></trudi-icon>
+      </button>
+      <ng-template #activeCall>
+        <div
+          trudi-tooltip
+          nzTooltipTrigger="hover"
+          [nzTooltipTitle]="isProgressCallTooltip"
+          nzTooltipPlacement="bottomRight"
+          nzTooltipOverlayClassName="tooltip-action-button">
+          <button
+            class="toolbar-button"
+            [ngClass]="{'disabled-button': isProgressCall || (isAppMessage && userProperty?.crmStatus === ECrmStatus.DELETED) || isDisableActionByOffBoardStatus || isNotDetectedContact}"
+            PreventButton
+            [attr.data-button-key]="EButtonTask.CALL"
+            [attr.data-button-type]="EButtonType.TASK"
+            [disabled]="isProgressCall || (isAppMessage && userProperty?.crmStatus === ECrmStatus.DELETED) || isDisableActionByOffBoardStatus"
+            (leftClick)="handleVideoCall()">
+            <trudi-icon
+              class="check-unread ml-auto"
+              [icon]="isProgressCall || (isAppMessage && userProperty?.crmStatus === ECrmStatus.DELETED) ? 'videoCallDisabled': 'videoUserIcon'"
+              [style]="{'width.px': 20, 'height.px': 20}"
+              PreventButton
+              [attr.data-button-key]="EButtonTask.CALL"
+              [attr.data-button-type]="EButtonType.TASK"></trudi-icon>
+          </button>
+        </div>
+      </ng-template>
+    </ng-container>
+  </div>
+</div>
+
+<ng-template #upSellVoiceCall>
+  <div class="d-flex flex-dir-column gap-4 cursor-default text-left">
+    <div>To place audio calls,</div>
+    <div
+      class="text-decoration-underline cursor-pointer"
+      [ngClass]="{'upgrade-disabled': this.isDisconnectCompanyMailbox}"
+      PreventButton
+      [attr.data-button-key]="EButtonTask.UPGRADE_AI"
+      [attr.data-button-type]="EButtonType.TASK"
+      (leftClick)="$event.stopPropagation(); handleUpgradePlan(callTooltipType?.voice)">
+      upgrade your plan.
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #upSellVideoCall>
+  <div class="d-flex flex-dir-column gap-4 cursor-default text-left">
+    <div>To place video calls,</div>
+    <div
+      class="text-decoration-underline cursor-pointer"
+      [ngClass]="{'upgrade-disabled': this.isDisconnectCompanyMailbox}"
+      PreventButton
+      [attr.data-button-key]="EButtonTask.UPGRADE_AI"
+      [attr.data-button-type]="EButtonType.TASK"
+      (leftClick)="$event.stopPropagation(); handleUpgradePlan(callTooltipType?.video)">
+      upgrade your plan.
+    </div>
+  </div>
+</ng-template>
+
+<nz-dropdown-menu #threeDotsMenu>
+  <div tabindex="0" focusElement [isFocus]="isSendMessageOptionVisible" nz-menu>
+    <div class="menu-wrapper border-rad-8">
+      <div
+        class="item text"
+        PreventButton
+        [ngClass]="{'disabled': isDisableSendMsg}"
+        nz-tooltip
+        [nzTooltipTrigger]="isDisableSendMsg ? 'hover' : null"
+        [nzTooltipOverlayStyle]="{'max-width': '215px'}"
+        nzTooltipTitle="Can only send messages to contact associated with the task property"
+        (leftClick)="handleOpenSendMessageModal(EOptionSendMessage.SEND_IN_TASK)">
+        Send in task
+      </div>
+      <div
+        class="item text"
+        PreventButton
+        (leftClick)="handleOpenSendMessageModal(EOptionSendMessage.SEND_IN_INBOX)">
+        Send in inbox
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>

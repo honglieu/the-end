@@ -1,0 +1,80 @@
+<trudi-modal
+  *ngIf="popupState.showPopupChangeState"
+  [visible]="popupState.showPopupChangeState"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  className="trudi-modal-custom">
+  <confirm-popup
+    [iconUrl]="'/assets/icon/warning.svg'"
+    [titleText]="stateWarningTitle"
+    [subTexts]="['You will be unable to access forms created in different states']"
+    [buttonLeft]="'Cancel'"
+    [buttonRight]="'Yes, I’m sure'"
+    btnType="danger"
+    [backgroundRightBtn]="'var(--danger-500)'"
+    [stateWarningTitle]="stateWarningTitle"
+    (onButtonLeftClick)="handleCancelChangeState()"
+    (onButtonRightClick)="onYesPopup()">
+  </confirm-popup>
+</trudi-modal>
+<trudi-modal
+  *ngIf="popupState.showPopupIntegration"
+  [visible]="popupState.showPopupIntegration"
+  [autoFocus]="null"
+  [modelWidth]="624"
+  [closable]="false"
+  [iconName]="logoForm">
+  <ng-template #headerModal>
+    <div class="integrations-pop-up-header">
+      <object
+        type="image/svg+xml"
+        data="assets/icon/icon-rei-form-widget.svg"></object>
+    </div>
+  </ng-template>
+
+  <integrations-form
+    [formGroup]="formGroup"
+    [listProviderAccessToken]="listProviderAccessToken"
+    [stateWarningTitle]="stateWarningTitle"
+    [currentToken]="currentToken"
+    [currentData]="currentData"
+    [errorState]="errorState"
+    [isUpdateToken]="isUpdateToken"
+    [hasToken]="hasToken"
+    [showPopupChangeState]="popupState.showPopupChangeState"
+    [reiFormDropdown]="reiFormDropdown"></integrations-form>
+
+  <ng-template #footerModal>
+    <div class="integrations-pop-up-footer">
+      <div class="wrap-actions d-flex gap-12">
+        <button
+          trudi-btn
+          [disabled]="((this.getToken() === this.currentData.accessToken) && (this.getReiDomain() === this.currentData.regionId) && hasToken) || isDisabled"
+          (click)="handleSave()">
+          Save
+        </button>
+
+        <button
+          trudi-btn
+          variant="tonal"
+          btnType="neutral"
+          (click)="handleCancel()">
+          Cancel
+        </button>
+      </div>
+
+      <ng-template #buttonGroupLoading>
+        <div class="wrap-actions d-flex gap-12">
+          <nz-skeleton-element
+            class="trudi-btn trudi-btn-large trudi-btn-tertiary btn-save button-skeleton"
+            nzType="button"
+            [nzActive]="true"></nz-skeleton-element>
+          <nz-skeleton-element
+            class="trudi-btn trudi-btn-large trudi-btn-tertiary btn-save button-skeleton"
+            nzType="button"
+            [nzActive]="true"></nz-skeleton-element>
+        </div>
+      </ng-template>
+    </div>
+  </ng-template>
+</trudi-modal>

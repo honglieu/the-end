@@ -1,0 +1,592 @@
+@import 'function';
+.detail-user-wrapper {
+  min-height: calc(100vh - 220px);
+}
+.wrapper-detail-skeleton {
+  min-height: calc(100vh - 270px);
+  .detail-user-content {
+    hr {
+      height: calc(100vh - 408px) !important;
+    }
+    .skeleton-container {
+      width: 50%;
+      height: max-content;
+      padding: 18px 16px;
+      max-height: calc(100vh - 383px) !important;
+      overflow-y: hidden;
+    }
+  }
+}
+
+hr {
+  margin: 0;
+}
+.detail-user-header {
+  display: flex;
+  justify-content: space-between;
+  .close-modal-btn {
+    height: fit-content;
+    border-radius: 50%;
+  }
+  .close-btn {
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    margin-right: 6px;
+    display: flex;
+    align-items: baseline;
+    margin-top: 5px;
+    border: none;
+    background-color: transparent;
+    border-radius: 50%;
+  }
+  .detail-user {
+    margin: 6px 0 16px 14px;
+    display: flex;
+    align-items: center;
+    .ava-user {
+      .default-stat-icon {
+        justify-content: center;
+        border-radius: 40px;
+        height: 48px;
+        width: 48px;
+        margin-right: 2.4rem;
+        background-color: var(--gray-700);
+        label {
+          font-size: 24px;
+          line-height: 28px;
+          margin-top: 5px;
+          line-height: normal;
+          letter-spacing: -0.51px;
+          text-align: center;
+          color: var(--white);
+        }
+      }
+      .landlord {
+        background-color: var(--brand-500);
+      }
+      .tenant {
+        background-color: var(--tenant-500);
+      }
+      .archived {
+        background-color: var(--gray-500);
+      }
+      .prop-manager {
+        background-color: var(--gray-700);
+      }
+    }
+    .info-user {
+      .name-user {
+        font-size: 20px;
+        line-height: 24px;
+        font-weight: 500;
+        color: var(--gray-700);
+        margin-bottom: 4px;
+      }
+      .contact-user {
+        margin-bottom: 0.7rem;
+        display: flex;
+        align-items: center;
+        .email-user {
+          @include fontSetup(var(--gray-950), 18px, 24px, normal, 600);
+        }
+        .small-circle {
+          width: 3px;
+          height: 3px;
+          display: inline-block;
+          border-radius: 100%;
+          margin: 0 5px;
+          background-color: var(--gray-700);
+        }
+        .phone-user {
+          @include fontSetup(var(--gray-950), 18px, 24px, normal, 600);
+          .ml-5 {
+            margin-left: 5px;
+            margin-right: 5px;
+          }
+        }
+      }
+      .first-active-date {
+        @include fontSetup(var(--gray-500), 14px, 16px, normal, 500);
+      }
+    }
+  }
+}
+.detail-user-content {
+  max-height: calc(100vh - 420px) !important;
+  display: flex;
+  margin-right: -10px;
+  hr {
+    margin: 20px 0 0;
+    height: calc(100vh - 333px) !important;
+    border: none;
+    border-right: 2px solid var(--gray-200);
+  }
+  .col-left,
+  .col-right {
+    width: 50%;
+    height: max-content;
+    padding: 20px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    max-height: calc(100vh - 300px) !important;
+    overflow-y: auto;
+  }
+  .detail-user-content-info {
+    padding-right: 26px;
+  }
+  .contact-number-user {
+    margin: 15px 0 15px 14px;
+    .text-contact {
+      font-size: 12px;
+      line-height: 14px;
+      color: var(--gray-500);
+      margin-bottom: 6px;
+    }
+    div {
+      font-size: 14px;
+      line-height: 16px;
+      font-weight: 500;
+      color: var(--gray-700);
+    }
+  }
+  .properties-user {
+    display: flex;
+    justify-content: space-between;
+    margin: 12px 0 18px 18px;
+
+    .payment {
+      margin-bottom: 12px;
+
+      &-text {
+        font-size: 12px;
+        line-height: 14px;
+        color: var(--gray-500);
+        margin-bottom: 4px;
+      }
+      &-code {
+        font-size: 14px;
+        line-height: 16px;
+        color: var(--gray-500);
+      }
+    }
+    .property-detail {
+      display: flex;
+      .property-icon {
+        .default-stat-icon {
+          justify-content: center;
+          border-radius: 40px;
+          height: 24px;
+          width: 24px;
+          margin-right: 0.8rem;
+          .logo {
+            border-radius: 40px;
+            height: 24px;
+            width: 24px;
+          }
+        }
+        .landlord {
+          background-color: var(--brand-500);
+        }
+        .tenant {
+          background-color: var(--tenant-500);
+        }
+        .archived {
+          background-color: var(--gray-500);
+        }
+      }
+      .info-property {
+        .address {
+          font-size: 14px;
+          line-height: 16px;
+
+          color: var(--gray-700);
+          font-weight: 500;
+          margin-bottom: 4px;
+        }
+        .streetline {
+          font-weight: 500;
+          font-size: 12px;
+          line-height: 14px;
+          color: var(--gray-700);
+          margin-bottom: 4px;
+        }
+        .small-circle {
+          width: 3px;
+          height: 3px;
+          display: inline-block;
+          border-radius: 50%;
+          margin: 0 5px;
+          background-color: var(--gray-500);
+        }
+        .contact,
+        .status {
+          white-space: nowrap;
+          display: flex;
+          align-items: center;
+
+          .italic {
+            font-style: italic;
+          }
+          text-transform: capitalize;
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 14px;
+          color: var(--gray-500);
+          margin-bottom: 4px;
+        }
+
+        .contact {
+          text-transform: none;
+        }
+      }
+    }
+    .vacated-date {
+      font-weight: 500;
+      font-size: 12px;
+      margin-right: 3px;
+      line-height: 14px;
+      color: var(--gray-500);
+    }
+  }
+
+  &-info {
+    .info-landlord {
+      background: var(--brand-100);
+      &.active {
+        border: 2px solid var(--brand-500);
+      }
+      &:hover {
+        background: var(--brand-50);
+      }
+    }
+
+    .info-tenant {
+      background: var(--bg-tenant-tonal-normal);
+      &.active {
+        border: 2px solid var(--tenant-500);
+      }
+      &:hover {
+        background: var(--warning-50);
+      }
+    }
+
+    .info-user {
+      padding: 12px;
+      cursor: pointer;
+      border-radius: 8px;
+      margin-bottom: 10px;
+
+      &:focus-visible {
+        box-shadow: inset 0px 0px 0px 1px var(--brand-500),
+          0px 0px 0px 2px rgba(var(--brand-500-rgb), 0.6) !important;
+      }
+
+      &-skeleton {
+        background-color: var(--gray-200);
+      }
+
+      &-header {
+        .info-username {
+          .name {
+            @include fontSetup(var(--gray-700), 16px, 24px, normal, 600);
+            margin: 0;
+            padding: 0;
+          }
+          .role {
+            @include fontSetup(var(--gray-500), 12px, 16px, normal, 500);
+          }
+        }
+      }
+
+      &-content {
+        .list-info {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+          display: flex;
+          flex-direction: column;
+          row-gap: 4px;
+          .margin-top-8 {
+            margin-top: 8px;
+          }
+
+          .display-content {
+            display: flex;
+            align-items: flex-start;
+            column-gap: 8px;
+
+            .align-content {
+              min-height: 16px;
+              display: flex;
+              align-items: center;
+
+              .has-value {
+                @include fontSetup(var(--gray-700), 12px, 16px, normal, 400);
+              }
+
+              .no-value {
+                @include fontSetup(var(--gray-500), 12px, 16px, italic, 400);
+              }
+
+              .export-history {
+                @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+                text-decoration: underline;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.property-file {
+  &.skeleton-container {
+    .item-thumbnail.rounded-corners {
+      &::ng-deep
+        .ant-skeleton-element
+        .ant-skeleton-avatar.ant-skeleton-avatar-circle {
+        border-radius: 4px;
+      }
+    }
+    .item-detail-property {
+      &::ng-deep .ant-skeleton-content .ant-skeleton-paragraph {
+        margin-block: 0;
+      }
+    }
+  }
+  .property-header {
+    @include fontSetup(var(--gray-700), 14px, 24px, normal, 600);
+  }
+
+  .item {
+    display: flex;
+    align-items: center;
+
+    &-thumbnail {
+      margin-right: 1.6rem;
+      position: relative;
+      cursor: pointer;
+      .round-border {
+        border-radius: 50% !important;
+      }
+      img {
+        object-fit: cover;
+        width: 3.2rem;
+        min-width: 3.2rem;
+        height: 3.2rem;
+        min-height: 3.2rem;
+        border-radius: 4px;
+      }
+      .play-button {
+        position: absolute;
+        background-color: #ffffff33;
+        top: 0;
+        width: 3.2rem;
+        min-width: 3.2rem;
+        height: 3.2rem;
+        min-height: 3.2rem;
+        & .play-icon {
+          width: 1.2rem;
+          min-width: 1.2rem;
+        }
+      }
+    }
+    &-detail {
+      overflow: hidden;
+      flex-grow: 1;
+      margin-right: 20px;
+      &-text {
+        margin-block: 0;
+      }
+      .file-name {
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        font-weight: 500;
+        font-size: 1.4rem;
+        line-height: 1.8rem;
+        color: var(--gray-950);
+        cursor: pointer;
+      }
+      .date-creator {
+        display: flex;
+        align-items: center;
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        color: var(--gray-600);
+        .date-text {
+          white-space: nowrap;
+        }
+      }
+      .viewing-permission {
+        font-size: 1.2rem;
+        line-height: 1.6rem;
+        color: var(--brand-500);
+        display: flex;
+        margin-top: 2px;
+        cursor: auto !important;
+
+        .user-avatar {
+          width: 22px;
+          height: 22px;
+          border: 2px solid var(--white);
+          border-radius: 100%;
+          color: var(--white);
+          font-size: 1.2rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-left: -4px;
+          cursor: pointer;
+          label {
+            cursor: pointer;
+            margin: 0;
+            text-transform: uppercase;
+            @include fontSetup(var(--white), 10px, 10px, normal, 600);
+          }
+          &.many-user {
+            background: var(--brand-50);
+            color: var(--brand-500);
+          }
+          &:first-child {
+            margin-left: unset;
+            z-index: 5;
+          }
+          &:nth-child(2) {
+            z-index: 4;
+          }
+          &:nth-child(3) {
+            z-index: 3;
+          }
+          &:nth-child(4) {
+            z-index: 2;
+          }
+          &:last-child {
+            z-index: 1;
+          }
+        }
+        .landlord {
+          background-color: var(--brand-500);
+        }
+        .tenant {
+          background-color: var(--tenant-500);
+        }
+        .agent {
+          background-color: var(--info-500);
+        }
+      }
+
+      .tooltip-wrapper {
+        visibility: visible;
+        min-width: 290px;
+        background-color: var(--white);
+        color: var(--gray-500);
+        font-size: 12px;
+        line-height: 16px;
+        border-radius: 8px;
+        padding: 10px 13px;
+        position: absolute;
+        z-index: 7;
+        top: 88%;
+        left: 0;
+        box-shadow: 0 4px 16px var(--bg-overlay-light);
+        .tooltip-name {
+          font-weight: 500;
+        }
+      }
+    }
+    &-action-button {
+      min-width: 24px;
+      cursor: pointer;
+
+      .dropdown-content {
+        background-color: var(--white);
+        border-radius: 8px;
+        box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.08);
+        visibility: visible;
+        position: absolute;
+        z-index: 2;
+        right: 0;
+        .dropdown-item {
+          display: flex;
+          padding: 10px 12px;
+          border-bottom: 1px solid var(--gray-100);
+          &:last-child {
+            border-bottom: none;
+          }
+          &-icon {
+            margin-right: 10px;
+          }
+          &-text {
+            font-weight: 500;
+            font-size: 1.4rem;
+            line-height: 2rem;
+            color: var(--gray-500);
+          }
+        }
+      }
+      .size-16 {
+        img {
+          width: 16px !important;
+          min-width: 16px !important;
+          height: 16px !important;
+          min-height: 16px !important;
+        }
+      }
+    }
+    .round-wrapper {
+      position: relative;
+      min-width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--gray-200);
+    }
+  }
+}
+
+.error-icon {
+  display: inline;
+  position: relative;
+  margin-right: 0.2rem;
+  img {
+    cursor: pointer;
+  }
+}
+// .error-icon:hover:after {
+.error-icon .unverified-tooltip {
+  visibility: hidden;
+  background-color: var(--white);
+  border-radius: 4px;
+  bottom: -28px;
+  font-size: 12px;
+  color: var(--gray-500);
+  content: attr(data-value);
+  left: 0;
+  padding: 7px 15px;
+  position: absolute;
+  z-index: 2;
+  width: max-content;
+  box-shadow: 0px 0px 0px 2px var(--gray-200);
+
+  // .unverified-text {
+  //     margin-right: 30px;
+  // }
+
+  .unverified-btn {
+    background-color: var(--brand-500);
+    border: 0;
+    font-size: 12px;
+    line-height: 14px;
+    padding: 5px 15px;
+    color: var(--white);
+    border-radius: 4px;
+  }
+}
+
+.error-icon:hover .unverified-tooltip {
+  visibility: visible;
+}

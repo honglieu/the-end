@@ -1,0 +1,111 @@
+@import 'function';
+
+:host {
+  .email-signature-preview-wrapper {
+    border-radius: 8px;
+    border: 1px solid var(--border-neutral-dark);
+    background-color: var(--bg-base);
+
+    .preview-header {
+      border-bottom: 1px solid var(--border-neutral-dark);
+      padding: 20px 24px;
+
+      &--mailbox {
+        margin-bottom: -5px;
+      }
+
+      &--title {
+        .title-text {
+          @include fontSetup(
+            var(--fg-neutral-stronger),
+            14px,
+            20px,
+            normal,
+            600
+          );
+        }
+
+        .sub-title-text {
+          @include fontSetup(var(--fg-neutral-weaker), 12px, 16px, normal, 400);
+        }
+      }
+    }
+
+    .preview-body {
+      padding: 16px 24px;
+
+      .preview-body-image-singature {
+        margin-top: 6px;
+        margin-bottom: 16px;
+        .image-signature {
+          transform-origin: top left;
+        }
+      }
+    }
+  }
+}
+
+.signature__preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  &--skeleton {
+    height: 12px;
+  }
+  ::ng-deep &--skeleton .ant-skeleton-input {
+    width: 64px;
+    min-width: 64px;
+    height: 100%;
+    border-radius: 15px;
+  }
+}
+
+::ng-deep .content-signature-preview {
+  margin-top: 16px;
+  .ant-skeleton-content .ant-skeleton-paragraph > li + li {
+    margin-top: 8px;
+  }
+  .ant-skeleton-content .ant-skeleton-paragraph > li {
+    height: 12px;
+  }
+  .ant-skeleton-round .ant-skeleton-content .ant-skeleton-title,
+  .ant-skeleton-round .ant-skeleton-content .ant-skeleton-paragraph > li {
+    border-radius: 15px;
+  }
+}
+
+.tooltip-content-wrapper {
+  // top: 10px;
+  @include fontSetup(var(--white), 12px, 16px, normal, 400);
+}
+
+.mailbox-option {
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+
+  &.selected {
+    .checked-icon {
+      visibility: visible;
+    }
+  }
+
+  .checked-icon {
+    visibility: hidden;
+    svg {
+      height: 20px;
+      width: 20px;
+      color: var(--fg-brand);
+    }
+  }
+
+  .company-name {
+    @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+  }
+
+  .company-email {
+    @include fontSetup(var(--fg-neutral-stronger), 12px, 16px, normal, 400);
+  }
+}

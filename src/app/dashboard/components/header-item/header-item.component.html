@@ -1,0 +1,86 @@
+<ng-container *ngIf="externalLink; else otherContent">
+  <a
+    (mouseenter)="mouseenter()"
+    (mouseleave)="mouseleave()"
+    class="header-link"
+    [href]="externalLink"
+    target="_blank"
+    [ngClass]="{'active': isSelected, 'header-link-custom': hasCustomClass, 'company-select': companySelect}"
+    [ngStyle]="{'cursor': disabled ? 'not-allowed': 'pointer'}"
+    [appE2E]="dataE2E || ''"
+    [id]="idHeaderItem">
+    <div *ngIf="logoLink" class="wrapper-logo">
+      <img class="logo" [src]="logoLink" alt="logo" alt="" />
+    </div>
+    <div *ngIf="!logoLink || isUnread" class="item-icon-wrapper">
+      <trudi-icon
+        *ngIf="!logoLink"
+        class="item-icon"
+        [icon]="iconName"
+        svgClass="size-20"></trudi-icon>
+      <trudi-icon
+        *ngIf="isUnread"
+        class="check-unread"
+        icon="redDotUnreadMessage"></trudi-icon>
+    </div>
+    <span *ngIf="titleName" class="title-name"> {{ titleName }} </span>
+    <trudi-icon *ngIf="isOpenNewTab" icon="iconNavigate"></trudi-icon>
+    <trudi-icon
+      *ngIf="!isVertical && isSelected && !isOpenNewTab"
+      icon="checkSuccess">
+    </trudi-icon>
+    <trudi-icon *ngIf="companySelect" icon="grayChevronDown"></trudi-icon>
+  </a>
+</ng-container>
+<ng-template #otherContent>
+  <a
+    tabindex="0"
+    (isActiveChange)="onLinkActiveChange($event)"
+    routerLinkActive="active"
+    (mouseenter)="mouseenter()"
+    (mouseleave)="mouseleave()"
+    class="header-link"
+    [routerLink]="routerLink"
+    [queryParams]="queryParams"
+    [ngClass]="{'active': isSelected, 'header-link-custom': hasCustomClass, 'company-select': companySelect}"
+    [appE2E]="dataE2E || ''"
+    [id]="idHeaderItem"
+    [ngStyle]="{'cursor': disabled ? 'not-allowed': 'pointer'}">
+    <div *ngIf="logoLink" class="wrapper-logo">
+      <img
+        *ngIf="className !== 'avatar circle'"
+        class="logo"
+        [src]="logoLink"
+        alt="logo"
+        alt="" />
+      <app-user-avatar
+        *ngIf="className === 'avatar circle'"
+        [avatar]="logoLink"
+        [user]="currentUser"
+        [style]="'width: 32px; height: 32px;'"></app-user-avatar>
+    </div>
+    <div
+      *ngIf="!logoLink || isUnread"
+      class="item-icon-wrapper no-pointer-event">
+      <trudi-icon
+        *ngIf="!logoLink"
+        class="item-icon"
+        [icon]="iconName"
+        svgClass="size-20"></trudi-icon>
+      <trudi-icon
+        *ngIf="isUnread"
+        class="check-unread"
+        icon="redDotUnreadMessage"></trudi-icon>
+    </div>
+    <span *ngIf="titleName" class="title-name"> {{ titleName }} </span>
+    <trudi-icon *ngIf="isOpenNewTab" icon="iconNavigate"></trudi-icon>
+    <trudi-icon
+      *ngIf="!isVertical && isSelected && !isOpenNewTab"
+      icon="checkSuccess">
+    </trudi-icon>
+    <trudi-icon *ngIf="companySelect" icon="grayChevronDown"></trudi-icon>
+  </a>
+</ng-template>
+<div class="content" [@menuAnimation] *ngIf="isCheckedHover">
+  <ng-content></ng-content>
+</div>

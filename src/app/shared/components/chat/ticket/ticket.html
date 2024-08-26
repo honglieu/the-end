@@ -1,0 +1,312 @@
+<div
+  class="ticket"
+  [style.width.%]="widthInPercent"
+  [ngClass]="{
+    'gray-border': grayBorder,
+    'box-shadow': showBoxShadow,
+    'ai-assistant__block': isAiAsistantPage || isAppMessageLog,
+    'ml-18': !isAiAsistantPage && !isAppMessageLog
+  }">
+  <span
+    *ngIf="!isAiAsistantPage && !isAppMessageLog"
+    class="ticket__avatar"
+    (click)="handleClickAvatar($event)">
+    <ng-container *ngIf="!!message.emailMetadata?.from?.length">
+      <app-circle-avatar
+        [firstName]="[EUserPropertyType.MAILBOX, EUserPropertyType.LEAD].includes(senderOfMessage?.userType) ? senderOfMessage?.pmName : excludedUserRole.includes(senderOfMessage?.senderRole) ? null : senderOfMessage?.firstName"
+        [lastName]="[EUserPropertyType.MAILBOX, EUserPropertyType.LEAD].includes(senderOfMessage?.userType) ? '' : excludedUserRole.includes(senderOfMessage?.senderRole) ? null : senderOfMessage?.lastName"
+        [size]="24"
+        [userType]="![EUserPropertyType.MAILBOX, EUserPropertyType.LEAD].includes(senderOfMessage?.userType) && (excludedUserRole.includes(senderOfMessage?.senderRole)) ? EUserPropertyType.EXTERNAL : senderOfMessage?.userPropertyType || senderOfMessage?.userType"
+        [avatar]="[EUserPropertyType.MAILBOX].includes(senderOfMessage?.userType) ? message.googleAvatar : senderOfMessage?.googleAvatar"
+        [userId]="[EUserPropertyType.MAILBOX].includes(senderOfMessage?.userType) ? message.userId : senderOfMessage?.userId">
+      </app-circle-avatar>
+    </ng-container>
+    <ng-container *ngIf="!message.emailMetadata?.from?.length">
+      <app-circle-avatar
+        [firstName]="(message.userPropertyType || message.userType) ? message.firstName : null"
+        [lastName]="(message.userPropertyType || message.userType) ? message.lastName : null"
+        [size]="32"
+        [userType]="message.userPropertyType || message.userType"
+        [avatar]="message.googleAvatar"
+        [userId]="message.userId">
+      </app-circle-avatar>
+    </ng-container>
+  </span>
+  <ng-container
+    *ngIf="!isAiAsistantPage && !isAppMessageLog; else aiAsistantTicket">
+    <div
+      *ngIf="(ticketCategoryInfo?.ticketLanguageCode && ticketCategoryInfo?.ticketLanguageCode !== 'en' && ticketCategoryInfo?.ticketLanguageCode !== 'und')"
+      class="translation-label mb-10">
+      <language-translation-label
+        (languageTranslationDisabled)="updateSubtitle($event)"
+        [messagesTranslate]="ticketCategoryInfo?.ticketTrans"
+        [inputLanguage]="ticketCategoryInfo?.ticketLanguageCode"></language-translation-label>
+    </div>
+    <div class="ticket__header">
+      <div class="detail">
+        <div class="d-flex align-items-center gap-8">
+          <trudi-icon
+            [icon]="type === EOptionType.GENERAL_ENQUIRY ? 'iconHelpV2' : 'maintenanceV2'"
+            svgClass="size-24"
+            viewBox="auto"></trudi-icon>
+          <div class="detail__topic">
+            {{(ticketCategoryInfo.name || ticketCategoryInfo.consoleTitle) |
+            uppercaseFirstLetter}}
+          </div>
+        </div>
+        <div *ngIf="ticketCreator" class="detail__creator">
+          <div
+            [ngClass]="{
+              'landlord': ticketCreator.propertyType === 'LANDLORD',
+              'tenant': ticketCreator.propertyType === 'TENANT',
+              'agent': ticketCreator.propertyType === 'AGENT'
+            }"
+            class="img-circle">
+            <label class="position-center-w"
+              >{{firstLetterFirstName}}{{firstLetterLastName}}</label
+            >
+          </div>
+          <div class="detail__creator-detail">
+            <div class="name">
+              <span
+                >{{ticketCreator?.firstName}} {{ticketCreator?.lastName}}</span
+              >
+            </div>
+            <span class="small-circle"></span>
+            <div class="role">
+              {{ticketCreator?.isPrimary ? 'Primary ' : ''
+              }}{{(ticketCreator?.propertyType === EUserPropertyType.LANDLORD ?
+              EUserPropertyType.OWNER : ticketCreator?.propertyType) |
+              lowercase}}
+            </div>
+          </div>
+        </div>
+        <trudi-badge
+          *ngIf="isUrgent"
+          [text]="'Urgent'"
+          size="small"
+          variant="error"
+          class="badge-item"></trudi-badge>
+      </div>
+    </div>
+    <div class="ticket__body">
+      <div
+        [innerHTML]="(updatedSubtitle || subtitle) | uppercaseFirstLetter: true"></div>
+      <div
+        class="ticket__body-images"
+        *ngIf="this.fileList && this.fileList.length">
+        <div
+          cdkDropList
+          #fileList1="cdkDropList"
+          id="source-drag-photo"
+          class="d-flex"
+          [cdkDropListData]="fileList"
+          [cdkDropListConnectedTo]="'destination-drop-photo'">
+          <div
+            class="image-item"
+            *ngFor="let file of fileList"
+            (click)="loadFile(file.propertyDocument)"
+            cdkDrag
+            cdkDragHandle>
+            <app-message-file
+              [showBoxShadow]="false"
+              [grayBorder]="true"
+              [widthInPercent]="40"
+              [messageFile]="file.propertyDocument"
+              [size]="60"></app-message-file>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="original-content mb-10"
+      *ngIf="updatedSubtitle && (ticketCategoryInfo?.ticketTrans && ticketCategoryInfo?.ticketLanguageCode && ticketCategoryInfo?.ticketLanguageCode !== 'en' && ticketCategoryInfo?.ticketLanguageCode !== 'und')">
+      <language-original-content
+        [content]="subtitle"></language-original-content>
+    </div>
+    <div class="ticket__footer">
+      <div class="date">
+        Submitted via {{createdFrom | titleCasePipe | lowercase}} {{timeCreated
+        | formatDateTime: true | async}}
+      </div>
+      <div
+        *ngIf="!isReadonly"
+        class="view-conversation"
+        (click)="(createdFrom !== EMessageComeFromType.APP ? (sessionEnded || !conversationLogId) : true) && handleViewConversation()"
+        (keyup.enter)="viewConversation.click()"
+        [class.view-conversation-disabled]="createdFrom !== EMessageComeFromType.APP && (!sessionEnded && !!conversationLogId)">
+        <span #viewConversation class="view-conversation-text"
+          >View conversation</span
+        >
+      </div>
+    </div>
+    <!-- <div
+      *ngIf="!isAiAsistantPage && !isDraftPage && !isAppMessageLog"
+      class="wraper-button"
+      [ngClass]="{'justify-content-center': isUnidentifiedProperty}">
+      <button-action
+        [ngClass]="{'full-width': !isUnidentifiedProperty}"
+        *ngIf="message?.status !== taskStatusType.deleted && message?.status !== taskStatusType.completed && message?.status !== taskStatusType.resolved && message?.status !== taskStatusType.cancelled"
+        [countMetaData]="countMetaDataLength"
+        (showModal)="handleButton($event)"
+        [isUnidentifiedProperty]="isUnidentifiedProperty"
+        [isFullWidth]="!isUnidentifiedProperty"></button-action>
+    </div> -->
+  </ng-container>
+</div>
+
+<ng-template #aiAsistantTicket>
+  <div class="d-flex justify-content-between align-items-start">
+    <div class="d-flex gap-16">
+      <trudi-icon
+        [icon]="type === EOptionType.GENERAL_ENQUIRY ? 'iconHelpV2' : 'maintenanceV2'"
+        svgClass="size-32"
+        class="mt-4"
+        viewBox="auto"></trudi-icon>
+      <div class="ai-assistant__block-center">
+        <div class="ticket__header">
+          <div class="detail">
+            <div class="d-flex align-items-center gap-4">
+              <div class="detail__topic">
+                {{(ticketCategoryInfo.name || ticketCategoryInfo.consoleTitle) |
+                uppercaseFirstLetter}}
+              </div>
+              <div *ngIf="isUrgent">
+                <trudi-badge
+                  text="Urgent"
+                  size="extra-small"
+                  variant="error"
+                  badgeType="filled"
+                  [rounded]="true">
+                </trudi-badge>
+              </div>
+            </div>
+            <span class="date">
+              {{status}} at {{timeCreated | formatTime: true | async}},
+              {{timeCreated | formatDate | async}}
+            </span>
+            <div
+              *ngIf="ticketCreator && status !== EStatusTicket.SUBMIT && isOpenDescription"
+              class="detail__creator">
+              <div
+                [ngClass]="{
+                  'landlord': ticketCreator.propertyType === 'LANDLORD',
+                  'tenant': ticketCreator.propertyType === 'TENANT',
+                  'agent': ticketCreator.propertyType === 'AGENT'
+                }"
+                class="img-circle">
+                <label class="position-center-w"
+                  >{{firstLetterFirstName}}{{firstLetterLastName}}</label
+                >
+              </div>
+              <div class="detail__creator-detail">
+                <div class="name">
+                  <span
+                    >{{ticketCreator?.firstName}}
+                    {{ticketCreator?.lastName}}</span
+                  >
+                </div>
+                <span class="small-circle"></span>
+                <div class="role">
+                  {{ticketCreator?.isPrimary ? 'Primary ' : ''
+                  }}{{(ticketCreator?.propertyType ===
+                  EUserPropertyType.LANDLORD ? EUserPropertyType.OWNER :
+                  ticketCreator?.propertyType) | lowercase}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="ticket__body d-flex flex-dir-column"
+          [class.mt-8]="isOpenDescription"
+          [@collapseMotion]="isOpenDescription ? 'expanded' : 'collapsed'">
+          <div
+            class="ticket__body-title"
+            [innerHTML]="(updatedSubtitle || subtitle) | uppercaseFirstLetter: true"></div>
+          <div
+            class="translation-label mt-8"
+            *ngIf="(ticketCategoryInfo?.ticketLanguageCode && ticketCategoryInfo?.ticketLanguageCode !== 'en' && ticketCategoryInfo?.ticketLanguageCode !== 'und') && status !== EStatusTicket.SUBMIT"
+            [@collapseMotion]="isOpenDescription && (ticketCategoryInfo?.ticketLanguageCode && ticketCategoryInfo?.ticketLanguageCode !== 'en' && ticketCategoryInfo?.ticketLanguageCode !== 'und') && status !== EStatusTicket.SUBMIT ? 'expanded' : 'collapsed'">
+            <language-translation-label
+              [isFromAIAssistant]="true"
+              [messagesTranslate]="ticketCategoryInfo?.ticketTrans"
+              (languageTranslationDisabled)="updateSubtitle($event)"
+              [inputLanguage]="ticketCategoryInfo?.ticketLanguageCode"></language-translation-label>
+          </div>
+          <div
+            *ngIf="updatedSubtitle && (ticketCategoryInfo?.ticketTrans && ticketCategoryInfo?.ticketLanguageCode && ticketCategoryInfo?.ticketLanguageCode !== 'en' && ticketCategoryInfo?.ticketLanguageCode !== 'und') && status !== EStatusTicket.SUBMIT"
+            class="mt-8">
+            <language-original-content
+              [isOpenDescription]="isOpenDescription"
+              [content]="subtitle"></language-original-content>
+          </div>
+          <div class="ticket__body-images" *ngIf="this.fileList?.length">
+            <div
+              cdkDropList
+              #fileList1="cdkDropList"
+              id="source-drag-photo"
+              class="d-flex"
+              [cdkDropListData]="fileList"
+              [cdkDropListConnectedTo]="'destination-drop-photo'">
+              <div
+                class="image-item"
+                *ngFor="let file of fileList"
+                (click)="loadFile(file.propertyDocument)"
+                cdkDrag
+                cdkDragHandle>
+                <app-message-file
+                  [showBoxShadow]="false"
+                  [grayBorder]="true"
+                  [widthInPercent]="40"
+                  [messageFile]="file.propertyDocument"
+                  [size]="60"></app-message-file>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button
+      *ngIf="status === EStatusTicket.SUBMIT"
+      trudi-btn
+      variant="ghost"
+      btnType="neutral"
+      size="medium"
+      shape="circle"
+      (click)="handleNavigateToTask()"
+      class="mt-8">
+      <trudi-icon
+        icon="arrowRight"
+        svgClass="icon-svg"
+        viewBox="auto"></trudi-icon>
+    </button>
+    <button
+      *ngIf="status !== EStatusTicket.SUBMIT && !(!isUrgent && !subtitle && !fileList?.length)"
+      trudi-btn
+      variant="ghost"
+      btnType="neutral"
+      size="medium"
+      shape="circle"
+      (click)="handleViewTicket()">
+      <trudi-icon
+        icon="chevronDown"
+        svgClass="size-24"
+        [class.rotation]="isOpenDescription"
+        viewBox="auto"></trudi-icon>
+    </button>
+  </div>
+</ng-template>
+
+<!-- <trudi-send-msg-v2
+  *ngIf="isShowSendMsgModal"
+  [rawMsg]="rawMsg"
+  [configs]="sendMsgModalConfig"
+  [selectedTasks]="selectedTasks"
+  [openFrom]="TaskType.MESSAGE"
+  (onQuit)="handleQuit()"
+  [typeMessage]="typeMessage.SCRATCH"
+  [listOfFiles]="isFowarding ? listFileMessage : listOfFiles"
+  [listContactCard]="contactsList"
+  (onSendMsg)="onSendMsg($event)">
+</trudi-send-msg-v2> -->

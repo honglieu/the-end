@@ -1,0 +1,24 @@
+<trudi-collapse-widget
+  [titleHeader]="headerPortfoliosGroup"
+  [activeExpand]="true"
+  class="portfolios-collapse">
+  <ul
+    class="portfolios-group-header d-flex flex-dir-column auto-hide-scroll pd-0">
+    <ng-container
+      *ngFor="let portfolios of portfoliosGroup.portfolios; trackBy: portfoliosTrackBy">
+      <li class="hodiday-item d-flex align-items-center">
+        <portfolios-row
+          [portfolios]="portfolios"
+          [agencyId]="portfoliosGroup.id"></portfolios-row>
+      </li>
+    </ng-container>
+  </ul>
+</trudi-collapse-widget>
+<ng-template #headerPortfoliosGroup>
+  <div class="d-flex align-items-center gap-4">
+    <div class="header-title">
+      {{ portfoliosGroup.name?.toUpperCase() + ' (' +
+      (portfoliosGroup.portfolios?.length) + ')' }}
+    </div>
+  </div>
+</ng-template>

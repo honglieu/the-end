@@ -1,0 +1,33 @@
+<div [formGroup]="form">
+  <div class="form__advance--container">
+    <div class="control__pre-screen">
+      <div class="row-label__container">
+        <span class="control__label">Pre-screen</span>
+        <trudi-checkbox label="Required" formControlName="preScreenIsRequired">
+        </trudi-checkbox>
+      </div>
+      <div class="row-content">
+        <div class="pre-screen__title w-100">
+          <trudi-form-control [checkSubmit]="!isSubmittedCommunicationForm">
+            <trudi-text-field
+              [checkSubmit]="!isSubmittedCommunicationForm"
+              label="Title"
+              formControlName="title"
+              [maxCharacter]="100">
+            </trudi-text-field>
+          </trudi-form-control>
+        </div>
+        <div class="pre-screen__amount w-100">
+          <trudi-form-control>
+            <trudi-number-field
+              label="Bond amount"
+              formControlName="amount"
+              prefixText="$"
+              size="extra-large">
+            </trudi-number-field>
+          </trudi-form-control>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

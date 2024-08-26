@@ -1,0 +1,5 @@
+@import 'function';
+
+.information-detail {
+  @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 500);
+}

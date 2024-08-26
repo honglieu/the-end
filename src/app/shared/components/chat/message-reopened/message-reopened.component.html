@@ -1,0 +1,26 @@
+<div
+  class="message-resolved d-flex align-items-center gap-4 wrap-conversation-status">
+  <trudi-icon
+    [style]="{'width.px': 20, 'height.px': 20}"
+    icon="greyRotateCcw"></trudi-icon>
+  <div>
+    <span> Reopened {{isFromMailBox ? 'from' : 'by'}} </span>
+    <ng-container *ngIf="!isUserFromApp else appUser">
+      <span
+        class="highlighted"
+        (click)="handleOpenProfileDrawer($event)"
+        [class.name-clickable]="isClickable">
+        @if (checkToShowPhoneNumber) {
+        <!-- Show phone number -->
+        {{message?.creator?.externalId || phoneNumber | phoneNumberFormat}}}
+        @else {
+        <!-- Show title || message -->
+        {{isFromMailBox ? title : message | formatDisplayFullName : false}} }
+      </span>
+    </ng-container>
+    <ng-template #appUser>
+      <span class="highlighted">{{userRole}}</span>
+    </ng-template>
+    <span> {{ message.createdAt | trudiDateTime : EPage.DETAILS | async}}</span>
+  </div>
+</div>

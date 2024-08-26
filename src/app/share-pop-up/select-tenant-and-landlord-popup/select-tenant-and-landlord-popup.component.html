@@ -1,0 +1,185 @@
+<app-modal-popup
+  *ngIf="showSelectTenantOrLandlord"
+  [show]="showSelectTenantOrLandlord">
+  <div class="invite-wrapper">
+    <div class="header">
+      <div class="detail-invite d-flex justify-content-between">
+        <div class="send-invite-text d-flex align-items-center">
+          <p>{{headerName}}</p>
+          <div>{{propertyAddress}}</div>
+        </div>
+        <div
+          data-e2e="button-close"
+          class="close-btn cursor-pointer"
+          (click)="isOpenModal(false)">
+          <img src="/assets/icon/close-modal.svg" alt="close modal" />
+        </div>
+      </div>
+    </div>
+    <hr />
+    <div class="body">
+      <div class="table-user" *ngIf="listOfUser; else noProperty">
+        <div class="wrap-users">
+          <div *ngIf="selectUserType !== 'TENANT'">
+            <ng-container
+              *ngFor="let user of listOfUser.ownerships; let i = index">
+              <div
+                class="user-row justify-content-between align-items-center"
+                #firstTrElement
+                [ngClass]="(isGroupChecked(user.id) || isChecked(i)) ? 'row-checked' : ''">
+                <div class="user">
+                  <div class="user-avatar">
+                    <div class="default-stat-icon" [ngClass]="user.type">
+                      <img src="/assets/icon/ownership.svg" [alt]="user.type" />
+                    </div>
+                  </div>
+                  <div class="user-info">
+                    <ng-container>
+                      <div class="primary-user">
+                        <span class="permission"
+                          >{{user.type | titlecase}}:
+                        </span>
+                        <span class="name">{{user.name}}</span>
+                        <text-badge
+                          class="user-status"
+                          [text]="user.status"></text-badge>
+                      </div>
+                      <ng-container *ngFor="let sub of user.userProperties">
+                        <div
+                          class="sub-users text-ellipsis gap-6"
+                          [style.maxWidth.px]="userTextWidth"
+                          [ngClass]="{'disable': fileSelected && !user.isAcceptedPermission}">
+                          <app-sub-user [subUser]="sub"></app-sub-user>
+                          <span
+                            *ngIf="fileSelected && !sub.isAcceptedPermission"
+                            class="tooltip-status"
+                            [ngClass]="{'disable': fileSelected && !sub.isAcceptedPermission}">
+                            <span class="tooltip-text"
+                              >To send to this user, please update document
+                              permissions.</span
+                            >
+                            <img
+                              src="/assets/images/icons/error-outline-gray.svg"
+                              alt="icon" />
+                          </span>
+                          <div
+                            class="sub-checkbox"
+                            [ngClass]="{'hide': headerName === 'Create New Task'}">
+                            <input
+                              type="checkbox"
+                              id="cb-{{sub.id}}"
+                              class="def-checkbox"
+                              (change)="onCheckboxChange(sub.id)"
+                              [disabled]="fileSelected && !sub.isAcceptedPermission" />
+                            <label
+                              for="cb-{{sub.id}}"
+                              class="checkbox-label"
+                              data-e2e="button-checkbox">
+                              <ng-container
+                                *ngIf="!fileSelected || sub.isAcceptedPermission; else noPermission">
+                                <img
+                                  [src]="isChecked(sub.user.id) ? '/assets/icon/ownership-check.svg' : '/assets/icon/select-people-uncheck.svg'"
+                                  class="user-checkbox checkbox-head" />
+                              </ng-container>
+                              <ng-template #noPermission>
+                                <div class="checkbox-disable"></div>
+                              </ng-template>
+                            </label>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+          <div *ngIf="selectUserType !== 'LANDLORD'">
+            <ng-container
+              *ngFor="let user of listOfUser.tenancies; let i = index">
+              <div
+                class="user-row"
+                #firstTrElement
+                [ngClass]="(isGroupChecked(user.id) || isChecked(i)) ? 'row-checked' : ''">
+                <div class="user">
+                  <div class="user-avatar">
+                    <div class="default-stat-icon" [ngClass]="user.type">
+                      <img src="/assets/icon/tenancy.svg" [alt]="user.type" />
+                    </div>
+                  </div>
+                  <div class="user-info">
+                    <ng-container>
+                      <div class="primary-user">
+                        <span class="permission"
+                          >{{user.type.toLowerCase() | titlecase}}:
+                        </span>
+                        <span class="name">{{user.name}}</span>
+                        <text-badge
+                          class="user-status"
+                          [type]="user.type.toUpperCase()"
+                          [text]="user.status"></text-badge>
+                      </div>
+                      <ng-container *ngFor="let sub of user.userProperties">
+                        <div
+                          class="sub-users text-ellipsis"
+                          [ngClass]="{'disable': fileSelected && !user.isAcceptedPermission}">
+                          <app-sub-user [subUser]="sub"></app-sub-user>
+                          <span
+                            *ngIf="fileSelected && !sub.isAcceptedPermission"
+                            class="tooltip-status"
+                            [ngClass]="{'disable': fileSelected && !sub.isAcceptedPermission}
+                        ">
+                            <span class="tooltip-text"
+                              >To send to this user, please update document
+                              permissions.</span
+                            >
+                            <img
+                              src="/assets/images/icons/error-outline-gray.svg"
+                              alt="icon" />
+                          </span>
+                          <div
+                            class="sub-checkbox"
+                            [ngClass]="{'hide': headerName === 'Create New Task'}">
+                            <input
+                              type="checkbox"
+                              id="cb-{{sub.id}}"
+                              class="def-checkbox"
+                              (change)="onCheckboxChange(sub.id)"
+                              [disabled]="fileSelected && !sub.isAcceptedPermission" />
+                            <label for="cb-{{sub.id}}" class="checkbox-label">
+                              <ng-container
+                                *ngIf="!fileSelected || sub.isAcceptedPermission; else noPermission">
+                                <img
+                                  [src]="isChecked(sub.user.id) ? '/assets/icon/tenancy-check.svg' : '/assets/icon/select-people-uncheck.svg'"
+                                  class="user-checkbox checkbox-head" />
+                              </ng-container>
+                              <ng-template #noPermission>
+                                <div class="checkbox-disable"></div>
+                              </ng-template>
+                            </label>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      <ng-template #noProperty></ng-template>
+    </div>
+    <hr class="hr-bottom" />
+    <div class="btn-wrapper">
+      <button
+        style="padding: 10px 33px"
+        type="button"
+        class="trudi-btn trudi-btn-primary trudi-btn-large"
+        (click)="handleCLickNext()"
+        [disabled]="!checkListChecked()">
+        Next
+      </button>
+    </div>
+  </div>
+</app-modal-popup>

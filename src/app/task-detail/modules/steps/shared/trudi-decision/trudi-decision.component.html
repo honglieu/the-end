@@ -1,0 +1,72 @@
+<list-step [sections]="steps"></list-step>
+
+<ng-container
+  *ngTemplateOutlet="isDecisionLoading && decisionChangeSkeleton"></ng-container>
+
+<ng-container *ngIf="decisions?.length && !isDecisionLoading">
+  <ng-container *ngIf="decisionChecked; else optionToProcced">
+    <div class="relative" [ngClass]="{'pd-l-12': parentDecisionKey}">
+      <button
+        class="edit-button d-flex gap-4 border-rad-6 align-items-center cursor-pointer justify-content-center decision-btn"
+        (click)="onClick($event)"
+        appOutsideClickListener
+        (clickOutside)="onClickOutSide()"
+        [ngClass]="{ 'checked': isShowListDecision }">
+        <p class="edit-title text-ellipsis">{{ currentDecision?.decision }}</p>
+        <trudi-icon
+          class="icon-chevron-down"
+          [icon]="'iconChevronDownInprogress'"></trudi-icon>
+      </button>
+      <div
+        *ngIf="isShowListDecision"
+        class="decision-dropdown border-rad-8"
+        [ngClass]="{dropUp: dropdownPositionn === 'up'}">
+        <ng-container *ngFor="let item of decisions">
+          <div
+            class="decision-item d-flex align-items-start cursor-pointer"
+            [attr.data-button-key]="buttonKey"
+            [attr.data-button-type]="buttonType"
+            PreventButton
+            (leftClick)="handleClick(item.index, item.id)"
+            [ngClass]="{'active': decisionChecked === item.id}">
+            <p class="decision-label">{{ item?.decision }}</p>
+            <trudi-icon
+              *ngIf="decisionChecked === item.id"
+              icon="checkSuccess20"></trudi-icon>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
+
+<div *ngIf="!isDecisionLoading" [ngClass]="{'pd-l-12': parentDecisionKey}">
+  <trudi-decision
+    *ngIf="currentDecision?.decisions?.length || currentDecision?.steps?.length"
+    class="d-block"
+    [decisions]="currentDecision?.decisions"
+    [steps]="decisionSteps"
+    [parentDecisionKey]="currentDecision"></trudi-decision>
+</div>
+
+<ng-template #optionToProcced>
+  <div class="option-to-procceed d-flex flex-dir-column gap-12 pd-12">
+    <p class="tiltle m-0">Select option to procceed</p>
+    <div
+      *ngFor="let item of decisions"
+      class="decision-name"
+      [attr.data-button-key]="buttonKey"
+      [attr.data-button-type]="buttonType"
+      PreventButton
+      (leftClick)="handleClick(item.index, item.id)">
+      {{item?.decision}}
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #decisionChangeSkeleton>
+  <nz-skeleton
+    [nzActive]="true"
+    [nzTitle]="false"
+    [nzParagraph]="{rows: 9, width: ['30%', '50%', '35%', '50%', '85%', '52%', '52%', '85%', '52%']}"></nz-skeleton>
+</ng-template>

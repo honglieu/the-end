@@ -1,0 +1,46 @@
+@import 'function';
+
+:host {
+  .calendar-wrapper {
+    max-height: 121px;
+  }
+
+  .list-wrapper {
+    height: 100%;
+    width: 100%;
+    @include fontSetup(
+      rgba($color: var(--fg-neutral-normal), $alpha: 0.6),
+      16px,
+      16px,
+      normal,
+      500
+    );
+
+    .no-task {
+      margin: 0 auto;
+      width: 15%;
+      gap: 40px;
+    }
+  }
+  .header-text {
+    @include fontSetup(var(--fg-neutral-weaker), 14px, 20px, italic, 400);
+  }
+}
+.border-load {
+  width: calc(100% - 32px);
+  border: 1px solid var(--gray-100);
+  border-radius: 8px;
+}
+.error-container {
+  margin-top: 16px !important;
+}
+
+:host ::ng-deep cdk-virtual-scroll-viewport.cdk-virtual-scroll-viewport {
+  overflow: hidden;
+}
+
+:host
+  ::ng-deep
+  cdk-virtual-scroll-viewport.cdk-virtual-scroll-viewport.auto-scroll {
+  overflow: auto;
+}

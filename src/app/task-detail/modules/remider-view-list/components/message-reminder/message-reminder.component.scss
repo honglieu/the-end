@@ -1,0 +1,323 @@
+@import 'function';
+
+.msg-reminder-wrapper-ignore {
+  background-color: var(--gray-100, #e7eaed) !important;
+  box-shadow: none !important;
+}
+
+.msg-reminder-wrapper {
+  background-color: var(--white);
+  box-shadow: 0px 4px 8px -1px #0000001a;
+  box-shadow: 0px -2px 6px -1px #0000000f;
+
+  .msg-content-wrapper {
+    padding-left: 4px;
+    padding-right: 4px;
+    border-radius: 4px;
+    &.msg-content-wrapper-hover {
+      background-color: var(--gray-50);
+    }
+  }
+
+  .pad-x-12 {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .msg-reminder-items {
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+  .info-wrapper {
+    flex: 1;
+    overflow: hidden;
+  }
+  ::ng-deep .msg-sender-items-info {
+    display: flex;
+    @include fontSetup(var(--gray-600), 12px, 16px, normal, 400);
+    span {
+      @include fontSetup(var(--gray-600), 12px, 16px, normal, 400 !important);
+    }
+    span.info-role {
+      @include fontSetup(
+        var(--gray-500) !important,
+        12px,
+        16px,
+        normal,
+        400 !important
+      );
+    }
+    .count-sender-email {
+      @include fontSetup(var(--gray-500) !important, 12px, 16px, normal, 400);
+      padding-left: 2px;
+    }
+
+    .max-width-200 {
+      max-width: 200px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .max-width {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+  .msg-sender-items-time {
+    @include fontSetup(var(--gray-600), 12px, 16px, normal, 400 !important);
+  }
+  .msg-sender-items-attachment,
+  .msg-sender-items-property {
+    @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+    white-space: nowrap;
+
+    &.strike-through {
+      text-decoration: line-through;
+    }
+  }
+  .quote-message-reminder {
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 600);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .icon-attachments {
+    gap: 0 2px;
+    padding: 0px 4px;
+    background-color: transparent;
+  }
+
+  .message-content {
+    overflow: hidden;
+    display: grid;
+  }
+
+  .task-label,
+  .msg-sender-items-title {
+    @include fontSetup(
+      var(--fg-neutral-weaker, #999999),
+      12px,
+      16px,
+      normal,
+      400
+    );
+  }
+
+  .task-name {
+    @include fontSetup(var(--fg-brand, #00aa9f), 12px, 16px, normal, 500);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .button-action-msg-reminder {
+    border: 1px solid;
+    border-radius: 8px;
+    padding: 0px 12px;
+    border-color: var(--border-neutral-dark, #d8dcdf);
+    background-color: var(--white);
+    height: 32px;
+    &:hover {
+      background: var(--bg-neutral-tonal-stronger, #e7eaed);
+    }
+    &:active {
+      background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+    }
+  }
+
+  .label-action {
+    @include fontSetup(var(--gray-500), 14px, 20px, normal, 600);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  ::ng-deep assign-to-agents .remaining-item {
+    background-color: var(--white);
+    padding: 0px 5.5px;
+    margin-bottom: 2px;
+  }
+  .button-unignore {
+    border-radius: 6px;
+  }
+
+  .box-ignore {
+    border: 1px solid var(--gray-200, #d8dcdf);
+    border-radius: 6px;
+    &.disabled {
+      background-color: var(--gray-200, #d8dcdf);
+    }
+  }
+
+  .button-ignore {
+    border-top-left-radius: 6px 6px;
+    border-bottom-left-radius: 6px 6px;
+    border: unset;
+    padding: 0px 8px;
+    background-color: var(--white, #ffffff);
+    height: 24px;
+    &:hover {
+      background: var(--bg-neutral-tonal-stronger, #e7eaed);
+    }
+    &:active {
+      background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+    }
+  }
+
+  .chevron-down-ignore {
+    border-top-right-radius: 6px 6px;
+    border-bottom-right-radius: 6px 6px;
+    padding: 2px 8px 2px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    &::before {
+      content: '';
+      height: 20px;
+      width: 1px;
+      background-color: var(--gray-200, #d8dcdf);
+    }
+    &:hover {
+      background: var((--bg-neutral-tonal-stronger, #e7eaed));
+    }
+    &.active,
+    &:active {
+      background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+    }
+    &.disabled {
+      pointer-events: none;
+      cursor: unset;
+      &::before {
+        content: '';
+        background-color: var(--white);
+      }
+      ::ng-deep trudi-icon svg path {
+        fill: var(--white);
+      }
+    }
+    &:active {
+      background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+    }
+  }
+
+  .button-ignore-disabled {
+    padding: 0px 8px;
+    background-color: var(--gray-200, #d8dcdf);
+    border: none;
+    height: 24px;
+    opacity: unset;
+  }
+
+  .label-ignore-disabled {
+    @include fontSetup(
+      var(--white, #ffffff) !important,
+      12px,
+      16px,
+      normal,
+      600
+    );
+  }
+
+  .label-ignore {
+    @include fontSetup(var(--gray-500), 12px, 16px, normal, 600);
+  }
+
+  ::ng-deep .icon-leading {
+    transform: rotate(135deg);
+  }
+
+  ::ng-deep {
+    mark.highlight {
+      background-color: var(--bg-tenant-solid-normal);
+      color: unset;
+      border-radius: 2px;
+    }
+  }
+
+  ::ng-deep
+    .assign-agent-reminder
+    assign-to-agents
+    .assigned-agent-container
+    .target-person-detail:hover {
+    background: none !important;
+  }
+
+  .loader {
+    border: 2px solid var(--gray-50);
+    border-radius: 50%;
+    border-top: 2px solid var(--gray-500);
+    width: 15px;
+    height: 15px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+    margin-right: 5px;
+    margin-left: 4px;
+  }
+
+  .bell-reminder-me {
+    background: var(--danger-50);
+    width: 24px;
+    height: 24px;
+    cursor: unset;
+  }
+
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% {
+      -webkit-transform: rotate(0deg);
+    }
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .max-width {
+    display: flex;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .msg-sender-items-info-wrapper {
+    height: 16px;
+  }
+}
+
+.list-item-time-container {
+  width: 160px;
+  background-color: var(--white);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+  border-radius: 8px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  .item-time {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 12px;
+    border-bottom: 1px solid var(--gray-50);
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      14px,
+      20px,
+      normal,
+      500
+    );
+    cursor: pointer;
+  }
+}

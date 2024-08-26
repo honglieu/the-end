@@ -1,0 +1,133 @@
+@import 'function';
+
+.integration-wrapper {
+  width: 454px;
+  border-radius: 8px;
+  background: var(--bg-neutral-tonal-normal);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.header {
+  align-items: center;
+  &-left {
+    gap: 8px;
+    .email-address {
+      @include fontSetup(
+        var(--fg-neutral-normal, #646464),
+        14px,
+        20px,
+        normal,
+        600
+      );
+      font-variant-numeric: lining-nums tabular-nums;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 260px;
+      &.box-width {
+        max-width: 200px;
+      }
+    }
+    .btn-setting {
+      min-width: 24px;
+      padding: 4px;
+      border-radius: 50%;
+      ::ng-deep .icon-setting {
+        height: 16px;
+        width: 16px;
+      }
+    }
+  }
+}
+.content {
+  @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 400);
+}
+.btn-connect {
+  max-width: 100px;
+  padding: 0px 8px !important;
+  p {
+    @include fontSetup(var(--fg-base), 12px, 16px, normal, 600);
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.connect {
+  display: flex;
+  height: 24px;
+  padding: 0px 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  border-radius: 6px;
+  background: var(--bg-brand-solid-normal, #00aa9f);
+  border: unset;
+  text-align: center;
+
+  @include fontSetup(var(--fg-base, #fff), 12px, 16px, normal, 600);
+
+  &:hover {
+    background: var(--bg-brand-solid-stronger, #33bbb2);
+  }
+  &:active {
+    background: var(--bg-brand-solid-strongest, #0aa095);
+  }
+}
+
+.re-connect {
+  display: flex;
+  width: 103px;
+  height: 24px;
+  padding: 0px 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+
+  border-radius: 6px;
+  background: var(--bg-brand-solid-normal, #00aa9f);
+  border: unset;
+  text-align: center;
+
+  @include fontSetup(var(--fg-base, #fff), 12px, 16px, normal, 600);
+
+  &:hover {
+    background: var(--bg-brand-solid-stronger, #33bbb2);
+  }
+  &:active {
+    background: var(--bg-brand-solid-strongest, #0aa095);
+  }
+}
+
+.disconnect {
+  display: flex;
+  height: 24px;
+  padding: 0px 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+
+  border-radius: 6px;
+  border: 1px solid var(--border-neutral-dark, #d8dcdf);
+  background: var(--bg-base, #fff);
+  text-align: center;
+
+  @include fontSetup(
+    var(--fg-neutral-normal, #646464),
+    12px,
+    16px,
+    normal,
+    600
+  );
+
+  &:hover {
+    background: var(--bg-neutral-tonal-stronger, #e7eaed);
+  }
+  &:active {
+    background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+  }
+}
+
+::ng-deep.hide-tooltip-setting {
+  display: none;
+}

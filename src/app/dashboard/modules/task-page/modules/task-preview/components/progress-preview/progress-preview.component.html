@@ -1,0 +1,35 @@
+<div class="progress-wrapper">
+  <div *ngIf="displayLabel" class="progress-label">PROGRESS</div>
+  <div class="progress-content">
+    <div
+      *ngIf="latestSteps.length; else workflowTemplate"
+      class="workflow"
+      nz-dropdown
+      [nzDropdownMenu]="stepsTemplate"
+      nzPlacement="bottomRight">
+      <div
+        *ngFor="let step of latestSteps"
+        class="workflow-step"
+        [ngClass]="{
+      'first-step': latestSteps[0].id === step.id,
+      'last-step': latestSteps[latestSteps.length-1].id === step.id
+    }">
+        <div class="workflow-step__icon-wrapper">
+          <trudi-icon
+            *ngIf="step?.status === TrudiButtonEnumStatus.COMPLETED ||
+                   step?.status === TrudiButtonEnumStatus.EXECUTED"
+            [style]="{width: '20px', height: '20px'}"
+            icon="checkMarkFill"></trudi-icon>
+        </div>
+        <div
+          class="workflow-step__name"
+          [class.completed]="step?.status === TrudiButtonEnumStatus.COMPLETED ||
+                             step?.status === TrudiButtonEnumStatus.EXECUTED"
+          [innerHTML]="step.name | highlight: searchValue"></div>
+      </div>
+    </div>
+    <ng-template #workflowTemplate>
+      <div class="workflow__no-items">No completed steps</div>
+    </ng-template>
+  </div>
+</div>

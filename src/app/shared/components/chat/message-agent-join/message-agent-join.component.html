@@ -1,0 +1,20 @@
+@if(!isSendFromEmail) {
+<div
+  class="message-agent d-flex align-items-center w-100 wrap-conversation-status wrap-conversation-status-large">
+  <div class="message-agent_join-container d-flex align-items-start">
+    <div class="message-agent_join-text d-flex gap-4">
+      <span
+        class="highlighted"
+        [class.name-clickable]="isClickable"
+        (click)="handleOpenProfileDrawer($event)">
+        {{ message | formatDisplayFullName: false }}
+      </span>
+      <span> {{ message.textContent || 'joined the conversation'}} </span>
+      <span>
+        {{ message.createdAt | trudiDateTime : EPage.DETAILS | async}}</span
+      >
+    </div>
+  </div>
+</div>
+
+}

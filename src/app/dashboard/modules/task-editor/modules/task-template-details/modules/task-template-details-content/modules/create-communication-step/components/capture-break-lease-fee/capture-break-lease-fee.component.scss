@@ -1,0 +1,39 @@
+@import 'function';
+
+:host {
+  .capture-break-lease-fee-wrapper {
+    margin-bottom: 24px;
+  }
+  .label-wrapper {
+    .required-checkbox {
+      ::ng-deep trudi-checkbox label.trudi-checkbox .label-text {
+        @include fontSetup(
+          var(--fg-neutral-strongest, #202020),
+          14px,
+          20px,
+          normal,
+          400
+        );
+      }
+    }
+  }
+  label.capture-break-lease-fee-label,
+  label.send-attachment-label {
+    @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 600);
+  }
+  .break-lease-fee-form,
+  .attachment-form {
+    display: flex;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid var(--border-neutral-dark, #d8dcdf);
+    ::ng-deep trudi-text-field .trudi-ui-text-field-label {
+      @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 400);
+    }
+  }
+  .break-lease-fee,
+  .advertising-fees,
+  .other-fees > div {
+    width: 264px;
+  }
+}

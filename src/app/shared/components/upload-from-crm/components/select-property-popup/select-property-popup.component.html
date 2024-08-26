@@ -1,0 +1,108 @@
+<trudi-modal
+  [visible]="visible"
+  [closable]="!!configs?.header?.showCloseBtn"
+  (onCancel)="onCloseSendMsg()"
+  className="trudi-modal-select-property">
+  <ng-template #headerModal>
+    <div class="d-flex align-items-center">
+      <div
+        class="image-property-tree"
+        [ngSwitch]="currentCompanyCRMSystemName$ | async">
+        <trudi-icon
+          *ngSwitchCase="CRMSystemName.PROPERTY_TREE"
+          icon="propertyTree"
+          [style]="{'width.px':84, 'height.px':20}"></trudi-icon>
+
+        <trudi-icon
+          *ngSwitchCase="CRMSystemName.RENT_MANAGER"
+          icon="rentManager"
+          [style]="{'width.px':106, 'height.px':20}"></trudi-icon>
+      </div>
+      <div class="title trudi-modal-select-property-title cursor-pointer">
+        Select property
+      </div>
+    </div>
+  </ng-template>
+  <form
+    class="trudi-modal-select-property-form"
+    [formGroup]="form"
+    *ngIf="!isLoading; else skeleton">
+    <trudi-single-select
+      placeholder="Select a property"
+      bindValue="id"
+      formControlName="property"
+      [items]="activeProperty"
+      [editableSearchTerm]="true"
+      (search)="handleSearch($event)"
+      bindLabel="streetline">
+      <ng-template
+        trudi-option-tmp
+        let-item="item"
+        let-searchTerm="searchTerms"
+        let-item$="item$">
+        <div class="y-center option-wrapper justify-content-between flex-1">
+          <div class="y-center gap-8">
+            <span
+              [ngOptionHighlight]="searchText ? searchText : ''"
+              [title]="item.streetline"
+              class="white-space-normal"
+              >{{item.streetline}}</span
+            >
+            <div class="property-tree y-center gap-4" *ngIf="item.manager">
+              <span class="property-tree-name"
+                >{{item?.manager?.firstName}} {{item?.manager?.lastName}}</span
+              >
+            </div>
+          </div>
+          <trudi-icon
+            icon="checkSuccess"
+            *ngIf="item.id === selectedPropertyId.value"
+            svgClass="size-16"></trudi-icon>
+        </div>
+      </ng-template>
+    </trudi-single-select>
+    <div
+      *ngIf="isSubmitted && selectedPropertyId.invalid &&
+      (selectedPropertyId.dirty || selectedPropertyId.touched)"
+      class="error-container y-center gap-4">
+      <trudi-icon svgClass="size-12" icon="errorBgRed"></trudi-icon>
+      <span class="error-text">{{validatePropertyMsg}}</span>
+    </div>
+  </form>
+  <ng-template #footerModal>
+    <div
+      class="d-flex w-100 align-items-center trudi-modal-select-property-footer gap-12">
+      <button
+        *ngIf="configs?.footer?.buttons?.showBackBtn"
+        trudi-btn
+        variant="outlined"
+        btnType="neutral"
+        (click)="onTriggerClick(false)"
+        type="submit"
+        class="trudi-btn">
+        <span class="btn-text">Back</span>
+      </button>
+      <button
+        trudi-btn
+        (click)="onTriggerClick(true)"
+        type="submit"
+        class="trudi-btn">
+        <span class="btn-text">Next</span>
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>
+
+<ng-template #skeleton>
+  <div class="new-task-form-skeleton">
+    <div
+      class="justify-content-between align-items-center files-item skeleton-bg skeleton-select">
+      <div class="skeleton-rectangle w-100">
+        <nz-skeleton
+          [nzParagraph]="paragraph"
+          [nzActive]="true"
+          class="w-100"></nz-skeleton>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,115 @@
+@import 'function';
+
+.lease-details-form {
+  .trudi-form-group {
+    gap: 20px;
+  }
+
+  .trudi-form-control {
+    .trudi-input-label {
+      cursor: default;
+    }
+
+    .trudi-picker {
+      height: 40px;
+      @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+    }
+  }
+
+  ::ng-deep ng-select.ng-select-disabled .ng-select-container {
+    color: var(--bg-overlay-light) !important;
+    background-color: var(--bg-neutral-tonal-strongest) !important;
+    cursor: not-allowed !important;
+
+    input,
+    .ng-arrow-wrapper {
+      cursor: not-allowed !important;
+    }
+  }
+
+  .trudi-picker {
+    max-width: 100%;
+  }
+
+  ::ng-deep .trudi-form-control {
+    .ng-select.ng-error .ng-select-container {
+      border: 1px solid var(--danger-500) !important;
+      box-shadow: none !important;
+      outline: 2px solid rgba(var(--danger-500-rgb), 0.6) !important;
+    }
+
+    .trudi-form-control-wrapper,
+    .trudi-picker {
+      .trudi-picker-disabled {
+        background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+        border-color: var(--gray-200) !important;
+        cursor: not-allowed;
+
+        ::placeholder {
+          color: var(--fg-neutral-weaker, #999);
+        }
+
+        .trudi-input-disabled {
+          cursor: not-allowed;
+        }
+      }
+    }
+
+    ng-select.ng-select.trudi-single-select {
+      .ng-select-container {
+        height: 40px !important;
+
+        .ng-value-label {
+          display: block;
+        }
+      }
+
+      .ng-dropdown-panel {
+        .ng-dropdown-panel-items {
+          max-height: 180px;
+
+          &:hover {
+            background-color: var(--brand-100);
+          }
+        }
+      }
+    }
+  }
+}
+
+::ng-deep {
+  .skeleton {
+    &-wrapper {
+      .skeleton-group {
+        display: flex;
+        justify-content: space-between;
+        gap: 40px;
+      }
+
+      .skeleton-item {
+        margin-top: 16px;
+
+        h3.ant-skeleton-title {
+          height: 40px;
+          margin: 0;
+          border-radius: 8px;
+        }
+      }
+    }
+  }
+  .ng-dropdown-panel.lease-term {
+    z-index: 99999;
+    margin-top: 8px;
+    .ng-dropdown-panel-items {
+      max-height: 180px;
+
+      .ng-option {
+        padding: 0px;
+      }
+      .trudi-select-label {
+        padding: 12px;
+        border-bottom: 1px solid var(--gray-50);
+      }
+    }
+  }
+}

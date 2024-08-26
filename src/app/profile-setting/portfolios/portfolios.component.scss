@@ -1,0 +1,26 @@
+@import 'function';
+
+.portfolios-main {
+  padding: 32px;
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  &-header {
+    width: 616px;
+    &-title {
+      @include fontSetup(var(--gray-700), 20px, 32px, normal, 500);
+    }
+    &-subtitle {
+      @include fontSetup(var(--gray-600), 14px, 20px, normal, 400);
+    }
+  }
+}
+::ng-deep .disable-header {
+  .portfolios-collapse .ant-collapse-header {
+    display: none !important;
+  }
+  .portfolios-row {
+    &:first-child {
+      border-top: none !important;
+    }
+  }
+}

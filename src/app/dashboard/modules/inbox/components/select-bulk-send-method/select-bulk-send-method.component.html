@@ -1,0 +1,22 @@
+<trudi-modal
+  [(visible)]="visible"
+  title="Select bulk-send method"
+  [autoFocus]="null"
+  [modelWidth]="546"
+  [isHideFooter]="true"
+  (onCancel)="handleCancel()"
+  classContainer="select-bulk-send-method-container">
+  <div class="body d-flex gap-12">
+    <ng-container *ngFor="let option of options">
+      <div
+        class="d-flex flex-dir-column align-items-center"
+        (click)="handleNext(option.type)">
+        <trudi-icon
+          [icon]="option.icon"
+          class="size-30"
+          [style]="{'width.px': 30, 'height.px': 30}"></trudi-icon>
+        <p class="text">{{option.text}}</p>
+      </div></ng-container
+    >
+  </div>
+</trudi-modal>

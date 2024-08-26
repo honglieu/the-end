@@ -1,0 +1,185 @@
+<div class="invite-wrapper big-size auto-height">
+  <div>
+    <div class="header">
+      <div class="detail-invite">
+        <div class="send-invite-text">
+          <p class="title-trudi">Send message</p>
+          <div class="number-sent-bg">1 Tenant</div>
+        </div>
+      </div>
+      <div
+        data-e2e="dr-message-x-btn"
+        class="close-btn cursor-pointer"
+        (click)="openQuitConfirmModal()">
+        <img class="center-position" src="/assets/icon/close-btn.svg" />
+      </div>
+    </div>
+    <hr />
+    <!--<div class="body" #scroll [scrollTop]="isScroll ? scroll.scrollHeight : ''">-->
+    <!-- fix for scroll bottom when texting make the display jerky -->
+    <div class="wrapper" #wrapper>
+      <div class="body">
+        <div class="sender" *ngIf="agentProfile">
+          <div class="up-left-text">Send from</div>
+          <ng-select
+            #selectSender
+            [searchable]="false"
+            [clearable]="true"
+            [items]="sender"
+            bindLabel="name"
+            bindValue="id"
+            [ngClass]="{'sender-bg': openFrom === SEND_MESSAGE_POPUP_OPEN_FROM.trudi}"
+            [(ngModel)]="selectedSender"
+            (change)="targetChange($event)">
+            <ng-template ng-label-tmp let-item="item">
+              <div class="select-item d-flex align-items-center">
+                <img
+                  *ngIf="item.avatar"
+                  class="avatar"
+                  loading="lazy"
+                  src="{{item.avatar}}"
+                  alt="" />
+                <div class="select-item-name">
+                  <span *ngIf="item.name">{{item.name}}</span>
+                  <span class="small-circle"></span>
+                  <span>{{item.title}}</span>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template ng-option-tmp let-item="item" let-index="index">
+              <div class="select-item d-flex align-items-center">
+                <img
+                  class="avatar"
+                  loading="lazy"
+                  src="{{item.avatar}}"
+                  alt="" />
+                <div class="select-item-name">
+                  <span>{{item.name}}</span>
+                  <span class="small-circle"></span>
+                  <span>{{item.title}}</span>
+                </div>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div
+          class="content"
+          [ngClass]="{'backgroundform': openFrom === SEND_MESSAGE_POPUP_OPEN_FROM.trudi}"
+          [style.marginTop.px]="(openFrom !== SEND_MESSAGE_POPUP_OPEN_FROM.userIndex) ? 24 : 0">
+          <textarea
+            data-e2e="dr-message-txt"
+            autosize
+            #textarea
+            appTextareaAutoresize
+            type="text"
+            rows="5"
+            class="input content-text"
+            [ngClass]="{'content-trudi': openFrom === SEND_MESSAGE_POPUP_OPEN_FROM.trudi}"
+            [(ngModel)]="contentText"
+            (ngModelChange)="contentChanged($event)"
+            placeholder="Type message here.."
+            [maxlength]="MAX_TEXT_MESS_LENGTH">
+          </textarea>
+          <div class="down-right-text textarea-bottom-text">
+            <app-remaining-character
+              [maxlength]="MAX_TEXT_MESS_LENGTH"
+              [currentTextLength]="contentText?.length">
+            </app-remaining-character>
+          </div>
+        </div>
+        <div
+          *ngIf="openFrom === 'trudi' && !noTicket"
+          class="task-ticket"
+          #taskTicket
+          [style.marginTop.px]="taskTicket.offsetHeight > 16 ? 16 : 0">
+          <task-ticket
+            [openFrom]="'trudi-area'"
+            [item]="isItemTaskTicket"
+            [changeText]="false"
+            (textTicket)="getTextTicket($event)">
+          </task-ticket>
+        </div>
+
+        <!-- <ng-container *ngIf="
+					infoAddition?.length &&
+					(forwardAction === forwardButtonAction.supToTenant || forwardAction === forwardButtonAction.createWorkOrder )
+				"> -->
+        <div class="addition">
+          <div class="btn-wrapper" style="padding: 0">
+            <button
+              data-e2e="dr-message-attached-file"
+              type="button"
+              class="add-file-btn"
+              (click)="openFile(true)">
+              <span class="btn-text"> Upload File </span>
+            </button>
+          </div>
+        </div>
+        <ng-container
+          *ngIf="
+					infoAddition?.length &&
+          (forwardAction === forwardButtonAction.supToTenant || forwardAction === forwardButtonAction.createWorkOrder )
+				">
+          <div class="list-contact-card d-flex flex-dir-column gap-12">
+            <ng-container *ngFor="let info of infoAddition">
+              <info-ticket [info]="info"></info-ticket>
+            </ng-container>
+          </div>
+        </ng-container>
+        <div class="attachment" #attachment>
+          <div
+            class="files"
+            [class.files-spacing]="listOfFiles.length > 0"
+            *ngIf="listOfFiles">
+            <div
+              class="message-file"
+              style="margin: 0"
+              [ngClass]="{'message-send-file': openFrom === SEND_MESSAGE_POPUP_OPEN_FROM.file}"
+              *ngFor="let item of listOfFiles; let i = index">
+              <div class="file-logo">
+                <img
+                  class="position-center-w"
+                  src="assets/images/icons/{{item.icon}}" />
+              </div>
+              <div class="file send-file">
+                <div class="file-info d-flex flex-dir-column">
+                  <span class="file-name">{{item.name || item.title}}</span>
+                  <!-- Add file from add-tenancy-agreemance OR add-files-pop-up -->
+                  <span class="file-size"
+                    >{{(item.size || item[0].size) | convertFileSize}}</span
+                  >
+                </div>
+              </div>
+              <div
+                data-e2e="dr-file-x-btn"
+                class="remove-btn-file"
+                (click)="removeFile(i)">
+                <img src="/assets/icon/small-close-black.svg" alt="" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="btn-wrapper d-flex justify-content-between">
+    <td-checkbox
+      [isChecked]="allowResolvedTextbox"
+      [reverse]="true"
+      label="Mark conversation as resolved"
+      [size]="24"
+      (tdCheckboxChanged)="onCheckboxChange($event)">
+    </td-checkbox>
+
+    <div class="group-btn d-flex">
+      <button
+        data-e2e="dr-message-send-btn"
+        type="button"
+        class="confirm-btn"
+        (click)="openInviteSuccessModal(false)"
+        [ngClass]="{'unclick': !clickable()}">
+        <span class="btn-text">Send</span>
+      </button>
+    </div>
+  </div>
+</div>

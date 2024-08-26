@@ -1,0 +1,117 @@
+<div class="week-wrapper">
+  <div
+    class="row-wrapper"
+    *ngIf="rowData?.id; else titleSection"
+    [ngClass]="{'row-wrapper-active': isActiveRow}"
+    (click)="handleOpenLinkTask($event)">
+    <button
+      class="week-item align-items-center cursor-pointer week-item-content"
+      appE2E="events-event"
+      [ngClass]="{
+        'first-event': rowData?.isStartOfMonth && !rowData?.isEndOfMonth,
+        'end-event': rowData?.isEndOfMonth && !rowData?.isStartOfMonth,
+        'single-event': rowData?.isStartOfMonth && rowData?.isEndOfMonth,
+        'common-event': (!rowData?.isStartOfMonth && !rowData?.isEndOfMonth),
+        'mid-event': rowData?.isMidMonth,
+        'start-event-of-day': !rowData?.isMidMonth && !rowData?.isEndOfMonth,
+        'console-side': isConsole,
+        'portal-side': !isConsole
+      }">
+      <ng-container *ngIf="!isConsole">
+        <trudi-checkbox
+          class="checkbox-frame"
+          (keydown.enter)="toggleSelectRow()"
+          [(ngModel)]="rowData.isSelected"
+          [disabled]="isEventCancelled || isEventClosed"
+          (ngModelChange)="handleChangeSelected()"></trudi-checkbox>
+      </ng-container>
+      <div class="wrapper-time text-ellipsis">
+        <div
+          [ngClass]="{'item-past': isPastDay}"
+          class="item-date text-ellipsis">
+          {{ rowData?.date | date: 'EEE dd MMM' }}
+        </div>
+        <div
+          class="item item-time text-ellipsis"
+          [ngClass]="{'item-past': isPastDay, 'event-cancelled': isEventCancelled || isEventClosed}">
+          {{ rowData?.defaultTime ? (rowData?.defaultTime | formatTime: true |
+          async | lowercase) : (rowData?.startTime | dateTimeRange:
+          rowData?.endTime | async) }}
+        </div>
+      </div>
+      <div
+        class="item text-ellipsis no-pointer-event"
+        [ngClass]="{'item-past': isPastDay}">
+        <event-name
+          [isEventCancelled]="isEventCancelled"
+          [isEventClosed]="isEventClosed"
+          [isOverDeal]="rowData?.eventType === EEventType.ARREAR || rowData?.eventType === EEventType.BREACH_REMEDY"
+          [currentRowData]="rowData"></event-name>
+        <div
+          class="tenant"
+          [innerHTML]="rowData?.tenancyTenantName | highlight: (searchText$ | async) || ''"></div>
+      </div>
+      <div class="item d-flex">
+        <div
+          #streetLine
+          class="item-address"
+          [ngClass]="{'item-past': isPastDay}"
+          (click)="$event.stopPropagation(); handleOpenPropertyProfile()"
+          nz-tooltip
+          [nzTooltipTitle]="isTextTruncated ? rowData?.streetline : null"
+          (mouseenter)="checkStreetLineOverflow()"
+          [innerHTML]="rowData?.streetline | highlight: (searchText$ | async) || ''"></div>
+      </div>
+      <div
+        class="item item-link-task text-ellipsis d-flex align-items-center gap-10"
+        [ngClass]="{'item-past': isPastDay}">
+        <div
+          class="wrapper-title text-ellipsis"
+          *ngIf="rowData?.totalLinkedTask; else noLinkedTasks">
+          <div
+            class="link-task-title text-ellipsis"
+            appE2E="events-event-linked-tasks-task-title"
+            (click)="$event.stopPropagation(); onNavigateToTask(rowData?.latestLinkedTask?.task?.id)"
+            [innerHTML]="rowData?.latestLinkedTask?.task?.title | highlight: (searchText$ | async) || ''"></div>
+          <div class="created-at text-ellipsis no-pointer-event">
+            Created {{rowData?.latestLinkedTask?.task?.createdAt | formatDate |
+            async }}
+          </div>
+        </div>
+        <span
+          class="remaining-task-count no-pointer-event"
+          *ngIf="rowData?.totalLinkedTask > 1"
+          >+{{rowData?.totalLinkedTask - 1}}</span
+        >
+        <ng-template #noLinkedTasks>
+          <span class="no-linked-tasks no-pointer-event text-ellipsis"
+            >No linked tasks</span
+          >
+        </ng-template>
+      </div>
+      <div class="d-flex justify-content-end link-task">
+        <button
+          *ngIf="!isEventCancelled && !isEventClosed"
+          trudi-btn
+          variant="outlined"
+          size="medium"
+          shape="circle"
+          appE2E="events-event-create-task"
+          [tabIndex]="isEventCancelled || isEventClosed ? -1 : 0"
+          nzTooltipTitle="Link task"
+          nzTooltipPlacement="bottom"
+          nz-tooltip
+          class="size-32"
+          (click)="handleClickRow($event)">
+          <trudi-icon icon="iconPlus2" svgClass="size-20"></trudi-icon>
+        </button>
+      </div>
+    </button>
+  </div>
+
+  <ng-template #titleSection>
+    <div class="week-title" [ngClass]="{'first-row': isFirst}">
+      {{ monthTitle }}
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,37 @@
+<div
+  class="facebook-message-footer"
+  [ngClass]="{
+    'facebook-message-footer-user': message.userSendType === EUserSendType.USER
+  }">
+  <div class="message-sent-info">
+    @if (isSending) {
+    <div class="message-sent-info-text">
+      Sending <span class="dot">.</span><span class="dot">.</span
+      ><span class="dot">.</span>
+    </div>
+    } @else if (isError) {
+    <div
+      class="message-sent-info-text message-sent-info-text-error"
+      [class.resend-disable]="!isShowResendButton"
+      (click)="isShowResendButton && onResend()">
+      Delivery failed<span *ngIf="isShowResendButton">, click to resend</span>
+    </div>
+    } @else { @if (message.userSendType !== EUserSendType.USER) {
+    <trudi-icon
+      svgClass="size-12"
+      [icon]="message.isRead ? 'iconSeenLogo' : 'iconSentLogo'"></trudi-icon>
+    }
+    <div class="message-sent-info-text">
+      @if (message.userSendType === EUserSendType.USER) { {{message.createdAt |
+      formatTime: true | async}} } @else { Sent by
+      <span
+        class="user-name"
+        [class.user-name--clickable]="message.userType !== EUserPropertyType.AGENT"
+        (click)="handleOpenProfileDrawer($event)"
+        >{{sender}}</span
+      >
+      at {{message.createdAt | formatTime: true | async}} }
+    </div>
+    }
+  </div>
+</div>

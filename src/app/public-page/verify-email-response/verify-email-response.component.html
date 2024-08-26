@@ -1,0 +1,80 @@
+<ng-container *ngIf="loadingService.isLoading$ | async; else verifiEmail">
+  <div class="wrapper-email-notification-settings">
+    <div class="email-notification-thanks">
+      <div class="wrapper-email-left-thanks">
+        <div>
+          <nz-skeleton-element
+            nzType="avatar"
+            [nzActive]="true"
+            [nzSize]="64"
+            [nzShape]="'circle'">
+          </nz-skeleton-element>
+        </div>
+        <ng-container>
+          <div class="wrapper-thanks">
+            <div class="thank-text">
+              <nz-skeleton
+                [nzParagraph]="{ rows: 1 }"
+                [nzActive]="true"
+                class="skeleton-text"></nz-skeleton>
+            </div>
+            <div class="button-save-notification-email">
+              <nz-skeleton-element
+                nzType="button"
+                [nzActive]="true"
+                class="button-skeleton">
+              </nz-skeleton-element>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <div class="image-email-settings-thanks">
+        <div class="img-notification-email-setting">
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"
+            class="skeleton-image">
+          </nz-skeleton-element>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #verifiEmail>
+  <div class="wrapper-email-notification-settings">
+    <div class="email-notification-thanks">
+      <div class="wrapper-email-left-thanks">
+        <div>
+          <img
+            src="/assets/icon/icon_trudi.svg"
+            alt="logo-trudi"
+            class="logo-trudi" />
+        </div>
+        <ng-container>
+          <div class="wrapper-thanks">
+            <div class="thank-text">
+              Thanks, your email notification preferences have been successfully
+              updated.
+            </div>
+            <div class="button-save-notification-email">
+              <button
+                type="button"
+                class="button-inner"
+                (click)="backToEmailNotificationSetting()">
+                <span class="text">Manage your email preferences</span>
+              </button>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <div class="image-email-settings-thanks">
+        <div class="img-notification-email-setting">
+          <img
+            src="/assets/images/email-notifications-settings.svg"
+            alt="email-notification-settings" />
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

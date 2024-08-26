@@ -1,0 +1,25 @@
+@import 'function';
+
+.section {
+  margin-bottom: 32px;
+
+  &-title {
+    @include fontSetup(
+      var(--fg-neutral-stronger, #333741),
+      18px,
+      28px,
+      normal,
+      600
+    );
+  }
+
+  &-subTitle {
+    @include fontSetup(
+      var(--fg-neutral-normal, #61646c),
+      14px,
+      20px,
+      normal,
+      400
+    );
+  }
+}

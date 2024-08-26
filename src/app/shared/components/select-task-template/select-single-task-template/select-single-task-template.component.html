@@ -1,0 +1,71 @@
+<trudi-single-select
+  class="select-task-template"
+  [items]="items"
+  [(ngModel)]="selectedValue"
+  (ngModelChange)="onChange($event)"
+  bindValue="id"
+  [clearable]="clearable"
+  (triggerEventChange)="onTaskChanged.emit($event)"
+  [editableSearchTerm]="editableSearchTerm"
+  [searchFn]="searchTaskTemplateFn"
+  [placeholder]="placeholder"
+  [loading]="loading"
+  [disabled]="disabled">
+  <ng-template
+    trudi-option-tmp
+    let-item="item"
+    let-searchTerm="searchTerm"
+    let-item$="item$">
+    <div
+      class="trudi-select-label d-flex justify-content-between align-items-center w-100 gap-8">
+      <div class="y-center gap-4 field-wrapper" #taskName>
+        <div
+          class="field-label text-ellipsis"
+          [ngOptionHighlight]="searchTerm || ''">
+          {{item?.label}}
+        </div>
+        <ng-container
+          *ngTemplateOutlet="isShowRegion && displayTaskTmpl; context: {item:  item}"></ng-container>
+      </div>
+      <div
+        *ngIf="selectedValue && (selectedValue === item?.id)"
+        class="d-flex align-items-center item-option-icon">
+        <trudi-icon icon="checkSuccess"></trudi-icon>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template trudi-label-tmp let-item="item">
+    <div class="item-label gap-4">
+      <span
+        class="task-label"
+        *ngIf="selectedValue && (item?.id === selectedValue)">
+        {{item?.label}}
+      </span>
+      <ng-container
+        *ngTemplateOutlet="isShowRegion && displayTaskTmpl; context: {item: item}"></ng-container>
+    </div>
+  </ng-template>
+</trudi-single-select>
+
+<ng-template #displayTaskTmpl let-item="item">
+  <trudi-badge
+    nz-tooltip
+    [nzTooltipTitle]="tooltipTemplate"
+    [nzTooltipPlacement]="['rightTop', 'leftTop']"
+    variant="role"
+    [text]="item?.taskNameRegions | regionTaskName: listRegion">
+  </trudi-badge>
+  <ng-template #tooltipTemplate>
+    <div class="task-template-region-tooltip">
+      <div
+        class="text-left"
+        *ngFor="let taskTemplateRegion of item?.taskNameRegions?.slice(0, 20)">
+        {{ (taskTemplateRegion?.regionId | regionShowName: listRegion) + '(' +
+        taskTemplateRegion?.regionName + ')' }}
+      </div>
+      <div class="text-left" *ngIf="item?.taskNameRegions.length > 20">
+        {{ ' +' + (item?.taskNameRegions.length - 20) + ' more' }}
+      </div>
+    </div>
+  </ng-template>
+</ng-template>

@@ -1,0 +1,20 @@
+<div
+  class="message-conversation-moved d-flex align-items-center wrap-conversation-status"
+  data-e2e="conversation-moved-to-text text-center">
+  <trudi-icon
+    class="mr-4"
+    [icon]="message?.messageType === EMessageType.moveOutOfTask ? 'greyCheck' : 'greyForwardIcon'"></trudi-icon>
+  <div>
+    <span>
+      {{message?.messageType === EMessageType.moveOutOfTask ? 'Conversation is
+      removed from' : 'Conversation moved to'}}
+    </span>
+
+    <span class="highlighted"> {{message?.message?.[0].value}} </span>
+    <span>by</span>
+    <span class="highlighted">
+      {{ message | formatDisplayFullName : false}}
+    </span>
+    <span> {{ message.createdAt | trudiDateTime : EPage.DETAILS | async}}</span>
+  </div>
+</div>

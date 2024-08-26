@@ -1,0 +1,37 @@
+<trudi-drawer
+  *ngIf="showDrawer"
+  [(visible)]="showDrawer"
+  [wrapClassName]="isJiggling ? 'shaking-task-editor-drawer' : ''"
+  [enableBackBtn]="!editStep"
+  [okText]="editStep ? 'Update' : 'Add'"
+  [enableBackBtn]="!editStep || isDisableForm"
+  [enableDeleteBtn]="editStep && !isDisableForm"
+  [enableOkBtn]="!isDisableForm"
+  [nzClosable]="true"
+  (onOk)="handleOk()"
+  (onBack)="handleBack()"
+  (onDelete)="handleDelete()"
+  (onClose)="handleCancel(true)"
+  (onCancel)="handleCancel()"
+  [headerTpl]="headerTpl">
+  <calendar-step-form
+    [invalidForm]="invalidForm"
+    [isDisableForm]="isDisableForm"
+    [isShowUpgradeMessage]="canEdit && isDisableForm"></calendar-step-form>
+</trudi-drawer>
+
+<ng-template #headerTpl>
+  <div
+    [formGroup]="calendarEventForm"
+    class="calendar-step-header d-flex flex-dir-column gap-4">
+    <trudi-badge
+      *ngIf="canEdit"
+      text="Calendar action"
+      size="small"></trudi-badge>
+    <trudi-text-field
+      class="step-name-field"
+      formControlName="stepName"
+      placeholder="Add your step name here"
+      [disabled]="isDisableForm"></trudi-text-field>
+  </div>
+</ng-template>

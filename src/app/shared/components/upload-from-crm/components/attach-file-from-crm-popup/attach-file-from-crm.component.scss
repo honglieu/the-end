@@ -1,0 +1,120 @@
+@import 'function';
+
+.trudi-modal-attach-file-from-crm {
+  &-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    @include fontSetup(var(--fg-neutral-strongest), 18px, 28px, normal, 600);
+  }
+  &-property {
+    padding: 12px 24px;
+    border-bottom: 1px solid var(--gray-100);
+    gap: 4px;
+    cursor: default;
+    ::ng-deep trudi-icon {
+      margin-top: 2px;
+    }
+    p {
+      @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 600);
+      margin: 0;
+    }
+  }
+  &-body {
+    padding: 20px 24px;
+    &-tabs {
+      margin-top: 12px;
+    }
+  }
+  &-footer {
+    justify-content: flex-end;
+  }
+}
+.skeleton:last-child {
+  border: none;
+}
+.skeleton {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--gray-200);
+  ::ng-deep {
+    .ant-skeleton-content {
+      .ant-skeleton-title {
+        padding: 12px;
+      }
+    }
+    h3.ant-skeleton-title.ng-star-inserted {
+      margin: 0;
+    }
+    ul.ant-skeleton-paragraph.ng-star-inserted {
+      margin: 0;
+    }
+  }
+  &-thumbnail {
+    ::ng-deep {
+      h3.ant-skeleton-title.ng-star-inserted {
+        margin: 0;
+        height: 38px;
+        width: 38px !important;
+      }
+    }
+  }
+
+  &-title {
+    ::ng-deep {
+      h3.ant-skeleton-title.ng-star-inserted {
+        margin: 0;
+        height: 20px;
+        width: 100% !important;
+        padding: 10px !important;
+      }
+    }
+  }
+
+  &-date {
+    ::ng-deep {
+      h3.ant-skeleton-title.ng-star-inserted {
+        margin: 0;
+        height: 16px;
+        width: 100% !important;
+        padding: 8px !important;
+      }
+    }
+  }
+
+  &-checkbox {
+    ::ng-deep {
+      .ant-skeleton-content .ant-skeleton-title {
+        border-radius: 50%;
+      }
+      h3.ant-skeleton-title.ng-star-inserted {
+        margin: 0;
+      }
+    }
+  }
+  &-infor {
+    gap: 2px;
+    width: 100%;
+  }
+}
+
+.body-no-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 400);
+  font-style: italic;
+}
+
+::ng-deep {
+  .tab-group-header-content {
+    padding: 0 !important;
+  }
+  .tab-group-header-label {
+    flex: 1 !important;
+    border-bottom: 1px solid var(--border-neutral-light) !important;
+    &.focused {
+      color: var(--fg-brand);
+      border-bottom: 3px solid var(--brand-500) !important;
+    }
+  }
+}

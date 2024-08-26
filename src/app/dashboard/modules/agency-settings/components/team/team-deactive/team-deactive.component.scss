@@ -1,0 +1,23 @@
+@import 'function';
+
+.team-deactive {
+  padding: 14px;
+  padding-bottom: 10px;
+  .bold-text {
+    @include fontSetup(var(--gray-700), 20px, 28px, normal, 600);
+  }
+
+  .grey-text {
+    @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 500);
+    ul {
+      padding-left: 25px;
+      li {
+        @include fontSetup(var(--fg-neutral-normal), 1.4rem, 20px, normal, 500);
+      }
+    }
+  }
+
+  .btn-wrapper {
+    margin-top: 20px;
+  }
+}

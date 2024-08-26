@@ -1,0 +1,245 @@
+<button
+  tabindex="0"
+  trudi-btn
+  [size]="size"
+  [variant]="variant"
+  [selected]="visibleDropdown"
+  btnType="neutral"
+  [disabled]="disabled"
+  nz-dropdown
+  #dropdown="nzDropdown"
+  close-dropdown-when-resizable
+  [nzDropDownDirective]="dropdown"
+  [nzOverlayClassName]="overlayClassName"
+  [nzDropdownMenu]="menu"
+  [nzPlacement]="placement"
+  class="trudi-select-dropdown-button"
+  [class.dropdown-open]="visibleDropdown"
+  [nzTrigger]="trudiTrigger"
+  [nzVisible]="visibleDropdown"
+  [nzBackdrop]="backdrop"
+  (nzVisibleChange)="handleVisibleChange($event)"
+  (nzPopoverVisibleChange)="handleVisibleChange($event)"
+  menuKeyboard
+  [visibleMenu]="visibleDropdown"
+  [menuType]="EMenuDropdownType.TrudiSelectDropDown">
+  <ng-container
+    *ngTemplateOutlet="titleTemplate?.templateRef || defaultSelectTitle; context: {item$: selectedItems}"></ng-container>
+  <ng-template #defaultSelectTitle>
+    <div class="trudi-select-dropdown-button__content">
+      <div
+        *ngIf="selectedItems && itemImage && !multi"
+        class="trudi-select-dropdown-button__content--image">
+        <img
+          *ngIf="(selectedItems[itemImage] | avatarCheck); else noAvatar"
+          [src]="selectedItems[itemImage]"
+          alt=""
+          referrerpolicy="no-referrer" />
+        <ng-template #noAvatar
+          >{{ selectedItems | formatFullname }}</ng-template
+        >
+      </div>
+      <div class="d-flex align-items-center">
+        <p class="trudi-select-dropdown-button__content--title">
+          {{ customTitle ?? _title}}
+        </p>
+        <span *ngIf="selectedItemsCountTemplate > 1"
+          >, +{{selectedItemsCountTemplate - 1}}</span
+        >
+      </div>
+    </div>
+  </ng-template>
+  <ng-template *ngIf="prefixIcon" iconPrefix>
+    <trudi-icon [icon]="prefixIcon"></trudi-icon>
+  </ng-template>
+  <ng-template *ngIf="showClearIcon" iconSuffix>
+    <trudi-icon
+      *ngIf="showArrowIcon && (!((multi && _value?.length > 0) || (!multi && _value)) || !clearable)"
+      class="arrow-icon"
+      icon="grayChevronDown"></trudi-icon>
+    <trudi-icon
+      *ngIf="((multi && _value?.length > 0) || (!multi && _value)) && clearable"
+      class="size-16 clear-icon"
+      (click)="handleClearValue($event)"
+      icon="clearFilterIcon"></trudi-icon>
+  </ng-template>
+</button>
+
+<nz-dropdown-menu [nzNoAnimation]="noAnimation" #menu="nzDropdownMenu">
+  <div
+    tabindex="-1"
+    [ngStyle]="dropdownWidth ? { width: dropdownWidth + 'px' } : null"
+    class="trudi-select-dropdown-container"
+    (click)="$event.stopPropagation()">
+    <ng-container
+      *ngIf="headerTemplate?.templateRef"
+      [ngTemplateOutlet]="headerTemplate.templateRef"></ng-container>
+    <div class="trudi-select-dropdown__header">
+      <div *ngIf="searchable" class="search-container">
+        <div
+          class="assign-search-bar d-flex border-rad-8 align-items-center background--gray">
+          <input
+            tabindex="0"
+            type="text"
+            class="search-property-input background--gray w-100"
+            [placeholder]="placeholder"
+            [(ngModel)]="searchValue"
+            (input)="search($event)" />
+          <div
+            [ngClass]="{'show-clear-search': searchValue, 'round-clear-icon': roundClearIcon}"
+            (click)="handleClearSearch()">
+            <trudi-icon
+              [ngClass]="roundClearIcon ? 'size-12 clear-search-icon' : 'size-16'"
+              icon="clearFilterIcon"></trudi-icon>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="multi" class="count-container">
+        <div class="d-flex count-wrapper align-items-center">
+          <div class="count-text">
+            {{ _value ? _value.length : 0 }}/{{ items.length }}
+          </div>
+          <button
+            *ngIf="_value?.length"
+            class="clear-btn"
+            tabindex="0"
+            (click)="handleClearMultiValue()">
+            Clear selection
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="trudi-select-dropdown-scroll"
+      [ngStyle]="{ maxHeight: dropdownHeight + 'px' }">
+      <ng-container
+        *ngTemplateOutlet="displayItems.length > 0 ? selectDropdownGroup : noResult"></ng-container>
+    </div>
+    <ng-container
+      *ngIf="footerTemplate?.templateRef"
+      [ngTemplateOutlet]="footerTemplate.templateRef"></ng-container>
+  </div>
+</nz-dropdown-menu>
+
+<ng-template #selectDropdownGroup>
+  <ng-container
+    [ngTemplateOutlet]="virtualScroll && displayItems.length > 12 ? virtualScrollTemplate : noVirtualScrollTemplate"></ng-container>
+
+  <!-- no virtual scroll -->
+  <ng-template #noVirtualScrollTemplate>
+    <ng-container
+      *ngFor="let item of displayItems; trackBy: trackByFn"
+      [ngSwitch]="item._itemType">
+      <!-- group item -->
+      <div
+        *ngSwitchCase="EItemType.Group"
+        class="trudi-select-dropdown-item__group-title">
+        <ng-container
+          *ngTemplateOutlet="groupTemplate?.templateRef || defaultGroupTemplate; context: { item: _groupMap[item.group] }"></ng-container>
+        <ng-template #defaultGroupTemplate> {{ item.group }} </ng-template>
+      </div>
+      <!-- not found item -->
+      <ng-container
+        *ngSwitchCase="EItemType.NotFound"
+        [ngTemplateOutlet]="noResult"></ng-container>
+      <!-- normal item -->
+      <div
+        tabindex="0"
+        *ngSwitchDefault
+        (click)="handleSelectItem(item)"
+        (keydown.enter)="handleSelectItem(item)"
+        class="trudi-select-dropdown-item"
+        [ngClass]="{
+        'selected': multi ? selectedItems?.[item[bindValue]] : _value === item[bindValue],
+        'multi-item': multi,
+        'disabled': item['disabled']
+      }">
+        <ng-container
+          *ngTemplateOutlet="optionTemplate?.templateRef || selectDropdownItem; context: { item: item, value: _value, searchTerm: searchValue, selectedItems: selectedItems }"></ng-container>
+      </div>
+    </ng-container>
+  </ng-template>
+
+  <!-- virtual scroll -->
+  <ng-template #virtualScrollTemplate>
+    <cdk-virtual-scroll-viewport
+      class="h-100 trudi-select-dropdown-virtual-scroll viewport"
+      itemSize="44"
+      minBufferPx="440"
+      maxBufferPx="450">
+      <div
+        *cdkVirtualFor="let item of displayItems; trackBy: trackByFn"
+        [ngSwitch]="item._itemType">
+        <!-- group item -->
+        <div
+          *ngSwitchCase="EItemType.Group"
+          class="trudi-select-dropdown-item__group-title">
+          <ng-container
+            *ngTemplateOutlet="groupTemplate?.templateRef || defaultGroupTemplate; context: { item: _groupMap[item.group] }"></ng-container>
+          <ng-template #defaultGroupTemplate> {{ item.group }} </ng-template>
+        </div>
+        <!-- not found item -->
+        <ng-container
+          *ngSwitchCase="EItemType.NotFound"
+          [ngTemplateOutlet]="noResult"></ng-container>
+        <!-- normal item -->
+        <div
+          tabindex="0"
+          *ngSwitchDefault
+          (keydown.enter)="handleSelectItem(item)"
+          (click)="handleSelectItem(item)"
+          class="trudi-select-dropdown-item"
+          [ngClass]="{
+          'selected': multi ? selectedItems?.[item[bindValue]] : _value === item[bindValue],
+          'multi-item': multi,
+          'disabled': item['disabled']
+        }">
+          <ng-container
+            *ngTemplateOutlet="optionTemplate?.templateRef || selectDropdownItem; context: { item: item, value: _value, searchTerm: searchValue, selectedItems: selectedItems }"></ng-container>
+        </div>
+      </div>
+    </cdk-virtual-scroll-viewport>
+  </ng-template>
+</ng-template>
+
+<ng-template
+  #selectDropdownItem
+  let-item="item"
+  let-currentValue="value"
+  let-selectedItems="selectedItems">
+  <div class="trudi-select-dropdown-item__info default-template">
+    <div *ngIf="itemImage" class="trudi-select-dropdown-item__info--image">
+      <img
+        *ngIf="(item[itemImage] | avatarCheck); else noAvatar"
+        [src]="item[itemImage]"
+        alt=""
+        referrerpolicy="no-referrer" />
+      <ng-template #noAvatar>{{ item | formatFullname }}</ng-template>
+    </div>
+    <p class="trudi-select-dropdown-item__info--label">{{ item[bindLabel] }}</p>
+  </div>
+  <trudi-checkbox
+    *ngIf="multi; else singleIconTpl"
+    class="item-checkbox"
+    [disabled]="item['disabled']"
+    [focusInputOnly]="false"
+    [ngModel]="selectedItems?.[item[bindValue]]"></trudi-checkbox>
+  <ng-template #singleIconTpl>
+    <trudi-icon class="checked-icon" icon="checkCurrentColor"></trudi-icon>
+  </ng-template>
+</ng-template>
+
+<ng-template #noResult>
+  <ng-container
+    [ngTemplateOutlet]="noResultsTemplate?.templateRef || defaultNoResult"></ng-container>
+
+  <ng-template #defaultNoResult>
+    <div
+      class="trudi-select-dropdown-item no-result"
+      [class.has-image]="itemImage">
+      <p class="trudi-select-dropdown-item__label default-template">
+        {{ textNotFound }}
+      </p>
+    </div>
+  </ng-template>
+</ng-template>

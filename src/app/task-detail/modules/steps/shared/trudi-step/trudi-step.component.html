@@ -1,0 +1,126 @@
+<ng-container *ngIf="!isConsole; else consoleTemplate">
+  <div
+    class="trudi-step-container"
+    [class.completed]="!model?.disabled && completed"
+    [class.disabled]="model?.disabled"
+    [class.not-completed]="!model?.disabled && !completed"
+    [class.selected]="(activeStep$ | async)?.id === model?.id"
+    [class.ignored]="model?.isIgnored"
+    (click)="handleUpdateCurrentStep()">
+    <ng-container [ngTemplateOutlet]="iconSection"></ng-container>
+    <div #trudiSuggestedStepContainer>
+      <div class="trudi-step-content">
+        <div class="trudi-step-title">
+          <p>
+            <span
+              (keyup.enter)="trudiSuggestedStepContainer.click()"
+              [tabIndex]="0"
+              #stepTitle
+              >{{ model?.name }}</span
+            >
+            <trudi-icon
+              class="reminder-times"
+              *ngIf="!!reminderTimes"
+              icon="TimeGrey"
+              [style]="{'width.px': 20, 'height.px': 20, 'color': '#3D3D3D'}"></trudi-icon>
+          </p>
+          <div class="required-badge" *ngIf="model?.isRequired">
+            <trudi-badge
+              text="Required"
+              variant="error"
+              badgeType="outlined"
+              size="small"></trudi-badge>
+          </div>
+          <span
+            *ngIf="model?.disabled && model?.showNoPropertyWarning"
+            trudi-tooltip
+            [hideWhenClick]="true"
+            nzTooltipPlacement="top"
+            [nzTooltipTitle]="NO_PROPERTY_WARNING"
+            [nzTooltipOverlayStyle]="{'max-width': '256px'}">
+            <trudi-icon icon="iconWarning" svgClass="size-16"></trudi-icon>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="cta-dock" *ngIf="(!model.disabled && !completed)">
+      <cta-buttons
+        class="cta-buttons"
+        #ctaButtons
+        (click)="$event.stopPropagation()"
+        (triggerClickCtaOption)="handleVisibleStepDetailPanel()"
+        [buttonKey]="buttonKey"
+        [class.active]="ctaButtons.dropdownBtn?.nzVisible"
+        [currentStep]="model"></cta-buttons>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #consoleTemplate>
+  <div
+    #trudiSuggestedStepContainer
+    (click)="handleUpdateCurrentStep()"
+    trudiTooltip
+    [customHostWidth]="stepTitle?.offsetWidth + 40"
+    [tooltipText]="completed && !model?.disabled ? 'Click to repeat' : ''"
+    class="trudi-step-container">
+    <ng-container [ngTemplateOutlet]="iconSection"></ng-container>
+
+    <div class="trudi-step-content">
+      <div class="trudi-step-title">
+        <p>
+          <span
+            (keyup.enter)="trudiSuggestedStepContainer.click()"
+            [tabIndex]="0"
+            #stepTitle
+            >{{ model?.name }}</span
+          >
+          <trudi-icon
+            class="reminder-times"
+            *ngIf="!!reminderTimes"
+            icon="TimeGrey"
+            [style]="{'width.px': 20, 'height.px': 20, 'color': '#3D3D3D'}"></trudi-icon>
+        </p>
+        <div class="required-badge" *ngIf="model?.isRequired">
+          <trudi-badge
+            text="Required"
+            variant="error"
+            badgeType="outlined"
+            size="small"></trudi-badge>
+        </div>
+        <span
+          *ngIf="model?.disabled && model?.showNoPropertyWarning"
+          trudi-tooltip
+          [hideWhenClick]="true"
+          nzTooltipPlacement="top"
+          [nzTooltipTitle]="NO_PROPERTY_WARNING"
+          [nzTooltipOverlayStyle]="{'max-width': '256px'}">
+          <trudi-icon icon="iconWarning" svgClass="size-16"></trudi-icon>
+        </span>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #iconSection>
+  <div class="icon-wrapper">
+    <div *ngIf="model.isNextStepMarker" class="next-step-marker">
+      <trudi-icon icon="nextStepMarker"> </trudi-icon>
+    </div>
+    <trudi-icon
+      class="icon-success"
+      *ngIf="!model?.disabled && completed"
+      icon="checkboxCheckedBold"></trudi-icon>
+    <trudi-icon
+      *ngIf="!model?.disabled && !completed"
+      icon="checkboxCheckedOutlined"></trudi-icon>
+    <trudi-icon
+      [ngClass]="{'icon-success-disabled': completed}"
+      *ngIf="model?.disabled"
+      [icon]="completed ? 'checkboxCheckedBold' : 'checkboxDisabledOutlined'"></trudi-icon>
+
+    <div class="reddot-container" *ngIf="model?.unreadComment">
+      <div class="reddot-icon"></div>
+    </div>
+  </div>
+</ng-template>

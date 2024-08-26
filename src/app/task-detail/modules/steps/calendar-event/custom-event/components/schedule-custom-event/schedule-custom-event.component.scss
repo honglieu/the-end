@@ -1,0 +1,77 @@
+@import 'function';
+.content-modal {
+  padding: 20px 24px;
+  ::ng-deep {
+    .trudi-picker {
+      max-width: 100%;
+    }
+    .trudi-date-picker,
+    .time-picker svg-icon svg path {
+      fill: var(--fg-neutral-weaker, #999);
+    }
+    time-picker {
+      .date-time-group div {
+        width: 100%;
+      }
+
+      input {
+        max-width: unset;
+        transition: unset;
+        height: 40px;
+        width: 100%;
+        padding: 12px 30px 12px 12px;
+      }
+      .date-time-picker .input-wrapper .dropdown-button {
+        max-width: 100% !important;
+      }
+
+      .date-time-picker .input-wrapper input:not(:focus) {
+        box-shadow: unset !important;
+      }
+
+      .input-error.input-error-hour:focus {
+        box-shadow: var(--shadow-brand) !important;
+      }
+      .field-had-submitted {
+        .input-error.input-error-hour:focus {
+          box-shadow: var(--shadow-danger) !important;
+        }
+      }
+      &.trudi-time-picker-error {
+        .date-time-picker .input-wrapper input.input-error:not(:focus) {
+          box-shadow: var(--shadow-danger) !important;
+        }
+      }
+
+      &:has(input.disabled) {
+        input {
+          cursor: not-allowed;
+          color: var(--fg-neutral-weakest);
+          background-color: var(--bg-neutral-tonal-strongest, #d8dcdf);
+        }
+        trudi-icon {
+          cursor: not-allowed;
+        }
+      }
+    }
+    .entry-time {
+      &.fieldDisable {
+        input {
+          background: var(--bg-neutral-tonal-strongest) !important;
+          color: var(--fg-neutral-weakest) !important;
+          cursor: not-allowed !important;
+        }
+      }
+    }
+  }
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 24px;
+  gap: 12px;
+  background: transparent;
+  border-top: 1px solid var(--gray-100);
+  border-radius: 0 0 8px 8px;
+}

@@ -1,0 +1,29 @@
+.agency-detail {
+  padding: 20px;
+}
+
+table tr th {
+  border: 0;
+  text-align: left;
+}
+
+table tr td {
+  font-family: sans-serif;
+}
+
+.confirm-btn {
+  display: flex;
+  padding: 0.9rem 2.2rem;
+  font-size: 1.4rem;
+  background-color: var(--brand-500);
+  border-radius: 0.7rem;
+  border: 0;
+  color: var(--white);
+  align-items: center;
+  margin-top: 20px;
+  margin-left: 8px;
+
+  .btn-text {
+    font-size: 14px;
+  }
+}

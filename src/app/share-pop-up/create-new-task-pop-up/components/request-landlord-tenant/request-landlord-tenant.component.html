@@ -1,0 +1,75 @@
+<popup-layout
+  [headerText]="title"
+  [leftButtonText]="leftButtonText"
+  rightButtonText="Confirm"
+  [dividerBottom]="false"
+  [disabledRightButton]="false"
+  logoSvgSegmentId="#trudi-default-logo"
+  (whenClosed)="onCloseModal.emit()"
+  (whenCancel)="onBack.emit()"
+  (whenConfirmed)="isEdit ? handleEditTask() : onNextRequest()">
+  <div [formGroup]="formGroup" class="content">
+    <div id="summaryArea">
+      <div class="summary-label">{{labelRequest}}</div>
+      <div #textAreaWrapper class="summary-textarea relative">
+        <textarea
+          type="text"
+          rows="4"
+          autosize
+          formControlName="summary"
+          placeholder="Enter summary"
+          data-e2e="summary-textarea"
+          [maxlength]="MAX_TEXT_MESS_LENGTH"
+          [ngClass]="{'has-error': formGroup.get('summary').dirty && formGroup.get('summary').invalid}"></textarea>
+        <div class="down-right-text textarea-bottom-text">
+          {{MAX_TEXT_MESS_LENGTH - formGroup.get('summary').value?.length}}
+        </div>
+      </div>
+      <div
+        *ngIf="formGroup.get('summary').dirty && formGroup.get('summary').invalid"
+        class="error-container d-flex align-items-center gap-4">
+        <trudi-icon
+          class="ng-select-alert size-12"
+          icon="iconWarningRedFit"></trudi-icon>
+        <span class="error-text">Required field</span>
+      </div>
+    </div>
+    <div id="photoArea">
+      <div class="summary-label">Photos (optional)</div>
+      <div class="d-flex align-items-center gap-8 img-wrapper">
+        <ng-container *ngFor="let image of imageCheckList; let idx = index">
+          <preview-image-video-box
+            *ngIf="idx < 5"
+            [fileData]="image"
+            [canSelected]="true"></preview-image-video-box>
+        </ng-container>
+        <div *ngIf="imageCheckList?.length < 5">
+          <label for="file" class="size-60 file-label"></label>
+          <input
+            type="file"
+            class="hide"
+            [accept]="acceptFileType"
+            id="file"
+            (change)="fileBrowseHandler($event)"
+            hidden />
+        </div>
+      </div>
+      <div
+        *ngIf="overFileSize; else fileValid"
+        class="error-container d-flex align-items-center gap-4">
+        <trudi-icon icon="iconWarning"></trudi-icon>
+        <div class="error-text">
+          Your file is larger than 25MB. Please upload a smaller file.
+        </div>
+      </div>
+      <ng-template #fileValid>
+        <div
+          *ngIf="mediaFilesInConversation && hasOriginalMediaFile"
+          class="photo-found-text">
+          {{mediaFilesInConversation}} {{mediaFilesInConversation === 1 ?
+          'photo' : 'photos'}} found in task conversations
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</popup-layout>

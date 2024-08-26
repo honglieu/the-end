@@ -1,0 +1,187 @@
+@import 'function';
+
+.trudi-tabs {
+  overflow: visible;
+  .ant-tabs-content {
+    transition: none !important;
+  }
+
+  .ant-tabs-tab {
+    color: var(--gray-400);
+    font-weight: 600;
+    padding: 4px 0;
+    font-size: 14px;
+  }
+
+  .ant-tabs-tab + .ant-tabs-tab {
+    margin: 0 0 0 16px;
+  }
+
+  &.ant-tabs-top > .ant-tabs-nav,
+  &.ant-tabs-bottom > .ant-tabs-nav,
+  &.ant-tabs-top > div > .ant-tabs-nav,
+  &.ant-tabs-bottom > div > .ant-tabs-nav {
+    margin: 0;
+  }
+
+  &.ant-tabs-top > .ant-tabs-nav::before,
+  &.ant-tabs-bottom > .ant-tabs-nav::before,
+  &.ant-tabs-top > div > .ant-tabs-nav::before,
+  &.ant-tabs-bottom > div > .ant-tabs-nav::before {
+    border-bottom: none;
+  }
+
+  &.ant-tabs-top > .ant-tabs-nav .ant-tabs-ink-bar,
+  &.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-ink-bar {
+    height: 3px;
+  }
+}
+
+:host {
+  .work-order-wrapper {
+    margin-top: 16px;
+    height: 100%;
+    max-height: 100%;
+    position: relative;
+    ::ng-deep {
+      .scrollable .ant-table-container {
+        max-height: calc(100vh - 470px);
+        overflow-y: auto;
+      }
+      .trudi-textarea-wrapper #trudi-textarea {
+        padding: 4px 0px;
+        max-height: 108px;
+      }
+    }
+    .trudi-table-wrapper tbody tr {
+      width: 100%;
+    }
+    .trudi-table-wrapper tbody tr .col-detail {
+      width: 24% !important;
+      .label {
+        width: 48px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        @include fontSetup(
+          var(--fg-neutral-normal, #646464),
+          12px,
+          16px,
+          normal,
+          400
+        );
+      }
+      .select-wrapper {
+        width: calc(100% - 48px);
+      }
+    }
+    .trudi-table-wrapper tbody td {
+      vertical-align: top;
+    }
+    .trudi-table-wrapper tbody tr .col-description {
+      width: 29% !important;
+    }
+    .trudi-table-wrapper tbody tr .col-quantity {
+      width: 5.6% !important;
+    }
+    .trudi-table-wrapper tbody tr .col-cost,
+    .col-price {
+      width: 8.8% !important;
+    }
+    .trudi-table-wrapper tbody tr .col-total {
+      min-width: 140px !important;
+      width: 3.2% !important;
+      div {
+        height: 36px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+      }
+    }
+    .trudi-table-wrapper tbody tr .col-actions {
+      width: 3.2% !important;
+    }
+    .trudi-table-wrapper tbody tr .col-bill {
+      width: 15.7% !important;
+    }
+    ::ng-deep .icon-more-action svg-icon {
+      transform: rotate(90deg) !important;
+      width: 32px;
+    }
+    ::ng-deep .trudi-ui-btn:focus {
+      box-shadow: none !important;
+    }
+    .item-disabled {
+      cursor: not-allowed !important;
+    }
+    .icon-warning {
+      height: 16px !important;
+      margin-top: 4px;
+    }
+    ::ng-deep .ng-dropdown-panel {
+      margin: 8px 0px;
+      .ng-dropdown-panel-items .ng-option {
+        padding: 12px !important;
+      }
+    }
+  }
+  .dropdown-actions {
+    .ant-dropdown-menu-item {
+      @include fontSetup(
+        var(--fg-neutral-stronger, #3d3d3d),
+        14px,
+        20px,
+        normal,
+        500
+      );
+    }
+  }
+  ::ng-deep .ant-dropdown-menu-item-disabled {
+    pointer-events: unset !important;
+    cursor: not-allowed !important;
+  }
+  .ant-dropdown-menu-item-disabled {
+    pointer-events: unset !important;
+    cursor: not-allowed !important;
+  }
+  ::ng-deep .trudi-single-select .ng-dropdown-panel .ng-dropdown-panel-items {
+    max-height: 270px !important;
+  }
+  ::ng-deep .trudi-ui-btn-outlined-neutral:disabled {
+    cursor: not-allowed !important;
+    pointer-events: unset !important;
+  }
+  ::ng-deep .trudi-checkbox-group-container {
+    display: block !important;
+  }
+}
+
+.dropdown-actions .dropdown-item-action {
+  padding: 12px !important;
+  border-bottom: 1px solid var(--border-neutral-light, #f2f5f7);
+  font-weight: 500;
+}
+
+::ng-deep .dropdown-actions .action-delete span {
+  @include fontSetup(var(--fg-danger, #e1024f), 14px, 20px, normal, 500);
+}
+
+::ng-deep trudi-checkbox .label-text {
+  @include fontSetup(
+    var(--fg-neutral-strongest, #202020),
+    14px,
+    20px,
+    normal,
+    500
+  );
+}
+
+::ng-deep .dropdown-actions .ant-dropdown-menu-item-disabled {
+  pointer-events: unset !important;
+  cursor: not-allowed !important;
+  span {
+    color: var(--fg-neutral-weakest, #b9bec0);
+  }
+}

@@ -1,0 +1,82 @@
+<div>
+  <div class="stask-chart-title">Task completion</div>
+  <div id="chart-section">
+    <chart-wrapper>
+      <div *ngIf="isLoading; else stackBarChart" class="skeleton_stack--bar">
+        <nz-skeleton-element
+          class="skeleton-header"
+          nzType="button"
+          nzShape="default"
+          [nzActive]="true"></nz-skeleton-element>
+        <nz-skeleton-element
+          class="skeleton-dropdown"
+          nzType="button"
+          nzShape="default"
+          [nzActive]="true"></nz-skeleton-element>
+
+        <nz-skeleton-element
+          class="skeleton-bar"
+          nzType="button"
+          nzShape="default"
+          [nzActive]="true"></nz-skeleton-element>
+      </div>
+      <ng-template #stackBarChart>
+        <div class="d-flex justify-content-between">
+          <div class="d-flex gap-12 align-items-center chart-title">
+            <span>Percentage of</span>
+            <trudi-select-dropdown-v2
+              placeholder="Search"
+              [searchable]="true"
+              [clearable]="false"
+              (visibleChange)="handleVisibleChange($event)"
+              [alwaysShowTitleGroup]="true"
+              [(ngModel)]="selectedTasks"
+              [groupOrders]="titleGroupTask"
+              (valueChange)="handleValueChange($event)"
+              [items]="completedTaskOptions"
+              [customTitle]="customTitle"
+              [groupBy]="'titleTask'"
+              bindValue="id"
+              bindLabel="name"
+              overlayClassName="select-dropdown-task-completed"
+              [multi]="true">
+            </trudi-select-dropdown-v2>
+            <span>tasks completed</span>
+          </div>
+          <div class="chart-note">* Hold Ctrl and scroll to zoom in/out</div>
+        </div>
+
+        <div>
+          <trudi-select-dropdown
+            [clearable]="false"
+            [(ngModel)]="currentPeriodType"
+            (valueChange)="handleChangePeriodType($event)"
+            [items]="LIST_PERIOD_TYPE"
+            bindLabel="label"
+            bindValue="value"></trudi-select-dropdown>
+        </div>
+
+        <div
+          *ngIf="dataStackBarChart | shouldShowStackBarChart;else noChartFoundTemplate">
+          <stack-bar-chart
+            [config]="configStackBarChart"
+            [tooltipTemplate]="tooltipTemplate">
+            <ng-template #tooltipTemplate>
+              <div class="default-tooltip">
+                <div class="default-tooltip__header">tooltip_header</div>
+                <div class="default-tooltip__body">tooltip_body</div>
+                <div class="d-flex gap-4">
+                  tooltip_icon_footer tooltip_footer
+                </div>
+              </div>
+            </ng-template>
+          </stack-bar-chart>
+        </div>
+
+        <ng-template #noChartFoundTemplate>
+          <div class="no-data-found">No data available</div>
+        </ng-template>
+      </ng-template>
+    </chart-wrapper>
+  </div>
+</div>

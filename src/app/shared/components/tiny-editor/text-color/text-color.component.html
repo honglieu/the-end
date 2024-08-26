@@ -1,0 +1,40 @@
+<div class="text-color-wrapper">
+  <button
+    class="btn-action"
+    (click)="$event.stopPropagation()"
+    nz-button
+    trudi-tooltip
+    [nzTooltipTitle]="'Text color'"
+    nz-dropdown
+    [nzClickHide]="false"
+    [nzTrigger]="'click'"
+    [nzDropdownMenu]="menu"
+    [nzPlacement]="'topLeft'"
+    [nzVisible]="visibleDropdown"
+    (nzVisibleChange)="visibleDropdown = $event">
+    <trudi-icon icon="aIcon" svgClass="size-12"></trudi-icon>
+    <div
+      class="a-underline"
+      [style.opacity]="!isMultipleSelected ? '1' : '0'"
+      [style.background-color]="currentTextColor.format"></div>
+  </button>
+</div>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div nz-menu focusElement [isFocus]="visibleDropdown" tabindex="0">
+    <div class="text-color-menu-wrapper">
+      <ng-container *ngFor="let item of textColors">
+        <div
+          nz-menu-item
+          class="btn-item"
+          [ngClass]="{'item-selected': item.format === currentTextColor.format}"
+          (clickStopPropagation)="onHandleChangeFontColor(item)">
+          <div
+            class="item"
+            [style.background-color]="item.format"
+            tabindex="0"></div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</nz-dropdown-menu>

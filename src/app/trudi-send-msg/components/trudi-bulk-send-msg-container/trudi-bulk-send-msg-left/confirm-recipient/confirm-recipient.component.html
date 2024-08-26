@@ -1,0 +1,199 @@
+<div class="confirm-recipient">
+  <div *ngIf="isHasRecipientEdit" class="recipient-list-text-container">
+    <div class="recipient-list-text d-flex justify-content-between">
+      @if (isOpenFromBulkCreateTask) {
+      <span class="text-ellipsis"> {{configs | sendEmailToLabel}} </span>
+      } @else if (!selectedReceivers?.value?.length) {
+      <span class="text-ellipsis">
+        {{configs | sendEmailToLabel}}
+        <span *ngIf="!selectedReceivers?.value?.length" class="no-recipients">
+          No recipients selected
+        </span>
+      </span>
+      } @else {
+      <div
+        *ngIf="!isOpenFromBulkCreateTask"
+        class="recipient-list-text-preview w-100 text-ellipsis">
+        <trudi-select-receiver-preview
+          [dataAsGroupTask]="true"
+          [allowCustomReceiverNameLength]="true"
+          [numberOfCharactersThatAllowed]="15"
+          [numberOfCharactersThatAllowedForOneUser]="27"
+          [prefixToTitle]="configs | sendEmailToLabel"
+          [recipientGroupByTask]="recipientGroupByTask"
+          [toRawUsers]="configs.otherConfigs.createMessageFrom !==
+        ECreateMessageFrom.MULTI_TASKS ? listReceiversContactGroup : toReceivers"
+          [toRawCcUsers]="ccReceivers?.value"
+          [toRawBccUsers]="bccReceivers.value"></trudi-select-receiver-preview>
+      </div>
+      }
+      <div
+        class="d-flex gap-4 align-items-center recipient-edit"
+        (click)="editConfirmRecipient.emit()">
+        <trudi-icon
+          icon="penGrayIcon"
+          class="size-20"
+          [style]="{'width.px': 20, 'height.px': 20}">
+        </trudi-icon>
+        <span>Edit</span>
+      </div>
+    </div>
+    @if (isSubmitted && selectedReceivers?.invalid) {
+    <div class="d-flex gap-4 recipient-error align-items-center">
+      <trudi-icon icon="iconWarning" class="size-12"> </trudi-icon>
+      <span *ngIf="selectedReceivers?.errors?.required">
+        Select recipient in the "Edit" section to send email
+      </span>
+    </div>
+    }
+  </div>
+  <div class="d-flex gap-10 align-items-center">
+    <p class="select-field-label">Confirm recipients</p>
+    @if (isSubmitted && selectedReceivers?.invalid &&
+    (configs.otherConfigs.createMessageFrom ===
+    ECreateMessageFrom.MULTI_MESSAGES || configs.otherConfigs.createMessageFrom
+    === ECreateMessageFrom.CONTACT)) {
+    <div class="d-flex gap-4 recipient-error align-items-center">
+      <trudi-icon icon="iconWarning" class="size-12"> </trudi-icon>
+      <span *ngIf="selectedReceivers?.errors?.required"
+        >Please select at least one contact to continue</span
+      >
+      <span *ngIf="selectedReceivers?.errors?.emailInvalid">Invalid email</span>
+    </div>
+    }
+  </div>
+  <ng-container
+    *ngIf="!selectedReceivers?.value?.length && (isTaskLoading$ | async)">
+    <div class="d-flex flex-dir-column gap-8">
+      <div
+        class="confirm-recipient-list-skeleton pd-12 border-rad-8"
+        *ngFor="let _ of [].constructor(2)">
+        <nz-skeleton
+          [nzActive]="true"
+          [nzParagraph]="{rows: 3, width: ['25%', '40%', '60%', '100%', '15%']}"
+          [nzTitle]="false"></nz-skeleton>
+      </div>
+    </div>
+  </ng-container>
+  <div class="confirm-recipient-wrapper d-flex flex-dir-column gap-8">
+    @if (!(configs.otherConfigs.createMessageFrom ===
+    ECreateMessageFrom.MULTI_TASKS || configs.otherConfigs.createMessageFrom ===
+    ECreateMessageFrom.TASK_STEP || configs.otherConfigs.createMessageFrom ===
+    ECreateMessageFrom.CONTACT)) {
+    <div
+      *ngFor="let recipient of displayRecipients; index as contactIndex"
+      class="confirm-recipient-list d-flex align-items-center">
+      <div class="text-ellipsis flex-1">
+        <ng-container
+          *ngTemplateOutlet="contact; context: {data: recipient, contactIndex: contactIndex}">
+        </ng-container>
+      </div>
+    </div>
+    } @else if (isSendSingleEmail) {
+    <ng-container
+      *ngFor="let task of listContactGroup.value | map: mapConfirmRecipientsFn; index as i; trackBy: trackByListContactGroup">
+      <div
+        *ngIf="listContactGroup.controls[i]?.controls['recipients']?.value?.length"
+        class="confirm-recipient-list d-flex align-items-center">
+        <div
+          class="d-flex flex-dir-column gap-8 text-ellipsis flex-1"
+          [formGroup]="listContactGroup.controls[i]">
+          <ng-container
+            *ngTemplateOutlet="contact; context: {task: task, data: listContactGroup.controls[i]?.controls['recipients']?.value, formControl: listContactGroup.controls[i]?.get('recipients'), contactIndex: task.displayIndex, propertyId: !(task?.streetline || task?.streetLine) ? null : task?.propertyId, isSendSingleEmail: true }">
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+    } @else {
+    <ng-container *ngFor="let task of recipientGroupByTask; index as i">
+      <div
+        *ngIf="listContactGroup.controls[i]?.controls['recipients']?.value?.length"
+        class="confirm-recipient-list d-flex align-items-center">
+        <div
+          class="d-flex flex-dir-column gap-8 text-ellipsis flex-1"
+          [formGroup]="listContactGroup.controls[i]">
+          <ng-container
+            *ngFor="let recipient of listContactGroup.controls[i]?.controls['recipients']?.value; index as contactIndex; trackBy: trackBy">
+            <ng-container
+              *ngTemplateOutlet="contact; context: {task: task, data: recipient, formControl: listContactGroup.controls[i]?.get('recipients'), contactIndex: contactIndex, propertyId: !(task?.streetline || task?.streetLine) ? null : task?.propertyId }">
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+    }
+  </div>
+</div>
+
+<ng-template
+  #contact
+  let-task="task"
+  let-data="data"
+  let-formControl="formControl"
+  let-contactIndex="contactIndex"
+  let-propertyId="propertyId"
+  let-isSendSingleEmail="isSendSingleEmail">
+  <div class="contact-item d-flex pd-8 border-rad-8">
+    <div
+      *ngIf="data.participants?.length || !data.participants"
+      class="contact-row w-100 d-flex justify-content-between"
+      [ngClass]="{'no-border-bottom': configs.otherConfigs.createMessageFrom === ECreateMessageFrom.MULTI_MESSAGES}">
+      <div class="contact-info-container w-100 d-flex flex-dir-column gap-4">
+        <div class="contact-index">
+          @if (isSendSingleEmail) {
+          <span class="contact-index-text">Email {{contactIndex + 1}}</span>
+          } @else {
+          <span class="contact-index-text"
+            >Email {{data | contactIndex: listReceiversContactGroup ||
+            selectedReceivers.value}}</span
+          >
+          }
+        </div>
+        <div
+          class="contact-info-content d-flex flex-dir-column gap-4 text-ellipsis">
+          <span
+            *ngIf="data?.title && configs.otherConfigs.createMessageFrom === ECreateMessageFrom.MULTI_MESSAGES"
+            class="task-title text-ellipsis">
+            Title: {{data?.title}}
+          </span>
+          @if (isSendSingleEmail) {
+          <trudi-select-receiver-preview
+            [selectedProperty]="{id: propertyId}"
+            [toRawUsers]="data"
+            [toRawCcUsers]="ccReceivers?.value"
+            [toRawBccUsers]="bccReceivers.value"></trudi-select-receiver-preview>
+          } @else {
+          <span
+            class="contact-recipients text-ellipsis"
+            [ngClass]="{'invalid-contact': data.type === EConfirmContactType.UNIDENTIFIED && !data.isValid}">
+            To: {{data | contactTitle:
+            ({createFrom:configs.otherConfigs.createMessageFrom, propertyId:
+            propertyId, ccReceivers: ccReceivers?.value, bccReceivers:
+            bccReceivers.value})}}
+          </span>
+          }
+          <div class="task-info-with-icon d-flex gap-4 align-items-center">
+            <trudi-icon icon="iconAddress" svgClass="size-16"></trudi-icon>
+            <span
+              class="task-property text-ellipsis d-block"
+              [class.no-property]="!(task?.streetline || task?.streetLine || data?.streetline || data?.streetLine)"
+              >{{task?.streetline || task?.streetLine || data?.streetline ||
+              data?.streetLine || 'No property'}}</span
+            >
+          </div>
+          <div
+            *ngIf="task?.title && configs.otherConfigs.createMessageFrom === ECreateMessageFrom.MULTI_TASKS"
+            class="task-info-with-icon d-flex gap-4 align-items-center">
+            <trudi-icon icon="taskCheckList" svgClass="size-16"></trudi-icon>
+            <span class="task-title text-ellipsis">{{task?.title}}</span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="d-none remove-contact-icon size-24 cursor-pointer"
+        (click)="handleRemoveContact(data, formControl, contactIndex)">
+        <trudi-icon icon="closeBtn"> </trudi-icon>
+      </div>
+    </div>
+  </div>
+</ng-template>

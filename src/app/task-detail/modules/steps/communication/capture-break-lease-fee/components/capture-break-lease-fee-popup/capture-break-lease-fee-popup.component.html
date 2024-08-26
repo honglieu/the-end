@@ -1,0 +1,89 @@
+<resizable-modal-popup
+  *ngIf="visible"
+  [show]="visible"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [closable]="true"
+  [title]="title"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="660"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [footerTemplate]="footerModal"
+  [hiddenCancelBtn]="true"
+  (onCancel)="handleClose()"
+  (onOk)="handleNext()"
+  [isCustomMoveable]="true">
+  <ng-template #footerModal>
+    <div class="d-flex gap-8 capture-break-lease-fee-footer">
+      <button
+        *ngIf="hasBackButton"
+        trudi-btn
+        variant="outlined"
+        btnType="neutral"
+        (click)="handleBack()">
+        Back
+      </button>
+      <button trudi-btn (click)="handleNext()">Next</button>
+    </div>
+  </ng-template>
+  <div [formGroup]="form" class="capture-break-lease-fee-form-wrapper">
+    <div class="d-flex flex-dir-column gap-16">
+      <div class="break-lease-fee-section w-100">
+        <trudi-form-control>
+          <trudi-number-field
+            [maskLeadZero]="true"
+            [maskPattern]="maskPattern"
+            thousandSeparatorType=","
+            [maxCharacter]="DEFAULT_CHAR_TRUDI_NUMBER_FIELD"
+            label="Break-lease fee?"
+            prefixText="$"
+            size="extra-large"
+            formControlName="breakLeaseFee"></trudi-number-field>
+        </trudi-form-control>
+      </div>
+      <div class="advertising-fee-section w-100">
+        <trudi-form-control>
+          <trudi-number-field
+            [maskLeadZero]="true"
+            [maskPattern]="maskPattern"
+            thousandSeparatorType=","
+            [maxCharacter]="DEFAULT_CHAR_TRUDI_NUMBER_FIELD"
+            label="Advertising fees?"
+            prefixText="$"
+            size="extra-large"
+            formControlName="advertisingFee"></trudi-number-field>
+        </trudi-form-control>
+      </div>
+      <label class="other-fee-label"> Other fees</label>
+      <div
+        class="other-fee-section w-100 d-flex gap-16"
+        formGroupName="otherFee">
+        <div class="name flex-1">
+          <trudi-form-control>
+            <trudi-text-field
+              placeholder="Fee name"
+              formControlName="name"
+              [maxCharacter]="255">
+            </trudi-text-field>
+          </trudi-form-control>
+        </div>
+        <div class="fee flex-1">
+          <trudi-form-control>
+            <trudi-number-field
+              [maskLeadZero]="true"
+              [maskPattern]="maskPattern"
+              thousandSeparatorType=","
+              [maxCharacter]="DEFAULT_CHAR_TRUDI_NUMBER_FIELD"
+              prefixText="$"
+              size="extra-large"
+              formControlName="fee">
+            </trudi-number-field>
+          </trudi-form-control>
+        </div>
+      </div>
+    </div>
+  </div>
+</resizable-modal-popup>

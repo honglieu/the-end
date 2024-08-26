@@ -1,0 +1,124 @@
+<div class="leading messages-header">
+  <div
+    class="assign-search-bar d-flex border-rad-8 align-items-center background--gray">
+    <input
+      type="text"
+      class="search-property-input background--gray w-100"
+      placeholder="Search"
+      tabindex="0"
+      focusable
+      onfocus="this.placeholder = ''"
+      onblur="this.placeholder = 'Search'"
+      [(ngModel)]="searchValue"
+      (input)="search()" />
+    <div class="clear-wrapper" *ngIf="searchValue" (click)="onClearSearch()">
+      <trudi-icon class="size-16" icon="clearFilterIcon"></trudi-icon>
+    </div>
+  </div>
+</div>
+<div class="count-container">
+  <div class="d-flex count-wrapper align-items-center">
+    <div class="count-text">{{countSelected}}/{{totalOriginalItems}}</div>
+    <button
+      *ngIf="selectedList.length"
+      tabindex="0"
+      focusable
+      class="clear-btn clear-selection-btn"
+      (click)="onClearSelection()">
+      Clear selection
+    </button>
+  </div>
+</div>
+<ng-template #content>
+  <div class="assign-list-items auto-hide-scroll">
+    <div class="assign-list-items-info">
+      <div *ngIf="searchList?.length else noResult">
+        <cdk-virtual-scroll-viewport
+          [ngStyle]="getStyle()"
+          class="assign-list-items-list"
+          itemSize="45"
+          minBufferPx="300"
+          maxBufferPx="326"
+          (scroll)="onScroll()">
+          <div focusable *cdkVirtualFor="let agency of searchList">
+            <div
+              class="subscription-group"
+              [ngClass]="{'d-none': filterList?.length === 1}">
+              {{agency.name | uppercase}}
+            </div>
+            <div
+              *ngFor="let portfolio of agency.portfolios"
+              (keydown.enter)="handleCheckbox(agency.id, portfolio.agencyAgentId)"
+              class="assign-item cursor-pointer"
+              focusable
+              [ngClass]="{'disable': portfolio?.isLastItem, 'active': portfolio?.selected}"
+              (click)="handleCheckbox(agency.id, portfolio.agencyAgentId)"
+              tabindex="0">
+              <div class="assign-item-content">
+                <div class="assign-item-info">
+                  <div
+                    class="assign-name text-overflow"
+                    [ngClass]="{'active': portfolio?.selected}">
+                    {{(portfolio?.firstName || '') + ' ' + (portfolio?.lastName
+                    || '')}}
+                  </div>
+                  <td-checkbox
+                    [size]="24"
+                    [isChecked]="portfolio?.selected"
+                    (tdCheckboxChanged)="handleCheckbox(agency.id, portfolio.agencyAgentId)"
+                    [currentUser]="portfolio">
+                  </td-checkbox>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            *ngIf="isScrolledToBottom"
+            class="grid-portfolio d-flex align-items-center gap-16">
+            <div class="grid-item w-100">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"
+                class="ant-skeleton-custom"></nz-skeleton>
+            </div>
+            <div class="grid-checkbox">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"
+                class="ant-skeleton-custom"></nz-skeleton>
+            </div>
+          </div>
+        </cdk-virtual-scroll-viewport>
+      </div>
+      <ng-template #noResult>
+        <div class="no-result">No results found</div>
+      </ng-template>
+    </div>
+  </div>
+</ng-template>
+
+<ng-container *ngIf="isLoadingList; else content">
+  <ng-container
+    *ngTemplateOutlet="skeletonLoadingItem; context: {rowNumber: 7}">
+  </ng-container>
+</ng-container>
+<ng-template #skeletonLoadingItem let-row="rowNumber">
+  <div
+    *ngFor="let _ of [].constructor(row); let i = index"
+    class="d-flex flex-dir-column">
+    <div class="grid-portfolio d-flex align-items-center gap-16">
+      <div class="grid-item w-100">
+        <nz-skeleton
+          [nzParagraph]="paragraph"
+          [nzActive]="true"
+          class="ant-skeleton-custom"></nz-skeleton>
+      </div>
+      <div class="grid-checkbox">
+        <nz-skeleton
+          [nzParagraph]="paragraph"
+          [nzActive]="true"
+          class="ant-skeleton-custom"></nz-skeleton>
+      </div>
+    </div>
+  </div>
+</ng-template>

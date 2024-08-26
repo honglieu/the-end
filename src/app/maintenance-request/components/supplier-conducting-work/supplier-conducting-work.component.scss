@@ -1,0 +1,57 @@
+@import 'function';
+
+:host ::ng-deep {
+  .box-header {
+    padding: 10px 14px 20px 14px;
+    gap: 16px;
+    width: 100%;
+    align-items: center;
+    .round-icon {
+      min-width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      img {
+        width: 40px;
+        height: 40px;
+      }
+    }
+    .title {
+      flex-grow: 1;
+      @include fontSetup(var(--gray-950), 18px, 24px, normal, 600);
+      display: flex;
+      align-items: center;
+    }
+    .action {
+      cursor: pointer;
+      min-width: 28px;
+      height: 28px;
+    }
+  }
+  .box-body {
+    .supplier-conducting {
+      &-list td-checkbox .content {
+        padding: 16px 14px 16px 14px;
+        .checkbox-label {
+          @include fontSetup(
+            var(--gray-700) !important,
+            16px!important,
+            24px!important,
+            normal,
+            600!important
+          );
+        }
+      }
+      &-empty {
+        margin: 20px 0;
+      }
+    }
+  }
+  .box-footer {
+    padding: 20px 14px 10px 14px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  hr.divider {
+    margin: 0 -10px;
+  }
+}

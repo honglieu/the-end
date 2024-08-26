@@ -1,0 +1,86 @@
+<div [formGroup]="form">
+  <div class="capture-inspection-action-wrapper">
+    <div
+      class="d-flex justify-content-between align-items-center label-wrapper">
+      <label class="capture-inspection-action-label"> Pre-screen </label>
+      <div class="required-checkbox mb-4">
+        <trudi-checkbox formControlName="preScreenIsRequired" label="Required">
+        </trudi-checkbox>
+      </div>
+    </div>
+    <div class="inspection-action-form">
+      <div class="w-100 d-flex flex-dir-column gap-16">
+        <div class="title">
+          <trudi-form-control [checkSubmit]="!isSubmittedCommunicationForm">
+            <trudi-text-field
+              [checkSubmit]="!isSubmittedCommunicationForm"
+              label="Title"
+              formControlName="title"
+              [maxCharacter]="100">
+            </trudi-text-field>
+          </trudi-form-control>
+        </div>
+        <div class="tenant-notes flex-1">
+          <trudi-form-control>
+            <trudi-text-field
+              label="Tenant notes"
+              formControlName="tenantNote"
+              placeholder="Free text field">
+            </trudi-text-field>
+          </trudi-form-control>
+        </div>
+        <div class="tenant-actions flex-1">
+          <trudi-form-control>
+            <trudi-text-field
+              label="Tenant actions"
+              formControlName="tenantAction"
+              placeholder="Free text field">
+            </trudi-text-field>
+          </trudi-form-control>
+        </div>
+        <div class="landlord-notes flex-1">
+          <trudi-form-control>
+            <trudi-text-field
+              label="Owner notes"
+              formControlName="landlordNote"
+              placeholder="Free text field">
+            </trudi-text-field>
+          </trudi-form-control>
+        </div>
+        <div class="landlord-follow-up flex-1">
+          <trudi-form-control>
+            <trudi-text-field
+              label="Owner follow-up items"
+              formControlName="landlordFollowUp"
+              placeholder="Free text field">
+            </trudi-text-field>
+          </trudi-form-control>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="send-attachment-wrapper">
+    <div
+      class="d-flex justify-content-between align-items-center label-wrapper">
+      <label class="send-attachment-label">
+        Pre-screen: Select attachment
+      </label>
+      <div class="required-checkbox mb-4">
+        <trudi-checkbox formControlName="attachmentIsRequired" label="Required">
+        </trudi-checkbox>
+      </div>
+    </div>
+    <div class="attachment-form">
+      <div class="w-100">
+        <trudi-form-control>
+          <trudi-text-field
+            formControlName="attachmentName"
+            label="Attachment name"
+            placeholder="Enter attachment name"
+            [maxCharacter]="75">
+          </trudi-text-field>
+        </trudi-form-control>
+      </div>
+    </div>
+  </div>
+</div>

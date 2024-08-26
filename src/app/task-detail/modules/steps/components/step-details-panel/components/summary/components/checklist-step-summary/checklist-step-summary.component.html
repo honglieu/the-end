@@ -1,0 +1,10 @@
+<ng-container [ngSwitch]="currentStep.status">
+  <div [innerHTML]="currentStep.fields?.stepContent | safeHtml"></div>
+  <ng-container *ngSwitchCase="EStepStatus.COMPLETED">
+    <div class="success-note mt-4">
+      Manually marked as completed by {{ currentStep.lastActionUser?.firstName
+      }} at {{ currentStep.lastTimeAction | formatDateTime:false:false:true |
+      async}}
+    </div>
+  </ng-container>
+</ng-container>

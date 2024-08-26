@@ -1,0 +1,51 @@
+<p class="m-0 label-tab" *ngIf="label">{{label}}</p>
+<ul nz-menu nzMode="inline" class="border-r-none d-flex flex-dir-column gap-8">
+  <li
+    class="border-rad-4 single-item m-0"
+    [class]="item.disabled ? 'cursor-not-allowed' : 'cursor-pointer'"
+    *ngFor="let item of listItem"
+    nz-menu-item
+    nz-tooltip
+    [nzTooltipOrigin]="button.elementRef"
+    [nzTooltipOverlayClassName]="'tool-tip-item'"
+    [nzTooltipTitle]="(item?.showTooltip && item.disabled) ? isOwnerOrAdmin ? upgradePlan : requestPlan : ''"
+    nzTooltipPlacement="right"
+    nzMatchRouter>
+    <div nz-element #button="nzElement">
+      <a
+        class="d-flex align-items-center w-100 active router-link"
+        [class.prevent-click]="item.disabled"
+        [queryParams]="{ mailBoxId: mailBoxId}"
+        [routerLink]="[item.link]">
+        <div
+          class="d-flex align-items-center gap-8"
+          [ngClass]="{'align-items-start' : item.title === ITEM_APPOINTMENT}">
+          <trudi-icon [icon]="item?.icon" svgClass="size-20"></trudi-icon>
+          <span class="item-name"> {{ item.title }} </span>
+        </div>
+      </a>
+    </div>
+  </li>
+</ul>
+
+<ng-template #upgradePlan>
+  <div class="d-flex flex-dir-column cursor-text text-left">
+    <div>To use voicemail,</div>
+    <div
+      (click)="handlePopupState({ plansSummary: true });"
+      class="text-decoration-underline cursor-pointer">
+      upgrade your plan
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #requestPlan>
+  <div class="d-flex flex-dir-column cursor-text text-left">
+    <div>To use voicemail,</div>
+    <div
+      (click)="handlePopupState({ requestSent: true, requestFromTab: true });"
+      class="text-decoration-underline cursor-pointer">
+      request plan upgrade
+    </div>
+  </div>
+</ng-template>

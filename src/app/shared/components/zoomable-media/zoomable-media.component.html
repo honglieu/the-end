@@ -1,0 +1,67 @@
+<div class="zoom-panel gap-16">
+  <div class="d-flex gap-4 align-items-center">
+    <!-- minus btn-->
+    <button
+      nz-tooltip
+      nzTooltipOverlayClassName="zoom-out-btn"
+      [nzTooltipTitle]="'Zoom out'"
+      nzTooltipPlacement="bottom"
+      class="minus-button zoom-panel-button"
+      (click)="handleZoom(EMediaZoomType.MINUS)">
+      <trudi-icon icon="minusWhite" svgClass="size-16"></trudi-icon>
+    </button>
+
+    <scale-percent-input
+      [maxValue]="maxScale"
+      [minValue]="minScale"
+      [ngModel]="scale"
+      (ngModelChange)="updateScale($event)"></scale-percent-input>
+
+    <!-- plus btn-->
+    <button
+      nz-tooltip
+      nzTooltipOverlayClassName="zoom-in-btn"
+      [nzTooltipTitle]="'Zoom in'"
+      nzTooltipPlacement="bottom"
+      class="plus-button zoom-panel-button"
+      (click)="handleZoom(EMediaZoomType.PLUS)">
+      <trudi-icon icon="plusWhite" svgClass="size-16"></trudi-icon>
+    </button>
+  </div>
+  <div class="divider"></div>
+  <div class="d-flex gap-4 align-items-center">
+    <!-- arrows btn-->
+    <button
+      nz-tooltip
+      nzTooltipOverlayClassName="zoom-in-btn"
+      [nzTooltipTitle]="isExpandWidth ? 'Fill width' : 'Fill height'"
+      nzTooltipPlacement="bottom"
+      class="zoom-panel-button arrows-button"
+      (click)="handleZoom(EMediaZoomType.EXPAND)">
+      <trudi-icon
+        [icon]="isExpandWidth ? 'arrowsLeftRight' : 'arrowsTopBottom' "
+        svgClass="size-16"></trudi-icon>
+    </button>
+
+    <!-- rotate btn-->
+    <button
+      nz-tooltip
+      nzTooltipOverlayClassName="zoom-in-btn"
+      nzTooltipTitle="Rotate"
+      nzTooltipPlacement="bottom"
+      (click)="handleRotate()"
+      class="zoom-panel-button rotateRight-button">
+      <trudi-icon icon="rotateRight" svgClass="size-16"></trudi-icon>
+    </button>
+  </div>
+</div>
+
+<div #zoomContainer class="zoom-container">
+  <div
+    class="zoom-target"
+    (mousedown)="onDragStart($event)"
+    #zoomTarget
+    [style.transform]="'translate(' + targetTranslation.x + 'px, ' + targetTranslation.y + 'px) scale(' + (scaleValue) +') rotate(' + rotate + 'deg)'">
+    <ng-content></ng-content>
+  </div>
+</div>

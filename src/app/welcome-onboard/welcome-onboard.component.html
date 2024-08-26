@@ -1,0 +1,50 @@
+<div class="welcome-onboard">
+  <div class="header">
+    <img src="assets/images/trudi-logo-text.png" alt="trudi-logo" />
+  </div>
+  <div class="content text-center">
+    <div class="welcome-text">
+      <span>Welcome onboard!</span>
+    </div>
+    <div class="welcome-avt">
+      <app-user-avatar
+        [avatar]="userInfo?.googleAvatar"
+        [user]="userInfo"
+        [style]="'width: 92px; height: 92px; font-size: 32px;'"></app-user-avatar>
+    </div>
+    <div class="welcome-name">
+      <span>{{userInfo?.firstName}} {{userInfo?.lastName}}</span>
+    </div>
+    <div class="welcome-description">
+      <span>We're still in the process of finalising your account.</span>
+      <span>Please contact your designated administrator to continue.</span>
+    </div>
+    <div class="welcome-admin-wrapper">
+      <a
+        *ngFor="let admin of adminInfoList"
+        class="admin"
+        [href]="'https://mail.google.com/mail/u/0/?fs=1&to=' + admin.email + '&tf=cm'"
+        target="_blank"
+        appOutsideClickListener
+        [ngClass]="{'border-highlight' : isAdministatorHighlight}"
+        (click)="borderOn()">
+        <div class="admin-item">
+          <app-user-avatar
+            [avatar]="admin?.googleAvatar"
+            [user]="admin"
+            [style]="'width: 32px; height: 32px; font-size: 16px;'"></app-user-avatar>
+          <div class="admin-name">
+            <span>{{admin.firstName}} {{admin.lastName}}</span>
+          </div>
+          <div class="admin-email" (click)="sendEmail(admin.email)">
+            <span>{{admin.email}}</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="logout">
+    <img class="logout-icon" src="assets/icon/logout.svg" alt="logout-icon" />
+    <div class="logout-text" (click)="onLogOut()">Log Out</div>
+  </div>
+</div>

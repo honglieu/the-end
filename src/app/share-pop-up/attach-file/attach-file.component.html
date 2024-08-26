@@ -1,0 +1,139 @@
+<div
+  class="attach-file-container"
+  [ngStyle]="{'gap': isAddCustomPolicy ? '8px' : '12px'}"
+  id="attachments-wrapper">
+  <div
+    #listFile
+    class="attachment-files"
+    *ngFor="let file of files ;let i = index">
+    <div
+      class="message-file"
+      [ngClass]="{'message-file-error': file | checkFileInvalid, 'default-policy-file': isPolicy, 'custom-policy-file' : isAddCustomPolicy}"
+      style="margin: 0">
+      <div
+        class="file-logo"
+        [class.dim-brightness]="file[0]?.localThumb && file[0]?.isSupportedVideo">
+        <ng-container [ngSwitch]="(file[0]?.mediaType || file?.mediaType)">
+          <ng-template [ngSwitchCase]="'photo'">
+            <img
+              *ngIf="file[0]?.mediaLink || file?.mediaLink"
+              [src]="file[0]?.mediaLink || file?.mediaLink" />
+            <img
+              *ngIf="!file[0]?.mediaLink"
+              [src]="((file[0]?.fileName | getFileIconType))" />
+          </ng-template>
+          <ng-template [ngSwitchCase]="'video'">
+            <img
+              *ngIf="file[0]?.thumbMediaLink || file?.thumbMediaLink"
+              [src]="file[0]?.thumbMediaLink || file?.thumbMediaLink" />
+            <img
+              *ngIf="!file[0]?.thumbMediaLink"
+              [src]="((file[0]?.fileName | getFileIconType))" />
+            <div class="play-icon">
+              <trudi-icon icon="playSolid"></trudi-icon>
+            </div>
+          </ng-template>
+          <ng-container *ngSwitchDefault>
+            <img
+              *ngIf="file[0]?.localThumb"
+              [src]="(file[0].localThumb | safe: 'resourceUrl')"
+              data-e2e="pdf-label" />
+            <img
+              *ngIf="!file[0]?.localThumb || !file[0]?.mediaLink"
+              [src]="(((file?.name || file[0]?.name || file?.fileName || file[0]?.fileName ) | getFileIconType))"
+              data-e2e="pdf-label" />
+            <div
+              *ngIf="file[0]?.localThumb && file[0]?.isSupportedVideo"
+              class="play-icon">
+              <trudi-icon icon="playSolid"></trudi-icon>
+            </div>
+          </ng-container>
+        </ng-container>
+      </div>
+
+      <div data-e2e="pdf-title" class="file">
+        <div
+          #tinyEditorfileName
+          data-e2e="pdf-title"
+          class="file-name"
+          nz-tooltip
+          nzTooltipPlacement="top"
+          [nzTooltipTitle]="file?.title || file?.name || file[0]?.name"
+          [nzTooltipOverlayStyle]="{ 'max-width': '200px', 'word-break': 'break-all' }"
+          [nzTooltipTrigger]="tinyEditorfileName?.offsetWidth < tinyEditorfileName?.scrollWidth ? 'hover' : null">
+          {{file.title || file.name || file[0]?.name}}
+        </div>
+        <div class="file-size">
+          {{(file?.size || file[0]?.size || file?.fileSize || file[0]?.fileSize
+          ) | convertFileSize}}
+        </div>
+      </div>
+      <ng-container
+        *ngIf="(!file?.uploaded && file?.canUpload) || (
+        !file[0]?.uploaded && file[0]?.canUpload
+      ); else closeButton">
+        <div class="image-rotation rotate-image">
+          <img src="/assets/icon/loading.png" alt="loading-icon" />
+        </div>
+      </ng-container>
+      <ng-template #closeButton>
+        <ng-container
+          *ngIf="file?.name || file[0]?.name || fromCheckListStep || file?.fileName">
+          <div
+            class="delete-media cursor-pointer delete-file"
+            (click)="removeFile($event, i)">
+            <trudi-icon
+              class="trudi-icon"
+              [style]="{ 'width.px': 16, 'height.px': 16, color: '#646464' }"
+              icon="closeIcon"></trudi-icon>
+          </div>
+        </ng-container>
+      </ng-template>
+    </div>
+  </div>
+</div>
+<div
+  class="d-flex mt-12 flex-wrap"
+  [ngStyle]="{'gap': isAddCustomPolicy ? '8px' : '12px'}">
+  <contact-card
+    [ngClass]="{'policy-default-card': isPolicy, 'policy-custom-card': isAddCustomPolicy}"
+    *ngFor="let card of cards"
+    [contact]="card"
+    [isPolicy]="isPolicy"
+    [isAddCustomPolicy]="isAddCustomPolicy"
+    (onClose)="onClearContact(card?.id)"></contact-card>
+</div>
+
+<div
+  *ngIf="overFileSize || isUnSupportFile"
+  class="d-flex flex-dir-column mt-8 gap-3">
+  <div class="d-flex align-items-center" *ngIf="overFileSize">
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M2.64534 10.9753C3.60295 11.6222 4.75736 12 6 12V12C9.31374 12 12 9.31376 12 6.00002C12 4.7184 11.5982 3.5306 10.9136 2.5558C9.82823 1.01021 8.0321 7.4104e-06 6.00002 0V0C2.68631 0 0 2.68629 0 6V6C0 8.07108 1.04933 9.89706 2.64534 10.9753Z"
+        fill="#fa3939" />
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M6.00084 2.6001C6.42199 2.6001 6.76341 2.9415 6.76341 3.36265V6.18886C6.76341 6.61001 6.42199 6.95142 6.00084 6.95142C5.57969 6.95142 5.23828 6.61001 5.23828 6.18886V3.36265C5.23828 2.9415 5.57969 2.6001 6.00084 2.6001Z"
+        fill="white" />
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M5.23828 8.63838C5.23828 8.21722 5.57969 7.87579 6.00084 7.87579H6.00847C6.42962 7.87579 6.77102 8.21722 6.77102 8.63838C6.77102 9.05955 6.42962 9.40087 6.00847 9.40087H6.00084C5.57969 9.40087 5.23828 9.05955 5.23828 8.63838Z"
+        fill="white" />
+    </svg>
+    <span class="over-size-err" style="margin-left: 6px">
+      Your file is larger than 25MB. Please upload a smaller file.
+    </span>
+  </div>
+  <div *ngIf="isUnSupportFile" class="over-size-err">
+    <img src="/assets/icon/icon_warning.svg" alt="" />
+    <span style="margin-left: 6px">Unsupported file type.</span>
+  </div>
+</div>

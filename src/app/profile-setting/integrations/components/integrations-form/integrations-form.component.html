@@ -1,0 +1,123 @@
+<div class="integrations-wrapper d-flex">
+  <div class="wrapper d-flex flex-dir-column align-items-center flex-1">
+    <div class="form-wrapper d-flex flex-dir-column gap-32">
+      <div class="wrap-title d-flex flex-dir-column gap-12">
+        <p class="to-link-account">To link your account:</p>
+      </div>
+
+      <div class="wrap-content">
+        <div
+          [formGroup]="formGroup"
+          class="wrap-verify-token d-flex flex-dir-column gap-32">
+          <div class="wrap-step d-flex flex-dir-column gap-6">
+            <div class="wrap-step-info d-flex gap-4">
+              <span class="step-name"> Step 1: </span>
+              <span class="step-des"
+                >Select a state to initiate your preferred version of REI Forms
+                Live.</span
+              >
+            </div>
+            <div class="wrap-state d-flex flex-dir-column">
+              <div class="select-state ml-4">
+                <ng-select
+                  *ngIf="!(loadingService.isLoading$ | async)"
+                  id="state"
+                  placeholder="Select state"
+                  [items]="reiFormDropdown"
+                  class="share-ng-select"
+                  [ngClass]="{'red-border': errorState.regionId}"
+                  bindValue="regionId"
+                  bindLabel="name"
+                  formControlName="reiDomain"
+                  [clearable]="true"
+                  [virtualScroll]="true"
+                  (change)="changeSelect($event)"
+                  (focus)="errorState.regionId = false">
+                  <ng-template ng-option-tmp let-item="item">
+                    <div class="y-center justify-content-between">
+                      <span class="item-label" [title]="item.id"
+                        >{{item.name}}</span
+                      >
+                      <trudi-icon
+                        *ngIf="item.regionId === this.getReiDomain()"
+                        icon="checkSuccess"
+                        [style]="{'width.px': 16, 'height.px': 16}"></trudi-icon>
+                    </div>
+                  </ng-template>
+                </ng-select>
+
+                <nz-skeleton-element
+                  *ngIf="loadingService.isLoading$ | async"
+                  class="share-ng-select input-skeleton"
+                  nzType="input"
+                  [nzActive]="true"></nz-skeleton-element>
+              </div>
+            </div>
+            <div
+              class="wrap-error-content y-center gap-4"
+              *ngIf="errorState.regionId">
+              <trudi-icon
+                icon="warning"
+                [style]="{'width.px': 12, 'height.px': 12}"></trudi-icon>
+              <span class="error-content"> Required field </span>
+            </div>
+          </div>
+
+          <div class="wrap-step d-flex flex-dir-column gap-2">
+            <div class="wrap-step-info">
+              <div class="wrap-step-title d-flex gap-4">
+                <span class="step-name"> Step 2: </span>
+                <span class="step-des"> Provide your access token. </span>
+              </div>
+              <div class="wrap-list-step">
+                <ul class="list-step">
+                  <li class="step" *ngFor="let item of listProviderAccessToken">
+                    <span [innerHTML]="item.text"></span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="wrap-token d-flex flex-dir-column gap-6">
+              <div
+                *ngIf="!(loadingService.isLoading$ | async)"
+                class="wrap-control-token y-center gap-12 ml-4">
+                <div
+                  class="wrap-input-token y-center gap-6"
+                  [ngClass]="{'red-border': errorState.accessToken, 'entering': !isBlur}">
+                  <input
+                    class="input-token flex-1"
+                    type="text"
+                    formControlName="token"
+                    placeholder="Enter your access token"
+                    (click)="editToken()"
+                    [ngClass]="{'white-background': errorState.accessToken || !isBlur, 'blur-input': isBlur}"
+                    (focus)="onFocus()"
+                    (blur)="onBlur()" />
+                  <trudi-icon
+                    *ngIf="isUpdateToken"
+                    icon="checkSuccess"></trudi-icon>
+                </div>
+              </div>
+              <div
+                class="wrap-error-content y-center gap-4"
+                *ngIf="errorState.accessToken">
+                <trudi-icon
+                  icon="warning"
+                  [style]="{'width.px': 12, 'height.px': 12}"></trudi-icon>
+                <span class="error-content">
+                  {{getToken() ? 'Invalid token' : 'Required field'}}
+                </span>
+              </div>
+
+              <nz-skeleton-element
+                *ngIf="loadingService.isLoading$ | async"
+                class="share-ng-select input-skeleton"
+                nzType="input"
+                [nzActive]="true"></nz-skeleton-element>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

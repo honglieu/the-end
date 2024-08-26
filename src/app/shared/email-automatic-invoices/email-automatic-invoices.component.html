@@ -1,0 +1,29 @@
+<div class="wrapper-email-copy">
+  <div class="block-email-copy d-flex flex-dir-column">
+    <ng-container *ngIf="listContactUsers.length; else noResult">
+      <div *ngFor="let item of listContactUsers">
+        <div class="block-email d-flex align-items-center gap-4">
+          <div
+            *ngIf="item?.unconfirmedChangeEmail"
+            nz-tooltip
+            [nzTooltipOverlayClassName]="'unverified-tooltip'"
+            [nzTooltipTitle]="unverifiedTooltip"
+            nzTooltipPlacement="bottomLeft">
+            <trudi-icon icon="errorOutlineRed" class="cursor-pointer">
+            </trudi-icon>
+          </div>
+          <div class="email-copy">{{item.email}}</div>
+        </div>
+        <ng-template #unverifiedTooltip>
+          <span class="unverified-text">
+            {{item?.unconfirmedChangeEmail}} (unverified)</span
+          >
+        </ng-template>
+      </div>
+    </ng-container>
+
+    <ng-template #noResult>
+      <div class="no-emails">No contacts found</div>
+    </ng-template>
+  </div>
+</div>

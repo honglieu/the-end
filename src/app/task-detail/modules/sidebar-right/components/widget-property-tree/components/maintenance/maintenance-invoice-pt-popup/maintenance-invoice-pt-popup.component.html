@@ -1,0 +1,450 @@
+<ng-container *ngIf="popupState">
+  <resizable-modal-popup
+    *ngIf="popupState"
+    [show]="popupState"
+    [modalId]="modalId"
+    [showTitle]="true"
+    [title]="'Maintenance invoice'"
+    [draggable]="true"
+    [hasBackdrop]="false"
+    [resizable]="false"
+    [iconName]="'ptLogo'"
+    [styleIcon]="null"
+    [classIconTitle]="null"
+    [heightCustom]="'auto'"
+    [widthCustom]="1084"
+    [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+    [footerTemplate]="footerModal"
+    (onCancel)="handleClose()"
+    [isCustomMoveable]="true"
+    class="maintainance-invoice-popup">
+    <div class="maintenance-invoice-body">
+      <div>
+        <div dialog-content [formGroup]="maintenanceInvoiceForm">
+          <div class="d-flex">
+            <div class="invoice-form-wrapper">
+              <div class="creditor-invoice-form">
+                <div class="property-address">
+                  <trudi-icon icon="homePortfolio"></trudi-icon>
+                  <div class="property-address-info">
+                    Property:
+                    <span>{{propertyStreetLine}}</span>
+                  </div>
+                </div>
+                <div
+                  *ngIf="invoiceStatus === EMaintenanceInvoiceStatus.CANCEL"
+                  class="wrap-invoice-name title-sync d-flex gap-4">
+                  <h4 class="title trudi-input-label">Maintenance invoice</h4>
+                  <span
+                    class="invoice-status cancelled border-rad-24 text-center">
+                    Cancelled
+                  </span>
+                </div>
+                <div class="trudi-form-control document-dropdown">
+                  <div class="trudi-input-label">
+                    Select invoice document (Optional)
+                  </div>
+                  <trudi-form-control
+                    [control]="invoiceDocument"
+                    class="container-invoice-doc">
+                    <ng-select
+                      #invoiceSelect
+                      id="document-list"
+                      class="share-ng-select"
+                      [ngClass]="{
+                      'ng-error': invoiceDocument?.invalid &&
+                      invoiceDocument.errors['required'],
+                      'disabled-select' : invoiceDocument.disabled}"
+                      [items]="invoiceDocuments"
+                      [loading]="loadingUploadFile"
+                      formControlName="invoiceDocument"
+                      bindValue="id"
+                      bindLabel="pdfName"
+                      [readonly]="invoiceDocument.disabled"
+                      [clearable]="invoiceDocument.value !== ''"
+                      [virtualScroll]="true"
+                      [searchable]="true"
+                      [editableSearchTerm]="true"
+                      [searchFn]="searchFn"
+                      (change)="handleChangeInvoiceDocument($event)"
+                      (search)="handleSearchInvoiceDocument($event)"
+                      (close)="onCloseInvoiceDocument()"
+                      (clear)="handleClear()"
+                      notFoundText="No invoice documents found">
+                      <ng-template
+                        ng-option-tmp
+                        let-item="item"
+                        let-search="searchTerm">
+                        <div class="show-dropdown-document">
+                          <div
+                            class="d-flex gap-8 align-items-center container-file">
+                            <div class="link-img">
+                              <img src="assets/images/icons/{{item.icon}}" />
+                            </div>
+                            <div
+                              class="d-flex flex-dir-column justify-content-center container-file-name">
+                              <span
+                                class="file-name d-block"
+                                [title]="item.pdfName"
+                                [innerHTML]="(item?.pdfName) | highlight: searchNameDocument">
+                                >{{item.pdfName}}</span
+                              >
+                              <span
+                                class="sub-title d-block"
+                                [innerHTML]="(item?.subTitle + ' • ' + (item?.created | formatDate | push)) | highlight: searchNameDocument">
+                              </span>
+                            </div>
+                          </div>
+                          <trudi-icon
+                            *ngIf="item.id === fileDocument?.id"
+                            svgClass="size-20"
+                            viewBox="auto"
+                            icon="checkSuccess"></trudi-icon>
+                        </div>
+                      </ng-template>
+                      <ng-template ng-footer-tmp>
+                        <label
+                          for="maintenance-invoice-upload-local"
+                          class="m-0 upload-footer d-flex gap-4 cursor-pointer">
+                          <trudi-icon
+                            icon="uploadLocal"
+                            [style]="{ 'width.px': 20, 'height.px': 20 }"></trudi-icon>
+                          <div class="upload-footer-text">
+                            Upload from computer
+                          </div>
+                        </label>
+                        <input
+                          id="maintenance-invoice-upload-local"
+                          class="d-none"
+                          type="file"
+                          [accept]="acceptTypeFile"
+                          (change)="openUploadLocal($event)" />
+                      </ng-template>
+                    </ng-select>
+                  </trudi-form-control>
+                </div>
+                <div class="wrap-invoice-name y-center gap-8 mb-10">
+                  <div
+                    class="check-upload-invoice d-flex align-items-center gap-8"
+                    *ngIf="isDisplayCheckbox && syncStatus !== ESyncPropertyTree.COMPLETED">
+                    <div class="text-center">
+                      <ng-container>
+                        <trudi-checkbox
+                          [disabled]="isUploadFile.disabled"
+                          [label]="'Upload invoice PDF to Property Tree'"
+                          formControlName="isUploadFile"
+                          (change)="onCheckboxChange($event)"></trudi-checkbox>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div>
+                <div formGroupName="creditorInvoice">
+                  <div
+                    class="trudi-form-group document-dropdown creditor-dropdown">
+                    <div class="trudi-form-control">
+                      <div class="trudi-input-label">Creditor</div>
+                      <trudi-form-control [control]="creditor">
+                        <ng-select
+                          class="share-ng-select"
+                          formControlName="creditor"
+                          [ngClass]="{'input-error-select': creditor.invalid && (creditor.dirty || creditor.touched), 'disabled-select' : creditor.disabled }"
+                          [items]="creditorOptions"
+                          bindValue="id"
+                          bindLabel="lastName"
+                          [clearable]="true"
+                          [virtualScroll]="true"
+                          [searchable]="true"
+                          [editableSearchTerm]="true"
+                          (change)="onCreditorSelectChanged($event)"
+                          notFoundText="No results found"
+                          [readonly]="readonly || creditor.disabled">
+                          <ng-template
+                            ng-option-tmp
+                            let-item="item"
+                            let-index="index"
+                            let-search="searchTerm">
+                            <div class="d-flex">
+                              <span class="flex-1">{{item.lastName}}</span>
+                              <trudi-icon
+                                *ngIf="item.id === creditor.value"
+                                svgClass="size-20"
+                                viewBox="auto"
+                                icon="checkSuccess"></trudi-icon>
+                            </div>
+                            <ng-template #original
+                              >{{item.lastName}}</ng-template
+                            >
+                          </ng-template>
+                        </ng-select>
+                      </trudi-form-control>
+                      <div class="payment-method">
+                        <ng-container
+                          *ngIf="paymentMethod; else noPaymentMethod">
+                          Payment method with
+                          <span>{{paymentMethod}}</span>
+                        </ng-container>
+                        <ng-template #noPaymentMethod
+                          >No payment method</ng-template
+                        >
+                      </div>
+                    </div>
+                    <div class="trudi-form-control">
+                      <div class="trudi-input-label">Account</div>
+                      <trudi-form-control [control]="account">
+                        <ng-select
+                          class="share-ng-select"
+                          formControlName="account"
+                          [ngClass]="{'input-error-select': account.invalid && (account.dirty || account.touched), 'disabled-select' : account.disabled }"
+                          [items]="listAccount"
+                          bindValue="id"
+                          bindLabel="name"
+                          [clearable]="true"
+                          [virtualScroll]="true"
+                          [searchable]="true"
+                          [editableSearchTerm]="true"
+                          notFoundText="No results found"
+                          [readonly]="readonly || account.disabled">
+                          <ng-template
+                            ng-option-tmp
+                            let-item="item"
+                            let-index="index"
+                            let-search="searchTerm">
+                            <div class="d-flex">
+                              <span class="flex-1">{{item.name}}</span>
+                              <trudi-icon
+                                *ngIf="item.id === account.value"
+                                svgClass="size-20"
+                                viewBox="auto"
+                                icon="checkSuccess"></trudi-icon>
+                            </div>
+                            <ng-template #original>{{item.name}}</ng-template>
+                          </ng-template>
+                        </ng-select>
+                      </trudi-form-control>
+                    </div>
+                  </div>
+                  <div class="trudi-form-control">
+                    <div class="trudi-input-label">Invoice description</div>
+                    <input
+                      type="text"
+                      class="trudi-input title-text"
+                      formControlName="invoiceDescription"
+                      [ngClass]="{'has-error': invoiceDescription.invalid && (invoiceDescription.dirty || invoiceDescription.touched) }"
+                      [attr.disabled]="readonly || invoiceDescription.disabled ? '' : null"
+                      maxlength="255" />
+                    <div
+                      *ngIf=" invoiceDescription.invalid && (invoiceDescription.dirty || invoiceDescription.touched) && invoiceDescription.errors['required']"
+                      class="error-container d-flex align-items-center gap-4">
+                      <trudi-icon [icon]="'iconWarning'"></trudi-icon>
+                      <div class="error-text">Required field</div>
+                    </div>
+                  </div>
+
+                  <div class="trudi-form-group">
+                    <div class="trudi-form-control">
+                      <div class="trudi-input-label">
+                        {{paymentMethod === EPaymentMethod.BPAY ? 'BPAY' :
+                        'Invoice'}} reference
+                      </div>
+                      <input
+                        formControlName="invoiceREF"
+                        [ngClass]="{'has-error': invoiceREF.invalid && (invoiceREF.dirty || invoiceREF.touched) }"
+                        type="text"
+                        class="trudi-input title-text"
+                        [attr.disabled]="readonly || (invoiceREF.disabled ? '' : null)"
+                        maxlength="20" />
+                      <div
+                        *ngIf=" invoiceREF.invalid && (invoiceREF.dirty || invoiceREF.touched) && invoiceREF.errors['required']"
+                        class="error-container d-flex align-items-center gap-4">
+                        <trudi-icon [icon]="'iconWarning'"></trudi-icon>
+                        <div class="error-text">Required field</div>
+                      </div>
+                    </div>
+                    <div class="trudi-form-control">
+                      <div class="trudi-input-label">Due date</div>
+                      <trudi-date-picker
+                        formControlName="dueDate"
+                        [class.trudi-picker-error]="dueDate.invalid && (dueDate.dirty || dueDate.touched)"
+                        [trudiDisabled]="readonly || dueDate.disabled"></trudi-date-picker>
+                      <div
+                        *ngIf="dueDate.invalid && (dueDate.dirty || dueDate.touched) && dueDate.errors['required']"
+                        class="error-container d-flex align-items-center gap-4">
+                        <trudi-icon [icon]="'iconWarning'"></trudi-icon>
+                        <div class="error-text">Required field</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="trudi-form-group">
+                    <div class="trudi-form-control">
+                      <div class="trudi-input-label">
+                        Amount excl. GST (AUD)
+                      </div>
+                      <div class="input-wrapper">
+                        <input
+                          [ngClass]="{'has-error': excludingGST.invalid && (excludingGST.dirty || excludingGST.touched) }"
+                          formControlName="excludingGST"
+                          type="text"
+                          class="trudi-input title-text"
+                          [attr.disabled]="readonly || (excludingGST.disabled ? '' : null)"
+                          appNumberOnly
+                          (keyup)="onChangeDecimalNumber('excludingGST')"
+                          [attr.maxlength]="13" />
+                      </div>
+                      <div
+                        *ngIf=" excludingGST.invalid && (excludingGST.dirty || excludingGST.touched)"
+                        class="error-container d-flex align-items-center gap-4">
+                        <trudi-icon [icon]="'iconWarning'"></trudi-icon>
+                        <div
+                          *ngIf="excludingGST.errors['required']; else invalidNumber"
+                          class="error-text">
+                          Required field
+                        </div>
+                      </div>
+                    </div>
+                    <div class="trudi-form-control">
+                      <div class="trudi-input-label">GST (AUD) (Optional)</div>
+                      <div class="input-wrapper">
+                        <input
+                          [ngClass]="{'has-error': invoiceForm.invalid && invoiceForm.errors?.['overGSTAmount'] || (gstAmount.invalid && (gstAmount.dirty || gstAmount.touched)) }"
+                          formControlName="gstAmount"
+                          type="text"
+                          class="trudi-input title-text"
+                          [attr.disabled]="readonly || (gstAmount.disabled ? '' : null)"
+                          appNumberOnly
+                          (keyup)="onChangeDecimalNumber('gstAmount')"
+                          [attr.maxlength]="13" />
+                      </div>
+                      <div
+                        *ngIf="invoiceForm.invalid && invoiceForm.errors?.['overGSTAmount']"
+                        class="error-container d-flex align-items-center gap-4">
+                        <trudi-icon [icon]="'iconWarning'"></trudi-icon>
+                        <div class="error-text">
+                          {{ invoiceForm.errors?.['overGSTAmount'] }}
+                        </div>
+                      </div>
+                      <div
+                        *ngIf="(gstAmount.invalid && (gstAmount.dirty || gstAmount.touched)) && !invoiceForm.errors?.['overGSTAmount']"
+                        class="error-container d-flex align-items-center gap-4">
+                        <trudi-icon [icon]="'iconWarning'"></trudi-icon>
+                        <div class="error-text">Invalid number</div>
+                      </div>
+                    </div>
+                    <div class="trudi-form-control">
+                      <div class="trudi-input-label">
+                        Amount incl. GST (AUD)
+                      </div>
+                      <div class="input-wrapper">
+                        <input
+                          [ngClass]="{'has-error': includingGST.invalid && (includingGST.dirty || includingGST.touched) }"
+                          formControlName="includingGST"
+                          type="text"
+                          class="trudi-input title-text"
+                          [attr.disabled]="readonly || (includingGST.disabled ? '' : null)"
+                          appNumberOnly
+                          (keyup)="onChangeDecimalNumber('includingGST')"
+                          [attr.maxlength]="13" />
+                      </div>
+                      <div
+                        *ngIf=" includingGST.invalid && (includingGST.dirty || includingGST.touched)"
+                        class="error-container d-flex align-items-center gap-4">
+                        <trudi-icon [icon]="'iconWarning'"></trudi-icon>
+                        <div
+                          *ngIf="includingGST.errors['required']; else invalidNumber"
+                          class="error-text">
+                          Required field
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="maintenance-invoice-view invoice-view d-flex flex-dir-column align-items-center justify-content-center">
+              <ng-container *ngIf="selectedDocumentUrl; else noInvoiceDocument">
+                <preview-invoice-file
+                  class="preview-file"
+                  [ngClass]="{'img-file': selectedDocumentType === EAvailableFileIcon.Image}"
+                  [fileType]="selectedDocumentType"
+                  [fileLink]="selectedDocumentUrl">
+                </preview-invoice-file>
+              </ng-container>
+              <ng-template #noInvoiceDocument>
+                <div>No invoice selected</div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #footerModal>
+      <div class="d-flex align-items-center gap-12 container-footer">
+        <pt-widget-sync-status
+          [syncStatus]="syncStatus"
+          [lastTimeSynced]="lastTimeSynced"></pt-widget-sync-status>
+        <div class="invoice-footer-wrap">
+          <div class="d-flex" [style.gap.px]="12">
+            <button
+              *ngIf="isUpdateMaintenanceInvoiceModal"
+              class="button-back"
+              (click)="handleBack()">
+              <div class="text-btn-back">Back</div>
+            </button>
+            <button
+              *ngIf="getIsShowBtnCancelInvoice"
+              [disabled]="isConsole || disabledBtnCancel || isArchiveMailbox"
+              [ngClass]="{'cancel-button-disabled': isConsole || disabledBtnCancel}"
+              type="button"
+              class="trudi-btn trudi-btn-normal-large cancel-invoice-btn"
+              (click)="cancelInvoice()">
+              Cancel invoice
+            </button>
+            <ng-container>
+              <button
+                *ngIf="getIsShowBtnSyncData"
+                [disabled]="isConsole || disabledBtnSync || isArchiveMailbox || loadingUploadFile"
+                data-e2e="button-next"
+                btnType="primary"
+                trudi-btn
+                (click)="syncToPT()"
+                [appE2E]="'pt-widget-maintenance-invoice'">
+                Sync to Property Tree
+              </button>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </resizable-modal-popup>
+
+  <ng-template #invalidNumber>
+    <div class="error-text">Invalid number</div>
+  </ng-template>
+</ng-container>
+
+<trudi-modal
+  [(visible)]="isShowConfirmCancelModal"
+  [modelWidth]="510"
+  (onCancel)="true"
+  type="confirm"
+  [closable]="false"
+  title="Are you sure you want to cancel?"
+  subTitle="All progress will be lost on this action."
+  iconName="iconCancleSync">
+  <ng-template #footerModal>
+    <div class="trudi-modal-footer__button--default">
+      <button
+        trudi-btn
+        size="large"
+        btnType="neutral"
+        variant="outlined"
+        (click)="goBack()">
+        Go back
+      </button>
+      <button trudi-btn btnType="danger" (click)="handleConfirmCancel()">
+        Yes, cancel
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

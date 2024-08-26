@@ -1,0 +1,39 @@
+<trudi-modal
+  *ngIf="show"
+  [visible]="show"
+  [autoFocus]="null"
+  className="trudi-modal-custom warning-rei-form">
+  <div class="modal-wrapper">
+    <div class="warning-rei-form-header">
+      <div class="header-detail d-flex gap-16 align-items-center">
+        <div class="header-icon">
+          <div class="d-flex align-items-center justify-content-around">
+            <trudi-icon svgClass="size-48" icon="trudiAvt"></trudi-icon>
+          </div>
+        </div>
+        <div class="header-detail-text">
+          <div class="main-text">You no longer have access to this form</div>
+          <div class="sub-text">
+            Please check your access token in your profile settings
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="d-flex justify-content-end gap-12 warning-rei-form-footer">
+      <button
+        trudi-btn
+        variant="outlined"
+        btnType="neutral"
+        (click)="onQuitModal($event)">
+        OK
+      </button>
+      <button
+        trudi-btn
+        variant="filled"
+        btnType="primary"
+        (click)="openSetting()">
+        Open settings
+      </button>
+    </div>
+  </div>
+</trudi-modal>

@@ -1,0 +1,85 @@
+<div class="header">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex gap-16">
+      <div class="d-flex flex-dir-column gap-2">
+        <div class="header--title">Create new contact</div>
+        <div class="header--sub-title">For email: <span>{{email}}</span></div>
+      </div>
+    </div>
+    <div class="close-btn cursor-pointer" (click)="close()">
+      <img src="/assets/icon/close-modal.svg" alt="close modal" />
+    </div>
+  </div>
+</div>
+<div
+  class="content d-flex flex-dir-column gap-16"
+  [formGroup]="createContactForm">
+  <div
+    class="input-wrapper d-flex flex-dir-column gap-6 justify-content-between">
+    <p>Contact name</p>
+    <input
+      class="resize-none border-rad-8"
+      formControlName="contactName"
+      [ngClass]="{'warning-required': contactName.invalid && contactName.dirty || isShowWarningMessage}" />
+    <div class="warning-wrapper d-flex" *ngIf="isShowWarningMessage">
+      <img
+        class="warning-icon"
+        src="/assets/icon/icon-warning-red.svg"
+        alt="warning" />
+      <p class="warning-text">Contact name already exists</p>
+    </div>
+  </div>
+  <div
+    class="input-wrapper d-flex flex-dir-column gap-6 justify-content-between">
+    <p>Role</p>
+    <ng-select
+      class="resize-none border-rad-8 share-ng-select"
+      [ngClass]="{'warning-required': role.invalid && role.dirty}"
+      [items]="roleArray"
+      formControlName="role"
+      bindLabel="name"
+      bindValue="id"
+      [searchable]="false"
+      [clearable]="true">
+      <ng-template ng-label-tmp let-item="item">
+        <span>{{item.name | titlecase}}</span>
+      </ng-template>
+      <ng-template ng-option-tmp let-item="item" let-index="index">
+        <span>{{item.name | titlecase}}</span>
+      </ng-template>
+    </ng-select>
+  </div>
+  <div
+    *ngIf="role.value === EUserPropertyType.OTHER"
+    class="input-wrapper d-flex flex-dir-column gap-6 justify-content-between">
+    <p>Contact Type</p>
+    <ng-select
+      class="resize-none border-rad-8 share-ng-select"
+      [ngClass]="{'warning-required': contactType.invalid && contactType.dirty}"
+      [items]="contactTypeArray"
+      formControlName="contactType"
+      placeholder="Contact Type"
+      bindLabel="name"
+      bindValue="id"
+      [searchable]="false"
+      [clearable]="true">
+      <ng-template ng-label-tmp let-item="item">
+        <span>{{item.name}}</span>
+      </ng-template>
+      <ng-template ng-option-tmp let-item="item" let-index="index">
+        <span>{{item.name}}</span>
+      </ng-template>
+    </ng-select>
+  </div>
+</div>
+<div
+  class="footer-section d-flex align-items-center justify-content-between flex-dir-row-reverse">
+  <button
+    [disabled]="createContactForm.invalid"
+    type="button"
+    class="background--brand-500 color--white border-rad-12 color--white btn-confirm"
+    [ngClass]="{'unclick': createContactForm.invalid}"
+    (click)="submit()">
+    Create
+  </button>
+</div>

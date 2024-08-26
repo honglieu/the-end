@@ -1,0 +1,208 @@
+<div class="work-order-wrapper scrollable-box">
+  <div class="trudi-table-wrapper">
+    <nz-table
+      [nzData]="workOrderForm.controls"
+      [nzShowPagination]="false"
+      [nzFooter]="customFooterTemplate"
+      class="nz-table-wrapper"
+      [ngClass]="{'scrollable': workOrderForm.controls.length >= 2}"
+      #nzTable
+      nzTemplateMode>
+      <thead>
+        <tr>
+          <th *ngFor="let item of trudiTableColumns">{{item.title}}</th>
+        </tr>
+      </thead>
+      <tbody class="trudi-table-body">
+        <tr
+          class="work-order-item"
+          *ngFor="let itemForm of workOrderForm.controls; let i = index"
+          [formGroup]="itemForm">
+          <td class="col-detail">
+            <div class="d-flex flex-wrap flex-dir-column gap-8">
+              <div class="d-flex gap-6 bill-group">
+                <div class="label">Item</div>
+                <div class="select-wrapper">
+                  <trudi-single-select
+                    (isOpened)="isOpened()"
+                    [appendTo]="appendTo"
+                    [dropdownPosition]="dropdownPosition[i]"
+                    formControlName="inventoryItemId"
+                    (triggerEventChange)="onInventoryItemChange($event, itemForm)"
+                    [items]="inventoryItems"
+                    bindValue="id"
+                    bindLabel="name"></trudi-single-select>
+                </div>
+              </div>
+              <div class="d-flex gap-6 bill-group">
+                <div class="label">Vendor</div>
+                <div class="select-wrapper">
+                  <trudi-single-select
+                    (isOpened)="isOpened()"
+                    [appendTo]="appendTo"
+                    [dropdownPosition]="dropdownPosition[i]"
+                    formControlName="vendorId"
+                    [items]="listSuppliers"
+                    groupBy="type"
+                    bindValue="id"
+                    bindLabel="lastName"></trudi-single-select>
+                </div>
+              </div>
+              <div class="d-flex gap-6 bill-group">
+                <div class="label">Job</div>
+                <div class="select-wrapper">
+                  <trudi-single-select
+                    (isOpened)="isOpened()"
+                    [appendTo]="appendTo"
+                    [dropdownPosition]="dropdownPosition[i]"
+                    formControlName="jobId"
+                    [items]="jobItems"
+                    groupBy="type"
+                    bindValue="id"
+                    bindLabel="name"></trudi-single-select>
+                </div>
+              </div>
+            </div>
+          </td>
+          <td class="col-description">
+            <trudi-textarea
+              formControlName="description"
+              [showCounting]="false"
+              [rows]="5"
+              [maxCharacter]="255"></trudi-textarea>
+          </td>
+          <td class="col-quantity">
+            <trudi-number-field
+              placeholder="0.00"
+              [checkSubmit]="!(itemForm.get('isAllowValidate').value)"
+              [maxCharacter]="13"
+              [maskLeadZero]="true"
+              [maskPattern]="maskPattern"
+              thousandSeparatorType=","
+              (change)="onChangeDataTotal(itemForm)"
+              size="extra-large"
+              formControlName="quantity">
+            </trudi-number-field>
+          </td>
+          <td class="col-cost">
+            <trudi-number-field
+              placeholder="0.00"
+              [checkSubmit]="!(itemForm.get('isAllowValidate').value)"
+              [maxCharacter]="13"
+              formControlName="cost"
+              [maskLeadZero]="true"
+              [maskPattern]="maskPattern"
+              thousandSeparatorType=","
+              prefixText="$"
+              size="extra-large">
+            </trudi-number-field>
+          </td>
+          <td class="col-price">
+            <trudi-number-field
+              placeholder="0.00"
+              [checkSubmit]="!(itemForm.get('isAllowValidate').value)"
+              (change)="onChangeDataTotal(itemForm)"
+              [maxCharacter]="13"
+              [maskLeadZero]="true"
+              [maskPattern]="maskPattern"
+              thousandSeparatorType=","
+              formControlName="salePrice"
+              prefixText="$"
+              size="extra-large">
+            </trudi-number-field>
+          </td>
+          <td class="col-total">
+            <div>
+              {{ itemForm.get('quantity').value ?? 0 | totalCost:
+              itemForm.get('salePrice').value }}
+            </div>
+          </td>
+          <td class="col-bill">
+            <trudi-checkbox-group formControlName="bills">
+              <ng-container *ngFor="let item of BILL_TYPES">
+                <div class="d-flex gap-4">
+                  <trudi-checkbox
+                    (change)="onSelectBillType(itemForm)"
+                    nz-tooltip
+                    [nzTooltipTitle]="(item?.type | billTypeDisabled: itemForm?.get('bills')?.value) || item?.isDisabled ? item?.tooltip : ''"
+                    [disabled]="(item.type | billTypeDisabled: itemForm.get('bills').value) || isRMSyncing || item.isDisabled"
+                    [label]="item.title"
+                    [stringValue]="item.type"></trudi-checkbox>
+                  <trudi-icon
+                    *ngIf="(item.type | viewFailedSyncBill: itemForm.get('billInfo').value).isDisplay"
+                    nz-tooltip
+                    [nzTooltipTitle]="(item?.type | viewFailedSyncBill: itemForm?.get('billInfo')?.value)?.tooltip"
+                    icon="iconWarning"
+                    [ngClass]="{'item-disabled': isRMSyncing}"
+                    class="cursor-pointer icon-warning"
+                    svgClass="size-16"
+                    viewBox="auto">
+                  </trudi-icon>
+                  <trudi-icon
+                    [ngClass]="{'item-disabled': isRMSyncing}"
+                    *ngIf="item.type | viewBill: itemForm.get('bills').value : itemForm.get('billInfo').value"
+                    class="cursor-pointer"
+                    svgClass="size-24"
+                    [icon]="'viewNavigate'"
+                    (click)="!isRMSyncing ? onHandleViewBill(itemForm.get('billInfo').value, item.type) : null"
+                    viewBox="auto">
+                  </trudi-icon>
+                </div>
+              </ng-container>
+            </trudi-checkbox-group>
+          </td>
+          <td class="col-action">
+            <trudi-icon
+              [ngClass]="{'item-disabled': isRMSyncing}"
+              class="cursor-pointer icon-more-action"
+              svgClass="size-32"
+              [icon]="'threeDotPrimary'"
+              viewBox="auto"
+              nz-dropdown
+              [nzOverlayClassName]="'dropdown-pt'"
+              [nzDropdownMenu]="menu"
+              [nzPlacement]="'bottomRight'"
+              [nzTrigger]="isRMSyncing ? null : 'click'">
+            </trudi-icon>
+            <ng-container>
+              <nz-dropdown-menu #menu="nzDropdownMenu">
+                <ul nz-menu class="dropdown-actions">
+                  <div class="box-list">
+                    <ng-container *ngFor="let menuItem of ACTION_TYPES">
+                      <li
+                        *ngIf="(menuItem.typeBill | viewBill: itemForm.get('bills').value : itemForm.get('billInfo').value) || menuItem.isDisplay"
+                        nz-menu-item
+                        class="dropdown-item-action"
+                        [ngClass]="menuItem?.className"
+                        [nzDisabled]="itemForm.get('externalId').value && menuItem.type === EWorkOrderActionType.DELETE"
+                        nz-tooltip
+                        [nzTooltipTitle]="(itemForm?.get('externalId')?.value && menuItem?.type === EWorkOrderActionType.DELETE) ? menuItem?.tooltip : ''"
+                        (click)="(itemForm.get('externalId').value && menuItem.type === EWorkOrderActionType.DELETE) ? null : onSelectAction(menuItem?.type, i, itemForm)">
+                        <span> {{ menuItem.title }} </span>
+                      </li>
+                    </ng-container>
+                  </div>
+                </ul>
+              </nz-dropdown-menu>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+      <ng-template #customFooterTemplate>
+        <button
+          [disabled]="isRMSyncing"
+          [ngClass]="{'item-disabled': isRMSyncing}"
+          trudi-btn
+          btnType="neutral"
+          variant="outlined"
+          (click)="onAddWorkOrder()">
+          <trudi-icon
+            svgClass="size-20"
+            viewBox="auto"
+            icon="iconPlus"></trudi-icon
+          >Add
+        </button>
+      </ng-template>
+    </nz-table>
+  </div>
+</div>

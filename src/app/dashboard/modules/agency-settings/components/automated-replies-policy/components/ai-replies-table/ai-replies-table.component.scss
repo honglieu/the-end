@@ -1,0 +1,207 @@
+@import 'function';
+
+@keyframes greenToWhite {
+  0% {
+    background-color: var(--brand-100);
+  }
+
+  100% {
+    background-color: var(--white);
+  }
+}
+
+.ai-replies-table {
+  position: relative;
+  border-radius: 8px;
+  height: 100%;
+  overflow: auto;
+  border: 1px solid var(--gray-200);
+
+  .thead-title {
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+    border: none;
+    text-align: start;
+    padding: 8px 14px;
+  }
+  .tr-policy {
+    width: 100%;
+    position: sticky;
+    top: 0px;
+    background-color: var(--gray-50);
+    z-index: 1;
+
+    .icon-sort {
+      width: 20px !important;
+      height: 20px !important;
+      cursor: pointer;
+      margin-left: 3px;
+      border: 1px solid var(--gray-50);
+      border-radius: 5px;
+    }
+    .icon-sort:focus-visible {
+      border: 1px solid var(--border-brand);
+      border-radius: 5px;
+    }
+  }
+
+  tbody {
+    .has-data {
+      cursor: pointer;
+      border-bottom: 1px solid var(--gray-200);
+      width: 100%;
+
+      &:focus-visible {
+        border: none;
+        box-shadow: inset 0px -0.5px 0px 2px var(--bg-brand-tonal-strongest);
+      }
+      &.background-after-merge {
+        animation: greenToWhite 3s;
+      }
+
+      &.ant-table-row {
+        &:hover > td {
+          background: var(--bg-neutral-tonal-stronger);
+        }
+
+        &:active > td {
+          background: var(--bg-neutral-tonal-strongest);
+        }
+      }
+
+      &:active {
+        background-color: var(--gray-100);
+      }
+
+      .ai-reply-questions {
+        width: auto;
+        padding: 12px;
+        border-bottom: 1px solid var(--gray-200);
+      }
+
+      .ai-reply-policy {
+        width: 220px;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--gray-200);
+        .ai-reply-content {
+          @include fontSetup(var(--gray-800), 14px, 20px, normal, 400);
+        }
+      }
+
+      .ai-reply-created-date {
+        width: 150px;
+        @include fontSetup(var(--gray-800), 14px, 20px, normal, 400);
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--gray-200);
+      }
+    }
+
+    .ai-reply-selected {
+      background-color: var(--gray-200) !important;
+    }
+
+    .ai-reply-skeleton {
+      border-bottom: 1px solid var(--gray-200);
+
+      .skeleton-checkbox-container {
+        display: flex;
+        justify-items: center;
+        align-items: center;
+        justify-content: center;
+        height: 96px;
+
+        .skeleton-checkbox {
+          width: 20px;
+          height: 20px;
+          border-radius: 4px;
+          border: 1px solid var(--gray-50);
+        }
+      }
+
+      .skeleton-multi-row-container {
+        .skeleton-multi-row {
+          padding: 16px;
+          height: 96px;
+        }
+      }
+
+      .skeleton-single-row-container {
+        .skeleton-single-row {
+          height: 96px;
+          padding: 16px;
+          display: flex;
+          align-items: flex-start;
+        }
+      }
+    }
+  }
+
+  .empty-list {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+
+    &.empty-icon {
+      height: 100%;
+      align-items: center;
+    }
+
+    &.empty-text {
+      @include fontSetup(var(--gray-400), 14px, 20px, italic, 400);
+      margin-top: 84px;
+    }
+    .empty-description {
+      padding-top: 15px;
+      @include fontSetup(var(--gray-400), 14px, 20px, normal, 500);
+    }
+  }
+}
+
+.table-border {
+  border: 1px solid var(--gray-200);
+}
+
+:host ::ng-deep .ai-replies-table {
+  .rwd-table td,
+  th {
+    border: none;
+    padding: 0px;
+  }
+  .ant-table-thead > tr > th::before {
+    display: none;
+  }
+  .tbody-empty {
+    position: absolute;
+    top: 400px;
+    tr {
+      display: none;
+    }
+  }
+  nz-skeleton {
+    .ant-skeleton-content {
+      .ant-skeleton-paragraph {
+        margin: 0px !important;
+
+        li {
+          height: 12px !important;
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .wrap-skeleton {
+  overflow: hidden;
+  .skeleton-wrapper {
+    .ant-skeleton-title {
+      height: 12px;
+    }
+  }
+  .skeleton-single-row-container,
+  .skeleton-multi-row-container {
+    padding: 10px;
+    border-bottom: 1px solid var(--border-dark);
+  }
+}
+::ng-deep .icon-sort-policy {
+  top: 6px !important;
+}

@@ -1,0 +1,193 @@
+<trudi-multi-select
+  #selectContacts
+  [items]="listItem"
+  [(ngModel)]="_selected"
+  (ngModelChange)="onChange($event)"
+  [placeholder]="placeholder"
+  (focusOut)="handleFocusOut()"
+  (clearAllSelection)="eventClearAll.emit()"
+  (handleOpen)="handleOpen.emit()"
+  [searchFn]="customSearchFn"
+  (search)="onSearch($event)"
+  [virtualScroll]="true"
+  [bindValue]="bindValue"
+  [bindLabel]="bindLabel"
+  [dropdownPosition]="dropdownPosition"
+  [groupBy]="groupBy"
+  [readonly]="_disabled || readonly"
+  [totalOptions]="items?.length"
+  [clearSearchOnAdd]="false">
+  <ng-template
+    trudi-label-tmp
+    let-items="items"
+    let-clear="clear"
+    let-searchTerm="searchTerm">
+    <div class="ng-value" *ngFor="let item of items">
+      <div
+        (mousedown)="$event.stopPropagation()"
+        class="trudi-label-wrapper"
+        [class.trudi-label-wrapper-readonly]="readonly"
+        [class.trudi-label-wrapper-disabled]="item.status === crmStatusType.archived"
+        appHoverShow
+        [appHoverShow]="hoverInformation"
+        [automaticTooltipPosition]="true"
+        (onTooltipHidden)="onTooltipHidden()"
+        #c="child">
+        <div class="trudi-select-label text-ellipsis">
+          {{!(item.type === EUserPropertyType.OWNER) ? item.lastName :
+          item.lastName + (item.role ? ' (' + item.role + ')' : '')}}
+        </div>
+        <button
+          class="close-wrapper pd-0 ml-4"
+          *ngIf="!_disabled && !readonly"
+          (mousedown)="$event.stopPropagation(); handleClear(item, clear); c.hideTooltip()">
+          <trudi-icon
+            *ngIf="!item?.disabled"
+            class="cursor-pointer"
+            icon="closeFilterIcon"
+            svgClass="size-16"></trudi-icon>
+        </button>
+        <ng-template #hoverInformation>
+          <ng-container
+            class="gap-4px"
+            *ngTemplateOutlet="
+                      customizeInfoTemplate;
+                      context: { item: item, item$: item$, visible: c.isTooltipVisible }
+                    "></ng-container>
+        </ng-template>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template
+    trudi-option-tmp
+    let-item="item"
+    let-searchTerm="searchTerm"
+    let-item$="item$">
+    <div
+      class="select-contact-option trudi-select-option d-flex justify-content-between align-items-center w-100 gap-8">
+      <div class="wrapper-option">
+        <div class="item-label">
+          <div class="item-label-supplier">
+            <div
+              #supplierName
+              nz-tooltip
+              triggerLongContentTooltip
+              [elementRef]="supplierName"
+              nzTooltipPlacement="top"
+              [nzTooltipTitle]="item.lastName"
+              class="text-ellipsis"
+              [ngOptionHighlight]="searchTerm ? searchTerm : ''">
+              {{item.lastName}}
+            </div>
+            <div>•</div>
+            Supplier
+          </div>
+          <trudi-icon
+            *ngIf="item?.isFavourite"
+            icon="goldStar"
+            svgClass="size-20">
+          </trudi-icon>
+          <div class="email-wrapper">
+            <trudi-icon icon="mailThin" svgClass="size-14"></trudi-icon>
+            <span
+              *ngIf="item.email"
+              class="text-ellipsis"
+              [ngOptionHighlight]="searchTerm ? searchTerm : ''"
+              >{{item.email}}</span
+            >
+            <span *ngIf="!item.email">No email</span>
+          </div>
+          <trudi-badge
+            *ngIf="item.status === crmStatusType.archived"
+            [text]="'Archived contact'"
+            size="small"
+            variant="role"
+            [allowTruncated]="true"></trudi-badge>
+        </div>
+      </div>
+      <div
+        class="d-flex align-items-center"
+        nz-tooltip
+        [nzTooltipTitle]="item$.disabled && item.status === crmStatusType.archived ? 'Archived supplier' : ''">
+        <trudi-checkbox
+          [ngModel]="item$.selected"
+          [disabled]="item.disabled"></trudi-checkbox>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template trudi-footer-tmp *ngIf="!_disabled && !readonly">
+    <div (click)="isShowPopup = true" class="add-new-supplier-btn">
+      <trudi-icon svgClass="size-20" icon="plusImg"></trudi-icon>
+      <span class="add-new-supplier-btn-text">Add new supplier</span>
+    </div>
+  </ng-template>
+</trudi-multi-select>
+
+<!-- customize template information -->
+<ng-template
+  #customizeInfoTemplate
+  let-item="item"
+  let-item$="item$"
+  let-visible="visible">
+  <div
+    class="select-item__contact company-name d-flex flex-wrap gap-4"
+    [ngClass]="{'hover-template' : visible}">
+    <trudi-badge
+      class="company-name"
+      [extraClass]="!item.lastName ? 'font-italic' : ''"
+      [text]="item.status === crmStatusType.archived ? item.lastName + ' (Archived)' : item.lastName"
+      [highlighText]="searchTerm"
+      [icon]="'maintenanceV2'"
+      size="small"
+      [customIconSize]="14"
+      variant="role"
+      [allowTruncated]="false"></trudi-badge>
+  </div>
+  <div
+    class="select-item__contact d-flex flex-wrap gap-4"
+    [ngClass]="{'hover-template' : visible}">
+    <trudi-badge
+      [extraClass]="!item.phoneNumber ? 'font-italic' : ''"
+      [text]="item.phoneNumber ? (item.phoneNumber | phoneNumberFormat) : 'no phone number'"
+      [highlighText]="searchTerm"
+      [icon]="'phoneThin'"
+      size="small"
+      [customIconSize]="14"
+      variant="role"
+      [allowTruncated]="visible"></trudi-badge>
+  </div>
+  <div
+    class="select-item__contact d-flex flex-wrap gap-4"
+    [ngClass]="{'hover-template' : visible}">
+    <trudi-badge
+      [extraClass]="!item.email ? 'font-italic' : ''"
+      [text]="item.email || 'no email'"
+      [highlighText]="searchTerm"
+      icon="mailThin"
+      size="small"
+      [customIconSize]="14"
+      variant="role"
+      [allowTruncated]="visible"></trudi-badge>
+  </div>
+  <div
+    *ngIf="!(item['type'] === EUserPropertyType.OWNER)"
+    class="select-item__other-contact"
+    [ngClass]="{'hover-template' : visible}">
+    <trudi-badge
+      [extraClass]="!item.landingPage ? 'font-italic' : ''"
+      [text]="item.landingPage || 'no website'"
+      [highlighText]="searchTerm"
+      [icon]="'globeThin'"
+      size="small"
+      [customIconSize]="14"
+      variant="role"
+      [allowTruncated]="visible"></trudi-badge>
+  </div>
+</ng-template>
+
+<add-new-supplier
+  #addSupplierPopup
+  *ngIf="isShowPopup"
+  [isShowPopup]="isShowPopup"
+  (handleConfirm)="addNewSupplier($event)"
+  (handleClose)="isShowPopup = false; modalCloseHandler()"></add-new-supplier>

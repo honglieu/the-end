@@ -1,0 +1,43 @@
+<div class="auth-login-wrapper forgot-password">
+  <div class="auth-logo">
+    <img src="/assets/icon/trudi-logo.svg" alt="logo" />
+  </div>
+  <h3 class="auth-hero">Forgot password</h3>
+  <p class="auth-title">
+    Please enter your email address and I’ll send you a link to reset your
+    password.
+  </p>
+
+  <div class="auth-form-wrapper">
+    <div [formGroup]="form" class="auth-form">
+      <div class="auth-form-control">
+        <input
+          type="email"
+          class="form-control auth-form-input"
+          placeholder="Enter your email"
+          id="auth-input-email"
+          formControlName="email" />
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <button trudi-btn size="small" variant="link">
+          <a class="link-unset" [routerLink]="'/'">Back to login</a>
+        </button>
+        <div *ngIf="errorMessage" class="auth-validate-msg">
+          <img src="/assets/icon/tool-tip-red.svg" alt="" />
+          {{errorMessage}}
+        </div>
+      </div>
+      <div class="auth-btn-wrapper">
+        <button
+          trudi-btn
+          size="extra-large"
+          class="w-100"
+          [disabled]="!form.valid"
+          (click)="onForgotPassword()">
+          Send reset email
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

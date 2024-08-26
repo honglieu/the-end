@@ -1,0 +1,315 @@
+@import 'function';
+
+.voice-mail {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0 12px;
+  min-height: 90px;
+  cursor: grab;
+
+  &:hover {
+    transition: all ease-in 0.3s;
+    background: var(--bg-neutral-tonal-stronger);
+  }
+
+  &:active {
+    transition: all ease-in 0.3s;
+    background: var(--bg-neutral-tonal-strongest);
+  }
+  &__menu--displayed {
+    box-shadow: inset 0 0 0 2px var(--brand-200);
+  }
+
+  &:hover,
+  &__selected {
+    ::ng-deep trudi-checkbox .trudi-checkbox span:first-child {
+      background-color: var(--white);
+    }
+  }
+
+  .voice-mail__row {
+    &--details {
+      &__title {
+        trudi-badge {
+          text-wrap: nowrap;
+        }
+      }
+    }
+  }
+
+  &__un-seen {
+    .voice-mail__row {
+      &--details {
+        &__participants,
+        &__title {
+          div:not(
+              .voice-mail__row--details__participants--date,
+              .voice-mail__row--details__title--urgent-badge,
+              .voice-mail__row--details__title--count,
+              .voice-mail__row--details__title--count > div
+            ) {
+            @include fontSetup(var(--gray-700), 14px, 20px, normal, 600);
+          }
+          &--ask,
+          &--attachments {
+            font-weight: 400 !important;
+          }
+
+          &--ai-control {
+            font-weight: 400 !important;
+            font-style: italic;
+          }
+        }
+      }
+    }
+  }
+
+  &__checked {
+    transition: all ease-in 0.3s;
+    background: var(--bg-neutral-tonal-stronger);
+  }
+
+  &__selected {
+    transition: all ease-in 0.3s;
+    background: var(--bg-neutral-tonal-stronger);
+  }
+
+  &__row {
+    min-height: 90px;
+    width: 100%;
+    display: flex;
+    gap: 4px;
+
+    &--first {
+      border-top: 0 !important;
+    }
+
+    &--last {
+      border-bottom: 1px solid var(--gray-200);
+    }
+
+    &--details {
+      min-height: 90px;
+      width: 100%;
+      display: flex;
+      gap: 4px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-200);
+
+      &__property {
+        justify-content: space-between;
+        &__address {
+          display: flex;
+          align-items: center;
+          gap: 2px;
+          @include fontSetup(var(--fg-neutral-weaker, #85888E), 12px, 16px, normal, 400);
+
+          ::ng-deep trudi-icon svg path {
+            fill: var(--fg-neutral-weaker, #85888E);
+          }
+        }
+      }
+
+      &__participants {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        > :nth-child(1) {
+          @include fontSetup(var(--gray-700), 14px, 20px, normal, 400);
+        }
+
+        > :nth-child(2) {
+          margin-left: auto;
+          @include fontSetup(var(--gray-400), 12px, 16px, normal, 400);
+          flex: none;
+        }
+
+        .participants-wrapper {
+          display: flex;
+          width: 100%;
+          align-items: center;
+
+          &:has(.has-checkbox) {
+            gap: 4px;
+          }
+
+          .participants-list {
+            flex: 1;
+
+            .participants-item-wrapper {
+              display: flex;
+              align-items: center;
+              max-width: 100%;
+            }
+
+            .single-item {
+              max-width: 280px;
+            }
+
+            .participants-name {
+              @include fontSetup(var(--gray-700), 14px, 20px, normal, 400);
+            }
+          }
+        }
+      }
+
+      &__title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        &--urgent-badge {
+          text-wrap: nowrap;
+        }
+
+        &--ai-control {
+          @include fontSetup(var(--gray-600), 14px, 20px, italic, 400);
+        }
+
+        &--ask {
+          @include fontSetup(var(--gray-600), 14px, 20px, normal, 400);
+        }
+
+        &--count {
+          margin-left: auto;
+          position: relative;
+          overflow: hidden;
+          width: 20px;
+          height: 20px;
+          border: double 1px transparent;
+          border-radius: 20px;
+          background-image: linear-gradient(white, white),
+            linear-gradient(
+              145.35deg,
+              #ffca62 3.66%,
+              #38dbd0 55.74%,
+              #4285f4 102.24%
+            );
+          background-origin: border-box;
+          background-clip: padding-box, border-box;
+
+          > div {
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+              145.35deg,
+              rgba(255, 202, 98, 0.2) 3.66%,
+              rgba(56, 219, 208, 0.2) 55.74%,
+              rgba(66, 133, 244, 0.2) 102.24%
+            );
+          }
+
+          @include fontSetup(var(--gray-600), 12px, 16px, normal, 500);
+        }
+        &--many-count {
+          width: 36px;
+        }
+        &--right {
+          margin-left: auto;
+          display: flex;
+          gap: 8px;
+          align-items: center;
+        }
+      }
+
+      &__message {
+        @include fontSetup(var(--gray-500), 14px, 20px, normal, 400);
+      }
+    }
+  }
+
+  ::ng-deep {
+    mark.highlight {
+      background-color: var(--bg-tenant-solid-normal);
+      color: unset;
+      border-radius: 2px;
+    }
+  }
+}
+
+::ng-deep .cdk-overlay-pane:has(.add-to-task-submenu) {
+  margin-top: -50px !important;
+  margin-left: 220px !important;
+}
+
+::ng-deep .cdk-overlay-container:has(.participants-tooltip-position) {
+  .ant-tooltip {
+    max-width: 400px;
+  }
+
+  .ant-tooltip-placement-top {
+    padding-bottom: 7px !important;
+  }
+
+  .ant-tooltip-placement-bottom {
+    padding-top: 4px !important;
+  }
+}
+
+::ng-deep {
+  .spin-syncing {
+    -webkit-animation: spinSyncing 4s linear infinite;
+    -moz-animation: spinSyncing 4s linear infinite;
+    animation: spinSyncing 4s linear infinite;
+  }
+
+  @-moz-keyframes spinSyncing {
+    100% {
+      -moz-transform: rotate(360deg);
+    }
+  }
+
+  @-webkit-keyframes spinSyncing {
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spinSyncing {
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(-360deg);
+    }
+  }
+}
+
+::ng-deep {
+  .export-conversation {
+    padding: 0 !important;
+    .ant-dropdown-menu-submenu-title {
+      padding: 12px;
+      width: 100%;
+      .ant-dropdown-menu-submenu-expand-icon {
+        display: none;
+      }
+      .item-container {
+        white-space: nowrap;
+        border: none;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--status-bg);
+        cursor: pointer;
+        @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+
+        &:hover {
+          background-color: var(--gray-50);
+          color: var(--fg-neutral-normal);
+        }
+
+        &:active {
+          background-color: var(--gray-100);
+          color: var(--fg-neutral-normal);
+        }
+      }
+    }
+  }
+}

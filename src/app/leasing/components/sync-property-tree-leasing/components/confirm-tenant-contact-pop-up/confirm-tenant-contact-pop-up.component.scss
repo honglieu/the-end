@@ -1,0 +1,39 @@
+@import 'function';
+
+.tenancy-name-form-group {
+  padding: 6px 24px 0;
+  margin: 0px -24px;
+  max-height: calc(100vh - 178px * 2);
+  overflow: auto;
+
+  .tenancy-name-wrapper {
+    padding: 0px 3px 10px 3px;
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+
+    .title {
+      @include fontSetup(var(--gray-700), 14px, 18px, normal, 500);
+      display: flex;
+      align-items: center;
+      margin: unset;
+    }
+  }
+
+  .divider {
+    border-top: 1px solid var(--gray-200);
+  }
+}
+
+.btn-confirm:hover {
+  background: var(--bg-brand-solid-stronger, #33bbb2);
+}
+
+.btn-confirm:active {
+  background: var(--bg-brand-solid-strongest, #0aa095);
+}
+.subTitle {
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--gray-500);
+}

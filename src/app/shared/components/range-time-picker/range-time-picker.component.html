@@ -1,0 +1,36 @@
+<div class="range-time d-flex align-items-start flex-dir-column">
+  <div class="range-time-picker d-flex align-items-center">
+    <time-picker
+      [label]="customLabel || 'Start'"
+      [validate]="validate"
+      [rangeFrom]="rangeFrom"
+      [rangeTo]="rangeTo"
+      [isFrom]="true"
+      [startHourdError]="startHourdError"
+      [readonly]="false"
+      [isShowTimezoneAbbrev]="false"
+      [(ngModel)]="startHourd"
+      (onChangeHour)="handleChangeStartHourd($event)">
+    </time-picker>
+    <span class="to">to</span>
+    <time-picker
+      [label]="customLabel || 'End'"
+      [validate]="validate"
+      [rangeFrom]="rangeFrom"
+      [rangeTo]="rangeTo"
+      [isTo]="true"
+      [endHourdError]="endHourdError"
+      [readonly]="false"
+      [isShowTimezoneAbbrev]="false"
+      [(ngModel)]="endHourd"
+      (onChangeHour)="handleChangeEndHourd($event)">
+    </time-picker>
+  </div>
+  <ng-container
+    *ngIf="startHourd && endHourd &&(startHourdError || endHourdError)">
+    <div class="error-container d-flex align-items-start gap-4">
+      <trudi-icon icon="iconWarning" class="mt-2"></trudi-icon>
+      <span class="error-text">Start time must be earlier than end time</span>
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,40 @@
+@import 'function';
+
+:host {
+  .no-my-item {
+    margin: 0 auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    img {
+      width: 160px;
+      height: auto;
+    }
+    p {
+      text-align: center;
+      padding: 0 16px 0 12px;
+      margin: 0;
+    }
+    &__title {
+      @include fontSetup(var(--fg-neutral-stronger), 18px, 22px, normal, 600);
+    }
+    &__description {
+      @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 400);
+      strong {
+        cursor: pointer;
+        @include fontSetup(var(--fg-brand), 14px, 20px, normal, 400);
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+      &.mt-8 {
+        margin: 8px 0 0 0 !important;
+      }
+    }
+  }
+  .remider-inbox {
+    background-color: var(--bg-neutral-tonal-stronger, #e7eaed);
+  }
+}

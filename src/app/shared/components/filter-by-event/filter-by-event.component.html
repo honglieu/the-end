@@ -1,0 +1,70 @@
+<div [formGroup]="formFilterEvent">
+  <trudi-select-dropdown-v2
+    [disabled]="disabled"
+    [overlayClassName]="'calendar_filter-event'"
+    formControlName="eventType"
+    [clearable]="false"
+    [items]="calendarEventList"
+    [noAnimation]="false"
+    bindValue="eventType"
+    bindLabel="title"
+    [multi]="true"
+    [prioritizeSelectingItems]="true"
+    [trudiTrigger]="'hover'"
+    [placement]="popoverPlacement"
+    [trackByFn]="trackByFn"
+    [groupBy]="'titleFilter'">
+    <ng-template trudi-select-dropdown-header-tmp>
+      <div class="count-container">
+        <div class="d-flex count-wrapper align-items-center">
+          <div class="count-text">
+            {{ formFilterEvent?.get('eventType')?.value?.length ?? 0 }}/{{
+            calendarEventList.length }}
+          </div>
+          <button
+            *ngIf="formFilterEvent?.get('eventType').value?.length > 0 || rangeDateHasValue"
+            class="clear-btn"
+            (click)="handleClearValue()">
+            Clear selection
+          </button>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template trudi-select-dropdown-title-tmp>
+      <div class="calendar_title w-100 justify-content-between">
+        Event
+        <span
+          *ngIf="formFilterEvent.get('eventType')?.value && formFilterEvent.get('eventType')?.value.length > 0"
+          class="calendar_count"
+          >{{formFilterEvent?.get('eventType')?.value.length}}</span
+        >
+        <trudi-icon
+          class="icon-left"
+          svgClass="size-20"
+          viewBox="auto"
+          icon="chevronRight"></trudi-icon>
+      </div>
+    </ng-template>
+    <ng-template trudi-select-dropdown-footer-tmp>
+      <div class="calendar_filter--footer">
+        <h5 class="calendar_filter--title">Select time period</h5>
+        <trudi-single-range-picker
+          class="w-100"
+          #datePicker
+          nzPlacement="bottomLeft"
+          [nzDropdownClassName]="'trudi-picker-dropdown'"
+          [nzBackdrop]="false"
+          [nzInline]="false"
+          [nzOpen]="isShowRangePicker"
+          [nzFormat]=" datePickerFormatPipe$ | async"
+          [ngModelOptions]="{standalone: true}"
+          [(ngModel)]="rangeDate"
+          (nzOnOk)="handleCalendarChange($event)"
+          (nzOnCalendarChange)="handleChangeValue($event)"
+          (nzOnOpenChange)="isShowRangePicker = false"
+          (nzOnCancel)="handleCancel()">
+        </trudi-single-range-picker>
+      </div>
+    </ng-template>
+  </trudi-select-dropdown-v2>
+</div>

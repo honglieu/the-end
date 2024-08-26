@@ -1,0 +1,67 @@
+<div class="contact-card gap-8" [class]="disable ? 'content-card-disable' : ''">
+  <div *ngIf="!disable" class="contact-card__action">
+    <div class="card">
+      <div class="content">
+        <div class="content-circle">
+          <img
+            src="/assets/images/icons/edit-icon.svg"
+            class="cursor-pointer"
+            (click)="toggleTenantContactPopup(contact, contactIndex)" />
+        </div>
+        <div class="content-circle">
+          <img
+            src="/assets/icon/deleted.svg"
+            class="cursor-pointer"
+            (click)="toggleTenantContactRemove(contactIndex)" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="disable"></div>
+  <div class="contact-card__header d-flex justify-content-between">
+    <div
+      class="header-content gap-4 d-flex align-items-center flex-1 flex-wrap">
+      <span class="header-name"> {{ tenantName }} </span>
+      <trudi-badge
+        [text]="isPrimaryTenant ? 'Primary tenant' : getTileByType(EUserPropertyType.TENANT) "
+        [size]="'small'"
+        [variant]="getVariant(EUserPropertyType.TENANT)"></trudi-badge>
+    </div>
+    <trudi-icon
+      *ngIf="disable && isSyncCompleted"
+      class="item-icon"
+      icon="iconSyncSuccess"></trudi-icon>
+  </div>
+  <div class="contact-card__content">
+    <div class="content-item d-flex gap-4">
+      <div class="d-flex align-items-start mt-2">
+        <trudi-icon icon="phoneThin"></trudi-icon>
+      </div>
+      <div
+        class="d-flex align-items-center"
+        [ngClass]="{ 'unknown-information': !phoneNumber }">
+        {{ phoneNumber ? phoneNumber : "(no phone number)" }}
+      </div>
+    </div>
+    <div class="content-item d-flex gap-4">
+      <div class="d-flex align-items-start mt-2">
+        <trudi-icon icon="locationDotThin"></trudi-icon>
+      </div>
+      <div
+        class="d-flex align-items-center"
+        [ngClass]="{ 'unknown-information': !contact?.address.addressLine1}">
+        {{ address ? address : "(no property)" }}
+      </div>
+    </div>
+    <div class="content-item d-flex gap-4">
+      <div class="d-flex align-items-start mt-2">
+        <trudi-icon icon="mailThin"></trudi-icon>
+      </div>
+      <div
+        class="d-flex align-items-center"
+        [ngClass]="{ 'unknown-information': !email }">
+        {{ email ? email : "(no email)" }}
+      </div>
+    </div>
+  </div>
+</div>

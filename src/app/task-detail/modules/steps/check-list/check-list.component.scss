@@ -1,0 +1,81 @@
+@import 'function';
+
+.content_description {
+  margin-top: 20px;
+  &--file {
+    margin: 0;
+    padding: 0;
+    color: var(--fg-neutral-normal, #646464);
+    font-size: 12px;
+    font-weight: 400;
+  }
+  &--limit {
+    color: var(--fg-neutral-weaker, #999);
+    font-size: 12px;
+    font-style: italic;
+    font-weight: 400;
+    margin: 0;
+    padding: 0;
+  }
+}
+::ng-deep .content .trudi-textarea-wrapper {
+  height: 104px;
+}
+
+::ng-deep .cdk-overlay-container:has(.check-list-item) {
+  z-index: 9999 !important;
+}
+
+::ng-deep a.tinymce-link {
+  color: var(--fg-hyperlink) !important;
+}
+
+.content {
+  ::ng-deep .file-box.invalid {
+    border: solid 2px var(--border-danger);
+  }
+}
+
+.warning-content {
+  @include fontSetup(var(--danger-500), 12px, 16px, normal, 400);
+}
+
+:host ::ng-deep .check-list-wrapper .modal-popup-content {
+  padding: 20px 24px;
+  overflow: auto;
+  max-height: calc(100vh - 350px);
+}
+
+.check-list-no-content {
+  border: 1px solid var(--gray-200);
+  padding: 12px 16px;
+  min-height: 44px;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  .step-name {
+    margin-bottom: 0px !important;
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+  }
+}
+.check-list-content {
+  border: 1px solid var(--gray-200);
+  padding: 12px 16px;
+  min-height: 44px;
+  border-radius: 8px;
+  .step-name {
+    margin-bottom: 0px !important;
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+  }
+}
+.lease-note-todo {
+  margin-top: 20px;
+  .title {
+    @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+  }
+}
+
+::ng-deep .check-list-content .mylistitemclass {
+  color: var(--fg-neutral-stronger) !important;
+}

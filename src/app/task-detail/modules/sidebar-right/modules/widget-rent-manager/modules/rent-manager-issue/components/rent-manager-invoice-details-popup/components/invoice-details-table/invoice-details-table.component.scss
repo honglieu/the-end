@@ -1,0 +1,53 @@
+@import 'function';
+
+.rm-menu-option .rm-menu-item {
+  padding: 12px !important;
+  width: 164px;
+  border-bottom: 1px solid var(--border-neutral-light, #f2f5f7);
+  @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+}
+
+.rm-delete-option.disabled {
+  cursor: not-allowed;
+  font-style: italic !important;
+  color: var(--fg-neutral-weakest) !important;
+}
+
+::ng-deep .rm-menu-option .rm-delete-option {
+  @include fontSetup(
+    var(--bg-danger-solid-normal, #e1024f) !important,
+    14px,
+    20px,
+    normal,
+    400 !important
+  );
+}
+
+.option-icon {
+  cursor: pointer;
+
+  ::ng-deep svg-icon {
+    transform: rotate(90deg) !important;
+
+    svg {
+      height: 32px;
+      width: 32px;
+    }
+  }
+
+  &.disable-option {
+    cursor: not-allowed;
+
+    ::ng-deep svg-icon svg {
+      rect {
+        fill: var(--gray-200);
+      }
+    }
+  }
+}
+
+::ng-deep .rm-issue-invoice-table {
+  ::ng-deep .ant-table-body {
+    overflow: auto !important;
+  }
+}

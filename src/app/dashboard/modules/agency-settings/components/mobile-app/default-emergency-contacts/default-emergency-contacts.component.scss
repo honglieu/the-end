@@ -1,0 +1,15 @@
+@import 'function';
+
+.default-emergency-contacts-table {
+  select-contacts.ng-invalid.ng-touched .ng-select {
+    &:not(.ng-select-opened) {
+      .ng-select-container {
+        box-shadow: var(--shadow-danger);
+        background-color: var(--white);
+      }
+    }
+  }
+  .remove-emergency-contacts-row-btn {
+    transform: translateY(6px);
+  }
+}

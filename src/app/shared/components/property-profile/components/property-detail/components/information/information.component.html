@@ -1,0 +1,106 @@
+<div class="information-wrapper">
+  <div class="title">INFORMATION</div>
+  <ng-container *ngIf="!isLoading else skeleton">
+    <ng-container *ngIf="!isCRM else crmContainer">
+      <div class="content-wrapper">
+        <div class="information-label">Next inspection</div>
+        <div class="information-value">
+          {{ (currentProperty.nextInspection | formatDate | async) |
+          formatDisplayValue: 'date' }}
+        </div>
+        <div class="information-label">Expenditure limit</div>
+        <div class="information-value">
+          {{ (currentProperty.expenditureLimit | number: '1.2-2' |
+          formatDisplayValue: 'currency') }}
+        </div>
+        <div class="information-label">Authority start</div>
+        <div class="information-value">
+          {{ (currentProperty.authorityStartDate | formatDate | async) |
+          formatDisplayValue: 'date' }}
+        </div>
+        <div class="information-label">Authority end</div>
+        <div class="information-value">
+          {{ (currentProperty.authorityEndDate | formatDate | async) |
+          formatDisplayValue: 'date' }}
+        </div>
+        <div class="information-label">Key number</div>
+        <div class="information-value">
+          {{ currentProperty.keyNumber | formatDisplayValue }}
+        </div>
+        <div class="information-label">Property manager</div>
+        <div class="information-value">
+          {{ currentProperty.managerName | formatDisplayValue }}
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</div>
+<ng-template #crmContainer>
+  <ng-container *ngIf="currentProperty.unitNo else showProperty">
+    <div class="content-wrapper">
+      <div class="information-label">Unit type</div>
+      <div>{{ currentProperty.unitType | formatDisplayValue }}</div>
+      <div class="information-label">Property</div>
+      <div
+        (click)="handleClickParentProperty(currentProperty.parentPropertyId)"
+        class="property address"
+        tabindex="0">
+        {{ currentProperty.parentStreetline | formatDisplayValue }}
+      </div>
+      <div class="information-label">Square footage</div>
+      <div>{{ currentProperty.squareFootage | formatDisplayValue }}</div>
+      <div class="information-label">Portfolios</div>
+      <trudi-badge
+        [nzTooltipOverlayClassName]="'portfolio-names'"
+        [nzTooltipTitle]="currentProperty.listPortfolioNames.fullName"
+        [text]="currentProperty.listPortfolioNames.shortName"
+        [variant]="'role'"
+        nz-tooltip
+        nzTooltipPlacement="bottom"></trudi-badge>
+    </div>
+  </ng-container>
+</ng-template>
+<ng-template #showProperty>
+  <div class="content-wrapper">
+    <div class="information-label">Short name</div>
+    <div class="information-value">
+      {{ currentProperty.shortenStreetline | formatDisplayValue }}
+    </div>
+    <div class="information-label">Billing name</div>
+    <div class="information-value">
+      {{ currentProperty.billingName1 | formatDisplayValue }}
+    </div>
+    <div class="information-label">Billing name 2</div>
+    <div class="information-value">
+      {{ currentProperty.billingName2 | formatDisplayValue }}
+    </div>
+    <div class="information-label">Manager</div>
+    <div class="information-value">
+      {{ currentProperty.managerName | formatDisplayValue }}
+    </div>
+    <div class="information-label">Email</div>
+    <div class="information-value">
+      {{ currentProperty.email | formatDisplayValue }}
+    </div>
+    <div class="information-label">Property type</div>
+    <div class="information-value">
+      {{ currentProperty.sourceProperty?.propertyType | formatDisplayValue }}
+    </div>
+    <div class="information-label">Portfolios</div>
+    <trudi-badge
+      [nzTooltipOverlayClassName]="'portfolio-names'"
+      [nzTooltipTitle]="currentProperty.listPortfolioNames.fullName"
+      [text]="currentProperty.listPortfolioNames.shortName"
+      [variant]="'role'"
+      nz-tooltip
+      nzTooltipPlacement="bottom"
+      showTooltip></trudi-badge>
+  </div>
+</ng-template>
+<ng-template #skeleton>
+  <div class="skeleton">
+    <div *ngFor="let _ of [].constructor(4)">
+      <nz-skeleton [nzActive]="true" [nzParagraph]="paragraph"></nz-skeleton>
+    </div>
+  </div>
+</ng-template>

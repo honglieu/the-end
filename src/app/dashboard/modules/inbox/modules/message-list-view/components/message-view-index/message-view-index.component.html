@@ -1,0 +1,73 @@
+<div class="message-view-index-container">
+  <div
+    class="header-wrapper d-flex align-items-center justify-content-between"
+    [class.d-block]="(sharedMessageViewService.isSearchBoxFocused$ | async)">
+    <div class="d-flex gap-8 align-items-center">
+      <div class="w-100">
+        <inbox-filter
+          tabindex="-1"
+          [taskDetailViewMode]="EViewDetailMode.MESSAGE"></inbox-filter>
+      </div>
+      <div
+        tabindex="0"
+        (keydown.enter)="handleClickOpenSendMessage()"
+        *ngIf="(sharedMessageViewService.isSearchBoxFocused$ | async) === false"
+        (click)="(handleClickOpenSendMessage())"
+        disableOpenSendMsgModal
+        class="compose-wrapper">
+        <trudi-icon icon="compose" [style]="{'width.px': 20, 'height.px': 20}">
+        </trudi-icon>
+      </div>
+    </div>
+    <button
+      trudi-btn
+      variant="ghost"
+      *ngIf="(inboxService.isAllFiltersDisabled$ | async) === false && (sharedMessageViewService.isSearchBoxFocused$ | async) === false
+      && (sharedMessageViewService.isShowSelect$ | async ) === true && !isConsole && params['status'] !== TaskStatusType.draft"
+      (click)="setIsSelectingMode(!isSelecting)">
+      {{isSelecting ? 'Cancel' : 'Select'}}
+    </button>
+  </div>
+  <div class="container-remider-index">
+    <div
+      tabindex="0"
+      (keydown.enter)="handleRedirectRemider(ReminderMessageType.FOLLOW_UP)"
+      (click)="handleRedirectRemider(ReminderMessageType.FOLLOW_UP)"
+      [appE2E]="EDataE2EInboxReminder.FOLLOW_UP"
+      class="d-flex flex-1 align-items-center gap-4 justify-content-between msg-index-row"
+      [ngClass]="{'isActive': currentReminderType === ReminderMessageType.FOLLOW_UP}">
+      <div class="d-flex gap-4 align-items-center no-pointer-event">
+        <trudi-icon icon="aiSummaryStar" [svgClass]="'size-20'"></trudi-icon>
+        <div class="text-remider">You might want to follow up on these...</div>
+      </div>
+      <div class="total-reminder" *ngIf="!this.hiddenTotal">
+        {{ totalMessageByParam[ReminderMessageType.FOLLOW_UP] !== null ?
+        totalMessageByParam[ReminderMessageType.FOLLOW_UP] :
+        statisticMessageReminder?.followup}}
+      </div>
+    </div>
+    <div
+      tabindex="0"
+      (keydown.enter)="handleRedirectRemider(ReminderMessageType.UNANSWERED)"
+      (click)="handleRedirectRemider(ReminderMessageType.UNANSWERED)"
+      [appE2E]="EDataE2EInboxReminder.WAITING_FOR_REPLY"
+      class="d-flex flex-1 align-items-center gap-4 justify-content-between msg-index-row"
+      [ngClass]="{'isActive': currentReminderType === ReminderMessageType.UNANSWERED}">
+      <div class="d-flex gap-4 align-items-center no-pointer-event">
+        <trudi-icon icon="aiSummaryStar" [svgClass]="'size-20'"></trudi-icon>
+        <div class="text-remider">Task emails awaiting your reply...</div>
+      </div>
+      <div class="total-reminder" *ngIf="!this.hiddenTotal">
+        {{ totalMessageByParam[ReminderMessageType.UNANSWERED] !== null ?
+        totalMessageByParam[ReminderMessageType.UNANSWERED] :
+        statisticMessageReminder?.unanswered}}
+      </div>
+    </div>
+  </div>
+  <div class="message-subTab-wrapper">
+    <trudi-tabs
+      [tabs]="emailSubTabs"
+      (changeTab)="handleChangeTab()"></trudi-tabs>
+  </div>
+  <router-outlet></router-outlet>
+</div>

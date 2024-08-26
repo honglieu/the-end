@@ -1,0 +1,16 @@
+<div class="content-wrapper">
+  <div class="success-icon">
+    <img src="/assets/icon/{{icon}}.svg" />
+  </div>
+  <div class="success-content">
+    <p *ngIf="!ticket">Message Sending</p>
+    <p *ngIf="ticket">Ticket Sent</p>
+    <div class="number-sent">
+      <div *ngIf="ticket">{{title}}</div>
+      <div *ngIf="!ticket">
+        The message is sending to {{numberSent}} {{numberSent > 1 ? 'recipients'
+        : 'recipient'}}
+      </div>
+    </div>
+  </div>
+</div>

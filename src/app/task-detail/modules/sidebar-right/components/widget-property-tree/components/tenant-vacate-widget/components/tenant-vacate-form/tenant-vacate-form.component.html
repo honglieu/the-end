@@ -1,0 +1,145 @@
+<div [formGroup]="tenantForm">
+  <div class="trudi-form-group gap-12">
+    <div class="trudi-form-control mw-50">
+      <div class="trudi-input-label">Select tenancy</div>
+      <trudi-form-control [control]="tenancy">
+        <ng-select
+          class="share-ng-select"
+          [items]="tenanciesOptions"
+          [ngClass]="{'input-error-select': tenancy.invalid && (tenancy.dirty || tenancy.touched) }"
+          formControlName="tenancy"
+          bindValue="id"
+          bindLabel="label"
+          [clearable]="true"
+          [virtualScroll]="true"
+          dropdownPosition="bottom"
+          notFoundText="No results found"
+          [readonly]="readonly || readonlyTenancy"
+          (change)="changeTenant($event)">
+          <ng-template
+            ng-option-tmp
+            let-item="item"
+            let-index="index"
+            let-search="searchTerm">
+            <div class="d-flex">
+              <span class="flex-1">{{item.label}}</span>
+              <img
+                width="16"
+                *ngIf="item.id === tenancy.value"
+                src="/assets/icon/check-success.svg"
+                alt="" />
+            </div>
+            <ng-template #original>{{item.label}}</ng-template>
+          </ng-template>
+        </ng-select>
+      </trudi-form-control>
+    </div>
+  </div>
+  <div class="trudi-form-group gap-12">
+    <div class="trudi-form-control mw-50">
+      <div class="trudi-input-label">Type</div>
+      <trudi-form-control [control]="vacateType">
+        <ng-select
+          id="vacate-type-select"
+          class="select-vacate-type share-ng-select"
+          [ngClass]="{'input-error-select': vacateType.invalid && (vacateType.dirty || vacateType.touched)}"
+          formControlName="vacateType"
+          bindLabel="text"
+          bindValue="value"
+          [items]="typeVacate"
+          [searchable]="true"
+          [clearable]="true"
+          placeholder="Select type"
+          [readonly]="readonly"
+          (change)="changeTypeVacate($event)">
+          <ng-template ng-option-tmp let-item="item">
+            <div class="y-center justify-content-between flex-1 w-100">
+              <div class="y-center gap-8 w-100 justify-content-between">
+                <div class="y-center gap-4">
+                  <span class="title">{{ item.text }}</span>
+                </div>
+                <img
+                  *ngIf="item.value === vacateType.value"
+                  class="icon-check"
+                  src="/assets/icon/check-success.svg"
+                  alt="selected-icon" />
+              </div>
+            </div>
+          </ng-template>
+        </ng-select>
+      </trudi-form-control>
+    </div>
+    <div class="trudi-form-control mw-50" *ngIf="isShowTermidate">
+      <div class="trudi-input-label">Termination date</div>
+      <trudi-form-control
+        [control]="terminationDate"
+        [errors]="[{'errorName': 'dateRange', 'errorMessage': 'Termination ' +  errorMessage}]">
+        <trudi-date-picker
+          class="pointer"
+          formControlName="terminationDate"
+          [trudiDisabled]="readonly"
+          [class.trudi-picker-error]="terminationDate?.invalid && (terminationDate?.dirty || terminationDate?.touched)">
+        </trudi-date-picker>
+      </trudi-form-control>
+    </div>
+  </div>
+
+  <div class="trudi-form-group gap-12">
+    <div class="trudi-form-control">
+      <div class="trudi-input-label">Notice Date</div>
+      <trudi-form-control
+        [control]="noticeDate"
+        [errors]="[{'errorName': 'dateRange', 'errorMessage': 'Notice ' +  errorMessage}]">
+        <trudi-date-picker
+          class="pointer"
+          formControlName="noticeDate"
+          [trudiDisabledDate]="disabledFutureDate"
+          [class.trudi-picker-error]="noticeDate.invalid && (noticeDate.dirty || noticeDate.touched)"
+          [trudiDisabled]="readonly">
+        </trudi-date-picker>
+      </trudi-form-control>
+    </div>
+    <div class="trudi-form-control">
+      <div class="trudi-input-label">Vacate Date</div>
+      <div class="form-input mt-6 trudi-date">
+        <trudi-form-control
+          [control]="vacateDate"
+          [errors]="[{'errorName': 'dateRange', 'errorMessage': 'Vacate ' +  errorMessage}]">
+          <trudi-date-picker
+            class="pointer"
+            formControlName="vacateDate"
+            [class.trudi-picker-error]="vacateDate.invalid && (vacateDate.dirty || vacateDate.touched)"
+            [trudiDisabled]="readonly">
+          </trudi-date-picker>
+        </trudi-form-control>
+      </div>
+    </div>
+    <div class="trudi-form-control">
+      <div class="trudi-input-label">Charge-to Date</div>
+      <div class="form-input mt-6 trudi-date">
+        <trudi-form-control
+          [control]="chargeToDate"
+          [errors]="[{'errorName': 'dateRange', 'errorMessage': 'Charge to ' +  errorMessage}]">
+          <trudi-date-picker
+            class="pointer"
+            formControlName="chargeToDate"
+            [class.trudi-picker-error]="chargeToDate.invalid && (chargeToDate.dirty || chargeToDate.touched)"
+            [trudiDisabled]="readonly">
+          </trudi-date-picker>
+        </trudi-form-control>
+      </div>
+    </div>
+  </div>
+  <div class="trudi-form-group">
+    <div class="trudi-form-control">
+      <trudi-form-control [control]="description">
+        <trudi-textarea
+          [label]="'Description'"
+          formControlName="description"
+          [maxCharacter]="255"
+          [rows]="2"
+          [disabled]="readonly"></trudi-textarea>
+      </trudi-form-control>
+    </div>
+  </div>
+</div>

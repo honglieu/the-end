@@ -1,0 +1,122 @@
+<trudi-step
+  [model]="model"
+  [showIconTitle]="false"
+  [hideProcessLine]="false"
+  [propertyTreeStep]="false"
+  (onProcess)="enableProcess()"
+  [buttonKey]="buttonKey"></trudi-step>
+
+<!-- <trudi-send-msg-v2
+  *ngIf="stepPopupState.sendMessage"
+  [configs]="sendMessageConfigs"
+  [rawMsg]="model?.fields.msgBody"
+  [listOfFiles]="model?.fields?.files || []"
+  (onBack)="onBackFromSendMsg()"
+  (onQuit)="closePopup()"
+  (onSendMsg)="onSendMsg($event)">
+</trudi-send-msg-v2> -->
+
+<resizable-modal-popup
+  *ngIf="stepPopupState.prescreen"
+  [show]="stepPopupState.prescreen"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [title]="modelData?.fields?.customControl?.preScreen?.title"
+  [footerTemplate]="footerModal"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="660"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  (onCancel)="closePopup()"
+  [isCustomMoveable]="true">
+  <ng-template #footerModal>
+    <div class="d-flex gap-12 capture-amount-footer">
+      <button
+        *ngIf="hasConfirmEssential"
+        trudi-btn
+        variant="outlined"
+        btnType="neutral"
+        (click)="onBack()">
+        Back
+      </button>
+      <button trudi-btn (click)="next()">Next</button>
+    </div>
+  </ng-template>
+  <div
+    *ngIf="amountOwingVacateForm"
+    [formGroup]="amountOwingVacateForm"
+    class="pre-screen__form">
+    <div class="pre-screen__row capture-amount-tenancy">
+      <trudi-form-control [control]="tenancy">
+        <trudi-single-select
+          bindLabel="name"
+          bindValue=""
+          [label]="currentCRM === ECRMSystem.PROPERTY_TREE ? 'Confirm tenancy': 'Confirm tenant'"
+          [placeholder]="currentCRM === ECRMSystem.PROPERTY_TREE ? 'Select tenancy': 'Select tenant'"
+          [formControl]="tenancy"
+          [items]="tenancyList"
+          (ngModelChange)="handleChangeTenancy()">
+          <ng-template
+            trudi-option-tmp
+            let-item="item"
+            let-valueSelected="valueSelected">
+            <div
+              class="trudi-select-label d-flex justify-content-between align-items-center w-100 gap-8">
+              <div class="y-center gap-4 overflow-hidden">
+                <div class="overflow-hidden">
+                  <div class="item-label">{{item?.name}}</div>
+                </div>
+              </div>
+              <div
+                *ngIf="valueSelected?.id && (valueSelected.id === item.id)"
+                class="d-flex align-items-center">
+                <trudi-icon icon="checkSuccess"></trudi-icon>
+              </div>
+            </div>
+          </ng-template>
+        </trudi-single-select>
+      </trudi-form-control>
+    </div>
+    <div class="pre-screen__row">
+      <trudi-form-control [control]="rentOwing" [checkSubmit]="checkSubmit">
+        <trudi-number-field
+          label="Rent owing"
+          [formControl]="rentOwing"
+          [maskLeadZero]="true"
+          [maskPattern]="maskPattern"
+          thousandSeparatorType=","
+          prefixText="$"
+          [checkSubmit]="checkSubmit"
+          [maxCharacter]="DEFAULT_CHAR_TRUDI_NUMBER_FIELD"
+          size="extra-large">
+        </trudi-number-field>
+      </trudi-form-control>
+    </div>
+    <div class="pre-screen__row">
+      <trudi-form-control [control]="invoiceFees" [checkSubmit]="checkSubmit">
+        <trudi-number-field
+          label="Outstanding invoices and fees"
+          [formControl]="invoiceFees"
+          [maskLeadZero]="true"
+          [maskPattern]="maskPattern"
+          thousandSeparatorType=","
+          [formatOnBlur]="true"
+          prefixText="$"
+          [checkSubmit]="checkSubmit"
+          [maxCharacter]="DEFAULT_CHAR_TRUDI_NUMBER_FIELD"
+          size="extra-large">
+        </trudi-number-field>
+      </trudi-form-control>
+    </div>
+    <div class="pre-screen__row">
+      <trudi-textarea
+        label="Notes"
+        [formControl]="notes"
+        [trim]="false"
+        [maxCharacter]="255">
+      </trudi-textarea>
+    </div>
+  </div>
+</resizable-modal-popup>

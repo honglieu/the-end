@@ -1,0 +1,10 @@
+<div
+  class="chip"
+  [ngStyle]="{'height': height}"
+  [ngClass]="{'isActive': isActive}"
+  [style]="styles"
+  (click)="handleClick(data)">
+  <ng-content select=".chip-start-icon"> </ng-content>
+  <div [style]="titleStyles" class="chip-content">{{title}}</div>
+  <ng-content select=".chip-end-icon"> </ng-content>
+</div>

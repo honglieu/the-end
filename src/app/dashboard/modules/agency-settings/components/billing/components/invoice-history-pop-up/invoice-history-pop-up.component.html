@@ -1,0 +1,16 @@
+<trudi-modal
+  [(visible)]="visible"
+  [autoFocus]="null"
+  title="Invoice history"
+  subTitle=""
+  [isHideFooter]="true"
+  (triggerAfterClose)="closePopup.emit()">
+  <div class="invoice-list-wrapper" #invoiceList>
+    <invoice-history
+      *ngFor="let item of invoiceHistoryData; index as i"
+      [invoiceHistoryData]="item"
+      [previousInvoice]="invoiceHistoryData[i + 1] || invoiceHistoryData[i]"
+      [isFirstMonth]="isFirstMonth(item, i)"
+      (toggleDropdown)="handleInvoiceDropdown($event, i)"></invoice-history>
+  </div>
+</trudi-modal>

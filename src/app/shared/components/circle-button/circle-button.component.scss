@@ -1,0 +1,11 @@
+.btn-circle {
+    &:first-child {
+        float: right;
+        margin-right: .2rem;
+    }
+    .button-circle {
+        border-radius: 50%;
+        border: none;
+        background: var( --white);
+    }
+}

@@ -1,0 +1,84 @@
+<resizable-modal-popup
+  [modalId]="modalId"
+  *ngIf="isShowPopupSync"
+  [showTitle]="true"
+  [title]="'Compliance item'"
+  [iconName]="'ptLogo'"
+  [styleIcon]="null"
+  [classIconTitle]="null"
+  [show]="isShowPopupSync"
+  [draggable]="true"
+  [resizable]="false"
+  [hasBackdrop]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  (onCancel)="cancel()"
+  [isCustomMoveable]="true"
+  [footerTemplate]="footerModal"
+  class="sync-compliance-popup-container">
+  <div
+    *ngIf="isEdit && complianceStatus"
+    class="status-compliance d-flex align-items-center">
+    <span class="status-title">Status</span>
+    <trudi-badge
+      [text]="complianceStatus | uppercaseFirstLetter"
+      [variant]="complianceStatus === complianceStatusEnum.ACTIVE ? 'primary' : 'error'">
+    </trudi-badge>
+  </div>
+  <compliance-form
+    #complianceFormComponent
+    [listCategoryByTask]="listCategoryFilter"
+    [tenanciesOptions]="tenanciesOptions"
+    [taskNameId]="taskNameId"
+    [currentDataEdit]="currentDataEdit"
+    [syncPTStatus]="syncPTStatus"
+    [isShowPopupSync]="isShowPopupSync"
+    [isShowSmokeAlarmField]="isShowSmokeAlarmField"
+    [accountOptions]="accountOptions"
+    [syncInprogress]="syncInprogress">
+  </compliance-form>
+
+  <ng-template #footerModal>
+    <div
+      class="lease-footer-wrap d-flex align-items-center justify-content-between w-100">
+      <div class="info-status d-flex align-items-center gap-4">
+        <trudi-icon
+          [ngClass]="{'spin': syncPTStatus === SYNC_TYPE.INPROGRESS}"
+          [icon]="changeData ? syncData[SYNC_TYPE.UN_SYNC]?.icon : syncData[syncPTStatus]?.icon"
+          viewBox="auto"
+          svgClass="size-16">
+        </trudi-icon>
+        <span
+          >{{changeData ? syncData[SYNC_TYPE.UN_SYNC]?.text :
+          syncData[syncPTStatus]?.text}}</span
+        >
+        <ng-container
+          *ngIf="lastTimeSynced && syncPTStatus !== SYNC_TYPE.INPROGRESS">
+          <span>•</span>
+          <span class="sync-text"
+            >{{lastTimeSynced | formatDateTime | push}}</span
+          >
+        </ng-container>
+      </div>
+      <div class="footer-wrapper d-flex" [style.gap.px]="12">
+        <button
+          *ngIf="!isEdit || (isEdit && isNextFromUpdateModal)"
+          trudi-btn
+          variant="outlined"
+          btnType="neutral"
+          (click)="back()">
+          <span class="btn-text">Back</span>
+        </button>
+        <button
+          *ngIf="!isHiddenSyncButton"
+          trudi-btn
+          [disabled]="isConsole || syncPTStatus === SYNC_TYPE.INPROGRESS || isArchiveMailbox"
+          (click)="syncCompliance()"
+          [appE2E]="'pt-widget-new-compliance'">
+          <span class="btn-text no-pointer-event">Sync to Property Tree</span>
+        </button>
+      </div>
+    </div>
+  </ng-template>
+</resizable-modal-popup>

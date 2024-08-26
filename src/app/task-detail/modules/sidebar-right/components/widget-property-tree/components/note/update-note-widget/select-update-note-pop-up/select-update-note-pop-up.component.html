@@ -1,0 +1,119 @@
+<ng-template #footerModal>
+  <div
+    class="wrapper-footer-notes-update d-flex align-items-center justify-content-end">
+    <button
+      (click)="handleNext()"
+      class="trudi-btn trudi-btn-large trudi-btn-primary">
+      Next
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #headerModal>
+  <div class="select-update-note-header-modal">
+    <div class="header-modal">
+      <trudi-icon icon="ptLogo" class="cursor-pointer"></trudi-icon>
+      <div class="header-title">Update note</div>
+    </div>
+    <button
+      (click)="handleCloseModal()"
+      class="trudi-icon close-btn cursor-pointer close-icon trudi-ui-btn-circle">
+      <trudi-icon
+        [style]="{ 'width.px': 24, 'height.px': 24, color: '#646464' }"
+        icon="closeIcon"></trudi-icon>
+    </button>
+  </div>
+</ng-template>
+<resizable-modal-popup
+  *ngIf="visible"
+  [modalId]="modalId"
+  [show]="visible"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [headerTemplate]="headerModal"
+  [footerTemplate]="footerModal"
+  (onCancel)="handleCloseModal()"
+  [isCustomMoveable]="true"
+  class="select-update-note-popup">
+  <div class="select-note-body">
+    <div
+      class="d-flex flex-dir-column align-items-center justify-content-start align-items-start gap-16 text-container">
+      Select note
+    </div>
+    <div class="select-form-wrapper" [formGroup]="selectNoteRequest">
+      <div class="form-select-wrapper form-distance">
+        <ng-container>
+          <ng-select
+            [loading]="loadingState.listExistTask"
+            bindValue="id"
+            bindLabel="label"
+            formControlName="selectExistNote"
+            [items]="listSelect"
+            [clearable]="true"
+            [searchable]="true"
+            [searchFn]="customSearchFn"
+            [editableSearchTerm]="false"
+            [clearOnBackspace]="true"
+            [virtualScroll]="true"
+            [notFoundText]="notFoundItemText"
+            [ngClass]="{'red-border': !selectExistControl.valid && (selectExistControl.touched || selectExistControl.dirty)}"
+            (blur)="ngBlur()">
+            <ng-template
+              ng-label-tmp
+              let-item="item"
+              let-item$="item$"
+              let-index="index">
+              <p class="item-text-selected">{{item?.label}}</p>
+            </ng-template>
+            <ng-template
+              ng-option-tmp
+              let-item="item"
+              let-item$="item$"
+              let-index="index"
+              let-search="searchTerm"
+              class="select-document">
+              <div
+                class="d-flex justify-content-between align-items-center active-item">
+                <div>
+                  <p
+                    [ngOptionHighlight]="search ? search : ''"
+                    class="item-text-selected">
+                    {{item?.entityType}} Note - {{item?.categoryName}}
+                    {{item?.nameUserPropertyGroup ? "(" +
+                    (item?.nameUserPropertyGroup) + ")" : "" }}
+                  </p>
+                  <div
+                    [ngOptionHighlight]="search ? search : ''"
+                    class="item-text-description">
+                    {{item?.description}}
+                  </div>
+                </div>
+                <trudi-icon
+                  svgClass="size-16"
+                  *ngIf="item$.selected"
+                  [icon]="'checkSuccess'"
+                  alt=""></trudi-icon>
+              </div>
+            </ng-template>
+          </ng-select>
+        </ng-container>
+        <ng-container
+          *ngIf="!selectExistControl.valid && (selectExistControl.touched || selectExistControl.dirty)">
+          <div>
+            <div class="content-require d-flex align-items-center">
+              <trudi-icon
+                [icon]="'iconWarningRedFit'"
+                class="d-flex align-items-center"
+                alt="error"></trudi-icon>
+              <span class="require-text">Required field</span>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</resizable-modal-popup>

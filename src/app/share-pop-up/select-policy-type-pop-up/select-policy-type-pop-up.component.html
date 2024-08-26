@@ -1,0 +1,168 @@
+<div
+  nz-dropdown
+  [nzOverlayClassName]="visibleSelectPolicy ? 'add-policy-overlay' : 'button-add'"
+  [nzVisible]="visible || visibleSelectPolicy"
+  nzTrigger="click"
+  [nzDropdownMenu]="selectPolicyDropdownMenu"
+  [nzOverlayStyle]="visibleSelectPolicy ? styles.popup : styles.button"
+  (nzVisibleChange)="onVisibleChange($event)"></div>
+
+<nz-dropdown-menu #selectPolicyDropdownMenu="nzDropdownMenu">
+  <div
+    id="select-policy-dropdown-menu"
+    [ngClass]="{'cursor-pointer': !visibleSelectPolicy}">
+    <!-- use (click)="$event.stopPropagation()" to prevent text selection from being lost when clicking the button in the tiny-editor -->
+    <!-- by default, clicking outside the modal will remove the current selection -->
+    <div
+      class="select-policy-dropdown-menu-container"
+      (click)="$event.stopPropagation()"
+      (mousedown)="handleClickAdd()">
+      <ng-container
+        *ngTemplateOutlet="visibleSelectPolicy ? contentTemplate : buttonAdd"></ng-container>
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<ng-template #buttonAdd
+  ><div class="add-policy-btn">Add to policy</div></ng-template
+>
+
+<ng-template #contentTemplate>
+  <div
+    class="container-form gap-16"
+    (click)="$event.stopPropagation()"
+    [formGroup]="addPolicyFormGroup">
+    <div class="header-title">
+      Save this information to a policy to improve the accuracy of AI replies.
+    </div>
+
+    <!-- preview selected text -->
+    @if (selectedText) {
+    <div class="trudi-highlight-text" [innerHTML]="selectedText"></div>
+    }
+
+    <div class="option-add-policy d-flex justify-content-start">
+      <trudi-radio-button
+        [options]="checkboxList"
+        formControlName="addOption"
+        [classType]="EClassType.ROW">
+      </trudi-radio-button>
+    </div>
+    @if(isExisting){
+    <div class="policy-list">
+      <label>Select policy</label>
+      <trudi-form-control>
+        <trudi-single-select
+          [items]="policyList"
+          [stopPropagationClick]="true"
+          bindLabel="name"
+          bindValue="id"
+          [clearable]="false"
+          formControlName="policy"
+          (scrollToEnd)="onScrollToEnd()"
+          [loading]="isLoading"
+          [isDisabled]="disabledPolicySelect"
+          placeholder="Select policy"
+          (triggerEventBlur)="handleBlurPolicy($event)"
+          [serversideSearch]="true"
+          (search)="handleSearchPolicy($event)">
+          <ng-template
+            trudi-option-tmp
+            let-item="item"
+            let-item$="item$"
+            let-searchTerm="searchTerm">
+            <div class="sub-item align-items-center">
+              @if (item?.isSkeleton) {
+              <nz-skeleton-element
+                nzType="input"
+                [nzActive]="true"></nz-skeleton-element>
+              } @else {
+              <div class="label-container d-flex gap-4">
+                <div class="d-flex w-100">
+                  <span
+                    class="text-ellipsis"
+                    disableTooltipOnWidth
+                    [maxWidthTooltip]="350"
+                    nz-tooltip
+                    nzTooltipPlacement="top"
+                    [nzTooltipTitle]="item?.name"
+                    [nzTooltipOverlayClassName]="'tooltip-policy-label'"
+                    [ngOptionHighlight]="searchTerm || ''"
+                    >{{item?.name}}</span
+                  >
+                </div>
+              </div>
+              @if (item$.selected) {
+              <div class="d-flex align-items-center">
+                <trudi-icon icon="checkSuccess"></trudi-icon>
+              </div>
+              } }
+            </div>
+          </ng-template>
+        </trudi-single-select>
+      </trudi-form-control>
+    </div>
+    @if(selectedPolicy) {
+    <div class="policy-version">
+      <label>Select version</label>
+      <trudi-form-control>
+        <trudi-single-select
+          [items]="policyVersion"
+          bindLabel="name"
+          [stopPropagationClick]="true"
+          bindValue="id"
+          [clearable]="false"
+          formControlName="version"
+          placeholder="Select version">
+          <ng-template
+            trudi-option-tmp
+            let-item="item"
+            let-item$="item$"
+            let-searchTerm="searchTerm">
+            <div class="sub-item align-items-center">
+              <div class="label-container d-flex gap-4">
+                <div
+                  disableTooltipOnWidth
+                  showTooltip
+                  nz-tooltip
+                  nzTooltipPlacement="top"
+                  [maxWidthTooltip]="item?.isSuggested ? 340 : 400"
+                  [nzTooltipTitle]="item?.name"
+                  [nzTooltipOverlayClassName]="'tooltip-policy-label'"
+                  class="d-flex"
+                  [ngStyle]="{'max-width': item?.isSuggested ? '85%' : '100%'}">
+                  <span
+                    class="text-ellipsis"
+                    [ngOptionHighlight]="searchTerm ? searchTerm : ''"
+                    >{{item?.name}}</span
+                  >
+                </div>
+                @if(item?.isSuggested){
+                <trudi-badge text="Suggest" size="small" variant="role">
+                </trudi-badge>
+                }
+              </div>
+              <div *ngIf="item$.selected" class="d-flex align-items-center">
+                <trudi-icon icon="checkSuccess"></trudi-icon>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template trudi-footer-tmp>
+            <button
+              class="btn-add-custom-version"
+              (click)="handleAddCustomPolicy($event)">
+              <trudi-icon icon="plusInvite"></trudi-icon>
+              <span>Create custom version</span>
+            </button>
+          </ng-template>
+        </trudi-single-select>
+      </trudi-form-control>
+    </div>
+    } }
+    <div class="d-flex justify-content-end policy-btn">
+      <button trudi-btn (click)="$event.stopPropagation();handleNext()">
+        Next
+      </button>
+    </div>
+  </div>
+</ng-template>

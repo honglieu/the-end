@@ -1,0 +1,172 @@
+@import 'function';
+
+#emergency-contacts {
+  padding: 24px 32px;
+
+  .warning-notice {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    @include fontSetup(
+      var(--fg-neutral-weaker, #85888e),
+      12px,
+      16px,
+      normal,
+      500
+    );
+    margin-bottom: 8px;
+  }
+
+  .wrapper-box {
+    padding-bottom: 16px;
+
+    .box-title {
+      @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+      padding-bottom: 6px;
+    }
+  }
+
+  &-content {
+    width: 100%;
+  }
+
+  trudi-multi-select ng-select {
+    .trudi-label-wrapper {
+      max-width: 248px !important;
+      width: 100%;
+      padding: 2px 4px !important;
+    }
+    .ng-arrow-wrapper {
+      top: 12px !important;
+      transform: unset !important;
+    }
+  }
+
+  ng-select.trudi-single-select:not(.ng-select-multiple) .ng-select-container {
+    height: 46px;
+    padding: 12px 16px !important;
+    .ng-value-container .ng-input > input {
+      padding-left: 16px;
+    }
+  }
+
+  ng-select.trudi-single-select.ng-select-multiple
+    .ng-select-container.ng-has-value {
+    padding: 6px 24px 6px 16px !important;
+  }
+
+  .ng-select.ng-select-opened:hover:not(.ng-select-focused):not(
+      .ng-select-disabled
+    )
+    > .ng-select-container {
+    border-color: var(--border-neutral-dark, #ececed) !important;
+    background: var(--bg-base, #fff) !important;
+    box-shadow: 0px 0px 0px 1px var(--border-brand),
+      0px 0px 0px 3px var(--brand-300, #b9e8e4) !important;
+  }
+
+  .ng-select.ng-select-disabled > .ng-select-container {
+    background-color: var(--bg-neutral-tonal-weaker, #fafafa) !important;
+
+    .item-label span {
+      color: var(--fg-neutral-stronger, #333741) !important;
+    }
+
+    .ng-arrow {
+      background: var(--fg-neutral-weakest, #cecfd2);
+      -webkit-mask: url('/assets/icon/chevron-up.svg') no-repeat center;
+      mask: url('/assets/icon/chevron-up.svg') no-repeat center;
+      background-size: contain;
+    }
+
+    .ng-value {
+      background: var(--white) !important;
+    }
+  }
+
+  .trudi-select-label {
+    @include fontSetup(
+      var(--fg-neutral-normal, #61646C) !important,
+      14px,
+      20px,
+      normal,
+      500
+    );    
+  }
+
+  .emergency-contacts-table {
+    th,
+    td,
+    .ant-table-footer {
+      padding: 12px 16px !important;
+    }
+    td {
+      vertical-align: top;
+    }
+    th {
+      border: none;
+      background: var(--bg-neutral-tonal-normal, #f5f5f6);
+      @include fontSetup(
+        var(--fg-neutral-normal, #61646c),
+        14px,
+        20px,
+        normal,
+        600
+      );
+      &::before {
+        display: none;
+      }
+    }
+    &-skeleton {
+      td,
+      .ant-skeleton {
+        padding: 16px !important;
+      }
+      td {
+        vertical-align: unset !important;
+      }
+    }
+    .ant-table-footer {
+      background: var(--white);
+    }
+    .ant-table-tbody > tr.ant-table-row:hover > td,
+    .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+      background: var(--white);
+    }
+    .ant-table-placeholder {
+      display: none;
+    }
+    &-readonly,
+    &-skeleton {
+      .ant-table-container {
+        border-radius: 8px;
+      }
+      .ant-table-tbody .ant-table-row.last-item {
+        .ant-table-cell {
+          border-radius: 8px;
+        }
+      }
+    }
+  }
+
+  .ant-skeleton {
+    .ant-skeleton-content .ant-skeleton-paragraph li {
+      width: 70% !important;
+    }
+  }
+
+  .emergency-contacts-title.ant-skeleton {
+    .ant-skeleton-content .ant-skeleton-paragraph li {
+      width: 132px !important;
+      height: 14px !important;
+    }
+  }
+
+  .emergency-contacts-subtitle.ant-skeleton {
+    .ant-skeleton-content .ant-skeleton-paragraph li {
+      width: 616px !important;
+      height: 14px !important;
+      margin-bottom: 28px;
+    }
+  }
+}

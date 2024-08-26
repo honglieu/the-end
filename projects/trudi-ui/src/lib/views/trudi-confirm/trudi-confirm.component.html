@@ -1,0 +1,20 @@
+<trudi-modal
+  [visible]="true"
+  type="confirm"
+  [title]="configs.title"
+  [okText]="configs.okText"
+  [cancelText]="configs.cancelText"
+  [subTitle]="configs.subtitle"
+  [colorBtn]="configs.colorBtn"
+  [iconName]="configs.iconName"
+  [closable]="configs.closable"
+  [className]="configs.className"
+  [modelWidth]="configs.modelWidth"
+  [checkboxLabel]="configs.checkboxLabel"
+  [allowCheckbox]="configs.allowCheckbox"
+  [hiddenCancelBtn]="configs.hiddenCancelBtn"
+  [dataE2E]="configs.dataE2E"
+  (onOk)="confirm($event)"
+  (onCancel)="cancel()">
+  <ng-container *ngTemplateOutlet="configs.content"></ng-container>
+</trudi-modal>

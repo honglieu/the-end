@@ -1,0 +1,36 @@
+<div class="verified-wrapper">
+  <div class="header">
+    <div class="detail-verified">
+      <div class="send-verified-icon">
+        <img src="/assets/icon/icon-email.svg" />
+      </div>
+      <div class="send-verified-text">
+        <p class="send-verified-text-header">Send Verify Email</p>
+        <div class="send-verified-text-des">
+          Send 'Verify your email address' email to {{email}}
+        </div>
+      </div>
+    </div>
+    <trudi-icon
+      data-e2e="exit-btn"
+      icon="closeBtn"
+      (click)="closeModal(true)"
+      class="close-modal-btn"></trudi-icon>
+  </div>
+  <div class="btn-wrapper">
+    <button
+      data-e2e="button-cancel"
+      type="button"
+      class="cancel-btn"
+      (click)="closeModal(true)">
+      <span class="btn-text"> Cancel </span>
+    </button>
+    <button
+      data-e2e="button-send"
+      type="button"
+      class="confirm-btn"
+      (click)="send()">
+      <span class="btn-text"> Send </span>
+    </button>
+  </div>
+</div>

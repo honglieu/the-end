@@ -1,0 +1,17 @@
+<ng-container *ngIf="tenantVacate">
+  <div class="mt-4">
+    <widget-common
+      title="VACATE DETAILS"
+      [buttonKey]="EButtonStepKey.VACATE_DETAILS"
+      [type]="tenantVacate?.status"
+      [externalError]="tenantVacate?.externalError"
+      [firstTimeSyncSuccess]="tenantVacate?.firstTimeSyncSuccess"
+      (remove)="removePtWidgetTenantVacate()"
+      (retry)="retryPtWidgetTenantVacate(tenantVacate)"
+      (showModal)="showModalTenantVacate(tenantVacate)"
+      [isDislayBtnCancel]="tenantVacate?.isSuccessful">
+      <card-widget-tenant-vacate
+        [listWidgetTenantVacate]="tenantVacate"></card-widget-tenant-vacate>
+    </widget-common>
+  </div>
+</ng-container>

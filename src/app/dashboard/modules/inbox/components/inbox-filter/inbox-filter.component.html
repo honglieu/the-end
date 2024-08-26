@@ -1,0 +1,49 @@
+<ng-template #loadingContent>
+  <div
+    class="filter-container"
+    [class.message-view]="[EViewDetailMode.APP_MESSAGE, EViewDetailMode.MESSAGE, EViewDetailMode.SMS_MESSAGE].includes(taskDetailViewMode)"
+    [class.filter-container-focus]="(sharedMessageViewService.isSearchBoxFocused$ | async)">
+    <div
+      class="search-wrapper"
+      [class.search-wrapper-expanded]="(sharedMessageViewService.isSearchBoxFocused$ | async)">
+      <trudi-text-field
+        (triggerEventFocus)="searchBoxEventHandler($event)"
+        (triggerEventBlur)="searchBoxEventHandler($event)"
+        e2eId="inbox-search-box"
+        [ngModel]="searchText"
+        iconLeft="iconSearch"
+        (ngModelChange)="handleChangeSearchText($event)"
+        placeholder="Search"
+        [allowPreventDefault]="false"
+        [clearable]="true"
+        (clear)="clearInputHandler($event)"></trudi-text-field>
+    </div>
+    <div
+      class="filter-dropdown"
+      nz-tooltip
+      nzTooltipPlacement="bottom"
+      [nzTooltipTitle]="isEnableTooltip ? 'Filters' : ''">
+      <filter-dropdown
+        [taskDetailViewMode]="taskDetailViewMode"></filter-dropdown>
+    </div>
+  </div>
+</ng-template>
+<ng-container
+  *ngIf="(inboxService.isLoadingMailBox$ | async), else loadingContent">
+  <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex gap-8">
+      <nz-skeleton
+        [nzParagraph]="false"
+        [nzActive]="true"
+        class="size-60"></nz-skeleton>
+      <nz-skeleton
+        [nzParagraph]="false"
+        [nzActive]="true"
+        class="size-16"></nz-skeleton>
+    </div>
+    <nz-skeleton
+      [nzParagraph]="false"
+      [nzActive]="true"
+      class="size-320"></nz-skeleton>
+  </div>
+</ng-container>

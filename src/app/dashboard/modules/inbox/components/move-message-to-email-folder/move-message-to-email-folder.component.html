@@ -1,0 +1,72 @@
+<trudi-modal
+  *ngIf="visible"
+  [modelWidth]="624"
+  [visible]="visible"
+  [autoFocus]="null"
+  title="Move to email folder"
+  [subTitle]="this.conversation?.id ? '1 message selected' : subTitleMoveToTask"
+  [hiddenCancelBtn]="true"
+  (onCancel)="handleClose()">
+  <div class="wrapper" [formGroup]="moveFormGroup">
+    <div class="dropdown-title">Email folder</div>
+    <div class="dropdown-input w-100">
+      <div style="width: 100%">
+        <trudi-form-control>
+          <trudi-single-select
+            formControlName="moveEmailFolder"
+            [items]="folderEmails"
+            [(ngModel)]="newLabelId"
+            [enableSearch]="false"
+            bindLabel="title"
+            bindValue="internalId"
+            [required]="true"
+            [label]="label"
+            [enableSearch]="true"
+            placeholder="Select folder"
+            name="selectedEmailFolder">
+            <ng-template
+              trudi-option-tmp
+              let-item="item"
+              let-searchTerm="searchTerm">
+              <div class="list-item-folder">
+                <div
+                  class="wrapper-item"
+                  [style.paddingLeft]="8*item.level+'px'">
+                  <div class="d-flex">
+                    <span class="wrapper-icon">
+                      <trudi-icon
+                        icon="iconFolder"
+                        [style]="{'width.px': 18, 'height.px': 18}"></trudi-icon>
+                    </span>
+                    <p
+                      class="item-text"
+                      [style.maxWidth]="'calc(504px - ' + (8 * item.level) + 'px )'">
+                      {{item.title}}
+                    </p>
+                  </div>
+                  <div class="wrapper-icon mr-8">
+                    <trudi-icon
+                      icon="checkSuccess"
+                      [style]="{ 'width.px': 20, 'height.px': 20}"
+                      *ngIf="item.internalId === newLabelId"></trudi-icon>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </trudi-single-select>
+        </trudi-form-control>
+      </div>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <button
+      appE2E
+      [e2eId]="isMailFolder ? 'email-details-move-to-email-folder':'move-to-email-confirm-button'"
+      [disabled]="isConsole"
+      trudi-btn
+      class="d-flex align-items-center gap-8 button-confirm"
+      (click)="onSubmit()">
+      Confirm
+    </button>
+  </ng-template>
+</trudi-modal>

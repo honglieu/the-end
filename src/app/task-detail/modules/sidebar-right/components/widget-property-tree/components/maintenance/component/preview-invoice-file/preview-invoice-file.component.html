@@ -1,0 +1,25 @@
+<ng-container [ngSwitch]="fileType">
+  <ng-template [ngSwitchCase]="(eAvailableFileIcon.PDF)">
+    <trudi-pdf-viewer
+      class="preview-container"
+      [showSpinner]="true"
+      [download]="false"
+      [openFile]="false"
+      [viewBookmark]="false"
+      [pdfUrl]="fileLink"></trudi-pdf-viewer>
+  </ng-template>
+
+  <ng-template [ngSwitchCase]="(eAvailableFileIcon.Image)">
+    <div>
+      <img [src]="fileLink" alt="invoice image" class="preview-container" />
+    </div>
+  </ng-template>
+
+  <ng-template [ngSwitchCase]="(eAvailableFileIcon.Doc)">
+    <ngx-doc-viewer
+      class="full-size preview-container"
+      [url]="fileLink"
+      viewer="office">
+    </ngx-doc-viewer>
+  </ng-template>
+</ng-container>

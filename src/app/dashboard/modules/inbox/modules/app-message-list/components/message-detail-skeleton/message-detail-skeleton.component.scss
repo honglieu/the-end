@@ -1,0 +1,248 @@
+:host::ng-deep {
+
+  .wrapper-relative {
+    position: relative;
+    width: 100%;
+  }
+
+
+  .wrapper-loading-message {
+    background-color: var(--gray-50);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+
+    .ant-skeleton-title {
+      border-radius: 10px;
+    }
+
+    .skeleton-conversation {
+      width: 99.8%;
+      height: 71px;
+      margin: auto;
+      background-color: var(--white);
+      border-bottom: 0.5px solid var(--gray-200);
+
+      .d-flex {
+        height: 22px;
+        margin-left: 10px;
+
+        .skeleton-left {
+          width: 100%;
+          margin-left: 10px;
+          padding-right: 50px;
+          display: flex;
+          flex-direction: row;
+
+          .d-flex {
+            padding-right: 50px;
+          }
+
+          .skt-conversation-title {
+            width: 100px;
+            height: 25px;
+          }
+
+          .skt-conversation-content {
+            width: 50px;
+            height: 25px;
+          }
+        }
+
+        .skeleton-right {
+          height: 70px;
+          padding-left: 22px;
+          text-align: right;
+          border-left: 0.5px solid var(--gray-200);
+
+          .skeleton-circle {
+            margin-top: 25px;
+            padding-right: 22px;
+          }
+        }
+      }
+    }
+
+    .skeleton-header-content {
+      padding: 12px;
+      margin: auto;
+      background-color: var(--white);
+
+      &.message-view {
+        .skeleton-content.message-title {
+          width: 130px !important;
+        }
+
+        .skeleton-content.property-address {
+          width: 258px;
+        }
+
+        ::ng-deep {
+          .ant-skeleton-content .ant-skeleton-title {
+            margin-top: 0;
+          }
+
+          .map-icon .ant-skeleton-avatar.ant-skeleton-avatar-circle {
+            width: 15px;
+            height: 15px;
+          }
+        }
+      }
+
+      .d-flex {
+        .skeleton-left {
+          width: 100%;
+
+          .skeleton-content {
+            height: 22px;
+          }
+        }
+      }
+    }
+
+    .skeleton-card-message {
+      height: 180px;
+      margin: 12px;
+      background-color: var(--white);
+      border: 1px solid transparent;
+      border-radius: 10px;
+
+      .border-bt {
+        border-bottom: 0.5px solid rgba(100, 100, 100, 0.2);
+      }
+
+      .skeleton-circle {
+        margin-top: 4px;
+        margin-left: 5px;
+      }
+
+      .skeleton-title-left {
+        width: 72px;
+        margin-left: 12px;
+      }
+
+      .skeleton-title-right {
+        width: 100px;
+        margin-right: 12px;
+      }
+
+      .skeleton-content {
+        height: 25px;
+        margin: 0 12px;
+
+        .skeleton-sm {
+          h3.ant-skeleton-title {
+            width: 86% !important;
+          }
+        }
+
+        .skeleton-md {
+          h3.ant-skeleton-title {
+            width: 93% !important;
+          }
+        }
+
+        .skeleton-lg {
+          h3.ant-skeleton-title {
+            width: 98% !important;
+          }
+        }
+      }
+    }
+
+    .skeleton-footer-content {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      background-color: var(--white);
+      margin: 0 2px;
+      padding: 12px;
+
+      .sleleton-textarea {
+        width: 100%;
+        height: 120px;
+        background-color: var(--gray-50);
+        border-radius: 10px;
+      }
+    }
+
+    .bottom-section {
+      bottom: 12px;
+      left: 50%;
+      transform: translate(-50%, 0);
+      position: absolute;
+
+      ::ng-deep .ant-skeleton-element .ant-skeleton-button {
+        width: 400px !important;
+        height: 40px;
+        border-radius: 8px;
+      }
+    }
+
+    @media screen and (min-width: 1024px) and (max-width: 1629px) {
+      .skeleton-conversation {
+        .skeleton-left {
+
+          .d-flex:nth-child(3),
+          .d-flex:nth-child(4) {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  .app-message-header-skeleton {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 100%;
+    background: var(--gray-50);
+
+    .header-section {
+      background: var(--white);
+      padding: 12px;
+      border-bottom: 1px solid var(--gray-200);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      .info-row {
+        &-first {
+          display: flex;
+          align-items: center;
+        }
+
+        ::ng-deep nz-skeleton {
+          .ant-skeleton-content {
+            .ant-skeleton-title {
+              margin-top: 0 !important;
+            }
+          }
+        }
+
+        ::ng-deep nz-skeleton {
+          .ant-skeleton-header {
+            padding-right: 0px !important;
+          }
+        }
+
+        ::ng-deep nz-skeleton-element {
+          .ant-skeleton-avatar-lg {
+            width: 25px !important;
+            height: 25px !important;
+          }
+        }
+
+        &-second {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,68 @@
+:host::ng-deep {
+
+    .app-message-header-skeleton {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        z-index: 99;
+        width: 100%;
+        background: var(--gray-50);
+
+        .ant-skeleton-title {
+          border-radius: 10px;
+        }
+      
+        .header-section {
+          height: 90px;
+          background: var(--white);
+          padding: 12px;
+          border-bottom: 1px solid var(--gray-200);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+      
+          .info-row {
+            &-first {
+              display: flex;
+              align-items: center;
+            }
+      
+            ::ng-deep nz-skeleton {
+              .ant-skeleton-content {
+                .ant-skeleton-title {
+                  margin-top: 0 !important;
+                }
+              }
+            }
+      
+            ::ng-deep nz-skeleton {
+              .ant-skeleton-header {
+                padding-right: 0px !important;
+              }
+            }
+      
+            ::ng-deep nz-skeleton-element {
+              .ant-skeleton-avatar-lg {
+                width: 25px !important;
+                height: 25px !important;
+              }
+            }
+
+            .circle-sm {
+              ::ng-deep nz-skeleton-element {
+              .ant-skeleton-avatar-lg {
+                width: 16px !important;
+                height: 16px !important;
+              }
+            }
+            }
+      
+            &-second {
+              display: flex;
+              align-items: center;
+              gap: 8px;
+            }
+          }
+        }
+      }
+}

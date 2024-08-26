@@ -1,0 +1,13 @@
+@import 'function';
+
+.message-header {
+  @include fontSetup(var(--fg-neutral-normal, #61646C), 12px, 16px, normal, 400);
+  margin-bottom: 4px;
+}
+
+.hover-underline {
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+}

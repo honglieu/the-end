@@ -1,0 +1,163 @@
+@import 'function';
+
+:host {
+  display: block;
+
+  ::ng-deep {
+    mark.highlight {
+      background-color: var(--bg-tenant-solid-normal);
+      color: unset;
+      border-radius: 2px;
+    }
+  }
+
+  &:hover {
+    background-color: var(--bg-neutral-tonal-stronger, #f0f1f1);
+  }
+
+  &:active {
+    background-color: var(--bg-neutral-tonal-strongest, #ececed);
+  }
+
+  &:focus {
+    background-color: var(--bg-neutral-tonal-strongest, #ececed);
+  }
+
+  .search-result-row-wrapper {
+    padding: 12px 16px;
+    @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 400);
+
+    .sender-name {
+      color: var(--fg-neutral-stronger);
+    }
+
+    .email-title {
+      @include fontSetup(var(--fg-neutral-strongest), 14px, 20px, normal, 600);
+      max-width: 84%;
+    }
+
+    .property-address {
+      @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 400);
+
+      ::ng-deep trudi-icon svg path {
+        fill: var(--fg-neutral-normal);
+      }
+    }
+
+    .email-body {
+      @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+    }
+
+    .task-title,
+    .task-title-content {
+      @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, null);
+    }
+
+    .task-title,
+    .task-title-content {
+      font-weight: 400;
+    }
+
+    .task-title-content {
+      font-weight: 500;
+    }
+
+    .customBadge {
+      max-width: 150px;
+      background-color: var(--bg-neutral-tonal-stronger);
+      color: var(--fg-neutral-normal);
+
+      ::ng-deep trudi-icon svg-icon svg {
+        width: 12.8px;
+        height: 12.8px;
+        min-width: 12.8px;
+        min-height: 12.8px;
+        margin-left: -4px;
+        border-radius: 50%;
+      }
+    }
+    .customIconTemplate {
+      width: 12.8px;
+      height: 12.8px;
+      min-width: 12.8px;
+      min-height: 12.8px;
+      margin-left: -4px;
+      border-radius: 50%;
+    }
+
+    .sender-email,
+    .sender-phone,
+    .remaining-recipients,
+    .time-email-send {
+      color: var(--fg-neutral-weaker, #999999);
+    }
+
+    .remaining-recipients {
+      border: 1px solid var(--border-neutral-dark);
+      padding: 0 8px;
+    }
+
+    .remaining-recipients {
+      border: 1px solid var(--border-neutral-dark);
+      padding: 0 8px;
+    }
+  }
+
+  .element {
+    .tag-draft {
+      text-transform: uppercase;
+      color: var(--fg-neutral-weaker, #999999);
+      padding: 2px;
+      border-radius: 2px;
+      font-weight: 600;
+      font-size: 10px;
+      background: var(--bg-neutral-tonal-stronger, #e7eaed);
+      line-height: 12px;
+    }
+
+    .icon-attachments {
+      background-color: transparent;
+      gap: 4px;
+    }
+  }
+
+  .truncate {
+    display: table-cell;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  .remaining-item {
+    label {
+      width: 20px;
+      min-width: 20px;
+      height: 20px;
+      min-height: 20px;
+      border-radius: 50%;
+      margin: 0;
+      padding-right: 2px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: var(--bg-neutral-tonal-stronger);
+      color: var(--fg-neutral-normal);
+    }
+  }
+
+  .break-line {
+    color: var(--bg-neutral-tonal-stronger);
+    margin: 0 16px;
+  }
+
+  .conversation-title-wrapper {
+    overflow: hidden;
+    .email-title {
+      display: inline-block;
+    }
+    .email-title,
+    .property-address {
+      max-width: 50%;
+    }
+  }
+}

@@ -1,0 +1,9 @@
+:host {
+  display: block;
+  ::ng-deep {
+    ul,
+    ol {
+      padding-left: 40px;
+    }
+  }
+}

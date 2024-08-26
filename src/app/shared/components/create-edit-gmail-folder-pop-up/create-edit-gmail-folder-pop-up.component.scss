@@ -1,0 +1,60 @@
+@import 'function';
+
+$MAX_LV: 20;
+$INIT_LV: 1;
+
+::ng-deep {
+  .trudi-ui-large .trudi-text-field-wrapper {
+    padding-left: 12px !important;
+  }
+  ng-select.share-ng-select .ng-dropdown-panel .ng-dropdown-panel-items {
+    max-height: 356px;
+  }
+  ng-select.share-ng-select
+    .ng-dropdown-panel
+    .ng-dropdown-panel-items
+    .ng-option {
+    padding: 10px 12px !important;
+    height: 44px !important;
+  }
+  .cpn-label {
+    font-size: 12px !important;
+    font-weight: 400 !important;
+  }
+}
+
+.folder-ng-select {
+  max-height: 356px;
+}
+.checkbox-wrapper {
+  margin: 16px 0 8px 0;
+}
+
+.wrapper-option-lv {
+  @for $i from $INIT_LV through $MAX_LV {
+    &-#{$i} {
+      padding-left: $i * 8px;
+    }
+  }
+}
+.wrapper-icon {
+  padding-right: 8px;
+}
+.wrapper-text,
+.wrapper-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ng-valid-form {
+  background: var(--bg-base) !important;
+  outline: none !important;
+  box-shadow: inset 0px 0px 0px 2px var(--danger-500),
+    0px 0px 0px 3px rgba(var(--danger-500-rgb), 0.6) !important;
+  border-radius: 8px;
+  border: none !important;
+  width: 100%;
+  &::-webkit-input-placeholder {
+    opacity: 0;
+  }
+}

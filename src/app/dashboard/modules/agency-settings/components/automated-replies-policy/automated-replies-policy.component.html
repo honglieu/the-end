@@ -1,0 +1,144 @@
+<ng-container *ngIf="!isLoading; else skeleton">
+  <div class="ai-replies-setting">
+    <div class="container-ai-replies-header">
+      <div class="container-search-enquiry d-flex gap-8 flex-dir-column">
+        <trudi-text-field
+          [(ngModel)]="search"
+          (keyup.enter)="handleSearchAiPolicy($event)"
+          iconLeft="searchLarge"
+          placeholder="Search"
+          size="medium"
+          [clearable]="true"
+          clearIcon="closeOutline"
+          [iconSize]="{width: 20, height: 20}"
+          (clear)="handleClearSearch()">
+        </trudi-text-field>
+
+        @if (!permissionToEdit) {
+        <div class="warning-notice d-flex gap-4 align-items-center">
+          <trudi-icon icon="circleInfoTooltip" svgClass="size-12"></trudi-icon>
+          <div class="white-space-nowrap notice-text">
+            You need to be an account administrator to edit this page.
+          </div>
+        </div>
+        }
+      </div>
+      @if (permissionToEdit) {
+      <div class="add-policy" (click)="addPolicy($event)">
+        <button trudi-btn class="trudi-icon">
+          <trudi-icon icon="plusIconWhite"></trudi-icon>
+          <span>Add policy</span>
+        </button>
+      </div>
+
+      }
+    </div>
+    <div class="container-ai-replies-table">
+      <ai-replies-table
+        [isFiltering]="isFiltering"
+        [aiReplies]="aiReplies"
+        [isNoPolices]="isNoPolices"
+        [isDeselectAIReply]="isDeselectAIReply"
+        [isLoadingNew]="isLoadingNew"
+        [removeClass]="removeClass"
+        (clickRow)="onClickRow($event)"
+        (endScroll)="onEndScroll()"
+        (changeSelected)="onChangeSelected()"
+        (sortEvent)="handleSortEvent($event)"></ai-replies-table>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template class="skeleton-wrapper" #skeleton>
+  <div class="wrap-all-skeleton">
+    <div class="skeleton-search-add d-flex justify-content-between">
+      <nz-skeleton
+        [nzRound]="true"
+        [nzParagraph]="false"
+        [nzActive]="true"
+        [ngStyle]="{'width.px': 300}"></nz-skeleton>
+      <nz-skeleton
+        [nzRound]="true"
+        [nzParagraph]="false"
+        [nzActive]="true"
+        [ngStyle]="{'width.px': 120}"></nz-skeleton>
+    </div>
+    <div class="skeleton-thead d-flex gap-20">
+      <ng-container *ngFor="let size of [15, 35, 30, 10, 10]">
+        <nz-skeleton
+          [nzRound]="true"
+          [nzParagraph]="false"
+          [nzActive]="true"
+          [ngStyle]="{'width.%': size}"></nz-skeleton>
+      </ng-container>
+    </div>
+    <div
+      *ngFor="let _ of [].constructor(8)"
+      class="skeleton-wrapper w-100 gap-20 d-flex justify-content-between">
+      <div class="d-flex gap-2" [ngStyle]="{'flex': 15}">
+        <div class="w-100 flex-dir-column">
+          <ng-container *ngFor="let width of ['100%', '70%', '50%']">
+            <nz-skeleton
+              [nzRound]="true"
+              [nzParagraph]="false"
+              [nzActive]="true"
+              [ngStyle]="{'width': width}"></nz-skeleton>
+          </ng-container>
+        </div>
+      </div>
+      <div class="d-flex gap-2" [ngStyle]="{'flex': 35}">
+        <div class="w-100 flex-dir-column">
+          <ng-container *ngFor="let width of ['100%', '50%']">
+            <nz-skeleton
+              [nzRound]="true"
+              [nzParagraph]="false"
+              [nzActive]="true"
+              [ngStyle]="{'width': width}"></nz-skeleton>
+          </ng-container>
+        </div>
+      </div>
+      <div class="d-flex gap-2" [ngStyle]="{'flex': 30}">
+        <div class="w-100 flex-dir-column">
+          <ng-container *ngFor="let width of ['100%']">
+            <nz-skeleton
+              [nzRound]="true"
+              [nzParagraph]="false"
+              [nzActive]="true"
+              [ngStyle]="{'width': width}"></nz-skeleton>
+          </ng-container>
+        </div>
+      </div>
+      <div class="d-flex gap-2" [ngStyle]="{'flex': 10}">
+        <div class="w-100 flex-dir-column">
+          <ng-container *ngFor="let width of ['100%', '85%', '70%']">
+            <nz-skeleton
+              [nzRound]="true"
+              [nzParagraph]="false"
+              [nzActive]="true"
+              [ngStyle]="{'width': width}"></nz-skeleton>
+          </ng-container>
+        </div>
+      </div>
+      <div class="d-flex gap-2" [ngStyle]="{'flex': 10}">
+        <div class="w-100 flex-dir-column">
+          <ng-container *ngFor="let width of ['100%', '85%', '70%']">
+            <nz-skeleton
+              [nzRound]="true"
+              [nzParagraph]="false"
+              [nzActive]="true"
+              [ngStyle]="{'width': width}"></nz-skeleton>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<policy-detail-panel
+  *ngIf="aiRepliesPopupState.openPanel"
+  [visible]="aiRepliesPopupState.openPanel"
+  [currentPolicyId]="editAiReplyId"
+  [editMode]="isEditPolicy"
+  (savePolicy)="handleSavePolicy($event)"
+  (deleteAiPolicy)="deletePolicy()"
+  (closeDrawer)="handleCloseDrawer($event)"></policy-detail-panel>

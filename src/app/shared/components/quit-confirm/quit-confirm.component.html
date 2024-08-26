@@ -1,0 +1,64 @@
+<div class="confirm-container">
+  <div class="d-flex gap-16">
+    <trudi-icon
+      class="warning-icon"
+      svgClass="size-48"
+      icon="iconWarningRed"
+      data-e2e="warning-icon"></trudi-icon>
+    <div class="confirm-text">
+      <ng-container [ngSwitch]="openFrom">
+        <ng-container *ngSwitchCase="quitConfirmOpenFrom.sendMaintenance">
+          <p class="text-sure" data-e2e="title">
+            Are you sure you want to cancel this maintenance request?
+          </p>
+          <p class="cannot-text" data-e2e="cannot-text">
+            You cannot reopen after cancellation.
+          </p>
+        </ng-container>
+        <ng-container *ngSwitchCase="quitConfirmOpenFrom.deleteTask">
+          <p class="text-sure">Are you sure you want to delete this task?</p>
+          <p class="cannot-text">{{cannotText}}</p>
+        </ng-container>
+        <ng-container *ngSwitchCase="quitConfirmOpenFrom.deleteEmail">
+          <p class="text-sure">{{sureText}}</p>
+        </ng-container>
+        <ng-container *ngSwitchCase="quitConfirmOpenFrom.deletePhone">
+          <p class="text-sure">{{sureText}}</p>
+        </ng-container>
+        <ng-container *ngSwitchCase="quitConfirmOpenFrom.normal">
+          <p class="text-sure">{{sureText}}</p>
+          <p class="cannot-text">{{cannotText}}</p>
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+          <p class="text-sure" data-e2e="title">
+            Are you sure you want to cancel?
+          </p>
+          <p class="cannot-text" data-e2e="content">
+            All progress will be lost on this action.
+          </p>
+        </ng-container>
+      </ng-container>
+      <ng-template #notSendMaintenance>
+        <p class="text-sure">Are you sure you want to cancel?</p>
+        <p class="cannot-text">All progress will be lost on this action.</p>
+      </ng-template>
+    </div>
+  </div>
+  <div class="btn-wrapper gap-12">
+    <button
+      trudi-btn
+      btnType="neutral"
+      (click)="$event.stopPropagation(); leftBtnClick()"
+      data-e2e="go-back-btn">
+      <span class="btn-text"> {{leftBtnText}} </span>
+    </button>
+    <button
+      trudi-btn
+      btnType="danger"
+      [disabled]="disable"
+      (click)="$event.stopPropagation(); rightBtnClick()"
+      data-e2e="yes-cancel-btn">
+      <span class="btn-text"> {{rightBtnText}} </span>
+    </button>
+  </div>
+</div>

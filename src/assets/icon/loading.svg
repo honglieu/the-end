@@ -1,0 +1,13 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" color="#28ad99">
+<g id="2">
+<path id="3" d="M40 20C40 31.0457 31.0457 40 20 40C8.9543 40 0 31.0457 0 20C0 8.9543 8.9543 0 20 0C31.0457 0 40 8.9543 40 20ZM5.98053 20C5.98053 27.7427 12.2573 34.0195 20 34.0195C27.7427 34.0195 34.0195 27.7427 34.0195 20C34.0195 12.2573 27.7427 5.98053 20 5.98053C12.2573 5.98053 5.98053 12.2573 5.98053 20Z" fill="url(#paint0_angular_17981_1492)"/>
+<circle id="Ellipse 1" cx="20.2" cy="37" r="3" fill="currentColor"/>
+</g>
+<defs>
+<radialGradient id="paint0_angular_17981_1492" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(20 20) rotate(90) scale(20)">
+<stop stop-color="currentColor"/>
+<stop offset="0.175675" stop-color="currentColor"/>
+<stop offset="1" stop-color="currentColor" stop-opacity="0"/>
+</radialGradient>
+</defs>
+</svg>

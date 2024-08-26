@@ -1,0 +1,43 @@
+<div class="confirm-popup">
+  <div
+    class="header d-flex"
+    [ngClass]="{'header-content': titleText === stateWarningTitle}">
+    @if (isShowIcon) {
+    <div class="round-icon">
+      <img [src]="iconUrl" alt="Trudi" data-e2e="warning-icon" />
+    </div>
+    }
+    <div
+      class="confirm-text"
+      [ngClass]="{'wrap-title': titleText === stateWarningTitle}">
+      <p class="title-text" data-e2e="title">{{titleText}}</p>
+      <div class="sub-text" *ngIf="subTexts.length">
+        <ng-container *ngFor="let subText of subTexts">
+          <p data-e2e="send-invoice-text">{{subText}}</p>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+  <div
+    class="btn-wrapper d-flex justify-content-end gap-12"
+    *ngIf="buttonLeft || buttonRight">
+    <button
+      *ngIf="buttonLeft"
+      trudi-btn
+      btnType="neutral"
+      variant="outlined"
+      (click)="handleLeftButtonClick($event)"
+      data-e2e="go-back-btn">
+      {{buttonLeft}}
+    </button>
+    <button
+      *ngIf="buttonRight"
+      trudi-btn
+      [disabled]="btnType === 'primary' ? isLoading : (isLoading && stateWarningTitle)"
+      [btnType]="btnType"
+      (click)="handleRightButtonClick($event)"
+      data-e2e="confirm-btn">
+      {{buttonRight}}
+    </button>
+  </div>
+</div>

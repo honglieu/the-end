@@ -1,0 +1,95 @@
+<trudi-drawer
+  [(visible)]="visible"
+  [enableOkBtn]="false"
+  [enableBackBtn]="false"
+  [enableDeleteBtn]="false"
+  [headerTpl]="headerTpl"
+  [nzClosable]="true"
+  (onCancel)="handleCloseDrawer()"
+  (onClose)="handleCloseDrawer()">
+  <ng-template #headerTpl>
+    <div class="trudi-drawer-header">Select step type</div>
+  </ng-template>
+  <ng-container *ngIf="visible">
+    <trudi-drawer-skeleton></trudi-drawer-skeleton>
+    <div class="trudi-drawer-content" tabindex="0">
+      <button
+        class="trudi-drawer-content-item"
+        (click)="handleCloseDrawer(ESelectStepType.COMMUNICATION_STEP)">
+        <div class="item-icon">
+          <trudi-icon
+            [style]="{'width.px':44, 'height.px':44}"
+            icon="sendEmail"></trudi-icon>
+        </div>
+        <div class="item-detail-step">
+          <div class="item-detail-step-title">Communication step</div>
+          <div class="item-detail-step-desc">
+            Send an email to selected contacts
+          </div>
+        </div>
+      </button>
+      <div *ngIf="crmSystemId === ECRMId.PROPERTY_TREE">
+        <button
+          class="trudi-drawer-content-item"
+          (click)="handleCloseDrawer(ESelectStepType.PROPERTY_TREE_ACTION)">
+          <div class="item-icon">
+            <trudi-icon
+              [style]="{'width.px':44, 'height.px':44}"
+              icon="propertyTreeAction"></trudi-icon>
+          </div>
+          <div class="item-detail-step">
+            <div class="item-detail-step-title">Property Tree action</div>
+            <div class="item-detail-step-desc">
+              Add or edits components in the Property Tree widget
+            </div>
+          </div>
+        </button>
+      </div>
+      <button
+        class="trudi-drawer-content-item"
+        (click)="handleCloseDrawer(ESelectStepType.CALENDAR_EVENT)">
+        <div class="item-icon">
+          <trudi-icon
+            [style]="{'width.px':44, 'height.px':44}"
+            icon="calendarEvent"></trudi-icon>
+        </div>
+        <div class="item-detail-step">
+          <div class="item-detail-step-title">Calendar event</div>
+          <div class="item-detail-step-desc">
+            Add a calendar event to portfolio calendar
+          </div>
+        </div>
+      </button>
+      <button
+        class="trudi-drawer-content-item"
+        (click)="handleCloseDrawer(ESelectStepType.NEW_TASK)">
+        <div class="item-icon">
+          <trudi-icon
+            [style]="{'width.px':44, 'height.px':44}"
+            icon="newTask"></trudi-icon>
+        </div>
+        <div class="item-detail-step">
+          <div class="item-detail-step-title">New task</div>
+          <div class="item-detail-step-desc">
+            Select from list of agency tasks
+          </div>
+        </div>
+      </button>
+      <button
+        class="trudi-drawer-content-item"
+        (click)="handleCloseDrawer(ESelectStepType.CHECK_LIST)">
+        <div class="item-icon">
+          <trudi-icon
+            [style]="{'width.px':44, 'height.px':44}"
+            icon="checklist"></trudi-icon>
+        </div>
+        <div class="item-detail-step">
+          <div class="item-detail-step-title">Checklist</div>
+          <div class="item-detail-step-desc">
+            A simple checklist item with option to leave note or attachment
+          </div>
+        </div>
+      </button>
+    </div>
+  </ng-container>
+</trudi-drawer>

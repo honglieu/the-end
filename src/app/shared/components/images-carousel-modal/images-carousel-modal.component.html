@@ -1,0 +1,16 @@
+<app-modal-popup
+  [transparent]="true"
+  [show]="isShowCarousel$ | async"
+  [zIndex]="999999"
+  [appendBody]="true"
+  [position]="popupModalPosition.full_screen">
+  <app-images-carousel
+    [open]="isShowCarousel$ | async"
+    [isSyncing]="false"
+    [imageUrlList]="imageCarousels"
+    [initialIndex]="initialIndex"
+    (showCarousel)="manageCarouselState($event)"
+    (showSelectPeoplePopup)="handleShowTrudiSendMsg($event)"
+    (fileEmit)="handleFileEmit($event)">
+  </app-images-carousel>
+</app-modal-popup>

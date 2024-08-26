@@ -1,0 +1,96 @@
+<div
+  class="widget-common-wrapper cursor-pointer"
+  [ngClass]="{'bg-sucess': (widgetState$ | push)?.isShowSuccess && (widgetState$ | push)?.isShowBackground, 'bg-syncing': (syncStatus$ | push) === ESyncStatus.INPROGRESS, 'bg-failed': (syncStatus$ | push) === ESyncStatus.FAILED}"
+  (click)="clickCard.emit($event)">
+  <div class="container">
+    <div class="title-status">
+      <div
+        *ngIf="(widgetState$ | push)?.isShowSuccess && (widgetState$ | push)?.isShowBackground"
+        class="title-success">
+        <trudi-icon svgClass="size-16" [icon]="'syncSuccessV2'" viewBox="auto">
+        </trudi-icon>
+        <div>Synced successfully</div>
+      </div>
+      <div
+        *ngIf="(syncStatus$ | push) === ESyncStatus.INPROGRESS"
+        class="title-syncing">
+        <trudi-icon
+          svgClass="size-16"
+          class="spin"
+          [icon]="'syncingV2'"
+          viewBox="auto">
+        </trudi-icon>
+        <div>Syncing</div>
+      </div>
+      <div
+        *ngIf="(syncStatus$ | push) === ESyncStatus.FAILED"
+        class="title-fail">
+        <trudi-icon svgClass="size-16" [icon]="'syncFailV2'" viewBox="auto">
+        </trudi-icon>
+        <div>Fail to sync</div>
+      </div>
+    </div>
+    <div class="box-content">
+      <div class="card-widget-wrapper">
+        <div class="card-widget-items d-flex flex-dir-column gap-4">
+          <div class="card-widget-items d-flex">
+            <div class="widget-title w-80">Title</div>
+            <div class="widget-info-w">
+              {{cardData['title'] ? cardData['title'] : 'None'}}
+            </div>
+          </div>
+          <div class="card-widget-items d-flex">
+            <div class="widget-title w-80">
+              {{(cardData?.details?.tenantDetail?.type?.includes('PROSPECT') ||
+              cardData?.details?.tenantDetail?.type?.includes('LANDLORD')) ?
+              'Tenant prospect' : 'Tenant'}}
+            </div>
+            <div
+              class="widget-info"
+              [ngClass]="{ 'widget-info-none': !cardData?.details?.tenantDetail?.user?.id }">
+              {{!!cardData?.details?.tenantDetail?.user?.id ?
+              sharedService.displayName(cardData?.details?.tenantDetail?.user?.firstName,
+              cardData?.details?.tenantDetail?.user?.lastName) : 'None'}}
+            </div>
+          </div>
+          <div class="card-widget-items d-flex">
+            <div class="card-widget-items-title widget-title w-80">
+              Category
+            </div>
+            <div
+              class="widget-info"
+              [ngClass]="{ 'widget-info-none': !category }">
+              {{!!category ? category : 'None'}}
+            </div>
+          </div>
+          <div class="card-widget-items d-flex">
+            <div class="widget-title w-80">Status</div>
+            <div
+              class="widget-info"
+              [ngClass]="{ 'widget-info-none': !status }">
+              {{!!status ? status : 'None'}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      *ngIf="(syncStatus$ | push) === ESyncStatus.FAILED"
+      class="box-button-fail">
+      <button
+        class="button-retry"
+        *ngIf="!isConsole"
+        (click)="handleClickRetry($event)">
+        <div class="text-btn-retry">Retry</div>
+      </button>
+      <button
+        class="button-remove"
+        *ngIf="!isConsole"
+        (click)="handleClickRightBtn($event)">
+        <div class="text-btn-remove">
+          {{ cardData?.details?.externalId ? 'Cancel' : 'Remove' }}
+        </div>
+      </button>
+    </div>
+  </div>
+</div>

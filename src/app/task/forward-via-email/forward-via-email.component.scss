@@ -1,0 +1,191 @@
+@import 'function';
+
+:host ::ng-deep {
+  .ng-value-container {
+    padding-left: 12px !important;
+    padding-top: 4px !important;
+    @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+  }
+  .supplier-dropdown.ng-select .ng-select-container {
+    background-color: var(--gray-50);
+    &:before {
+      display: none;
+    }
+  }
+  .ng-select.ng-select-opened.ng-select-bottom > .ng-select-container {
+    background-color: #fff !important;
+  }
+  .supplier-dropdown.ng-select .ng-dropdown-panel {
+    margin-top: -3px;
+  }
+  .ng-dropdown-panel .ng-dropdown-panel-items {
+    max-height: 280px;
+    border-radius: 5px;
+  }
+  .ng-select.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
+    outline: 2px solid rgba(var(--brand-500-rgb), 0.6) !important;
+    box-shadow: none;
+    background-color: #fff;
+  }
+  .body .supplier-tab .supplier-select {
+    margin-top: 0px !important;
+  }
+  .ng-select .ng-clear-wrapper {
+    display: none;
+  }
+  .ng-dropdown-panel.ng-select-bottom
+    .ng-dropdown-panel-items
+    .ng-option.ng-option-disabled {
+    @include fontSetup(var(--gray-500), 14px, 20px, italic, 500);
+    padding: 10px 12px !important;
+  }
+}
+
+.forward-email-wrapper::ng-deep {
+  width: 100%;
+
+  .header {
+    padding: 10px 14px 10px 14px;
+
+    .detail-invite {
+      gap: 16px;
+      .detail-invite-icon {
+        .background-icon {
+          height: 48px;
+          width: 48px;
+          background-color: var(--white);
+          img {
+            width: 100%;
+          }
+        }
+      }
+
+      .detail-invite-text {
+        flex-grow: 1;
+        min-width: 476px;
+        p {
+          @include fontSetup(var(--gray-950), 18px, 24px, normal, 600);
+          margin: 0;
+        }
+
+        div {
+          display: flex;
+          margin-top: 8px;
+          @include fontSetup(var(--gray-500), 14px, 16px, normal, 500);
+        }
+      }
+
+      .close-btn {
+        min-width: 28px;
+      }
+    }
+  }
+
+  hr {
+    margin: 10px -10px 20px;
+  }
+
+  .body {
+    padding: 0 14px;
+    .text-header {
+      @include fontSetup(var(--gray-600), 12px, 16px, normal, 400);
+      margin-bottom: 6px;
+    }
+
+    .data {
+      font-size: 14px;
+      line-height: 19px;
+      color: var(--gray-700);
+      input {
+        width: 100%;
+        border: 0;
+        padding: 12px;
+        background: var(--gray-200);
+        border-radius: 8px;
+        @include fontSetup(var(--gray-700), 14px, 18px, normal, 500);
+      }
+    }
+
+    .supplier-tab {
+      .supplier-select {
+        margin-top: 24px;
+      }
+      .supplier-name-item {
+        font-weight: 600;
+      }
+      .supplier-email-item {
+        padding-left: 0.4rem;
+        @include fontSetup(var(--gray-500), 12px, 20px, normal, 400);
+      }
+
+      .supplier-dot {
+        width: 5px;
+        height: 5px;
+        margin: 0 3px 1px 6px;
+        background: var(--gray-500);
+        border-radius: 50%;
+        display: inline-block;
+        opacity: 60%;
+      }
+
+      .supplier-address {
+        @include fontSetup(var(--gray-500), 12px, 18px, normal, 400);
+        margin-top: 2px;
+      }
+    }
+  }
+
+  .move-footer {
+    padding: 40px 14px 10px;
+    @include fontSetup(var(--white), 14px, 16px, normal, 500);
+    justify-content: flex-end;
+
+    .btn-wrapper {
+      margin: 0;
+      display: flex;
+      justify-content: flex-end;
+      .confirm-btn {
+        text-align: center;
+        padding: 12px 16px;
+        background: var(--brand-500);
+        border-radius: 12px;
+        border: 0;
+        color: var(--white);
+        transition: all 0.2s;
+        .btn-text {
+          @include fontSetup(var(--white), 14px, 20px, normal, 600);
+        }
+        &:active {
+          opacity: 0.8;
+        }
+        &:disabled {
+          opacity: 0.3;
+          cursor: default;
+        }
+      }
+
+      .cancel-btn {
+        text-align: center;
+        padding: 12px 16px;
+        margin-right: 12px;
+        background: var(--gray-200);
+        border-radius: 12px;
+        border: 0;
+        color: var(--gray-700);
+        transition: all 0.2s;
+        .btn-text {
+          @include fontSetup(var(--gray-700), 12px, 16px, normal, 600);
+        }
+      }
+    }
+  }
+}
+
+.required-message {
+  margin-top: 6px;
+
+  span {
+    margin-left: 4px;
+    @include fontSetup(var(--danger-500), 12px, 16px, normal, 400);
+  }
+}

@@ -1,0 +1,51 @@
+@import 'function';
+
+:host {
+  .calendar-wrapper {
+    height: 275px;
+    padding: 20px 24px;
+  }
+
+  .list-wrapper {
+    height: 100%;
+    width: 100%;
+    @include fontSetup(
+      rgba($color: var(--fg-neutral-normal), $alpha: 0.6),
+      16px,
+      16px,
+      normal,
+      500
+    );
+
+    .no-task {
+      margin: 0 auto;
+      width: 15%;
+      gap: 40px;
+    }
+  }
+  .header-text {
+    @include fontSetup(var(--fg-neutral-weaker), 14px, 20px, italic, 400);
+  }
+
+  ::ng-deep {
+    nz-skeleton .ant-skeleton-content {
+      .ant-skeleton-title {
+        padding: 12px;
+      }
+    }
+    nz-skeleton:last-child {
+      .ant-skeleton-content .ant-skeleton-title {
+        border-radius: 50%;
+      }
+    }
+  }
+}
+.border-load {
+  width: calc(100% - 32px);
+  border: 1px solid var(--gray-100);
+  border-radius: 8px;
+}
+
+.body {
+  padding: 20px 24px;
+}

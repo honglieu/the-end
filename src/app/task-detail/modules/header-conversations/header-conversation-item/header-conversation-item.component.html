@@ -1,0 +1,417 @@
+<div
+  class="conversation-container"
+  #conversationRow
+  (contextmenu)="onRightClick($event,isDraftEmailMessageWithoutConversation ? contextMenuForDraftItem : menu)"
+  [ngClass]="{
+  'conversation-menu-displayed': isMenuDisplayed
+}">
+  <div class="conversation-container__wrap-content">
+    <div
+      *ngIf="!(conversation.conversationType === EConversationType.APP && !conversation.shortenStreetline && !conversation.streetline)"
+      class="d-flex gap-2 mb-4">
+      <trudi-icon class="size-12" [icon]="'iconAddress'"></trudi-icon>
+      <div
+        class="info-property-address"
+        [ngClass]="{'no-property': !conversation.shortenStreetline && !conversation.streetline}">
+        {{ conversation.shortenStreetline || conversation.streetline || "No
+        property" }}
+      </div>
+    </div>
+    <div
+      class="d-flex align-items-center justify-content-between mb-4"
+      [ngClass]="{'highlight' : !conversation.isSeen}">
+      <div class="participants-right text-ellipsis">
+        <span
+          *ngIf="!isConsoleUser && conversation.conversationType !== EConversationType.APP && conversation?.isScratchDraft && participants?.length === 0"
+          class="participants-name-draft"
+          [innerHTML]="'No recipient' | highlight: search"></span>
+        <ng-container *ngIf="!!participants?.length">
+          <div class="participants-list text-ellipsis" #participantContainer>
+            <div
+              class="d-flex align-items-center fit-content"
+              trudi-tooltip
+              [hideWhenClick]="true"
+              [nzTooltipTitle]="tooltipTemplate"
+              [nzTooltipMouseEnterDelay]="tooltipEnterMouseDelay"
+              nzTooltipOverlayClassName="participants-tooltip-position participants-tooltip"
+              [nzTooltipPlacement]="tooltipPlacement">
+              <div class="participants-item-wrapper">
+                <ng-container
+                  *ngFor="let participant of displayParticipants; let last = last">
+                  <div
+                    *ngIf="conversation.createdFrom !== ECreatedFrom.VOICE_MAIL || (conversation.createdFrom === ECreatedFrom.VOICE_MAIL && participant.email)"
+                    class="participants-name text-ellipsis"
+                    [style.max-width.px]="maxWidthParticipantName"
+                    [innerHTML]="participant.title | highlight: search"></div>
+                  <div
+                    *ngIf="conversation.createdFrom === ECreatedFrom.VOICE_MAIL && !participant.email"
+                    class="participants-name text-ellipsis"
+                    [style.max-width.px]="maxWidthParticipantName"
+                    [innerHTML]="participant.title | phoneNumberFormat | highlight: search"></div>
+                  <div
+                    *ngIf="!!remainingParticipants.length ? true : !last"
+                    class="participants-name">
+                    ,&nbsp;
+                  </div>
+                </ng-container>
+              </div>
+              <div *ngIf="!!remainingParticipants.length" class="count">
+                +{{remainingParticipants.length}}
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-container
+          *ngIf="!participants?.length && conversation.conversationType === EConversationType.APP">
+          <div class="participants-list-empty text-ellipsis">No recipient</div>
+        </ng-container>
+      </div>
+      <p class="list-content-box-time my-0">
+        {{(currentTab === EConversationStatusTab.DRAFT ?
+        conversation.lastTimeMessage || conversation.lastMessageDraft?.createdAt
+        : conversation.messageDate) | trudiDateTime: EPage.DETAILS | push }}
+      </p>
+    </div>
+    <div class="list-content-box-title gap-4 mb-4">
+      <div
+        *ngIf="[EConversationType.VOICE_MAIL].includes(conversation.conversationType) ? conversation.status !== EConversationStatus.resolved && conversation.isUrgent : conversation.isUrgent"
+        class="urgent-badge">
+        <trudi-badge
+          text="Urgent"
+          size="extra-small"
+          variant="error"
+          badgeType="filled"
+          [rounded]="true">
+        </trudi-badge>
+      </div>
+      <p
+        #conversationTitle
+        nz-tooltip
+        [nzTooltipPlacement]="tooltipPlacement"
+        [nzTooltipTitle]="conversation?.categoryName"
+        [nzTooltipOverlayStyle]="{'max-width': '300px'}"
+        [nzTooltipTrigger]="titleExceedWidth ? 'hover' : null"
+        class="text-ellipsis flex-1 my-0"
+        [ngClass]="{'highlight' : !conversation.isSeen, 'empty-content': !conversation.categoryName}">
+        {{conversation.categoryName || 'No subject'}}
+      </p>
+      <span
+        *ngIf="conversation.messageCount"
+        class="list-content-box-title-total-messages"
+        [ngClass]="{'list-content-box-title-total-messages-selected': isMessageActive}">
+        {{conversation.messageCount | totalCountPipe: 99: true}}
+      </span>
+    </div>
+    <div class="list-content-box-desc align-items-center gap-4">
+      <ng-container *ngIf="conversation?.isAutomatedReply">
+        <span class="tag-auto-reply">AUTOMATED REPLY</span>
+      </ng-container>
+      <ng-container
+        *ngIf="!isConsoleUser && conversation.isLastMessageDraft &&
+              ((conversation.conversationType !== EConversationType.APP || currentTab !== EConversationStatusTab.RESOLVED) ||
+              (conversation.conversationType === EConversationType.APP && currentTab === EConversationStatusTab.RESOLVED))">
+        <span class="tag-draft">Draft</span>
+      </ng-container>
+      <ng-container
+        *ngIf="((!conversation.isLastMessageDraft && currentTab !== EConversationStatusTab.DRAFT) ||
+             (conversation.conversationType !== EConversationType.EMAIL && conversation.isLastMessageDraft && currentTab === EConversationStatusTab.RESOLVED)) &&
+             !(conversation.isLastMessageDraft && conversation.conversationType === EConversationType.APP && currentTab === EConversationStatusTab.RESOLVED)">
+        <ng-container [ngSwitch]="conversation.conversationType">
+          <ng-container *ngSwitchCase="EConversationType.VOICE_MAIL">
+            <trudi-icon class="mr-4" icon="voiceMail"></trudi-icon>
+          </ng-container>
+          <ng-container *ngSwitchCase="EConversationType.APP">
+            <trudi-icon
+              class="mr-4"
+              [icon]="EConversationType.APP | inboxIcon : conversation?.callType"></trudi-icon>
+          </ng-container>
+          <ng-container *ngSwitchDefault
+            ><trudi-icon
+              class="mr-4"
+              [icon]="EConversationType.EMAIL | inboxIcon : conversation?.callType"></trudi-icon>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+
+      <div class="preview-content">
+        <div
+          class="text-content"
+          [ngClass]="{'empty-content': !textContent}"
+          [innerHTML]="textContent || 'No preview is available'"></div>
+      </div>
+
+      <div
+        *ngIf="!!conversation.attachmentCount"
+        class="list-content-box-desc-attachments ml-4">
+        <trudi-icon class="mr-4" icon="attachments"></trudi-icon>
+        <span class="attachment-count"
+          >{{conversation.attachmentCount | totalCountPipe: 99}}</span
+        >
+      </div>
+      <div
+        *ngIf="!!conversation.scheduleMessageCount"
+        class="list-content-box-desc-attachments ml-4">
+        <trudi-icon class="mr-4" icon="timeIcon"></trudi-icon>
+        <span>{{conversation.scheduleMessageCount}}</span>
+      </div>
+      <div
+        *ngIf="iconSync"
+        [ngClass]="{'spin-syncing': iconSync === 'syncingV2'}">
+        <trudi-icon
+          [icon]="iconSync"
+          svgClass="size-20"
+          class="size-20"
+          alt="syncing"></trudi-icon>
+      </div>
+      @if (conversation?.countUnreadTicket > 0) {
+      <div class="list-content-box-desc-count-unread">
+        <trudi-badge
+          [text]="conversation.countUnreadTicket |
+              totalCountPipe: 99: true : '+'"
+          size="small"
+          variant="error"
+          badgeType="tonal">
+        </trudi-badge>
+      </div>
+      }
+    </div>
+  </div>
+</div>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div nz-menu>
+    <div class="menu-wrapper menu-wrapper-message border-rad-8">
+      <div
+        *ngIf="menuDropDown.addTask"
+        nz-dropdown
+        nzTrigger="click"
+        [attr.data-button-key]="EButtonTask.CONVERSATION_ADD_TO_TASK"
+        [attr.data-button-type]="EButtonType.TASK"
+        PreventButton
+        (leftClick)="openAddToTaskModal()"
+        class="item d-flex align-items-center gap-8"
+        [appE2E]="EDataE2EConversation.ADD_TO_TASK"
+        ripple>
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          class="no-pointer-event"
+          icon="taskNewIcon">
+        </trudi-icon>
+        <p class="text no-pointer-event">Move to another task</p>
+      </div>
+      <div
+        *ngIf="menuDropDown.resolve && (task?.taskType === taskType.TASK && (conversation?.status === EConversationStatus.open || conversation?.status === EConversationStatus.reopen))"
+        class="item cursor-pointer d-flex align-items-center gap-8"
+        (click)="handleMenu(EMessageMenuOption.RESOLVE)"
+        [appE2E]="EDataE2EConversation.MARK_AS_RESOLVED"
+        [ngClass]="{'disabled' : isConsoleUser}">
+        <trudi-icon
+          class="no-pointer-event"
+          icon="iconCheckCircleV2"></trudi-icon>
+        <p class="text no-pointer-event">Mark as resolved</p>
+      </div>
+      <div
+        *ngIf="menuDropDown.reOpen && (conversation?.status === EConversationStatus.resolved || conversation?.status === EConversationStatus.deleted)"
+        class="item cursor-pointer d-flex align-items-center gap-8"
+        appE2E="task-details-reopen-button"
+        [ngClass]="{'disabled' : isConsoleUser  || conversation?.crmStatus === ECrmStatus.DELETED || (task?.taskType === taskType.TASK && isDisableActionByOffBoardStatus)}"
+        (click)="!(isConsoleUser  || conversation?.crmStatus === ECrmStatus.DELETED || (task?.taskType === taskType.TASK && isDisableActionByOffBoardStatus)) && handleMenu(EMessageMenuOption.REOPEN)">
+        <trudi-icon icon="rotateCcwLight" class="no-pointer-event"></trudi-icon>
+        <p class="text no-pointer-event">
+          {{task?.taskType === taskType.TASK ? "Reopen" : "Reopen message"}}
+        </p>
+      </div>
+      <div
+        *ngIf="menuDropDown.read"
+        (click)="handleMenu(conversation.isSeen ? EMessageMenuOption.UNREAD : EMessageMenuOption.READ)"
+        class="item d-flex align-items-center gap-8"
+        [appE2E]="conversation.isSeen ? EDataE2EConversation.MARK_AS_UNREAD : EDataE2EConversation.MARK_AS_READ"
+        [ngClass]="{'disabled' : isConsoleUser}"
+        ripple>
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          class="no-pointer-event"
+          [icon]="conversation.isSeen ? 'markAsUnread' : 'markAsRead'">
+        </trudi-icon>
+        <p class="text no-pointer-event">
+          Mark as {{ conversation.isSeen ? 'unread' : 'read' }}
+        </p>
+      </div>
+      @if (menuDropDown.saveToPropertyTree && !isRmEnvironment) {
+      <div
+        nz-submenu
+        nzMenuClassName="sub-menu-nongap"
+        [nzTitle]="exportConversationTitle">
+        <div
+          nz-menu-item
+          class="submenu-option-item"
+          appE2E="conversation-right-click-save-to-pt"
+          [ngClass]="{'disabled' : isConsoleUser || [SYNC_TYPE.INPROGRESS, SYNC_TYPE.PENDING].includes(conversation.syncStatus)}"
+          (click)="handleMenu(EMessageMenuOption.SAVE_TO_PROPERTY_TREE, $event)">
+          <trudi-icon
+            svgClass="size-20"
+            viewBox="auto"
+            icon="archive"
+            class="no-pointer-event"></trudi-icon>
+          <p class="no-margin no-pointer-event">Save to Property Tree</p>
+        </div>
+        <div
+          nz-menu-item
+          class="submenu-option-item"
+          [ngClass]="{'disabled' : disabledDownloadPDF}"
+          (click)="!disabledDownloadPDF && handleMenu(EMessageMenuOption.DOWNLOAD_AS_PDF, $event)">
+          <trudi-icon
+            svgClass="size-20"
+            viewBox="auto"
+            icon="iconDownload"></trudi-icon>
+          <p class="no-margin">Download as PDF</p>
+        </div>
+      </div>
+      }
+      <trudi-modal
+        [classContainer]="'modal_select--task'"
+        (onCancel)="handleCancelModal()"
+        [visible]="modalAddToTask === modalTypeAddToTask.SELECT_OPTION"
+        [isHideFooter]="true"
+        [autoFocus]="null"
+        title="Select an option to continue">
+        <div class="select_option--task">
+          <button
+            (click)="handleMenu(EMessageMenuOption.CREATE_NEW_TASK)"
+            appE2E="conversation-right-click-create-new-task"
+            class="convert_task">
+            <div class="content_btn_task">
+              <trudi-icon class="item-icon" icon="createNewTask"></trudi-icon>
+              <div>
+                <p>Create new task</p>
+                <span>Create a new task and add messages to this task</span>
+              </div>
+            </div>
+          </button>
+          <button
+            (click)="handleMenu(EMessageMenuOption.MOVE_TO_TASK)"
+            appE2E="conversation-right-click-add-to-existing-task"
+            class="move_task">
+            <div class="content_btn_task">
+              <trudi-icon class="item-icon" icon="existingTask"></trudi-icon>
+              <div>
+                <p>Add to existing task</p>
+                <span>Add messages to an existing task</span>
+              </div>
+            </div>
+          </button>
+        </div>
+      </trudi-modal>
+
+      <div
+        *ngIf="menuDropDown.urgent
+      && (conversation?.status !== EConversationStatus.resolved
+      && conversation?.status !== EConversationStatus.deleted)"
+        (click)="handleMenu(conversation.isUrgent ? EMessageMenuOption.UN_FLAG : EMessageMenuOption.FLAG)"
+        class="item d-flex align-items-center gap-8"
+        [appE2E]="conversation.isUrgent ? EDataE2EConversation.CLICK_UNFLAG : EDataE2EConversation.CLICK_FLAG"
+        [ngClass]="{'disabled' : isConsoleUser}"
+        ripple>
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          class="no-pointer-event"
+          [icon]="conversation.isUrgent ? 'unFlag' : 'flag'"></trudi-icon>
+        <p class="text no-pointer-event">
+          {{ conversation.isUrgent ? 'Unflag' : 'Flag as urgent'}}
+        </p>
+      </div>
+
+      <div
+        *ngIf="menuDropDown.removeConversation"
+        class="item cursor-pointer d-flex align-items-center gap-8"
+        [ngClass]="{'disabled' : isConsoleUser}"
+        (click)="handleMenu(EMessageMenuOption.REMOVE_FROM_TASK)">
+        <trudi-icon svgClass="size-20" viewBox="auto" icon="folderMinus">
+        </trudi-icon>
+        <p class="text">Remove from task</p>
+      </div>
+
+      <div
+        *ngIf="menuDropDown.reportSpam"
+        class="item cursor-pointer d-flex align-items-center gap-8"
+        [ngClass]="{'disabled' : isConsoleUser}"
+        [appE2E]="EDataE2EConversation.REPORT_SPAM"
+        (click)="handleMenu(EMessageMenuOption.REPORT_SPAM)">
+        <trudi-icon icon="alertOctagonv2" class="no-pointer-event"></trudi-icon>
+        <p class="text no-pointer-event">Report spam</p>
+      </div>
+      <div
+        *ngIf="menuDropDown.saveToRentManager && (conversation?.status === EConversationStatus.resolved && isRmEnvironment)"
+        (click)="handleMenu(EMessageMenuOption.SAVE_TO_RENT_MANAGER, $event)"
+        class="item d-flex align-items-center gap-8"
+        [ngClass]="{'disabled': conversation.syncStatus === SYNC_TYPE.INPROGRESS || isArchiveMailbox || isConsoleUser}"
+        ripple>
+        <trudi-icon class="size-20" viewBox="auto" icon="archive"></trudi-icon>
+        <p class="text">Save to Rent Manager</p>
+      </div>
+      <div
+        *ngIf="menuDropDown.delete && conversation?.status !== EConversationStatus.deleted"
+        (click)="handleMenu(EMessageMenuOption.DELETE)"
+        class="item d-flex align-items-center gap-8"
+        [ngClass]="{'disabled' : isConsoleUser}"
+        ripple>
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          icon="deleteIconOutline"></trudi-icon>
+        <p class="text">Delete</p>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<ng-template #exportConversationTitle>
+  <div class="d-flex justify-content-between align-items-center gap-8">
+    <div class="item d-flex align-items-center gap-8 submenu-option" ripple>
+      <trudi-icon svgClass="size-20" icon="conversationExport"></trudi-icon>
+      <div>Export conversation history</div>
+    </div>
+    <trudi-icon svgClass="size-20" icon="iconChevronRight"></trudi-icon>
+  </div>
+</ng-template>
+
+<ng-template #tooltipTemplate>
+  <div class="d-flex flex-dir-column">
+    <div
+      style="text-align: start"
+      *ngFor="let participant of tooltipListParticipants">
+      {{ participant}}
+    </div>
+  </div>
+</ng-template>
+
+<nz-dropdown-menu #contextMenuForDraftItem="nzDropdownMenu">
+  <div nz-menu>
+    <div class="menu-wrapper menu-action-wrapper border-rad-8">
+      <div
+        class="item item-content d-flex align-items-center gap-8"
+        (click)="closeMenu();conversation.conversationType === EConversationType.APP ? navigateToMessageDetail() : handleEditMessage(conversation)">
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          class="no-pointer-event"
+          icon="iconEditNeutralNormal"></trudi-icon>
+        <p class="text no-pointer-event">Edit</p>
+      </div>
+      <div
+        nz-dropdown
+        class="item item-content d-flex align-items-center gap-8"
+        (click)="closeMenu(); handleMenu(EMessageMenuOption.DELETE)">
+        <trudi-icon
+          svgClass="size-20"
+          viewBox="auto"
+          class="no-pointer-event"
+          icon="deleteIconOutline"></trudi-icon>
+        <p class="text no-pointer-event">Delete</p>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>

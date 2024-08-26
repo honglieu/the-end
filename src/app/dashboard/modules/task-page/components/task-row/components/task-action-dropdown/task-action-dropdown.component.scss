@@ -1,0 +1,174 @@
+@import 'function';
+
+.menu-wrapper {
+  width: 228px;
+  color: rgba(0, 0, 0, 0.87);
+  background-color: var(--white);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+
+  .item {
+    padding: 12px;
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 500);
+    cursor: pointer;
+
+    &.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+
+      .size-20 {
+        opacity: 0.3;
+      }
+    }
+
+    &:not(:first-child) {
+      border-top: 1px var(--border-neutral-light) solid;
+    }
+
+    .text {
+      margin: 0;
+      white-space: nowrap;
+    }
+  }
+}
+
+.folder-icon {
+  display: flex;
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  background: var(--bg-neutral-tonal-strongest, #d8dcdf);
+}
+
+.menu-folder,
+.menu-group {
+  overflow: hidden;
+  .list-wrapper {
+    overflow-y: auto;
+    width: 248px;
+    &-folder {
+      max-height: calc(5 * 49px);
+    }
+    &-group {
+      max-height: calc(5 * 45px);
+    }
+  }
+
+  .menu-item:not(:last-child),
+  .menu-header {
+    border-bottom: 1px solid var(--border-neutral-light, #f2f5f7);
+  }
+
+  .menu-header {
+    display: flex;
+    padding: 12px;
+    font-variant-numeric: lining-nums tabular-nums;
+    justify-content: space-between;
+    /* Text M @/Semibold */
+    @include fontSetup(var(--fg-neutral-weaker, #999), 14px, 20px, normal, 600);
+    width: 224px;
+    &.no-folder {
+      width: unset;
+      @include fontSetup(var(--fg-neutral-weaker), 14px, 20px, italic, 400);
+    }
+  }
+
+  .menu-item {
+    &__name {
+      overflow: hidden;
+      @include fontSetup(
+        var(--fg-neutral-stronger, #3d3d3d),
+        14px,
+        20px,
+        normal,
+        500
+      );
+      text-overflow: ellipsis;
+
+      /* Text M @/Medium */
+      text-wrap: nowrap;
+      max-width: 186px;
+    }
+
+    .group-color {
+      padding: 0px 6px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    ::ng-deep {
+      .ant-dropdown-menu-submenu-title {
+        padding: 12px !important;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+    }
+  }
+}
+
+.export-task {
+  max-width: 204px;
+  margin-bottom: -7px;
+  background: var(--white, #fff);
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px 0px var(--bg-overlay-light),
+    0px 8px 28px 0px rgba(0, 0, 0, 0.05);
+
+  .disabled {
+    cursor: not-allowed !important;
+    pointer-events: auto !important;
+    background-color: var(--gray-200);
+  }
+
+  .export-task-item {
+    border: none;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 45px;
+    padding: 12px;
+    background: var(--status-bg);
+    cursor: pointer;
+    @include fontSetup(
+      var(--fg-neutral-stronger, #3d3d3d),
+      14px,
+      20px,
+      normal,
+      500
+    );
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+
+      &:hover,
+      &:active {
+        background: none !important;
+        color: var(--gray-600) !important;
+      }
+    }
+    &:hover:not(.disabled) {
+      background-color: var(--bg-neutral-tonal-stronger);
+      color: var(--fg-neutral-normal);
+    }
+  }
+}
+
+::ng-deep {
+  .submenu-export-task {
+    &.item {
+      padding: 0 !important;
+      .ant-dropdown-menu-submenu-title {
+        padding: 12px !important;
+        width: 100%;
+        .submenu-item {
+          @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 500);
+        }
+      }
+    }
+  }
+}

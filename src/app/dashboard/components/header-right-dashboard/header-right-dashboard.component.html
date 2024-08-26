@@ -1,0 +1,176 @@
+<div class="right-header">
+  <div class="search-wrapper">
+    <global-search></global-search>
+  </div>
+  <div class="right-header-item">
+    <li
+      *ngIf="!isConsole"
+      nzMatchRouter
+      class="notification"
+      (click)="handleClickOnHeaderItem()">
+      <span
+        class="notification-unreadCount ml-4 border-rad-16"
+        *ngIf="unreadCount">
+        {{ unreadCount > 999 ? "999+" : unreadCount }}
+      </span>
+      <header-item
+        id="notifications"
+        iconName="iconBellV2"
+        [dataE2E]="EDataE2ENavHeader.NAV_NOTIFICATIONS_BUTTON"
+        (click)="handleOpenNotification()"
+        (keydown.enter)="handleOpenNotification()"
+        [idHeaderItem]="'notificationHeaderItem'"
+        [isSelected]="isShowNotification$ | async"
+        nz-tooltip
+        nzTooltipPlacement="bottom"
+        [nzTooltipTitle]="'Notifications'">
+      </header-item>
+    </li>
+    <li nzMatchRouter>
+      <header-item
+        appOutsideClickListener
+        (clickOutside)="handleClickOutside($event)"
+        id="help-center"
+        iconName="iconHelpV2"
+        [isSelected]="isShowHelpCentre$ | async"
+        (click)="showHelpCenter($event)"
+        (keydown.enter)="showHelpCenter($event)"
+        nz-tooltip
+        nzTooltipPlacement="bottom"
+        [nzTooltipTitle]="'Help centre'"></header-item>
+    </li>
+  </div>
+  <li
+    id="user-profile"
+    (click)="handleClickOnHeaderItem(true);"
+    *ngIf="currentUser; else userSkeleton">
+    <div
+      nz-dropdown
+      nzTrigger="click"
+      [nzDropdownMenu]="avatarPopupMenu"
+      nzOverlayClassName="avatar-popup"
+      nzPlacement="rightBottom"
+      [(nzVisible)]="avatarPopupVisible"
+      nz-tooltip
+      nzTooltipPlacement="bottomRight"
+      [nzTooltipTitle]="'My profile'"
+      nzTooltipOverlayClassName="my-profile">
+      <ng-container *ngIf="isLead; else inactiveAvatar">
+        <header-item
+          className="avatar circle"
+          [logoLink]="currentUser?.googleAvatar"
+          [active]="true"
+          (keydown.enter)="handleVisibleChange(true)"
+          menuKeyboard
+          [visibleMenu]="avatarPopupVisible"
+          [menuType]="EMenuDropdownType.TrudiSelectDropDown">
+        </header-item>
+      </ng-container>
+
+      <ng-template #inactiveAvatar>
+        <header-item
+          className="avatar circle"
+          [logoLink]="currentUser?.googleAvatar"
+          [active]="false"></header-item>
+      </ng-template>
+    </div>
+  </li>
+</div>
+
+<ng-template #userSkeleton>
+  <li nzMatchRouter class="skeleton-user">
+    <nz-skeleton-element
+      nzType="avatar"
+      [nzActive]="true"
+      [nzSize]="48"
+      [nzShape]="'circle'">
+    </nz-skeleton-element>
+  </li>
+</ng-template>
+
+<nz-dropdown-menu #avatarPopupMenu="nzDropdownMenu">
+  <ul tabindex="-1" class="border-rad-8" nz-menu [nzMode]="'vertical'">
+    <li
+      *ngIf="isLead"
+      nz-menu-item
+      nzMatchRouter
+      (click)="handleClickOnHeaderItem()"
+      class="menu-item-wrapper">
+      <header-item
+        [hasCustomClass]="true"
+        titleName="Profile settings"
+        iconName="iconProfileSettingV2"
+        [routerLink]="['/dashboard', 'profile-settings']"
+        mode="horizontal"
+        tabindex="-1"
+        (keydown.event)="goToProfileSetting()"></header-item>
+    </li>
+    <li
+      *ngIf="isConsole"
+      nz-menu-item
+      nzMatchRouter
+      (click)="handleClickOnHeaderItem()"
+      class="menu-item-wrapper">
+      <a class="w-100" (click)="goToConsoleSetting()">
+        <header-item
+          [hasCustomClass]="true"
+          titleName="Console settings"
+          iconName="iconSettingsSmall"
+          mode="horizontal">
+        </header-item>
+      </a>
+    </li>
+    <li
+      *ngIf="listCompany?.length > 1"
+      class="menu-item-wrapper"
+      nz-dropdown
+      [nzTrigger]="!isProcessStep && 'click'"
+      [attr.data-button-key]="EButtonCommonKey.SWITCH_ACCOUNT"
+      [attr.data-button-type]="EButtonType.COMMON"
+      PreventButton
+      [nzDropdownMenu]="switchAgencyMenu"
+      nzOverlayClassName="avatar-popup"
+      nzPlacement="rightBottom">
+      <header-item
+        [hasCustomClass]="true"
+        titleName="Switch account"
+        iconName="iconSwapV2"
+        mode="horizontal"
+        [isSubmenu]="true">
+      </header-item>
+    </li>
+    <li *ngIf="!isConsole" nz-menu-item nzMatchRouter class="menu-item-wrapper">
+      <header-item
+        (keydown.enter)="handleNavigateToPrivacyPolicy()"
+        [hasCustomClass]="true"
+        titleName="Privacy policy"
+        iconName="iconPrivacyPolicy"
+        mode="horizontal"
+        (click-validation)="handleNavigateToPrivacyPolicy()"></header-item>
+    </li>
+    <li nz-menu-item nzMatchRouter class="menu-item-wrapper">
+      <header-item
+        (keydown.enter)="handleLogout()"
+        [hasCustomClass]="true"
+        titleName="Log out"
+        iconName="iconLogout"
+        mode="horizontal"
+        (click-validation)="handleLogout()"></header-item>
+    </li>
+  </ul>
+</nz-dropdown-menu>
+
+<nz-dropdown-menu #switchAgencyMenu="nzDropdownMenu">
+  <ul class="border-rad-8 switch-agency-menu" nz-menu [nzMode]="'vertical'">
+    <ng-container *ngFor="let item of listCompany">
+      <li nz-menu-item class="menu-item-wrapper">
+        <header-item
+          (click-validation)="avatarPopupVisible = false; handleSwitchAgency(item)"
+          [titleName]="item.name"
+          mode="horizontal"
+          [logoLink]="item?.useDefaultLogo ? item.defaultLogo : item.logo"
+          [isSelected]="currentCompanyId === item.id"></header-item>
+      </li>
+    </ng-container>
+  </ul>
+</nz-dropdown-menu>

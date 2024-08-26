@@ -1,0 +1,11 @@
+<div *ngIf="iconPrefix?.templateRef" class="trudi-icon" [ngClass]="[size]">
+  <ng-container [ngTemplateOutlet]="iconPrefix.templateRef"></ng-container>
+</div>
+<ng-content></ng-content>
+<div
+  *ngIf="iconSuffix?.templateRef"
+  class="trudi-icon"
+  [class.selected]="selected"
+  [ngClass]="[size]">
+  <ng-container [ngTemplateOutlet]="iconSuffix.templateRef"></ng-container>
+</div>

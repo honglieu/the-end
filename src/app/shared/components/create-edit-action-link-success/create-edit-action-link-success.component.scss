@@ -1,0 +1,25 @@
+.content-wrapper {
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    .success-content {
+        margin-left: 24px;
+        p {
+            font-weight: 500;
+            font-size: 20px;
+            line-height: 24px;
+            color: var(--gray-700);
+        }
+        .number-sent {
+            display: flex;
+            margin-top: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 16px;
+            color: var(--gray-500);
+            span {
+                white-space: break-spaces;
+            }
+        }
+    }
+}

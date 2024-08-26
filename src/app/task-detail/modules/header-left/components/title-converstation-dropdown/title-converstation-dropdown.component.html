@@ -1,0 +1,48 @@
+<button nz-dropdown [nzDropdownMenu]="menu" [nzTrigger]="'click'">
+  <img src="/assets/icon/gray-chevron-down.svg" alt="svg" />
+</button>
+
+<nz-dropdown-menu #menu="nzDropdownMenu" [nzNoAnimation]="true">
+  <div nz-menu class="trudi-menu">
+    <div
+      *ngIf="(taskService.currentTask$ | push)?.propertyManager?.firstName || (taskService.currentTask$ | push)?.propertyManager?.lastName else noPortfolio"
+      class="items-menu">
+      <ng-container>
+        <div
+          nz-menu-item
+          class="detail-item d-flex align-items-center border-rad-8">
+          <span (click)="handleOpenModalPeople()" class="text"
+            >Portfolio: {{(taskService.currentTask$ |
+            async)?.propertyManager.firstName}} {{(taskService.currentTask$ |
+            async)?.propertyManager.lastName}}</span
+          >
+        </div>
+      </ng-container>
+    </div>
+    <ng-template #noPortfolio>
+      <div class="items-menu">
+        <ng-container>
+          <div
+            nz-menu-item
+            class="task-open-status d-flex align-items-center border-rad-8">
+            <span class="text">No Portfolio</span>
+          </div>
+        </ng-container>
+      </div>
+    </ng-template>
+    <div
+      *ngIf="(taskService.currentTask$ | push)?.createdAt"
+      class="items-menu">
+      <ng-container>
+        <div
+          nz-menu-item
+          class="task-open-status d-flex align-items-center border-rad-8">
+          <span class="text"
+            >Opened {{(taskService.currentTask$ | push)?.createdAt | dateCase |
+            async}}</span
+          >
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</nz-dropdown-menu>

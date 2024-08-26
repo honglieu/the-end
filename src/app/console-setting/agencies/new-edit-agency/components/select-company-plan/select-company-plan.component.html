@@ -1,0 +1,51 @@
+<div class="trudi-input-label mt-12">Select plan</div>
+<div class="form-group-container" [formGroup]="agencyFormGroup">
+  <trudi-radio-button [options]="planList" formControlName="plan">
+    <ng-template trudi-radio-button-tmp let-value="value">
+      <ng-container [ngSwitch]="value">
+        <ng-template [ngSwitchCase]="(EAgencyPlan.CUSTOM)">
+          <div class="addons-list">
+            <div *ngFor="let addOn of addOnsList; let isLast = last">
+              <ng-container *ngIf="addOn.comingSoon; else defaultAddOn">
+                <div class="d-flex justify-content-between">
+                  <div class="d-flex gap-8">
+                    <div class="coming-soon-text">{{addOn.title}}</div>
+                    <trudi-badge
+                      text="Coming soon"
+                      size="small"
+                      variant="role"
+                      [allowTruncated]="true">
+                    </trudi-badge>
+                  </div>
+                  <trudi-icon icon="blackDisableToggle"></trudi-icon>
+                </div>
+              </ng-container>
+              <ng-template #defaultAddOn>
+                <trudi-switch
+                  class="mr-auto addon-item"
+                  nz-tooltip
+                  nzTooltipPlacement="topRight"
+                  [nzTooltipTitle]="(addOn.controlName === 'voicemail' && voicemail.disabled) || 
+                                    ( addOn.controlName === 'sms' && customPlanSMS.disabled) ? tooltipFeatureMessage : ''"
+                  [index]="addOn.controlName"
+                  [label]="addOn.title"
+                  [reverse]="true"
+                  [disabled]="addOn.disable"
+                  [formControlName]="addOn.controlName">
+                </trudi-switch>
+              </ng-template>
+              <div class="line" *ngIf="!isLast"></div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-container *ngSwitchDefault></ng-container>
+      </ng-container>
+    </ng-template>
+  </trudi-radio-button>
+</div>
+
+<ng-template #tooltipFeatureMessage>
+  <span>
+    You need to enter Voicemail/SMS number before turn on this feature
+  </span>
+</ng-template>

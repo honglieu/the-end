@@ -1,0 +1,48 @@
+<div class="pd-16 list-user">
+  <user-header-toolbar
+    [isDisableActionByOffBoardStatus]="isDisableActionByOffBoardStatus"
+    [userProperty]="userProperty"
+    [openFrom]="openFrom"
+    [currentDataUser]="currentDataUser"></user-header-toolbar>
+  <card-user-info
+    [currentDataUser]="currentDataUser"
+    [openFrom]="openFrom"></card-user-info>
+  <lease-user-info [userProperty]="userProperty"></lease-user-info>
+  <div
+    class="d-flex justify-content-end gap-5 align-items-center export-conversation">
+    <button
+      nz-tooltip
+      [nzTooltipTitle]="conversationExportHover"
+      nzTooltipPlacement="topRight"
+      nzTooltipOverlayClassName="move-to-icon"
+      class="btn-action"
+      [ngClass]="{'action-icon': isTenantOwner}"
+      *ngIf="currentDataUser?.type && ![EConfirmContactType.OTHER, EConfirmContactType.SUPPLIER].includes(currentDataUser.type) && currentDataUser?.propertyId"
+      (click)="showModalExport()">
+      <trudi-icon
+        [style]="{ 'width.px': 20, 'height.px': 20}"
+        icon="exportIcon"></trudi-icon>
+    </button>
+    <button
+      nz-tooltip
+      [nzTooltipTitle]="userPropertyHover"
+      nzTooltipPlacement="topRight"
+      nzTooltipOverlayClassName="move-to-icon"
+      class="delete-icon btn-action"
+      [ngClass]="{'action-icon': !userPropertyHover}"
+      (click)="showDeleteConfirmation(currentDataUser)">
+      <trudi-icon [icon]="deleteState"></trudi-icon>
+    </button>
+    <trudi-modal
+      [visible]="showPopupDelete"
+      [autoFocus]="null"
+      [modelWidth]="510"
+      className="trudi-modal-custom">
+      <app-popup-delete
+        [title]="'Are you sure you want to delete?'"
+        (onCancel)="handleCloseModalDelete()"
+        (onDelete)="handleDeleteItems()">
+      </app-popup-delete>
+    </trudi-modal>
+  </div>
+</div>

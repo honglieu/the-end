@@ -1,0 +1,83 @@
+<ng-container
+  *ngIf="labelSkeleton; else formTemplate"
+  class="new-task-form-wrapper">
+  <div class="new-task-form-skeleton">
+    <div class="skeleton-rectangle skeleton-label">
+      <nz-skeleton
+        [nzParagraph]="paragraph"
+        [nzActive]="true"
+        class="w-20"></nz-skeleton>
+    </div>
+    <div
+      class="justify-content-between align-items-center files-item pd-16 skeleton-bg skeleton-select">
+      <div class="skeleton-rectangle w-50">
+        <nz-skeleton
+          [nzParagraph]="paragraph"
+          [nzActive]="true"
+          class="w-50"></nz-skeleton>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #formTemplate>
+  <ng-container>
+    <div>
+      <div [formGroup]="newTaskStepForm">
+        <div class="new-task-form-wrapper">
+          <upgrade-message
+            *ngIf="isShowUpgradeMessage"
+            [action]="EActionShowMessageTooltip.EDIT_WORKFLOWS"
+            [isTooltip]="false"></upgrade-message>
+          <div class="mb-6 mt-24">
+            <span class="field-label"> Select task </span>
+          </div>
+          <trudi-single-select
+            [items]="taskNameList"
+            bindValue="id"
+            bindLabel="name"
+            formControlName="newTaskTemplateId"
+            [virtualScroll]="true"
+            (scrollToEnd)="onScrollToEnd()"
+            (search)="handleSearch($event)"
+            [disabled]="isDisableForm"
+            [editableSearchTerm]="true"
+            [searchFn]="searchFn"
+            placeholder="Select">
+            <ng-template
+              trudi-option-tmp
+              let-item="item"
+              let-searchTerm="searchTerm"
+              let-item$="item$">
+              <div *ngIf="item === itemSkeleton; else optionTemplate">
+                <div class="skeleton-rectangle w-100 trudi-select-label">
+                  <nz-skeleton
+                    [nzParagraph]="paragraph"
+                    [nzActive]="true"
+                    class="skeleton-content"></nz-skeleton>
+                </div>
+              </div>
+              <ng-template #optionTemplate>
+                <div
+                  class="trudi-select-label d-flex justify-content-between align-items-center w-100 gap-8">
+                  <div class="y-center gap-4 field-wrapper" #taskName>
+                    <div
+                      class="field-label text-ellipsis"
+                      [ngOptionHighlight]="searchTerm || ''">
+                      {{item?.name}}
+                    </div>
+                  </div>
+                  <div
+                    *ngIf="newTaskStepForm.value.newTaskTemplateId && (newTaskStepForm.value?.newTaskTemplateId === item?.id)"
+                    class="d-flex align-items-center item-option-icon">
+                    <trudi-icon icon="checkSuccess"></trudi-icon>
+                  </div>
+                </div>
+              </ng-template>
+            </ng-template>
+          </trudi-single-select>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-template>

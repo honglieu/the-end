@@ -1,0 +1,65 @@
+<div
+  class="msg-summary_body_summary"
+  (click)="handleClickMessageSummaryItem(message)"
+  (mouseenter)="handleHoverAttachment(message)"
+  (mouseleave)="handleLeaveAttachment()">
+  <div class="msg-summary_body_wrapper">
+    <div class="msg-summary_body_wrapper_event">
+      {{message?.createdAt | dateCase:true:false:true | async}}
+    </div>
+    <div class="msg-summary_body_wrapper_content">
+      <div
+        class="msg-summary-content-title d-flex align-items-center gap-4"
+        [ngClass]="{'text-ellipsis': message?.messageSummaryTimeLine?.length > 250, 'no-message': message?.messageSummaryTimeLine === '[NO_MESSAGE_SUMMARY]' }">
+        @if(message?.messageSummaryTimeLine === '[NO_MESSAGE_SUMMARY]') { No
+        message } @else { {{message?.messageSummaryTimeLine}} }
+        <div class="attachments">
+          <div
+            *ngIf="message?.attachments?.length"
+            class="msg-summary-icon-attachments"
+            [ngClass]="{'msg': isConversationOfMsg}"
+            nz-tooltip
+            nzTooltipTitle="View attachments"
+            (click)="$event.stopPropagation(); handleShowAttachment()">
+            <trudi-icon
+              icon="attachments"
+              class="d-flex align-items-center mr-4"></trudi-icon>
+            <span>
+              {{ message?.attachments?.length | totalCountPipe: 99 }}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div
+        class="d-flex align-items-center gap-4 list-attachment"
+        *ngIf="message?.attachments?.length && showAttachment">
+        <div *ngFor="let file of message?.attachments">
+          <summary-message-dialog-file
+            [file]="file"></summary-message-dialog-file>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="copy-send-msg-summary">
+    <button
+      nz-tooltip
+      [nzTooltipPlacement]="'top'"
+      [nzTooltipTitle]="'Forward'"
+      (click)="openPopupSendMessage($event, message?.attachments)"
+      disableOpenSendMsgModal
+      class="btn-action">
+      <trudi-icon class="trudi-icon" icon="forwardMsgIcon"></trudi-icon>
+    </button>
+    <button
+      nz-tooltip
+      [nzTooltipTitle]="isCopy ? 'Copied' : 'Copy'"
+      [nzTooltipPlacement]="'top'"
+      (click)="$event.stopPropagation(); copyToClipboard(message?.messageSummaryTimeLine)"
+      class="btn-action">
+      <trudi-icon
+        class="trudi-icon"
+        svgClass="size-14"
+        icon="copy"></trudi-icon>
+    </button>
+  </div>
+</div>

@@ -1,0 +1,104 @@
+@import 'function';
+.chart-container {
+  width: 100%;
+  overflow-x: auto;
+  .line-chart-wrapper {
+    min-width: 100%;
+    ::ng-deep {
+      .x-axis {
+        .tick text {
+          fill: var(--fg-neutral-weaker, #999) !important;
+          @include fontSetup(
+            var(--fg-neutral-weaker, #999),
+            14px,
+            20px,
+            normal,
+            600
+          );
+        }
+        .tick line {
+          stroke: none !important;
+        }
+        .domain {
+          stroke: none;
+        }
+      }
+      .line {
+        fill: none;
+        stroke-width: 2px;
+      }
+      .hover-line {
+        stroke: rgba(51, 186, 177, 0.5);
+        stroke-width: 2px;
+        stroke-dasharray: 7;
+      }
+      .focus circle {
+        fill: var(--tenant-50);
+        stroke: var(--tenant-500);
+        stroke-width: 3px;
+      }
+
+      .overlay {
+        fill: none;
+        pointer-events: all;
+      }
+    }
+    .tick line {
+      stroke: none !important;
+    }
+    .domain {
+      stroke: none;
+    }
+  }
+  .line {
+    fill: none;
+    stroke-width: 2px;
+  }
+  .hover-line {
+    stroke: rgba(51, 186, 177, 0.5);
+    stroke-width: 2px;
+    stroke-dasharray: 7;
+  }
+  .focus circle {
+    fill: var(--tenant-50);
+    stroke: var(--tenant-500);
+    stroke-width: 3px;
+  }
+
+  .overlay {
+    fill: none;
+    pointer-events: all;
+  }
+
+  ::ng-deep .data-circle {
+    fill: var(--tenant-50);
+    stroke: var(--tenant-500);
+    stroke-width: 3;
+  }
+}
+.default-tooltip {
+  display: flex;
+  flex-direction: column;
+  gap: 1.98px;
+  background: var(--bg-base);
+  padding: 8px;
+  border-radius: 8px;
+  border: 0.991px solid var(--border-neutral-light, #f2f5f7);
+  box-shadow: 0px 13.86849px 35.66184px 0px rgba(0, 0, 0, 0.13),
+    0px 1.98121px 11.88728px 0px rgba(0, 0, 0, 0.08);
+  &--date {
+    @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 500);
+  }
+  &--data {
+    @include fontSetup(var(--fg-neutral-weaker, #999), 12px, 16px, normal, 500);
+  }
+  &--property {
+    @include fontSetup(
+      var(--fg-neutral-strongest, #202020),
+      16px,
+      24px,
+      normal,
+      600
+    );
+  }
+}

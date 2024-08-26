@@ -1,0 +1,167 @@
+<div class="d-flex flex-dir-column h-100">
+  <ng-container
+    *ngIf="(!listMessages.length && (isLoadingDetail || (emailTaskLoadingService.isLoading$ | async))); else emailDetailMessage">
+    <div class="detail-header">
+      <div class="w-100 ant-skeleton-title">
+        <nz-skeleton [nzParagraph]="paragraph" [nzActive]="true"></nz-skeleton>
+      </div>
+    </div>
+    <div class="detail-header">
+      <div class="w-100 ant-skeleton-link">
+        <nz-skeleton [nzParagraph]="paragraph" [nzActive]="true"></nz-skeleton>
+      </div>
+    </div>
+    <div class="detail-content">
+      <div class="wrapper-loading-message">
+        <div
+          class="skeleton-card-message"
+          *ngFor="let _ of [].constructor(2); let i = index">
+          <div class="d-flex border-bt">
+            <div class="d-flex flex-grow-1">
+              <div class="skeleton-title-left">
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"></nz-skeleton>
+              </div>
+            </div>
+            <div class="skeleton-title-right">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+          </div>
+          <div class="skeleton-content-wrapper">
+            <div class="skeleton-content">
+              <nz-skeleton
+                class="skeleton-sm"
+                [nzParagraph]="paragraph"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+            <div class="skeleton-content">
+              <nz-skeleton
+                class="skeleton-md"
+                [nzParagraph]="paragraph"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+            <div class="skeleton-content">
+              <nz-skeleton
+                class="skeleton-lg"
+                [nzParagraph]="paragraph"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+            <div class="skeleton-content">
+              <nz-skeleton
+                class="skeleton-lg"
+                [nzParagraph]="paragraph"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<ng-template #emailDetailMessage>
+  <ng-container *ngIf="listMessages?.length">
+    <div>
+      <div class="detail-header">
+        <div class="email-subject" appE2E e2eId="email-details-title">
+          {{listMessages[0].subject || '(no subject)'}}
+        </div>
+        <div *hideWithConsole class="d-flex">
+          <div *ngIf="!isSentItemsFolder">
+            <button
+              *ngIf="isSpamFolder;else spam"
+              (click)="handleNotSpam()"
+              class="trudi-btn trudi-btn-tertiary trudi-btn-medium mr-12">
+              Not spam
+            </button>
+            <ng-template #spam>
+              <button
+                (click)="handleReportSpam()"
+                nz-tooltip
+                [nzTooltipTitle]="'Report spam'"
+                nzTooltipPlacement="bottomCenter"
+                nzTooltipOverlayClassName="move-to-icon"
+                class="trudi-btn trudi-btn-tertiary trudi-btn-medium trudi-btn-medium-circle mr-12">
+                <trudi-icon icon="alertOctagonv2"></trudi-icon>
+              </button>
+            </ng-template>
+          </div>
+          <button
+            appE2E
+            e2eId="email-details-move-to-button"
+            nz-dropdown
+            [nzClickHide]="false"
+            [nzDropdownMenu]="menu"
+            [nzTrigger]="'click'"
+            [nzVisible]="isDropdownVisible"
+            (nzVisibleChange)="handleVisibleChange($event)"
+            nz-tooltip
+            [nzTooltipTitle]="!isDropdownVisible ? 'Move to' : ''"
+            nzTooltipPlacement="bottomRight"
+            nzTooltipOverlayClassName="move-to-icon"
+            class="trudi-btn trudi-btn-tertiary trudi-btn-medium trudi-btn-medium-circle"
+            [class.active]="isDropdownVisible">
+            <trudi-icon icon="nextArrowBold"></trudi-icon>
+          </button>
+        </div>
+      </div>
+      <ng-container
+        *ngIf="portalConversation  && portalConversation.type && (portalConversation?.status !== taskStatusType.unassigned)">
+        <linked-to [portalConversation]="portalConversation"></linked-to>
+      </ng-container>
+    </div>
+    <div
+      class="detail-content scroll-container-wrapper"
+      tabindex="0"
+      #scrollMessages>
+      <div
+        class="w-100"
+        *ngFor="let message of listMessages; let last = last; let i = index">
+        <div
+          *ngIf="!message?.isRead && i === firstUnreadMessageIndex  "
+          class="d-flex flex-dir-row align-items-center red-line"
+          #redLineNew>
+          <hr />
+          <span>NEW</span>
+        </div>
+        <email-view-detail-message
+          [lastItem]="last"
+          [message]="message"></email-view-detail-message>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!listMessages?.length">
+    <div
+      class="icon-items"
+      [class.selected-item]="!!(inboxToolbarService.inboxItem$ | async)?.length">
+      <img
+        [src]="!!(inboxToolbarService.inboxItem$ | async)?.length ? 'assets/images/item-selected.png' :'assets/images/no-item.png'"
+        [alt]="!!(inboxToolbarService.inboxItem$ | async)?.length ? 'Items Selected' : 'No item'" />
+      <p *ngIf="!!(emailViewService.emailItemLists$ | async)?.length">
+        Select an item to read
+      </p>
+    </div>
+  </ng-container>
+</ng-template>
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div nz-menu>
+    <div class="menu-wrapper border-rad-8">
+      <div
+        *ngFor="let item of emailMenuItems"
+        appE2E
+        e2ePrefix="email-details"
+        [e2eId]="item.action"
+        (click)="!item.disabled && handleEmailMoveToAction(item.action)"
+        class="item cursor-pointer"
+        [class.disabled]="item.disabled">
+        <div [class.pointer-events-none]="item.disabled" ripple>
+          <p class="text">{{ item.label }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>

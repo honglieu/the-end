@@ -1,0 +1,32 @@
+{
+  "name": "trudi",
+  "version": "1.1.9",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron main.js",
+    "build:attic": "electron-builder --config build-config/build-config.attic.yml",
+    "build:stage": "electron-builder --config build-config/build-config.stage.yml",
+    "build:preprod": "electron-builder --config build-config/build-config.preprod.yml",
+    "build:prod": "electron-builder --config build-config/build-config.prod.yml",
+    "build:produs": "electron-builder --config build-config/build-config.produs.yml",
+    "postinstall": "electron-builder install-app-deps",
+    "postuninstall": "electron-builder install-app-deps"
+  },
+  "private": true,
+  "dependencies": {
+    "@lottiefiles/lottie-player": "^2.0.2",
+    "cron": "^2.3.0",
+    "electron-config": "^2.0.0",
+    "electron-log": "^5.0.3",
+    "electron-store": "^8.1.0",
+    "electron-taskbar-badge": "^1.1.2",
+    "moment": "^2.29.4",
+    "node-cron": "^3.0.2",
+    "node-fetch": "2",
+    "push-receiver": "^2.1.1"
+  },
+  "devDependencies": {
+    "electron": "^27.3.0",
+    "electron-builder": "^23.6.0"
+  }
+}

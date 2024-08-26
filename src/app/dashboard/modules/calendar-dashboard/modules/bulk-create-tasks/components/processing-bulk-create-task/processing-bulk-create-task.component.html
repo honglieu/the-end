@@ -1,0 +1,69 @@
+<trudi-modal
+  className="modal-bulk-tasks-creating"
+  [visible]="displayPopup === typePopup.BULK_TASKS_IS_CREATING"
+  [autoFocus]="null"
+  [isHideHeader]="true"
+  [isHideFooter]="true">
+  <div class="body-modal-bulk-tasks-creating">
+    <div class="content">
+      <div class="title">Bulk tasks are creating</div>
+      <div class="info-progress">
+        <div class="progress-bar">
+          <nz-progress
+            [nzPercent]="percentProgressComplete"
+            [nzShowInfo]="false"
+            nzStrokeColor="#00AA9F"></nz-progress>
+        </div>
+        <span class="complete-task">{{completeTask}}&#47;{{totalTask}}</span>
+      </div>
+    </div>
+  </div>
+</trudi-modal>
+<trudi-modal
+  className="modal-failed-create-task"
+  [visible]="displayPopup === typePopup.FAILED_TO_CREATE_TASK"
+  title="Failed to create task"
+  [subTitle]="null"
+  [autoFocus]="null"
+  (onCancel)="handleCancel()">
+  <div class="body-modal-failed-create-task">
+    <div class="warning">
+      <trudi-icon icon="iconWarning" svgClass="size-24"></trudi-icon>
+      <div class="warning-content">These events are failed to create task</div>
+    </div>
+    <div class="list-failed-tasks">
+      <ng-container *ngFor="let event of listEventFailedCreateTask">
+        <div class="detail-failed-task">
+          <div class="calendar-event">
+            {{event?.eventName}}&#32;&#45;&#32;{{event?.eventDate |
+            date:"dd/MM/YYYY"}}
+          </div>
+          <div class="property-address">
+            <trudi-icon icon="iconAddress" svgClass="size-16"></trudi-icon>
+            <span>{{event?.streetline}}</span>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div class="footer-modal-failed-create-task">
+      <button
+        trudi-btn
+        size="large"
+        btnType="neutral"
+        variant="outlined"
+        (click)="onSkip()">
+        Skip
+      </button>
+      <button
+        trudi-btn
+        class="margin-left-12"
+        size="large"
+        variant="filled"
+        (click)="onTryAgain()">
+        Try again
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

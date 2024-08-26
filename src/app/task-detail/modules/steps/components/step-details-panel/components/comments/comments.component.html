@@ -1,0 +1,20 @@
+<div class="comment-editor">
+  <comments-editor></comments-editor>
+  <comments-attachments [invalidFile]="invalidFile">
+    @for(file of uploadedFiles; track file.localId) {
+    <comments-attachment-item
+      [isUploading]="isUploading"
+      [canRemove]="true"
+      [attachment]="file"
+      (triggerRemoveFile)="handleRemoveFile($event)"></comments-attachment-item>
+    }
+  </comments-attachments>
+</div>
+
+<ng-container *ngIf="isCreating$ | async as isCreating">
+  <div *ngIf="isCreating" class="mt-16">
+    <app-comment-skeleton></app-comment-skeleton>
+  </div>
+</ng-container>
+
+<comments-threads></comments-threads>

@@ -1,0 +1,10 @@
+@import 'function';
+
+.list-attachment {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.warning-content {
+  @include fontSetup(var(--danger-500), 12px, 16px, normal, 400);
+}

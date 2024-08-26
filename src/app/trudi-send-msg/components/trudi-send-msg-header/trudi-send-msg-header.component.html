@@ -1,0 +1,45 @@
+<div class="trudi-send-msg-header">
+  <div class="trudi-send-msg-header-body">
+    <trudi-icon [icon]="configs.header?.icon"></trudi-icon>
+    <div class="flex-dir-column max-width-100">
+      <div class="d-flex align-items-center gap-8">
+        <span
+          *ngIf="configs.header?.title"
+          class="trudi-send-msg-header-body-title"
+          [class.error-text]="invalidRecipients">
+          {{ configs.header.title }}
+        </span>
+        <trudi-send-msg-property
+          *ngIf="(configs.otherConfigs.createMessageFrom === ECreateMessageFrom.SCRATCH
+        || configs.otherConfigs.createMessageFrom === ECreateMessageFrom.TASK_HEADER 
+        || (configs.otherConfigs.createMessageFrom === ECreateMessageFrom.TASK_STEP && isTaskStepSingleEmailSendType))
+        && !configs.header.hideSelectProperty"
+          [isLoading]="isLoading"
+          [listProperties]="listProperties"
+          [formControl]="property">
+        </trudi-send-msg-property>
+      </div>
+      <trudi-send-option-menu
+        [hasAppUser]="isAppUser"
+        [formControl]="sendOption"></trudi-send-option-menu>
+    </div>
+  </div>
+  <trudi-icon
+    tabindex="0"
+    *ngIf="expandable"
+    class="trudi-send-msg-header-icon-expand-or-collapse expand-or-collapse-modal-btn header-icon"
+    [icon]="isFullScreenModal ? 'modalCollapse' : 'modalExpand'"
+    [style]="{ 'width.px': 14, 'height.px': 14, color: '#646464' }"
+    tabindex="0"
+    (keydown.enter)="onTriggerExpandOrResizeModal()"
+    (click)="onTriggerExpandOrResizeModal()"></trudi-icon>
+  <trudi-icon
+    tabindex="0"
+    *ngIf="configs.header?.closeIcon"
+    class="trudi-send-msg-header-icon-close close-modal-btn header-icon"
+    [icon]="configs.header.closeIcon"
+    [style]="{ 'width.px': 14, 'height.px': 14, color: '#646464' }"
+    tabindex="0"
+    (keydown.enter)="onCloseSendMsg()"
+    (click)="onCloseSendMsg()"></trudi-icon>
+</div>

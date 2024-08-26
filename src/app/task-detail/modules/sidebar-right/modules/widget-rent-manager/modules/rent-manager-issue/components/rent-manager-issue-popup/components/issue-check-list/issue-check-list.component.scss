@@ -1,0 +1,151 @@
+@import 'function';
+
+:host {
+  ::ng-deep {
+    .trudi-textarea-wrapper {
+      padding: 0 !important;
+
+      textarea {
+        padding: 12px !important;
+        overflow-y: hidden;
+        resize: none;
+        height: 36px;
+      }
+    }
+
+    .error-container {
+      display: none !important;
+    }
+
+    th {
+      border-right: unset !important;
+    }
+
+    .cursor-not-allowed {
+      cursor: not-allowed !important;
+    }
+
+    .trudi-ui-btn-outlined:disabled {
+      cursor: not-allowed !important;
+      pointer-events: unset !important;
+      background-color: white;
+
+      svg {
+        cursor: not-allowed !important;
+      }
+    }
+
+    .trudi-ui-btn:focus {
+      box-shadow: none !important;
+    }
+
+    trudi-textarea:has(.trudi-ui-textarea.ng-invalid.ng-dirty) {
+      box-shadow: none !important;
+    }
+
+    .trudi-table-wrapper {
+      .ant-table {
+        margin-top: 16px !important;
+      }
+
+      .ant-table-container {
+        .ant-table-header {
+          overflow: hidden !important;
+        }
+
+        .ant-table-cell-ellipsis {
+          white-space: inherit !important;
+        }
+
+        thead {
+          position: sticky;
+          top: 0;
+          z-index: 1;
+        }
+      }
+
+      mark.highlight {
+        background-color: var(--bg-tenant-solid-normal);
+        color: unset;
+        border-radius: 2px;
+      }
+
+      .ant-table-thead > tr > th {
+        padding: 12px 0px !important;
+        background: var(--bg-neutral-tonal-normal);
+        @include fontSetup(var(--fg-neutral-normal), 12px, 18px, normal, 500);
+
+        &:first-child {
+          padding: 0 8px 0 12px !important;
+        }
+      }
+
+      .ant-table-tbody > tr {
+        &.ant-table-measure-now {
+          display: none;
+        }
+
+        &.ant-table-row {
+          .ant-table-cell {
+            border-right: none !important;
+          }
+
+          .ant-table-cell:nth-child(2) {
+            .trudi-checkbox {
+              justify-content: center;
+            }
+          }
+
+          .ant-table-cell:last-child {
+            .disabled {
+              color: var(--fg-neutral-weakest) !important;
+            }
+
+            trudi-icon {
+              color: var(--fg-danger);
+
+              svg-icon {
+                justify-content: center;
+              }
+            }
+          }
+        }
+
+        & > td {
+          &:not(:first-child):not(:last-child) {
+            padding-right: 10px !important;
+          }
+
+          padding: 16px !important;
+          @include fontSetup(
+            var(--fg-neutral-stronger),
+            14px,
+            20px,
+            normal,
+            500
+          );
+        }
+      }
+
+      trudi-icon {
+        cursor: pointer;
+      }
+
+      .ant-table-thead
+        > tr
+        > th:not(:last-child):not(.ant-table-selection-column):not(
+          .ant-table-row-expand-icon-cell
+        ):not([colspan])::before {
+        content: unset;
+      }
+
+      .ant-table-body {
+        overflow-y: auto !important;
+      }
+
+      .ant-table-footer {
+        background-color: var(--bg-base);
+      }
+    }
+  }
+}

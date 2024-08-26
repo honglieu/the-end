@@ -1,0 +1,142 @@
+<div class="wrapper-skeleton-dashboard">
+  <div class="header-dashboard d-flex">
+    <div class="header-left d-flex">
+      <div class="w-100">
+        <nz-skeleton
+          [nzParagraph]="paragraph"
+          [nzActive]="true"
+          class="size-60"></nz-skeleton>
+      </div>
+      <div class="w-100">
+        <nz-skeleton
+          [nzParagraph]="paragraph"
+          [nzActive]="true"
+          class="size-60"></nz-skeleton>
+      </div>
+      <div class="w-100">
+        <nz-skeleton
+          [nzParagraph]="paragraph"
+          [nzActive]="true"
+          class="size-60"></nz-skeleton>
+      </div>
+    </div>
+    <div class="header-right">
+      <div>
+        <nz-skeleton-element
+          class="ant-skeleton-circle"
+          nzType="avatar"
+          [nzActive]="true"></nz-skeleton-element>
+      </div>
+      <div>
+        <nz-skeleton
+          [nzParagraph]="paragraph"
+          [nzActive]="true"
+          class="ant-skeleton-custom size-16"></nz-skeleton>
+      </div>
+    </div>
+  </div>
+  <div class="container-dashboard d-flex">
+    <div class="skeleton-inbox-sidebar">
+      <div class="message-block">
+        <div class="sidebar-title">
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"
+            class="size-60"></nz-skeleton>
+        </div>
+        <div
+          class="d-flex flex-row"
+          *ngFor="let _ of [].constructor(3); let i = index">
+          <div>
+            <nz-skeleton-element
+              class="ant-skeleton-circle"
+              nzType="avatar"
+              [nzActive]="true"></nz-skeleton-element>
+          </div>
+          <div>
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="ant-skeleton-custom size-60"></nz-skeleton>
+          </div>
+        </div>
+      </div>
+
+      <div class="task-block">
+        <div class="sidebar-title">
+          <nz-skeleton
+            [nzParagraph]="paragraph"
+            [nzActive]="true"
+            class="size-60"></nz-skeleton>
+        </div>
+        <div
+          class="d-flex flex-row"
+          *ngFor="let _ of [].constructor(10); let i = index">
+          <div class="size-44">
+            <nz-skeleton
+              *ngIf="i === 0"
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="ant-skeleton-custom size-16"></nz-skeleton>
+          </div>
+          <div>
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="size-60"></nz-skeleton>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="skeleton-inbox-content overflow-hidden">
+      <div
+        *ngFor="let _ of [].constructor(11); let i = index"
+        class="message-row-wrapper d-flex flex-dir-column m-12">
+        <div class="title-inbox d-flex align-items-center">
+          <div class="d-flex gap-8 flex-1 align-items-center">
+            <nz-skeleton
+              class="ant-skeleton-checkbox"
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="size-16"></nz-skeleton>
+            <div
+              class="d-flex flex-1 align-items-center justify-content-between">
+              <div class="d-flex align-items-center gap-12">
+                <div class="message-name">
+                  <nz-skeleton
+                    [nzParagraph]="paragraph"
+                    [nzActive]="true"
+                    class="w-50"></nz-skeleton>
+                </div>
+                <div class="message-role">
+                  <span class="task-item-time-text text-ellipsis">
+                    <nz-skeleton
+                      [nzParagraph]="paragraph"
+                      [nzActive]="true"
+                      class="ant-skeleton-message-role"></nz-skeleton>
+                  </span>
+                </div>
+                <div class="property-address">
+                  <nz-skeleton
+                    [nzParagraph]="paragraph"
+                    [nzActive]="true"
+                    class="w-50"></nz-skeleton>
+                </div>
+              </div>
+              <nz-skeleton
+                class="ant-skeleton-circle"
+                [nzParagraph]="paragraph"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+          </div>
+        </div>
+        <div class="content-inbox">
+          <nz-skeleton
+            class="ant-skeleton-custom"
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

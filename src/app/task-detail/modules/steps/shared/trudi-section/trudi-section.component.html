@@ -1,0 +1,27 @@
+<cdk-accordion class="section-accordion">
+  <cdk-accordion-item
+    #accordionItem="cdkAccordionItem"
+    role="button"
+    tabindex="0"
+    [expanded]="true"
+    [attr.aria-expanded]="accordionItem.expanded"
+    [attr.aria-controls]="'accordion-body'">
+    <div
+      class="trudi-suggested-step-group-title"
+      (click)="accordionItem.toggle()">
+      <div class="section-chevron" [class.collapse]="!accordionItem.expanded">
+        <trudi-icon icon="chevronDownIcon"></trudi-icon>
+      </div>
+      <div class="group-title">{{ groupTitle }}</div>
+    </div>
+    <div
+      role="region"
+      [style.display]="accordionItem.expanded ? '' : 'none'"
+      [attr.id]="'accordion-body-'"
+      [attr.aria-labelledby]="'accordion-header'">
+      <div class="trudi-suggested-step-group-container">
+        <ng-content></ng-content>
+      </div>
+    </div>
+  </cdk-accordion-item>
+</cdk-accordion>

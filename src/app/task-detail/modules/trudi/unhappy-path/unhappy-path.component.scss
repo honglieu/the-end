@@ -1,0 +1,15 @@
+@import 'function';
+
+.convert-to-task {
+  .container-convert-to-task {
+    align-items: flex-start;
+  }
+  .container-move-to-task {
+    align-items: flex-start;
+  }
+  gap: 24px;
+}
+
+.title {
+  @include fontSetup(var(--gray-700), 14px, 20px, normal, 600);
+}

@@ -1,0 +1,21 @@
+:host {
+  transition: .15s;
+  display: flex;
+  align-items: center;
+  padding: 11px 23px;
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 8px;
+  cursor: pointer;
+  .text {
+    font-weight: 500;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 16px;
+    user-select: none;
+  }
+  &:active {
+    box-shadow: 0 0 0 0.25rem rgba(217, 217, 217, 0.5);
+  }
+}

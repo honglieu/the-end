@@ -1,0 +1,8 @@
+<create-new-task-pop-up
+  [configs]="configs"
+  [listEventBulkCreateTask]="listEvents"
+  [openFrom]="createTaskFrom.CALENDAR_EVENT_BULK_CREATE_TASKS"
+  [showBackBtn]="showBackBtn"
+  (onBack)="handleBack()"
+  (onNext)="handleNext($event)"
+  (onQuit)="handleCancel()"></create-new-task-pop-up>

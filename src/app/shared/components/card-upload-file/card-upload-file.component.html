@@ -1,0 +1,77 @@
+<div class="content-upload">
+  <div
+    class="body-title-wrapper d-flex align-items-center justify-content-between">
+    <div class="content-title">{{titleContent}}</div>
+    <trudi-icon
+      class="cursor-pointer"
+      nz-tooltip
+      nzTooltipTitle="Document will be attached to your outgoing message"
+      nzTooltipPlacement="topRight"
+      nzTooltipOverlayClassName="upload-file-tooltip"
+      icon="infoFill"></trudi-icon>
+  </div>
+  <ng-container *ngIf="!file || !file[0] || file[0]?.errors">
+    <!-- <button-upload-file (isOpenFile)="openFile($event)"></button-upload-file> -->
+    <div class="content-button">
+      <button
+        class="trudi-btn trudi-btn-semi-large trudi-btn-tertiary"
+        (click)="triggerUploadFile()">
+        Upload file
+      </button>
+      <input
+        class="d-none"
+        type="file"
+        [accept]="acceptType"
+        (change)="fileBrowseHandler($event)"
+        #inputUploadfile />
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!file && isSubmit && fileRequired">
+    <div class="content-require d-flex align-items-center">
+      <trudi-icon class="sync-icon" icon="errorBgRed"></trudi-icon>
+      <span class="require-text">Required field</span>
+    </div>
+  </ng-container>
+
+  <div class="files" [class.files-spacing]="file > 0" *ngIf="file">
+    <ng-container *ngFor="let item of file; let index = index">
+      <div
+        *ngIf="!item[i]?.errors"
+        class="message-file align-items-center justify-content-between"
+        [ngClass]="{'invalid-file': !item?.validFileType || item?.overFileSize}"
+        style="margin: 0">
+        <div class="name-file d-flex align-items-center">
+          <img class="size-36" src="assets/images/icons/{{item?.icon}}" />
+          <div class="file send-file">
+            <div class="file-info d-flex flex-dir-column">
+              <span class="file-name">{{item.title || item?.name}}</span>
+              <span class="file-date-created"
+                >{{(item?.size ||item?.size) | convertFileSize}}</span
+              >
+            </div>
+          </div>
+        </div>
+        <div
+          class="remove-btn-file"
+          (click)="removeFile(item, index)"
+          data-e2e="file-exit-btn">
+          <trudi-icon
+            icon="closeIcon"
+            [style]="{ 'width.px': 16, 'height.px': 16, color: '#646464' }"></trudi-icon>
+        </div>
+      </div>
+    </ng-container>
+    <div class="d-flex flex-dir-column gap-4">
+      <div *ngIf="file?.length && overFileSize" class="y-center gap-6 mt-4">
+        <img src="/assets/icon/icon_warning.svg" alt="" />
+        <span class="warning-content"
+          >Your file is larger than 25MB. Please upload a smaller file.
+        </span>
+      </div>
+      <div *ngIf="file?.length && unSupportFile" class="y-center gap-6 mt-4">
+        <img src="/assets/icon/icon_warning.svg" alt="" />
+        <span class="warning-content">Unsupported file type.</span>
+      </div>
+    </div>
+  </div>
+</div>

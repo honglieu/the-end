@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Convo-Index-Updates" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="message-read" transform="translate(-1002.000000, -760.000000)">
+            <g id="icon_seen-copy-2" transform="translate(1002.000000, 760.000000)">
+                <rect id="Rectangle" x="0" y="0" width="16" height="16"></rect>
+                <path d="M13.1381025,4.1952625 C13.3984025,4.4556125 13.3984025,4.8777225 13.1381025,5.1380725 L6.4714025,11.8047025 C6.2110525,12.0651025 5.7889425,12.0651025 5.5286025,11.8047025 L2.1952625,8.4714025 C1.9349125,8.2110625 1.9349125,7.7889425 2.1952625,7.5286025 C2.4556125,7.2682525 2.8777225,7.2682525 3.1380725,7.5286025 L6,10.3905025 L12.1953025,4.1952625 C12.4556025,3.9349125 12.8777025,3.9349125 13.1381025,4.1952625 Z" id="Path" fill="#00A99F"></path>
+            </g>
+        </g>
+    </g>
+</svg>

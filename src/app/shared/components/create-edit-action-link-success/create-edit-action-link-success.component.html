@@ -1,0 +1,9 @@
+<div class="content-wrapper">
+  <div class="success-icon">
+    <img src="/assets/icon/icon-success.svg" />
+  </div>
+  <div class="success-content">
+    <p *ngIf="!isDelete">Action link {{isCreate ? 'created' : 'edited'}}</p>
+    <p *ngIf="isDelete">Action link Deleted</p>
+  </div>
+</div>

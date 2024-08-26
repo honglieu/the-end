@@ -1,0 +1,127 @@
+<div class="d-flex gap-2">
+  <div class="flex-1">
+    <inbox-filter></inbox-filter>
+    <ng-container *ngIf="isLoading; else loadingContent">
+      <div class="flex-1 task-row-skeleton">
+        <ng-container
+          *ngTemplateOutlet="skeletonLoadingItem; context: {rowNumber: 30}">
+        </ng-container>
+      </div>
+    </ng-container>
+    <ng-template #skeletonLoadingItem let-row="rowNumber">
+      <div
+        *ngFor="let _ of [].constructor(row)"
+        class="task-row-wrapper d-flex flex-dir-column m-12">
+        <div class="d-flex align-items-center gap-16">
+          <div class="d-flex gap-8 flex-1 align-items-center">
+            <nz-skeleton
+              class="ant-skeleton-checkbox"
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="size-16"></nz-skeleton>
+            <div
+              class="d-flex flex-1 align-items-center justify-content-between">
+              <div class="d-flex align-items-center gap-12">
+                <div class="message-name">
+                  <nz-skeleton
+                    [nzParagraph]="paragraph"
+                    [nzActive]="true"
+                    class="w-50"></nz-skeleton>
+                </div>
+                <div class="message-role">
+                  <span class="task-item-time-text text-ellipsis">
+                    <nz-skeleton
+                      [nzParagraph]="paragraph"
+                      [nzActive]="true"
+                      class="ant-skeleton-message-role"></nz-skeleton>
+                  </span>
+                </div>
+                <div class="property-address">
+                  <nz-skeleton
+                    [nzParagraph]="paragraph"
+                    [nzActive]="true"
+                    class="w-50"></nz-skeleton>
+                </div>
+              </div>
+              <nz-skeleton
+                class="ant-skeleton-circle"
+                [nzParagraph]="paragraph"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+          </div>
+        </div>
+        <div class="quote-wrapper">
+          <nz-skeleton
+            class="ant-skeleton-custom"
+            [nzParagraph]="paragraph"
+            [nzActive]="true"></nz-skeleton>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template #loadingContent>
+      <div
+        *ngIf="defaultTaskList?.length; else notFoundTask"
+        (scroll)="handleScroll()"
+        class="d-flex flex-1">
+        <div class="w-100 task-list-wrapper">
+          <cdk-virtual-scroll-viewport
+            class="h-100"
+            itemSize="68"
+            minBufferPx="680"
+            maxBufferPx="1360"
+            (scroll)="onScrollDown()">
+            <task-row
+              *cdkVirtualFor="let taskItem of defaultTaskList; index as i; trackBy: trackTaskItem"
+              [taskItem]="taskItem"
+              [search]="currentQueryParams[inboxFilterSelectedType.SEARCH]"
+              [activeTaskList]="activeTaskList"
+              [index]="i"
+              [hasSelectedTask]="!!activeTaskList.length"
+              (pressShiftClick)="handleSelectedTasks($event)"
+              (removeActiveTask)="handleRemoveActiveTask($event)"
+              (addSelectedTask)="handleAddSelectedTask($event)"></task-row>
+            <ng-container *ngIf="isLoadingMore">
+              <ng-container *ngTemplateOutlet="loadingSpinner"> </ng-container>
+            </ng-container>
+          </cdk-virtual-scroll-viewport>
+        </div>
+      </div>
+
+      <ng-template #notFoundTask>
+        <ng-container
+          [ngTemplateOutlet]="isFocusedView && !hasFilter ? emptyFocusViewTemplate : defaultEmptyTemplate"></ng-container>
+        <ng-template #emptyFocusViewTemplate>
+          <container-element
+            [ngSwitch]="currentQueryParams[ETaskQueryParams.TASKSTATUS]">
+            <empty-focused-view-page
+              *ngSwitchDefault
+              message="There are no cancelled tasks assigned to you"
+              subMessage="To view all cancelled tasks, please "></empty-focused-view-page>
+            <empty-focused-view-page
+              *ngSwitchCase="TaskStatusType.completed"
+              message="There are no completed tasks assigned to you"
+              subMessage="To view all completed tasks, please "></empty-focused-view-page>
+          </container-element>
+        </ng-template>
+        <ng-template #defaultEmptyTemplate>
+          <div
+            class="list-wrapper background--white d-flex flex-dir-column justify-content-center">
+            <div class="no-task d-flex flex-dir-column align-items-center">
+              <trudi-icon icon="noTasks"></trudi-icon>
+              <div class="text-center">None to display</div>
+            </div>
+          </div>
+        </ng-template>
+      </ng-template>
+    </ng-template>
+  </div>
+
+  <task-preview [isLoadingSkeleton]="isLoading" [listTaskRow]="defaultTaskList">
+  </task-preview>
+</div>
+
+<ng-template #loadingSpinner>
+  <div class="loading-spinner">
+    <img src="assets/images/loading-spinner.gif" />
+  </div>
+</ng-template>

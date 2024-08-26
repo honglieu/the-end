@@ -1,0 +1,209 @@
+@import 'function';
+
+.team-permissions {
+  position: relative;
+  z-index: 1;
+  padding: 32px;
+
+  > div:last-child {
+    overflow-y: scroll;
+    &.loading {
+      overflow: hidden;
+    }
+  }
+
+  ::ng-deep
+    trudi-checkbox
+    .checkbox-input:checked:disabled
+    + .trudi-checkbox
+    span:first-child {
+    background: var(--brand-300) !important;
+    border-color: var(--brand-300) !important;
+  }
+
+  ::ng-deep .ant-skeleton-content .ant-skeleton-title {
+    margin-top: 0 !important;
+  }
+
+  ::ng-deep
+    .ant-skeleton-content
+    .ant-skeleton-title
+    + .ant-skeleton-paragraph {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .no-nember {
+    tr {
+      position: relative;
+      height: 72px;
+    }
+
+    td {
+      position: absolute;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  .table-fix-header {
+    position: relative;
+    z-index: 1;
+    border-radius: 8px;
+    border: 1px solid var(--gray-200);
+
+    &::-webkit-scrollbar {
+      height: 5px;
+    }
+
+    .table-property {
+      &.h-100 {
+        height: 100%;
+      }
+      position: relative;
+      width: 100%;
+      border-collapse: separate;
+      background-color: var(--white);
+
+      thead > tr > th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        padding: 12px 16px;
+        border: 0;
+        border-bottom: 1px solid var(--gray-200);
+        background: var(--gray-50);
+        min-width: 150px;
+        @include fontSetup(var(--gray-500), 12px, 20px !important, normal, 500);
+
+        span {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+        }
+
+        &:first-child {
+          min-width: 270px;
+
+          span {
+            justify-content: flex-start;
+          }
+        }
+
+        &:last-child {
+          color: var(--brand-500);
+          justify-content: flex-end;
+
+          button {
+            background: transparent;
+            border: 0;
+            outline: 0;
+            padding: 6px;
+          }
+
+          .action {
+            min-width: 64px;
+            display: flex;
+            justify-content: flex-end;
+            &-btn-edit {
+              font-weight: 600;
+              padding: 2px 8px;
+              border-radius: 6px;
+            }
+
+            &-wrap-btn {
+              position: absolute;
+              top: 50%;
+              transform: translateY(-50%);
+              right: 12px;
+            }
+
+            & .btn-confirm,
+            .btn-cancel {
+              border-radius: 50%;
+            }
+
+            &-btn-edit,
+            .btn-confirm {
+              &:not([disabled]):hover {
+                background-color: var(--brand-200);
+              }
+
+              &:not([disabled]):active {
+                background-color: var(--brand-300);
+              }
+            }
+
+            & .btn-cancel {
+              &:not([disabled]):hover {
+                background-color: var(--danger-200);
+              }
+
+              &:not([disabled]):active {
+                background-color: var(--bg-danger-tonal-strongest);
+              }
+            }
+          }
+        }
+      }
+
+      tbody tr td {
+        border-bottom: 1px solid var(--gray-200);
+        padding: 20px 16px;
+
+        span {
+          display: flex;
+          justify-content: center;
+        }
+
+        &:first-child {
+          span {
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+            @include fontSetup(
+              var(--gray-700),
+              14px,
+              20px !important,
+              normal,
+              500
+            );
+          }
+
+          img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+        }
+      }
+
+      tbody tr:last-child td {
+        border-bottom: 0px;
+      }
+    }
+  }
+}
+
+::ng-deep .team-permissions__customTooltip {
+  max-width: 220px;
+  .ant-tooltip-inner {
+    text-align: left;
+  }
+}
+
+.tooltip-company {
+  margin-bottom: 16px;
+  .tooltip-company-title {
+    @include fontSetup(
+      var(--fg-neutral-normal),
+      14px,
+      20px !important,
+      normal,
+      400
+    );
+  }
+}

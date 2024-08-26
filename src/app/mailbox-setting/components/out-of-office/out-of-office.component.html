@@ -1,0 +1,312 @@
+<trudi-add-contact-card
+  *ngIf="popupState.addContactCardOutside"
+  [visible]="popupState.addContactCardOutside"
+  [configs]="addContactCardTextEditorConfigs"
+  [isOutOfOffice]="true"
+  [form]="outOfOfficeForm"
+  (onTrigger)="onTrigger()"
+  (onClose)="onCloseAddContactCard()"></trudi-add-contact-card>
+
+<upload-from-crm
+  [configs]="attachmentTextEditorConfigs"
+  (onTrigger)="onTriggerAddFilesFromCrm()"
+  (onClose)="onCloseUploadFromCRM()"
+  *ngIf="uploadFileFromCRMPopupState.uploadFileFromCRMOutside"></upload-from-crm>
+
+<ng-container *ngIf="isLoadingSkeleton; else outOfOffice">
+  <div class="out-of-office__wrapper out-of-office__wrapper-skeleton">
+    <div class="body">
+      <div class="d-flex flex-dir-column gap-8">
+        <div class="d-flex justify-content-between">
+          <div
+            class="checkbox-label checkbox-label-skeleton cpn-label break-word">
+            <nz-skeleton
+              [nzParagraph]="nzParagraph"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"
+            [nzSize]="'small'"
+            [nzShape]="'round'">
+          </nz-skeleton-element>
+        </div>
+        <div class="d-flex flex-dir-column gap-8">
+          <div class="d-flex justify-content-between mt-8">
+            <div class="date-time w-48 d-flex flex-dir-column">
+              <nz-skeleton
+                [nzParagraph]="nzParagraph"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+            <div class="date-time w-48 d-flex flex-dir-column">
+              <nz-skeleton
+                [nzParagraph]="nzParagraph"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+          </div>
+          <div class="text-wrapper mt-8">
+            <nz-skeleton
+              [nzParagraph]="nzParagraph"
+              [nzActive]="true"></nz-skeleton>
+          </div>
+        </div>
+
+        <div class="d-flex gap-12">
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"
+            [nzShape]="'square'">
+          </nz-skeleton-element>
+          <nz-skeleton-element
+            nzType="button"
+            [nzActive]="true"
+            [nzShape]="'square'">
+          </nz-skeleton-element>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+<ng-template #outOfOffice>
+  <div class="out-of-office__wrapper">
+    <div class="body">
+      <div class="d-flex flex-dir-column gap-8">
+        <div class="d-flex justify-content-between">
+          <div class="checkbox-label cpn-label break-word">
+            Out of office responder
+          </div>
+          <switch-checkbox
+            [isChecked]="isResponder"
+            (tdCheckboxChanged)="handleChangeCheckbox($event)"
+            class="switch-item"
+            dataE2E="mailbox-settings-out-of-office-toggle"
+            [disabled]="(inboxService?.isArchiveMailbox$ | async) || ((currentMailbox?.role ) | checkMailboxPermission) === false || isConsole"
+            [reverse]="true"></switch-checkbox>
+        </div>
+        <div
+          class="d-flex flex-dir-column gap-8"
+          [formGroup]="outOfOfficeForm"
+          [ngClass]="{'hide': !isResponder}">
+          <div class="d-flex justify-content-between mt-8">
+            <div class="w-48 d-flex flex-dir-column">
+              <div class="title-text">First date</div>
+              <trudi-date-picker
+                [trudiDisabled]="(inboxService?.isArchiveMailbox$ | async) || ((currentMailbox?.role ) | checkMailboxPermission) === false || isConsole"
+                formControlName="firstDate"
+                [trudiDisabledDate]="disabledDate"
+                (trudiOnOpenChange)="openDatePicker($event)"
+                (trudiOnClearDate)="isEdit = true"
+                [trudiStatus]="datePickerStatus"
+                [class.trudi-picker-error]="firstDate.invalid && formSubmitAttempt && firstDate.errors['required']"></trudi-date-picker>
+              <div
+                class="error-container d-flex align-items-start gap-4"
+                *ngIf="firstDate.invalid && formSubmitAttempt && firstDate.errors['required']">
+                <trudi-icon icon="iconWarning" class="mt-2"></trudi-icon>
+                <div class="error-text">{{errorMessage.REQUIRED}}</div>
+              </div>
+            </div>
+            <div class="w-48 d-flex flex-dir-column">
+              <div class="title-text">Last date</div>
+              <trudi-date-picker
+                [trudiDisabled]="(inboxService?.isArchiveMailbox$ | async) || ((currentMailbox?.role ) | checkMailboxPermission) === false || isConsole"
+                formControlName="lastDate"
+                [trudiDisabledDate]="disableLastDate"
+                (trudiOnOpenChange)="openDatePicker($event)"
+                (trudiOnClearDate)="isEdit = true"
+                [trudiStatus]="datePickerStatus"
+                [class.trudi-picker-error]="lastDate.invalid && formSubmitAttempt && (lastDate.errors['required'] || lastDate.errors['invalidRange'])"></trudi-date-picker>
+              <div
+                class="error-container d-flex align-items-start gap-4"
+                *ngIf="lastDate.invalid && formSubmitAttempt && (lastDate.errors['required'] || lastDate.errors['invalidRange'])">
+                <trudi-icon icon="iconWarning" class="mt-2"></trudi-icon>
+                <div class="error-text">
+                  {{lastDate.errors['required'] ? errorMessage.REQUIRED :
+                  errorMessage.LAST_DATE}}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-wrapper mt-8">
+            <div class="title-text" data-e2e="description-text">
+              Auto-response message
+            </div>
+            <tiny-editor
+              #editorContainer
+              [outOfOfficeDefaultSetting]="defaultSetting"
+              [disabled]="(inboxService?.isArchiveMailbox$ | async) || ((currentMailbox?.role ) | checkMailboxPermission) === false || isConsole"
+              [attachBtnConfig]="configs.body.tinyEditor.attachBtn"
+              [maxHeight]="500"
+              [hasError]="message.touched && message.invalid && formSubmitAttempt"
+              [text]="message.value"
+              [from]="'OutOfOffice'"
+              [disabledAttachBtn]="!showAddFile || noAddFile"
+              [isEmailSignature]="defaultSetting?.includeSignature ?? true"
+              [allowInsertContactCardToContent]="allowInsertContactCardToContent"
+              [prefillContactCard]="prefillContactCard"
+              (showEmailSignature)="hasSignature = $event"
+              (triggerSignatureFromToolbar)="handleCheckEmailSignature($event)"
+              (value)="handleValueChange($event)"
+              (onFocus)="handleFocus($event)"
+              (addFileComputer)="addFileComputer()"
+              (dropFile)="dropFileComputer($event)"
+              (addFileCRM)="editorAddFileFromCrm()"
+              (originContent)="handleChangeOriginContent($event)"
+              [showAddPolicyPopover]="false"
+              (addContactCard)="openModalContact()"
+              [allowTextColor]="true"
+              [allowTextBackgroundColor]="true"></tiny-editor>
+
+            <div
+              *ngIf="message.touched && message.invalid && formSubmitAttempt"
+              class="error-container d-flex align-items-center gap-4">
+              <img src="/assets/icon/icon_warning.svg" alt="msfb-error" />
+              <div class="error-text">{{errorMessage.REQUIRED}}</div>
+            </div>
+
+            <!-- attachment -->
+            <div
+              class="attachment"
+              [class.disabled]="(inboxService?.isArchiveMailbox$ | async) || ((currentMailbox?.role ) | checkMailboxPermission) === false || isConsole"
+              #attachment
+              [style.marginBottom.px]="16"
+              [style.marginTop.px]="16">
+              <div
+                class="files justify-content-between"
+                [class.files-spacing]="listOfFiles.length > 0"
+                *ngIf="listOfFiles">
+                <div
+                  class="out-off-office-file"
+                  [class.file-error]="file | checkFileInvalid"
+                  style="margin: 0"
+                  *ngFor="let file of listOfFiles?.value; let i = index">
+                  <div
+                    class="file-logo custom-file-logo"
+                    [class.dim-brightness]="file[0]?.localThumb && file[0]?.isSupportedVideo">
+                    <img
+                      *ngIf="file[0]?.localThumb"
+                      [src]="(file[0]?.localThumb | safe: 'resourceUrl')" />
+                    <div
+                      *ngIf="file[0]?.localThumb && file[0]?.isSupportedVideo"
+                      class="play-icon">
+                      <trudi-icon icon="playSolid"></trudi-icon>
+                    </div>
+                    <img
+                      *ngIf="!file[0].localThumb"
+                      [src]="((file[0]?.name || file[0]?.title || file[0]?.fileName ||
+                      file?.name | getFileIconType))" />
+                  </div>
+                  <div
+                    class="wrap-file-info d-flex flex-dir-column flex-1 gap-4">
+                    <span
+                      #outOfOfficefileName
+                      nz-tooltip
+                      nzTooltipPlacement="top"
+                      [nzTooltipTitle]="file[0]?.name || file[0]?.title || file[0]?.fileName || file?.name || ''"
+                      [nzTooltipOverlayStyle]="{'max-width': '240px', 'word-break': 'break-all'}"
+                      [nzTooltipTrigger]="outOfOfficefileName?.offsetWidth < outOfOfficefileName?.scrollWidth ? 'hover' : null"
+                      class="file-name">
+                      {{file[0]?.name || file[0]?.title || file[0]?.fileName ||
+                      file?.name}}
+                    </span>
+                    <span class="file-size"
+                      >{{(file?.size || file[0]?.size) | convertFileSize}}</span
+                    >
+                  </div>
+                  <ng-container
+                    *ngIf="(!file?.uploaded && file?.canUpload) || (
+                  !file[0]?.uploaded && file[0]?.canUpload
+                ); else closeButton">
+                    <div class="image-rotation rotate-image">
+                      <img src="/assets/icon/loading.png" alt="loading-icon" />
+                    </div>
+                  </ng-container>
+                  <ng-template #closeButton>
+                    <ng-container *ngIf="i >= 0 || file?.name">
+                      <div
+                        data-e2e="close-btn"
+                        class="cursor-pointer remove-file-button"
+                        (click)="removeFileLocal(i)">
+                        <trudi-icon
+                          class="trudi-icon"
+                          [style]="{ 'width.px': 16, 'height.px': 16, color: '#646464' }"
+                          icon="closeIcon"></trudi-icon>
+                      </div>
+                    </ng-container>
+                  </ng-template>
+                </div>
+              </div>
+              <div
+                *ngIf="listOfFiles.value.length > 0 && (isUnSupportFile || isOverFileSize)"
+                class="y-center gap-6 mt-4">
+                <img src="/assets/icon/icon_warning.svg" alt="" />
+                <span class="warning-content">
+                  {{ isUnSupportFile ? errorMessage.UNSUPPORTED :
+                  errorMessage.OVER_SIZE }}
+                </span>
+              </div>
+            </div>
+
+            <ng-container *ngIf="file || showAddFile && !noAddFile">
+              <div class="addition hide">
+                <div class="btn-wrapper" style="padding: 0">
+                  <button
+                    data-e2e="button-upload-file"
+                    type="button"
+                    class="add-file-btn-upload">
+                    <input
+                      id="out-of-office-upload-btn"
+                      [accept]="acceptType"
+                      title=""
+                      [multiple]="true"
+                      class="input-file"
+                      onclick="this.value=''"
+                      type="file"
+                      (change)="uploadFileLocal($event)" />
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+        <ng-container
+          *ngIf="!!listSelectedContact?.length && !this.allowInsertContactCardToContent">
+          <div
+            class="contact-card mb-12 d-flex flex-dir-column gap-16"
+            *ngIf="!!listSelectedContact?.length"
+            #listContactCard
+            [class.disabled]="(inboxService?.isArchiveMailbox$ | async) || ((currentMailbox?.role ) | checkMailboxPermission) === false || isConsole"
+            [class.files-spacing]="!!listSelectedContact?.length">
+            <ng-container *ngFor="let contact of listSelectedContact">
+              <contact-card
+                [contact]="contact"
+                (onClose)="removeContact(contact)"></contact-card>
+            </ng-container>
+          </div>
+        </ng-container>
+
+        <div
+          *ngIf="(inboxService?.isArchiveMailbox$ | async) === false && ((currentMailbox?.role ) | checkMailboxPermission) === true && !isConsole"
+          [ngClass]="{'hide': !isEdit}"
+          class="group-btn d-flex gap-12">
+          <button
+            data-e2e="send-btn"
+            type="button"
+            class="trudi-btn trudi-btn-primary trudi-btn-large"
+            [disabled]="isLoading || isUnSupportFile || isOverFileSize"
+            (click)="handleSave()">
+            Save
+          </button>
+          <button
+            type="button"
+            class="trudi-btn trudi-btn-tertiary trudi-btn-large"
+            [disabled]="isLoading"
+            (click)="handleCancel()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,14 @@
+<div class="favourite-star">
+  <button
+    *ngIf="isActive"
+    class="cursor-pointer"
+    (clickStopPropagation)="handleToggleSelectFavourite(false)">
+    <trudi-icon [icon]="'starYellow'"></trudi-icon>
+  </button>
+  <button
+    *ngIf="!isActive"
+    class="cursor-pointer"
+    (clickStopPropagation)="handleToggleSelectFavourite(true)">
+    <trudi-icon [icon]="'starBorder'"></trudi-icon>
+  </button>
+</div>

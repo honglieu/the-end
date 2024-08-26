@@ -1,0 +1,24 @@
+@import 'function';
+
+::ng-deep .ant-modal.trudi-modal.trudi-modal-office-contact {
+  .ant-modal-header {
+    border-bottom: 0px !important;
+  }
+
+  .ant-modal-footer {
+    display: none !important;
+  }
+}
+
+.trudi-send-msg {
+  &-footer {
+    margin-top: 20px;
+
+    &-btn-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+  }
+}

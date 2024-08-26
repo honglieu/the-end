@@ -1,0 +1,6 @@
+<div class="d-flex justify-content-between" *ngIf="chartTitle || chartNote">
+  <div *ngIf="chartTitle" class="chart-title">{{chartTitle}}</div>
+  <div *ngIf="chartNote" class="chart-note">{{chartNote}}</div>
+</div>
+<ng-content select="chartTitle"></ng-content>
+<ng-content></ng-content>

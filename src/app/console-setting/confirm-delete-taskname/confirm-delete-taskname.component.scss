@@ -1,0 +1,45 @@
+@import 'function';
+
+.confirm-wrapper {
+  padding: 14px;
+  .header {
+    display: flex;
+    .warning-icon {
+      margin-right: 2.4rem;
+    }
+    .confirm-text {
+      .bold-text {
+        @include fontSetup(var(--gray-700), 20px, 24px, normal, 500);
+      }
+      .grey-text {
+        margin-top: 8px;
+        @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+      }
+    }
+  }
+  .btn-wrapper {
+    margin-top: 40px;
+    display: flex;
+    justify-content: flex-end;
+    @include fontSetup(var(--white), 14px, 16px, normal, 500);
+
+    .confirm-btn {
+      display: flex;
+      padding: 0.9rem 2.2rem;
+      background-color: var(--danger-500);
+      border-radius: 0.7rem;
+      border: 0;
+      align-items: center;
+    }
+    .go-back-btn {
+      display: flex;
+      padding: 0.9rem 2.2rem;
+      margin-right: 2rem;
+      background-color: var(--white);
+      border-radius: 0.7rem;
+      border: 0;
+      color: var(--gray-500);
+      align-items: center;
+    }
+  }
+}

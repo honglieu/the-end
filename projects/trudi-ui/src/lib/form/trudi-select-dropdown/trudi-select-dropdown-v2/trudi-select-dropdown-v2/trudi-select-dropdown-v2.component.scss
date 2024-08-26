@@ -1,0 +1,375 @@
+@import 'function';
+
+:host {
+  .trudi-select-dropdown-button {
+    min-width: unset;
+    height: auto;
+    .trudi-select-dropdown-button__content {
+      min-width: 20px;
+      display: flex;
+      align-items: center;
+      column-gap: 10px;
+      &--image {
+        img {
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+        }
+      }
+      &--title {
+        margin: 0;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        word-wrap: break-word;
+        white-space: nowrap;
+        text-align: left;
+        @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 600);
+      }
+    }
+
+    &.dropdown-open.trudi-ui-btn {
+      &-filled {
+        &-primary {
+          background-color: var(--brand-600);
+        }
+        &-danger {
+          background-color: var(--danger-700);
+        }
+      }
+
+      &-tonal {
+        &-neutral {
+          background-color: var(--bg-neutral-tonal-strongest);
+        }
+
+        &-primary {
+          background-color: var(--bg-brand-tonal-strongest);
+        }
+
+        &-danger {
+          background-color: var(--bg-danger-tonal-strongest);
+        }
+      }
+
+      &-outlined {
+        &-neutral {
+          background-color: var(--bg-neutral-tonal-strongest);
+        }
+        &-primary {
+          background-color: var(--bg-brand-tonal-strongest);
+        }
+        &-danger {
+          background-color: var(--bg-danger-tonal-strongest);
+        }
+      }
+
+      &-text {
+        &-neutral {
+          background-color: var(--bg-neutral-tonal-strongest);
+        }
+
+        &-primary {
+          background-color: var(--brand-200);
+        }
+
+        &-danger {
+          background-color: var(--bg-danger-tonal-strongest);
+        }
+      }
+    }
+
+    ::ng-deep trudi-icon.clear-icon svg {
+      width: 16px !important;
+      height: 16px !important;
+    }
+    ::ng-deep trudi-icon.arrow-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+.trudi-select-dropdown-item__info--image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--white);
+  font-weight: 500;
+  font-size: 12px;
+  width: 28px;
+  height: 28px;
+  &:not(:has(img)) {
+    background-color: var(--brand-500);
+  }
+}
+
+.trudi-select-dropdown-button__content--image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--white);
+  font-weight: 500;
+  font-size: 10px;
+  width: 20px;
+  height: 20px;
+  &:not(:has(img)) {
+    background-color: var(--brand-500);
+  }
+}
+
+::ng-deep .ant-dropdown .trudi-select-dropdown-container {
+  min-width: 120px;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--white);
+  box-shadow: 0 3px 6px -4px #0000001f, 0 6px 16px #00000014,
+    0 9px 28px 8px #0000000d;
+
+  &:has(.search-container) {
+    width: 240px;
+  }
+
+  .trudi-select-dropdown__header {
+    .search-container {
+      padding: 4px;
+      .assign-search-bar {
+        padding: 8px 12px;
+        height: 36px;
+        border: 1px solid transparent;
+        &:focus-within {
+          border: 1px solid var(--brand-500);
+          background: var(--white);
+          .search-property-input {
+            background: var(--white);
+          }
+        }
+        .search-property-input {
+          height: 20px;
+          border: none;
+          outline: none;
+          @include fontSetup(var(--gray-700), 14px, 20px, normal, 400);
+        }
+        div {
+          visibility: hidden;
+        }
+        .show-clear-search {
+          visibility: visible;
+          cursor: pointer;
+
+          &.round-clear-icon {
+            border-radius: 50%;
+            border: 1px solid var(--border-neutral-dark, var(--gray-200));
+
+            .clear-search-icon {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              margin: 3px;
+
+              .svg-icon {
+                width: 14px;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .clear-section {
+      padding: 12px;
+      border-bottom: 1px solid var(--border-neutral-light);
+      .clear-single-btn {
+        border: none;
+        padding: 0;
+        background-color: var(--white);
+        @include fontSetup(var(--danger-500), 12px, 16px, normal, 500);
+
+        &:hover {
+          color: var(--danger-400);
+          text-decoration: underline;
+        }
+        &:active {
+          color: var(--danger-600);
+          text-decoration: underline;
+        }
+      }
+    }
+    .count-container {
+      height: 32px;
+      border-bottom: 1px solid var(--border-neutral-light, #f2f5f7);
+      .count-wrapper {
+        height: 32px;
+        justify-content: space-between;
+        padding: 12px;
+        .count-text {
+          @include fontSetup(
+            var(--fg-neutral-weaker, #999),
+            12px,
+            16px,
+            normal,
+            400
+          );
+        }
+        .clear-btn {
+          border: none;
+          padding: 0;
+          @include fontSetup(
+            var(--fg-neutral-stronger, #3d3d3d),
+            12px,
+            16px,
+            normal,
+            500
+          );
+          background-color: var(--white);
+        }
+      }
+    }
+  }
+
+  .trudi-select-dropdown-scroll {
+    max-height: 450px;
+    overflow-y: auto;
+    .trudi-select-dropdown-item {
+      cursor: pointer;
+
+      &:has(.default-template) {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px;
+        column-gap: 8px;
+      }
+
+      &:has(.trudi-select-dropdown-item__info--image) {
+        padding: 8px 12px;
+      }
+
+      &__info {
+        display: flex;
+        align-items: center;
+        column-gap: 10px;
+        flex: 1;
+        overflow: hidden;
+
+        &--label {
+          margin: 0;
+          max-width: calc(100% - 40px);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          word-wrap: break-word;
+          white-space: nowrap;
+          text-align: left;
+          @include fontSetup(
+            var(--fg-neutral-stronger),
+            14px,
+            20px,
+            normal,
+            500
+          );
+        }
+
+        &--image {
+          img {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+          }
+        }
+
+        &:not(:has(.trudi-select-dropdown-item__info--image)) {
+          .trudi-select-dropdown-item__info--label {
+            max-width: 100%;
+          }
+        }
+      }
+
+      &__group-title {
+        padding: 8px 12px;
+        text-transform: uppercase;
+        background-color: var(--bg-neutral-tonal-normal);
+        text-overflow: ellipsis;
+        overflow: hidden;
+        text-wrap: nowrap;
+        @include fontSetup(var(--fg-neutral-weaker), 12px, 16px, normal, 600);
+      }
+
+      .checked-icon {
+        visibility: hidden;
+      }
+
+      .checked-icon {
+        svg {
+          height: 20px;
+          width: 20px;
+          color: var(--fg-brand);
+        }
+      }
+
+      &:not(:last-child) {
+        border-bottom: 1px solid var(--border-neutral-light);
+      }
+
+      &.selected {
+        .checked-icon {
+          visibility: visible;
+        }
+      }
+
+      &:hover {
+        background-color: var(--bg-neutral-tonal-stronger);
+      }
+
+      &:active {
+        background-color: var(--bg-neutral-tonal-strongest);
+      }
+
+      &.no-result {
+        cursor: unset;
+        background-color: unset;
+        .trudi-select-dropdown-item__label {
+          margin: 0;
+          @include fontSetup(var(--gray-500), 14px, 20px, italic, 400);
+        }
+        &.has-image {
+          .trudi-select-dropdown-item__label {
+            margin-right: 38px;
+          }
+        }
+      }
+
+      &.disabled {
+        cursor: not-allowed;
+        pointer-events: none;
+        background-color: unset;
+        .trudi-select-dropdown-item__info {
+          &--label {
+            @include fontSetup(
+              var(--fg-neutral-weakest),
+              14px,
+              20px,
+              normal,
+              500
+            );
+          }
+        }
+      }
+
+      ::ng-deep trudi-checkbox.item-checkbox {
+        pointer-events: none;
+      }
+      &:focus-visible {
+        transition: none;
+        border-radius: 8px;
+        border: 1px solid var(--brand-500) !important;
+        box-shadow: 0px 0px 0px 1px var(--brand-300);
+      }
+    }
+  }
+
+  .trudi-select-dropdown-virtual-scroll {
+    height: 450px;
+  }
+}

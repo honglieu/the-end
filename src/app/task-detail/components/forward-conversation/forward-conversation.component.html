@@ -1,0 +1,13 @@
+<trudi-send-msg-v2
+  *ngIf="popupState.isShowForwardConversation"
+  [listOfFiles]="prefillFiles"
+  [isSyncedAttachment]="isSyncedAttachment"
+  [threadId]="threadId"
+  [attachmentSync]="attachmentSync"
+  [configs]="forwardConversationConfigs"
+  [defaultBtnOption]="EDefaultBtnDropdownOptions.SendAndResolve"
+  [rawMsg]="rawMsg"
+  [openFrom]="isTaskType ? '' : TaskType.MESSAGE"
+  (onQuit)="handlePopupState({isShowForwardConversation: false})"
+  (onSendMsg)="onSendMsg($event)">
+</trudi-send-msg-v2>

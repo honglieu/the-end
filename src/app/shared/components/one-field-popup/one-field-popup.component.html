@@ -1,0 +1,36 @@
+<resizable-modal-popup
+  *ngIf="isShow"
+  [show]="isShow"
+  [modalId]="modalId"
+  [showTitle]="true"
+  [title]="titleHeader"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="624"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  [hiddenCancelBtn]="!hasBackButton"
+  [isShowFooter]="true"
+  (onOk)="handleConfirm()"
+  [okText]="'Next'"
+  (onCancel)="handleClose()"
+  [isCustomMoveable]="true"
+  className="trudi-modal-one-field">
+  <div class="bond-amount-due-body">
+    <trudi-form-control
+      [control]="formControl"
+      [errors]="[{errorName: 'pattern', errorMessage: 'Invalid number'}]">
+      <trudi-number-field
+        [label]="label"
+        prefixText="$"
+        size="extra-large"
+        [maskLeadZero]="true"
+        [maskPattern]="maskPattern"
+        thousandSeparatorType=","
+        [maxCharacter]="DEFAULT_CHAR_TRUDI_NUMBER_FIELD"
+        [formControl]="formControl">
+      </trudi-number-field>
+    </trudi-form-control>
+  </div>
+</resizable-modal-popup>

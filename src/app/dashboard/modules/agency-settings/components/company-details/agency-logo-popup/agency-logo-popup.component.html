@@ -1,0 +1,138 @@
+<div class="agency-logo-wrapper">
+  <div
+    *ngIf="currentStep !== UploadAgencyStep.REMOVE"
+    class="header flex-dir-row-reverse">
+    <button
+      data-e2e="button-close"
+      class="close-btn close-modal-btn"
+      (click)="handleCloseModal()">
+      <trudi-icon icon="closeUpload"></trudi-icon>
+    </button>
+    <div class="title-text">
+      <div class="title-text__main">Upload logo</div>
+      <div class="title-text__sub">
+        Upload your company logo for use across the
+        <span
+          ><a href="https://trudi.ai/" target="_blank" tabindex="0"
+            >Trudi.ai</a
+          ></span
+        >
+        product suite.
+      </div>
+    </div>
+  </div>
+  <div class="header" *ngIf="currentStep === UploadAgencyStep.REMOVE">
+    <div class="title-text">
+      <div class="title-text__main">Remove company photo?</div>
+      <div class="title-text__sub">This image will be used instead</div>
+    </div>
+    <button
+      data-e2e="button-close"
+      class="close-btn close-modal-btn"
+      (click)="handleCloseModal()">
+      <trudi-icon icon="closeUpload"></trudi-icon>
+    </button>
+  </div>
+  <div *ngIf="currentStep === UploadAgencyStep.VIEW">
+    <div class="agency-avatar">
+      <img [src]="imageUrl" />
+    </div>
+    <div class="error-msg error-msg-margin" *ngIf="uploadError">
+      <div class="warning-icon">
+        <trudi-icon icon="warning"></trudi-icon>
+      </div>
+      <div>{{errorMsg}}</div>
+    </div>
+    <button
+      (click)="setCurrentStep(UploadAgencyStep.UPLOAD)"
+      class="action-button secondary change-button-l button-margin"
+      *ngIf="currentCompany.useDefaultLogo">
+      <trudi-icon icon="iconEditOutlinePrimary"></trudi-icon>
+      <div>Change</div>
+    </button>
+    <div
+      *ngIf="!currentCompany.useDefaultLogo"
+      class="button-wrapper button-margin">
+      <button
+        class="action-button tertiary remove-button"
+        (click)="setCurrentStep(UploadAgencyStep.REMOVE)">
+        <trudi-icon icon="deleteIconOutline"></trudi-icon>
+        <div>Remove</div>
+      </button>
+      <button
+        class="action-button secondary change-button-m"
+        (click)="setCurrentStep(UploadAgencyStep.UPLOAD)">
+        <trudi-icon icon="iconEditOutlinePrimary"></trudi-icon>
+        <div>Change</div>
+      </button>
+    </div>
+  </div>
+  <div *ngIf="currentStep === UploadAgencyStep.UPLOAD">
+    <input
+      style="display: none"
+      name="uploader"
+      id="uploader"
+      #uploader
+      type="file"
+      [accept]="acceptImageType"
+      (change)="fileChangeEvent($event)" />
+    <div class="body d-flex justify-content-center">
+      <div class="picture-wrapper">
+        <div id="croppie">
+          <img id="agencyLogo" #agencyLogo src="" alt="" />
+        </div>
+        <div class="slider-wrapper d-flex align-items-center">
+          <button
+            class="minus-button"
+            (click)="handleZoomInOut(sliderType.MINUS)">
+            <trudi-icon icon="minus"></trudi-icon>
+          </button>
+          <input step="0.0001" type="range" min="0.8036" class="cr-slider" />
+          <button
+            class="plus-button"
+            (click)="handleZoomInOut(sliderType.PLUS)">
+            <trudi-icon icon="plus"></trudi-icon>
+          </button>
+        </div>
+        <div
+          (click)="uploader.click()"
+          class="upload-button d-flex align-items-center justify-content-between">
+          <img src="/assets/icon/add-file-img.svg" alt="icon add img" />
+        </div>
+        <div class="drag-button d-flex align-items-center">
+          <img class="drag-icon" src="/assets/icon/dragicon.svg" alt="" />
+          <span class="drag-text">Drag to reposition</span>
+        </div>
+      </div>
+      <div class="slider"></div>
+    </div>
+    <div class="button-wrapper button-margin">
+      <button
+        class="action-button tertiary cancel-button-l"
+        (click)="onCancel(UploadAgencyStep.VIEW)">
+        Cancel
+      </button>
+      <button
+        class="action-button primary save-button"
+        (click)="handleUploadPicture()">
+        Save
+      </button>
+    </div>
+  </div>
+  <div *ngIf="currentStep === UploadAgencyStep.REMOVE">
+    <div class="agency-avatar">
+      <img [src]="imageUrl" />
+    </div>
+    <div class="button-wrapper button-margin">
+      <button
+        class="action-button tertiary cancel-button-l"
+        (click)="onCancel(UploadAgencyStep.VIEW)">
+        Cancel
+      </button>
+      <button class="action-button danger remove-button" (click)="removeLogo()">
+        <trudi-icon icon="delete"></trudi-icon>
+        <div>Remove</div>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,94 @@
+@import 'function';
+:host {
+  .note-preview {
+    margin-bottom: 43px;
+    .note-header {
+      padding: 12px 0;
+    }
+
+    .title-note {
+      @include fontSetup(var(--gray-400, #999999), 12px, 16px, normal, 600);
+    }
+
+    .unread-count {
+      @include fontSetup(var(--fg-danger, #e1024f), 12px, 16px, normal, 600);
+      border-radius: 16px;
+      background: var(--bg-danger-tonal-normal, #c73e5a);
+      display: flex;
+      padding: 0px 4px;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .notes-list {
+      .note-box {
+        display: flex;
+        height: 66px;
+        cursor: pointer;
+        padding: var(--spacing-m, 12px);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+        border-radius: 4px;
+        border: 1px solid var(--border-neutral-dark, #d8dcdf);
+        background: var(--gray-200);
+
+        .receiver-name {
+          @include fontSetup(
+            var(--fg-neutral-stronger, #3d3d3d),
+            14px,
+            20px,
+            normal,
+            400
+          );
+          overflow: hidden;
+          font-variant-numeric: lining-nums tabular-nums;
+          text-overflow: ellipsis;
+        }
+        .unread {
+          font-weight: 600 !important;
+        }
+
+        .send-time {
+          min-width: 60px;
+          @include fontSetup(
+            var(--fg-neutral-weaker, #999),
+            12px,
+            16px,
+            normal,
+            400
+          );
+        }
+
+        .note-message {
+          max-width: 100%;
+          h4 {
+            @include fontSetup(
+              var(--fg-neutral-normal, #646464),
+              14px,
+              20px,
+              normal,
+              400
+            );
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+
+        &:hover {
+          background: var(--tenant-200);
+        }
+      }
+      .unreadBackground {
+        background: var(--bg-base);
+      }
+    }
+  }
+
+  .no-note {
+    @include fontSetup(var(--fg-neutral-weaker, #999), 14px, 20px, italic, 400);
+    margin: 0;
+  }
+}

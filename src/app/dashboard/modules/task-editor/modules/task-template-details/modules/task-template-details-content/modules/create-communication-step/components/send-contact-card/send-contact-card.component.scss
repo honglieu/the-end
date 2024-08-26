@@ -1,0 +1,52 @@
+@import 'function';
+
+:host {
+  .send-contact-card-wrapper {
+    .send-contact-card-label {
+      @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 600);
+    }
+    ::ng-deep nz-radio-group {
+      flex-direction: row !important;
+      .radio-label span {
+        @include fontSetup(var(--fg-neutral-stronger), 14px, 20px, normal, 400);
+      }
+    }
+    ::ng-deep .trudi-checkbox .label-text {
+      @include fontSetup(
+        var(--fg-neutral-weaker, #999),
+        14px,
+        20px,
+        normal,
+        400
+      );
+    }
+    .list-contact-type {
+      margin: 16px 0px;
+    }
+    .item-label {
+      @include fontSetup(
+        var(--fg-neutral-stronger, #3d3d3d) !important,
+        14px,
+        20px,
+        normal,
+        500
+      );
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    ::ng-deep trudi-checkbox label {
+      cursor: not-allowed;
+    }
+  }
+  ::ng-deep .ng-option {
+    border-bottom: 1px solid var(--border-neutral-light);
+  }
+  .clear-btn {
+    cursor: pointer;
+  }
+  ::ng-deep trudi-badge.custom-trudi-badge .badge-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

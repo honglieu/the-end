@@ -1,0 +1,150 @@
+<resizable-modal-popup
+  *ngIf="showReviewAttachPopup && isResizableModal"
+  [modalId]="modalId"
+  [show]="showReviewAttachPopup"
+  [headerTemplate]="headerTemplate"
+  [draggable]="true"
+  [hasBackdrop]="false"
+  [resizable]="false"
+  [heightCustom]="'auto'"
+  [widthCustom]="1280"
+  [styleCustom]="{ backgroundColor: '#FFFFFF', border: 0 }"
+  (onCancel)="handleCloseModal()"
+  [isCustomMoveable]="true"
+  class="review-attachment-popup">
+  <ng-container [ngTemplateOutlet]="reviewAttachmentTemplate"></ng-container>
+</resizable-modal-popup>
+
+<trudi-modal
+  *ngIf="showReviewAttachPopup && !isResizableModal"
+  [visible]="showReviewAttachPopup"
+  [modelWidth]="'80%'"
+  [autoFocus]="null"
+  (onCancel)="handleCloseModal()"
+  className="trudi-modal-review-attachment">
+  <ng-template #headerModal>
+    <ng-container [ngTemplateOutlet]="headerTemplate"></ng-container>
+  </ng-template>
+  <ng-container [ngTemplateOutlet]="reviewAttachmentTemplate"></ng-container>
+  <ng-template #footerBtn>
+    <div class="modal-footer-review-attachment"></div></ng-template
+></trudi-modal>
+
+<ng-template #headerTemplate>
+  <div class="review-attachment-wrapper w-100">
+    <div class="header">
+      <div
+        class="detail-invite d-flex justify-content-between align-items-center">
+        <div class="send-invite-text d-flex flex-dir-column align-items-start">
+          <div class="w-100">
+            <div class="d-flex" [ngClass]="{'d-none': isEdit}">
+              <p class="form-title relative">
+                Review attachment: {{reiFormLink?.formDetail?.name}}
+                <button class="btn-icon btn-edit" (click)="onEdit()">
+                  <trudi-icon icon="editIcon"></trudi-icon>
+                </button>
+              </p>
+            </div>
+          </div>
+          <div
+            class="edit-name-wrapper d-flex align-items-center"
+            [ngClass]="{'d-none': !isEdit}">
+            <p class="form-title-edit">Review attachment:</p>
+            &nbsp;
+            <trudi-form-control [control]="input" [showErrorMessage]="false">
+              <trudi-text-field
+                size="small"
+                [formControl]="input"
+                [maxCharacter]="250"
+                [showCounting]="false"></trudi-text-field>
+            </trudi-form-control>
+            <button class="btn-icon btn-confirm" (click)="confirmUpdate()">
+              <trudi-icon icon="check"></trudi-icon>
+            </button>
+            <button (click)="onCancel()" class="btn-icon btn-cancel">
+              <trudi-icon icon="cancel"></trudi-icon>
+            </button>
+          </div>
+          <p *ngIf="reiFormStatus.length" class="reiForm-status">
+            {{reiFormStatus}}
+          </p>
+        </div>
+        <button
+          *ngIf="isResizableModal"
+          (click)="handleCloseModal()"
+          class="trudi-icon close-btn cursor-pointer close-icon trudi-ui-btn-circle btn-close">
+          <trudi-icon
+            class="trudi-icon"
+            [style]="{ 'width.px': 24, 'height.px': 24, color: '#646464' }"
+            icon="closeIcon"></trudi-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #reviewAttachmentTemplate>
+  <div
+    class="review-attachment-wrapper"
+    [ngClass]="{'review-attachment-wrapper-body': isStep}">
+    <div
+      class="review-attachment-body"
+      [ngClass]="{'mb-70' : isHideBottomWrapper}">
+      <img
+        *ngIf="!isFullyLoaded"
+        class="loading"
+        src="/assets/images/loading-iframe.gif" />
+      <iframe width="100%" height="100%" (load)="onLoad()" [src]="url"></iframe>
+    </div>
+    <div
+      *ngIf="!isHideBottomWrapper"
+      class="review-attachment-footer d-flex align-items-center justify-content-between">
+      <div class="left-btn-wrapper d-flex align-items-center">
+        <div
+          *ngIf="isFullyLoaded"
+          class="close-btn cursor-pointer"
+          (click)="handleOpenNewTab()">
+          <trudi-icon icon="newTab"></trudi-icon>
+        </div>
+        <div
+          *ngIf="isFullyLoaded"
+          class="close-btn cursor-pointer"
+          (click)="handleRefresh()">
+          <trudi-icon icon="refresh"></trudi-icon>
+        </div>
+      </div>
+      <div class="d-flex align-items-center right-btn-wrapper">
+        <button
+          style="width: 100px"
+          class="trudi-btn trudi-btn-large trudi-btn-tertiary"
+          (click)="handleBack()">
+          Back
+        </button>
+        <button
+          style="width: 100px"
+          class="trudi-btn trudi-btn-large trudi-btn-primary"
+          [disabled]="!isFullyLoaded || isArchiveMailbox"
+          (click)="handleConfirm()">
+          Continue
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<trudi-modal
+  *ngIf="showAttachDaftFormPopup"
+  [visible]="showAttachDaftFormPopup"
+  [autoFocus]="null"
+  [modelWidth]="510"
+  className="trudi-modal-custom">
+  <confirm-popup
+    [isShowIcon]="false"
+    [titleText]="'Attach draft form?'"
+    [subTexts]="['You are about to attach a draft form which has yet to be finalised.']"
+    [buttonLeft]="'Cancel'"
+    [buttonRight]="'Yes, continue'"
+    (onButtonLeftClick)="handleBackToReviewAttachment()"
+    (onButtonRightClick)="handleOpenSendMessage()">
+  </confirm-popup>
+</trudi-modal>

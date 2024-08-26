@@ -1,0 +1,18 @@
+<div class="filter-events-container">
+  <div class="d-flex gap-12 pd-12">
+    <ng-container *ngFor="let item of eventFilterButtons; index as i">
+      <div
+        class="event-filter-button"
+        [ngClass]="{'selected': item.selected}"
+        (click)="handleclickFilterButton(item.id)">
+        {{item.label}}
+      </div>
+    </ng-container>
+  </div>
+  <div class="wrap-filter-checkbox">
+    <trudi-checkbox
+      [(ngModel)]="isIncludeCancelAndClosedEvent"
+      (ngModelChange)="onCheckboxFilter($event)"
+      [label]="isRmEnvironment ? 'Include cancelled events' : 'Include cancelled, closed events'"></trudi-checkbox>
+  </div>
+</div>

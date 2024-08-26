@@ -1,0 +1,173 @@
+@import 'function';
+
+.form-template-container {
+  .trudi-form-control {
+    margin-bottom: 16px;
+    padding: 0 2px;
+  }
+
+  .list-template {
+    margin-top: 16px;
+    height: 364px;
+    overflow: auto;
+    padding: 2px;
+
+    .task-card {
+      width: 100%;
+      background: transparent;
+      height: 58px;
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid var(--bg-neutral-tonal-stronger, #e7eaed);
+      margin-bottom: 8px;
+      font-style: normal;
+      cursor: pointer;
+      text-align: left;
+
+      &-name {
+        color: var(--fg-neutral-strongest, #202020);
+        font-size: 15px;
+        font-weight: 500;
+        line-height: 20px;
+        margin-right: 4px;
+      }
+
+      &-assign {
+        color: var(--fg-neutral-weaker, #999);
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 16px;
+        min-width: 80px;
+        padding: 4px 8px 4px 6px;
+        border-radius: 24px;
+        background: var(--bg-neutral-tonal-normal, #f2f5f7);
+      }
+
+      &-assign-warpper {
+        min-width: 80px;
+        justify-content: center;
+        display: flex;
+        padding: 4px 8px 4px 6px;
+        align-items: center;
+        gap: 4px;
+        border-radius: 24px;
+        background: var(--bg-neutral-tonal-normal, #f2f5f7);
+      }
+
+      &:hover {
+        background-color: var(--bg-neutral-tonal-stronger, #f0f1f1) !important;
+      }
+
+      &:active {
+        background-color: var(--bg-neutral-tonal-strongest, #ececed) !important;
+      }
+    }
+
+    ::ng-deep mark.highlight {
+      background: var(--bg-tenant-solid-normal);
+      color: var(--fg-neutral-normal, #646464);
+      padding: 1px 0;
+    }
+  }
+
+  .error-text {
+    color: var(--danger-500, #e1024f);
+    font-size: 14px;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 20px;
+  }
+
+  .active {
+    background-color: var(--bg-neutral-tonal-stronger, #f0f1f1) !important;
+  }
+
+  .skeleton-wrapper {
+    margin-top: 16px;
+    .list-skeleton {
+      .card-skeleton {
+        height: 48px;
+        .skeleton-left,
+        .skeleton-right {
+          ::ng-deep
+            nz-skeleton.ant-skeleton
+            .ant-skeleton-content
+            .ant-skeleton-paragraph
+            > li {
+            width: 100% !important;
+            border-radius: 18px;
+          }
+        }
+      }
+    }
+  }
+}
+:ng-deep div:not(.task-card):focus-visible {
+  box-shadow: inset 0px 0px 0px 1px var(--brand-500),
+    0px 0px 0px 2px rgba(var(--brand-500-rgb), 0.6) !important;
+}
+
+.no-data {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 45px;
+  margin-bottom: 45px;
+  gap: 40px;
+  span {
+    @include fontSetup(var(--bg-overlay-dark), 12px, 16px, normal, 500);
+  }
+}
+
+.btn-next-task {
+  width: 100px;
+  height: 40px;
+  padding: 0px 16px;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--bg-brand-solid-normal, #00aa9f);
+  border: none;
+  @include fontSetup(var(--fg-neutral-base, #fff), 14px, 20px, normal, 600);
+
+  &:hover {
+    background: var(--bg-brand-solid-stronger, #33bbb2);
+  }
+
+  &:active {
+    background: var(--bg-brand-solid-strongest, #0aa095);
+  }
+
+  &:disabled {
+    background: var(--bg-brand-tonal-strongest, #b9e8e4);
+    cursor: not-allowed;
+  }
+}
+
+.btn-back-task {
+  width: 100px;
+  height: 40px;
+  padding: 0px 16px;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--bg-neutral-base-default, #fff);
+  border: 1px solid var(--border-neutral-dark, #d8dcdf);
+  @include fontSetup(var(--fg-neutral-normal), 14px, 20px, normal, 600);
+
+  &:hover {
+    background-color: var(--bg-neutral-tonal-stronger);
+  }
+
+  &:disabled {
+    border: 1px solid var(--border-neutral-dark, #d8dcdf);
+    color: var(--fg-neutral-weakest, #b9bec0);
+    cursor: not-allowed;
+    background: none;
+  }
+}
+
+.region-tooltip {
+  text-align: left;
+}

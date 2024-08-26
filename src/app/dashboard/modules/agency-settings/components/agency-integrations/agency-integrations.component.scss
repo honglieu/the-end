@@ -1,0 +1,110 @@
+@import 'function';
+
+.integrations {
+  height: 100vh;
+  padding: 32px;
+
+  .integrations-title {
+    @include fontSetup(var(--gray-950, #0c111d), 18px, 28px, normal, 600);
+  }
+
+  .integrations-content {
+    .connect-wrapper {
+      ::ng-deep {
+        .trudi-badge-large {
+          height: 24px !important;
+          padding: 4px, 8px, 4px, 6px !important;
+          font-size: 12px;
+          line-height: 16px;
+          font-weight: 600;
+          gap: 4px;
+        }
+      }
+    }
+  }
+
+  .integrations-content {
+    .description {
+      width: 454.55px;
+      @include fontSetup(var(--gray-600), 14px, 20px, normal, 400);
+    }
+
+    .integrations-link {
+      color: unset;
+    }
+
+    &-activity {
+      .activity {
+        &-header {
+          @include fontSetup(var(--gray-950, #0c111d), 18px, 28px, normal, 600);
+        }
+
+        &-document {
+          max-width: 492px;
+        }
+
+        &-document-title {
+          @include fontSetup(var(--gray-950, #0c111d), 14px, 20px, normal, 500);
+        }
+      }
+    }
+  }
+
+  .save-conversation {
+    &-title {
+      @include fontSetup(var(--gray-500), 18px, 28px, normal, 600);
+    }
+
+    &-container {
+      gap: 90px;
+      margin-top: 12px;
+
+      &-text {
+        max-width: 370px;
+        @include fontSetup(var(--gray-500), 14px, 20px, normal, 500);
+      }
+    }
+
+    &-pt {
+      &-container {
+        margin-top: 12px;
+      }
+
+      &-content-wrapper {
+        max-width: 432px;
+      }
+
+      &-sub-title {
+        @include fontSetup((var(--gray-600, #61646c)), 16px, 24px, normal, 600);
+      }
+
+      &-description {
+        @include fontSetup(var(--gray-700, #333741), 14px, 20px, normal, 400);
+      }
+    }
+  }
+
+  a {
+    &:focus-visible {
+      padding: 2px;
+      box-shadow: inset 0px 0px 0px 1px var(--brand-500),
+        0px 0px 0px 2px rgba(var(--brand-500-rgb), 0.6);
+    }
+  }
+}
+
+.modal-add-mailbox-info {
+  padding: 6px 14px;
+
+  &__content {
+    @include fontSetup(var(--fg-neutral-stronger), 18px, 28px, normal, 600);
+  }
+
+  .button-box {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    align-items: center;
+    margin-top: 20px;
+  }
+}

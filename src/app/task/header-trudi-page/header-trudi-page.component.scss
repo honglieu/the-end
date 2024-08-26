@@ -1,0 +1,27 @@
+@import 'function';
+
+.header-section {
+  &-logo {
+    margin: 0px 0 14px 0;
+  }
+
+  &-title {
+    .header-title {
+      @include fontSetup(var(--gray-700), 1.4rem, 2rem, normal, 600);
+      white-space: inherit;
+      margin-bottom: 4px;
+    }
+    .header-title-multiple {
+      white-space: pre-line;
+      word-wrap: break-word;
+      display: flex;
+      flex-direction: column;
+    }
+    .header-email {
+      @include fontSetup(var(--danger-600), 14px, 20px, normal, 600);
+      white-space: inherit;
+      text-overflow: inherit;
+      word-wrap: break-word;
+    }
+  }
+}

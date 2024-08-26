@@ -1,0 +1,50 @@
+<trudi-drawer
+  *ngIf="showCommunicationStep"
+  [wrapClassName]="isJiggling ? 'shaking-task-editor-drawer' : ''"
+  [(visible)]="showCommunicationStep"
+  [enableBackBtn]="!editStep || isDisableForm"
+  [enableDeleteBtn]="editStep && !isDisableForm"
+  [enableOkBtn]="enableBtnAction"
+  [enableCancel]="enableBtnAction"
+  [disabledNext]="isDisabledNext"
+  [okText]="editStep ? 'Update' : 'Add'"
+  [headerTpl]="headerTpl"
+  [nzClosable]="true"
+  (onDelete)="handleDelete()"
+  (onCancel)="handleCancel()"
+  (onOk)="handleOk()"
+  (onBack)="handleBack()"
+  (onClose)="handleCancel(true)">
+  <communication-step-form
+    #communicationFormView
+    [isEditingStep]="editStep"
+    [disabledForm]="isDisableForm"
+    [isShowUpgradeMessage]="canEdit && isDisableForm"
+    [disableMessage]="disableMessage"
+    (setIsDisabledNext)="setIsDisabledNext($event)"
+    (onDropFile)="onDropFile($event)"
+    (aiSettingValue)="getAiSettingValue($event)"></communication-step-form>
+</trudi-drawer>
+
+<ng-template #headerTpl>
+  <div class="communication-step-header d-flex flex-dir-column gap-4">
+    <trudi-badge
+      *ngIf="canEdit"
+      text="Communication step"
+      size="small"></trudi-badge>
+    <trudi-text-field
+      *ngIf="!isDisableForm; else stepName"
+      class="step-name-field"
+      [formControl]="stepNameControl"
+      maxCharacter="100"
+      [showCounting]="false"
+      [disabled]="isDisableForm"
+      [checkSubmit]="!(isSubmittedCommunicationForm || isSubmittedAiGenerateMsgCopyForm)"
+      placeholder="Add your step name here"></trudi-text-field>
+    <ng-template #stepName>
+      <span *ngIf="stepNameControl.value" class="step-name text-ellipsis">
+        {{ stepNameControl.value }}
+      </span>
+    </ng-template>
+  </div>
+</ng-template>

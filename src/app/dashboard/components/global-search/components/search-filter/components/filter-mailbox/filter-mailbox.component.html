@@ -1,0 +1,127 @@
+<div class="filter-mailbox">
+  <div class="d-flex flex-dir-column gap-8 mailbox-container">
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-4">
+        <span>Mailbox</span>
+        <div
+          *ngIf="selectedList.length"
+          class="mailbox-count d-flex justify-content-center">
+          <span>{{selectedList.length}}</span>
+        </div>
+      </div>
+      <trudi-select-dropdown-v2
+        #dropdown
+        overlayClassName="custom-select-dropdown-mailbox"
+        placeholder="Search"
+        [clearable]="true"
+        [searchable]="true"
+        [items]="listMailboxes"
+        [multi]="true"
+        [virtualScroll]="true"
+        [(ngModel)]="selectedList"
+        [showArrowIcon]="false"
+        [showClearIcon]="false"
+        (valueChange)="handleSelectMailbox($event)">
+        <ng-template trudi-select-dropdown-title-tmp>
+          <trudi-icon
+            class="icon-expand"
+            [icon]="'chevronDown'"
+            [style]="{'width.px': 20, 'height.px': 20}"></trudi-icon>
+        </ng-template>
+
+        <ng-template
+          trudi-select-dropdown-option-tmp
+          let-item="item"
+          let-selectedItems="selectedItems">
+          <div
+            class="mailbox-item d-flex align-items-center gap-12"
+            [ngClass]="{'archived': item.status === EMailBoxStatus.ARCHIVE}">
+            <div class="avatar">
+              <div class="mailbox-avatar">
+                <ng-container
+                  *ngTemplateOutlet="avatarTemplate; context: {$implicit:item, alt:'Mailbox avatar'}"></ng-container>
+              </div>
+            </div>
+            <div class="mailbox-info">
+              <ng-container
+                *ngTemplateOutlet="mailboxItemTemplate; context: {$implicit:item}"></ng-container>
+            </div>
+          </div>
+          <trudi-checkbox
+            class="item-checkbox"
+            [focusInputOnly]="false"
+            [ngModel]="selectedItems?.[item?.id]"></trudi-checkbox>
+        </ng-template>
+      </trudi-select-dropdown-v2>
+    </div>
+  </div>
+</div>
+
+<ng-template #avatarTemplate let-item let-alt="alt">
+  <div class="avatar">
+    <img
+      *ngIf="item?.picture; else noneAvt"
+      [src]="item?.picture"
+      [alt]="alt ?? 'avatar'"
+      [class.mailbox-img-archived]="item?.status === EMailBoxStatus.ARCHIVE" />
+    <ng-template #noneAvt>
+      <div class="custom-avatar">{{item?.name | shortenName}}</div>
+    </ng-template>
+    @if (item?.type === mailBoxType.COMPANY) {
+    <trudi-icon
+      [icon]="'mailboxTypeCompany'"
+      [style]="{ 'width.px': 18, 'height.px': 18 }">
+    </trudi-icon>
+    } @else if (item?.type !== mailBoxType.COMPANY && !item?.isNotShared &&
+    !isConsole) {
+    <trudi-icon
+      [icon]="'mailboxTypeShared'"
+      [style]="{ 'width.px': 18, 'height.px': 18 }">
+    </trudi-icon>
+    }
+  </div>
+</ng-template>
+
+<ng-template #mailboxItemTemplate let-item>
+  <div class="d-flex flex-dir-column">
+    <div class="d-flex gap-4 align-items-center">
+      <span
+        nz-tooltip
+        nzTooltipPlacement="bottom"
+        [nzTooltipTitle]="item?.name"
+        [nzTooltipOverlayStyle]="{ 'max-width': '266px', 'padding-top': '5px' }"
+        [ngClass]="displayAsSelectedItem ? {'selected-mailbox-archived': item?.status === EMailBoxStatus.ARCHIVE} : ''"
+        class="user_name text-ellipsis">
+        {{item?.name}}
+      </span>
+      <trudi-icon *ngIf="unreadList[item?.id]" icon="redDotUnreadMessage">
+      </trudi-icon>
+      <trudi-icon
+        *ngIf="item?.status === EMailBoxStatus.DISCONNECT || item?.status === EMailBoxStatus.FAIL"
+        nz-tooltip
+        [nzTooltipTitle]="item?.status === EMailBoxStatus.FAIL
+                          ? titleTemplate
+                          : item?.role?.includes(EUserMailboxRole.OWNER)
+                          ? textTooltip
+                          : textTooltip + ' Please contact mailbox owner.'"
+        nzTooltipPlacement="bottom"
+        [icon]="item?.status === EMailBoxStatus.FAIL ? 'alertWarningIcon' : 'alertOctagonIcon'"
+        svgClass="size-20">
+      </trudi-icon>
+      <ng-template #titleTemplate>
+        <div class="d-flex flex-dir-column text-left">
+          <span>Fail to connect</span>
+          <span>{{item?.lastTimeSync | formatDateTime | async}}</span>
+        </div>
+      </ng-template>
+    </div>
+    <span
+      nz-tooltip
+      nzTooltipPlacement="bottom"
+      [nzTooltipTitle]="item?.emailAddress"
+      [nzTooltipOverlayStyle]="{ 'max-width': '266px', 'padding-top': '5px' }"
+      class="user_email text-ellipsis"
+      >{{item?.emailAddress}}
+    </span>
+  </div>
+</ng-template>

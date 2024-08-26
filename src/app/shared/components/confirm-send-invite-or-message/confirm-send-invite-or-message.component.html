@@ -1,0 +1,69 @@
+<div class="invite-wrapper">
+  <div class="detail-invite gap-16 d-flex align-items-center">
+    <ng-container *ngIf="isSendInvite else sendMessageHeader">
+      <div class="send-invite-text">
+        <div class="text-sure">Send tenant app invite</div>
+        <div class="cannot-text">
+          Sending tenant app invite to {{numberSent}} {{numberSent > 1 ?
+          'recipients' : 'recipient'}}
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <ng-container *ngIf="usersHaveInvalidEmail.length > 0">
+    <hr class="hr-top" />
+    <div class="detail-invite">
+      <div>
+        The following contacts will not receive this {{isSendInvite ? 'tenant
+        app invite' : 'message'}} as they have an incorrect or missing email
+        address:
+      </div>
+      <div class="invalid-users">
+        <div class="invalid-user" *ngFor="let user of usersHaveInvalidEmail">
+          <app-circle-avatar
+            [style.margin-right.px]="8"
+            [userId]="user?.userId"
+            [firstName]="user?.firstName"
+            [lastName]="user?.lastName"
+            [userType]="user?.type"
+            [size]="24"></app-circle-avatar>
+          <span class="invalid-user__name"
+            >{{ user.firstName }} {{ user.lastName }}</span
+          >
+          <span class="small-circle"></span>
+          <span class="invalid-user__email"
+            >{{ user.email ? user.email : "no email address" }}</span
+          >
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <div class="btn-wrapper gap-12">
+    <button
+      data-e2e="button-cancel"
+      type="button"
+      class="trudi-btn trudi-btn-large trudi-btn-tertiary"
+      (click)="isOpenModal(false)">
+      <span class="btn-text"> Cancel </span>
+    </button>
+    <button
+      data-e2e="button-confirm"
+      type="button"
+      class="trudi-btn trudi-btn-large trudi-btn-primary"
+      (click)="handleConfirmSuccess(false)">
+      <span class="btn-text">
+        {{ usersHaveInvalidEmail.length > 0 ? "Send anyway" : "Confirm" }}
+      </span>
+    </button>
+  </div>
+</div>
+
+<ng-template #sendMessageHeader>
+  <div class="send-invite-text">
+    <div class="text-sure">Send message</div>
+    <div class="cannot-text">
+      Sending message to {{numberSent}} {{numberSent > 1 ? 'recipients' :
+      'recipient'}}
+    </div>
+  </div>
+</ng-template>

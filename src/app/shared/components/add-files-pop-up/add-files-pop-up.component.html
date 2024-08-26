@@ -1,0 +1,129 @@
+<trudi-modal
+  *ngIf="show"
+  [(visible)]="show"
+  [modelWidth]="375"
+  [subTitle]="'Select Files to add to message'"
+  title="Add Files"
+  [autoFocus]="null"
+  [showIconName]="false"
+  (onCancel)="openQuitConfirmModal(true)"
+  iconName="trudiAvt">
+  <div class="invite-wrapper">
+    <div class="body" [formGroup]="fg">
+      <div
+        data-e2e="browse-file-square"
+        class="dropzone"
+        *ngIf="!selectedFile"
+        appDnd
+        (filesDropped)="onFilesDropped($event)">
+        <input
+          type="file"
+          accept="{{fileTypeSelect}}"
+          onfocus="this.value=''"
+          #fileDropRef
+          id="fileDropRef"
+          (change)="fileBrowseHandler($event)" />
+        <img src="/assets/icon/icon_upload.svg" alt="" />
+        <p>
+          Drag and Drop here <br />
+          or
+        </p>
+        <label for="fileDropRef">Browse files</label>
+        <div class="text-file-over">Drop here</div>
+      </div>
+      <div class="warning" *ngIf="overFileSize">
+        Your file is larger than 25MB. Please upload a smaller file.
+      </div>
+      <div class="warning" *ngIf="!isValidFileUploadType">
+        Unsupported file type
+      </div>
+      <div class="files-list" *ngIf="selectedFile">
+        <div class="file-item" *ngFor="let item of selectedFile">
+          <div class="file-logo">
+            <img
+              data-e2e="file-item-type"
+              class="position-center-w"
+              src="assets/images/icons/{{ item.icon }}" />
+          </div>
+          <div class="file">
+            <div class="name-extension" data-e2e="file-item-label">
+              <div class="file-name">{{item.fileName}}</div>
+              <div class="file-extension">{{item.extension}}</div>
+            </div>
+            <div class="date-upload" data-e2e="file-item-date">
+              {{timeUpload | formatDate | async}}
+            </div>
+          </div>
+          <div class="remove-btn" (click)="removeFile()">
+            <img
+              data-e2e="file-item-remove"
+              class="position-center-w"
+              src="/assets/icon/small-close-black.svg"
+              alt="" />
+          </div>
+        </div>
+      </div>
+      <div data-e2e="document-section" class="document-input">
+        <div data-e2e="document-label" class="up-left-text">
+          Document Type <span *ngIf="topic.invalid">*</span>
+        </div>
+        <ng-select
+          [attr.data-e2e]="'document-dropdown'"
+          class="share-ng-select dropdown-size"
+          [items]="selectTopicItems"
+          bindLabel="text"
+          bindValue="id"
+          [searchable]="false"
+          [clearable]="false"
+          formControlName="topic">
+          <ng-template
+            ng-option-tmp
+            let-item="item"
+            let-index="index"
+            let-search="searchTerm">
+            <span
+              class="ng-option-label"
+              [attr.data-e2e]="'document-option-'+index"
+              >{{item.text}}</span
+            >
+          </ng-template>
+        </ng-select>
+      </div>
+      <div data-e2e="title-section" class="document-input">
+        <div class="d-flex justify-content-between up-left-text">
+          <div data-e2e="title-label">
+            Title <span *ngIf="title.invalid">*</span>
+          </div>
+          <app-remaining-character
+            [maxlength]="30"
+            [currentTextLength]="title.value?.length"></app-remaining-character>
+        </div>
+        <input
+          data-e2e="title-input"
+          type="text"
+          class="input title-text"
+          formControlName="title"
+          maxlength="30" />
+      </div>
+    </div>
+    <ng-template #footerModal>
+      <div class="btn-wrapper-footer">
+        <button
+          data-e2e="back-btn"
+          type="button"
+          class="trudi-btn trudi-btn-tertiary trudi-btn-large"
+          (click)="backtoSendMessageModal(true)">
+          Back
+        </button>
+        <button
+          data-e2e="add-btn"
+          type="button"
+          class="trudi-btn trudi-btn-primary trudi-btn-large"
+          [ngClass]="{'unclick': !clickable()}"
+          (click)="openSendMessageModal(true)">
+          Add
+        </button>
+      </div>
+    </ng-template>
+  </div>
+</trudi-modal>

@@ -1,0 +1,39 @@
+<div
+  class="modal-container"
+  [id]="'modal-popup-wrapper'"
+  (click)="onClickModal($event)"
+  [ngClass]="{ 'modal-position-center': position === modalPopupPosition.center,
+'modal-position-right': position === modalPopupPosition.right, 'modal-position-full-screen': position === modalPopupPosition.full_screen}"
+  [style.zIndex]="_zIndex"
+  [style.display]="(show ? 'flex' : 'none')">
+  <div
+    class="modal-popup-bk"
+    [style.zIndex]="_zIndex + 1"
+    (click)="onClose($event)">
+    &nbsp;
+  </div>
+  <div
+    class="modal-window"
+    [ngClass]="{'modal-fullscreen' : isFullScreenModal}"
+    [style.background-color]="transparent && 'transparent'"
+    [ngStyle]="{
+      'min-width.px': specificWidth || '',
+      'width.px': specificWidth || '',
+      'width.%': isFullScreenModal ? 100 : widthInPercent ?? '',
+      'margin': bigSize && 'auto',
+      'padding.px': hasPadding ? 10 : 0
+    }"
+    [style.zIndex]="_zIndex + 2">
+    <div
+      class="modal-popup-header"
+      [style.display]="(showTitle ? 'block' : 'none')">
+      <button class="close-button" (click)="onClose($event)">
+        <img src="assets/icon/close-modal.png" />
+      </button>
+      <h1>{{title | lowercase}}</h1>
+    </div>
+    <div class="modal-popup-content" #modalContent tabindex="0">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

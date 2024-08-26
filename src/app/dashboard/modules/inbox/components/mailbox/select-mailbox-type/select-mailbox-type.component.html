@@ -1,0 +1,76 @@
+<trudi-modal
+  [visible]="visible"
+  title="Select mailbox type"
+  subTitle=""
+  [hiddenCancelBtn]="true"
+  okText="Next"
+  [autoFocus]="null"
+  (onCancel)="handleCancel()"
+  (onOk)="handleNext()">
+  <div class="wrapper-select-mailbox-type">
+    <div class="wrapper-select-type">
+      <div
+        tabindex="0"
+        (keydown.enter)="onSelectMailboxType(mailBoxType.COMPANY)"
+        class="mailbox-type"
+        [ngClass]="{'selected': selectedMailboxType === mailBoxType.COMPANY}"
+        (click)="onSelectMailboxType(mailBoxType.COMPANY)">
+        <div class="icon-type">
+          <trudi-icon
+            icon="mailboxTypeCompany"
+            [style]="{ 'width.px': 52, 'height.px': 52}"></trudi-icon>
+        </div>
+        <div class="value-type">
+          <span class="name-type">Company</span>
+          <trudi-icon
+            class="icon-tooltip"
+            icon="toolTip2"
+            [style]="{ 'width.px': 14, 'height.px': 14}"
+            nz-tooltip
+            [nzTooltipTitle]="tooltipCompany"
+            [nzTooltipMouseEnterDelay]="0.3"
+            nzTooltipOverlayClassName="tooltip-type-mailbox-company"></trudi-icon>
+        </div>
+      </div>
+      <div
+        tabindex="0"
+        (keydown.enter)="onSelectMailboxType(mailBoxType.INDIVIDUAL)"
+        class="mailbox-type"
+        [ngClass]="{'selected': selectedMailboxType === mailBoxType.INDIVIDUAL}"
+        (click)="onSelectMailboxType(mailBoxType.INDIVIDUAL)">
+        <div class="icon-type">
+          <trudi-icon
+            icon="mailboxTypeIndividual"
+            [style]="{ 'width.px': 52, 'height.px': 52}"></trudi-icon>
+        </div>
+        <div class="value-type">
+          <span class="name-type">Individual</span>
+          <trudi-icon
+            class="icon-tooltip"
+            icon="toolTip2"
+            [style]="{ 'width.px': 14, 'height.px': 14}"
+            nz-tooltip
+            [nzTooltipTitle]="tooltipIndividual"
+            [nzTooltipMouseEnterDelay]="0.3"
+            nzTooltipOverlayClassName="tooltip-type-mailbox-individual"></trudi-icon>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="isErrorSelect" class="error-no-select">
+      <trudi-icon
+        icon="errorInputIcon"
+        [style]="{ 'width.px': 16, 'height.px': 16}"></trudi-icon>
+      <span>You must select mailbox type</span>
+    </div>
+  </div>
+</trudi-modal>
+<ng-template #tooltipCompany>
+  <ul>
+    <li>Visible by all team members</li>
+    <li>Destination for voicemail, app messages, web widget enquiries</li>
+    <li>One mailbox per company</li>
+  </ul>
+</ng-template>
+<ng-template #tooltipIndividual>
+  <div>Can be private or shared with team members.</div>
+</ng-template>

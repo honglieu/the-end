@@ -1,0 +1,21 @@
+<div class="inbox-sidebar-wrapper padding-right-0" cdkScrollable>
+  <add-mailbox
+    [isOwner]="isOwner"
+    [selectedmailboxType]="selectedmailboxType"
+    [isExistCompanyMailbox]="isExistCompanyMailbox"
+    [listMailBoxs]="listMailBoxs"
+    [currentCompanyId]="currentCompanyId"
+    [isOwnerMailBox]="isOwnerMailBox"
+    [isOwnerOutlook]="isOwnerOutlook"
+    (onUpdateListMailBoxs)="handleUpdateMailBox($event)"></add-mailbox>
+  <mailbox-list [listMailBoxs]="listMailBoxs" [unreadList]="unreadList">
+  </mailbox-list>
+  <email-foder-list *ngIf="hasActiveMailboxes" [listMailBoxs]="listMailBoxs">
+  </email-foder-list>
+  <archived-mailbox-list
+    *ngIf="showViewArchivedList"
+    [listMailBoxs]="listMailBoxs"
+    [listArchiveMessenger]="listArchiveMessenger"
+    [listArchiveWhatsApp]="listArchiveWhatsApp"
+    [unreadList]="unreadList"></archived-mailbox-list>
+</div>

@@ -1,0 +1,30 @@
+<div class="auth-wrapper">
+  <div class="container">
+    <div class="d-flex">
+      <div class="form-wrapper">
+        <router-outlet></router-outlet>
+      </div>
+      <div class="auth-bg-wrapper">
+        <div class="auth-bg" #bgPrimary>
+          <div class="circle"></div>
+          <div class="circle-medium"></div>
+          <div
+            class="circle-large"
+            [style.top]="(bgPrimary.offsetHeight + bgPrimary.offsetWidth ) / 2.78 + 'px'"
+            [style.width]="bgPrimary.offsetWidth + 'px'"
+            [style.height]="bgPrimary.offsetWidth + 'px'"></div>
+          <img
+            (load)="handleOnloadBanner()"
+            style="display: none"
+            src="/assets/images/onboarding-bg.png"
+            alt="auth bg" />
+          <img
+            *ngIf="showBanner"
+            class="img-auth"
+            src="/assets/images/onboarding-bg.png"
+            alt="auth bg" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

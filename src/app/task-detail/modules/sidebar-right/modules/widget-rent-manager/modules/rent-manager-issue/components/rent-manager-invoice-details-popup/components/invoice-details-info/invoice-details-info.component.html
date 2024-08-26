@@ -1,0 +1,159 @@
+<div [formGroup]="formGroup" class="d-flex gap-20" id="rm-issue-invoice-info">
+  <div class="form-section flex-1">
+    <div class="form-section__title">Information</div>
+    <div class="form-section__body">
+      <div class="form-section__body-row d-flex gap-16">
+        <div class="flex-1 invoice-type">
+          <trudi-form-control [checkSubmit]="!submitted">
+            <trudi-single-select
+              [items]="invoiceTypes"
+              [enableSearch]="false"
+              bindLabel="name"
+              bindValue="id"
+              label="Invoice type"
+              (ngModelChange)="handleAccountTypeChange($event)"
+              formControlName="accountType"></trudi-single-select>
+          </trudi-form-control>
+        </div>
+        <div class="flex-1">
+          <trudi-form-control>
+            <trudi-single-select
+              [items]="listUser"
+              bindValue="id"
+              bindLabel="fullName"
+              formControlName="accountId"
+              [label]="ACCOUNT_TYPE_LABEL[accountTypeControl?.value]"></trudi-single-select>
+          </trudi-form-control>
+        </div>
+      </div>
+      <div class="form-section__body-row">
+        <trudi-single-select
+          [items]="terms"
+          bindLabel="name"
+          bindValue="id"
+          formControlName="termId"
+          label="Term"></trudi-single-select>
+      </div>
+      <div class="form-section__body-row d-flex gap-20">
+        <div class="d-flex flex-dir-column flex-1">
+          <trudi-form-control [checkSubmit]="!submitted">
+            <span class="form-label d-block">Date</span>
+            <trudi-date-picker
+              formControlName="invoiceDate"
+              [class.trudi-picker-error]="submitted && invoiceDateControl?.errors && invoiceDateControl?.touched"
+              label="Date"></trudi-date-picker>
+          </trudi-form-control>
+        </div>
+        <div class="d-flex flex-dir-column flex-1">
+          <trudi-form-control [checkSubmit]="!submitted">
+            <span class="form-label d-block">Due date</span>
+            <trudi-date-picker
+              formControlName="dueDate"
+              [class.trudi-picker-error]="submitted && dueDateControl?.errors && dueDateControl?.touched"
+              label="Due date"></trudi-date-picker>
+          </trudi-form-control>
+        </div>
+      </div>
+      <div class="form-section__body-row">
+        <trudi-single-select
+          formControlName="jobId"
+          bindValue="id"
+          bindLabel="name"
+          [items]="rmData?.job"
+          label="Job"></trudi-single-select>
+      </div>
+    </div>
+  </div>
+  <div class="form-section flex-1">
+    <div class="form-section__title">Summary</div>
+    <div class="form-section__body flex-1">
+      <div class="form-section__body-row">
+        <trudi-form-control>
+          <trudi-single-select
+            [items]="rmData?.taxTypes"
+            bindValue="id"
+            bindLabel="name"
+            formControlName="taxTypeId"
+            (ngModelChange)="changeTaxType()"
+            label="Tax type"></trudi-single-select>
+        </trudi-form-control>
+      </div>
+      <div class="form-section__body-row d-flex gap-20">
+        <div class="flex-1">
+          <trudi-form-control>
+            <trudi-number-field
+              [maskLeadZero]="true"
+              [maskPattern]="maskPattern"
+              [checkSubmit]="!submitted"
+              [separatorLimit]="MAX_8_DIGIT_BEFORE_DECIMAL"
+              thousandSeparatorType=","
+              placeholder="0.00"
+              formControlName="taxPercent"
+              label="Tax %"
+              size="large"></trudi-number-field>
+          </trudi-form-control>
+        </div>
+        <div class="flex-1">
+          <trudi-number-field
+            formControlName="taxableAmount"
+            [maskLeadZero]="true"
+            [maskPattern]="maskPattern"
+            thousandSeparatorType=","
+            label="Taxable amount"
+            size="large"></trudi-number-field>
+        </div>
+      </div>
+      <div class="form-section__body-row">
+        <trudi-textarea
+          formControlName="comment"
+          [maxCharacter]="3000"
+          [showCounting]="false"
+          label="Comments"></trudi-textarea>
+      </div>
+      <div class="form-section__body-row flex-1 d-flex align-items-center">
+        <trudi-checkbox
+          label="Taxable"
+          formControlName="isTaxable"></trudi-checkbox>
+      </div>
+    </div>
+  </div>
+  <div class="form-section flex-1">
+    <div class="form-section__body-row">
+      <table class="summary">
+        <tbody>
+          <tr>
+            <td>Sub total</td>
+            <td>{{subTotal | currency: 'USD'}}</td>
+          </tr>
+          <tr>
+            <td>Markup total</td>
+            <td>{{markupTotal | currency: 'USD'}}</td>
+          </tr>
+          <tr>
+            <td>Tax</td>
+            <td>{{tax | currency: 'USD'}}</td>
+          </tr>
+          <tr>
+            <td>Total</td>
+            <td>{{ subTotal + markupTotal + tax | currency: 'USD'}}</td>
+          </tr>
+          <tr>
+            <td>Amount paid</td>
+            <td>{{chargeAmountPaid | currency: 'USD'}}</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td class="balance-title">Balance due</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td class="balance-due">
+              {{subTotal + markupTotal + tax - chargeAmountPaid | currency:
+              'USD'}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

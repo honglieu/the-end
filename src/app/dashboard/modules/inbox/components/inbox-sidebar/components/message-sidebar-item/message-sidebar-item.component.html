@@ -1,0 +1,67 @@
+<ul
+  nz-menu
+  nzMode="inline"
+  class="border-r-none"
+  (mouseenter)="showTotal = true"
+  (mouseleave)="showTotal = false">
+  <li
+    class="border-rad-4 single-item m-0 drop_task--folder"
+    nz-menu-item
+    [attr.folder-type]="item?.folderType"
+    [attr.folder-status]="item?.status"
+    [attr.folder-mailbox-id]="mailbox?.id"
+    [nzSelected]="matchRouter">
+    <a (click)="handleClick(item)" class="d-flex align-items-center w-100">
+      <div class="d-flex align-items-center overflow-hidden">
+        <div class="icon-wrapper">
+          <trudi-icon
+            svgClass="size-20"
+            class="item-icon"
+            [icon]="item?.icon"></trudi-icon>
+        </div>
+        <span class="ml-8 item-name text-ellipsis"> {{ item?.name }} </span>
+        <span
+          class="item-unRead ml-4 border-rad-16"
+          *ngIf="item?.unReadMsgCount && (mailbox?.status  !== EMailBoxStatus.SYNCING) && isAccountAdded ">
+          {{ item?.unReadMsgCount | totalCountPipe }}
+        </span>
+        <div class="alert-icon-wrapper ml-4">
+          @if (isShowWarning) {
+          <trudi-icon
+            nz-tooltip
+            nzTooltipPlacement="top"
+            [tooltipMaxWidth]="210"
+            [nzTooltipTitle]="tooltipText || tooltipTemplate"
+            [icon]="'alertOctagonIcon'"
+            svgClass="size-16">
+          </trudi-icon>
+          }
+        </div>
+      </div>
+      <span
+        class="item-total ml-auto"
+        *ngIf="item?.total !== null && (mailbox?.status  !== EMailBoxStatus.SYNCING) && isAccountAdded">
+        {{ item?.total | totalCountPipe: 999: true }}
+      </span>
+      <span
+        class="item-total ml-auto"
+        *ngIf="item?.total === null && showTotal">
+        {{ item?.hoverTotal | totalCountPipe: 999: true }}
+      </span>
+    </a>
+  </li>
+</ul>
+
+<ng-template #tooltipTemplate>
+  <div class="template-tooltip-reconnect">
+    <div style="text-align: start">
+      We've lost connection to your Facebook account. @if(isPermissionEdit) {
+      <span class="reconnect-btn" (click)="handleReconnectFacebookMessenger()"
+        >Reconnect</span
+      >
+      } @else {
+      <span>Please contact your Facebook admin</span>
+      }
+    </div>
+  </div>
+</ng-template>

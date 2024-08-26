@@ -1,0 +1,9 @@
+<div class="note-section">
+  <main-note
+    class="note-section-main d-block"
+    [style.height]="'calc(100% - '+ ((chatNoteSection?.offsetHeight + 24) + 'px)')">
+  </main-note>
+  <div #chatNoteSection class="note-section-chat">
+    <chat-note></chat-note>
+  </div>
+</div>

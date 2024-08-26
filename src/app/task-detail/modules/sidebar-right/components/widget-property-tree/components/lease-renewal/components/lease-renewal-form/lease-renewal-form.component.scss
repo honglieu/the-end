@@ -1,0 +1,108 @@
+@import 'function';
+
+h4.title {
+  @include fontSetup(var(--gray-700), 14px, 20px, normal, 600);
+  margin-bottom: 8px;
+}
+
+.trudi-form-group {
+  gap: 12px;
+
+  .account-form {
+    max-width: calc((100% / 2) - 6px);
+  }
+}
+
+.option-clear {
+  padding: 5px 3px;
+  @include fontSetup(var(--danger-500), 14px, 20px, normal, 500);
+}
+
+.trudi-form-control {
+  .trudi-input,
+  .trudi-picker {
+    @include fontSetup(var(--gray-700), 14px, 20px, normal, 500);
+
+    &[disabled],
+    .trudi-picker-disabled {
+      color: var(--gray-500);
+      background: var(--gray-50) !important;
+      border: none;
+    }
+  }
+}
+
+:host ::ng-deep .trudi-number-field-wrapper {
+  &.disabled {
+    background: var(--gray-50) !important;
+    border-color: var(--gray-200) !important;
+    cursor: not-allowed;
+
+    #trudi-number-field {
+      color: var(--fg-neutral-weakest);
+    }
+  }
+}
+
+:host ::ng-deep ng-select.ng-select-disabled .ng-select-container {
+  color: var(--bg-overlay-light) !important;
+}
+
+:host ::ng-deep {
+  .ng-dropdown-panel {
+    .ng-dropdown-panel-items {
+      &:hover {
+        background-color: var(--brand-100);
+      }
+    }
+  }
+}
+
+:host ::ng-deep ng-select.share-ng-select .ng-select-container {
+  height: 40px !important;
+}
+
+.trudi-picker {
+  max-width: 100%;
+}
+
+:host ::ng-deep .trudi-form-control {
+  .ng-select.ng-error .ng-select-container {
+    border: 1px solid var(--danger-500) !important;
+    box-shadow: none !important;
+    outline: 2px solid rgba(var(--danger-500-rgb), 0.6) !important;
+  }
+
+  .trudi-form-control-wrapper,
+  .trudi-picker {
+    height: 40px !important;
+
+    .trudi-picker-disabled {
+      background: var(--gray-50) !important;
+      border-color: var(--gray-200) !important;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.rent-ng-select {
+  margin-top: 0 !important;
+}
+
+:host .form-lease-renewal {
+  ::ng-deep .ng-select.ng-select-disabled {
+    .ng-select-container {
+      cursor: not-allowed;
+      background-color: #fafafa;
+      border: 1px solid var(--border-neutral-dark, #ececed);
+
+      .ng-value-container {
+        @include fontSetup(#cecfd2, 14px, 20px, normal, 500);
+      }
+
+      &:hover {
+        box-shadow: none;
+      }
+    }
+  }
+}

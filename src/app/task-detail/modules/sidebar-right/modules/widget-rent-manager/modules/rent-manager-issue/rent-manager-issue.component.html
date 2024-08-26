@@ -1,0 +1,7 @@
+<rent-manager-issue-popup *ngIf="currentPopup"></rent-manager-issue-popup>
+<rent-manager-invoice-details-popup
+  *ngIf="currentPopup === ERentManagerIssuePopup.RM_ISSUE_INVOICE_DETAILS_POPUP"></rent-manager-invoice-details-popup>
+<bill-detail-popup
+  *ngIf="currentPopup === ERentManagerIssuePopup.RM_ISSUE_BILL_POPUP"></bill-detail-popup>
+<purchase-order-popup
+  *ngIf="currentPopup === ERentManagerIssuePopup.RM_ISSUE_PURCHASE_ORDER_POPUP"></purchase-order-popup>

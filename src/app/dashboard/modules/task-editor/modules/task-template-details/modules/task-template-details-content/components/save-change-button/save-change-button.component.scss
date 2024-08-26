@@ -1,0 +1,91 @@
+@import 'function';
+
+.save-change-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  gap: 8px;
+  left: 50%;
+  bottom: 40px;
+  transform: translateX(-50%);
+  z-index: 9999;
+}
+
+.text-error {
+  position: relative;
+  padding: 8px 12px 8px 12px;
+  border-radius: 8px;
+  background-color: var(--danger-50);
+  @include fontSetup(var(--fg-danger), 12px, 16px, normal, 500);
+}
+
+.save-change-container {
+  background-color: var(--white);
+  display: flex;
+  border-radius: 8px;
+  max-width: 428px;
+  max-height: 72px;
+  box-shadow: 0px 8px 34px 0px rgba(0, 0, 0, 0.13),
+    0px 4px 26px 0px rgba(0, 0, 0, 0.1), 0px 16px 66px 0px rgba(0, 0, 0, 0.24);
+  gap: 16px;
+
+  .save-change-status {
+    width: 167px;
+    display: flex;
+    padding: 26px 21px;
+    align-items: center;
+    border-radius: 8px 0 0 8px;
+    background-color: var(--white);
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 600);
+  }
+
+  .save-change-action {
+    width: 261px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 0 8px 8px 0;
+    padding-right: 16px;
+  }
+}
+
+.input-error-select {
+  outline: 2px solid var(--border-danger) !important;
+}
+
+.trudi-btn:disabled {
+  cursor: not-allowed;
+  pointer-events: all;
+}
+
+.input-error-shaking {
+  animation: shake 0.5s;
+}
+
+@keyframes shake {
+  10%,
+  90% {
+    transform: translateX(-50%);
+  }
+
+  20%,
+  80% {
+    transform: translateX(-53%);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translateX(-47%);
+  }
+
+  40%,
+  60% {
+    transform: translateX(-53%);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}

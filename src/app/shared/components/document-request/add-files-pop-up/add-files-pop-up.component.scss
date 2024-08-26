@@ -1,0 +1,329 @@
+@import 'function';
+
+:host ::ng-deep {
+  .invite-wrapper {
+    padding: 14px;
+    width: 100%;
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+
+      .close-btn {
+        cursor: pointer;
+        display: flex;
+        align-items: baseline;
+      }
+
+      .detail-invite {
+        display: flex;
+        align-items: center;
+
+        .send-invite-icon {
+          margin-right: 2.4rem;
+
+          .background-icon {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            border-radius: 29px;
+            height: 48px;
+            width: 48px;
+            background-color: var(--tenant-500);
+          }
+        }
+
+        .send-invite-text {
+          p {
+            font-weight: 500;
+            font-size: 20px;
+            line-height: 24px;
+            margin: 0;
+            color: var(--gray-700);
+          }
+
+          .number-sent {
+            display: flex;
+            margin-top: 8px;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 16px;
+            color: var(--gray-500);
+
+            span {
+              white-space: break-spaces;
+            }
+          }
+        }
+      }
+    }
+
+    .body {
+      display: flex;
+      flex-direction: column;
+
+      .denied-file {
+        border: solid 1px var(--danger-500);
+        background-color: var(--danger-50);
+      }
+
+      .green-background {
+        background-color: var(--gray-100);
+        border: dashed 1px var(--brand-500);
+      }
+
+      .fileover {
+        background-color: var(--brand-500) !important;
+        border: 1px dashed var(--brand-500) !important;
+
+        label,
+        p,
+        img {
+          display: none !important;
+        }
+
+        .text-file-over {
+          display: unset !important;
+          font-size: 16px;
+          line-height: 10.4rem;
+          color: var(--brand-500);
+        }
+      }
+
+      .dropzone {
+        width: auto;
+        height: 15rem;
+        padding: 2rem;
+        text-align: center;
+        position: relative;
+        border: 1px dashed var(--gray-600);
+        background-color: var(--white);
+        border-radius: 8px;
+
+        input {
+          opacity: 0;
+          position: absolute;
+          z-index: 2;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+        }
+
+        .text-file-over {
+          display: none;
+        }
+
+        label {
+          cursor: pointer;
+          @include fontSetup(var(--brand-500), 1.6rem, 2rem, normal, 600);
+        }
+
+        p {
+          margin: 0;
+          @include fontSetup(var(--gray-600), 1.6rem, 2rem, normal, 500);
+        }
+
+        img {
+          margin-bottom: 9px;
+        }
+      }
+
+      .warning {
+        width: auto;
+        margin-top: 16px;
+        padding: 16px 24px;
+        background-color: var(--danger-50);
+        border: 1px solid var(--danger-500);
+        border-radius: 8px;
+        font-size: 1.4rem;
+        line-height: 1.6rem;
+        color: var(--danger-500);
+        text-align: center;
+      }
+
+      .files-list {
+        width: 100%;
+        padding: 16px;
+        background-color: var(--gray-100);
+        border-radius: 8px;
+
+        .file-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          width: 100%;
+
+          .file {
+            display: block;
+            margin: 2px 10px;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 24px;
+            color: var(--gray-950);
+            width: calc(100% - 68px);
+
+            .name-extension {
+              display: flex;
+
+              .file-name {
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+              }
+            }
+
+            .date-upload {
+              font-size: 1.2rem;
+              line-height: 1.6rem;
+              color: var(--gray-600);
+            }
+          }
+        }
+      }
+
+      .document-input {
+        margin: 2.4rem 0 0 0;
+      }
+
+      .des-text {
+        margin: 1.6rem 0 1.6rem 2.4rem;
+        font-weight: 500;
+        font-size: 1.6rem;
+        line-height: 1.9rem;
+        color: var(--gray-950);
+      }
+    }
+
+    .btn-wrapper {
+      margin-top: 32px;
+      display: flex;
+      justify-content: flex-end;
+
+      .add-btn {
+        display: flex;
+        padding: 0.9rem 2.2rem;
+        font-size: 1.4rem;
+        background-color: var(--brand-500);
+        border-radius: 0.7rem;
+        border: 0;
+        color: var(--white);
+        align-items: center;
+
+        .btn-text {
+          font-size: 14px;
+        }
+      }
+
+      .cancel-btn {
+        display: flex;
+        padding: 0.9rem 2.2rem;
+        font-size: 1.4rem;
+        margin-right: 2rem;
+        border: 0;
+        background-color: var(--white);
+        color: var(--brand-500);
+        align-items: center;
+
+        .btn-text {
+          font-weight: 500;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+
+  .input {
+    width: -webkit-fill-available;
+    border: 0;
+    border-bottom: 1px solid var(--gray-100);
+    background-color: var(--white);
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 19px;
+    padding: 0;
+    color: var(--gray-700);
+  }
+
+  .content-text {
+    width: -webkit-fill-available;
+    border: 0;
+    margin: 0 1.65rem 1.65rem;
+    background-color: var(--white);
+  }
+
+  .up-left-text {
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--gray-600);
+  }
+
+  .down-right-text {
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--gray-600);
+    display: flex;
+    justify-content: flex-end;
+    margin: 0 8.5px 8.5px 0;
+  }
+
+  :host
+    ::ng-deep
+    .ng-select-focused:not(::ng-deep .ng-select-opened)
+    > ::ng-deep
+    .ng-select-container {
+    box-shadow: none;
+    border-color: var(--gray-100);
+    background-color: var(--white);
+  }
+
+  ng-select {
+    padding: 0;
+
+    .ng-select-focused:not(.ng-select-opened) {
+      &.ng-select-container {
+        box-shadow: none;
+      }
+    }
+
+    .ng-select-container {
+      border: 0;
+      color: var(--gray-700);
+      font-weight: 500;
+      align-items: center;
+      font-size: 14px;
+      min-height: 20.5px;
+      height: 26px;
+      border-bottom: 1px solid var(--gray-100);
+
+      .ng-value-container {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        height: 32px;
+        margin: 0;
+        border: 0;
+        padding: 0;
+        box-shadow: none;
+      }
+    }
+
+    .ng-dropdown-panel {
+      .ng-dropdown-panel-items {
+        .ng-option {
+          font-weight: 500;
+          color: var(--gray-700);
+        }
+
+        .ng-option-marked,
+        .ng-option-selected {
+          color: var(--gray-700);
+        }
+      }
+    }
+
+    .ng-select-container ::after {
+      border: 0;
+    }
+  }
+}

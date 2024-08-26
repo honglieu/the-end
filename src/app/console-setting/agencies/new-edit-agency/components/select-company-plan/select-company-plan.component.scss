@@ -1,0 +1,60 @@
+@import 'function';
+
+.form-group-container {
+  padding: 0 8px;
+}
+
+.addons-list {
+  margin: 10px 32px 0 32px;
+  border-radius: 8px;
+  border: 1px solid var(--gray-200);
+  padding: 16px;
+  position: relative;
+
+  .addon-item ::ng-deep .checkbox-label {
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 600);
+  }
+
+  .addon-item ::ng-deep .switch-checkbox-container {
+    justify-content: space-between;
+  }
+
+  .addon-text {
+    @include fontSetup(var(--gray-500), 12px, 16px, normal, 400);
+    letter-spacing: 0em;
+    text-align: left;
+    margin-top: 8px;
+    margin-bottom: 6px;
+  }
+
+  .coming-soon-text {
+    @include fontSetup(var(--gray-600), 1.4rem, 2rem, normal, 600);
+  }
+
+  .line {
+    margin: 16px 0;
+  }
+}
+
+.trudi-input-label {
+  @include fontSetup(var(--gray-600), 14px, 20px, normal, 600);
+}
+
+.line {
+  background-color: var(--gray-200);
+  height: 1px;
+  max-width: 100%;
+  margin: 24px 0px;
+}
+
+.elite-plan {
+  margin: 8px 32px 0 32px;
+}
+
+:host ::ng-deep {
+  trudi-number-field {
+    .trudi-number-field-wrapper {
+      max-width: 250px;
+    }
+  }
+}

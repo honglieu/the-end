@@ -1,0 +1,136 @@
+<div *ngIf="vm$ | async as vm" [id]="'item_' + comment.friendlyId">
+  <!-- edit -->
+  <ng-container
+    *ngIf="vm.editedCurrentCommentId === comment.id && !vm.isUpdating">
+    <div class="comment-editor">
+      <comments-editor
+        [commented]="comment"
+        action="edit"
+        (triggerEventEscape)="cancelEdit()"></comments-editor>
+      <comments-attachments [invalidFile]="invalidFile">
+        @for(file of uploadedFiles; track file.localId) {
+        <comments-attachment-item
+          [isUploading]="isUploading"
+          [canRemove]="true"
+          [attachment]="file"
+          (triggerRemoveFile)="handleRemoveFile($event)"></comments-attachment-item>
+        }
+      </comments-attachments>
+    </div>
+    <button class="cancel-button" (click)="cancelEdit()">Cancel</button>
+  </ng-container>
+
+  <!-- show skeleton when updating -->
+  <ng-container
+    *ngIf="vm.editedCurrentCommentId === comment.id && vm.isUpdating">
+    <app-comment-skeleton></app-comment-skeleton>
+  </ng-container>
+  <!-- hight light comment when: create/edit, navigate from notification and unread comment -->
+  <div
+    *ngIf="vm.editedCurrentCommentId !== comment.id"
+    [ngClass]="{'highlight': !isLoadingComment && (comment?.isNewComment || (commentInNotificationId === comment.friendlyId) || (comment.friendlyId > lastReadFriendlyId && !isCancelEdit && !navigateFromBell))}">
+    <!-- thread detail -->
+    <div class="comment">
+      <!-- header -->
+      <div class="comment-header">
+        <app-user-avatar
+          [avatar]="comment.createdUser?.googleAvatar"
+          [user]="comment?.createdUser"
+          [style]="'width: 24px; height: 24px; font-size: 12px;'"></app-user-avatar>
+
+        @if(comment.type === ECommentType.DELETE) {
+        <ng-container *ngTemplateOutlet="deletedText"></ng-container>
+
+        } @if(comment.type === ECommentType.TEXT) {
+        <span
+          class="username"
+          nz-tooltip
+          [nzTooltipTitle]="comment?.createdUser | formatFullname : true"
+          >{{comment?.createdUser | formatFullname : true}}</span
+        >
+
+        <span class="created-at"
+          >{{comment.createdAt | trudiDateTime | async}}</span
+        >
+
+        <div class="comment-actions">
+          <div class="edited-tag" *ngIf="comment.editAt">(edited)</div>
+
+          <button
+            *ngIf="comment.createdUser?.id === vm.currentUserId"
+            trudi-btn
+            variant="outlined"
+            btnType="neutral"
+            shape="circle"
+            size="small"
+            class="comment-actions-btn"
+            nz-dropdown
+            nzTrigger="click"
+            [nzClickHide]="false"
+            [nzPlacement]="'bottomRight'"
+            [nzDropdownMenu]="threeDotsMenu">
+            <trudi-icon
+              viewBox="auto"
+              svgClass="size-16"
+              icon="verticalMore"></trudi-icon>
+          </button>
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- content -->
+    @if(comment.type === ECommentType.TEXT) {
+    <div class="comment-body">
+      <div class="comment-placeholder"></div>
+      <div class="comment-content">
+        <!-- text comment -->
+
+        <div
+          *ngIf="comment.text"
+          class="comment-text"
+          [innerHTML]="comment.text | safe: 'html'"></div>
+
+        <!-- attachment -->
+        <div class="comment-attachment" *ngIf="comment?.children.length">
+          @for(attachment of comment.children; track attachment.id) {
+          <comments-attachment-item
+            (triggerUpdateSyncStatus)="changeSyncStatus($event)"
+            [attachment]="attachment.internalNoteFile"
+            [canRemove]="false"></comments-attachment-item>
+          }
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+</div>
+
+<nz-dropdown-menu #threeDotsMenu>
+  <div nz-menu>
+    <div class="comment-actions-menu-wrapper border-rad-8">
+      <div
+        class="item cursor-pointer d-flex gap-8"
+        (click)="editComment(comment.id)">
+        <trudi-icon
+          [style]="{'width.px': 20, 'height.px': 20}"
+          icon="editIcon"></trudi-icon>
+        <span class="text">Edit</span>
+      </div>
+      <div
+        class="item cursor-pointer d-flex gap-8"
+        (click)="confirmDeleteComment(comment.id)">
+        <trudi-icon
+          [style]="{'width.px': 20, 'height.px': 20}"
+          icon="deleteIconOutline"></trudi-icon>
+        <span class="text">Delete</span>
+      </div>
+    </div>
+  </div>
+</nz-dropdown-menu>
+
+<ng-template #deletedText>
+  <span class="deleted-text"
+    >{{comment?.createdUser | formatFullname : true}} deleted a comment</span
+  >
+</ng-template>

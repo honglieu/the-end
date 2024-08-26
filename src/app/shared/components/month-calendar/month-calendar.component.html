@@ -1,0 +1,100 @@
+<div class="week-calender-container">
+  <div class="header d-flex align-items-center justify-content-center">
+    <span
+      class="current-month-text"
+      [class.months-after]="CURRENT_MONTH < monthValue || CURRENT_YEAR < currentYear"
+      [ngClass]="{ active: isCurrentMonth }">
+      {{title}}
+    </span>
+  </div>
+  <div class="calendar">
+    <ul class="weeks">
+      <li>M</li>
+      <li>T</li>
+      <li>W</li>
+      <li>T</li>
+      <li>F</li>
+      <li>S</li>
+      <li>S</li>
+    </ul>
+    <ul class="days">
+      <ng-container *ngFor="let day of daysHTML">
+        <div
+          [ngClass]="{
+            'day-item': true,
+            'is-not-day': day.value === null,
+            'active': day.isActive,
+            'in-the-pass': day.isInThePass,
+            'dayoff': day.isDayOff,
+            'is-out-of-month': day.isOutOfScopeDay,
+            'selected': isShowPopup(selectedDay, day.value) && !day.isDisabled
+          }"
+          (click)="handleSelectDay(day.value, day.isDisabled, $event)">
+          <ng-container *ngIf="includeOutOfScopeDay || !day.isOutOfScopeDay">
+            <button class="day-button">
+              <span> {{ day.label }} </span>
+              <span class="dayoff-text" *ngIf="day.isDayOff"> OFF </span>
+            </button>
+            <div
+              (click)="handleClickOnPopup($event)"
+              class="selected-day-popup d-flex align-items-center justify-content-center"
+              *ngIf="isShowPopup(selectedDay, day.value) && !day.isDisabled"
+              [ngClass]="{
+                'left-pos': popupPosition === popupAnchor.left,
+                'right-pos': popupPosition === popupAnchor.right,
+                'bottom-pos': popupPosition === popupAnchor.bottom,
+                'right-top-pos': popupPosition === popupAnchor.rightTop,
+                'left-top-pos': popupPosition === popupAnchor.leftTop
+              }">
+              <button
+                trudi-btn
+                variant="tonal"
+                btnType="neutral"
+                shape="circle"
+                size="small"
+                class="close-day-popup-btn"
+                (click)="handleClosePopup()">
+                <trudi-icon icon="closeIcon" svgClass="size-16"></trudi-icon>
+              </button>
+              <div
+                class="popup-holiday d-flex align-items-center justify-content-center"
+                *ngIf="!day.isDayOff">
+                <span class="popup-holiday-label"> {{ day.label }} </span>
+                <span class="popup-holiday-name"
+                  >{{day.dayOff ? 'Day off' : 'Working day'}}</span
+                >
+                <button
+                  trudi-btn
+                  variant="link"
+                  size="small"
+                  class="popup-holiday-action"
+                  (click)="handleSetHoliday(day.value)">
+                  Set holiday
+                </button>
+              </div>
+
+              <div
+                class="popup-remove d-flex align-items-center justify-content-center"
+                *ngIf="day.isDayOff">
+                <span class="popup-remove-label">
+                  {{ day.label }}
+                  <span> OFF </span>
+                </span>
+                <span class="popup-remove-name">{{day?.dayOffValue.name}}</span>
+                <button
+                  trudi-btn
+                  variant="link"
+                  size="small"
+                  btnType="danger"
+                  class="popup-holiday-action"
+                  (click)="handleRemoveHoliday(day)">
+                  Remove the holiday
+                </button>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,181 @@
+@import 'function';
+.add-custom-policy-template {
+  margin-top: 10px;
+  border-radius: 5px;
+  border: 1px solid var(--border-neutral-dark);
+  padding: 16px;
+  .wrapper-name-delete {
+    margin-bottom: 10px;
+    .custom-policy-name {
+      flex: 0 0 92%;
+    }
+    .btn-delete {
+      cursor: pointer;
+    }
+    ::ng-deep .trudi-textarea-wrapper {
+      display: flex;
+      align-items: center !important;
+      padding: 8px 12px 8px 0px;
+      background-color: var(--white);
+      #trudi-textarea {
+        &:focus {
+          padding-left: 12px !important;
+        }
+        font-family: 'Inter';
+      }
+      #trudi-textarea::placeholder {
+        @include fontSetup(
+          var(--fg-neutral-weaker) !important,
+          14px,
+          20px,
+          normal,
+          400 !important
+        );
+      }
+    }
+  }
+  .custom-title {
+    margin-bottom: 5px;
+    @include fontSetup(var(--fg-neutral-normal), 12px, 16px, normal, 400);
+  }
+  .custom-property {
+    margin-bottom: 10px;
+  }
+  .reply-content {
+    ::ng-deep .trudi-textarea-wrapper {
+      #trudi-textarea::placeholder {
+        @include fontSetup(
+          var(--fg-neutral-weaker) !important,
+          14px,
+          20px,
+          normal,
+          400 !important
+        );
+      }
+    }
+    ::ng-deep .attach-file-container {
+      gap: 7px;
+    }
+    ::ng-deep .attach-file-container .attachment-files .custom-width-file {
+      max-width: 201px;
+      min-width: 201px;
+    }
+  }
+}
+
+::ng-deep .select-property-wrapper {
+  width: 616px;
+
+  trudi-form-control {
+    .trudi-form-control-wrapper {
+      trudi-multi-select {
+        ng-select {
+          .tag-error {
+            border: 1px solid var(--danger-500);
+          }
+          .ng-placeholder {
+            margin-top: 1px;
+            @include fontSetup(
+              var(--fg-neutral-weaker) !important,
+              14px,
+              20px,
+              normal,
+              400
+            );
+          }
+          .ng-value-container {
+            .tag-label {
+              @include fontSetup(
+                var(--gray-600) !important,
+                16px,
+                24px,
+                normal,
+                500
+              );
+            }
+            .label-wrapper {
+              height: 28px;
+              max-width: 560px !important;
+              cursor: pointer;
+              &:hover {
+                background-color: var(--gray-100);
+              }
+            }
+
+            .disabled {
+              opacity: 0.5;
+            }
+          }
+          ng-dropdown-panel {
+            .ng-dropdown-panel-items {
+              max-height: 220px !important;
+            }
+            .ng-option {
+              .option-item {
+                padding: 0 12px;
+                .label-container {
+                  width: 95%;
+                }
+                .w-90 {
+                  width: 90%;
+                }
+                .item-label {
+                  padding: 10px 0;
+                }
+                &.disable {
+                  .item-label {
+                    @include fontSetup(var(—gray-300), 14px, 20px, normal, 500);
+                    &:hover {
+                      @include fontSetup(
+                        var(—gray-300),
+                        14px,
+                        20px,
+                        normal,
+                        500
+                      );
+                    }
+                  }
+                  trudi-checkbox {
+                    pointer-events: none;
+                  }
+                }
+                &.disable-field {
+                  .item-label {
+                    color: var(--gray-700) !important;
+                  }
+                }
+                .mw-label {
+                  max-width: 95%;
+                  overflow: hidden;
+                  white-space: nowrap;
+                  text-overflow: ellipsis;
+                }
+                .mw-90 {
+                  max-width: 90%;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .ng-optgroup {
+      text-transform: capitalize !important;
+    }
+  }
+}
+
+::ng-deep {
+  .ant-tooltip.tooltip-policy {
+    max-width: 387px !important;
+    .ant-tooltip-arrow {
+      right: 0px !important;
+    }
+  }
+}
+
+::ng-deep .cdk-overlay-container:has(.tooltip-label) {
+  .ant-tooltip {
+    max-width: 700px;
+  }
+}

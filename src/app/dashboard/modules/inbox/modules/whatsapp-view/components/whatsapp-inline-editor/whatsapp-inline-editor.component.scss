@@ -1,0 +1,363 @@
+@import 'function';
+
+:host {
+  width: 100%;
+
+  .header-wrapper {
+    z-index: 8;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    top: 0px;
+    background: white;
+
+    inline-message-receiver-container.invalid-receiver-value
+      .select-receiver-container {
+      .pseudo-input:not(.has-value) {
+        color: var(--fg-danger);
+      }
+    }
+  }
+
+  .center-conversation {
+    background-color: var(--bg-neutral-tonal-normal);
+  }
+
+  .select-sender {
+    .ng-placeholder,
+    .sender-label__prefix {
+      @include fontSetup(
+        var(--fg-neutral-weaker) !important,
+        14px,
+        20px,
+        normal,
+        400 !important
+      );
+    }
+
+    &.invalid-sender-value .ng-placeholder {
+      color: var(--fg-danger) !important;
+    }
+
+    .checked-icon {
+      visibility: hidden;
+    }
+
+    .ng-dropdown-panel .ng-dropdown-panel-items {
+      .ng-option.ng-star-inserted {
+        display: block !important;
+      }
+
+      .ng-option-selected {
+        .checked-icon {
+          visibility: visible;
+        }
+      }
+    }
+  }
+
+  ::ng-deep {
+    .title-control #msg-title-field.ng-invalid .not-check-submit .prefix-text {
+      color: var(--fg-danger) !important;
+    }
+
+    .invalid-receiver-value .select-receiver-container {
+      .to-preview {
+        .receivers-info-wrapper .receivers-info-wrapper-content .pseudo-prefix {
+          color: var(--fg-danger) !important;
+        }
+      }
+      .pseudo-input:not(.has-value) {
+        color: var(--fg-danger) !important;
+      }
+    }
+
+    .trudi-text-field-wrapper {
+      .trudi-ui-text-field {
+        color: var(--fg-neutral-strongest) !important;
+      }
+      .prefix-text {
+        @include fontSetup(
+          var(--fg-neutral-weaker) !important,
+          14px,
+          20px,
+          normal,
+          400 !important
+        );
+      }
+    }
+
+    .title-control .trudi-text-field-wrapper,
+    .select-sender-control .ng-select.ng-select-single .ng-select-container {
+      padding: 10px 12px !important;
+      height: 40px;
+    }
+
+    .editor-container editor {
+      margin-bottom: 40px !important;
+    }
+
+    .editor-container,
+    .editor-container .toolbar,
+    .title-control .trudi-text-field-wrapper,
+    .title-control .trudi-text-field-wrapper:hover:not(.disabled),
+    .title-control .trudi-text-field-wrapper:focus-within:has(:hover),
+    .title-control
+      .trudi-text-field-wrapper:has(
+        .trudi-ui-text-field:focus:not(.ng-invalid)
+      ),
+    .title-control
+      .ng-invalid.ng-touched
+      .trudi-text-field-wrapper.not-check-submit,
+    .select-receiver-container .ng-select-container:hover,
+    .select-receiver-container .ng-select.ng-select-opened .ng-select-container,
+    .select-receiver-container
+      .ng-select:hover:not(.ng-select-focused):not(.ng-select-disabled)
+      > .ng-select-container,
+    .select-receiver-container
+      .ng-select.ng-select-focused:not(.ng-select-opened)
+      > .ng-select-container,
+    .select-sender-control .ng-select.ng-select-opened .ng-select-container,
+    .select-sender-control
+      .ng-select.ng-select-focused:not(.ng-select-opened)
+      > .ng-select-container,
+    .select-sender-control .ng-select.ng-select-single .ng-select-container,
+    .select-sender-control .ng-select-focused .ng-select-container,
+    .trudi-text-field-wrapper:hover:not(.disabled),
+    .trudi-text-field-wrapper:active:not(.disabled) {
+      background-color: var(--bg-base) !important;
+      border: unset !important;
+      box-shadow: unset !important;
+      border-radius: unset !important;
+    }
+
+    trudi-form-control:not(:last-child) .trudi-form-control-wrapper {
+      border-bottom: unset !important;
+    }
+
+    trudi-form-control:has(:last-child) .trudi-form-control-wrapper {
+      border-bottom: 1px solid var(--border-neutral-dark);
+      margin-bottom: 0px;
+    }
+
+    .receiver-wrapper:has(.ccBtn):has(.bccBtn) {
+      .ng-spinner-loader {
+        margin-right: 106px !important;
+      }
+    }
+
+    .ng-value-container {
+      padding-right: 106px !important;
+    }
+
+    .bcc-receiver-wrapper:has(.ccBtn),
+    .cc-receiver-wrapper:has(.bccBtn) {
+      .ng-spinner-loader {
+        margin-right: 50px !important;
+      }
+    }
+
+    .ng-value-container {
+      padding-right: 50px !important;
+    }
+
+    .invalid-receiver {
+      color: var(--fg-danger);
+    }
+  }
+
+  .attachments {
+    border-top: 1px solid var(--border-neutral-dark);
+    background-color: var(--bg-base);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    padding: 12px 11px 0 11px;
+
+    .file-section, .card-section {
+      display: flex;
+      width: 100%;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      position: relative;
+      &::-webkit-scrollbar {
+        position: absolute;
+        bottom: 5px;
+      }
+      &::-webkit-scrollbar-track {
+        position: absolute;
+        top: 0;
+        margin-top: -5px;
+      }
+      ::ng-deep {
+        trudi-send-msg-file {
+          .trudi-send-msg-attachment-files {
+            flex-wrap: nowrap !important;
+          }
+          .attachment-wrapper {
+            margin-top: 0 !important;
+          }
+        }
+        trudi-form-control .trudi-form-control-wrapper {
+          border-bottom: unset !important;
+        }
+      }
+    }
+
+    .card-section {
+      ::ng-deep .contact-card {
+        margin-top: 0px !important;
+      }
+      .card-container {
+        display: flex;
+        gap: 16px;
+        flex-wrap: nowrap;
+      }
+    }
+  }
+
+  .schedule-msg {
+    background-color: var(--bg-base);
+    display: flex;
+    gap: 6px;
+    width: 100%;
+    height: 40px;
+    border-top: 1px solid var(--border-neutral-dark, #ececed);
+    &-item {
+      display: flex;
+      width: 100%;
+      padding-bottom: 12px;
+      position: relative;
+      ::ng-deep {
+        trudi-form-control .trudi-form-control-wrapper {
+          border-bottom: unset !important;
+        }
+      }
+    }
+  }
+
+  @mixin fullHeight {
+    display: block;
+    height: 100%;
+  }
+
+  .compose-section {
+    display: flex;
+    flex-direction: column;
+    transition: height 0.1s ease-out 0s;
+  }
+
+  .inline-editor {
+    border-top: 1px solid var(--border-neutral-dark) !important;
+    position: relative;
+    flex: 1;
+    min-height: 150px;
+    inline-message-editor {
+      @include fullHeight()
+    }
+    ::ng-deep {
+      div.resize {
+        height: 1px !important;
+        padding: 0px !important;
+        &>div {
+          height: 1px !important;
+          background-color: var(--border-neutral-dark);
+        }
+      }
+      tiny-editor, .app-chat, .editor-container {
+        @include fullHeight()
+      }
+      .editor-container editor {
+        display: block;
+        height: calc(100% - 0px);
+        margin-bottom: 0 !important;
+        max-height: auto !important;
+        .tox-tinymce {
+          height: 100% !important;
+        }
+      }
+      .editor-container.not-focus .tox-edit-area__iframe:hover {
+        background-color: transparent !important;
+      }
+      .toolbar {
+        border-top: 1px solid var(--border-neutral-dark) !important;
+      }
+      .editor-area {
+        flex: 1;
+        max-height: none !important;
+      }
+      .editor-space{
+        height: 100%;
+        max-height: auto !important;
+      }
+
+    }
+  }
+
+  .nz-resizable-resizing {
+    cursor: ns-resize;
+    ::ng-deep {
+      editor {
+        pointer-events: none;
+      }
+    }
+  }
+}
+
+:host {
+    ::ng-deep {
+        editor {
+            margin-bottom: 40px;
+            .tox .tox-tinymce .tox-tinymce--toolbar-sticky-off {
+                border-bottom: 1px solid var(--border-neutral-dark);
+            }
+        }
+        --toolbar-bottom-height: 50px;
+        --chat-reply-height: 28px;
+        .reply-gpt-alert {
+          border-radius: unset !important;
+        }
+        .editor-container {
+          display: flex !important;
+          flex-direction: column !important;
+          .editor-area {
+            flex: 1;
+          }
+          .toolbar {
+            position: relative !important;
+
+            @media screen and (max-width: 1480px) {
+              .gap-8 {
+                gap: 6px;
+              }
+            }
+
+            @media screen and (max-width: 1440px) {
+              .btn-list .btn-group .divider {
+                margin: 0 2px !important;
+              }
+            }
+          }
+          .chat-gpt-generate {
+
+            .editor-area {
+              height: calc(100% - 78px) !important;
+            }
+            editor {
+              height: calc(100% - 0px) !important;
+            }
+          }
+
+          .toolbar.toolbar-on-bottom .btn-list .btn-group {
+            .divider-index-2 {
+              display: none !important;
+            }
+          }
+        }
+    }
+}
+
+

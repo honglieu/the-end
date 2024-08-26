@@ -1,0 +1,25 @@
+@import 'function';
+.chip {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border: solid 1px var(--gray-200);
+  border-radius: 8px;
+  width: fit-content;
+  column-gap: 8px;
+  background-color: var(--white);
+  cursor: pointer;
+
+  &-content {
+    @include fontSetup(var(--gray-500), 14px, 16px, normal, 400);
+  }
+
+  &.isActive .chip-content {
+    @include fontSetup(var(--brand-500), 14px, 16px, normal, 400);
+  }
+
+  &.isActive {
+    border: solid 1px var(--brand-500);
+    background-color: var(--brand-50);
+  }
+}

@@ -1,0 +1,62 @@
+<div class="invite-wrapper">
+  <div class="header">
+    <div class="detail-invite">
+      <div class="send-invite-icon">
+        <trudi-icon
+          [icon]="typeOfCall  === 'videoCall' ? 'video_call' : 'iconPhoneCircle'"></trudi-icon>
+      </div>
+      <div class="send-invite-text">
+        <ng-container *ngIf="showListNumber; else default">
+          <p class="numbers-sent">Which number do you want to call?</p>
+        </ng-container>
+        <ng-template #default>
+          <p>Start {{callType}} call</p>
+          <div class="number-sent">Call to {{callTo}}</div>
+        </ng-template>
+      </div>
+    </div>
+    <trudi-icon
+      icon="closeBtn"
+      class="close-modal-btn"
+      (click)="closeModal(true)"></trudi-icon>
+  </div>
+
+  <hr *ngIf="showListNumber" />
+
+  <ng-container *ngIf="showListNumber">
+    <div class="list-phone">
+      <ng-container *ngFor="let phone of listPhoneNumber">
+        <div
+          class="phone-radio d-flex align-items-center cursor-pointer"
+          (click)="selectPhone(phone)">
+          <p>{{phone | phoneNumberFormat}}</p>
+          <img
+            class="size-20"
+            [src]="selectedPhone === phone ? checkBoxImg.ownershipCheck : checkBoxImg.uncheck" />
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+
+  <div
+    *ngIf="!isSelectedPhoneNumber"
+    class="error-container d-flex align-items-center gap-4">
+    <trudi-icon
+      svgClass="size-12"
+      viewBox="auto"
+      icon="iconWarning"></trudi-icon>
+    <div class="error-text">Select an option to continue</div>
+  </div>
+
+  <hr *ngIf="showListNumber" />
+
+  <div class="btn-wrapper d-flex">
+    <button
+      data-e2e="button-confirm"
+      [disabled]="isCalling || isConsole"
+      trudi-btn
+      (click)="startToCall()">
+      Call now
+    </button>
+  </div>
+</div>

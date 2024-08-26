@@ -1,0 +1,14 @@
+<ng-container *ngIf="maxCharacter && !onlyShowMaxCharacter" #maxCharacterRef>
+  <p class="max-character-text d-flex align-item-center">
+    <span>
+      {{ showRemainderCharacterMode ? maxCharacter - currentLength :
+      currentLength }}
+    </span>
+    <span> /{{ maxCharacter }} </span>
+  </p>
+</ng-container>
+<ng-container *ngIf="maxCharacter && onlyShowMaxCharacter" #maxCharacterRef>
+  <p class="max-character-text d-flex align-item-center">
+    <span> {{ maxCharacter - currentLength }} </span>
+  </p>
+</ng-container>

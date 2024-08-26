@@ -1,0 +1,273 @@
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  body {
+    -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+    zoom: 0.6;
+  }
+
+  a[href]:after {
+    display: none;
+    visibility: hidden;
+  }
+
+  .print-title {
+    margin: 36px 24px 36px 24px;
+    text-align: center;
+    color: #00aa9f !important;
+    font-size: 36px;
+    line-height: 34.57px;
+  }
+
+  .insight-print-wrapper {
+    padding: 32px;
+  }
+
+  .insights-container {
+    display: block !important;
+  }
+
+  .insights-container .insights-section {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    gap: 30px;
+  }
+
+  .header-row :is(.rank, .name, .criteria) {
+    color: var(--fg-neutral-weaker) !important;
+  }
+  top-performing-team-members
+    :is(.title, .rank span, .name span, .criteria span) {
+    color: var(--fg-neutral-stronger) !important;
+  }
+
+  :is(
+      donut-chart .chart-body,
+      task-completed-section,
+      enquires-resolved-section
+    )
+    :is(.annotation-item__title) {
+    color: var(--fg-neutral-stronger, #3d3d3d) !important;
+  }
+
+  .trudi-select-dropdown-button__content--title {
+    color: var(--fg-neutral-normal) !important;
+  }
+
+  .chart-title,
+  .chart-title span,
+  .enquiry_filter {
+    color: var(--fg-neutral-stronger, #3d3d3d) !important;
+  }
+
+  .top-performance-scroll,
+  .chart-content,
+  .chart-container,
+  .bar_chart {
+    overflow: hidden !important;
+  }
+
+  text {
+    color: var(--fg-neutral-weaker, #999) !important;
+  }
+
+  .data-box, .top-performance-table {
+    -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+    -webkit-filter: opacity(1);
+            filter: opacity(1);
+    -webkit-filter: blur(0);
+            filter: blur(0);
+    -webkit-box-shadow: 0px 4px 12px 0px #0000001a, 0px 8px 28px 0px #0000000d !important;
+            box-shadow: 0px 4px 12px 0px #0000001a, 0px 8px 28px 0px #0000000d !important;
+  }
+
+  .btn-view-detail {
+    color: #00aa9f !important;
+  }
+
+  .number {
+    color: var(--gray-600) !important;
+  }
+
+  .type-text-box {
+    color: var(--gray-500) !important;
+  }
+
+  .trend-down-bg {
+    background-color: var(--danger-100) !important;
+  }
+
+  .trend-up-bg {
+    background-color: var(--brand-100) !important;
+  }
+
+  .noData-gray-bg {
+    background-color: var(--gray-200) !important;
+  }
+
+  .noData-gray-text {
+    color: var(--gray-300) !important;
+  }
+
+  .trend-percent {
+    color: var(--gray-700) !important;
+  }
+
+  .trend-percent-up {
+    color: var(--success-500) !important;
+  }
+
+  .trend-percent-down {
+    color: var(--fg-danger) !important;
+  }
+
+  .text-trend,
+  .text-trend span {
+    color: var(--gray-600) !important;
+  }
+
+  .accomplish-wrappper .text-title {
+    color: var(--gray-600) !important;
+  }
+
+  time-savings-section {
+    display: block !important;
+    margin-top: 45px !important;
+  }
+
+  time-savings-section .text-title {
+    color: var(--gray-600) !important;
+  }
+
+  time-savings-section #chart-section {
+    display: block !important;
+  }
+
+  time-savings-section .break-down {
+    margin-top: 60px;
+    -webkit-column-break-before: page !important;
+       -moz-column-break-before: page !important;
+            break-before: page !important;
+  }
+
+  efficiency-section .section-title {
+    color: var(--gray-600) !important;
+  }
+
+  .efficiency-section-wrapper {
+    margin: 60px 0 !important;
+  }
+
+  enquires-resolved-section {
+    display: block !important;
+    margin: 60px 0;
+    -webkit-column-break-before: page !important;
+       -moz-column-break-before: page !important;
+            break-before: page !important;
+  }
+
+  enquires-resolved-section .enquiry_title {
+    color: var(--gray-600) !important;
+  }
+
+  enquires-resolved-section trudi-checkbox.selected label span:first-child {
+    background-color: var(--bg-brand-solid-normal, #28ad99) !important;
+    border-color: var(--bg-brand-solid-normal, #28ad99) !important;
+  }
+
+  enquires-resolved-section trudi-checkbox.selected label span:first-child svg {
+    stroke: var(--white) !important;
+    stroke-dashoffset: 0 !important;
+  }
+
+  task-completed-section .stask-chart-title {
+    color: var(--gray-600) !important;
+  }
+
+  donut-chart trudi-badge trudi-icon svg-icon svg path {
+    color: white !important;
+  }
+
+  stack-bar-chart
+    .annotation
+    > .annotation-item:first-child
+    .annotation-item__color {
+    background-color: rgba(51, 187, 178, 0.5) !important;
+  }
+  stack-bar-chart
+    .annotation
+    > .annotation-item:last-child
+    .annotation-item__color {
+    background-color: rgba(216, 220, 223, 0.5) !important;
+  }
+
+  time-savings-section donut-chart .annotation .badge-text {
+    color: #fff !important;
+  }
+  time-savings-section
+    donut-chart
+    .annotation
+    :first-child.annotation-item
+    .annotation-item__color {
+    background-color: #fedf73 !important;
+  }
+
+  time-savings-section
+    donut-chart
+    .annotation
+    :nth-child(2).annotation-item
+    .annotation-item__color {
+    background-color: #ff8f51 !important;
+  }
+
+  time-savings-section
+    donut-chart
+    .annotation
+    :is(:nth-child(2), :nth-child(3)).annotation-item
+    .annotation-item__title
+    trudi-badge {
+    background-color: #ffbf41 !important;
+  }
+
+  time-savings-section
+    donut-chart
+    .annotation
+    :is(:nth-child(4), :nth-child(5)).annotation-item
+    .annotation-item__title
+    trudi-badge {
+    background-color: #38dbd0 !important;
+  }
+
+  time-savings-section
+    donut-chart
+    .annotation
+    :nth-child(3).annotation-item
+    .annotation-item__color {
+    background-color: #f15656 !important;
+  }
+
+  time-savings-section
+    donut-chart
+    .annotation
+    :nth-child(4).annotation-item
+    .annotation-item__color {
+    background-color: #476efa !important;
+  }
+
+  time-savings-section
+    donut-chart
+    .annotation
+    :nth-child(5).annotation-item
+    .annotation-item__color {
+    background-color: #b7e94d !important;
+  }
+}

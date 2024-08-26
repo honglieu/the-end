@@ -1,0 +1,24 @@
+<widget-common
+  [type]="inspectionCard.syncStatus"
+  [firstTimeSyncSuccess]="firstTimeSyncSuccess"
+  [isDislayBtnCancel]="inspectionCard?.externalInspectionId"
+  (showModal)="handleOpenModal()"
+  (retry)="handleRetryWidget()"
+  (remove)="handleRemoveWidget()">
+  <div class="card-widget-wrapper">
+    <div class="card-widget-item">
+      <span>Tenant</span>
+      <span class="tenant-name"
+        >{{inspectionCard?.userPropertyGroup?.name || 'None'}}</span
+      >
+    </div>
+    <div class="card-widget-item">
+      <span>Type</span>
+      <span>{{inspectionCard?.inspectionType?.name + ' inspection'}}</span>
+    </div>
+    <div class="card-widget-item">
+      <span>Status</span>
+      <span>{{inspectionCard?.inspectionStatus?.name}}</span>
+    </div>
+  </div>
+</widget-common>

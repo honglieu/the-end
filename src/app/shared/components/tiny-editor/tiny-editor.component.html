@@ -1,0 +1,698 @@
+<div
+  id="editor-{{ editorId }}"
+  #editorContainer
+  [class]="fromAppChat ? 'app-chat' : 'send-message'">
+  <div #resizeEditor class="resize" (mousedown)="onResize($event)">
+    <div></div>
+  </div>
+
+  <div
+    class="editor-container border-rad-8 relative"
+    [ngClass]="{
+      'editor-error' : hasError,
+      'small-editor': small.smallUI,
+      'not-focus hover-tertiary': !editorFocus,
+      'hide': false,
+      'chat-gpt-generate':((AIState.onLoading) || (AIState.onGenerated)),
+      'disabled-field': disabled
+    }">
+    <ng-container *ngIf="(AIState.onLoading) && !cancelChatGpt">
+      <div class="editor-bg-disable">
+        <div
+          class="editor-img-loading-box"
+          [ngClass]="{'loading-task-editor': fromCommunicationStep}"
+          (click)="onCloseSuggestedChatGpt()">
+          <ng-lottie class="editor-img-loading" [options]="options"></ng-lottie>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container
+      *ngIf="((AIState.onLoading) || (AIState.onGenerated)) && !cancelChatGpt">
+      <div class="reply-gpt-alert">
+        <span
+          [ngStyle]="{'margin-left': AIState.onLoading && !cancelChatGpt ? '36px' : '0'}"
+          >{{AIState.message}}</span
+        >
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="fromCheckListStep">
+      <ng-container *ngTemplateOutlet="toolbarTemp"></ng-container>
+    </ng-container>
+
+    <ng-template #toolbarTemp>
+      <div
+        *ngIf="!disabled"
+        class="toolbar d-flex justify-content-end"
+        [ngClass]="{'toolbar-on-bottom': toolbarPosition === ETinyEditorToolbarPosition.BOTTOM}">
+        <!-- <div
+          *ngIf="inlineMessage"
+          class="editor-type relative d-flex align-items-center">
+          <send-option-control
+            [hasAppUser]="isAppUser"
+            [inlineMessage]="inlineMessage"
+            [formControl]="sendOptionControl"
+            (onChangeOptionControl)="onChangeSelectViaOption.emit($event)"></send-option-control>
+          <div class="divider"></div>
+        </div> -->
+
+        <!-- toolbar btn  -->
+        <toolbar-wrapper
+          [ngStyle]="{width: isShowSendActionTpl ? 'calc(100% - 320px)' : '100%'}">
+          <ng-template #defaultToolbar>
+            <ng-container
+              *ngFor="let group of listToolbarButton; index as idx; last as isLast">
+              <ng-container *ngFor="let btn of group">
+                <ng-container
+                  *ngIf="btn.value === ToolbarAction.EmailSignature ? btn.show && (sendOptionMsgModal === ESendOptionType.EMAIL || isEmailSignature || toFieldLength === 0) : btn.show">
+                  <ng-container *ngIf="!btn?.component; else outletComponent">
+                    <div
+                      class="relative"
+                      [class.cursor-not-allowed]="btn?.disabled"
+                      [ngClass]="{'d-flex justify-content-center': btn?.attachOptions?.length}"
+                      (click)="$event.stopPropagation();">
+                      <button
+                        trudi-tooltip
+                        [attr.data-e2e]="btn.value === ToolbarAction.Attach ? 'attact-btn' : null"
+                        [id]="btn?.id || ''"
+                        (click)="
+                            handleToolbarBtn(btn.value, $event);
+                            btn.selected = !btn?.selected;"
+                        class="btn-item size-24 border-rad-4"
+                        [class.disable-btn]="btn?.disabled"
+                        [ngClass]="{'selected': btn?.selected, 'attach-file': btn?.value === ToolbarAction.Attach}"
+                        [nzTooltipTitle]="btn?.attachOptions?.length && btn?.selected ? '' : btn?.value === ToolbarAction.Attach && fromCommunicationStep ? 'Attach file' : btn?.tooltip || btn?.value"
+                        appOutsideClickListener
+                        (clickOutside)="clickOutSidePopover(btn)">
+                        <ng-container [ngSwitch]="btn?.value">
+                          <ng-template [ngSwitchCase]="ToolbarAction.Code">
+                            <trudi-icon
+                              [ngClass]="{'selected-icon': isVisiblePopover.insert}"
+                              [icon]="btn?.icon"
+                              nz-dropdown
+                              #dropdown="nzDropdown"
+                              close-dropdown-when-resizable
+                              [nzDropDownDirective]="dropdown"
+                              (nzVisibleChange)="handleSelectedPopover($event, btn)"
+                              [(nzVisible)]="isVisiblePopover.insert"
+                              [nzOverlayClassName]="'dropdown-pt'"
+                              [nzDropdownMenu]="menu"
+                              [nzPlacement]="'topLeft'"
+                              [nzTrigger]="'click'"></trudi-icon>
+                          </ng-template>
+
+                          <ng-template [ngSwitchCase]="ToolbarAction.Attach">
+                            <trudi-icon
+                              *ngIf="fromCommunicationStep"
+                              [icon]="btn?.icon"></trudi-icon>
+                            <trudi-icon
+                              *ngIf="!fromCommunicationStep"
+                              [ngClass]="{'selected-icon': isVisiblePopover.attach}"
+                              nz-dropdown
+                              #dropdown="nzDropdown"
+                              close-dropdown-when-resizable
+                              [nzDropDownDirective]="dropdown"
+                              (nzVisibleChange)="handleSelectedPopover($event, btn)"
+                              [(nzVisible)]="isVisiblePopover.attach"
+                              [icon]="isVisiblePopover.attach ? btn?.selectedIcon : btn?.icon"
+                              [nzOverlayClassName]="'dropdown-pt'"
+                              [nzDropdownMenu]="attachMenu"
+                              [nzPlacement]="'topCenter'"
+                              [nzTrigger]="'click'"></trudi-icon>
+                          </ng-template>
+
+                          <ng-container *ngSwitchDefault>
+                            <trudi-icon
+                              [icon]="btn?.selected ? btn?.selectedIcon : btn?.icon"></trudi-icon>
+                          </ng-container>
+                        </ng-container>
+                      </button>
+
+                      <!-- Start Menu Attachment -->
+                      <div
+                        class="dropdown-list absolute border-rad-8 align-items-center">
+                        <ng-container>
+                          <nz-dropdown-menu #attachMenu="nzDropdownMenu">
+                            <div
+                              *ngIf="btn?.attachOptions?.length"
+                              nz-menu
+                              class="dropdown-property-tree">
+                              <div class="box-list">
+                                <ng-container
+                                  *ngFor="let attachOption of btn?.attachOptions">
+                                  <div
+                                    *ngIf="!attachOption.disabled && !fromCheckListStep"
+                                    nz-menu-item
+                                    class="list-item cursor-pointer"
+                                    (click)="handleAttachOption(attachOption?.action); btn.selected = false"
+                                    [attr.data-e2e]="attachOption.dataE2e"
+                                    [ngClass]="{'disabled': attachOption.disabled}">
+                                    <div
+                                      class="white-space-nowrap no-pointer-event">
+                                      {{attachOption?.text}}
+                                    </div>
+                                  </div>
+                                  <div
+                                    *ngIf="fromCheckListStep"
+                                    nz-menu-item
+                                    class="list-item cursor-pointer"
+                                    (click)="handleAttachOption(attachOption?.action); btn.selected = false"
+                                    [attr.data-e2e]="attachOption.dataE2e"
+                                    [ngClass]="{'disabled': attachOption.disabled}">
+                                    <div
+                                      class="white-space-nowrap no-pointer-event">
+                                      {{attachOption?.text}}
+                                    </div>
+                                  </div>
+                                </ng-container>
+                              </div>
+                            </div>
+                          </nz-dropdown-menu>
+                        </ng-container>
+                      </div>
+                    </div>
+                    <!-- End Menu Attachment -->
+
+                    <!-- Start Menu Code -->
+                    <div
+                      class="dropdown-list absolute border-rad-8 align-items-center">
+                      <ng-container>
+                        <nz-dropdown-menu #menu="nzDropdownMenu">
+                          <ul nz-menu class="dropdown-property-tree">
+                            <div class="box-list">
+                              <ng-container
+                                *ngFor="let codeOption of listCodeOptions">
+                                <li
+                                  (click)="$event.stopPropagation()"
+                                  *ngIf="codeOption.menu"
+                                  nz-submenu
+                                  [nzDisabled]="codeOption?.disabled"
+                                  [nzMenuClassName]="'sub-menu-pt sub-menu-nongap'"
+                                  [nzTitle]="titleTpl"
+                                  class="dropdown-item-property-tree"
+                                  [ngClass]="{'option-has-sub-title': codeOption?.subTitle,
+                                    'disabled-code-option': codeOption?.disabled}">
+                                  <ng-template #titleTpl
+                                    ><span nz-icon nzType="appstore"></span>
+                                    <div
+                                      class="d-flex justify-content-between flex-1">
+                                      <div class="code-option-title">
+                                        <span>
+                                          {{ codeOption?.title |
+                                          landlordToOwner}}</span
+                                        >
+                                        <p
+                                          *ngIf="codeOption?.subTitle"
+                                          class="sub-title">
+                                          {{ codeOption?.subTitle }}
+                                        </p>
+                                      </div>
+                                      @if (codeOption?.tooltip) {
+                                      <trudi-icon
+                                        [nzTooltipTitle]="codeOption?.tooltip"
+                                        trudi-tooltip
+                                        [icon]="'infoFill'"
+                                        class="size-20"></trudi-icon>
+                                      } @else {
+                                      <trudi-icon
+                                        svgClass="size-20"
+                                        icon="iconChevronRight">
+                                      </trudi-icon>
+                                      }
+                                    </div>
+                                  </ng-template>
+                                  <ul class="box-sub-menu-pt">
+                                    <li
+                                      *ngFor="let subCodeOption of codeOption?.menu"
+                                      class="d-flex gap-4 dropdown-sub-menu-property-tree"
+                                      [ngClass]="{'disabled-sub-option': subCodeOption?.disabled}"
+                                      (click)="handleEmbedCodeOption(subCodeOption);$event.stopPropagation();btn.selected = false"
+                                      nz-menu-item>
+                                      <span> {{ subCodeOption?.title }} </span>
+                                      @if(subCodeOption?.disabled) {
+                                      <trudi-icon
+                                        [nzTooltipTitle]="subCodeOption?.tooltip"
+                                        trudi-tooltip
+                                        [icon]="'infoFill'"
+                                        class="size-20"></trudi-icon>
+                                      }
+                                    </li>
+                                  </ul>
+                                </li>
+                              </ng-container>
+                            </div>
+                          </ul>
+                        </nz-dropdown-menu>
+                      </ng-container>
+                    </div>
+                    <!-- End Menu Code -->
+                  </ng-container>
+                  <ng-template #outletComponent>
+                    <ng-container
+                      [ngComponentOutlet]="btn.component"
+                      [ndcDynamicInputs]="buildDynamicInputs(btn)"
+                      [ndcDynamicOutputs]="btn?.outputs">
+                    </ng-container>
+                  </ng-template>
+                </ng-container>
+              </ng-container>
+              @if(!isInlineMessenger) {
+              <ng-container *ngIf="fromCheckListStep else defaultDivider">
+                <div
+                  *ngIf="(idx !== 2 && idx !== 3) && !isLast"
+                  [class]="'divider ' + 'divider-index-' + idx"></div>
+              </ng-container>
+              <ng-template #defaultDivider>
+                <div
+                  *ngIf="(fromAppChat || (idx + 1 !== listToolbarButton.length))"
+                  [class]="'divider ' + 'divider-index-' + idx"></div>
+              </ng-template>
+              }
+            </ng-container>
+          </ng-template>
+
+          <ng-container
+            *ngIf="small.smallUI || isShowSidebarRight; else defaultToolbar">
+            <ng-container *ngFor="let btn of smallToolBtnList">
+              <ng-container *ngIf="btn.show">
+                <div *ngIf="btn.divider" class="divider"></div>
+                <ng-template #defaultBtn>
+                  <div
+                    class="relative d-flex justify-content-center"
+                    (click)="$event.stopPropagation()">
+                    <button
+                      (click)="handleToolbarBtn(btn?.value); (btn?.value !== ToolbarAction.More) && (btn.selected = !btn?.selected);"
+                      class="btn-item size-24 border-rad-4"
+                      [ngClass]="{'selected': btn?.selected}"
+                      [nzTooltipTitle]="btn?.moreList?.length && btn?.showPopup ? '' :btn?.tooltip || btn?.value"
+                      trudi-tooltip
+                      appOutsideClickListener
+                      (clickOutside)="clickOutSidePopover(btn)">
+                      <trudi-icon
+                        [icon]="btn?.selected ? btn?.selectedIcon : btn?.icon"
+                        class="size-20 justify-content-center y-center"></trudi-icon>
+                    </button>
+                    <div
+                      *ngIf="btn?.moreList?.length"
+                      class="dropdown-list absolute border-rad-8 align-items-center"
+                      [ngClass]="{
+                        'hide': !btn.showPopup,
+                        'small-dropdown': small.smallDropdown
+                      }">
+                      <ng-container *ngFor="let moreBtn of btn?.moreList">
+                        <ng-container
+                          *ngIf="moreBtn.show"
+                          [ngSwitch]="moreBtn.value">
+                          <ng-template [ngSwitchCase]="ToolbarAction.Code">
+                            <div
+                              class="list-item relative cursor-pointer"
+                              [ngClass]="{
+                                'item-selected': moreBtn?.selected,
+                                'disabled': moreBtn?.disabled
+                              }"
+                              nz-dropdown
+                              #dropdown="nzDropdown"
+                              close-dropdown-when-resizable
+                              [nzDropDownDirective]="dropdown"
+                              [nzOverlayClassName]="'dropdown-pt'"
+                              (nzVisibleChange)="handleSelectedPopover($event, moreBtn)"
+                              [(nzVisible)]="isVisiblePopover.insert"
+                              [nzDropdownMenu]="menuSmall"
+                              [nzPlacement]="'right'"
+                              [nzTrigger]="'click'">
+                              <div
+                                class="d-flex gap-8"
+                                (click)="handleToolbarBtn(moreBtn?.value); moreBtn.selected = isVisiblePopover.insert; checkIsBtnMoreSelected();">
+                                <trudi-icon
+                                  [icon]="moreBtn?.icon"
+                                  svgClass="size-20"></trudi-icon>
+                                <div class="white-space-nowrap">
+                                  {{moreBtn?.tooltip || moreBtn?.value}}
+                                </div>
+                                <trudi-icon
+                                  [icon]="'chevronRight'"
+                                  class="size-16 ml-auto"></trudi-icon>
+                              </div>
+                              <!-- Start Small Menu Code -->
+                              <div
+                                class="dropdown-list absolute border-rad-8 align-items-center">
+                                <ng-container>
+                                  <nz-dropdown-menu #menuSmall="nzDropdownMenu">
+                                    <ul nz-menu class="dropdown-property-tree">
+                                      <div class="box-list">
+                                        <ng-container
+                                          *ngFor="let codeOption of listCodeOptions">
+                                          <li
+                                            (click)="$event.stopPropagation()"
+                                            *ngIf="codeOption.menu"
+                                            nz-submenu
+                                            [nzMenuClassName]="'sub-menu-pt'"
+                                            [nzTitle]="titleTpl"
+                                            class="dropdown-item-property-tree"
+                                            [ngClass]="{'option-has-sub-title': codeOption?.subTitle}">
+                                            <ng-template #titleTpl>
+                                              <span
+                                                nz-icon
+                                                nzType="appstore"></span>
+                                              <div class="code-option-title">
+                                                <span>
+                                                  {{ codeOption?.title |
+                                                  landlordToOwner}}
+                                                </span>
+                                                <p
+                                                  *ngIf="codeOption?.subTitle"
+                                                  class="sub-title">
+                                                  {{ codeOption?.subTitle }}
+                                                </p>
+                                              </div>
+                                            </ng-template>
+                                            <ul class="box-sub-menu-pt">
+                                              <li
+                                                *ngFor="let subCodeOption of codeOption?.menu"
+                                                class="d-flex gap-4 dropdown-sub-menu-property-tree"
+                                                (click)="handleEmbedCodeOption(subCodeOption);$event.stopPropagation();moreBtn.selected = false"
+                                                nz-menu-item>
+                                                <span>
+                                                  {{ subCodeOption?.title }}
+                                                </span>
+                                              </li>
+                                            </ul>
+                                          </li>
+                                        </ng-container>
+                                      </div>
+                                    </ul>
+                                  </nz-dropdown-menu>
+                                </ng-container>
+                              </div>
+                              <!-- End Small Menu Code -->
+                            </div>
+                          </ng-template>
+
+                          <ng-template [ngSwitchCase]="ToolbarAction.Attach">
+                            <div
+                              class="list-item relative cursor-pointer"
+                              [ngClass]="{
+                                'item-selected': moreBtn?.selected,
+                                'disabled': moreBtn?.disabled
+                              }"
+                              nz-dropdown
+                              #dropdown="nzDropdown"
+                              close-dropdown-when-resizable
+                              [nzDropDownDirective]="dropdown"
+                              [(nzVisible)]="isVisiblePopover.attach"
+                              (nzVisibleChange)="handleSelectedPopover($event, moreBtn)"
+                              [nzOverlayClassName]="'dropdown-pt'"
+                              [nzDropdownMenu]="menuAttachSmall"
+                              [nzPlacement]="'right'"
+                              [nzTrigger]="'click'">
+                              <div
+                                [ngClass]="{'disabled': moreBtn?.disabled}"
+                                (click)="handleToolbarBtn(moreBtn?.value); moreBtn.selected = isVisiblePopover.attach; checkIsBtnMoreSelected();">
+                                <div class="d-flex gap-8">
+                                  <trudi-icon
+                                    [icon]="moreBtn?.icon"
+                                    svgClass="size-20"></trudi-icon>
+                                  <div
+                                    class="white-space-nowrap"
+                                    [ngClass]="{'color--dark-gray' : moreBtn.selected && !moreOptionButtons.includes(moreBtn?.value)}">
+                                    {{moreBtn?.tooltip || moreBtn?.value}}
+                                  </div>
+                                  <ng-container [ngSwitch]="moreBtn?.value">
+                                    <ng-container
+                                      *ngSwitchCase="moreOptionButtons.includes(moreBtn?.value) ? moreBtn?.value : ''">
+                                      <trudi-icon
+                                        [icon]="'chevronRight'"
+                                        class="size-16 ml-auto"></trudi-icon>
+                                    </ng-container>
+                                    <ng-container *ngSwitchDefault>
+                                      <trudi-icon
+                                        *ngIf="moreBtn.selected"
+                                        [icon]="'checkSuccess'"
+                                        class="size-16 ml-auto"></trudi-icon>
+                                    </ng-container>
+                                  </ng-container>
+                                </div>
+                                <!-- Start Small Menu Attachment -->
+                                <div
+                                  class="dropdown-list absolute border-rad-8 align-items-center">
+                                  <ng-container>
+                                    <nz-dropdown-menu
+                                      #menuAttachSmall="nzDropdownMenu">
+                                      <div
+                                        *ngIf="moreBtn?.attachOptions?.length"
+                                        nz-menu
+                                        class="dropdown-list dropdown-property-tree box-list absolute border-rad-8 align-items-center">
+                                        <ng-container
+                                          *ngFor="let attachOption of moreBtn?.attachOptions">
+                                          <div
+                                            class="list-item cursor-pointer dropdown-sub-menu-property-tree"
+                                            nz-menu-item
+                                            (click)="moreBtn.selected = false; handleAttachOption(attachOption?.action, $event);"
+                                            [attr.data-e2e]="attachOption.dataE2e"
+                                            [ngClass]="{'disabled': attachOption.disabled}">
+                                            <div
+                                              class="white-space-nowrap no-pointer-event">
+                                              {{attachOption?.text}}
+                                            </div>
+                                          </div>
+                                        </ng-container>
+                                      </div>
+                                    </nz-dropdown-menu>
+                                  </ng-container>
+                                </div>
+                                <!-- End Small Menu Attachment -->
+                              </div>
+                            </div>
+                          </ng-template>
+
+                          <ng-container *ngSwitchDefault>
+                            <div
+                              class="list-item relative cursor-pointer"
+                              [ngClass]="{'item-selected': moreBtn?.selected, 'disabled': moreBtn?.disabled}"
+                              (click)="handleToolbarBtn(moreBtn?.value); moreBtn.selected = !moreBtn?.selected; checkIsBtnMoreSelected();">
+                              <div class="d-flex gap-8">
+                                <trudi-icon
+                                  [icon]="moreBtn?.icon"
+                                  svgClass="size-20"></trudi-icon>
+                                <div
+                                  class="white-space-nowrap"
+                                  [ngClass]="{'color--dark-gray' : moreBtn.selected && !moreOptionButtons.includes(moreBtn?.value)}">
+                                  {{moreBtn?.tooltip || moreBtn?.value}}
+                                </div>
+                                <ng-container [ngSwitch]="moreBtn?.value">
+                                  <ng-container
+                                    *ngSwitchCase="moreOptionButtons.includes(moreBtn?.value) ? moreBtn?.value : ''">
+                                    <trudi-icon
+                                      [icon]="'chevronRight'"
+                                      class="size-16 ml-auto"></trudi-icon>
+                                  </ng-container>
+                                  <ng-container *ngSwitchDefault>
+                                    <trudi-icon
+                                      *ngIf="moreBtn.selected"
+                                      [icon]="'checkSuccess'"
+                                      class="size-16 ml-auto"></trudi-icon>
+                                  </ng-container>
+                                </ng-container>
+                              </div>
+                            </div>
+                          </ng-container>
+                        </ng-container>
+                      </ng-container>
+                    </div>
+                  </div>
+                </ng-template>
+                <ng-container
+                  *ngIf="btn.value === ToolbarAction.More && showSmallNestedComponent; else defaultBtn">
+                  <ng-container
+                    [ngComponentOutlet]="btn?.moreList?.[selectedBtn]?.component"
+                    [ndcDynamicInputs]="btn?.moreList?.[selectedBtn]?.inputs"
+                    [ndcDynamicOutputs]="btn?.moreList?.[selectedBtn]?.outputs">
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+            <div *ngIf="fromAppChat" class="divider"></div>
+          </ng-container>
+        </toolbar-wrapper>
+
+        <!-- end toolbar btn -->
+
+        <!-- send actions  -->
+        <ng-container
+          *ngTemplateOutlet="isShowSendActionTpl && sendActionBtn"></ng-container>
+        <!-- end send action -->
+      </div>
+    </ng-template>
+
+    <div
+      class="overflow-y-auto d-flex flex-dir-column justify-content-between editor-area"
+      (dragenter)="onDragEnter($event)"
+      (dragover)="onDragOver($event)"
+      (drop)="onDrop($event)"
+      (click)="handleFocus(true, $event)">
+      <div class="editor-space" #editor>
+        <editor
+          #tinyEditor
+          allowedEvents="onFocus, onClick, onKeyDown, onPaste, onDrop, onBlur"
+          [formControl]="editorControl"
+          [disabled]="disabled"
+          [init]="TinyMCEConfig"
+          (onFocus)="handleFocus(true, $event)"
+          (onClick)="onClick($event)"
+          (onKeyDown)="onKeyDown($event.event)"
+          (onPaste)="onPaste($event)"
+          (onDrop)="onDrop($event.event)"
+          (onBlur)="handleBlur()"
+          [ngClass]="{
+            'tiny-editor-modal': !inlineMessage,
+            'tiny-editor--hidden': ((AIState.onLoading) && !cancelChatGpt)
+          }"></editor>
+      </div>
+      <app-remaining-character
+        *ngIf="isShowRemainCharacter || (maxRemainCharacter && (isInlineMessenger || inlineSMSMessage))"
+        [showCurrentTextLength]="true"
+        [maxlength]="maxRemainCharacter"
+        [countCharacterUp]="countCharacterUp"
+        class="character-checklist d-flex justify-content-end"
+        [currentTextLength]="rawText?.length">
+      </app-remaining-character>
+    </div>
+
+    <ng-container *ngIf="!isCustomToolbar && !fromCheckListStep">
+      <ng-container *ngTemplateOutlet="toolbarTemp"></ng-container>
+    </ng-container>
+
+    <input
+      id="btn-upload-tiny-{{ editorId }}"
+      [multiple]="true"
+      class="input-file d-none"
+      type="file"
+      accept="{{ACCEPT_ONLY_SUPPORTED_FILE}}"
+      (change)="fileBrowseHandler($event)" />
+  </div>
+</div>
+
+<ng-container *ngIf="fromCommunicationStep || isShowPreviewAttachment">
+  <attach-file
+    [cards]="selectedContactCard"
+    [isShowPreviewAttachment]="isShowPreviewAttachment"
+    [fromCheckListStep]="fromCheckListStep"
+    [files]="listOfFiles"
+    [overFileSize]="overFileSize"
+    (onRemoveFile)="removeFile($event)"
+    (clearCard)="onClearContactById($event)"
+    [isUnSupportFile]="isUnSupportFile"></attach-file>
+</ng-container>
+
+<trudi-modal
+  [visible]="showPopupInvalidFile"
+  iconName="iconWarningRed"
+  [closable]="false"
+  [modelWidth]="510"
+  type="confirm"
+  colorBtn="danger"
+  okText="Ok, got it"
+  title="Cannot upload file"
+  [subTitleTemplate]="subTitle"
+  [hiddenCancelBtn]="true"
+  [autoFocus]="null"
+  (onOk)="handleClickConfirm()"
+  className="modal-invalid-file">
+</trudi-modal>
+
+<ng-template #subTitle>
+  <div class="sub-title">
+    <div>• You cannot upload with files larger than 25 MB.</div>
+    <div>
+      • Only 'png', 'jpeg', 'webp', 'gif', 'jpg', 'mp4', '3gpp', 'wmv', 'avi',
+      'mov', '3gp', 'pdf', 'docx', 'doc', 'xls', 'xlsx', 'xlsm' are allowed.
+    </div>
+  </div>
+</ng-template>
+<ng-template #sendActionBtn>
+  <div
+    class="reminder-sendbutton d-flex align-items-center gap-32 justify-content-between"
+    [ngClass]="{'hide': ( !isShowSendAction && !fromAppChat)}">
+    <div
+      class="send-btn-container align-items-center relative ml-auto d-flex gap-8">
+      <div
+        *ngIf="fromAppChat && deleteInlineType"
+        class="trash"
+        (click)="handleDeleteFromInline(deleteInlineType)">
+        <trudi-icon icon="trudiTrash" svgClass="size-20"></trudi-icon>
+      </div>
+      <div
+        class="dropdown-list absolute border-rad-8 align-items-center"
+        [ngClass]="{'hide': !showListSendOption}">
+        <ng-container *ngFor="let option of sendOptionValue">
+          <div
+            class="d-flex gap-8 list-item"
+            (click)="onSelectOptionSend(option)"
+            [appE2E]="option?.dataE2e || ''"
+            [ngClass]="{'item-selected' : selectedSendOption === option}">
+            <trudi-icon
+              [icon]="option?.icon"
+              class="no-pointer-event"
+              svgClass="size-20"></trudi-icon>
+            <div
+              class="white-space-nowrap no-pointer-event"
+              [ngClass]="{'color--dark-gray' : selectedSendOption === option}">
+              {{option?.text}}
+            </div>
+            <trudi-icon
+              *ngIf="selectedSendOption === option"
+              icon="checkSuccess"
+              class="size-16 ml-auto no-pointer-event"></trudi-icon>
+          </div>
+        </ng-container>
+      </div>
+      <div *ngIf="!isShowSendActionTpl">
+        <button
+          trudi-btn
+          variant="tonal"
+          size="medium"
+          btnType="neutral"
+          (click)="onCancel.emit()">
+          Cancel
+        </button>
+      </div>
+      <div *ngIf="isShowBackBtn">
+        <button
+          trudi-btn
+          variant="outlined"
+          size="medium"
+          btnType="neutral"
+          (click)="handleBack()">
+          Back
+        </button>
+      </div>
+      <div
+        class="send-btn border-rad-6 d-flex cursor-pointer align-items-center"
+        [ngClass]="{
+              'send-btn-disable': isDisabledSendBtn && (!canSend && (listOfFiles?.length < 1 && selectedContactCard?.length < 1) || overFileSize || isUnSupportFile || disableSendButton || (isArchiveMailbox && !fromAppChat) || isConsole || (isDisconnected && !fromAppChat) || isDisabledSendBtn),
+            }">
+        <button
+          trudi-btn
+          variant="text"
+          [appE2E]="'send-message-send-dropdown'"
+          [disabled]="isDisabledSendBtn && (!canSend && (listOfFiles?.length < 1 && selectedContactCard?.length < 1) || overFileSize || isUnSupportFile || disableSendButton || (isArchiveMailbox && !fromAppChat) || isConsole || (isDisconnected && !fromAppChat))"
+          class="d-flex gap-4 align-items-center"
+          (click)="handleSendMessage()">
+          <trudi-icon icon="sendArrow"></trudi-icon>
+          <div class="send-text white-space-nowrap no-pointer-event">
+            {{selectedSendOption?.text}}
+          </div>
+        </button>
+        <button
+          trudi-btn
+          variant="text"
+          [class.selected]="showListSendOption"
+          [disabled]="isDisabledSendBtn && (!canSend && (listOfFiles?.length < 1 && selectedContactCard?.length < 1) || overFileSize || isUnSupportFile || disableSendButton || isArchiveMailbox || isConsole || isDisconnected)"
+          (click)="showListSendOption = !showListSendOption">
+          <trudi-icon icon="whiteChevronDown"></trudi-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>

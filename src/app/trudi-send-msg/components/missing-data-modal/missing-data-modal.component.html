@@ -1,0 +1,71 @@
+<trudi-modal
+  [className]="'modal-missing'"
+  [modelWidth]="720"
+  [(visible)]="visible"
+  [isCondense]="true"
+  title="We’ve noticed an issue with your email"
+  classContainer="modal-missing_container"
+  (onCancel)="handleContinueEditMessage()">
+  <div class="content-modal">
+    <div class="param-info-wrapper">
+      <div
+        *ngFor="let paramInfo of (listParamMissingData || [])"
+        class="param-info">
+        <div class="param-info__users-wrapper">
+          <div class="param-info__user">
+            <div
+              class="param-info__user--name"
+              [innerHtml]="paramInfo.formattedName"></div>
+            <div
+              class="param-info__user--address"
+              [class.no-property]="!property?.value?.streetline"
+              *ngIf="
+                configs?.otherConfigs?.createMessageFrom === ECreateMessageFrom.SCRATCH ||
+                configs?.otherConfigs?.createMessageFrom === ECreateMessageFrom.TASK_HEADER;
+                else missingDataSendBulkTemplate">
+              <trudi-icon icon="iconAddress"></trudi-icon>
+              <p class="m-0">
+                {{ property?.value?.streetline || 'No property' }}
+              </p>
+            </div>
+            <ng-template #missingDataSendBulkTemplate>
+              <div
+                class="param-info__user--address"
+                [class.no-property]="!(paramInfo?.user?.streetLine)">
+                <trudi-icon icon="iconAddress"></trudi-icon>
+                <p class="m-0">
+                  {{ paramInfo?.user?.property?.shortenStreetline ||
+                  paramInfo?.user?.property?.streetLine || 'No property' }}
+                </p>
+              </div>
+            </ng-template>
+            <div class="param-info__user--warning">
+              <p class="m-0">
+                <trudi-icon class="d-inline" icon="iconWarning"></trudi-icon>
+                Missing data&nbsp;
+                <span class="d-inline" *ngFor="let param of paramInfo?.params"
+                  ><{{param}}>&nbsp;</span
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #footerModal>
+    <div class="button-footer d-flex gap-12">
+      <button
+        trudi-btn
+        btnType="neutral"
+        variant="outlined"
+        class="trudi-btn trudi-btn-tertiary btn-cancel button-size"
+        (click)="handleKeepSending()">
+        Send anyway
+      </button>
+      <button trudi-btn (click)="handleContinueEditMessage()">
+        Edit message
+      </button>
+    </div>
+  </ng-template>
+</trudi-modal>

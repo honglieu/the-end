@@ -1,0 +1,22 @@
+<div class="detail-tab-wrap" #detailTabWrap>
+  <div
+    class="property-detail-slide-wrap"
+    [style.width.px]="(stepWidth * 3)"
+    [style.transform]="'translateX('+ translateValue + 'px)'">
+    <ng-container [ngSwitch]="currentStep">
+      <div class="slide-step" [style.width.px]="stepWidth">
+        <property-detail *ngSwitchDefault></property-detail>
+      </div>
+      <div class="slide-step" [style.width.px]="stepWidth">
+        <tenancy-detail
+          *ngSwitchCase="(EPropertyProfileStep.TENANCY_DETAIL)"></tenancy-detail>
+      </div>
+      <div class="slide-step" [style.width.px]="stepWidth">
+        <user-property-details
+          *ngSwitchCase="(EPropertyProfileStep.TENANT_DETAIL)"></user-property-details>
+        <user-property-details
+          *ngSwitchCase="(EPropertyProfileStep.OWNERSHIP_DETAIL)"></user-property-details>
+      </div>
+    </ng-container>
+  </div>
+</div>

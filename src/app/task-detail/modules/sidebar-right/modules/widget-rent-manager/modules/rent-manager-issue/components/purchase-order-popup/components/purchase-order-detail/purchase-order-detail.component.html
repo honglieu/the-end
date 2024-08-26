@@ -1,0 +1,149 @@
+<div
+  class="purchase-detail-wrapper w-100"
+  *ngIf="purchaseOrderForm"
+  [formGroup]="purchaseOrderForm">
+  <div class="detail-info w-100">
+    <div class="detail-one">
+      <div class="issue-date-wrapper">
+        <span class="date-title">Issue date</span>
+        <trudi-date-picker [formControl]="issueDateControl">
+        </trudi-date-picker>
+      </div>
+
+      <trudi-textarea
+        label="Description"
+        [formControl]="descriptionControl"
+        [maxCharacter]="2000"
+        [resizable]="false"
+        [rows]="2"></trudi-textarea>
+
+      <trudi-single-select
+        label="Workflow"
+        [items]="workFlowList"
+        bindValue="id"
+        bindLabel="name"
+        [formControl]="workFlowControl"></trudi-single-select>
+    </div>
+    <div class="detail-two">
+      <div class="d-flex align-items-center gap-20">
+        <trudi-single-select
+          class="accountType-select"
+          label="Account type"
+          [items]="accountTypes"
+          bindValue="value"
+          bindLabel="label"
+          (ngModelChange)="handleChange($event)"
+          [formControl]="accountTypeControl"></trudi-single-select>
+        <trudi-single-select
+          class="w-100"
+          [label]="renderLabelByType[accountTypeControl?.value].userTypeLabel"
+          [items]="tenantList"
+          [loading]="loadingListUser"
+          [searchFn]="customSearchFn"
+          bindValue="id"
+          [formControl]="userTypeControl">
+          <ng-template
+            trudi-option-tmp
+            let-item="item"
+            let-item$="item$"
+            let-searchTerm="searchTerm">
+            <div class="tenants_list">
+              <div [ngOptionHighlight]="searchTerm ? searchTerm : ''">
+                {{ (item.firstName ? item.firstName : '')+' '+(item.lastName ?
+                item.lastName : '') }}
+              </div>
+              <div *ngIf="item$.selected" class="d-flex align-items-center">
+                <trudi-icon icon="checkSuccess"></trudi-icon>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template
+            trudi-label-tmp
+            let-item="item"
+            let-searchTerm="searchTerm">
+            <div class="tenants_preview">
+              {{ (item.firstName ? item.firstName : '') +' '+ (item.lastName ?
+              item.lastName : '') }}
+            </div>
+          </ng-template>
+        </trudi-single-select>
+      </div>
+
+      <trudi-checkbox
+        [label]="renderLabelByType[accountTypeControl?.value].invoiceLabel"
+        [formControl]="isInvoicedControl">
+      </trudi-checkbox>
+
+      <trudi-form-control class="w-100">
+        <trudi-single-select
+          label="Vendor"
+          [items]="supplierList"
+          [loading]="loadingListSupplier"
+          [searchFn]="customSupplierSearchFn"
+          bindValue="id"
+          bindLabel="lastName"
+          [formControl]="vendorControl"></trudi-single-select>
+      </trudi-form-control>
+
+      <div class="d-flex align-items-center gap-20">
+        <div class="w-100">
+          <trudi-text-field
+            label="Billing address"
+            [formControl]="billingAddressControl"
+            [showCounting]="false"
+            maxCharacter="255">
+          </trudi-text-field>
+        </div>
+
+        <div class="w-100">
+          <trudi-text-field
+            label="Shipping address"
+            [formControl]="shippingAddressControl"
+            [showCounting]="false"
+            maxCharacter="255">
+          </trudi-text-field>
+        </div>
+      </div>
+    </div>
+
+    <div class="detail-summary">
+      <div class="total">
+        <span class="total-text"> P.O. Total </span>
+        <span class="total-price text-ellipsis"> ${{totalPO}} </span>
+      </div>
+      <div class="total">
+        <span class="total-text"> Quantity </span>
+        <span class="total-price text-ellipsis"> {{totalQuantity}} </span>
+      </div>
+    </div>
+  </div>
+
+  <div class="detail-order w-100">
+    <div class="order-header">
+      <div *ngFor="let data of purchaseOrderTitles" class="item">{{data}}</div>
+    </div>
+    <div class="order-content">
+      <purchase-order-bill-list
+        #billList
+        [billDataList]="purchaseOrderData?.details"
+        (reCalculateBill)="calculateTotal()"></purchase-order-bill-list>
+    </div>
+    <div class="order-footer" [class.border-t]="hasBills">
+      <button
+        (click)="handleAddBill()"
+        trudi-btn
+        size="medium"
+        variant="outlined"
+        btnType="neutral">
+        <ng-template [iconPrefix]>
+          <trudi-icon
+            color="red"
+            [style]="{ 'width.px': 14, 'height.px': 14 }"
+            icon="greyPlus64">
+          </trudi-icon>
+        </ng-template>
+        Add
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,255 @@
+<div [formGroup]="complianceFormControl" class="property-note-form-group">
+  <div class="property-note-wrapper">
+    <div class="property-note-form">
+      <div class="form-row">
+        <div class="form-title">Select tenancy</div>
+        <trudi-form-control [control]="tenancyControl">
+          <ng-select
+            notFoundText="No results found"
+            class="select-smoke-type share-ng-select"
+            [ngClass]="{'input-error-select': tenancyControl.invalid && (tenancyControl.dirty || tenancyControl.touched)}"
+            formControlName="tenancyControl"
+            bindLabel="name"
+            bindValue="id"
+            [items]="tenanciesOptions"
+            [searchable]="true"
+            [clearable]="true"
+            [readonly]="disableForm"
+            [editableSearchTerm]="true">
+            <ng-template
+              ng-option-tmp
+              let-item="item"
+              let-index="index"
+              let-search="searchTerm">
+              <div class="d-flex">
+                <span class="flex-1">{{item.name}}</span>
+                <trudi-icon
+                  *ngIf="item.id === tenancyControl?.value"
+                  icon="checkSuccess"
+                  alt="Success Icon"></trudi-icon>
+              </div>
+            </ng-template>
+          </ng-select>
+        </trudi-form-control>
+      </div>
+      <div class="form-row mt-20 d-flex gap-12">
+        <div class="col-left w-50">
+          <div class="form-title">Compliance item</div>
+          <trudi-form-control [control]="complianceItemControl">
+            <ng-select
+              notFoundText="No results found"
+              class="select-smoke-type share-ng-select"
+              [ngClass]="{'input-error-select': complianceItemControl.invalid && (complianceItemControl.dirty || complianceItemControl.touched)}"
+              formControlName="complianceItemControl"
+              bindLabel="name"
+              bindValue="id"
+              [items]="listCategoryByTask"
+              [searchable]="true"
+              [clearable]="true"
+              [readonly]="disableForm"
+              [editableSearchTerm]="true"
+              (change)="handleChangeCompliance($event)">
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm">
+                <div class="d-flex">
+                  <span class="flex-1">{{item.name}}</span>
+                  <trudi-icon
+                    *ngIf="item.id === complianceItemControl?.value"
+                    icon="checkSuccess"
+                    alt="Success Icon"></trudi-icon>
+                </div>
+              </ng-template>
+            </ng-select>
+          </trudi-form-control>
+        </div>
+        <div class="col-right w-50" *ngIf="isShowSmokeAlarmField">
+          <div class="form-title">Smoke alarm type</div>
+          <trudi-form-control [control]="smokeAlarmTypeControl">
+            <ng-select
+              notFoundText="No results found"
+              id="smoke-type-select"
+              class="select-smoke-type share-ng-select"
+              [ngClass]="{'input-error-select': smokeAlarmTypeControl.invalid && (smokeAlarmTypeControl.dirty || smokeAlarmTypeControl.touched)}"
+              formControlName="smokeAlarmTypeControl"
+              bindLabel="text"
+              bindValue="value"
+              [items]="alarmTypeList"
+              [readonly]="disableForm"
+              [editableSearchTerm]="true"
+              [searchable]="true"
+              [clearable]="true">
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm">
+                <div class="d-flex">
+                  <span class="flex-1">{{item.text}}</span>
+                  <trudi-icon
+                    *ngIf="item.value === smokeAlarmTypeControl?.value"
+                    icon="checkSuccess"
+                    alt="Success Icon"></trudi-icon>
+                </div>
+              </ng-template>
+            </ng-select>
+          </trudi-form-control>
+        </div>
+      </div>
+      <div class="form-row mt-20">
+        <div class="form-title">Managed by</div>
+        <div class="form-input mt-6">
+          <trudi-form-control [control]="managedByControl">
+            <ng-select
+              notFoundText="No results found"
+              class="select-smoke-type share-ng-select"
+              [ngClass]="{'input-error-select': managedByControl.invalid && (managedByControl.dirty || managedByControl.touched)}"
+              formControlName="managedByControl"
+              bindLabel="text"
+              bindValue="value"
+              [items]="managedByList"
+              [readonly]="disableForm"
+              [editableSearchTerm]="true"
+              [searchable]="true"
+              [clearable]="true"
+              (change)="handleChangeManagedBy($event)">
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm">
+                <div class="d-flex">
+                  <span class="flex-1">{{item.text}}</span>
+                  <trudi-icon
+                    *ngIf="item.value === managedByControl?.value"
+                    icon="checkSuccess"
+                    alt="Success Icon"></trudi-icon>
+                </div>
+              </ng-template>
+            </ng-select>
+          </trudi-form-control>
+        </div>
+      </div>
+      <div class="form-row mt-20 d-flex gap-12" *ngIf="isShowServiceField">
+        <div class="col-left w-50">
+          <div class="form-title">Serviced by</div>
+          <div class="form-input mt-6">
+            <trudi-form-control [control]="servicesByControl">
+              <ng-select
+                notFoundText="No results found"
+                id="smoke-type-select"
+                class="select-smoke-type share-ng-select service-by"
+                formControlName="servicesByControl"
+                [ngClass]="{'input-error-select': servicesByControl.invalid && (servicesByControl.dirty || servicesByControl.touched)}"
+                bindLabel="label"
+                bindValue="id"
+                [items]="accountOptions"
+                [readonly]="disableForm"
+                [searchable]="true"
+                [clearable]="true"
+                [editableSearchTerm]="true"
+                placeholder="Search for supplier">
+                <ng-template
+                  ng-option-tmp
+                  let-item="item"
+                  let-index="index"
+                  let-search="searchTerm">
+                  <div class="d-flex">
+                    <span class="flex-1">{{item.label}}</span>
+                    <trudi-icon
+                      *ngIf="item.id === servicesByControl?.value"
+                      icon="checkSuccess"
+                      alt="Success Icon"></trudi-icon>
+                  </div>
+                </ng-template>
+              </ng-select>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div class="col-right w-50" *ngIf="true">
+          <div class="form-title">Authority Form Received</div>
+          <trudi-form-control [control]="authorReceivedControl">
+            <ng-select
+              notFoundText="No results found"
+              class="select-smoke-type share-ng-select"
+              formControlName="authorReceivedControl"
+              bindLabel="text"
+              bindValue="value"
+              [items]="authorList"
+              [searchable]="true"
+              [clearable]="true"
+              [readonly]="disableForm"
+              [editableSearchTerm]="true">
+              <ng-template
+                ng-option-tmp
+                let-item="item"
+                let-index="index"
+                let-search="searchTerm">
+                <div class="d-flex">
+                  <span class="flex-1">{{item.text}}</span>
+                  <trudi-icon
+                    *ngIf="item.value === authorReceivedControl?.value"
+                    icon="checkSuccess"
+                    alt="Success Icon"></trudi-icon>
+                </div>
+              </ng-template>
+            </ng-select>
+          </trudi-form-control>
+        </div>
+      </div>
+      <div class="form-row mt-20 d-flex gap-12">
+        <div class="w-33">
+          <div class="form-title">Expiry date</div>
+          <div class="form-input mt-6 trudi-date">
+            <trudi-form-control [control]="expiredDateControl">
+              <trudi-date-picker
+                class="pointer"
+                formControlName="expiredDateControl"
+                [trudiDisabled]="disableForm">
+              </trudi-date-picker>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div class="w-33">
+          <div class="form-title">Last service date</div>
+          <div class="form-input mt-6 trudi-date">
+            <trudi-form-control [control]="lastServiceDateControl">
+              <trudi-date-picker
+                class="pointer"
+                formControlName="lastServiceDateControl"
+                [trudiDisabled]="disableForm">
+              </trudi-date-picker>
+            </trudi-form-control>
+          </div>
+        </div>
+        <div class="w-33">
+          <div class="form-title">Next service date</div>
+          <div class="form-input mt-6 trudi-date">
+            <trudi-form-control [control]="nextServiceDateControl">
+              <trudi-date-picker
+                class="pointer"
+                formControlName="nextServiceDateControl"
+                [trudiDisabled]="disableForm">
+              </trudi-date-picker>
+            </trudi-form-control>
+          </div>
+        </div>
+      </div>
+      <div class="form-row mt-12">
+        <div class="form-title">Note</div>
+        <div class="form-input mt-6 note-area">
+          <trudi-form-control [control]="noteControl">
+            <trudi-textarea
+              [formControl]="noteControl"
+              [maxCharacter]="MAX_TEXT_NOTE_LENGTH"
+              [rows]="2"
+              [required]="false">
+            </trudi-textarea>
+          </trudi-form-control>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

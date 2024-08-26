@@ -1,0 +1,60 @@
+<div class="attachment-wrapper d-flex flex-dir-column gap-8">
+  <div class="attachment-files justify-content-between">
+    <div
+      [ngClass]="{'invalid': attachment | checkFileInvalid }"
+      class="comment-attachment"
+      (click)="manageCarouselState(attachment)">
+      <div class="attachment text-ellipsis">
+        <div
+          class="attachment-name"
+          nz-tooltip
+          nzTooltipPlacement="top"
+          [nzTooltipTitle]="attachment?.title || attachment.name || attachment.fileName"
+          [nzTooltipTrigger]="'hover'">
+          {{attachment?.title || attachment.fileName || attachment.name}}
+        </div>
+        <div class="attachment-extension">{{attachment?.extension}}</div>
+        <div class="attachment-size">
+          &nbsp;({{(attachment?.fileSize || attachment?.size) |
+          convertFileSize}})
+        </div>
+      </div>
+
+      <trudi-icon
+        *ngIf="attachment.syncPTStatus === ESyncStatus.SUCCESS"
+        icon="iconSyncSuccess"
+        [style]="{'width.px': 20, 'height.px': 20}"></trudi-icon>
+
+      <div
+        *ngIf="canRemove && (attachment.uploaded || !attachment.canUpload)"
+        class="cursor-pointer attachment-remove"
+        (click)="removeMediaFiles(attachment)">
+        <trudi-icon
+          class="trudi-icon"
+          [style]="{ 'width.px': 16, 'height.px': 16, color: '#646464' }"
+          icon="closeIcon"></trudi-icon>
+      </div>
+
+      <div
+        class="image-rotation rotate-image"
+        *ngIf="isUploading && !attachment.uploaded && !(attachment | checkFileInvalid)">
+        <img src="/assets/icon/loading.png" alt="loading-icon" />
+      </div>
+    </div>
+  </div>
+</div>
+<app-modal-popup
+  *ngIf="isShowCarousel"
+  [transparent]="true"
+  [show]="isShowCarousel"
+  [position]="popupModalPosition.full_screen">
+  <app-images-carousel
+    *ngIf="isShowCarousel"
+    [open]="isShowCarousel"
+    [isSyncing]="false"
+    [isInternalNote]="true"
+    [imageUrlList]="listImageCarousel"
+    [initialIndex]="initialIndex"
+    (showCarousel)="manageCarouselState($event)"
+    (fileEmit)="handleFileEmit($event.file)"></app-images-carousel>
+</app-modal-popup>

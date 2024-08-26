@@ -1,0 +1,85 @@
+@import 'function';
+
+:host {
+  .trudi-input-label {
+    @include fontSetup(var(--gray-600), 14px, 20px, normal, 600);
+  }
+  .warning-text {
+    margin: 6px 0 0 0;
+    @include fontSetup(
+      var(--fg-neutral-weaker, #999999),
+      12px,
+      16px,
+      normal,
+      400
+    );
+  }
+}
+
+.trudi-select-header-custom {
+  display: flex;
+  padding: 8px 16px 8px 12px;
+  align-items: center;
+  justify-content: space-between;
+
+  .trudi-select-header-custom__label {
+    @include fontSetup(var(--fg-neutral-weaker), 12px, 16px, normal, 400);
+  }
+
+  .trudi-select-header-custom__action {
+    display: flex;
+    align-items: center;
+    column-gap: 4px;
+    > span {
+      @include fontSetup(
+        var(--fg-neutral-stronger, #3d3d3d),
+        12px,
+        16px,
+        normal,
+        500
+      );
+
+      &:not(.label) {
+        cursor: pointer;
+      }
+
+      ::ng-deep trudi-checkbox {
+        pointer-events: none;
+      }
+    }
+  }
+}
+
+.task-template-option {
+  &__label {
+    max-width: calc(100% - 52px);
+    .item-label {
+      max-width: calc(100% - 120px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      @include fontSetup(
+        var(--fg-neutral-stronger, #3d3d3d),
+        14px,
+        20px,
+        normal,
+        500
+      );
+    }
+  }
+
+  ::ng-deep trudi-badge {
+    cursor: default;
+    max-width: unset;
+  }
+}
+
+.task-template-label-wrapper .trudi-select-label {
+  @include fontSetup(
+    var(--fg-neutral-stronger, #3d3d3d),
+    14px,
+    20px,
+    normal,
+    500
+  );
+}

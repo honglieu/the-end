@@ -1,0 +1,108 @@
+<ng-container *ngIf="!typeLoadingTask; else taskDetailContent">
+  <ng-container *ngIf="isLoadingSkeleton; else loadingContentLeft">
+    <div class="right-side-bar skeleton-left" id="right-side-bar">
+      <div class="side-bar-content">
+        <div class="d-flex flex-dir-column gap-24">
+          <div class="d-flex flex-dir-column gap-12">
+            <div class="skeleton-title d-flex flex-dir-column">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+            <div class="d-flex gap-12 w-100">
+              <div class="w-100">
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"
+                  class="skeleton-input w-100"></nz-skeleton>
+              </div>
+              <nz-skeleton-element
+                nzType="button"
+                [nzActive]="true"
+                class="skeleton-button-trudi"></nz-skeleton-element>
+            </div>
+          </div>
+          <div class="d-flex flex-dir-column gap-12">
+            <div class="skeleton-title d-flex flex-dir-column">
+              <nz-skeleton
+                [nzParagraph]="paragraph"
+                [nzActive]="true"></nz-skeleton>
+            </div>
+            <div class="d-flex gap-12 w-100">
+              <div class="w-100">
+                <nz-skeleton
+                  [nzParagraph]="paragraph"
+                  [nzActive]="true"
+                  class="skeleton-input"></nz-skeleton>
+              </div>
+              <nz-skeleton-element
+                nzType="button"
+                [nzActive]="true"
+                class="skeleton-button-trudi"></nz-skeleton-element>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</ng-container>
+
+<ng-template #loadingContentLeft>
+  <div class="right-side-bar" id="right-side-bar">
+    <div class="side-bar-content">
+      <app-trudi-tab class="w-100"></app-trudi-tab>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #taskDetailContent>
+  <app-modal-popup
+    *ngIf="isShowQuitConfirmModal"
+    [show]="isShowQuitConfirmModal"
+    [position]="popupModalPosition.center"
+    [specificWidth]="510">
+    <app-quit-confirm
+      (isCloseModal)="showQuitConfirm($event)"
+      (delete)="deleteTask($event)"></app-quit-confirm>
+  </app-modal-popup>
+
+  <div class="right-side-bar" id="right-side-bar">
+    <div
+      class="side-bar-content"
+      [ngClass]="canDisplayRightTab ? '' : 'overflow-hidden'">
+      <div class="h-100" *ngIf="canDisplayRightTab; else loadingContent">
+        <ng-container>
+          <div class="tab-content" (scroll)="onScroll()">
+            <div
+              class="h-100"
+              *ngIf="taskType === TaskTypeEnum.TASK && ((amountConversation !== 0) || trudiResponseInTask || isBlankTask)">
+              <app-trudi-tab
+                [class.d-none]="!(controlPanelService.currentTab === controlPanelTab.trudi)">
+              </app-trudi-tab>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <ng-template #loadingContent>
+        <div
+          class="skeleton-wrapper pd-8"
+          *ngFor="let _ of [].constructor(2  ); let i = index">
+          <div class="sleleton-title">
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="w-25"></nz-skeleton>
+          </div>
+          <div
+            class="skeleton-content"
+            *ngFor="let _ of [].constructor(5); let i = index">
+            <nz-skeleton
+              [nzParagraph]="paragraph"
+              [nzActive]="true"
+              class="w-75"></nz-skeleton>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,51 @@
+.not-allowed {
+    cursor: not-allowed !important;
+}
+.not-allowed  > *{
+    cursor: not-allowed;
+}
+.def-checkbox {
+    display: none;
+}
+.cpn-label {
+    margin: 0;
+    font-size: 14px;
+    line-height: 20px;
+    font-weight: 500;
+    color: var(--gray-500);
+}
+.checkbox-label {
+    cursor: pointer;
+}
+.disable {
+  margin-right: 2px;
+}
+
+:host {
+  position: relative;
+}
+
+.content {
+    user-select: none;
+    display: flex;
+    font-size: 14px;
+    line-height: 16px;
+    align-items: center;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    gap: 8px;
+}
+
+hr.divider{
+  position: absolute;
+  bottom: 0;
+  width: -webkit-fill-available;
+  margin: 0;
+  margin-right: 24px;
+  border-top: 0.1px solid var(--gray-50);
+}
+
+.change-color {
+  color: var(--gray-700) !important;
+}

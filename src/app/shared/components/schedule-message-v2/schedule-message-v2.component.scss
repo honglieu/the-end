@@ -1,0 +1,196 @@
+@import 'function';
+
+:host {
+  .modal-form-schedule-message {
+    padding: 0 12px;
+    border-bottom: 1px solid var(--border-neutral-dark);
+    .title {
+      @include fontSetup(
+        var(--fg-neutral-weaker, #85888e),
+        14px,
+        20px,
+        normal,
+        400
+      );
+    }
+    .trudi-form-group {
+      padding: 0px !important;
+    }
+
+    .trudi-send-msg {
+      &-footer {
+        padding: 0px;
+
+        &-btn-wrapper {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          justify-content: flex-end;
+        }
+      }
+    }
+
+    .ant-modal-body {
+      padding: 32px 24px;
+    }
+
+    time-picker {
+      .dropdown-button {
+        max-width: 100% !important;
+        min-height: 44px !important;
+        max-width: unset !important;
+      }
+    }
+
+    trudi-date-picker {
+      .trudi-picker-suffix {
+        pointer-events: all;
+        cursor: pointer;
+      }
+      .ant-picker-wrapper {
+        top: 9px !important;
+      }
+    }
+
+    .title-text {
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--gray-500);
+    }
+
+    .trudi-form-group {
+      padding: 32px 14px;
+    }
+
+    .warning-text {
+      @include fontSetup(var(--danger-500), 12px, 16px, normal, 400);
+    }
+
+    ::ng-deep time-picker {
+      .date-time-group div {
+        width: 100%;
+        &:hover:not(:has(.input-error))  {
+          text-decoration: underline var(--fg-brand, #28ad99);
+          text-underline-offset: 3px;
+        }
+      }
+
+      input {
+        max-width: unset;
+        transition: unset;
+        height: 40px;
+        width: 100%;
+        padding: 12px 30px 12px 12px;
+        line-height: 40px !important;
+        &:focus {
+          @include box-shadow-input-select(unset);
+        }
+      }
+
+      .date-time-picker .input-wrapper {
+        input {
+          background-color: unset !important;
+          color: var(--bg-brand-solid-normal, #28ad99) !important;
+          &:hover {
+            background-color: unset !important;
+          }
+          &:focus {
+            text-decoration: underline;
+          }
+        }
+        .input-error:hover {
+          color: var(--danger-500) !important;
+          @include box-shadow-input-select(unset);
+          text-decoration: underline var(--danger-500);
+          text-underline-offset: 3px;
+        }
+        .input-error,
+        .input-error:focus {
+          color: var(--danger-500) !important;
+          @include box-shadow-input-select(unset);
+        }
+        .input-error.input-error-hour:focus {
+          @include box-shadow-input-select(unset);
+        }
+
+        .dropdown-button {
+          max-width: 160px !important;
+        }
+        .btn-group trudi-icon:not(.time-picker-v2) {
+          display: none !important;
+        }
+        &:has(.input-error) {
+          .time-picker-v2 svg-icon svg path {
+            fill: var(--danger-500);
+          }
+        }
+      }
+
+      .date-time-picker .input-wrapper input:focus:not(.input-error) {
+        outline: unset !important;
+      }
+
+      .date-time-picker .input-wrapper input:focus {
+        box-shadow: unset !important;
+        outline: unset !important;
+        text-underline-offset: 3px;
+      }
+
+      &.trudi-time-picker-error {
+        .date-time-picker .input-wrapper input.input-error:not(:focus) {
+          box-shadow: var(--danger-500) !important;
+        }
+      }
+
+      &:has(input.disabled) {
+        input {
+          cursor: not-allowed;
+          color: var(--fg-neutral-weakest);
+          background-color: var(--bg-neutral-tonal-strongest, #d8dcdf);
+        }
+        trudi-icon {
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+  .app-time {
+    padding-left: 95px;
+    padding-bottom: 5px;
+  }
+}
+
+:host {
+  ::ng-deep {
+    .modal-form-schedule-message
+      trudi-form-control:not(:last-child)
+      .trudi-form-control-wrapper {
+      border-bottom: unset !important;
+    }
+  }
+}
+
+::ng-deep .dropdown-list.schedule-msg-bulk {
+  margin-top: -3px !important;
+  left: -16% !important;
+  width: 203px;
+  .tz-hint .label-hint {
+    font-weight: 400 !important;
+  }
+}
+::ng-deep .dropdown-list.schedule-msg {
+  margin-top: 1px !important;
+  left: -16% !important;
+  width: 203px;
+  .tz-hint .label-hint {
+    font-weight: 400 !important;
+  }
+}
+
+::ng-deep .dropdown-list.schedule-msg-inline {
+  width: 203px;
+  .tz-hint .label-hint {
+    font-weight: 400 !important;
+  }
+}

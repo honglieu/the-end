@@ -1,0 +1,233 @@
+@import 'function';
+#wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--white);
+
+  .content-wrapper {
+    height: calc(100vh - 72px);
+    width: 400px;
+    padding: 12px;
+    border-radius: 12px 0px 0px 0px;
+    background-color: var(--gray-200);
+  }
+  .w-100-vw {
+    width: 100vw !important;
+  }
+}
+
+.right-side-bar {
+  margin-top: 9px;
+}
+
+.main-container {
+  @include breakpoint-range(medium, large) {
+    .openMenu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 9999;
+      width: auto;
+      box-shadow: 8px 0px 21px rgb(0 0 0 / 2%), 0px -2px 16px rgb(0 0 0 / 8%),
+        0px 26px 24px rgb(0 0 0 / 5%);
+    }
+  }
+}
+.multi-select {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-right: 20px;
+}
+
+.multi-select button.btn {
+  box-shadow: none !important;
+  border: 0 !important;
+  height: 40px !important;
+}
+
+.multi-select .btn-group {
+  width: 100% !important;
+}
+
+.multi-select .multiselect.dropdown-toggle {
+  background: var(--danger-500) !important;
+  color: var(--white) !important;
+  border-bottom: 1px solid var(--white) !important;
+}
+
+.multi-select .multiselect.dropdown-toggle.btn.btn-default {
+  overflow: inherit !important;
+  width: 100% !important;
+  text-align: left;
+}
+
+.multi-select .dropdown-menu > .active > a {
+  background: var(--success-500) !important;
+  color: var(--white);
+}
+
+.multi-select .dropdown-menu > li > a:hover {
+  background: var(--success-500) !important;
+  color: var(--white);
+}
+
+.multi-select .multiselect-container li {
+  background: var(--danger-500);
+  color: var(--white);
+}
+
+.multi-select .open > .dropdown-menu {
+  display: block;
+  background: var(--danger-500) !important;
+  width: 100%;
+}
+
+.multi-select .checkbox input[type='checkbox'] {
+  margin-left: 0 !important;
+  right: 10px !important;
+}
+
+.multi-select .checkbox input[type='checkbox'] {
+  margin-top: 11px !important;
+}
+
+.multi-select .dropdown-menu {
+  border-radius: 0;
+}
+
+.multi-select .multiselect-native-select {
+  position: relative;
+}
+
+.multi-select .multiselect-native-select select {
+  border: 0 !important;
+  clip: rect(0 0 0 0) !important;
+  height: 1px !important;
+  margin: -1px -1px -1px -3px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  position: absolute !important;
+  width: 1px !important;
+  left: 50%;
+  top: 30px;
+}
+
+.multi-select .multiselect-container {
+  position: absolute;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.multi-select .multiselect-container .input-group {
+  margin: 5px;
+}
+
+.multi-select .multiselect-container li {
+  padding: 0;
+}
+
+.multi-select .multiselect-container li .multiselect-all label {
+  font-weight: 700;
+}
+
+.multi-select .multiselect-container li a {
+  padding: 0;
+}
+
+.multi-select .multiselect-container li a label {
+  margin: 0;
+  height: 100%;
+  cursor: pointer;
+  font-weight: 400;
+  padding: 0 10px 0 15px;
+  color: var(--white);
+}
+
+.multi-select .multiselect-container li a label input[type='checkbox'] {
+  margin-bottom: 5px;
+}
+
+.multi-select .multiselect-container li a label.radio {
+  margin: 0;
+}
+
+.multi-select .multiselect-container li a label.checkbox {
+  margin: 0;
+}
+
+.multi-select .multiselect-container li.multiselect-group label {
+  margin: 0;
+  padding: 3px 20px 3px 20px;
+  height: 100%;
+  font-weight: 700;
+}
+
+.multi-select .multiselect-container li.multiselect-group-clickable label {
+  cursor: pointer;
+}
+
+.multi-select .btn-group .btn-group .multiselect.btn {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+
+.multi-select .form-inline .multiselect-container label.checkbox {
+  padding: 3px 20px 3px 40px;
+}
+
+.multi-select .form-inline .multiselect-container label.radio {
+  padding: 3px 20px 3px 40px;
+}
+
+.multi-select
+  .form-inline
+  .multiselect-container
+  li
+  a
+  label.checkbox
+  input[type='checkbox'] {
+  margin-left: -20px;
+  margin-right: 0;
+}
+
+.multi-select button.activate-property-btn {
+  background: var(--brand-400);
+  height: 40px;
+  line-height: 40px;
+  cursor: pointer;
+  border: 0;
+  text-align: center;
+  color: var(--white);
+  text-transform: uppercase;
+  font-weight: 500;
+  width: 100%;
+}
+
+.selected-div-checklist {
+  background-color: var(--success-400);
+  height: 40px;
+  line-height: 40px;
+}
+
+.unselected-div-checklist {
+  background-color: var(--danger-500);
+  height: 40px;
+  line-height: 40px;
+}
+
+.show-hide-btn {
+  background: var(--danger-500);
+  height: 20px;
+  cursor: pointer;
+  border: 0;
+  padding-top: 0;
+  margin-top: 0;
+  text-align: center;
+  color: var(--white);
+  text-transform: uppercase;
+  font-weight: 500;
+  width: 94%;
+}

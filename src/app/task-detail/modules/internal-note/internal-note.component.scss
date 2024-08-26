@@ -1,0 +1,30 @@
+@import 'function';
+
+:host {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.note-section {
+  position: relative;
+  border: 3px solid rgba(242, 245, 247, 1);
+  height: 100%;
+  width: 100%;
+
+  &-main {
+    margin: 12px;
+    background-color: var(--gray-50);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  &-chat {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 12px;
+    border-radius: 8px;
+  }
+}
